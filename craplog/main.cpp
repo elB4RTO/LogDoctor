@@ -1,4 +1,4 @@
-#include "craplog.h"
+#include "mainwindow.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    Craplog w;
+    MainWindow w;
     w.show();
     return a.exec();
 }
