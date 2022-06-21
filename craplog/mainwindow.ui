@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Craplog</class>
- <widget class="QMainWindow" name="Craplog">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+   <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -29,9 +29,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="CrapTabs">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
@@ -42,7 +47,7 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="movable">
        <bool>true</bool>
@@ -58,7 +63,7 @@
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string>Logs</string>
+        <string></string>
        </attribute>
        <attribute name="toolTip">
         <string>Parse logs to create statistics</string>
@@ -76,15 +81,15 @@
            <enum>Qt::NoFocus</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
-          <widget class="QWidget" name="LogFiles">
+          <widget class="QWidget" name="LogBoxFiles">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>727</width>
-             <height>419</height>
+             <width>722</width>
+             <height>404</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -96,11 +101,70 @@
            <attribute name="label">
             <string>Files</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="2" rowspan="2">
-             <widget class="QTextBrowser" name="textBrowser">
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0" colspan="2">
+             <widget class="QCheckBox" name="checkAllLogFiles">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip">
+               <string>Toggle/untoggle selection for all files</string>
+              </property>
+              <property name="text">
+               <string>All</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>90</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="buttonViewFile">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>36</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Inspect a log file</string>
+              </property>
+              <property name="text">
+               <string></string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4" rowspan="3">
+             <widget class="QTextBrowser" name="textLogFiles">
+              <property name="acceptDrops">
+               <bool>false</bool>
               </property>
               <property name="lineWrapMode">
                <enum>QTextEdit::NoWrap</enum>
@@ -110,25 +174,44 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#6d6d6d;&quot;&gt;Select a file from the list&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#6d6d6d;&quot;&gt;to inspect its content&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="openLinks">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QCheckBox" name="checkBox">
-              <property name="text">
-               <string>All</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QTreeWidget" name="treeWidget">
+            <item row="1" column="0" colspan="4">
+             <widget class="QTreeWidget" name="listLogFiles">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>256</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="tabKeyNavigation">
+               <bool>true</bool>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::SingleSelection</enum>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectRows</enum>
               </property>
               <property name="sortingEnabled">
                <bool>true</bool>
@@ -136,42 +219,132 @@ hr { height: 1px; border-width: 0; }
               <property name="animated">
                <bool>true</bool>
               </property>
-              <property name="columnCount">
-               <number>2</number>
-              </property>
-              <attribute name="headerVisible">
+              <attribute name="headerMinimumSectionSize">
+               <number>75</number>
+              </attribute>
+              <attribute name="headerDefaultSectionSize">
+               <number>150</number>
+              </attribute>
+              <attribute name="headerStretchLastSection">
                <bool>true</bool>
               </attribute>
               <column>
                <property name="text">
-                <string>Select</string>
-               </property>
-               <property name="toolTip">
-                <string>Select/Deselect a log file</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignLeading|AlignVCenter</set>
+                <string>Name</string>
                </property>
               </column>
               <column>
                <property name="text">
-                <string>Log Files</string>
+                <string>Size</string>
                </property>
-               <property name="toolTip">
-                <string>Names of the log files in your logs folder</string>
+               <property name="font">
+                <font>
+                 <italic>false</italic>
+                </font>
                </property>
               </column>
+              <item>
+               <property name="text">
+                <string notr="true">access.log.1</string>
+               </property>
+               <property name="toolTip">
+                <string notr="true"/>
+               </property>
+               <property name="statusTip">
+                <string notr="true"/>
+               </property>
+               <property name="whatsThis">
+                <string notr="true"/>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                </font>
+               </property>
+               <property name="checkState">
+                <enum>Unchecked</enum>
+               </property>
+               <property name="text">
+                <string notr="true">13.7 MB</string>
+               </property>
+               <property name="toolTip">
+                <string notr="true"/>
+               </property>
+               <property name="statusTip">
+                <string notr="true"/>
+               </property>
+               <property name="whatsThis">
+                <string notr="true"/>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                 <italic>true</italic>
+                 <underline>false</underline>
+                 <strikeout>false</strikeout>
+                </font>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
              </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QPushButton" name="buttonRefreshList">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>32</width>
+                <height>32</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Refresh the list</string>
+              </property>
+              <property name="text">
+               <string></string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" colspan="3">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>224</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="LogArgs">
+          <widget class="QWidget" name="LogBoxArgs">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>727</width>
-             <height>419</height>
+             <width>722</width>
+             <height>404</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -184,13 +357,13 @@ hr { height: 1px; border-width: 0; }
             <string>Options</string>
            </attribute>
           </widget>
-          <widget class="QWidget" name="LogStart">
+          <widget class="QWidget" name="LogBoxStart">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>727</width>
-             <height>419</height>
+             <width>722</width>
+             <height>404</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -215,7 +388,7 @@ hr { height: 1px; border-width: 0; }
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string>Statistics</string>
+        <string></string>
        </attribute>
        <attribute name="toolTip">
         <string>View your statisticsView your statistics</string>
@@ -239,7 +412,7 @@ hr { height: 1px; border-width: 0; }
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string>Update</string>
+        <string></string>
        </attribute>
        <attribute name="toolTip">
         <string>Update Craplog</string>
@@ -253,7 +426,7 @@ hr { height: 1px; border-width: 0; }
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string>Settings</string>
+        <string></string>
        </attribute>
        <attribute name="toolTip">
         <string>Configure Craplog</string>
