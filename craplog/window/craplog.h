@@ -23,7 +23,9 @@ public:
         std::string path;
     };
     std::vector<LogFile> getLogsList( bool fresh=false );
+    int getLogsListSize();
     std::string getLogFilePath( QString file_name );
+    int setLogFileSelected( QString file_name );
 
 private:
     std::string logs_path;
