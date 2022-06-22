@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
         window/craplog.h
         window/craplog.cpp
+        resources/resources.qrc
         ${TS_FILES}
 )
 

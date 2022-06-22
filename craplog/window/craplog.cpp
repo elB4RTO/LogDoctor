@@ -2,9 +2,15 @@
 
 Craplog::Craplog()
 {
-    this-> logs_path = "/var/log/apache2";
-    //this-> readConfigs();
-    this-> scanLogsDir();
+    this->logs_path = "/var/log/apache2";
+    //this->readConfigs();
+    this->scanLogsDir();
+}
+
+
+// return the size of the list
+int Craplog::getLogsListSize() {
+    return this->logs_list.size();
 }
 
 // return the list. rescan if fresh is true
@@ -13,8 +19,9 @@ std::vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
     if ( fresh == true ) {
         this->scanLogsDir();
     }
-    return this-> logs_list;
+    return this->logs_list;
 }
+
 
 // return the path of the file matching the given name
 std::string Craplog::getLogFilePath( QString file_name )
@@ -29,10 +36,24 @@ std::string Craplog::getLogFilePath( QString file_name )
     return path;
 }
 
+// set a file as selected
+int Craplog::setLogFileSelected( QString file_name )
+{
+    int result = 1;
+    for ( Craplog::LogFile& item : this->logs_list ) {
+        if ( item.name == file_name ) {
+            item.selected = true;
+            result = 0;
+            break;
+        }
+    }
+    return result;
+}
+
 // scan the logs path to update the log files list
 void Craplog::scanLogsDir()
 {
-    this-> logs_list.clear();
+    this->logs_list.clear();
     // iterate over entries in the logs folder
     for (auto const& dir_entry : std::filesystem::directory_iterator{this->logs_path}) {
         // get the attributes
@@ -45,7 +66,7 @@ void Craplog::scanLogsDir()
             continue;
         }
         // push in the list
-        this-> logs_list.push_back(
+        this->logs_list.push_back(
             LogFile{
                 .selected =  false,
                 .size = size,
