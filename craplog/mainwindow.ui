@@ -47,7 +47,7 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="movable">
        <bool>true</bool>
@@ -80,8 +80,8 @@
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
-          <property name="currentIndex">
-           <number>0</number>
+          <property name="tabSpacing">
+           <number>9</number>
           </property>
           <widget class="QWidget" name="LogBoxFiles">
            <property name="geometry">
@@ -89,7 +89,7 @@
              <x>0</x>
              <y>0</y>
              <width>722</width>
-             <height>404</height>
+             <height>395</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -100,6 +100,9 @@
            </property>
            <attribute name="label">
             <string>Files</string>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Select which log files to use</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0" colspan="2">
@@ -200,7 +203,7 @@ hr { height: 1px; border-width: 0; }
               </property>
               <property name="maximumSize">
                <size>
-                <width>256</width>
+                <width>320</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -232,6 +235,11 @@ hr { height: 1px; border-width: 0; }
                <property name="text">
                 <string>Name</string>
                </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
               </column>
               <column>
                <property name="text">
@@ -239,6 +247,7 @@ hr { height: 1px; border-width: 0; }
                </property>
                <property name="font">
                 <font>
+                 <pointsize>12</pointsize>
                  <italic>false</italic>
                 </font>
                </property>
@@ -258,7 +267,7 @@ hr { height: 1px; border-width: 0; }
                </property>
                <property name="font">
                 <font>
-                 <pointsize>13</pointsize>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="checkState">
@@ -278,7 +287,7 @@ hr { height: 1px; border-width: 0; }
                </property>
                <property name="font">
                 <font>
-                 <pointsize>13</pointsize>
+                 <pointsize>12</pointsize>
                  <italic>true</italic>
                  <underline>false</underline>
                  <strikeout>false</strikeout>
@@ -330,7 +339,7 @@ hr { height: 1px; border-width: 0; }
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>224</width>
+                <width>288</width>
                 <height>20</height>
                </size>
               </property>
@@ -344,7 +353,7 @@ hr { height: 1px; border-width: 0; }
              <x>0</x>
              <y>0</y>
              <width>722</width>
-             <height>404</height>
+             <height>395</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -356,6 +365,9 @@ hr { height: 1px; border-width: 0; }
            <attribute name="label">
             <string>Options</string>
            </attribute>
+           <attribute name="toolTip">
+            <string>Define the options to apply while parsing logs</string>
+           </attribute>
           </widget>
           <widget class="QWidget" name="LogBoxStart">
            <property name="geometry">
@@ -363,7 +375,7 @@ hr { height: 1px; border-width: 0; }
              <x>0</x>
              <y>0</y>
              <width>722</width>
-             <height>404</height>
+             <height>395</height>
             </rect>
            </property>
            <property name="sizePolicy">
