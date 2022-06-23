@@ -9,7 +9,7 @@
 
 #include "utilities/io.h"
 #include "utilities/rtf.h"
-#include "windows/craplog.h"
+#include "tools/craplog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,5 +43,7 @@ private:
     std::unordered_map<std::string, QColor> COLORS;    
     std::unordered_map<std::string, QFont> FONTS;
     int font_size, font_size_big, font_size_small;
+    
+    int TB_color_scheme;
 };
 #endif // MAINWINDOW_H
