@@ -15,7 +15,7 @@ class Craplog
 {
 public:
     Craplog();
-    
+
     // logs formats
     enum LogsFormat {
         AccessCommon,
@@ -24,9 +24,10 @@ public:
     };
     LogsFormat access_logs_format;
     LogsFormat error_logs_format;
-    
+
     // log file infoes
     enum LogType {
+        Failed,
         Access,
         Error
     };
@@ -48,11 +49,11 @@ private:
     // logs related
     std::string logs_path;
     std::vector<LogFile> logs_list;
-    // logs list related    
+    // logs list related
     void scanLogsDir();
-    
+
     void readConfigs();
-    
+
     void loadFileContent();
 };
 
