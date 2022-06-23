@@ -6,12 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     this->ui->setupUi(this);
-    
+
     // initialize the colors map
     this->COLORS["black"] = QColor(0,0,0,255);
     this->COLORS["grey"]  = QColor(127,127,127,255);
     this->COLORS["white"] = QColor(255,255,255,255);
-    
+
     // define text sizes
     this->font_size = 13;
     this->font_size_big = 16;
@@ -26,10 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->FONTS["main"] = QFont( main_font_family, this->font_size );
     this->FONTS["main_italic"] = QFont( main_font_family, this->font_size, -1, true );
     this->FONTS["script"] = QFont( script_font_family, this->font_size );
-    
+
     // initialize the TextBrowser's color scheme
     this->TB_color_scheme = 1;
-    
+
     // get a fresh list of log files
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
@@ -40,6 +40,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
 //////////////
 //// LOGS ////
@@ -184,9 +185,9 @@ bool MainWindow::runCraplog()
     if ( proceed == false ) {
         return proceed;
     }
-    
-    
-    
+
+
+
     return proceed;
 }
 

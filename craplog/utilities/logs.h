@@ -10,11 +10,13 @@ class LogOp
 {
 public:
     LogOp();
-    
-    Craplog::LogType defineLogType( std::string line );
-    
-    std::vector<std::string> splitLine( std::string line );    
-    std::vector<std::string> splitLines( std::string line );
+
+    static bool isNameValid( std::string name );
+
+    static Craplog::LogType defineLogType( std::vector<std::string> lines );
+
+    static std::vector<std::string> splitLine( std::string line, Craplog::LogType type );
+    static std::vector<std::string> splitLines( std::string line, Craplog::LogType type );
 };
 
 #endif // LOGOP_H
