@@ -57,19 +57,20 @@ int Craplog::setLogFileSelected( QString file_name )
     return result;
 }
 
+
 // scan the logs path to update the log files list
 void Craplog::scanLogsDir()
 {
     this->logs_list.clear();
     // iterate over entries in the logs folder
-    for ( const std::filesystem::directory_entry& dir_entry : std::filesystem::directory_iterator{this->logs_path}) {
+    for ( const auto& dir_entry : std::filesystem::directory_iterator{this->logs_path}) {
         // get the attributes
         int size = dir_entry.file_size();
         std::string path = dir_entry.path().string();
         std::string name = dir_entry.path().filename().string();
         // match only files having ".log." in their name
         if ( ! dir_entry.is_regular_file()
-          || name.find(".log.") == -1 ) {
+          || LogOp::isNameValid( name ) ) {
             continue;
         }
         // push in the list

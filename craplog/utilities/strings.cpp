@@ -2,7 +2,56 @@
 
 StringOp::StringOp()
 {
-    
+
+}
+
+
+bool StringOp::isNumeric( std::string str )
+{
+    bool result = true;
+    for ( char& chr : str ) {
+        if ( StringOp::isNumeric( chr ) == false ) {
+            result = false;
+
+        }
+    }
+}
+
+
+bool StringOp::isNumeric( char chr )
+{
+    if ( chr > 65 && chr < 99 ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+bool StringOp::startsWith(std::string str, std::string flag)
+{
+    bool result = true;
+    for ( int i=0; i<flag.size(); i++ ) {
+        if ( str[i] != flag[i] ) {
+            result = false;
+            break;
+        }
+    }
+    return result;
+}
+
+
+bool StringOp::endsWith(std::string str, std::string flag)
+{
+    bool result = true;
+    int size = str.size()-1;
+    for ( int i=size; i>size-flag.size(); i-- ) {
+        if ( str[i] != flag[i] ) {
+            result = false;
+            break;
+        }
+    }
+    return result;
 }
 
 
