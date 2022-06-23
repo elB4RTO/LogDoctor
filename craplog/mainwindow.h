@@ -1,12 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QFontDatabase>
-#include <QMessageBox>
+#include "qmainwindow.h"
+#include "qfontdatabase.h"
+#include "qmessagebox.h"
 
-#include "./window/craplog.h"
 #include "qtreewidget.h"
+
+#include "utilities/io.h"
+#include "utilities/rtf.h"
+#include "windows/craplog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,8 +42,6 @@ private:
     
     std::unordered_map<std::string, QColor> COLORS;    
     std::unordered_map<std::string, QFont> FONTS;
-    QString font_name;
     int font_size, font_size_big, font_size_small;
-    QFont main_font;
 };
 #endif // MAINWINDOW_H

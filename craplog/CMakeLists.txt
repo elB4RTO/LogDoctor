@@ -21,11 +21,17 @@ set(TS_FILES
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
         mainwindow.h
+        mainwindow.cpp
         mainwindow.ui
-        window/craplog.h
-        window/craplog.cpp
+        windows/craplog.h
+        windows/craplog.cpp
+        utilities/io.h
+        utilities/io.cpp
+        utilities/strings.h
+        utilities/strings.cpp
+        utilities/rtf.h
+        utilities/rtf.cpp
         resources/resources.qrc
         ${TS_FILES}
 )
