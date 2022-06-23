@@ -89,4 +89,20 @@ std::vector<std::string> StringOp::split( std::string str, std::string sep )
             start = stop+sep.size();
         }
     }
+    return splitted;
+}
+
+
+std::vector<std::string> StringOp::splitrip( std::string str, std::string sep, std::string chars )
+{
+    std::vector<std::string> splitted, aux;
+    str = StringOp::strip( str );
+    aux = StringOp::split( str );
+    for ( std::string &str : aux ) {
+        if ( str.empty() ) {
+            continue;
+        }
+        splitted.push_back( StringOp::strip( str ) );
+    }
+    return splitted;
 }

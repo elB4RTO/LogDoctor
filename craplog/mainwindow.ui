@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Craplog</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources/resources.qrc">
+    <normaloff>:/icons/Craplogo</normaloff>:/icons/Craplogo</iconset>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -457,8 +461,25 @@ hr { height: 1px; border-width: 0; }
      <height>27</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Utilities</string>
+    </property>
+    <addaction name="actionCrapnote"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
+  <action name="actionCrapnote">
+   <property name="text">
+    <string>Block-note</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
