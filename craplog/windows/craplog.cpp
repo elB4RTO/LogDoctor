@@ -27,7 +27,7 @@ std::vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
 std::string Craplog::getLogFilePath( QString file_name )
 {
     std::string path;
-    for ( Craplog::LogFile& item : this->logs_list ) {
+    for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
             path = item.path;
             break;
@@ -55,7 +55,7 @@ void Craplog::scanLogsDir()
 {
     this->logs_list.clear();
     // iterate over entries in the logs folder
-    for (auto const& dir_entry : std::filesystem::directory_iterator{this->logs_path}) {
+    for ( const std::filesystem::directory_entry& dir_entry : std::filesystem::directory_iterator{this->logs_path}) {
         // get the attributes
         int size = dir_entry.file_size();
         std::string path = dir_entry.path().string();
