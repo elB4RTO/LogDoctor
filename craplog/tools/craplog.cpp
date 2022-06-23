@@ -1,7 +1,14 @@
+
 #include "craplog.h"
+
+#include "utilities/io.h"
+#include "utilities/logs.h"
+
 
 Craplog::Craplog()
 {
+    this->access_logs_format = Craplog::LogsFormat::AccessCombined;
+    this->error_logs_format = Craplog::LogsFormat::ErrorDefault;
     this->logs_path = "/var/log/apache2";
     //this->readConfigs();
     this->scanLogsDir();
@@ -71,7 +78,8 @@ void Craplog::scanLogsDir()
                 .selected =  false,
                 .size = size,
                 .name = QString::fromStdString( name ),
-                .path = dir_entry.path().string(),
+                .path = path,
+                .type = LogOp::defineLogType( path )
         });
     }
 }

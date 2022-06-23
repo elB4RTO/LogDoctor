@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->FONTS["main_italic"] = QFont( main_font_family, this->font_size, -1, true );
     this->FONTS["script"] = QFont( script_font_family, this->font_size );
     
+    // initialize the TextBrowser's color scheme
+    this->TB_color_scheme = 1;
+    
     // get a fresh list of log files
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
@@ -52,12 +55,11 @@ void MainWindow::on_buttonRefreshList_clicked()
         QTreeWidgetItem * item = new QTreeWidgetItem();
         // set unchecked
         item->setCheckState(0, Qt::CheckState::Unchecked );
-        // name to be showed
+        // set the name of the file
         item->setText( 0, log_file.name );
         item->setFont( 0, this->FONTS["main"] );
-        // size to be showed
+        // prepare the size of the file
         float size = (float)log_file.size / 1024;
-        int n_decimals = 3;
         std::string sfx = " KiB";
         if (size > 1024) {
             size /= 1024;
@@ -65,30 +67,29 @@ void MainWindow::on_buttonRefreshList_clicked()
         }
         // cut decimals depending on how big the floor is
         std::string size_str = std::to_string( size );
-        int point_i = size_str.find('.')+1;
-        if ( point_i == 0 ) {
-                point_i = size_str.find(',')+1;
+        int cut_index = size_str.find('.')+1;
+        if ( cut_index == 0 ) {
+                cut_index = size_str.find(',')+1;
         }
+        int n_decimals = 3;
         if ( size >= 100 ) {
             n_decimals = 2;
             if ( size >= 1000 ) {
                 n_decimals = 1;
                 if ( size >= 10000 ) {
                     n_decimals = 0;
-                    point_i --;
+                    cut_index --;
                 }
             }
         }
-        if ( point_i >= 1 ) {
-            for ( int i=0; i<n_decimals; i++ ) {
-                if ( i >= size_str.size() ) {
-                    break;
-                }
-                point_i ++;
+        if ( cut_index >= 1 ) {
+            cut_index += n_decimals;
+            if ( cut_index > size_str.size()-1 ) {
+                cut_index = size_str.size()-1;
             }
         }
-        // apply text and color
-        item->setText( 1, QString::fromStdString( size_str.substr(0,point_i) + sfx ) );
+        // apply text and color to the size text
+        item->setText( 1, QString::fromStdString( size_str.substr(0,cut_index) + sfx ) );
         item->setForeground( 1, this->COLORS["grey"] );
         item->setFont( 1, this->FONTS["main_italic"] );
         // append the item (on top, forced)
@@ -125,7 +126,7 @@ void MainWindow::on_buttonViewFile_clicked()
     QString file_name = this->ui->listLogFiles->selectedItems().takeFirst()->text(0);
     std::string file_path = this->craplog.getLogFilePath( file_name );
     std::string content = IOutils::readFile( file_path );
-    this->ui->textLogFiles->setText( RichText::enrichLogs( content ) );
+    this->ui->textLogFiles->setText( RichText::enrichLogs( content, this->TB_color_scheme ) );
     this->ui->textLogFiles->setFont( this->FONTS["main"] );
 }
 

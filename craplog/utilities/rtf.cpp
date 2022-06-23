@@ -6,7 +6,7 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs( std::string content, int color_scheme )
+QString RichText::enrichLogs( std::string content, Craplog::LogsFormat logs_format, int color_scheme )
 {
     QString style;
     switch ( color_scheme ) {
@@ -52,5 +52,10 @@ QString RichText::enrichLogs( std::string content, int color_scheme )
 
     QString rich_content = QString("<html><head>%1<head/><body>")
         .arg( style );
+    for ( std::string& line : StringOp::splitrip( content ) ) {
+        if ( line[0] == '[' ) {
+            // error logs
+        }
+    }
     return rich_content;
 }
