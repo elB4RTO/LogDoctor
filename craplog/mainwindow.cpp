@@ -47,13 +47,13 @@ void MainWindow::on_buttonRefreshList_clicked()
     // clear the current tree
     this->ui->listLogFiles->clear();
     // iterate over elements of list
-    for ( Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
+    for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
         // new entry for the tree widget
         QTreeWidgetItem * item = new QTreeWidgetItem();
         // set unchecked
         item->setCheckState(0, Qt::CheckState::Unchecked );
         // name to be showed
-        item-> setText( 0, log_file.name );
+        item->setText( 0, log_file.name );
         item->setFont( 0, this->FONTS["main"] );
         // size to be showed
         float size = (float)log_file.size / 1024;
@@ -122,7 +122,11 @@ void MainWindow::on_checkAllLogFiles_stateChanged(int arg1)
 
 void MainWindow::on_buttonViewFile_clicked()
 {
-    
+    QString file_name = this->ui->listLogFiles->selectedItems().takeFirst()->text(0);
+    std::string file_path = this->craplog.getLogFilePath( file_name );
+    std::string content = IOutils::readFile( file_path );
+    this->ui->textLogFiles->setText( RichText::enrichLogs( content ) );
+    this->ui->textLogFiles->setFont( this->FONTS["main"] );
 }
 
 
