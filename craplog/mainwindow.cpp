@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -51,7 +53,9 @@ void MainWindow::on_buttonRefreshList_clicked()
     // clear the current tree
     this->ui->listLogFiles->clear();
     // iterate over elements of list
+    std::cout << "OOOOOOOOOOOOOOOOOK" << std::endl;
     for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
+        std::cout << "XXXXXXXXXXXXXXXXXXXXXXXK" << std::endl;
         // new entry for the tree widget
         QTreeWidgetItem * item = new QTreeWidgetItem();
         // set unchecked
@@ -124,10 +128,26 @@ void MainWindow::on_checkAllLogFiles_stateChanged(int arg1)
 
 void MainWindow::on_buttonViewFile_clicked()
 {
-    QString file_name = this->ui->listLogFiles->selectedItems().takeFirst()->text(0);
+    /*QString file_name = this->ui->listLogFiles->selectedItems().takeFirst()->text(0);
     std::string file_path = this->craplog.getLogFilePath( file_name );
     std::string content = IOutils::readFile( file_path );
-    this->ui->textLogFiles->setText( RichText::enrichLogs( content, this->TB_color_scheme ) );
+    this->ui->textLogFiles->setText( RichText::enrichLogs( content, this->TB_color_scheme ) );*/
+    Craplog::LogFile item = this->craplog.getLogFileItem(
+        this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
+    Craplog::LogsFormat format;
+    if ( item.type == Craplog::LogType::Access ) {
+        format = this->craplog.getAccessLogsFormat();
+    } else if ( item.type == Craplog::LogType::Error ) {
+        format = this->craplog.getErrorLogsFormat();
+    } else {
+        // this shouldn't be
+            // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+    }
+    this->ui->textLogFiles->setText(
+        RichText::enrichLogs(
+            IOutils::readFile( item.path ),
+            format,
+            this->TB_color_scheme ));
     this->ui->textLogFiles->setFont( this->FONTS["main"] );
 }
 

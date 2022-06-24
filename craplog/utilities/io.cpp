@@ -5,7 +5,7 @@
 
 IOutils::IOutils()
 {
-    
+
 }
 
 
@@ -35,12 +35,12 @@ std::vector<std::string> IOutils::readLines( std::string path, int n_lines )
               continue;
             }
             // succesfully catched a line
-            lines.push_back( StringOp::strip( line ) );
+            lines.push_back( StringOps::strip( line ) );
             n++;
         }
     } catch (const std::ios_base::failure& err) {
         // failed reading
-        std::cout << err.what() << std::endl; // !!! PUT AN DIALOG ERROR MESSAGE HERE !!!
+        // >> err.what() << // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
     }
     if ( file.is_open() ) {
         file.close();
@@ -70,12 +70,12 @@ std::string IOutils::readFile( std::string path )
         std::string buf = std::string(read_size, '\0');
         while (file.read(& buf[0], read_size)) {
             content.append(buf);
-            //content.append(buf, 0, file.gcount()); !!! REMOVE IF NOT NEEDED
+            //content.append(buf, 0, file.gcount()); !!! REMOVE IF NOT NEEDED !!!
         }
         content.append(buf, 0, file.gcount());
     } catch (const std::ios_base::failure& err) {
         // failed reading
-        std::cout << err.what() << std::endl; // !!! PUT AN DIALOG ERROR MESSAGE HERE !!!
+        // >> err.what() << // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
     }
     if ( file.is_open() ) {
         file.close();

@@ -6,10 +6,10 @@
 
 #include "qstring.h"
 
-class StringOp
+class StringOps
 {
 public:
-    StringOp();
+    StringOps();
 
     static bool isNumeric( std::string str );
     static bool isNumeric( char chr );
@@ -26,4 +26,4 @@ public:
     static std::vector<std::string> splitrip( std::string str, std::string sep="\n", std::string chars=" \n\t\b\r\v" );
 };
 
-#endif // STRINGOP_H
+#endif // StringOps_H
