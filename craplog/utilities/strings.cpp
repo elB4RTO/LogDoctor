@@ -1,26 +1,29 @@
+
 #include "strings.h"
 
-StringOp::StringOp()
+
+StringOps::StringOps()
 {
 
 }
 
 
-bool StringOp::isNumeric( std::string str )
+bool StringOps::isNumeric( std::string str )
 {
     bool result = true;
     for ( char& chr : str ) {
-        if ( StringOp::isNumeric( chr ) == false ) {
+        if ( StringOps::isNumeric( chr ) == false ) {
             result = false;
 
         }
     }
+    return result;
 }
 
 
-bool StringOp::isNumeric( char chr )
+bool StringOps::isNumeric( char chr )
 {
-    if ( chr > 65 && chr < 99 ) {
+    if ( chr > 47 && chr < 58 ) {
         return true;
     } else {
         return false;
@@ -28,7 +31,7 @@ bool StringOp::isNumeric( char chr )
 }
 
 
-bool StringOp::startsWith(std::string str, std::string flag)
+bool StringOps::startsWith(std::string str, std::string flag)
 {
     bool result = true;
     for ( int i=0; i<flag.size(); i++ ) {
@@ -41,7 +44,7 @@ bool StringOp::startsWith(std::string str, std::string flag)
 }
 
 
-bool StringOp::endsWith(std::string str, std::string flag)
+bool StringOps::endsWith(std::string str, std::string flag)
 {
     bool result = true;
     int size = str.size()-1;
@@ -55,16 +58,16 @@ bool StringOp::endsWith(std::string str, std::string flag)
 }
 
 
-std::string StringOp::strip( std::string str, std::string chars )
+std::string StringOps::strip( std::string str, std::string chars )
 {
     std::string stripped;
-    stripped = StringOp::lstrip( str, chars );
-    stripped = StringOp::rstrip( str, chars );
+    stripped = StringOps::lstrip( str, chars );
+    stripped = StringOps::rstrip( stripped, chars );
     return stripped;
 }
 
 
-std::string StringOp::lstrip( std::string str, std::string chars )
+std::string StringOps::lstrip( std::string str, std::string chars )
 {
     bool found = true;
     int i = 0;
@@ -90,7 +93,7 @@ std::string StringOp::lstrip( std::string str, std::string chars )
 }
 
 
-std::string StringOp::rstrip( std::string str, std::string chars )
+std::string StringOps::rstrip( std::string str, std::string chars )
 {
     bool found = true;
     int i = str.size() - 1;
@@ -110,14 +113,14 @@ std::string StringOp::rstrip( std::string str, std::string chars )
     }
     std::string stripped = "";
     if ( i > 0 ) {
-        stripped = str.substr( 0, str.size() - i );
+        stripped = str.substr( 0, str.size() - (str.size() - i) + 1 );
     }
     return stripped;
 }
 
 
 
-std::vector<std::string> StringOp::split( std::string str, std::string sep )
+std::vector<std::string> StringOps::split( std::string str, std::string sep )
 {
     std::vector<std::string> splitted;
     std::string slice;
@@ -142,16 +145,16 @@ std::vector<std::string> StringOp::split( std::string str, std::string sep )
 }
 
 
-std::vector<std::string> StringOp::splitrip( std::string str, std::string sep, std::string chars )
+std::vector<std::string> StringOps::splitrip( std::string str, std::string sep, std::string chars )
 {
     std::vector<std::string> splitted, aux;
-    str = StringOp::strip( str );
-    aux = StringOp::split( str );
+    str = StringOps::strip( str );
+    aux = StringOps::split( str );
     for ( std::string &str : aux ) {
         if ( str.empty() ) {
             continue;
         }
-        splitted.push_back( StringOp::strip( str ) );
+        splitted.push_back( StringOps::strip( str ) );
     }
     return splitted;
 }

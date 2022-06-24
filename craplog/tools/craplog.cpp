@@ -1,14 +1,31 @@
 
 #include "craplog.h"
 
-#include "utilities/io.h"
-#include "utilities/logs.h"
+#include "utilities.h"
+
+#include <filesystem>
+
+#include <iostream>
 
 
 Craplog::Craplog()
 {
-    this->access_logs_format = Craplog::LogsFormat::AccessCombined;
-    this->error_logs_format = Craplog::LogsFormat::ErrorDefault;
+    this->access_logs_format = Craplog::LogsFormat{
+        .format = Craplog::Format::Combined,
+        .string = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"",
+        .initial = "",
+        .final   = "\"",
+        .separators = {" ", " ", " ", " \"", "\" ", " ", " \"", "\" \""},
+        .fields = {"client","logname","user","date_time","request","response_code","http_size","referer","user_agent"}
+    };
+    this->error_logs_format = Craplog::LogsFormat{
+        .format = Craplog::Format::Default,
+        .string = "[%t] [%l] [pid %P] %F: %E: [client %a] %M",
+        .initial = "[",
+        .final   = "",
+        .separators = {"] [", "] [pid", "] ", ": ", ": [client ", "] "},
+        .fields = {"date_time","error_level","pid","source_file","os_err","client:port","error_message"}
+    };
     this->logs_path = "/var/log/apache2";
     //this->readConfigs();
     this->scanLogsDir();
@@ -27,6 +44,20 @@ std::vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
         this->scanLogsDir();
     }
     return this->logs_list;
+}
+
+
+// return the path of the file matching the given name
+Craplog::LogFile Craplog::getLogFileItem( QString file_name )
+{
+    LogFile logfile;
+    for ( const Craplog::LogFile& item : this->logs_list ) {
+        if ( item.name == file_name ) {
+            logfile = item;
+            break;
+        }
+    }
+    return logfile;
 }
 
 
@@ -69,18 +100,156 @@ void Craplog::scanLogsDir()
         std::string path = dir_entry.path().string();
         std::string name = dir_entry.path().filename().string();
         // match only files having ".log." in their name
-        if ( ! dir_entry.is_regular_file()
-          || LogOp::isNameValid( name ) ) {
+        if ( dir_entry.is_regular_file() == false
+          || this->isFileNameValid( name ) == false ) {
+            continue;
+        }
+        auto logfile =LogFile{
+            .selected = false,
+            .size = size,
+            .name = QString::fromStdString( name ),
+            .path = path,
+            .type = this->defineFileType( name, IOutils::readLines( path ) )
+        };
+        if ( logfile.type == Craplog::LogType::Failed ) {
+            // failed to get the log type
+            // error message displayed while defining as failed in logOps
             continue;
         }
         // push in the list
-        this->logs_list.push_back(
-            LogFile{
-                .selected =  false,
-                .size = size,
-                .name = QString::fromStdString( name ),
-                .path = path,
-                .type = LogOp::defineLogType( path )
-        });
+        this->logs_list.push_back( logfile );
     }
+}
+
+
+
+bool Craplog::isFileNameValid( std::string name )
+{
+    bool valid = false;
+    if ( StringOps::startsWith( name, "access.log." )
+      || StringOps::startsWith( name, "error.log." ) ) {
+        int start = name.find_last_of( ".log." )+1;
+        int stop = name.find( ".gz", start);
+        if ( stop >= name.size() ) {
+            stop = name.size()-1;
+        }
+        valid = true;
+        for ( int i=start; i<=stop; i++ ) {
+            if ( StringOps::isNumeric( name[i] ) == false ) {
+                valid = false;
+                break;
+            }
+        }
+    }
+    return valid;
+}
+
+
+Craplog::LogType Craplog::defineFileType( std::string name, std::vector<std::string> lines )
+{
+    int n_acc=0, n_err=0;
+    Craplog::LogType supposed_type, real_type;
+    if ( StringOps::startsWith( name, "access" ) ) {
+        supposed_type = Craplog::LogType::Access;
+    } else if ( StringOps::startsWith( name, "error" ) ) {
+        supposed_type = Craplog::LogType::Error;
+    } else {
+        // this shouldn't be
+            // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+    }
+    real_type = Craplog::LogType::Failed;
+    for ( const std::string& line : lines ) {
+        std::cout << "LINE: " << line << std::endl;
+        if ( supposed_type == Craplog::LogType::Access ) {
+            if ( this->access_logs_format.initial.size() > 0 ) {
+                // a fixed starter char is set
+                if ( StringOps::startsWith( line, this->access_logs_format.initial ) == false ) {
+                    // but wasn't found
+                    continue;
+                }
+            }
+            if ( this->access_logs_format.final.empty() > 0 ) {
+                // a fixed starter char is set
+                if ( StringOps::endsWith( line, this->access_logs_format.final ) == false ) {
+                    // but wasn't found
+                    continue;
+                }
+            }
+            n_acc++;
+        } else {
+            if ( this->error_logs_format.initial.empty() == false ) {
+                // a fixed starter char is set
+                if ( StringOps::startsWith( line, this->error_logs_format.initial ) == false ) {
+                    // but wasn't found
+                    continue;
+                }
+            }
+            if ( this->error_logs_format.final.empty() == false ) {
+                // a fixed starter char is set
+                if ( StringOps::endsWith( line, this->error_logs_format.final ) == false ) {
+                    // but wasn't found
+                    continue;
+                }
+            }
+            n_err++;
+        }
+    }
+    std::cout << "ACC: " << n_acc << " / ERR: " << n_err << std::endl;
+    if ( n_acc > 0 && n_err == 0 ) {
+        // access logs
+        real_type = Craplog::LogType::Access;
+    } else if ( n_err > 0 && n_acc == 0 ) {
+        // error logs
+        real_type = Craplog::LogType::Error;
+    } else {
+        // something is wrong with these logs, put a warnin
+        if ( n_acc > 0 && n_err > 0 ) {
+            // both access and error types found
+                // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+        } else {
+            // every line was invalid
+                // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+        }
+    }
+    return real_type;
+}
+
+
+// get the logs format
+Craplog::LogsFormat Craplog::getAccessLogsFormat()
+{
+    return this->access_logs_format;
+}
+Craplog::LogsFormat Craplog::getErrorLogsFormat()
+{
+    return this->error_logs_format;
+}
+
+// set the logs format
+void Craplog::setAccessLogsFormat( std::string format_string )
+{
+
+}
+void Craplog::setErrorLogsFormat( std::string format_string )
+{
+
+}
+
+
+/////////////////
+//// LOG OPS ////
+/////////////////
+Craplog::LogOps::LogOps()
+{
+
+}
+
+std::vector<std::string> Craplog::LogOps::splitLine( std::string line, Craplog::LogType type )
+{
+
+}
+
+std::vector<std::string> Craplog::LogOps::splitLines( std::string line, Craplog::LogType type )
+{
+
 }
