@@ -25,7 +25,7 @@ public:
 private slots:
     void on_buttonViewFile_clicked();
 
-    void on_checkAllLogFiles_stateChanged(int arg1);
+    void on_checkBox_LogFiles_CheckAll_stateChanged(int arg1);
 
     void on_buttonRefreshList_clicked();
 
