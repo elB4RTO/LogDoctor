@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
     this->on_buttonRefreshList_clicked();
+
 }
 
 MainWindow::~MainWindow()

@@ -67,7 +67,7 @@
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string></string>
+        <string notr="true"></string>
        </attribute>
        <attribute name="toolTip">
         <string>Parse logs to create statistics</string>
@@ -164,7 +164,7 @@
                <string>Inspect a log file</string>
               </property>
               <property name="text">
-               <string></string>
+               <string notr="true"></string>
               </property>
              </widget>
             </item>
@@ -172,6 +172,9 @@
              <widget class="QTextBrowser" name="textLogFiles">
               <property name="acceptDrops">
                <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string notr="true"/>
               </property>
               <property name="lineWrapMode">
                <enum>QTextEdit::NoWrap</enum>
@@ -326,7 +329,7 @@ hr { height: 1px; border-width: 0; }
                <string>Refresh the list</string>
               </property>
               <property name="text">
-               <string></string>
+               <string notr="true"></string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -372,6 +375,73 @@ hr { height: 1px; border-width: 0; }
            <attribute name="toolTip">
             <string>Define the options to apply while parsing logs</string>
            </attribute>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="0">
+             <widget class="QScrollArea" name="scrollArea">
+              <property name="minimumSize">
+               <size>
+                <width>704</width>
+                <height>377</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>702</width>
+                 <height>375</height>
+                </rect>
+               </property>
+               <widget class="QRadioButton" name="radioButton_DefaultSettings">
+                <property name="geometry">
+                 <rect>
+                  <x>20</x>
+                  <y>20</y>
+                  <width>281</width>
+                  <height>30</height>
+                 </rect>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>use default configuration</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+               <widget class="QRadioButton" name="radioButton_CustomSettings">
+                <property name="geometry">
+                 <rect>
+                  <x>20</x>
+                  <y>60</y>
+                  <width>281</width>
+                  <height>30</height>
+                 </rect>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>use custom settings</string>
+                </property>
+               </widget>
+              </widget>
+             </widget>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="LogBoxStart">
            <property name="geometry">
@@ -404,21 +474,11 @@ hr { height: 1px; border-width: 0; }
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string></string>
+        <string notr="true"></string>
        </attribute>
        <attribute name="toolTip">
         <string>View your statisticsView your statistics</string>
        </attribute>
-       <widget class="QTextEdit" name="textEdit">
-        <property name="geometry">
-         <rect>
-          <x>43</x>
-          <y>39</y>
-          <width>691</width>
-          <height>531</height>
-         </rect>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="Up">
        <property name="sizePolicy">
@@ -428,7 +488,7 @@ hr { height: 1px; border-width: 0; }
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string></string>
+        <string notr="true"></string>
        </attribute>
        <attribute name="toolTip">
         <string>Update Craplog</string>
@@ -442,7 +502,7 @@ hr { height: 1px; border-width: 0; }
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string></string>
+        <string notr="true"></string>
        </attribute>
        <attribute name="toolTip">
         <string>Configure Craplog</string>
