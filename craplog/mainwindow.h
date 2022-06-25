@@ -40,9 +40,28 @@ private:
     bool runCraplog();
 
     std::unordered_map<std::string, QColor> COLORS;
-    std::unordered_map<std::string, QFont> FONTS;
-    int font_size, font_size_big, font_size_small;
+    std::unordered_map<std::string, QFont>  FONTS;
+    int font_size       = 13,
+        font_size_big   = 16,
+        font_size_small = 10;
 
-    int TB_color_scheme;
+    // base font families, to build fonts from
+    QString main_font_family;
+    QString script_font_family;
+
+    // text browser related
+    struct LogFilesTB {
+        bool wide_lines;
+        int  color_scheme;
+        int  font_size;
+        QString font_family;
+        QFont   font;
+    };
+    LogFilesTB TB;
+    void setTB_FontSize( int size );
+    void setTB_FontFamily( QString font_family );
+    void updateTB_Font();
+    int getTB_FontSize();
+    QString getTB_FontFamily();
 };
 #endif // MAINWINDOW_H

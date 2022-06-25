@@ -126,7 +126,7 @@ std::vector<std::string> StringOps::split( std::string str, std::string sep )
     std::string slice;
     int start=0, stop=0;
     while (true) {
-        stop = str.find( sep );
+        stop = str.find( sep, start );
         if ( stop >= str.size() ) {
             slice = str.substr( start );
             if ( slice.empty() == false ) {

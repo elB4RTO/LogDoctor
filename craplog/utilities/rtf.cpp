@@ -1,4 +1,6 @@
+
 #include "rtf.h"
+
 
 RichText::RichText()
 {
@@ -6,55 +8,59 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs( std::string content, Craplog::LogsFormat format, int color_scheme )
+QString RichText::enrichLogs( std::string content, Craplog::LogsFormat format, int color_scheme, bool wide_lines )
 {
-    QString style;
+
+    std::unordered_map<std::string, QString> style;
     switch ( color_scheme ) {
         case 1:
             // breeze
-            style = QString("<style>"
-                    "body{background-color:#ffffff}"
-                    "p{color:#9c9c9b}"
-                    "span.x{color:#1f1c1b}"
-                    "span.ip{color:#644a9b}"
-                    "span.pt{color:#d5bc79}"
-                    "span.time{color:#d685d6}"
-                    "span.ua_src{color:#006e28}"
-                    "span.req_err{color:#54b8ff}"
-                    "span.res_lev{color:#d24f4f}"
-                    "/<style>");
+            style.emplace("background","#ffffff");
+            style.emplace("text","#9c9c9b");
+            style.emplace("x","#1f1c1b");
+            style.emplace("ip","#644a9b");
+            style.emplace("pt","#d5bc79");
+            style.emplace("time","#d685d6");
+            style.emplace("ua_src","#006e28");
+            style.emplace("req_err","#54b8ff");
+            style.emplace("res_lev","#d24f4f");
+            break;
         case 2:
             // monokai
-            style = QString("<style>"
-                    "body{background-color:#272822}"
-                    "p{color:#706c5a}"
-                    "span.x{color:#d1d1cb}"
-                    "span.ip{color:#57adbc}"
-                    "span.pt{color:#c1b864}"
-                    "span.time{color:#9773db}"
-                    "span.ua_src{color:#a6e22e}"
-                    "span.req_err{color:#bebeb8}"
-                    "span.res_lev{color:#f92672}"
-                    "</style>");
+            style.emplace("background","#272822");
+            style.emplace("text","#706c5a");
+            style.emplace("x","#d1d1cb");
+            style.emplace("ip","#57adbc");
+            style.emplace("pt","#c1b864");
+            style.emplace("time","#9773db");
+            style.emplace("ua_src","#a6e22e");
+            style.emplace("req_err","#bebeb8");
+            style.emplace("res_lev","#f92672");
+            break;
         case 3:
             // radical
-            style = QString("<style>"
-                    "body{background-color:#141322}"
-                    "p{color:#749295}"
-                    "span.x{color:#7c9c9e}"
-                    "span.ip{color:#fda8bc}"
-                    "span.pt{color:#ff85a1}"
-                    "span.time{color:#a8c0c2}"
-                    "span.ua_src{color:#42a784}"
-                    "span.req_err{color:#d5358f}"
-                    "span.res_lev{color:#56e8e4}"
-                    "</style>");
+            style.emplace("background","#141322");
+            style.emplace("text","#749295");
+            style.emplace("x","#7c9c9e");
+            style.emplace("ip","#fda8bc");
+            style.emplace("pt","#ff85a1");
+            style.emplace("time","#a8c0c2");
+            style.emplace("ua_src","#42a784");
+            style.emplace("req_err","#d5358f");
+            style.emplace("res_lev","#56e8e4");
+            break;
         default:
-            style = "";
+            // no style
+            break;
     }
-
-    QString rich_content = QString("<!DOCTYPE html><html><head>%1</head><body>")
-        .arg( style );
+    QString rich_content = QString("<!DOCTYPE html><html><head></head><body");
+    if ( color_scheme > 0 ) {
+        rich_content += " style=\"background:" + style["background"] + "; color:" + style["text"] + "\"";
+    }
+    rich_content += ">";
+    if ( wide_lines == true ) {
+        rich_content += "<br/>";
+    }
     QString rich_line="", class_name="";
     std::string sep, fld;
     int start=0, stop=0, i=0;
@@ -63,7 +69,7 @@ QString RichText::enrichLogs( std::string content, Craplog::LogsFormat format, i
     for ( std::string& line : StringOps::splitrip( content ) ) {
         i = 0;
         line_size = line.size()-1;
-        rich_line += "<p>";
+        rich_line = "<p>";
         // add the initial chars
         stop = format.initial.size();
         rich_line += QString::fromStdString( format.initial );
@@ -71,54 +77,65 @@ QString RichText::enrichLogs( std::string content, Craplog::LogsFormat format, i
             // color fields
             if ( i <= n_sep ) {
                 sep = format.separators[i];
-            } else {
+            } else if ( i == n_sep+1 ) {
+                // final separator
                 sep = format.final;
+            } else {
+                // no more separators
+                break;
             }
-            start = stop;
+            start = stop; // stop updated at the end of this loop
             stop = line.find( sep, start );
-            if ( stop > line_size ) {
+            if ( stop > line_size || stop < 0 ) {
                 // separator not found, skip to the next one
                 i++;
-                if ( i > n_sep+1 ) {
-                    // break if no one left
-                    break;
-                }
+                stop = start;
                 continue;
             }
             // color the fields
-            class_name.clear();
-            fld = format.fields[i];
+            rich_line += "<b>";
+            class_name = "";
             if ( color_scheme > 0 ) {
-                class_name += "<span class=\"";
+                fld = format.fields[i];
+                class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
-                    class_name += "ip";
+                    class_name += style["ip"];
                 } else if ( fld == "port" ) {
-                    class_name += "pt";
+                    class_name += style["pt"];
                 } else if ( fld == "date_time" ) {
-                    class_name += "time";
+                    class_name += style["time"];
                 } else if ( fld == "user_agent" || fld == "source_file" ) {
-                    class_name += "ua_src";
+                    class_name += style["ua_src"];
                 } else if ( fld == "request" || fld == "error_message" ) {
-                    class_name = "req_err";
+                    class_name += style["req_err"];
                 } else if ( fld == "response_code" || fld == "error_level" ) {
-                    class_name += "res_lev";
+                    class_name += style["res_lev"];
                 } else {
-                    class_name += "x";
+                    class_name += style["x"];
                 }
                 class_name += "\">";
             }
-            // add the class name as apan
+            // add the class name as span
+            rich_line += class_name;
             rich_line += QString::fromStdString( line.substr(start, stop-start) );
             if ( color_scheme > 0 ) {
                 rich_line += "</span>";
             }
+            rich_line += "</b>";
             // update the stop for the next start
             stop = stop + sep.size();
-            if ( stop >= line_size ) {
+            if ( stop > line_size ) {
+                // this was the final separator
+                rich_line += QString::fromStdString( format.final );
                 break;
             }
+            rich_line += QString::fromStdString( sep );
+            i++;
         }
         rich_line += "</p>";
+        if ( wide_lines == true ) {
+            rich_line += "<br/>";
+        }
         rich_content.push_back( rich_line );
         rich_line.clear();
     }

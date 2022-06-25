@@ -14,23 +14,47 @@ MainWindow::MainWindow(QWidget *parent)
     this->COLORS["grey"]  = QColor(127,127,127,255);
     this->COLORS["white"] = QColor(255,255,255,255);
 
-    // define text sizes
-    this->font_size = 13;
-    this->font_size_big = 16;
-    this->font_size_small = 10;
     // load the main font
-    QString main_font_family = QFontDatabase::applicationFontFamilies(
+    this->main_font_family = QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/Metropolis")).at(0);
     // load the script font
-    QString script_font_family = QFontDatabase::applicationFontFamilies(
+    this->script_font_family = QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/3270")).at(0);
     // initialize the fonts map
-    this->FONTS["main"] = QFont( main_font_family, this->font_size );
-    this->FONTS["main_italic"] = QFont( main_font_family, this->font_size, -1, true );
-    this->FONTS["script"] = QFont( script_font_family, this->font_size );
+    this->FONTS["main"] = QFont(
+        this->main_font_family,
+        this->font_size );
+    this->FONTS["main_italic"] = QFont(
+        this->main_font_family,
+        this->font_size,
+        -1, true );
+    this->FONTS["main_bold"] = QFont(
+        this->main_font_family,
+        this->font_size,
+        1 );
+    this->FONTS["main_big"] = QFont(
+        this->main_font_family,
+        this->font_size_big );
+    this->FONTS["main_small"] = QFont(
+        this->main_font_family,
+        this->font_size_small );
+    this->FONTS["script"] = QFont(
+        this->script_font_family,
+        this->font_size );
 
-    // initialize the TextBrowser's color scheme
-    this->TB_color_scheme = 1;
+    // TreeView for the LogFiles
+    this->ui->checkAllLogFiles->setFont( this->FONTS["main_small"] );
+    this->ui->listLogFiles->setFont( this->FONTS["main"] );
+
+    // initialize the TextBrowser for the LogFiles
+    this->TB.wide_lines   = false;
+    this->TB.color_scheme = 1;
+    this->TB.font_size    = this->font_size;
+    this->TB.font_family  = this->main_font_family;
+    this->TB.font = QFont(
+        this->TB.font_family,
+        this->TB.font_size );
+    this->ui->textLogFiles->setFont( this->TB.font );
 
     // get a fresh list of log files
     this->ui->listLogFiles->header()->resizeSection(0,200);
@@ -53,16 +77,14 @@ void MainWindow::on_buttonRefreshList_clicked()
     // clear the current tree
     this->ui->listLogFiles->clear();
     // iterate over elements of list
-    std::cout << "OOOOOOOOOOOOOOOOOK" << std::endl;
     for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
-        std::cout << "XXXXXXXXXXXXXXXXXXXXXXXK" << std::endl;
         // new entry for the tree widget
         QTreeWidgetItem * item = new QTreeWidgetItem();
         // set unchecked
         item->setCheckState(0, Qt::CheckState::Unchecked );
         // set the name of the file
         item->setText( 0, log_file.name );
-        item->setFont( 0, this->FONTS["main"] );
+        //item->setFont( 0, this->FONTS["main"] );
         // prepare the size of the file
         float size = (float)log_file.size / 1024;
         std::string sfx = " KiB";
@@ -128,27 +150,26 @@ void MainWindow::on_checkAllLogFiles_stateChanged(int arg1)
 
 void MainWindow::on_buttonViewFile_clicked()
 {
-    /*QString file_name = this->ui->listLogFiles->selectedItems().takeFirst()->text(0);
-    std::string file_path = this->craplog.getLogFilePath( file_name );
-    std::string content = IOutils::readFile( file_path );
-    this->ui->textLogFiles->setText( RichText::enrichLogs( content, this->TB_color_scheme ) );*/
-    Craplog::LogFile item = this->craplog.getLogFileItem(
-        this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
-    Craplog::LogsFormat format;
-    if ( item.type == Craplog::LogType::Access ) {
-        format = this->craplog.getAccessLogsFormat();
-    } else if ( item.type == Craplog::LogType::Error ) {
-        format = this->craplog.getErrorLogsFormat();
-    } else {
-        // this shouldn't be
-            // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+    if ( this->ui->listLogFiles->selectedItems().size() > 0 ) {
+        // display the selected item
+        Craplog::LogFile item = this->craplog.getLogFileItem(
+            this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
+        Craplog::LogsFormat format;
+        if ( item.type == Craplog::LogType::Access ) {
+            format = this->craplog.getAccessLogsFormat();
+        } else if ( item.type == Craplog::LogType::Error ) {
+            format = this->craplog.getErrorLogsFormat();
+        } else {
+            // this shouldn't be
+                // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+        }
+        this->ui->textLogFiles->setText(
+            RichText::enrichLogs(
+                IOutils::readFile( item.path ),
+                format,
+                this->TB.color_scheme,
+                this->TB.wide_lines ));
     }
-    this->ui->textLogFiles->setText(
-        RichText::enrichLogs(
-            IOutils::readFile( item.path ),
-            format,
-            this->TB_color_scheme ));
-    this->ui->textLogFiles->setFont( this->FONTS["main"] );
 }
 
 
