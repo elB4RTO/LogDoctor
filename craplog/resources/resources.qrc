@@ -5,6 +5,6 @@
         <file alias="Hack">fonts/Hack.ttf</file>
     </qresource>
     <qresource prefix="/icons">
-        <file alias="Craplogo">icons/craplogo.svg</file>
+        <file alias="Craplogo">icons/crapicon.svg</file>
     </qresource>
 </RCC>
