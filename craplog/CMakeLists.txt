@@ -15,8 +15,10 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 set(TS_FILES
-        Craplog_en_EN.ts
-        Craplog_it_IT.ts
+        translations/Craplog_en_EN.ts
+        translations/Craplog_es_ES.ts
+        translations/Craplog_fr_FR.ts
+        translations/Craplog_it_IT.ts
 )
 
 set(PROJECT_SOURCES
