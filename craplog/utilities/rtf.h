@@ -12,7 +12,7 @@ class RichText
 public:
     RichText();
 
-    static QString enrichLogs( std::string content, Craplog::LogsFormat, int color_scheme );
+    static QString enrichLogs( std::string content, Craplog::LogsFormat format, int color_scheme, bool wide_lines );
 };
 
 #endif // RICHTEXT_H

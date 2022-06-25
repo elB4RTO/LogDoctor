@@ -159,7 +159,6 @@ Craplog::LogType Craplog::defineFileType( std::string name, std::vector<std::str
     }
     real_type = Craplog::LogType::Failed;
     for ( const std::string& line : lines ) {
-        std::cout << "LINE: " << line << std::endl;
         if ( supposed_type == Craplog::LogType::Access ) {
             if ( this->access_logs_format.initial.size() > 0 ) {
                 // a fixed starter char is set
@@ -194,7 +193,6 @@ Craplog::LogType Craplog::defineFileType( std::string name, std::vector<std::str
             n_err++;
         }
     }
-    std::cout << "ACC: " << n_acc << " / ERR: " << n_err << std::endl;
     if ( n_acc > 0 && n_err == 0 ) {
         // access logs
         real_type = Craplog::LogType::Access;

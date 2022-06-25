@@ -56,7 +56,7 @@ std::string IOutils::readFile( std::string path )
     std::string content = std::string();
     try {
         constexpr std::size_t read_size = std::size_t(4096);
-        std::ifstream file = std::ifstream(path);
+        std::ifstream file(path);
         if ( file.is_open() == false ) {
             throw std::ios_base::failure( "file is not open" );
         }
@@ -67,14 +67,12 @@ std::string IOutils::readFile( std::string path )
         file.exceptions(std::ifstream::failbit);
         file.exceptions(std::ios_base::badbit);
         // read the whole file
-        std::string buf = std::string(read_size, '\0');
-        while (file.read(& buf[0], read_size)) {
-            content.append(buf);
-            //content.append(buf, 0, file.gcount()); !!! REMOVE IF NOT NEEDED !!!
-        }
-        content.append(buf, 0, file.gcount());
+        content = std::string(
+            (std::istreambuf_iterator<char>( file )),
+            std::istreambuf_iterator<char>() );
     } catch (const std::ios_base::failure& err) {
         // failed reading
+        content = "";
         // >> err.what() << // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
     }
     if ( file.is_open() ) {
