@@ -42,11 +42,13 @@ MainWindow::MainWindow(QWidget *parent)
         this->script_font_family,
         this->font_size );
 
-    // TreeView for the LogFiles
-    this->ui->checkAllLogFiles->setFont( this->FONTS["main_small"] );
-    this->ui->listLogFiles->setFont( this->FONTS["main"] );
+    // parent font for every tab
+    this->ui->CrapTabs->setFont( this->FONTS["main_big"] );
 
-    // initialize the TextBrowser for the LogFiles
+    // TreeView for the LogFiles
+    this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS["main_small"] );
+    this->ui->listLogFiles->setFont( this->FONTS["main"] );
+    // TextBrowser for the LogFiles
     this->TB.wide_lines   = false;
     this->TB.color_scheme = 1;
     this->TB.font_size    = this->font_size;
@@ -55,8 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
         this->TB.font_family,
         this->TB.font_size );
     this->ui->textLogFiles->setFont( this->TB.font );
-
-    // get a fresh list of log files
+    // get a fresh list of LogFiles
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
     this->on_buttonRefreshList_clicked();
@@ -128,13 +129,13 @@ void MainWindow::on_buttonRefreshList_clicked()
 }
 
 
-void MainWindow::on_checkAllLogFiles_stateChanged(int arg1)
+void MainWindow::on_checkBox_LogFiles_CheckAll_stateChanged(int arg1)
 {
     Qt::CheckState new_state;
-    if ( this->ui->checkAllLogFiles->checkState() == Qt::CheckState::Checked ) {
+    if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
         // check all
         new_state = Qt::CheckState::Checked;
-    } else if ( this->ui->checkAllLogFiles->checkState() == Qt::CheckState::Unchecked ) {
+    } else if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Unchecked ) {
         // un-check all
         new_state = Qt::CheckState::Unchecked;
     } else {
@@ -192,11 +193,11 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
         ++i;
     }
     if ( n_checked == 0 ) {
-        this->ui->checkAllLogFiles->setCheckState(Qt::CheckState::Unchecked);
+        this->ui->checkBox_LogFiles_CheckAll->setCheckState(Qt::CheckState::Unchecked);
     } else if ( n_checked == this->craplog.getLogsListSize() ) {
-        this->ui->checkAllLogFiles->setCheckState(Qt::CheckState::Checked);
+        this->ui->checkBox_LogFiles_CheckAll->setCheckState(Qt::CheckState::Checked);
     } else {
-        this->ui->checkAllLogFiles->setCheckState(Qt::CheckState::PartiallyChecked);
+        this->ui->checkBox_LogFiles_CheckAll->setCheckState(Qt::CheckState::PartiallyChecked);
     }
 }
 
