@@ -192,9 +192,9 @@ void MainWindow::on_buttonViewFile_clicked()
         Craplog::LogFile item = this->craplog.getLogFileItem(
             this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
         FormatOps::LogsFormat format;
-        if ( item.type == Craplog::LogType::Access ) {
+        if ( item.type == LogOps::LogType::Access ) {
             format = this->craplog.getCurrentALF();
-        } else if ( item.type == Craplog::LogType::Error ) {
+        } else if ( item.type == LogOps::LogType::Error ) {
             format = this->craplog.getCurrentELF();
         } else {
             // this shouldn't be

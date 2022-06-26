@@ -16,7 +16,7 @@ class Craplog
 public:
     Craplog();
 
-    // web servers
+    // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // logs formats
@@ -31,21 +31,16 @@ public:
     FormatOps::LogsFormat getCurrentALF();
     FormatOps::LogsFormat getCurrentELF();
 
-
-    // log file infoes
-    enum LogType {
-        Failed=0,
-        Access=1,
-        Error=2
-    };
-    // log file item
+    // log type constants
+    const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
+    // log file item's infoes
     struct LogFile {
         bool selected;
         int size;
         QString name;
         std::string hash;
         std::string path;
-        LogType type;
+        LogOps::LogType type;
     };
     // logs list related methods
     std::vector<LogFile> getLogsList( bool fresh=false );
@@ -57,8 +52,6 @@ public:
     int setLogFileSelected( QString file_name );
     // check if a file name respects the one set
     bool isFileNameValid( std::string name );
-    // define if really access and/or error logs
-    Craplog::LogType defineFileType( std::string name, std::vector<std::string> lines );
 
     // logs usage control
     HashOps hashOps;
