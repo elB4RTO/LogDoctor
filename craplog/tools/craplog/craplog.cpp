@@ -44,7 +44,6 @@ Craplog::Craplog()
 
     this->hashOps.readLists( this->configs_path );*/
 
-    this->scanLogsDir();
 }
 
 
@@ -123,9 +122,6 @@ void Craplog::scanLogsDir()
             int size = dir_entry.file_size();
             std::string path = dir_entry.path().string();
             std::string name = dir_entry.path().filename().string();
-            std::cout << logs_path << std::endl;
-            std::cout << name << " : " << path << std::endl;
-            std::cout << this->hashOps.digestFile( path ) << std::endl;
             // match only files having ".log." in their name
             if ( dir_entry.is_regular_file() == false
               || this->isFileNameValid( name ) == false ) {
@@ -262,6 +258,17 @@ void Craplog::setErrorLogsFormat( int web_server_id, std::string format_string )
 
 }
 
+
+// set the current Web Server
+void Craplog::setCurrentWSID( int web_server_id )
+{
+    this->current_WS = web_server_id;
+}
+
+int Craplog::getCurrentWSID()
+{
+    return this->current_WS;
+}
 
 // set the current access logs format
 void Craplog::setCurrentALF()

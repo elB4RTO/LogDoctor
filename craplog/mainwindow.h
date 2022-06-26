@@ -33,6 +33,12 @@ private slots:
 
     void on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column);
 
+    void on_button_LogFiles_Apache_clicked();
+
+    void on_button_LogFiles_Nginx_clicked();
+
+    void on_button_LogFiles_Iis_clicked();
+
 private:
     Ui::MainWindow *ui;
     Craplog craplog;
