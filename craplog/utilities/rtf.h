@@ -14,4 +14,4 @@ public:
     static QString enrichLogs( std::string content, int logs_format, int color_scheme, bool wide_lines );
 };
 
-#endif // RICHTEXT_H
+#endif // RTF_H

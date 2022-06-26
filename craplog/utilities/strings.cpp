@@ -129,13 +129,13 @@ std::vector<std::string> StringOps::split( std::string str, std::string sep )
         stop = str.find( sep, start );
         if ( stop >= str.size() ) {
             slice = str.substr( start );
-            if ( slice.empty() == false ) {
+            if ( slice.size() > 0 ) {
                 splitted.push_back( slice );
             }
             break;
         } else {
             slice = str.substr( start, stop-start );
-            if ( slice.empty() == false ) {
+            if ( slice.size() > 0 ) {
                 splitted.push_back( slice );
             }
             start = stop+sep.size();
@@ -151,7 +151,7 @@ std::vector<std::string> StringOps::splitrip( std::string str, std::string sep, 
     str = StringOps::strip( str );
     aux = StringOps::split( str );
     for ( std::string &str : aux ) {
-        if ( str.empty() ) {
+        if ( str.size() == 0 ) {
             continue;
         }
         splitted.push_back( StringOps::strip( str ) );
