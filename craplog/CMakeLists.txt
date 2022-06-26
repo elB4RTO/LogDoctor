@@ -26,15 +26,24 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.cpp
         mainwindow.ui
-        tools/craplog.h
-        tools/craplog.cpp
+
+        tools/craplog/craplog.h
+        tools/craplog/craplog.cpp
+        tools/craplog/modules/hash.h
+        tools/craplog/modules/hash.cpp
+        tools/craplog/modules/logs.h
+        tools/craplog/modules/logs.cpp
+
         utilities.h
         utilities/io.h
         utilities/io.cpp
-        utilities/strings.h
-        utilities/strings.cpp
         utilities/rtf.h
         utilities/rtf.cpp
+        utilities/strings.h
+        utilities/strings.cpp
+        utilities/vectors.h
+        utilities/vectors.cpp
+
         resources/resources.qrc
         ${TS_FILES}
 )
