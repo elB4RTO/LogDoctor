@@ -73,6 +73,41 @@ MainWindow::~MainWindow()
 //////////////
 //// LOGS ////
 //////////////
+// switch to another web server
+void MainWindow::on_button_LogFiles_Apache_clicked()
+{
+    if ( this->craplog.getCurrentWSID() != 11 ) {
+        this->craplog.setCurrentWSID( 11 );
+        this->ui->button_LogFiles_Apache->setFlat( false );
+        this->ui->button_LogFiles_Nginx->setFlat( true );
+        this->ui->button_LogFiles_Iis->setFlat( true );
+        this->craplog.getLogsList( true );
+    }
+}
+
+void MainWindow::on_button_LogFiles_Nginx_clicked()
+{
+    if ( this->craplog.getCurrentWSID() != 12 ) {
+        this->craplog.setCurrentWSID( 12 );
+        this->ui->button_LogFiles_Nginx->setFlat( false );
+        this->ui->button_LogFiles_Apache->setFlat( true );
+        this->ui->button_LogFiles_Iis->setFlat( true );
+        this->craplog.getLogsList( true );
+    }
+}
+
+void MainWindow::on_button_LogFiles_Iis_clicked()
+{
+    if ( this->craplog.getCurrentWSID() != 13 ) {
+        this->craplog.setCurrentWSID( 13 );
+        this->ui->button_LogFiles_Iis->setFlat( false );
+        this->ui->button_LogFiles_Apache->setFlat( true );
+        this->ui->button_LogFiles_Nginx->setFlat( true );
+        this->craplog.getLogsList( true );
+    }
+}
+
+
 // refresh the log files list
 void MainWindow::on_buttonRefreshList_clicked()
 {
