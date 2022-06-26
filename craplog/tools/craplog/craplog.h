@@ -6,6 +6,9 @@
 
 #include <QMainWindow>
 
+#include "tools/craplog/modules/hash.h"
+#include "tools/craplog/modules/logs.h"
+
 
 class Craplog
 {
@@ -14,10 +17,10 @@ public:
 
     // logs formats
     enum Format{
-        Default,
-        Common,
-        Combined,
-        Custom
+        Default=10,
+        Common=11,
+        Combined=12,
+        Custom=13
     };
     struct LogsFormat {
         Format format;
@@ -32,17 +35,19 @@ public:
     LogsFormat getAccessLogsFormat();
     LogsFormat getErrorLogsFormat();
 
+
     // log file infoes
     enum LogType {
-        Failed,
-        Access,
-        Error
+        Failed=0,
+        Access=1,
+        Error=2
     };
     // log file item
     struct LogFile {
         bool selected;
         int size;
         QString name;
+        std::string hash;
         std::string path;
         LogType type;
     };
@@ -59,22 +64,19 @@ public:
     // define if really access and/or error logs
     Craplog::LogType defineFileType( std::string name, std::vector<std::string> lines );
 
+    // logs usage control
+    HashOps hashOps;
+
     // operations on logs
-    class LogOps
-    {
-    public:
-        LogOps();
-
-        std::vector<std::string> splitLine( std::string line, Craplog::LogType type );
-        std::vector<std::string> splitLines( std::string line, Craplog::LogType type );
-
-    };
     LogOps logOps;
 
 private:
+    // configs location
+    std::string configs_path="~/.config/craplog";
+
     // logs related
-    std::string default_access_logs_name = "access.log";
-    std::string logs_path = "/var/log/apache2";
+    std::unordered_map<int, std::unordered_map<int, std::string>> logs_base_names;
+    std::unordered_map<int, std::unordered_map<int, std::string>> logs_paths;
     std::vector<LogFile> logs_list;
     // logs list related
     void scanLogsDir();
