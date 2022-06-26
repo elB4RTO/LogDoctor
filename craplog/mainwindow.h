@@ -8,7 +8,7 @@
 #include "qtreewidget.h"
 
 #include "utilities.h"
-#include "tools/craplog.h"
+#include "tools/craplog/craplog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

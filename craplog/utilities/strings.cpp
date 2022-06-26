@@ -44,12 +44,13 @@ bool StringOps::startsWith(std::string str, std::string flag)
 }
 
 
-bool StringOps::endsWith(std::string str, std::string flag)
+bool StringOps::endsWith( std::string str, std::string flag )
 {
     bool result = true;
-    int size = str.size()-1;
-    for ( int i=size; i>size-flag.size(); i-- ) {
-        if ( str[i] != flag[i] ) {
+    int str_size = str.size()-1,
+        flg_size = flag.size()-1;
+    for ( int i=0; i<flg_size; i++ ) {
+        if ( str[str_size-i] != flag[flg_size-i] ) {
             result = false;
             break;
         }

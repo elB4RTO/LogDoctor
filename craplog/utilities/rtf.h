@@ -6,12 +6,14 @@
 
 #include "utilities/strings.h"
 
+#include "tools/craplog/modules/formats.h"
+
 class RichText
 {
 public:
     RichText();
 
-    static QString enrichLogs( std::string content, int logs_format, int color_scheme, bool wide_lines );
+    static QString enrichLogs( std::string content, FormatOps::LogsFormat logs_format, int color_scheme, bool wide_lines );
 };
 
 #endif // RTF_H

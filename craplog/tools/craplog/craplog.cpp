@@ -26,17 +26,18 @@ Craplog::Craplog()
     };
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( 1, new std::unordered_map<int, std::string> );
-    this->logs_paths[1].emplace( 1, "/var/log/apache2" );
-    this->logs_paths[1].emplace( 2, "/var/log/apache2" );
+    std::unordered_map<int, std::string> new_map;
+    this->logs_paths.emplace( 11, std::unordered_map<int, std::string>() );
+    this->logs_paths[11].emplace( 1, "/var/log/apache2" );
+    this->logs_paths[11].emplace( 2, "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( 2, new std::unordered_map<int, std::string> );
-    this->logs_paths[2].emplace( 1, "/var/log/nginx" );
-    this->logs_paths[2].emplace( 2, "/var/log/nginx" );
+    this->logs_paths.emplace( 12, std::unordered_map<int, std::string>() );
+    this->logs_paths[12].emplace( 1, "/var/log/nginx" );
+    this->logs_paths[12].emplace( 2, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( 3, new std::unordered_map<int, std::string> );
-    this->logs_paths[3].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
-    this->logs_paths[3].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
+    this->logs_paths.emplace( 13, std::unordered_map<int, std::string>() );
+    this->logs_paths[13].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
+    this->logs_paths[13].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
 
 
     /*this->readConfigs();
@@ -115,13 +116,16 @@ void Craplog::scanLogsDir()
         n=1;
     }
     for ( int i=0; i<n; i++ ) {
-        std::string logs_path = logs_paths[i];
+        std::string logs_path = logs_paths[i+1];
         // iterate over entries in the logs folder
         for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
             // get the attributes
             int size = dir_entry.file_size();
             std::string path = dir_entry.path().string();
             std::string name = dir_entry.path().filename().string();
+            std::cout << logs_path << std::endl;
+            std::cout << name << " : " << path << std::endl;
+            std::cout << this->hashOps.digestFile( path ) << std::endl;
             // match only files having ".log." in their name
             if ( dir_entry.is_regular_file() == false
               || this->isFileNameValid( name ) == false ) {
