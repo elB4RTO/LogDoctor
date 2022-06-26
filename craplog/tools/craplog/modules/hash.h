@@ -24,10 +24,10 @@ public:
 
 private:
     // id constants
-    const int APACHE_ID=1, NGINX_ID=2, IIS_ID=3;
+    const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
     // lists of used files' hashes
     std::unordered_map<int, std::vector<std::string>> hashes;
 
 };
 
-#endif // HASHOPS_H
+#endif // HASH_H

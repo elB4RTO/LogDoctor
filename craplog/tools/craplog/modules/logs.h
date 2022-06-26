@@ -15,7 +15,7 @@ public:
 
 private:
     // types constants
-    const int ACCESS_LOGS=1, ERROR_LOGS=2;
+    const unsigned int ACCESS_LOGS=1, ERROR_LOGS=2;
 
 };
 

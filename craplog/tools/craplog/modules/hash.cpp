@@ -20,7 +20,7 @@ HashOps::HashOps()
 // reads the files holding the already used hashes
 void HashOps::readLists( std::string dir_path )
 {
-    for ( int id=1; id<4; id++ ) {
+    for ( int id=11; id<14; id++ ) {
 
     }
 }
