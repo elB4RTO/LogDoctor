@@ -4,16 +4,17 @@
 #include "utilities/io.h"
 #include "utilities/vectors.h"
 
-#include <openssl/sha.h>
 #include <sstream>
 #include <iomanip>
+
+#include "tools/craplog/modules/sha256.h"
 
 
 HashOps::HashOps()
 {
-    this->hashes.emplace( this->APACHE_ID, new std::vector<std::string> );
-    this->hashes.emplace( this->NGINX_ID, new std::vector<std::string> );
-    this->hashes.emplace( this->IIS_ID, new std::vector<std::string> );
+    this->hashes.emplace( this->APACHE_ID, std::vector<std::string>() );
+    this->hashes.emplace( this->NGINX_ID, std::vector<std::string>() );
+    this->hashes.emplace( this->IIS_ID, std::vector<std::string>() );
 }
 
 
@@ -30,17 +31,11 @@ void HashOps::readLists( std::string dir_path )
 std::string HashOps::digestFile( std::string file_path )
 {
     std::string content = IOutils::readFile( file_path );
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, content.c_str(), content.size());
-    SHA256_Final(hash, &sha256);
-    std::stringstream hex_digest;
-    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    {
-        hex_digest << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
-    }
-    return hex_digest.str();
+    SHA256 sha;
+    sha.update( content );
+    uint8_t * digest = sha.digest();
+    // return the hex digest
+    return SHA256::toString(digest);
 }
 
 
@@ -48,7 +43,7 @@ std::string HashOps::digestFile( std::string file_path )
 bool HashOps::hasBeenUsed( std::string file_hash, const int web_server_id )
 {
     bool found = false;
-    for ( std::string hash : this->hashes[ web_server_id ] ) {
+    for ( const std::string &hash : this->hashes[ web_server_id ] ) {
         if ( file_hash == hash ) {
             found = true;
             break;
