@@ -35,6 +35,8 @@ set(PROJECT_SOURCES
         tools/craplog/modules/hash.cpp
         tools/craplog/modules/logs.h
         tools/craplog/modules/logs.cpp
+        tools/craplog/modules/sha256.h
+        tools/craplog/modules/sha256.cpp
 
         utilities.h
         utilities/io.h
