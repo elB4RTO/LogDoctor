@@ -112,69 +112,100 @@
             <string>Select which log files to use</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="0" column="0" colspan="2">
-             <widget class="QCheckBox" name="checkBox_LogFiles_CheckAll">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="mouseTracking">
-               <bool>false</bool>
-              </property>
-              <property name="toolTip">
-               <string>Toggle/untoggle selection for all files</string>
-              </property>
-              <property name="text">
-               <string>All</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>90</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="3">
-             <widget class="QPushButton" name="buttonViewFile">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+            <item row="0" column="0" colspan="4">
+             <widget class="QFrame" name="frame">
               <property name="maximumSize">
                <size>
-                <width>36</width>
-                <height>40</height>
+                <width>320</width>
+                <height>48</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <pointsize>15</pointsize>
-               </font>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
-              <property name="toolTip">
-               <string>Inspect a log file</string>
+              <property name="frameShadow">
+               <enum>QFrame::Plain</enum>
               </property>
-              <property name="text">
-               <string notr="true"></string>
+              <property name="lineWidth">
+               <number>0</number>
               </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QPushButton" name="button_LogFiles_Apache">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>96</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Parse logs from the Apache2 web server</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true">Apache2</string>
+                 </property>
+                 <property name="flat">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="button_LogFiles_Nginx">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>96</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Parse logs from the Nginx web server</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true">Nginx</string>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="button_LogFiles_Iis">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>96</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Parse logs from the Microsoft Internet Information Service web server</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true">IIS</string>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
-            <item row="0" column="4" rowspan="3">
+            <item row="0" column="4" rowspan="4">
              <widget class="QTextBrowser" name="textLogFiles">
               <property name="mouseTracking">
                <bool>false</bool>
@@ -209,7 +240,69 @@ hr { height: 1px; border-width: 0; }
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="4">
+            <item row="1" column="0" colspan="2">
+             <widget class="QCheckBox" name="checkBox_LogFiles_CheckAll">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="mouseTracking">
+               <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>Toggle/untoggle selection for all files</string>
+              </property>
+              <property name="text">
+               <string>All</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>90</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="1" column="3">
+             <widget class="QPushButton" name="buttonViewFile">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>36</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Inspect a log file</string>
+              </property>
+              <property name="text">
+               <string notr="true"></string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="4">
              <widget class="QTreeWidget" name="listLogFiles">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -315,7 +408,7 @@ hr { height: 1px; border-width: 0; }
               </item>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QPushButton" name="buttonRefreshList">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -345,7 +438,7 @@ hr { height: 1px; border-width: 0; }
               </property>
              </widget>
             </item>
-            <item row="2" column="1" colspan="3">
+            <item row="3" column="1" colspan="3">
              <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -355,7 +448,7 @@ hr { height: 1px; border-width: 0; }
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>288</width>
+                <width>280</width>
                 <height>20</height>
                </size>
               </property>
@@ -497,6 +590,7 @@ hr { height: 1px; border-width: 0; }
        <attribute name="toolTip">
         <string>View your statistics</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2"/>
       </widget>
       <widget class="QWidget" name="Up">
        <property name="sizePolicy">
