@@ -156,11 +156,11 @@ void MainWindow::on_buttonViewFile_clicked()
         // display the selected item
         Craplog::LogFile item = this->craplog.getLogFileItem(
             this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
-        Craplog::LogsFormat format;
+        FormatOps::LogsFormat format;
         if ( item.type == Craplog::LogType::Access ) {
-            format = this->craplog.getAccessLogsFormat();
+            format = this->craplog.getCurrentALF();
         } else if ( item.type == Craplog::LogType::Error ) {
-            format = this->craplog.getErrorLogsFormat();
+            format = this->craplog.getCurrentELF();
         } else {
             // this shouldn't be
                 // !!! PUT A DIALOG ERROR MESSAGE HERE !!!

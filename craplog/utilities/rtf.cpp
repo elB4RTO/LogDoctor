@@ -8,7 +8,7 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs( std::string content, int logs_format, int color_scheme, bool wide_lines )
+QString RichText::enrichLogs( std::string content, FormatOps::LogsFormat logs_format, int color_scheme, bool wide_lines )
 {
 
     std::unordered_map<std::string, QString> style;
@@ -65,21 +65,21 @@ QString RichText::enrichLogs( std::string content, int logs_format, int color_sc
     std::string sep, fld;
     int start=0, stop=0, i=0;
     int line_size;
-    int n_sep = format.separators.size()-1;
+    int n_sep = logs_format.separators.size()-1;
     for ( std::string& line : StringOps::splitrip( content ) ) {
         i = 0;
         line_size = line.size()-1;
         rich_line = "<p>";
         // add the initial chars
-        stop = format.initial.size();
-        rich_line += QString::fromStdString( format.initial );
+        stop = logs_format.initial.size();
+        rich_line += QString::fromStdString( logs_format.initial );
         while (true) {
             // color fields
             if ( i <= n_sep ) {
-                sep = format.separators[i];
+                sep = logs_format.separators[i];
             } else if ( i == n_sep+1 ) {
                 // final separator
-                sep = format.final;
+                sep = logs_format.final;
             } else {
                 // no more separators
                 break;
@@ -96,7 +96,7 @@ QString RichText::enrichLogs( std::string content, int logs_format, int color_sc
             rich_line += "<b>";
             class_name = "";
             if ( color_scheme > 0 ) {
-                fld = format.fields[i];
+                fld = logs_format.fields[i];
                 class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
                     class_name += style["ip"];
@@ -126,7 +126,7 @@ QString RichText::enrichLogs( std::string content, int logs_format, int color_sc
             stop = stop + sep.size();
             if ( stop > line_size ) {
                 // this was the final separator
-                rich_line += QString::fromStdString( format.final );
+                rich_line += QString::fromStdString( logs_format.final );
                 break;
             }
             rich_line += QString::fromStdString( sep );
