@@ -26,8 +26,25 @@ Craplog::Craplog()
         .separators = {"] [", "] [pid", "] ", ": ", ": [client ", "] "},
         .fields = {"date_time","error_level","pid","source_file","os_err","client:port","error_message"}
     };
-    this->logs_path = "/var/log/apache2";
+
+    this->hashOps.readLists( this->configs_path );
+
+    // apache2 access/error logs location
+    this->logs_paths.emplace( 1, new std::unordered_map<int, std::string> );
+    this->logs_paths[1].emplace( 1, "/var/log/apache2" );
+    this->logs_paths[1].emplace( 2, "/var/log/apache2" );
+    // nginx access/error logs location
+    this->logs_paths.emplace( 2, new std::unordered_map<int, std::string> );
+    this->logs_paths[2].emplace( 1, "/var/log/nginx" );
+    this->logs_paths[2].emplace( 2, "/var/log/nginx" );
+    // iis access/error logs location
+    this->logs_paths.emplace( 3, new std::unordered_map<int, std::string> );
+    this->logs_paths[3].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
+    this->logs_paths[3].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
+
+
     //this->readConfigs();
+
     this->scanLogsDir();
 }
 
@@ -108,6 +125,7 @@ void Craplog::scanLogsDir()
             .selected = false,
             .size = size,
             .name = QString::fromStdString( name ),
+            .hash = this->hashes.digestFile( path );
             .path = path,
             .type = this->defineFileType( name, IOutils::readLines( path ) )
         };
@@ -234,20 +252,3 @@ void Craplog::setErrorLogsFormat( std::string format_string )
 }
 
 
-/////////////////
-//// LOG OPS ////
-/////////////////
-Craplog::LogOps::LogOps()
-{
-
-}
-
-std::vector<std::string> Craplog::LogOps::splitLine( std::string line, Craplog::LogType type )
-{
-
-}
-
-std::vector<std::string> Craplog::LogOps::splitLines( std::string line, Craplog::LogType type )
-{
-
-}
