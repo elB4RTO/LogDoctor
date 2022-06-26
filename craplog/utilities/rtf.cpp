@@ -8,7 +8,7 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs( std::string content, Craplog::LogsFormat format, int color_scheme, bool wide_lines )
+QString RichText::enrichLogs( std::string content, int logs_format, int color_scheme, bool wide_lines )
 {
 
     std::unordered_map<std::string, QString> style;
