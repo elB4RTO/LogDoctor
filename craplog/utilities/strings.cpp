@@ -1,6 +1,8 @@
 
 #include "strings.h"
 
+using std::string, std::vector;
+
 
 StringOps::StringOps()
 {
@@ -8,7 +10,7 @@ StringOps::StringOps()
 }
 
 
-bool StringOps::isNumeric( std::string str )
+bool StringOps::isNumeric( string str )
 {
     bool result = true;
     for ( char& chr : str ) {
@@ -31,7 +33,7 @@ bool StringOps::isNumeric( char chr )
 }
 
 
-bool StringOps::startsWith(std::string str, std::string flag)
+bool StringOps::startsWith(string str, string flag)
 {
     bool result = true;
     for ( int i=0; i<flag.size(); i++ ) {
@@ -44,7 +46,7 @@ bool StringOps::startsWith(std::string str, std::string flag)
 }
 
 
-bool StringOps::endsWith( std::string str, std::string flag )
+bool StringOps::endsWith( string str, string flag )
 {
     bool result = true;
     int str_size = str.size()-1,
@@ -59,16 +61,16 @@ bool StringOps::endsWith( std::string str, std::string flag )
 }
 
 
-std::string StringOps::strip( std::string str, std::string chars )
+string StringOps::strip( string str, string chars )
 {
-    std::string stripped;
+    string stripped;
     stripped = StringOps::lstrip( str, chars );
     stripped = StringOps::rstrip( stripped, chars );
     return stripped;
 }
 
 
-std::string StringOps::lstrip( std::string str, std::string chars )
+string StringOps::lstrip( string str, string chars )
 {
     bool found = true;
     int i = 0;
@@ -86,7 +88,7 @@ std::string StringOps::lstrip( std::string str, std::string chars )
         }
         i++;
     }
-    std::string stripped = "";
+    string stripped = "";
     if ( i < str.size() ) {
         stripped = str.substr( i );
     }
@@ -94,7 +96,7 @@ std::string StringOps::lstrip( std::string str, std::string chars )
 }
 
 
-std::string StringOps::rstrip( std::string str, std::string chars )
+string StringOps::rstrip( string str, string chars )
 {
     bool found = true;
     int i = str.size() - 1;
@@ -112,7 +114,7 @@ std::string StringOps::rstrip( std::string str, std::string chars )
         }
         i--;
     }
-    std::string stripped = "";
+    string stripped = "";
     if ( i > 0 ) {
         stripped = str.substr( 0, str.size() - (str.size() - i) + 1 );
     }
@@ -121,10 +123,10 @@ std::string StringOps::rstrip( std::string str, std::string chars )
 
 
 
-std::vector<std::string> StringOps::split( std::string str, std::string sep )
+vector<string> StringOps::split( string str, string sep )
 {
-    std::vector<std::string> splitted;
-    std::string slice;
+    vector<string> splitted;
+    string slice;
     int start=0, stop=0;
     while (true) {
         stop = str.find( sep, start );
@@ -146,12 +148,12 @@ std::vector<std::string> StringOps::split( std::string str, std::string sep )
 }
 
 
-std::vector<std::string> StringOps::splitrip( std::string str, std::string sep, std::string chars )
+vector<string> StringOps::splitrip( string str, string sep, string chars )
 {
-    std::vector<std::string> splitted, aux;
+    vector<string> splitted, aux;
     str = StringOps::strip( str );
     aux = StringOps::split( str );
-    for ( std::string &str : aux ) {
+    for ( string &str : aux ) {
         if ( str.size() == 0 ) {
             continue;
         }

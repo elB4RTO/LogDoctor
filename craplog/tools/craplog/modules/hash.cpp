@@ -9,17 +9,19 @@
 
 #include "tools/craplog/modules/sha256.h"
 
+using std::string, std::vector;
+
 
 HashOps::HashOps()
 {
-    this->hashes.emplace( this->APACHE_ID, std::vector<std::string>() );
-    this->hashes.emplace( this->NGINX_ID, std::vector<std::string>() );
-    this->hashes.emplace( this->IIS_ID, std::vector<std::string>() );
+    this->hashes.emplace( this->APACHE_ID, vector<string>() );
+    this->hashes.emplace( this->NGINX_ID, vector<string>() );
+    this->hashes.emplace( this->IIS_ID, vector<string>() );
 }
 
 
 // reads the files holding the already used hashes
-void HashOps::readLists( std::string dir_path )
+void HashOps::readLists( string dir_path )
 {
     for ( int id=11; id<14; id++ ) {
 
@@ -28,9 +30,9 @@ void HashOps::readLists( std::string dir_path )
 
 
 // returns the hash
-std::string HashOps::digestFile( std::string file_path )
+string HashOps::digestFile( string file_path )
 {
-    std::string content = IOutils::readFile( file_path );
+    string content = IOutils::readFile( file_path );
     SHA256 sha;
     sha.update( content );
     uint8_t * digest = sha.digest();
@@ -40,10 +42,10 @@ std::string HashOps::digestFile( std::string file_path )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( std::string file_hash, const int web_server_id )
+bool HashOps::hasBeenUsed( string file_hash, const int web_server_id )
 {
     bool found = false;
-    for ( const std::string &hash : this->hashes[ web_server_id ] ) {
+    for ( const string &hash : this->hashes[ web_server_id ] ) {
         if ( file_hash == hash ) {
             found = true;
             break;
@@ -54,7 +56,7 @@ bool HashOps::hasBeenUsed( std::string file_hash, const int web_server_id )
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertHash( std::string hash, const int web_server_id )
+bool HashOps::insertHash( string hash, const int web_server_id )
 {
     bool proceed = true;
     try {
@@ -70,10 +72,10 @@ bool HashOps::insertHash( std::string hash, const int web_server_id )
 }
 
 
-bool HashOps::insertHashes( std::vector<std::string> hashes, const int web_server_id )
+bool HashOps::insertHashes( vector<string> hashes, const int web_server_id )
 {
     bool proceed = true;
-    for ( std::string& hash : hashes ) {
+    for ( string& hash : hashes ) {
         if ( this->insertHash( hash, web_server_id ) == false ) {
             proceed = false;
             break;
