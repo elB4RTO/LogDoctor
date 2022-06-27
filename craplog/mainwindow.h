@@ -41,9 +41,12 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Craplog craplog;
 
+    Craplog craplog;
     bool runCraplog();
+
+    // quantoty of informational dialogs to display
+    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
 
     std::unordered_map<std::string, QColor> COLORS;
     std::unordered_map<std::string, QFont>  FONTS;
@@ -54,6 +57,17 @@ private:
     // base font families, to build fonts from
     QString main_font_family;
     QString script_font_family;
+
+    //////////////
+    //// LOGS ////
+    // web servers related
+    bool loading_LogsList = false;
+    std::unordered_map<int, bool> allowed_web_servers;
+    void disableAllButtons_LogFiles_WS();
+    void enableAllButtons_LogFiles_WS();
+    // logs list related
+    bool display_used_files = true;
+    bool display_warnsize_files = true;
 
     // text browser related
     struct LogFilesTB {
