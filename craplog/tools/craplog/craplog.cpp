@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+using std::string, std::vector, std::unordered_map;
+
 
 Craplog::Craplog()
 {
@@ -26,16 +28,16 @@ Craplog::Craplog()
     };
 
     // apache2 access/error logs location
-    std::unordered_map<int, std::string> new_map;
-    this->logs_paths.emplace( 11, std::unordered_map<int, std::string>() );
+    unordered_map<int, string> new_map;
+    this->logs_paths.emplace( 11, unordered_map<int, string>() );
     this->logs_paths[11].emplace( 1, "/var/log/apache2" );
     this->logs_paths[11].emplace( 2, "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( 12, std::unordered_map<int, std::string>() );
+    this->logs_paths.emplace( 12, unordered_map<int, string>() );
     this->logs_paths[12].emplace( 1, "/var/log/nginx" );
     this->logs_paths[12].emplace( 2, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( 13, std::unordered_map<int, std::string>() );
+    this->logs_paths.emplace( 13, unordered_map<int, string>() );
     this->logs_paths[13].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
     this->logs_paths[13].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
 
@@ -53,7 +55,7 @@ int Craplog::getLogsListSize() {
 }
 
 // return the list. rescan if fresh is true
-std::vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
+vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
 {
     if ( fresh == true ) {
         this->scanLogsDir();
@@ -77,9 +79,9 @@ Craplog::LogFile Craplog::getLogFileItem( QString file_name )
 
 
 // return the path of the file matching the given name
-std::string Craplog::getLogFilePath( QString file_name )
+string Craplog::getLogFilePath( QString file_name )
 {
-    std::string path;
+    string path;
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
             path = item.path;
@@ -90,13 +92,13 @@ std::string Craplog::getLogFilePath( QString file_name )
 }
 
 // set a file as selected
-int Craplog::setLogFileSelected( QString file_name )
+bool Craplog::setLogFileSelected( QString file_name )
 {
-    int result = 1;
+    bool result = false;
     for ( Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
             item.selected = true;
-            result = 0;
+            result = true;
             break;
         }
     }
@@ -115,19 +117,28 @@ void Craplog::scanLogsDir()
         n=1;
     }
     for ( int i=0; i<n; i++ ) {
-        std::string logs_path = logs_paths[i+1];
+        string logs_path = logs_paths[i+1];
+        if ( !IOutils::isDir( logs_path ) ) {
+            // this directory doesn't exists
+                // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+            continue;
+        }
         // iterate over entries in the logs folder
         for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
             // get the attributes
             int size = dir_entry.file_size();
-            std::string path = dir_entry.path().string();
-            std::string name = dir_entry.path().filename().string();
-            // match only files having ".log." in their name
-            if ( dir_entry.is_regular_file() == false
-              || this->isFileNameValid( name ) == false ) {
+            string path = dir_entry.path().string();
+            string name = dir_entry.path().filename().string();
+            // check the readability
+            if ( IOutils::checkFile(path,true) == false ) {
                 continue;
             }
-            auto logfile =LogFile{
+            // match only files having ".log." in their name
+            if ( this->isFileNameValid( name ) == false ) {
+                continue;
+            }
+
+            auto logfile = LogFile{
                 .selected = false,
                 .size = size,
                 .name = QString::fromStdString( name ),
@@ -136,8 +147,8 @@ void Craplog::scanLogsDir()
                 .type = this->logOps.defineFileType( name, IOutils::readLines( path ), this->logs_formats[ this->current_WS ] )
             };
             if ( logfile.type == LogOps::LogType::Failed ) {
-                // failed to get the log type
-                // error message displayed while defining as failed in logOps
+                // failed to get the log type, do not append
+                // error message already displayed while defining as failed in logOps
                 continue;
             }
             // push in the list
@@ -148,7 +159,7 @@ void Craplog::scanLogsDir()
 
 
 
-bool Craplog::isFileNameValid( std::string name )
+bool Craplog::isFileNameValid( string name )
 {
     bool valid = false;
     if ( StringOps::startsWith( name, "access.log." )
@@ -170,6 +181,17 @@ bool Craplog::isFileNameValid( std::string name )
 }
 
 
+int Craplog::getWarningSize()
+{
+    return this->warning_size;
+}
+
+void Craplog::setWarningSize( int new_size )
+{
+    this->warning_size = new_size;
+}
+
+
 // get the logs format
 FormatOps::LogsFormat Craplog::getAccessLogsFormat( int web_server_id )
 {
@@ -181,11 +203,11 @@ FormatOps::LogsFormat Craplog::getErrorLogsFormat( int web_server_id )
 }
 
 // set the logs format
-void Craplog::setAccessLogsFormat( int web_server_id, std::string format_string )
+void Craplog::setAccessLogsFormat( int web_server_id, string format_string )
 {
 
 }
-void Craplog::setErrorLogsFormat( int web_server_id, std::string format_string )
+void Craplog::setErrorLogsFormat( int web_server_id, string format_string )
 {
 
 }
