@@ -11,13 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
     //// GRAPHICS ////
     this->ui->setupUi(this);
 
+    // initialize the color-schemes map
+    this->TB_COLOR_SCHEMES = ColorSec::getColorSchemes();
     // initialize the colors map
-    this->COLORS["black"] = QColor(0,0,0,255);
-    this->COLORS["grey"]  = QColor(127,127,127,255);
-    this->COLORS["white"] = QColor(255,255,255,255);
-
-    this->COLORS["red"] = QColor(255,40,0,255);
-    this->COLORS["orange"] = QColor(255,140,0,255);
+    this->COLORS = ColorSec::getColors();
 
     // load the main font
     this->main_font_family = QFontDatabase::applicationFontFamilies(
@@ -54,14 +51,12 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS["main_small"] );
     this->ui->listLogFiles->setFont( this->FONTS["main"] );
     // TextBrowser for the LogFiles
-    this->TB.wide_lines   = false;
-    this->TB.color_scheme = 1;
-    this->TB.font_size    = this->font_size;
-    this->TB.font_family  = this->main_font_family;
-    this->TB.font = QFont(
-        this->TB.font_family,
-        this->TB.font_size );
-    this->ui->textLogFiles->setFont( this->TB.font );
+    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES[1] );
+    this->TB.setFontFamily( this->main_font_family );
+    this->TB.setFont( QFont(
+        this->main_font_family,
+        this->font_size ));
+    this->ui->textLogFiles->setFont( this->TB.getFont() );
 
 
     ////////////////////////
@@ -295,8 +290,7 @@ void MainWindow::on_buttonViewFile_clicked()
             RichText::enrichLogs(
                 IOutils::readFile( item.path ),
                 format,
-                this->TB.color_scheme,
-                this->TB.wide_lines ));
+                this->TB ));
     }
 }
 

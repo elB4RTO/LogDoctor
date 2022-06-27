@@ -23,8 +23,8 @@ Craplog::Craplog()
         .string = "[%t] [%l] [pid %P] %F: %E: [client %a] %M",
         .initial = "[",
         .final   = "",
-        .separators = {"] [", "] [pid", "] ", ": ", ": [client ", "] "},
-        .fields = {"date_time","error_level","pid","source_file","os_err","client:port","error_message"}
+        .separators = {"] [", "] [pid", "] ", ": ", ": [client ", ":", "] "},
+        .fields = {"date_time","error_level","pid","source_file","os_err","client","port","error_message"}
     };
 
     // apache2 access/error logs location
