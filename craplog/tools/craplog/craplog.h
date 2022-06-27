@@ -72,7 +72,7 @@ private:
     int current_WS = 11;
 
     // logs related
-    int warning_size = 1'048'576; //104857600; // in Bytes ( => 100 MiB )
+    int warning_size = 1'048'576; //104'857'600; // in Bytes ( => 100 MiB )
     // web server specific paths and file names
     std::unordered_map<int, std::unordered_map<int, std::string>> logs_base_names;
     std::unordered_map<int, std::unordered_map<int, std::string>> logs_paths;

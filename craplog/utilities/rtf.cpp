@@ -1,6 +1,8 @@
 
 #include "rtf.h"
 
+using std::string, std::unordered_map;
+
 
 RichText::RichText()
 {
@@ -8,65 +10,26 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs( std::string content, FormatOps::LogsFormat logs_format, int color_scheme, bool wide_lines )
+QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format, TextBrowser TB )
 {
-
-    std::unordered_map<std::string, QString> style;
-    switch ( color_scheme ) {
-        case 1:
-            // breeze
-            style.emplace("background","#ffffff");
-            style.emplace("text","#9c9c9b");
-            style.emplace("x","#1f1c1b");
-            style.emplace("ip","#644a9b");
-            style.emplace("pt","#d5bc79");
-            style.emplace("time","#d685d6");
-            style.emplace("ua_src","#006e28");
-            style.emplace("req_err","#54b8ff");
-            style.emplace("res_lev","#d24f4f");
-            break;
-        case 2:
-            // monokai
-            style.emplace("background","#272822");
-            style.emplace("text","#706c5a");
-            style.emplace("x","#d1d1cb");
-            style.emplace("ip","#57adbc");
-            style.emplace("pt","#c1b864");
-            style.emplace("time","#9773db");
-            style.emplace("ua_src","#a6e22e");
-            style.emplace("req_err","#bebeb8");
-            style.emplace("res_lev","#f92672");
-            break;
-        case 3:
-            // radical
-            style.emplace("background","#141322");
-            style.emplace("text","#749295");
-            style.emplace("x","#7c9c9e");
-            style.emplace("ip","#fda8bc");
-            style.emplace("pt","#ff85a1");
-            style.emplace("time","#a8c0c2");
-            style.emplace("ua_src","#42a784");
-            style.emplace("req_err","#d5358f");
-            style.emplace("res_lev","#56e8e4");
-            break;
-        default:
-            // no style
-            break;
-    }
+    std::unordered_map<std::string, QString> colors = TB.getColorScheme();
+    int color_scheme = TB.getColorSchemeID();
+    bool wide_lines = TB.getWideLinesUsage();
+    // enrich the text
     QString rich_content = QString("<!DOCTYPE html><html><head></head><body");
     if ( color_scheme > 0 ) {
-        rich_content += " style=\"background:" + style["background"] + "; color:" + style["text"] + "\"";
+        rich_content += " style=\"background:" + colors["background"] + "; color:" + colors["text"] + "\"";
     }
     rich_content += ">";
     if ( wide_lines == true ) {
         rich_content += "<br/>";
     }
     QString rich_line="", class_name="";
-    std::string sep, fld;
+    string sep, fld;
     int start=0, stop=0, i=0;
     int line_size;
     int n_sep = logs_format.separators.size()-1;
-    for ( std::string& line : StringOps::splitrip( content ) ) {
+    for ( string& line : StringOps::splitrip( content ) ) {
         i = 0;
         line_size = line.size()-1;
         rich_line = "<p>";
@@ -92,6 +55,16 @@ QString RichText::enrichLogs( std::string content, FormatOps::LogsFormat logs_fo
                 stop = start;
                 continue;
             }
+            if ( i+1 < logs_format.separators.size() ) {
+                // not the last separator, check the possibility of missing
+                if ( line.find( logs_format.separators[i+1], start-1 ) == start
+                  && logs_format.separators[i+1] != logs_format.separators[i] ) {
+                    // current field missing, skip to the next one
+                    i++;
+                    stop = start;
+                    continue;
+                }
+            }
             // color the fields
             rich_line += "<b>";
             class_name = "";
@@ -99,19 +72,19 @@ QString RichText::enrichLogs( std::string content, FormatOps::LogsFormat logs_fo
                 fld = logs_format.fields[i];
                 class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
-                    class_name += style["ip"];
+                    class_name += colors["ip"];
                 } else if ( fld == "port" ) {
-                    class_name += style["pt"];
+                    class_name += colors["pt"];
                 } else if ( fld == "date_time" ) {
-                    class_name += style["time"];
+                    class_name += colors["time"];
                 } else if ( fld == "user_agent" || fld == "source_file" ) {
-                    class_name += style["ua_src"];
+                    class_name += colors["ua_src"];
                 } else if ( fld == "request" || fld == "error_message" ) {
-                    class_name += style["req_err"];
+                    class_name += colors["req_err"];
                 } else if ( fld == "response_code" || fld == "error_level" ) {
-                    class_name += style["res_lev"];
+                    class_name += colors["res_lev"];
                 } else {
-                    class_name += style["x"];
+                    class_name += colors["x"];
                 }
                 class_name += "\">";
             }

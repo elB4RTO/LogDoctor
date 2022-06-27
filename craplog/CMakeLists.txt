@@ -27,6 +27,22 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.ui
 
+        utilities.h
+        utilities/colors.h
+        utilities/colors.cpp
+        utilities/io.h
+        utilities/io.cpp
+        utilities/rtf.h
+        utilities/rtf.cpp
+        utilities/strings.h
+        utilities/strings.cpp
+        utilities/vectors.h
+        utilities/vectors.cpp
+
+        modules.h
+        modules/tb.h
+        modules/tb.cpp
+
         tools/craplog/craplog.h
         tools/craplog/craplog.cpp
         tools/craplog/modules/formats.h
@@ -37,16 +53,6 @@ set(PROJECT_SOURCES
         tools/craplog/modules/logs.cpp
         tools/craplog/modules/sha256.h
         tools/craplog/modules/sha256.cpp
-
-        utilities.h
-        utilities/io.h
-        utilities/io.cpp
-        utilities/rtf.h
-        utilities/rtf.cpp
-        utilities/strings.h
-        utilities/strings.cpp
-        utilities/vectors.h
-        utilities/vectors.cpp
 
         resources/resources.qrc
         ${TS_FILES}
