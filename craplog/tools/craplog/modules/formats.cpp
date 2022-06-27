@@ -21,7 +21,7 @@ FormatOps::FormatOps()
     this->APACHE2_ALF["%{Referer}i"] = "referer";
     this->APACHE2_ALF["%{User-agent}i"] = "user_agent";
     // error logs fields formats (only the ones considered)
-    this->APACHE2_ELF["%a"] = "client + port";
+    this->APACHE2_ELF["%a"] = "client:port";
     this->APACHE2_ELF["%l"] = "error_level";
     this->APACHE2_ELF["%M"] = "error_message";
     this->APACHE2_ELF["%t"] = "date_time";

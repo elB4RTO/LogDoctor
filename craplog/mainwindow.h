@@ -8,6 +8,7 @@
 #include "qtreewidget.h"
 
 #include "utilities.h"
+#include "modules.h"
 #include "tools/craplog/craplog.h"
 
 QT_BEGIN_NAMESPACE
@@ -48,6 +49,7 @@ private:
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
 
+    std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
     std::unordered_map<std::string, QColor> COLORS;
     std::unordered_map<std::string, QFont>  FONTS;
     int font_size       = 13,
@@ -68,20 +70,8 @@ private:
     // logs list related
     bool display_used_files = true;
     bool display_warnsize_files = true;
-
     // text browser related
-    struct LogFilesTB {
-        bool wide_lines;
-        int  color_scheme;
-        int  font_size;
-        QString font_family;
-        QFont   font;
-    };
-    LogFilesTB TB;
-    void setTB_FontSize( int size );
-    void setTB_FontFamily( QString font_family );
-    void updateTB_Font();
-    int getTB_FontSize();
-    QString getTB_FontFamily();
+    TextBrowser TB;
+
 };
 #endif // MAINWINDOW_H
