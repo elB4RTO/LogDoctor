@@ -1,6 +1,8 @@
 
 #include "logs.h"
 
+using std::string, std::vector, std::unordered_map;
+
 
 LogOps::LogOps()
 {
@@ -8,7 +10,7 @@ LogOps::LogOps()
 }
 
 
-LogOps::LogType LogOps::defineFileType( std::string name, std::vector<std::string> lines, std::unordered_map<int, FormatOps::LogsFormat> formats )
+LogOps::LogType LogOps::defineFileType( string name, vector<string> lines, unordered_map<int, FormatOps::LogsFormat> formats )
 {
     int n_acc=0, n_err=0;
     LogOps::LogType supposed_type, real_type;
@@ -23,7 +25,7 @@ LogOps::LogType LogOps::defineFileType( std::string name, std::vector<std::strin
             // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
     }
     real_type = this->LogType::Failed;
-    for ( const std::string& line : lines ) {
+    for ( const string& line : lines ) {
         if ( supposed_type == LogOps::LogType::Access ) {
             if ( current_ALF.initial.size() > 0 ) {
                 // a fixed starter char is set
@@ -78,12 +80,12 @@ LogOps::LogType LogOps::defineFileType( std::string name, std::vector<std::strin
 }
 
 
-std::vector<std::string> LogOps::splitLine( std::string line, int type )
+vector<string> LogOps::splitLine( string line, int type )
 {
 
 }
 
-std::vector<std::string> LogOps::splitLines( std::string line, int type )
+vector<string> LogOps::splitLines( string line, int type )
 {
 
 }
