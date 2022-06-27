@@ -1,6 +1,12 @@
+
 #include "io.h"
 
 #include "utilities/strings.h"
+
+#include <fstream>
+#include <filesystem>
+
+using std::vector, std::string;
 
 
 IOutils::IOutils()
@@ -8,13 +14,78 @@ IOutils::IOutils()
 
 }
 
+// test the existence of a file/folder
+bool IOutils::exists( string path )
+{
+    return std::filesystem::exists( path );
+}
 
-std::vector<std::string> IOutils::readLines( std::string path, int n_lines )
+// tests if a path exists and points to a file
+bool IOutils::isFile( string path )
+{
+    if ( std::filesystem::exists( path )) {
+        return std::filesystem::is_regular_file( path );
+    }
+}
+// returns whether a file is readable
+bool IOutils::checkFile( string path, bool readable, bool writable )
+{
+    bool result = false;
+    if ( IOutils::isFile( path ) == true ) {
+        result = true;
+        // check the needed permissions
+        auto perms = std::filesystem::status( path ).permissions();
+        if ( readable == true ) {
+            if ( (perms & std::filesystem::perms::owner_read) == std::filesystem::perms::none ) {
+                result = false;
+            }
+        }
+        if ( writable == true ) {
+            if ( (perms & std::filesystem::perms::owner_write) == std::filesystem::perms::none ) {
+                result = false;
+            }
+        }
+    }
+    return result;
+}
+
+// test if a path exists and points to a folder
+bool IOutils::isDir( string path )
+{
+    if ( std::filesystem::exists( path )) {
+        return std::filesystem::is_directory( path );
+    }
+}
+// returns whether a file is readable
+bool IOutils::checkDir( string path, bool readable, bool writable )
+{
+    bool result = false;
+    if ( IOutils::isDir( path ) == true ) {
+        result = true;
+        // check the needed permissions
+        auto perms = std::filesystem::status( path ).permissions();
+        if ( readable == true ) {
+            if ( (perms & std::filesystem::perms::owner_read) == std::filesystem::perms::none ) {
+                result = false;
+            }
+        }
+        if ( writable == true ) {
+            if ( (perms & std::filesystem::perms::owner_write) == std::filesystem::perms::none ) {
+                result = false;
+            }
+        }
+    }
+    return result;
+}
+
+
+
+vector<string> IOutils::readLines( string path, int n_lines )
 {
     // read rhe first line only
     std::ifstream file;
-    std::vector<std::string> lines;
-    std::string line;
+    vector<string> lines;
+    string line;
     try {
         constexpr std::size_t read_size = std::size_t(4096);
         file = std::ifstream(path);
@@ -49,11 +120,11 @@ std::vector<std::string> IOutils::readLines( std::string path, int n_lines )
 }
 
 
-std::string IOutils::readFile( std::string path )
+string IOutils::readFile( string path )
 {
     // read the whole file
     std::ifstream file;
-    std::string content = std::string();
+    string content = string();
     try {
         constexpr std::size_t read_size = std::size_t(4096);
         std::ifstream file(path);
@@ -67,7 +138,7 @@ std::string IOutils::readFile( std::string path )
         file.exceptions(std::ifstream::failbit);
         file.exceptions(std::ios_base::badbit);
         // read the whole file
-        content = std::string(
+        content = string(
             (std::istreambuf_iterator<char>( file )),
             std::istreambuf_iterator<char>() );
     } catch (const std::ios_base::failure& err) {
