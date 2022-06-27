@@ -150,7 +150,7 @@
                   <string notr="true">Apache2</string>
                  </property>
                  <property name="flat">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -403,7 +403,7 @@ hr { height: 1px; border-width: 0; }
                 </font>
                </property>
                <property name="flags">
-                <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                </property>
               </item>
              </widget>

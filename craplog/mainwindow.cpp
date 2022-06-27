@@ -7,12 +7,17 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    //////////////////
+    //// GRAPHICS ////
     this->ui->setupUi(this);
 
     // initialize the colors map
     this->COLORS["black"] = QColor(0,0,0,255);
     this->COLORS["grey"]  = QColor(127,127,127,255);
     this->COLORS["white"] = QColor(255,255,255,255);
+
+    this->COLORS["red"] = QColor(255,40,0,255);
+    this->COLORS["orange"] = QColor(255,140,0,255);
 
     // load the main font
     this->main_font_family = QFontDatabase::applicationFontFamilies(
@@ -57,6 +62,60 @@ MainWindow::MainWindow(QWidget *parent)
         this->TB.font_family,
         this->TB.font_size );
     this->ui->textLogFiles->setFont( this->TB.font );
+
+
+    ////////////////////////
+    //// INITIALIZATION ////
+    // WebServers for the LogsList
+    this->allowed_web_servers[11] = true; // apache2
+    this->allowed_web_servers[12] = true; // nginx
+    this->allowed_web_servers[13] = true; // iis
+
+
+    /////////////////
+    //// CONFIGS ////
+
+
+    ///////////////////
+    //// POLISHING ////
+    // disable the unallowed WebServers
+    int ws = 14;
+    for ( int id=11; id<14; id++ ) {
+        if ( this->allowed_web_servers[ id ] == true ) {
+            ws = ( id < ws ) ? id : ws;
+        } else {
+            switch (id) {
+                case 11: this->ui->button_LogFiles_Apache->setEnabled( false ); break;
+                case 12: this->ui->button_LogFiles_Nginx->setEnabled( false ); break;
+                case 13: this->ui->button_LogFiles_Iis->setEnabled( false ); break;
+            }
+        }
+    }
+    if ( ws == 14 ) {
+        // no WS is allowed (???), fallback to the default one
+        ws = 11;
+        this->craplog.setCurrentWSID( 11 );
+        this->allowed_web_servers[ 11 ] = true;
+        this->on_button_LogFiles_Apache_clicked();
+        this->ui->button_LogFiles_Apache->setEnabled( true );
+    }
+    // set the LogList to the current WebServer
+    if ( this->allowed_web_servers[ this->craplog.getCurrentWSID() ] == false ) {
+        // the current WS is not allowed, fallback to the default one
+        this->craplog.setCurrentWSID( ws );
+    }
+    // set the current WS for the LogList
+    switch ( this->craplog.getCurrentWSID() ) {
+        case 11:
+            this->ui->button_LogFiles_Apache->setFlat( false );
+            break;
+        case 12:
+            this->ui->button_LogFiles_Nginx->setFlat( false );
+            break;
+        case 13:
+            this->ui->button_LogFiles_Iis->setFlat( false );
+            break;
+    }
     // get a fresh list of LogFiles
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
@@ -73,37 +132,46 @@ MainWindow::~MainWindow()
 //////////////
 //// LOGS ////
 //////////////
-// switch to another web server
+// switch to apache web server
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 11 ) {
-        this->craplog.setCurrentWSID( 11 );
+    if ( this->craplog.getCurrentWSID() != 11
+      && this->allowed_web_servers[11] == true ) {
+        // enable the enables
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
-        this->craplog.getLogsList( true );
+        // load the list
+        this->craplog.setCurrentWSID( 11 );
+        this->on_buttonRefreshList_clicked();
     }
 }
-
+// switch to nginx web server
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 12 ) {
-        this->craplog.setCurrentWSID( 12 );
+    if ( this->craplog.getCurrentWSID() != 12
+      && this->allowed_web_servers[12] == true) {
+        // enable the enables
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
-        this->craplog.getLogsList( true );
+        // load the list
+        this->craplog.setCurrentWSID( 12 );
+        this->on_buttonRefreshList_clicked();
     }
 }
-
+// switch to iis web server
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 13 ) {
-        this->craplog.setCurrentWSID( 13 );
+    if ( this->craplog.getCurrentWSID() != 13
+      && this->allowed_web_servers[13] == true ) {
+        // load the list
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Nginx->setFlat( true );
-        this->craplog.getLogsList( true );
+        // load the list
+        this->craplog.setCurrentWSID( 13 );
+        this->on_buttonRefreshList_clicked();
     }
 }
 
@@ -111,17 +179,24 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
 // refresh the log files list
 void MainWindow::on_buttonRefreshList_clicked()
 {
+    std::string col;
     // clear the current tree
     this->ui->listLogFiles->clear();
+    this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
     // iterate over elements of list
     for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
         // new entry for the tree widget
         QTreeWidgetItem * item = new QTreeWidgetItem();
-        // set unchecked
-        item->setCheckState(0, Qt::CheckState::Unchecked );
         // set the name of the file
+        if ( this->craplog.hashOps.hasBeenUsed( log_file.hash, this->craplog.getCurrentWSID() ) ) {
+            // already used
+            if ( this->display_used_files == false ) {
+                // do not display
+                continue;
+            }
+            item->setForeground( 0, this->COLORS["red"] );
+        }
         item->setText( 0, log_file.name );
-        //item->setFont( 0, this->FONTS["main"] );
         // prepare the size of the file
         float size = (float)log_file.size / 1024;
         std::string sfx = " KiB";
@@ -153,14 +228,30 @@ void MainWindow::on_buttonRefreshList_clicked()
             }
         }
         // apply text and color to the size text
+        col = "grey";
+        if ( log_file.size > this->craplog.getWarningSize() ) {
+            // already used
+            if ( this->display_warnsize_files == false ) {
+                // do not display
+                continue;
+            }
+            col = "orange";
+        }
         item->setText( 1, QString::fromStdString( size_str.substr(0,cut_index) + sfx ) );
-        item->setForeground( 1, this->COLORS["grey"] );
+        item->setForeground( 1, this->COLORS[ col ] );
         item->setFont( 1, this->FONTS["main_italic"] );
         // append the item (on top, forced)
+        item->setCheckState(0, Qt::CheckState::Unchecked );
         this->ui->listLogFiles->addTopLevelItem( item );
     }
-    // sort the list alphabetically
-    this->ui->listLogFiles->sortByColumn(0, Qt::SortOrder::AscendingOrder );
+    if ( this->craplog.getLogsListSize() > 0 ) {
+        // sort the list alphabetically
+        this->ui->listLogFiles->sortByColumn(0, Qt::SortOrder::AscendingOrder );
+        this->ui->checkBox_LogFiles_CheckAll->setEnabled( true );
+    } else {
+        this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
+        this->ui->checkBox_LogFiles_CheckAll->setEnabled( false );
+    }
 }
 
 
@@ -245,7 +336,7 @@ bool MainWindow::runCraplog()
     while ( *i ) {
         if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
             // tell Craplog to set this file as selected
-            if ( this->craplog.setLogFileSelected( (*i)->text(0) ) != 0 ) {
+            if ( this->craplog.setLogFileSelected( (*i)->text(0) ) == false ) {
                 // this shouldn't be, but...
                 int response = QMessageBox::warning(this,
                     QString("File selection failed"),
