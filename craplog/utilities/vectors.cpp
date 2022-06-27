@@ -1,4 +1,7 @@
+
 #include "vectors.h"
+
+using std::string, std::vector;
 
 VecOps::VecOps()
 {
@@ -6,10 +9,10 @@ VecOps::VecOps()
 }
 
 
-bool VecOps::contains( std::vector<std::string> list, std::string flag )
+bool VecOps::contains( vector<string> list, string flag )
 {
     bool result = false;
-    for ( std::string& item : list ) {
+    for ( string& item : list ) {
         if ( item == flag ) {
             result = true;
             break;

@@ -1,6 +1,7 @@
 
 #include "formats.h"
 
+using std::string, std::vector;
 
 
 FormatOps::FormatOps()
@@ -29,15 +30,15 @@ FormatOps::FormatOps()
 }
 
 
-FormatOps::LogsFormat FormatOps::processApacheALF( std::string fs )
+FormatOps::LogsFormat FormatOps::processApacheALF( string fs )
 {
-    std::string initial="", final="";
-    std::vector<std::string> separators, fields;
+    string initial="", final="";
+    vector<string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
     int n_fld=0,
         start=0, aux=0, stop=-1,
         min_dist=0, max_dist=fs.size();
-    std::string cur_fld, cur_sep;
+    string cur_fld, cur_sep;
     // find and convert any field
     while (true) {
         // start after the last field
@@ -45,7 +46,7 @@ FormatOps::LogsFormat FormatOps::processApacheALF( std::string fs )
         cur_fld = "";
         min_dist = max_dist;
         // find the next field
-        for ( std::string& fld : this->A_ALFs ) {
+        for ( string& fld : this->A_ALFs ) {
             while (true) {
                 // run untill a valid field is found
                 aux = fs.find( fld, stop );
