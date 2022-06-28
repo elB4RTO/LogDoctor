@@ -25,8 +25,9 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
         rich_content += "<br/>";
     }
     QString rich_line="", class_name="";
-    string sep, fld;
-    int start=0, stop=0, i=0;
+    string sep, fld, aux_sep1, aux_sep2;
+    bool missing=false;
+    int start=0, stop=0, i=0, aux_start1=0, aux_start2=0, aux_stop=0;
     int line_size;
     int n_sep = logs_format.separators.size()-1;
     for ( string& line : StringOps::splitrip( content ) ) {
@@ -38,31 +39,54 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
         rich_line += QString::fromStdString( logs_format.initial );
         while (true) {
             // color fields
+            start = stop; // stop updated at the end of this loop
             if ( i <= n_sep ) {
                 sep = logs_format.separators[i];
+                stop = line.find( sep, start );
             } else if ( i == n_sep+1 ) {
                 // final separator
                 sep = logs_format.final;
+                stop = line_size;
             } else {
                 // no more separators
                 break;
             }
-            start = stop; // stop updated at the end of this loop
-            stop = line.find( sep, start );
-            if ( stop > line_size || stop < 0 ) {
+            if ( stop > line_size+1 || stop < 0 ) {
                 // separator not found, skip to the next one
                 i++;
                 stop = start;
                 continue;
             }
-            if ( i+1 < logs_format.separators.size() ) {
+            if ( i+1 <= n_sep ) {
                 // not the last separator, check the possibility of missing
-                if ( line.find( logs_format.separators[i+1], start-1 ) == start
-                  && logs_format.separators[i+1] != logs_format.separators[i] ) {
-                    // current field missing, skip to the next one
-                    i++;
-                    stop = start;
-                    continue;
+                aux_sep1 = sep;
+                aux_start1 = aux_sep1.find(' ');
+                if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
+                    aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
+                }
+                // iterate over following separators
+                for ( int j=i+1; j<n_sep; j++ ) {
+                    aux_sep2 = logs_format.separators[j];
+                    aux_start2 = aux_sep2.find(' ');
+                    if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
+                        aux_start2 = stop;
+                    } else {
+                        aux_start2 = stop + aux_start2 + 1;
+                        aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
+                    }
+                    // if the 2 seps are identical, skip (for uncertainty)
+                    if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
+                        continue;
+                    }
+                    // check if the next sep is found in the same position of the current one
+                    if ( line.find( aux_sep2, aux_start2 ) == aux_start2 ) {
+                        // probably the current field is missing, skip to this one
+                        i = j;
+                        aux_stop = aux_start2 + aux_sep2.size();
+                        aux_sep2 = logs_format.separators[j];
+                        missing = true;
+                    }
+                    break;
                 }
             }
             // color the fields
@@ -96,14 +120,23 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
             }
             rich_line += "</b>";
             // update the stop for the next start
-            stop = stop + sep.size();
+            if ( missing == true ) {
+                stop = aux_stop;
+            } else {
+                stop = stop + sep.size();
+                i++;
+            }
             if ( stop > line_size ) {
                 // this was the final separator
                 rich_line += QString::fromStdString( logs_format.final );
                 break;
             }
-            rich_line += QString::fromStdString( sep );
-            i++;
+            if ( missing == true ) {
+                missing = false;
+                rich_line += QString::fromStdString( aux_sep2 );
+            } else {
+                rich_line += QString::fromStdString( sep );
+            }
         }
         rich_line += "</p>";
         if ( wide_lines == true ) {
