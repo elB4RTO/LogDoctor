@@ -23,7 +23,7 @@ Craplog::Craplog()
         .string = "[%t] [%l] [pid %P] %F: %E: [client %a] %M",
         .initial = "[",
         .final   = "",
-        .separators = {"] [", "] [pid", "] ", ": ", ": [client ", ":", "] "},
+        .separators = {"] [", "] [pid ", "] ", ": ", ": [client ", ":", "] "},
         .fields = {"date_time","error_level","pid","source_file","os_err","client","port","error_message"}
     };
 
@@ -120,7 +120,9 @@ void Craplog::scanLogsDir()
         string logs_path = logs_paths[i+1];
         if ( !IOutils::isDir( logs_path ) ) {
             // this directory doesn't exists
-                // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+            if ( IOutils::exists( logs_path ) ) {
+                Dialogs::msgDirNotExists( this, logs_path );
+            }
             continue;
         }
         // iterate over entries in the logs folder
