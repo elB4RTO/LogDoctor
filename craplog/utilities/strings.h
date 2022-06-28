@@ -11,6 +11,9 @@ class StringOps
 public:
     StringOps();
 
+
+    static int count( std::string str, std::string flag, bool consecutives=true );
+
     static bool isNumeric( std::string str );
     static bool isNumeric( char chr );
 
@@ -20,6 +23,7 @@ public:
     static std::string strip( std::string str, std::string chars=" \n\t\b\r\v" );
     static std::string lstrip( std::string str, std::string chars=" \n\t\b\r\v" );
     static std::string rstrip( std::string str, std::string chars=" \n\t\b\r\v" );
+    static std::string lstripUntil( std::string str, std::string chr, bool inclusive=true, bool consecutives=true );
 
     static std::vector<std::string> split( std::string str, std::string sep="\n" );
 
