@@ -10,6 +10,29 @@ StringOps::StringOps()
 }
 
 
+int StringOps::count( std::string str, std::string flag, bool consecutives )
+{
+    int start=0, aux_start=0, max=str.size()-1, count=0;
+    while (true) {
+        start = str.find( flag, start );
+        if ( start >= 0 && start < max ) {
+            if ( consecutives == true
+              && start == aux_start ) {
+                start += flag.size();
+                aux_start = start;
+                continue;
+            }
+            count ++;
+            start += flag.size();
+            aux_start = start;
+        } else {
+            break;
+        }
+    }
+    return count;
+}
+
+
 bool StringOps::isNumeric( string str )
 {
     bool result = true;
@@ -117,6 +140,50 @@ string StringOps::rstrip( string str, string chars )
     string stripped = "";
     if ( i > 0 ) {
         stripped = str.substr( 0, str.size() - (str.size() - i) + 1 );
+    }
+    return stripped;
+}
+
+
+string StringOps::lstripUntil( string str, string chr, bool inclusive, bool consecutives )
+{
+    int start, aux_start, aux;
+    int max_size = str.size()-1;
+    string stripped = "";
+    if ( str != "" ) {
+        start = str.find( chr );
+        if ( inclusive == true ) {
+            start += chr.size();
+        }
+        if ( consecutives == true
+          && start >= 0 && start <= max_size ) {
+            aux_start = start;
+            while (true) {
+                aux = str.find( chr, aux_start );
+                if ( aux < 0 || aux > max_size ) {
+                    break;
+                } else if ( aux != aux_start ) {
+                    break;
+                }
+                if ( inclusive == true ) {
+                    aux += chr.size();
+                }
+                aux_start = aux;
+            }
+            if ( aux_start == max_size+1 ) {
+                stripped = "";
+            } else {
+                stripped = str.substr( aux_start );
+            }
+        } else {
+            if ( start < 0 || start > max_size+1 ) {
+                stripped = str;
+            } else if ( start == max_size+1 ) {
+                stripped = "";
+            } else {
+                stripped = str.substr( start );
+            }
+        }
     }
     return stripped;
 }
