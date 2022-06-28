@@ -6,12 +6,14 @@
 
 #include <QMainWindow>
 
+#include "modules/dialogs.h"
+
 #include "tools/craplog/modules/formats.h"
 #include "tools/craplog/modules/hash.h"
 #include "tools/craplog/modules/logs.h"
 
 
-class Craplog
+class Craplog : public QWidget
 {
 public:
     Craplog();
