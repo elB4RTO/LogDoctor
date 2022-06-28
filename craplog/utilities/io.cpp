@@ -23,9 +23,11 @@ bool IOutils::exists( string path )
 // tests if a path exists and points to a file
 bool IOutils::isFile( string path )
 {
+    bool result = false;
     if ( std::filesystem::exists( path )) {
-        return std::filesystem::is_regular_file( path );
+        result = std::filesystem::is_regular_file( path );
     }
+    return result;
 }
 // returns whether a file is readable
 bool IOutils::checkFile( string path, bool readable, bool writable )
@@ -52,9 +54,11 @@ bool IOutils::checkFile( string path, bool readable, bool writable )
 // test if a path exists and points to a folder
 bool IOutils::isDir( string path )
 {
+    bool result = false;
     if ( std::filesystem::exists( path )) {
-        return std::filesystem::is_directory( path );
+        result = std::filesystem::is_directory( path );
     }
+    return result;
 }
 // returns whether a file is readable
 bool IOutils::checkDir( string path, bool readable, bool writable )
