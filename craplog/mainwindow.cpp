@@ -1,7 +1,11 @@
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include "modules/dialogs.h"
+
 #include <iostream>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -51,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS["main_small"] );
     this->ui->listLogFiles->setFont( this->FONTS["main"] );
     // TextBrowser for the LogFiles
-    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES[1] );
+    this->TB.setColorScheme( 0, this->TB_COLOR_SCHEMES[0] );
     this->TB.setFontFamily( this->main_font_family );
     this->TB.setFont( QFont(
         this->main_font_family,
@@ -284,7 +288,7 @@ void MainWindow::on_buttonViewFile_clicked()
             format = this->craplog.getCurrentELF();
         } else {
             // this shouldn't be
-                // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+                Dialogs::msgGenericError( this, QMessageBox::tr("This file's LogType is not Access nor Error:\n") + item.name );
         }
         this->ui->textLogFiles->setText(
             RichText::enrichLogs(
@@ -332,13 +336,7 @@ bool MainWindow::runCraplog()
             // tell Craplog to set this file as selected
             if ( this->craplog.setLogFileSelected( (*i)->text(0) ) == false ) {
                 // this shouldn't be, but...
-                int response = QMessageBox::warning(this,
-                    QString("File selection failed"),
-                    QString("No file in the list matching this name:\n%1\n\nContinue?")
-                        .arg( (*i)->text(0) ),
-                    QMessageBox::Abort | QMessageBox::Ignore );
-                if ( response == QMessageBox::Abort ) {
-                    proceed = false;
+                if ( Dialogs::choiceSelectedFileNotFound( this, (*i)->text(0) ) == false ) {
                     break;
                 }
             }
