@@ -25,7 +25,7 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
         rich_content += "<br/>";
     }
     QString rich_line="", class_name="";
-    string sep, fld, aux_sep1, aux_sep2;
+    string sep, fld, fld_str, aux_sep1, aux_sep2;
     bool missing=false;
     int start=0, stop=0, i=0, aux_start1=0, aux_start2=0, aux_stop=0;
     int line_size;
@@ -90,16 +90,27 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
                 }
             }
             // color the fields
+            fld = logs_format.fields[i];
+            fld_str = line.substr(start, stop-start);
+            if ( StringOps::startsWith( fld, "date_time" ) ) {
+                if ( StringOps::startsWith( fld_str, "[" ) ) {
+                    fld_str = fld_str.substr( 1, fld_str.size()-1 );
+                    rich_line += "[";
+                    if ( StringOps::endsWith( fld_str, "]" ) ) {
+                        fld_str = fld_str.substr( 0, fld_str.size()-1 );
+                        sep = "]" + sep;
+                    }
+                }
+            }
             rich_line += "<b>";
             class_name = "";
             if ( color_scheme > 0 ) {
-                fld = logs_format.fields[i];
                 class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
                     class_name += colors["ip"];
                 } else if ( fld == "port" ) {
                     class_name += colors["pt"];
-                } else if ( fld == "date_time" ) {
+                } else if ( StringOps::startsWith( fld, "date_time" ) ) {
                     class_name += colors["time"];
                 } else if ( fld == "user_agent" || fld == "source_file" ) {
                     class_name += colors["ua_src"];
@@ -114,7 +125,7 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
             }
             // add the class name as span
             rich_line += class_name;
-            rich_line += QString::fromStdString( line.substr(start, stop-start) );
+            rich_line += QString::fromStdString( fld_str );
             if ( color_scheme > 0 ) {
                 rich_line += "</span>";
             }
