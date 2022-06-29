@@ -83,6 +83,8 @@ private:
     void scanLogsDir();
 
     // logs format related
+    FormatOps formatOps;
+    std::unordered_map<int, std::unordered_map<int, std::string>> logs_format_stings;
     std::unordered_map<int, std::unordered_map<int, FormatOps::LogsFormat>> logs_formats;
     void setCurrentALF();
     void setCurrentELF();

@@ -12,20 +12,30 @@ using std::string, std::vector, std::unordered_map;
 
 Craplog::Craplog()
 {
-    this->current_ALF = FormatOps::LogsFormat{
-        .string = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"",
-        .initial = "",
-        .final   = "\"",
-        .separators = {" ", " ", " ", " \"", "\" ", " ", " \"", "\" \""},
-        .fields = {"client","logname","user","date_time","request","response_code","http_size","referer","user_agent"}
-    };
-    this->current_ELF = FormatOps::LogsFormat{
-        .string = "[%t] [%l] [pid %P] %F: %E: [client %a] %M",
-        .initial = "[",
-        .final   = "",
-        .separators = {"] [", "] [pid ", "] ", ": ", ": [client ", ":", "] "},
-        .fields = {"date_time","error_level","pid","source_file","os_err","client","port","error_message"}
-    };
+    this->logs_format_stings[11] = unordered_map<int, string>();
+    this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
+    this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";/*
+    this->logs_format_stings[12] = unordered_map<int, string>();
+    this->logs_format_stings[12][1] = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
+    this->logs_format_stings[12][2] = "";
+    this->logs_format_stings[13] = unordered_map<int, string>();
+    this->logs_format_stings[13][1] = "";
+    this->logs_format_stings[13][2] = "";*/
+
+    // TEMPORARY !!!
+    this->logs_formats[11][1] = this->formatOps.processFormatString( this->logs_format_stings[11][1], 1, 11 );
+    this->logs_formats[11][2] = this->formatOps.processFormatString( this->logs_format_stings[11][2], 2, 11 );
+    this->logs_formats[12][1] = this->formatOps.processFormatString( this->logs_format_stings[12][1], 1, 12 );
+    /* FINAL WILL BE:
+    for ( int i=11; i<14; i++ ) {
+        for ( int j=1; j<3; j++ ) {
+            this->logs_formats[i][j] = this->formatOps.processFormatString( this->logs_format_stings[i][j], j, i );
+        }
+    }
+    */
+
+    this->current_ALF = this->logs_formats[11][1];
+    this->current_ELF = this->logs_formats[11][2];
 
     // apache2 access/error logs location
     unordered_map<int, string> new_map;
