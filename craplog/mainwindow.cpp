@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS["main_small"] );
     this->ui->listLogFiles->setFont( this->FONTS["main"] );
     // TextBrowser for the LogFiles
-    this->TB.setColorScheme( 0, this->TB_COLOR_SCHEMES[0] );
+    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES[1] );
     this->TB.setFontFamily( this->main_font_family );
     this->TB.setFont( QFont(
         this->main_font_family,
