@@ -9,11 +9,11 @@ Dialogs::Dialogs()
 }
 
 
-bool Dialogs::choiceSelectedFileNotFound( QWidget *parent, std::string file )
+bool Dialogs::choiceSelectedFileNotFound(QWidget *parent, const std::string& file )
 {
     return choiceSelectedFileNotFound( parent, QString::fromStdString( file ) );
 }
-bool Dialogs::choiceSelectedFileNotFound( QWidget *parent, QString file )
+bool Dialogs::choiceSelectedFileNotFound(QWidget *parent, const QString& file )
 {
     bool proceed = false;
     auto response = QMessageBox::warning(parent,
@@ -29,11 +29,11 @@ bool Dialogs::choiceSelectedFileNotFound( QWidget *parent, QString file )
 
 
 
-void Dialogs::msgDirNotExists( QWidget *parent, std::string dir )
+void Dialogs::msgDirNotExists(QWidget *parent, const std::string& dir )
 {
     msgDirNotExists( parent, QString::fromStdString( dir ) );
 }
-void Dialogs::msgDirNotExists( QWidget *parent, QString dir )
+void Dialogs::msgDirNotExists(QWidget *parent, const QString& dir )
 {
     QMessageBox::warning(parent,
         t_DIR_NOT_FOUND,
@@ -44,11 +44,11 @@ void Dialogs::msgDirNotExists( QWidget *parent, QString dir )
 
 
 
-void Dialogs::msgGenericError( QWidget *parent, std::string msg )
+void Dialogs::msgGenericError(QWidget *parent, const std::string& msg )
 {
     msgGenericError( parent, QString::fromStdString( msg ) );
 }
-void Dialogs::msgGenericError( QWidget *parent, QString msg )
+void Dialogs::msgGenericError(QWidget *parent, const QString& msg )
 {
     QMessageBox::critical(parent,
         t_ERROR_OCCURED,

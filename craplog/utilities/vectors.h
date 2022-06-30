@@ -9,7 +9,7 @@ class VecOps
 public:
     VecOps();
 
-    static bool contains( std::vector<std::string> list, std::string flag );
+    static bool contains( const std::vector<std::string>& list, const std::string& flag );
 };
 
 #endif // VECOPS_H

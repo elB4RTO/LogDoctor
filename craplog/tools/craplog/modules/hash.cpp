@@ -21,7 +21,7 @@ HashOps::HashOps()
 
 
 // reads the files holding the already used hashes
-void HashOps::readLists( string dir_path )
+void HashOps::readLists( const std::string& dir_path )
 {
     for ( int id=11; id<14; id++ ) {
 
@@ -30,7 +30,7 @@ void HashOps::readLists( string dir_path )
 
 
 // returns the hash
-string HashOps::digestFile( string file_path )
+string HashOps::digestFile( const string& file_path )
 {
     string content = IOutils::readFile( file_path );
     SHA256 sha;
@@ -42,7 +42,7 @@ string HashOps::digestFile( string file_path )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( string file_hash, const int web_server_id )
+bool HashOps::hasBeenUsed( const std::string &file_hash, const int web_server_id )
 {
     bool found = false;
     for ( const string &hash : this->hashes[ web_server_id ] ) {
@@ -56,7 +56,7 @@ bool HashOps::hasBeenUsed( string file_hash, const int web_server_id )
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertHash( string hash, const int web_server_id )
+bool HashOps::insertHash( const std::string &hash, const int web_server_id )
 {
     bool proceed = true;
     try {
@@ -72,10 +72,10 @@ bool HashOps::insertHash( string hash, const int web_server_id )
 }
 
 
-bool HashOps::insertHashes( vector<string> hashes, const int web_server_id )
+bool HashOps::insertHashes( const vector<string>& hashes, const int web_server_id )
 {
     bool proceed = true;
-    for ( string& hash : hashes ) {
+    for ( const string &hash : hashes ) {
         if ( this->insertHash( hash, web_server_id ) == false ) {
             proceed = false;
             break;

@@ -11,20 +11,20 @@ public:
     IOutils();
 
     // checks the existence of a path
-    static bool exists( std::string path );
+    static bool exists( const std::string& path );
     // checks if a path exists and it points to a file
-    static bool isFile( std::string path );
+    static bool isFile( const std::string& path );
     // checks if a path exists and it points to a folder
-    static bool isDir( std::string path );
+    static bool isDir( const std::string& path );
     // checks if a path exists and it points to a file and the file is readable/writable
-    static bool checkFile( std::string path, bool readable=false, bool writable=false );
+    static bool checkFile( const std::string& path, const bool readable=false, const bool writable=false );
     // checks if a path exists and it points to a folder and the folder is readable/writable
-    static bool checkDir( std::string path, bool readable=false, bool writable=false );
+    static bool checkDir( const std::string& path, const bool readable=false, const bool writable=false );
 
     // read a defined amount of lines (from the start)
-    static std::vector<std::string> readLines( std::string path, int n_lines=10 );
+    static std::vector<std::string> readLines( const std::string& path, const int n_lines=10 );
     // read the entire content
-    static std::string readFile( std::string path );
+    static std::string readFile( const std::string& path );
 };
 
 #endif // IO_H

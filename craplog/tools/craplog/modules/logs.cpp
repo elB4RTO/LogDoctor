@@ -10,12 +10,12 @@ LogOps::LogOps()
 }
 
 
-LogOps::LogType LogOps::defineFileType( string name, vector<string> lines, unordered_map<int, FormatOps::LogsFormat> formats )
+LogOps::LogType LogOps::defineFileType( const string& name, const vector<string>& lines, unordered_map<int, FormatOps::LogsFormat>& formats )
 {
     int n_acc=0, n_err=0;
     LogOps::LogType supposed_type, real_type;
-    FormatOps::LogsFormat current_ALF = formats[1],
-                          current_ELF = formats[2];
+    const FormatOps::LogsFormat current_ALF = formats[1],
+                                current_ELF = formats[2];
     if ( StringOps::startsWith( name, "access" ) ) {
         supposed_type = LogOps::LogType::Access;
     } else if ( StringOps::startsWith( name, "error" ) ) {
@@ -80,12 +80,12 @@ LogOps::LogType LogOps::defineFileType( string name, vector<string> lines, unord
 }
 
 
-vector<string> LogOps::splitLine( string line, int type )
+vector<string> LogOps::splitLine( const string& line, const int type )
 {
 
 }
 
-vector<string> LogOps::splitLines( string line, int type )
+vector<string> LogOps::splitLines( const string& line, const int type )
 {
 
 }
