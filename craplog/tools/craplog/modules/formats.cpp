@@ -13,7 +13,7 @@ FormatOps::FormatOps()
     this->APACHE2_ALF["%t"]             = "date_time";
     this->APACHE2_ALF["%t_u"]           = "date_time_utc";
     this->APACHE2_ALF["%t_ctime"]       = "date_time_ct";
-    this->APACHE2_ALF["%r"]             = "request";
+    this->APACHE2_ALF["%r"]             = "request_full";
     this->APACHE2_ALF["%>s"]            = "response_code";
     this->APACHE2_ALF["%O"]             = "bytes_sent";
     this->APACHE2_ALF["%I"]             = "bytes_received";
@@ -68,7 +68,7 @@ FormatOps::FormatOps()
     this->NGINX_ALF["$remote_addr"]     = "client";
     this->NGINX_ALF["$time_local"]      = "date_time";
     this->NGINX_ALF["$time_iso8601"]    = "date_time_iso";
-    this->NGINX_ALF["$request"]         = "request";
+    this->NGINX_ALF["$request"]         = "request_full";
     this->NGINX_ALF["$status"]          = "response_code";
     this->NGINX_ALF["$bytes_sent"]      = "bytes_sent";
     this->NGINX_ALF["$request_length"]  = "bytes_received";
@@ -83,20 +83,23 @@ FormatOps::FormatOps()
     this->NGINX_ALF["msec"]                 = "NONE";
     this->NGINX_ALF["pipe"]                 = "NONE";
     // error logs fields formats (only the ones considered)
-    this->NGINX_ELF[""] = "client:port";
-    this->NGINX_ELF[""] = "error_level";
-    this->NGINX_ELF[""] = "error_message";
-    this->NGINX_ELF[""] = "source_file";
-    this->NGINX_ELF[""] = "date_time";
+    //this->NGINX_ELF[""] = "client:port";
+    this->NGINX_ELF["$error_level"] = "error_level";
+    this->NGINX_ELF["$error_message"] = "error_message";
+    //this->NGINX_ELF[""] = "source_file";
+    this->NGINX_ELF["$time_iso8601"] = "date_time";
     // not in use, will be discarded
-    this->NGINX_ELF[""] = "NONE";
+    this->NGINX_ELF["$pid"] = "NONE";
+    this->NGINX_ELF["$Cid"] = "NONE";
 
     /////////////
     //// IIS ////
     // access logs fields formats (only the ones considered)
     this->IIS_ALF["c-ip"]           = "client";
     this->IIS_ALF["time"]           = "date_time_utc";
-    this->IIS_ALF["cs-uri-stem"]    = "request";
+    this->IIS_ALF["cs-uri-stem"]    = "request_page";
+    this->IIS_ALF["cs-uri-query"]   = "request_query";
+    this->IIS_ALF["cs(Cookie)"]     = "cookie";
     this->IIS_ALF["sc-status"]      = "response_code";
     this->IIS_ALF["sc-bytes"]       = "bytes_sent";
     this->IIS_ALF["cs-bytes"]       = "bytes_received";
@@ -107,11 +110,9 @@ FormatOps::FormatOps()
     this->IIS_ALF["s-sitename"]      = "NONE";
     this->IIS_ALF["s-computername"]  = "NONE";
     this->IIS_ALF["s-ip"]            = "NONE";
-    this->IIS_ALF["cs-uri-query"]    = "NONE";
     this->IIS_ALF["s-port"]          = "NONE";
     this->IIS_ALF["cs-username"]     = "NONE";
     this->IIS_ALF["cs-version"]      = "NONE";
-    this->IIS_ALF["cs(Cookie)"]      = "NONE";
     this->IIS_ALF["cs-host"]         = "NONE";
     this->IIS_ALF["sc-substatus"]    = "NONE";
     this->IIS_ALF["sc-win32-status"] = "NONE";
@@ -127,7 +128,7 @@ FormatOps::FormatOps()
 }
 
 
-FormatOps::LogsFormat FormatOps::processFormatString(string f_str, int l_type, int ws_id )
+FormatOps::LogsFormat FormatOps::processFormatString( const std::string& f_str, const int l_type, const int ws_id ) const&
 {
     unordered_map<string, string> f_map;
     vector<string> f_flds;

@@ -22,10 +22,10 @@ public:
     };
 
     // define if really access and/or error logs
-    LogType defineFileType( std::string name, std::vector<std::string> lines, std::unordered_map<int, FormatOps::LogsFormat> format );
+    LogType defineFileType( const std::string& name, const std::vector<std::string>& lines, std::unordered_map<int, FormatOps::LogsFormat>& format );
 
-    std::vector<std::string> splitLine( std::string line, int type );
-    std::vector<std::string> splitLines( std::string line, int type );
+    std::vector<std::string> splitLine( const std::string& line, const int type );
+    std::vector<std::string> splitLines( const std::string& line, int type );
 
 private:
     // types constants

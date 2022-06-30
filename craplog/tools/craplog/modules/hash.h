@@ -12,15 +12,15 @@ public:
     HashOps();
 
     // retrieve the lists from file
-    void readLists( std::string dir_path );
+    void readLists( const std::string& dir_path );
 
     // returns the hash
-    std::string digestFile( std::string file_path );
+    std::string digestFile( const std::string& file_path );
     // check if the given hash is from a file which has been used already
-    bool hasBeenUsed( std::string file_hash, int web_server_id );
+    bool hasBeenUsed( const std::string& file_hash, const int web_server_id );
     // insert the given hash/es in the relative list
-    bool insertHash( std::string hash, int web_server_id );
-    bool insertHashes( std::vector<std::string> hashes, int web_server_id );
+    bool insertHash( const std::string& hash, const int web_server_id );
+    bool insertHashes( const std::vector<std::string>& hashes, const int web_server_id );
 
 private:
     // id constants

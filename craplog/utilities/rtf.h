@@ -17,9 +17,9 @@ public:
     RichText();
 
     static QString enrichLogs(
-        const std::string content,
-        const FormatOps::LogsFormat logs_format,
-        const TextBrowser TB );
+        const std::string& content,
+        const FormatOps::LogsFormat& logs_format,
+        const TextBrowser& TB );
 };
 
 #endif // RTF_H
