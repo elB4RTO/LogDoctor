@@ -6,6 +6,7 @@
 #include <filesystem>
 
 #include <iostream>
+#include <thread>
 
 using std::string, std::vector, std::unordered_map;
 
@@ -14,13 +15,13 @@ Craplog::Craplog()
 {
     this->logs_format_stings[11] = unordered_map<int, string>();
     this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
-    this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";/*
+    this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";
     this->logs_format_stings[12] = unordered_map<int, string>();
     this->logs_format_stings[12][1] = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
-    this->logs_format_stings[12][2] = "";
+    this->logs_format_stings[12][2] = "$time_iso8601 [$error_level] $pid: *$cid $error_message";
     this->logs_format_stings[13] = unordered_map<int, string>();
-    this->logs_format_stings[13][1] = "";
-    this->logs_format_stings[13][2] = "";*/
+    this->logs_format_stings[13][1] = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken";
+    this->logs_format_stings[13][2] = "";
 
     // TEMPORARY !!!
     this->logs_formats[11][1] = this->formatOps.processFormatString( this->logs_format_stings[11][1], 1, 11 );
@@ -38,7 +39,6 @@ Craplog::Craplog()
     this->current_ELF = this->logs_formats[11][2];
 
     // apache2 access/error logs location
-    unordered_map<int, string> new_map;
     this->logs_paths.emplace( 11, unordered_map<int, string>() );
     this->logs_paths[11].emplace( 1, "/var/log/apache2" );
     this->logs_paths[11].emplace( 2, "/var/log/apache2" );
@@ -51,6 +51,31 @@ Craplog::Craplog()
     this->logs_paths[13].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
     this->logs_paths[13].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
 
+    // apache2 access/error log files' names
+    this->logs_base_names.emplace( 11, unordered_map<int, LogName>() );
+    this->logs_base_names[11].emplace( 1, LogName { .starts   = "access.log.",
+                                                    .contains = "",
+                                                    .ends     = "" });
+    this->logs_base_names[11].emplace( 2, LogName { .starts   = "error.log.",
+                                                    .contains = "",
+                                                    .ends     = "" });
+    // nginx access/error log files' names
+    this->logs_base_names.emplace( 12, unordered_map<int, LogName>() );
+    this->logs_base_names[12].emplace( 1, LogName { .starts   = "access.log.",
+                                                    .contains = "",
+                                                    .ends     = "" });
+    this->logs_base_names[12].emplace( 2, LogName { .starts   = "error.log.",
+                                                    .contains = "",
+                                                    .ends     = "" });
+    // iis access/error log files' names
+    this->logs_base_names.emplace( 13, unordered_map<int, LogName>() );
+    this->logs_base_names[13].emplace( 1, LogName { .starts   = "nc",
+                                                    .contains = "",
+                                                    .ends     = ".log" });
+    this->logs_base_names[13].emplace( 2, LogName { .starts   = "",
+                                                    .contains = "",
+                                                    .ends     = "" });
+
 
     /*this->readConfigs();
 
@@ -59,6 +84,81 @@ Craplog::Craplog()
 }
 
 
+//////////////////
+//// SETTINGS ////
+int Craplog::getWarningSize()
+{
+    return this->warning_size;
+}
+
+void Craplog::setWarningSize( int new_size )
+{
+    this->warning_size = new_size;
+}
+
+
+// get the logs format
+FormatOps::LogsFormat Craplog::getAccessLogsFormat( int web_server_id ) &
+{
+    return this->logs_formats[ web_server_id ][1];
+}
+FormatOps::LogsFormat Craplog::getErrorLogsFormat( int web_server_id ) &
+{
+    return this->logs_formats[ web_server_id ][2];
+}
+
+// set the logs format
+void Craplog::setAccessLogsFormat( const int web_server_id, const std::string& format_string )
+{
+    this->logs_formats[web_server_id][1] = this->formatOps.processFormatString(
+        this->logs_format_stings[web_server_id][1],
+        1, web_server_id );
+}
+void Craplog::setErrorLogsFormat(const int web_server_id, const std::string& format_string )
+{
+    this->logs_formats[web_server_id][2] = this->formatOps.processFormatString(
+        this->logs_format_stings[web_server_id][2],
+        2, web_server_id );
+}
+
+
+// set the current Web Server
+void Craplog::setCurrentWSID( int web_server_id )
+{
+    this->current_WS = web_server_id;
+}
+
+int Craplog::getCurrentWSID() const
+{
+    return this->current_WS;
+}
+
+// set the current access logs format
+void Craplog::setCurrentALF()
+{
+    this->current_ALF = this->logs_formats[ this->current_WS ][1];
+}
+// set the current error logs format
+void Craplog::setCurrentELF()
+{
+    this->current_ELF = this->logs_formats[ this->current_WS ][2];
+}
+
+// get the current access logs format
+FormatOps::LogsFormat Craplog::getCurrentALF() const&
+{
+    return this->current_ALF;
+}
+// get the current error logs format
+FormatOps::LogsFormat Craplog::getCurrentELF() const&
+{
+    return this->current_ELF;
+}
+
+
+
+///////////////////
+//// LOGS LIST ////
 // return the size of the list
 int Craplog::getLogsListSize() {
     return this->logs_list.size();
@@ -75,7 +175,7 @@ vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
 
 
 // return the path of the file matching the given name
-Craplog::LogFile Craplog::getLogFileItem( QString file_name )
+Craplog::LogFile Craplog::getLogFileItem( const QString& file_name )
 {
     LogFile logfile;
     for ( const Craplog::LogFile& item : this->logs_list ) {
@@ -89,7 +189,7 @@ Craplog::LogFile Craplog::getLogFileItem( QString file_name )
 
 
 // return the path of the file matching the given name
-string Craplog::getLogFilePath( QString file_name )
+string Craplog::getLogFilePath( const QString& file_name )
 {
     string path;
     for ( const Craplog::LogFile& item : this->logs_list ) {
@@ -102,7 +202,7 @@ string Craplog::getLogFilePath( QString file_name )
 }
 
 // set a file as selected
-bool Craplog::setLogFileSelected( QString file_name )
+bool Craplog::setLogFileSelected( const QString& file_name )
 {
     bool result = false;
     for ( Craplog::LogFile& item : this->logs_list ) {
@@ -145,8 +245,16 @@ void Craplog::scanLogsDir()
             if ( IOutils::checkFile(path,true) == false ) {
                 continue;
             }
-            // match only files having ".log." in their name
-            if ( this->isFileNameValid( name ) == false ) {
+
+            LogOps::LogType log_type = this->logOps.defineFileType( name, IOutils::readLines( path ), this->logs_formats[ this->current_WS ] );
+            if ( log_type == LogOps::LogType::Failed ) {
+                // failed to get the log type, do not append
+                // error message already displayed while defining as failed in logOps
+                continue;
+            }
+
+            // match only valid files names
+            if ( this->isFileNameValid( name, log_type ) == false ) {
                 continue;
             }
 
@@ -156,13 +264,8 @@ void Craplog::scanLogsDir()
                 .name = QString::fromStdString( name ),
                 .hash = this->hashOps.digestFile( path ),
                 .path = path,
-                .type = this->logOps.defineFileType( name, IOutils::readLines( path ), this->logs_formats[ this->current_WS ] )
+                .type = log_type
             };
-            if ( logfile.type == LogOps::LogType::Failed ) {
-                // failed to get the log type, do not append
-                // error message already displayed while defining as failed in logOps
-                continue;
-            }
             // push in the list
             this->logs_list.push_back( logfile );
         }
@@ -171,91 +274,99 @@ void Craplog::scanLogsDir()
 
 
 
-bool Craplog::isFileNameValid( string name )
+bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& log_type )
 {
-    bool valid = false;
-    if ( StringOps::startsWith( name, "access.log." )
-      || StringOps::startsWith( name, "error.log." ) ) {
-        int start = name.find_last_of( ".log." )+1;
-        int stop = name.find( ".gz", start);
-        if ( stop >= name.size() ) {
-            stop = name.size()-1;
+    bool valid = true;
+    if ( this->logs_base_names[ this->current_WS ][ log_type ].starts != "" ) {
+        if ( ! StringOps::startsWith( name, this->logs_base_names[ this->current_WS ][ log_type ].starts ) ) {
+            return false;
         }
-        valid = true;
-        for ( int i=start; i<=stop; i++ ) {
-            if ( StringOps::isNumeric( name[i] ) == false ) {
-                valid = false;
-                break;
+    }
+    if ( this->logs_base_names[ this->current_WS ][ log_type ].contains != "" ) {
+        if ( ! StringOps::contains(
+                    name.substr( this->logs_base_names[ this->current_WS ][ log_type ].starts.size() ),
+                    this->logs_base_names[ this->current_WS ][ log_type ].contains ) ) {
+            return false;
+        }
+    }
+    if ( this->logs_base_names[ this->current_WS ][ log_type ].ends != "" ) {
+        if ( ! StringOps::endsWith( name, this->logs_base_names[ this->current_WS ][ log_type ].ends ) ) {
+            return false;
+        }
+    }
+
+    switch ( this->current_WS ) {
+        int start, stop;
+        case 11 | 12:
+            // further checks for apache / nginx
+            start = name.find_last_of( ".log." )+1;
+            stop = name.find( ".gz", start);
+            if ( stop < 0 || stop >= name.size() ) {
+                stop = name.size()-1;
             }
-        }
+            // serach for incremental numbers
+            for ( int i=start; i<=stop; i++ ) {
+                if ( StringOps::isNumeric( name[i] ) == false ) {
+                    valid = false;
+                    break;
+                }
+            }
+            break;
+
+        case 13:
+            // further checks for iis
+            start = this->logs_base_names[ 13 ][ log_type ].starts.size();
+            stop = name.size() - this->logs_base_names[ 13 ][ log_type ].ends.size();
+            // search for incremental number / date
+            for ( int i=start; i<=stop; i++ ) {
+                if ( StringOps::isNumeric( name[i] ) == false ) {
+                    valid = false;
+                    break;
+                }
+            }
+            break;
     }
     return valid;
 }
 
 
-int Craplog::getWarningSize()
+///////////////
+//// WORKK ////
+void Craplog::startWorking()
 {
-    return this->warning_size;
+    this->working = true;
+    this->proceed = true;
+    this->parsed_size = 0;
+    this->parsed_lines = 0;
+}
+void Craplog::stopWorking()
+{
+    this->working = false;
+}
+bool Craplog::isWorking()
+{
+    return this->working;
 }
 
-void Craplog::setWarningSize( int new_size )
+// performances
+int Craplog::getParsedSize()
 {
-    this->warning_size = new_size;
+    return this->parsed_size;
 }
-
-
-// get the logs format
-FormatOps::LogsFormat Craplog::getAccessLogsFormat( int web_server_id )
+int Craplog::getParsedLines()
 {
-    return this->logs_formats[ web_server_id ][1];
-}
-FormatOps::LogsFormat Craplog::getErrorLogsFormat( int web_server_id )
-{
-    return this->logs_formats[ web_server_id ][2];
-}
-
-// set the logs format
-void Craplog::setAccessLogsFormat( int web_server_id, string format_string )
-{
-
-}
-void Craplog::setErrorLogsFormat( int web_server_id, string format_string )
-{
-
+    return this->parsed_lines;
 }
 
 
-// set the current Web Server
-void Craplog::setCurrentWSID( int web_server_id )
+void Craplog::run()
 {
-    this->current_WS = web_server_id;
-}
-
-int Craplog::getCurrentWSID()
-{
-    return this->current_WS;
-}
-
-// set the current access logs format
-void Craplog::setCurrentALF()
-{
-    this->current_ALF = this->logs_formats[ this->current_WS ][1];
-}
-// set the current error logs format
-void Craplog::setCurrentELF()
-{
-    this->current_ELF = this->logs_formats[ this->current_WS ][2];
-}
-
-// get the current access logs format
-FormatOps::LogsFormat Craplog::getCurrentALF()
-{
-    return this->current_ALF;
-}
-// get the current error logs format
-FormatOps::LogsFormat Craplog::getCurrentELF()
-{
-    return this->current_ELF;
+    for ( int i=0; i<50; i++ ) {
+        std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+        this->parsed_size += 2496;
+        this->parsed_lines += 7467;
+    }
+    this->stopWorking();
 }
 
 

@@ -18,19 +18,21 @@ class Craplog : public QWidget
 public:
     Craplog();
 
+    void run();
+
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // logs formats web server specific settings
-    void setAccessLogsFormat( int web_server_id, std::string format_string );
-    void setErrorLogsFormat( int web_server_id, std::string format_string );
-    FormatOps::LogsFormat getAccessLogsFormat( int web_server_id );
-    FormatOps::LogsFormat getErrorLogsFormat( int web_server_id );
+    void setAccessLogsFormat( const int web_server_id, const std::string& format_string );
+    void setErrorLogsFormat( const int web_server_id, const std::string& format_string );
+    FormatOps::LogsFormat getAccessLogsFormat( const int web_server_id ) &;
+    FormatOps::LogsFormat getErrorLogsFormat( const int web_server_id ) &;
     // currently used WS and LF
-    void setCurrentWSID( int web_server_id );
-    int  getCurrentWSID();
-    FormatOps::LogsFormat getCurrentALF();
-    FormatOps::LogsFormat getCurrentELF();
+    void setCurrentWSID( const int web_server_id );
+    int  getCurrentWSID() const;
+    FormatOps::LogsFormat getCurrentALF() const&;
+    FormatOps::LogsFormat getCurrentELF() const&;
 
     // log type constants
     const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
@@ -44,26 +46,41 @@ public:
         LogOps::LogType type;
     };
     // logs list related methods
-    std::vector<LogFile> getLogsList( bool fresh=false );
+    std::vector<LogFile> getLogsList( const bool fresh=false );
     int getLogsListSize();
     // log file related
-    LogFile getLogFileItem( QString file_name );
-    std::string getLogFilePath( QString file_name );
+    LogFile getLogFileItem( const QString& file_name );
+    std::string getLogFilePath( const QString& file_name );
     // set a file in the list as selected, to be used for the stats
-    bool setLogFileSelected( QString file_name );
+    bool setLogFileSelected( const QString& file_name );
     // check if a file name respects the one set
-    bool isFileNameValid( std::string name );
+    bool isFileNameValid( const std::string& name, const LogOps::LogType& log_type );
 
     // warning file size (in Bytes)
     int getWarningSize();
-    void setWarningSize( int new_size );
+    void setWarningSize( const int new_size );
     // logs usage control
     HashOps hashOps;
 
     // operations on logs
     LogOps logOps;
 
+    // job related
+    void startWorking();
+    void stopWorking();
+    bool isWorking();
+    // job performancea
+    int getParsedSize();
+    int getParsedLines();
+
 private:
+    // job related
+    bool working = false,
+         proceed = false;
+    // perf related
+    int parsed_size = 1110,
+        parsed_lines = 22220;
+
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
 
@@ -75,9 +92,15 @@ private:
 
     // logs related
     int warning_size = 1'048'576; //104'857'600; // in Bytes ( => 100 MiB )
-    // web server specific paths and file names
-    std::unordered_map<int, std::unordered_map<int, std::string>> logs_base_names;
+    // web server specific paths
     std::unordered_map<int, std::unordered_map<int, std::string>> logs_paths;
+    // web server specific file names criterions
+    struct LogName {
+        std::string starts;
+        std::string contains;
+        std::string ends;
+    };
+    std::unordered_map<int, std::unordered_map<int, LogName>> logs_base_names;
     // logs list related
     std::vector<LogFile> logs_list;
     void scanLogsDir();
