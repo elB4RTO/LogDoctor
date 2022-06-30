@@ -9,10 +9,10 @@ VecOps::VecOps()
 }
 
 
-bool VecOps::contains( vector<string> list, string flag )
+bool VecOps::contains( const vector<string>& list, const string& flag )
 {
     bool result = false;
-    for ( string& item : list ) {
+    for ( const string& item : list ) {
         if ( item == flag ) {
             result = true;
             break;

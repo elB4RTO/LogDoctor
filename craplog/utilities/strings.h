@@ -12,22 +12,24 @@ public:
     StringOps();
 
 
-    static int count( std::string str, std::string flag, bool consecutives=true );
+    static int count( const std::string& str, const std::string& flag, const bool consecutives=true );
 
-    static bool isNumeric( std::string str );
-    static bool isNumeric( char chr );
+    static bool isNumeric( const std::string& str );
+    static bool isNumeric( const char chr );
 
-    static bool startsWith( std::string str, std::string flag );
-    static bool endsWith( std::string str, std::string flag );
+    static bool startsWith( const std::string& str, const std::string& flag );
+    static bool endsWith( const std::string& str, const std::string& flag );
 
-    static std::string strip( std::string str, std::string chars=" \n\t\b\r\v" );
-    static std::string lstrip( std::string str, std::string chars=" \n\t\b\r\v" );
-    static std::string rstrip( std::string str, std::string chars=" \n\t\b\r\v" );
-    static std::string lstripUntil( std::string str, std::string chr, bool inclusive=true, bool consecutives=true );
+    static bool contains( const std::string& str, const std::string& flag );
 
-    static std::vector<std::string> split( std::string str, std::string sep="\n" );
+    static std::string strip( const std::string& str, const std::string& chars=" \n\t\b\r\v" );
+    static std::string lstrip( const std::string& str, const std::string& chars=" \n\t\b\r\v" );
+    static std::string rstrip( const std::string& str, const std::string& chars=" \n\t\b\r\v" );
+    static std::string lstripUntil( const std::string& str, const std::string& chr, const bool inclusive=true, const bool consecutives=true );
 
-    static std::vector<std::string> splitrip( std::string str, std::string sep="\n", std::string chars=" \n\t\b\r\v" );
+    static std::vector<std::string> split( const std::string& str, const std::string& sep="\n" );
+
+    static std::vector<std::string> splitrip( const std::string& str, const std::string& sep="\n", const std::string& chars=" \n\t\b\r\v" );
 };
 
-#endif // StringOps_H
+#endif // STRINGS_H

@@ -15,13 +15,13 @@ IOutils::IOutils()
 }
 
 // test the existence of a file/folder
-bool IOutils::exists( string path )
+bool IOutils::exists( const string& path )
 {
     return std::filesystem::exists( path );
 }
 
 // tests if a path exists and points to a file
-bool IOutils::isFile( string path )
+bool IOutils::isFile( const std::string& path )
 {
     bool result = false;
     if ( std::filesystem::exists( path )) {
@@ -30,7 +30,7 @@ bool IOutils::isFile( string path )
     return result;
 }
 // returns whether a file is readable
-bool IOutils::checkFile( string path, bool readable, bool writable )
+bool IOutils::checkFile( const std::string& path, const bool readable, const bool writable )
 {
     bool result = false;
     if ( IOutils::isFile( path ) == true ) {
@@ -52,7 +52,7 @@ bool IOutils::checkFile( string path, bool readable, bool writable )
 }
 
 // test if a path exists and points to a folder
-bool IOutils::isDir( string path )
+bool IOutils::isDir( const std::string& path )
 {
     bool result = false;
     if ( std::filesystem::exists( path )) {
@@ -61,7 +61,7 @@ bool IOutils::isDir( string path )
     return result;
 }
 // returns whether a file is readable
-bool IOutils::checkDir( string path, bool readable, bool writable )
+bool IOutils::checkDir( const std::string& path, const bool readable, const bool writable )
 {
     bool result = false;
     if ( IOutils::isDir( path ) == true ) {
@@ -84,7 +84,7 @@ bool IOutils::checkDir( string path, bool readable, bool writable )
 
 
 
-vector<string> IOutils::readLines( string path, int n_lines )
+vector<string> IOutils::readLines( const string& path, const int n_lines )
 {
     // read rhe first line only
     std::ifstream file;
@@ -124,7 +124,7 @@ vector<string> IOutils::readLines( string path, int n_lines )
 }
 
 
-string IOutils::readFile( string path )
+string IOutils::readFile( const string& path )
 {
     // read the whole file
     std::ifstream file;

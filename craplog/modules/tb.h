@@ -11,19 +11,19 @@ public:
     TextBrowser();
 
     // getters
-    bool getWideLinesUsage();
-    int  getColorSchemeID();
-    std::unordered_map<std::string, QString> getColorScheme();
-    int  getFontSize();
-    QString getFontFamily();
-    QFont   getFont();
+    bool getWideLinesUsage() const;
+    int  getColorSchemeID() const;
+    std::unordered_map<std::string, QString> getColorScheme() const&;
+    int  getFontSize() const;
+    QString getFontFamily() const;
+    QFont   getFont() const;
 
     // setters
-    void setWideLinesUsage( bool use_wide_lines );
-    void setColorScheme( int color_scheme_id, std::unordered_map<std::string, QString> color_scheme );
-    void setFontSize( int font_size );
-    void setFontFamily( QString font_family );
-    void setFont( QFont font );
+    void setWideLinesUsage( const bool use_wide_lines );
+    void setColorScheme( const int color_scheme_id, const std::unordered_map<std::string, QString>& color_scheme );
+    void setFontSize( const int font_size );
+    void setFontFamily( const QString& font_family );
+    void setFont( const QFont& font );
 
 private:
     bool wide_lines = false;

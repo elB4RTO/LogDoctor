@@ -10,7 +10,7 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format, TextBrowser TB )
+QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFormat& logs_format, const TextBrowser &TB )
 {
     std::unordered_map<std::string, QString> colors = TB.getColorScheme();
     int color_scheme = TB.getColorSchemeID();
@@ -27,7 +27,7 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
     QString rich_line="", class_name="";
     string sep, fld, fld_str, aux_sep1, aux_sep2;
     bool missing=false;
-    int start=0, stop=0, i=0, aux_start1=0, aux_start2=0, aux_stop=0;
+    int start, stop=0, i, aux_start1, aux_start2, aux_stop;
     int line_size;
     int n_sep = logs_format.separators.size()-1;
     for ( string& line : StringOps::splitrip( content ) ) {
@@ -114,7 +114,7 @@ QString RichText::enrichLogs( string content, FormatOps::LogsFormat logs_format,
                     class_name += colors["time"];
                 } else if ( fld == "user_agent" || fld == "source_file" ) {
                     class_name += colors["ua_src"];
-                } else if ( fld == "request" || fld == "error_message" ) {
+                } else if ( StringOps::startsWith( fld, "request" ) || fld == "error_message" ) {
                     class_name += colors["req_err"];
                 } else if ( fld == "response_code" || fld == "error_level" ) {
                     class_name += colors["res_lev"];

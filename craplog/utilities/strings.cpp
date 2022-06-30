@@ -10,7 +10,7 @@ StringOps::StringOps()
 }
 
 
-int StringOps::count( std::string str, std::string flag, bool consecutives )
+int StringOps::count(const std::string& str, const std::string& flag, bool consecutives )
 {
     int start=0, aux_start=0, max=str.size()-1, count=0;
     while (true) {
@@ -33,10 +33,10 @@ int StringOps::count( std::string str, std::string flag, bool consecutives )
 }
 
 
-bool StringOps::isNumeric( string str )
+bool StringOps::isNumeric( const string& str )
 {
     bool result = true;
-    for ( char& chr : str ) {
+    for ( const char& chr : str ) {
         if ( StringOps::isNumeric( chr ) == false ) {
             result = false;
 
@@ -56,7 +56,7 @@ bool StringOps::isNumeric( char chr )
 }
 
 
-bool StringOps::startsWith(string str, string flag)
+bool StringOps::startsWith( const string& str, const string& flag)
 {
     bool result = true;
     for ( int i=0; i<flag.size(); i++ ) {
@@ -69,7 +69,7 @@ bool StringOps::startsWith(string str, string flag)
 }
 
 
-bool StringOps::endsWith( string str, string flag )
+bool StringOps::endsWith( const string& str, const string& flag )
 {
     bool result = true;
     int str_size = str.size()-1,
@@ -84,7 +84,18 @@ bool StringOps::endsWith( string str, string flag )
 }
 
 
-string StringOps::strip( string str, string chars )
+bool StringOps::contains( const string& str, const string& flag )
+{
+    bool result = true;
+    int i = str.find( flag );
+    if ( i < 0 || i > str.size() ) {
+        result = false;
+    }
+    return result;
+}
+
+
+string StringOps::strip( const string& str, const string& chars )
 {
     string stripped;
     stripped = StringOps::lstrip( str, chars );
@@ -93,7 +104,7 @@ string StringOps::strip( string str, string chars )
 }
 
 
-string StringOps::lstrip( string str, string chars )
+string StringOps::lstrip( const string& str, const string& chars )
 {
     bool found = true;
     int i = 0;
@@ -119,7 +130,7 @@ string StringOps::lstrip( string str, string chars )
 }
 
 
-string StringOps::rstrip( string str, string chars )
+string StringOps::rstrip( const string& str, const string& chars )
 {
     bool found = true;
     int i = str.size() - 1;
@@ -145,7 +156,7 @@ string StringOps::rstrip( string str, string chars )
 }
 
 
-string StringOps::lstripUntil( string str, string chr, bool inclusive, bool consecutives )
+string StringOps::lstripUntil( const string& str, const string& chr, bool inclusive, bool consecutives )
 {
     int start, aux_start, aux;
     int max_size = str.size()-1;
@@ -190,11 +201,11 @@ string StringOps::lstripUntil( string str, string chr, bool inclusive, bool cons
 
 
 
-vector<string> StringOps::split( string str, string sep )
+vector<string> StringOps::split( const string& str, const string& sep )
 {
     vector<string> splitted;
     string slice;
-    int start=0, stop=0;
+    int start=0, stop;
     while (true) {
         stop = str.find( sep, start );
         if ( stop >= str.size() ) {
@@ -215,16 +226,16 @@ vector<string> StringOps::split( string str, string sep )
 }
 
 
-vector<string> StringOps::splitrip( string str, string sep, string chars )
+vector<string> StringOps::splitrip( const string& str, const string& sep, const string& chars )
 {
     vector<string> splitted, aux;
-    str = StringOps::strip( str );
-    aux = StringOps::split( str );
-    for ( string &str : aux ) {
-        if ( str.size() == 0 ) {
+    const string str_ = StringOps::strip( str );
+    aux = StringOps::split( str_ );
+    for ( const string& str_ : aux ) {
+        if ( str_.size() == 0 ) {
             continue;
         }
-        splitted.push_back( StringOps::strip( str ) );
+        splitted.push_back( StringOps::strip( str_ ) );
     }
     return splitted;
 }

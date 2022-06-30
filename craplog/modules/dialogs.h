@@ -31,12 +31,12 @@ class Dialogs
 public:
     Dialogs();
 
-    static void msgGenericError( QWidget *parent, QString message );
-        static void msgGenericError( QWidget *parent, std::string message );
+    static void msgGenericError( QWidget *parent, const QString& message );
+        static void msgGenericError( QWidget *parent, const std::string& message );
 
     // LogsList
-    static bool choiceSelectedFileNotFound( QWidget *parent, QString file );
-        static bool choiceSelectedFileNotFound( QWidget *parent, std::string file );
+    static bool choiceSelectedFileNotFound( QWidget *parent, const QString& file );
+        static bool choiceSelectedFileNotFound( QWidget *parent, const std::string& file );
 
     // files
     static void msgFileNotExists( QWidget *parent );
@@ -46,8 +46,8 @@ public:
     static bool choiceFileNotReadable( QWidget *parent );
     static bool choiceFileNotWritable( QWidget *parent );
     // folders
-    static void msgDirNotExists( QWidget *parent, QString dir );
-        static void msgDirNotExists( QWidget *parent, std::string dir  );
+    static void msgDirNotExists( QWidget *parent, const QString& dir );
+        static void msgDirNotExists( QWidget *parent, const std::string& dir );
     static void msgDirNotReadable( QWidget *parent );
     static void msgDirNotWritable( QWidget *parent );
     static void choiceDirNotExists( QWidget *parent );
