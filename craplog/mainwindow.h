@@ -7,6 +7,8 @@
 
 #include "qtreewidget.h"
 
+#include <thread>
+
 #include "utilities.h"
 #include "modules.h"
 #include "tools/craplog/craplog.h"
@@ -23,12 +25,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    //void operator()( int a );
+
 private slots:
-    void on_buttonViewFile_clicked();
+    void on_button_LogFiles_ViewFile_clicked();
 
     void on_checkBox_LogFiles_CheckAll_stateChanged(int arg1);
 
-    void on_buttonRefreshList_clicked();
+    void on_button_LogFiles_RefreshList_clicked();
 
     void on_listLogFiles_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
@@ -40,11 +44,23 @@ private slots:
 
     void on_button_LogFiles_Iis_clicked();
 
+    void on_button_MakeStats_Start_clicked();
+
+    // custom
+    void update_MakeStats_labels();
+
 private:
     Ui::MainWindow *ui;
 
     Craplog craplog;
-    bool runCraplog();
+    std::thread craplog_thread;
+    QTimer *craplog_timer;
+    std::chrono::system_clock::time_point
+        craplog_timer_start,
+        craplog_timer_lapse;
+    std::chrono::system_clock::duration craplog_timer_elapsed;
+    void craplogStarted();
+    void craplogFinished();
 
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
@@ -57,19 +73,26 @@ private:
         font_size_small = 10;
 
     // base font families, to build fonts from
-    QString main_font_family;
-    QString script_font_family;
+    QString main_font_family,
+            script_font_family;
+
+    /////////////////////
+    //// GENERAL USE ////
+    // get a printable size, from Bytes to the best fit
+    QString printableSize( int bytes ),
+            printableSpeed( int bytes, int secs ),
+            printableTime( int seconds );
 
     //////////////
     //// LOGS ////
     // web servers related
     bool loading_LogsList = false;
     std::unordered_map<int, bool> allowed_web_servers;
-    void disableAllButtons_LogFiles_WS();
-    void enableAllButtons_LogFiles_WS();
+    void disableAllButtons_LogFiles_WS(),
+         enableAllButtons_LogFiles_WS();
     // logs list related
-    bool display_used_files = true;
-    bool display_warnsize_files = true;
+    bool display_used_files = true,
+         display_warnsize_files = true;
     // text browser related
     TextBrowser TB;
 
