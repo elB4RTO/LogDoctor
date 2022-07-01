@@ -6,8 +6,6 @@
 #include <fstream>
 #include <filesystem>
 
-using std::vector, std::string;
-
 
 IOutils::IOutils()
 {
@@ -15,7 +13,7 @@ IOutils::IOutils()
 }
 
 // test the existence of a file/folder
-bool IOutils::exists( const string& path )
+bool IOutils::exists( const std::string& path )
 {
     return std::filesystem::exists( path );
 }
@@ -84,12 +82,13 @@ bool IOutils::checkDir( const std::string& path, const bool readable, const bool
 
 
 
-vector<string> IOutils::readLines( const string& path, const int n_lines )
+std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines ) throw()
 {
     // read rhe first line only
+    bool result = true;
     std::ifstream file;
-    vector<string> lines;
-    string line;
+    std::vector<std::string> lines;
+    std::string line;
     try {
         constexpr std::size_t read_size = std::size_t(4096);
         file = std::ifstream(path);
@@ -115,8 +114,14 @@ vector<string> IOutils::readLines( const string& path, const int n_lines )
         }
     } catch (const std::ios_base::failure& err) {
         // failed reading
+        lines.clear();
+        result = false;
         // >> err.what() << // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+    } catch (...) {
+        lines.clear();
+        result = false;
     }
+
     if ( file.is_open() ) {
         file.close();
     }
@@ -124,11 +129,11 @@ vector<string> IOutils::readLines( const string& path, const int n_lines )
 }
 
 
-string IOutils::readFile( const string& path )
+std::string IOutils::readFile( const std::string& path ) throw()
 {
     // read the whole file
     std::ifstream file;
-    string content = string();
+    std::string content = std::string();
     try {
         constexpr std::size_t read_size = std::size_t(4096);
         std::ifstream file(path);
@@ -142,7 +147,7 @@ string IOutils::readFile( const string& path )
         file.exceptions(std::ifstream::failbit);
         file.exceptions(std::ios_base::badbit);
         // read the whole file
-        content = string(
+        content = std::string(
             (std::istreambuf_iterator<char>( file )),
             std::istreambuf_iterator<char>() );
     } catch (const std::ios_base::failure& err) {
