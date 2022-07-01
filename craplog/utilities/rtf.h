@@ -20,6 +20,9 @@ public:
         const std::string& content,
         const FormatOps::LogsFormat& logs_format,
         const TextBrowser& TB );
+
+    static QString richLogsDefault();
+    static QString richLogsFailure();
 };
 
 #endif // RTF_H
