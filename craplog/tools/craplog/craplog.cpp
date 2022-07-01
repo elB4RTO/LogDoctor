@@ -13,6 +13,7 @@ using std::string, std::vector, std::unordered_map;
 
 Craplog::Craplog()
 {
+    // initialize default values
     this->logs_format_stings[11] = unordered_map<int, string>();
     this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
     this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";
@@ -76,6 +77,11 @@ Craplog::Craplog()
                                                     .contains = "",
                                                     .ends     = "" });
 
+
+    // access logs data
+    this->data_collection[1] = std::vector<std::unordered_map<int, std::string>>();
+    // error logs data
+    this->data_collection[2] = std::vector<std::unordered_map<int, std::string>>();
 
     /*this->readConfigs();
 
@@ -231,7 +237,7 @@ void Craplog::scanLogsDir()
         if ( !IOutils::isDir( logs_path ) ) {
             // this directory doesn't exists
             if ( IOutils::exists( logs_path ) ) {
-                Dialogs::msgDirNotExists( this, logs_path );
+                DialogSec::msgDirNotExists( nullptr, logs_path );
             }
             continue;
         }
@@ -246,28 +252,49 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            LogOps::LogType log_type = this->logOps.defineFileType( name, IOutils::readLines( path ), this->logs_formats[ this->current_WS ] );
-            if ( log_type == LogOps::LogType::Failed ) {
-                // failed to get the log type, do not append
-                // error message already displayed while defining as failed in logOps
-                continue;
+            bool proceed = true;
+            std::vector<std::string> content;
+            try {
+                content = IOutils::readLines( path );
+            } catch (const std::ios_base::failure& err) {
+                // failed reading
+                proceed = false;
+                // >> err.what() << //
+                DialogSec::msgFailedReadFile( nullptr, name );
+            } catch (...) {
+                // failed somehow
+                proceed = false;
+                QString err_msg = QMessageBox::tr("An error occured while reading");
+                DialogSec::msgGenericError( nullptr, err_msg +":\n"+ QString::fromStdString(name) );
             }
 
-            // match only valid files names
-            if ( this->isFileNameValid( name, log_type ) == false ) {
-                continue;
-            }
+            if ( proceed == true ) {
+                LogOps::LogType log_type = this->logOps.defineFileType( name, content, this->logs_formats[ this->current_WS ] );
+                if ( log_type == LogOps::LogType::Failed ) {
+                    // failed to get the log type, do not append
+                    DialogSec::msgFailedDefineLogType( nullptr, name );
+                    continue;
+                }
 
-            auto logfile = LogFile{
-                .selected = false,
-                .size = size,
-                .name = QString::fromStdString( name ),
-                .hash = this->hashOps.digestFile( path ),
-                .path = path,
-                .type = log_type
-            };
-            // push in the list
-            this->logs_list.push_back( logfile );
+                // match only valid files names
+                if ( this->isFileNameValid( name, log_type ) == false ) {
+                    continue;
+                }
+
+                std::string hash = this->hashOps.digestFile( path );
+
+                auto logfile = LogFile{
+                    .selected = false,
+                    .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS ),
+                    .size = size,
+                    .name = QString::fromStdString( name ),
+                    .hash = hash,
+                    .path = path,
+                    .type = log_type
+                };
+                // push in the list
+                this->logs_list.push_back( logfile );
+            }
         }
     }
 }
@@ -336,12 +363,21 @@ void Craplog::startWorking()
 {
     this->working = true;
     this->proceed = true;
+    this->total_size = 0;
     this->parsed_size = 0;
     this->parsed_lines = 0;
+    this->access_size = 0;
+    this->error_size = 0;
+    this->data_collection[1].clear();
+    this->data_collection[2].clear();
+    this->access_logs_lines.clear();
+    this->error_logs_lines.clear();
 }
 void Craplog::stopWorking()
 {
     this->working = false;
+    this->data_collection[1].clear();
+    this->data_collection[2].clear();
 }
 bool Craplog::isWorking()
 {
@@ -349,6 +385,10 @@ bool Craplog::isWorking()
 }
 
 // performances
+int Craplog::getTotalSize()
+{
+    return this->total_size;
+}
 int Craplog::getParsedSize()
 {
     return this->parsed_size;
@@ -357,16 +397,102 @@ int Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
+int Craplog::getAccessSize()
+{
+    return this->access_size;
+}
+int Craplog::getErrorSize()
+{
+    return this->error_size;
+}
 
 
 void Craplog::run()
 {
-    for ( int i=0; i<50; i++ ) {
-        std::this_thread::sleep_for( std::chrono::milliseconds(100) );
-        this->parsed_size += 2496;
-        this->parsed_lines += 7467;
+    this->startWorking();
+
+    // collect log lines
+    this->joinLogLines();
+
+    if ( this->proceed == true ) {
+        this->parseLogLines();
     }
+
     this->stopWorking();
 }
 
+
+
+void Craplog::joinLogLines()
+{
+    std::vector<std::string> content;
+    for ( const LogFile& file : this->logs_list ) {
+
+        if ( this->proceed == false ) { break; }
+
+        // check again the type
+        if ( file.type == LogOps::LogType::Failed ) {
+            bool choice = DialogSec::choiceUndefinedLogType( nullptr, file.name );
+            if ( choice == false ) {
+                // choosed to abort all
+                this->proceed = false;
+                break;
+            } else {
+                // choosed to discard and continue
+                continue;
+            }
+        }
+
+        // check if the file has been used already
+        if ( file.used_already == true ) {
+            // already used
+            QString msg = file.name;
+            if ( this->dialogs_Level == 2 ) {
+                msg += "\n" + QString::fromStdString( file.hash );
+            }
+            int choice = DialogSec::choiceFileAlreadyUsed( nullptr, msg );
+            if ( choice < 0 ) {
+                // choosed to abort all
+                this->proceed = false;
+                break;
+            } else if ( choice > 0 ) {
+                // choosed to discard and continue
+                continue;
+            }/* else {
+                // choosed to ignore and use the file anyway
+            }*/
+        }
+
+        // collect lines
+        content.clear();
+        try {
+            // try reading
+            content = StringOps::splitrip( IOutils::readFile( file.path ) );
+        } catch (const std::ios_base::failure& err) {
+            // failed reading
+            // >> err.what() << //
+            DialogSec::msgFailedReadFile( nullptr, file.name, true );
+            continue;
+        } catch (...) {
+            // failed somehow
+            DialogSec::msgFailedReadFile( nullptr, file.name, true );
+            continue;
+        }
+
+        // append to the relative list
+        if ( file.type == LogOps::LogType::Access ) {
+            this->access_logs_lines.insert( this->access_logs_lines.end(), content.begin(), content.end() );
+        } else {
+            this->error_logs_lines.insert( this->error_logs_lines.end(), content.begin(), content.end() );
+        }
+
+        this->total_size += file.size;
+    }
+}
+
+
+void Craplog::parseLogLines()
+{
+
+}
 
