@@ -91,10 +91,16 @@ private:
     void disableAllButtons_LogFiles_WS(),
          enableAllButtons_LogFiles_WS();
     // logs list related
-    bool display_used_files = true,
+    bool display_access_logs = true,
+         display_error_logs = true,
+         display_used_files = true,
          display_warnsize_files = true;
     // text browser related
     TextBrowser TB;
+
+    //////////////////////////
+    //// LOGS PERFORMANCE ////
+    void reset_MakeStats_labels();
 
 };
 #endif // MAINWINDOW_H
