@@ -13,7 +13,7 @@
 #include "tools/craplog/modules/logs.h"
 
 
-class Craplog : public QWidget
+class Craplog
 {
 public:
     Craplog();
@@ -39,6 +39,7 @@ public:
     // log file item's infoes
     struct LogFile {
         bool selected;
+        bool used_already;
         int size;
         QString name;
         std::string hash;
@@ -70,16 +71,37 @@ public:
     void stopWorking();
     bool isWorking();
     // job performancea
-    int getParsedSize();
-    int getParsedLines();
+    int getTotalSize(),
+        getParsedSize(),
+        getParsedLines(),
+        getAccessSize(),
+        getErrorSize();
 
 private:
     // job related
     bool working = false,
          proceed = false;
     // perf related
-    int parsed_size = 1110,
-        parsed_lines = 22220;
+    int total_size = 0,
+        parsed_size = 0,
+        parsed_lines = 0,
+        access_size = 0,
+        error_size = 0;
+    // data collection
+    /* structure
+     *      log_type_id : [ { log_field_id : "data" } } }
+     * log_type_ids
+     *      1: access_logs, 2: error_logs
+     * log_field_ids
+     *      1: year, 2: month, 3: day, 4: hour, 5: minute,
+     *      10: req_method, 11: req_page, 12: req_query, 13: response_code,
+     *      14: time_taken, 15: bytes_sent, 16: bytes_received, 17: referrer,
+     *      20: ip, 21: user-agent, 22: cookie
+    */
+    std::unordered_map<int, std::vector<std::unordered_map<int, std::string>>> data_collection;
+    std::vector<std::string> access_logs_lines, error_logs_lines;
+    void joinLogLines();
+    void parseLogLines();
 
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
