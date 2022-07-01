@@ -237,6 +237,8 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
         // load the list
         this->craplog.setCurrentWSID( 11 );
         this->on_button_LogFiles_RefreshList_clicked();
+        this->ui->textLogFiles->setText( RichText::richLogsDefault() );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
     }
 }
 // switch to nginx web server
@@ -251,6 +253,8 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
         // load the list
         this->craplog.setCurrentWSID( 12 );
         this->on_button_LogFiles_RefreshList_clicked();
+        this->ui->textLogFiles->setText( RichText::richLogsDefault() );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
     }
 }
 // switch to iis web server
@@ -265,6 +269,8 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
         // load the list
         this->craplog.setCurrentWSID( 13 );
         this->on_button_LogFiles_RefreshList_clicked();
+        this->ui->textLogFiles->setText( RichText::richLogsDefault() );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
     }
 }
 
@@ -280,29 +286,45 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
     for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
         // new entry for the tree widget
         QTreeWidgetItem * item = new QTreeWidgetItem();
-        // set the name of the file
-        if ( this->craplog.hashOps.hasBeenUsed( log_file.hash, this->craplog.getCurrentWSID() ) ) {
-            // already used
+
+        // preliminary check for file-type display
+        if ( this->display_access_logs == false && log_file.type == LogOps::LogType::Access ) {
+            // do not display
+            delete item; // possible memory leak, says cppcheck
+            continue;
+        } else if ( this->display_error_logs == false && log_file.type == LogOps::LogType::Error ) {
+            // do not display
+            delete item; // possible memory leak, says cppcheck
+            continue;
+        }
+
+        // preliminary check for file usage display
+        if ( log_file.used_already == true ) {
             if ( this->display_used_files == false ) {
                 // do not display
-                delete item; // possible memory leak
+                delete item; // possible memory leak, says cppcheck
                 continue;
             }
+            // display with red foreground
             item->setForeground( 0, this->COLORS["red"] );
         }
-        item->setText( 0, log_file.name );
-        // apply text and color to the size text
+
+        // preliminary check on file size
         col = "grey";
         if ( log_file.size > this->craplog.getWarningSize() ) {
-            // already used
             if ( this->display_warnsize_files == false ) {
                 // do not display
+                delete item; // possible memory leak, says cppcheck
                 continue;
             }
             col = "orange";
         }
-        item->setText( 1, this->printableSize( log_file.size ) );
         item->setForeground( 1, this->COLORS[ col ] );
+
+        // set the name
+        item->setText( 0, log_file.name );
+        // set the size
+        item->setText( 1, this->printableSize( log_file.size ) );
         item->setFont( 1, this->FONTS["main_italic"] );
         // append the item (on top, forced)
         item->setCheckState(0, Qt::CheckState::Unchecked );
@@ -346,6 +368,7 @@ void MainWindow::on_checkBox_LogFiles_CheckAll_stateChanged(int arg1)
 void MainWindow::on_button_LogFiles_ViewFile_clicked()
 {
     if ( this->ui->listLogFiles->selectedItems().size() > 0 ) {
+        bool proceed = true;
         // display the selected item
         Craplog::LogFile item = this->craplog.getLogFileItem(
             this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
@@ -355,14 +378,41 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
         } else if ( item.type == LogOps::LogType::Error ) {
             format = this->craplog.getCurrentELF();
         } else {
-            // this shouldn't be
-                Dialogs::msgGenericError( this, QMessageBox::tr("This file's LogType is not Access nor Error:\n") + item.name );
+            // this shouldn't be reached, but...
+            proceed = false;
+            DialogSec::msgUndefinedLogType( nullptr, item.name );
         }
-        this->ui->textLogFiles->setText(
-            RichText::enrichLogs(
-                IOutils::readFile( item.path ),
-                format,
-                this->TB ));
+
+        if ( proceed == true ) {
+            std::string content;
+            try {
+                content = IOutils::readFile( item.path );
+            } catch (const std::ios_base::failure& err) {
+                // failed reading
+                proceed = false;
+                // >> err.what() << //
+                DialogSec::msgFailedReadFile( nullptr, item.name );
+            } catch (...) {
+                // failed somehow
+                proceed = false;
+                QString err_msg = QMessageBox::tr("An error occured while reading");
+                DialogSec::msgGenericError( nullptr, err_msg +":\n"+ item.name );
+            }
+
+            if ( proceed == true ) {
+                // succesfully read, now enriched and display
+                this->ui->textLogFiles->setText(
+                    RichText::enrichLogs(
+                        content,
+                        format,
+                        this->TB ));
+            }
+        }
+        if ( proceed == false ) {
+            // failed to read
+            this->ui->textLogFiles->setText( RichText::richLogsFailure() );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
     }
 }
 
@@ -407,7 +457,7 @@ void MainWindow::on_button_MakeStats_Start_clicked()
             // tell Craplog to set this file as selected
             if ( this->craplog.setLogFileSelected( (*i)->text(0) ) == false ) {
                 // this shouldn't be, but...
-                if ( Dialogs::choiceSelectedFileNotFound( this, (*i)->text(0) ) == false ) {
+                if ( DialogSec::choiceSelectedFileNotFound( nullptr, (*i)->text(0) ) == false ) {
                     proceed = false;
                     break;
                 }
@@ -417,16 +467,28 @@ void MainWindow::on_button_MakeStats_Start_clicked()
     }
 
     if ( proceed == true ) {
+        // reset perfs
+        this->reset_MakeStats_labels();
+        // periodically update perfs
         this->craplog_timer = new QTimer(this);
         connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_MakeStats_labels()));
         this->craplog_timer->start(250);
-
-        this->craplog_timer_start = std::chrono::high_resolution_clock::now();
-        this->craplog.startWorking();
+        // run craplog as thread
+        this->craplog_timer_start = std::chrono::system_clock::now();
         this->craplog_thread = std::thread( &Craplog::run, &this->craplog );
     } else {
         this->craplogFinished();
     }
+}
+
+void MainWindow::reset_MakeStats_labels()
+{
+    // reset to default
+    this->ui->label_MakeStats_Size->setText( "0 B" );
+    this->ui->label_MakeStats_Lines->setText( "0" );
+    // time and speed
+    this->ui->label_MakeStats_Time->setText( "00:00" );
+    this->ui->label_MakeStats_Speed->setText( "0 B/s" );
 }
 
 void MainWindow::update_MakeStats_labels()
