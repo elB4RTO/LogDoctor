@@ -22,16 +22,35 @@ public:
     };
 
     // define if really access and/or error logs
-    LogType defineFileType( const std::string& name, const std::vector<std::string>& lines, std::unordered_map<int, FormatOps::LogsFormat>& format );
+    LogType defineFileType(
+        const std::string& name,
+        const std::vector<std::string>& lines,
+        std::unordered_map<int, FormatOps::LogsFormat>& format
+        );
 
-    std::vector<std::string> splitLine( const std::string& line, const FormatOps::LogsFormat& format );
-    std::vector<std::string> splitLines( const std::string& line, const FormatOps::LogsFormat& format );
+    std::unordered_map<int, std::string> parseLine(
+        const std::string& line,
+        const FormatOps::LogsFormat& format
+        ) const;
+    std::vector<std::unordered_map<int, std::string>> parseLines(
+        const std::vector<std::string>& lines,
+        const FormatOps::LogsFormat& format
+        ) const;
 
 private:
     // types constants
     const unsigned int ACCESS_LOGS=1, ERROR_LOGS=2;
 
-    bool deepTypeCheck( const std::string& line, const FormatOps::LogsFormat& format );
+    std::unordered_map<std::string, int> field2id;
+
+    bool deepTypeCheck(
+        const std::string& line,
+        const FormatOps::LogsFormat& format );
+
+    LogType comparativeTypeCheck(
+        const std::string& line,
+        const FormatOps::LogsFormat& access_format,
+        const FormatOps::LogsFormat& error_format );
 
 };
 
