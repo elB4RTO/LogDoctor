@@ -9,11 +9,11 @@ DialogSec::DialogSec()
 }
 
 
-void DialogSec::msgFailedDefineLogType( QWidget *parent, const std::string& file )
+void DialogSec::errFailedDefineLogType( QWidget *parent, const std::string& file )
 {
-    msgFailedDefineLogType( parent, QString::fromStdString(file) );
+    errFailedDefineLogType( parent, QString::fromStdString(file) );
 }
-void DialogSec::msgFailedDefineLogType( QWidget *parent, const QString& file )
+void DialogSec::errFailedDefineLogType( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::critical(parent,
@@ -24,11 +24,11 @@ void DialogSec::msgFailedDefineLogType( QWidget *parent, const QString& file )
 }
 
 
-void DialogSec::msgUndefinedLogType( QWidget *parent, const std::string& file )
+void DialogSec::errUndefinedLogType( QWidget *parent, const std::string& file )
 {
-    msgUndefinedLogType( parent, QString::fromStdString(file) );
+    errUndefinedLogType( parent, QString::fromStdString(file) );
 }
-void DialogSec::msgUndefinedLogType( QWidget *parent, const QString& file )
+void DialogSec::errUndefinedLogType( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::critical(parent,
@@ -82,11 +82,11 @@ int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& file )
 }
 
 
-void DialogSec::msgFailedReadFile(QWidget *parent, const std::string& file , const bool skipping)
+void DialogSec::errFailedReadFile(QWidget *parent, const std::string& file , const bool skipping)
 {
-    msgFailedReadFile( parent, QString::fromStdString( file ), skipping );
+    errFailedReadFile( parent, QString::fromStdString( file ), skipping );
 }
-void DialogSec::msgFailedReadFile(QWidget *parent, const QString& file , const bool skipping )
+void DialogSec::errFailedReadFile(QWidget *parent, const QString& file , const bool skipping )
 {
     std::ignore=
     QMessageBox::critical(parent,
@@ -95,6 +95,23 @@ void DialogSec::msgFailedReadFile(QWidget *parent, const QString& file , const b
             .arg( m_FILE_FAILED_READ, file + ((skipping) ? f_SKIPPING : "") ),
         QMessageBox::Ok );
 }
+
+
+void DialogSec::warnEmptyFile( QWidget *parent, const std::string& file )
+{
+    warnEmptyFile( parent, QString::fromStdString( file ) );
+}
+
+void DialogSec::warnEmptyFile( QWidget *parent, const QString& file )
+{
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_FILE_EMPTY,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_FILE_EMPTY, file, f_SKIPPING ),
+        QMessageBox::Ok );
+}
+
 
 
 bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const std::string& file )
@@ -107,9 +124,9 @@ bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString& file 
     auto response = QMessageBox::warning(parent,
         t_FILE_NOT_FOUND,
         QString("%1:\n%2\n\n%3?")
-            .arg( m_SELECTED_FILE_NOT_FOUND, file, q_CONTINUE ),
-        QMessageBox::Abort | QMessageBox::Ignore );
-    if ( response == QMessageBox::Ignore ) {
+            .arg( m_SELECTED_FILE_NOT_FOUND, file, q_DA ),
+        QMessageBox::Abort | QMessageBox::Discard );
+    if ( response == QMessageBox::Discard ) {
         proceed = true;
     }
     return proceed;
@@ -117,14 +134,14 @@ bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString& file 
 
 
 
-void DialogSec::msgDirNotExists(QWidget *parent, const std::string& dir )
+void DialogSec::errDirNotExists(QWidget *parent, const std::string& dir )
 {
-    msgDirNotExists( parent, QString::fromStdString( dir ) );
+    errDirNotExists( parent, QString::fromStdString( dir ) );
 }
-void DialogSec::msgDirNotExists(QWidget *parent, const QString& dir )
+void DialogSec::errDirNotExists(QWidget *parent, const QString& dir )
 {
     std::ignore=
-    QMessageBox::warning(parent,
+    QMessageBox::critical(parent,
         t_DIR_NOT_FOUND,
         QString("%1:\n%2")
             .arg( m_DIR_NOT_EXISTS, dir ),
@@ -153,16 +170,40 @@ bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 
 
 
-void DialogSec::msgGenericError(QWidget *parent, const std::string& msg )
+void DialogSec::warnGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
 {
-    msgGenericError( parent, QString::fromStdString( msg ) );
+    warnGeneric( parent, QString::fromStdString( msg ), report_msg );
 }
-void DialogSec::msgGenericError(QWidget *parent, const QString& msg )
+void DialogSec::warnGeneric(QWidget *parent, const QString& msg, const bool report_msg )
 {
+    QString footer = "";
+    if ( report_msg == true ) {
+        footer += "\n\n" + r_REPORT_ISSUE;
+    }
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_ERROR_OCCURED,
+        QString("%1%2")
+            .arg( msg, footer ),
+        QMessageBox::Ok );
+}
+
+
+
+void DialogSec::errGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
+{
+    errGeneric( parent, QString::fromStdString( msg ), report_msg );
+}
+void DialogSec::errGeneric(QWidget *parent, const QString& msg, const bool report_msg )
+{
+    QString footer = "";
+    if ( report_msg == true ) {
+        footer += "\n\n" + r_REPORT_ISSUE;
+    }
     std::ignore=
     QMessageBox::critical(parent,
         t_ERROR_OCCURED,
-        QString("%1\n\n%2")
-            .arg( msg, r_REPORT_ISSUE ),
+        QString("%1%2")
+            .arg( msg, footer ),
         QMessageBox::Ok );
 }
