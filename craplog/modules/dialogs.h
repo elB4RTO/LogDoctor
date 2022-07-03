@@ -22,6 +22,7 @@ static QString
     t_FILE_ALREADY_USED  = QMessageBox::tr("File already used"),
 
     t_FILE_NOT_FOUND    = QMessageBox::tr("File not found"),
+    t_FILE_EMPTY        = QMessageBox::tr("File is empty"),
     t_FILE_FAILED_READ  = QMessageBox::tr("Failed reading"),
 
     t_DIR_NOT_FOUND   = QMessageBox::tr("Directory not found"),
@@ -34,6 +35,7 @@ static QString
     m_FILE_NOT_EXISTS = QMessageBox::tr("The file does not exists"),
     m_DIR_NOT_EXISTS  = QMessageBox::tr("The directory does not exists"),
 
+    m_FILE_EMPTY        = QMessageBox::tr("The file is blank, useless to process it"),
     m_FILE_FAILED_READ  = QMessageBox::tr("An error accured while reading the file"),
 
     m_FILE_ALREADY_USED  = QMessageBox::tr("The file has probably been used already"),
@@ -54,18 +56,20 @@ class DialogSec
 public:
     DialogSec();
 
-    static void msgGenericError( QWidget *parent, const QString& message );
-        static void msgGenericError( QWidget *parent, const std::string& message );
+    static void warnGeneric( QWidget *parent, const QString& message, const bool report_msg=false );
+        static void warnGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
+    static void errGeneric( QWidget *parent, const QString& message, const bool report_msg=false );
+        static void errGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
 
     // LogsList
     static bool choiceSelectedFileNotFound( QWidget *parent, const QString& file );
         static bool choiceSelectedFileNotFound( QWidget *parent, const std::string& file );
 
     // log files type
-    static void msgFailedDefineLogType( QWidget *parent, const QString& file );
-        static void msgFailedDefineLogType( QWidget *parent, const std::string& file );
-    static void msgUndefinedLogType( QWidget *parent, const QString& file );
-        static void msgUndefinedLogType( QWidget *parent, const std::string& file );
+    static void errFailedDefineLogType( QWidget *parent, const QString& file );
+        static void errFailedDefineLogType( QWidget *parent, const std::string& file );
+    static void errUndefinedLogType( QWidget *parent, const QString& file );
+        static void errUndefinedLogType( QWidget *parent, const std::string& file );
     static bool choiceUndefinedLogType( QWidget *parent, const QString& file );
         static bool choiceUndefinedLogType( QWidget *parent, const std::string& file );
     // log files hash
@@ -73,21 +77,23 @@ public:
         static int choiceFileAlreadyUsed( QWidget *parent, const std::string& file );
 
     // files permissions
-    static void msgFileNotExists( QWidget *parent );
-    static void msgFileNotReadabl( QWidget *parent );
-    static void msgFileNotWritable( QWidget *parent );
+    static void warnFileNotExists( QWidget *parent );
+    static void warnFileNotReadable( QWidget *parent );
+    static void warnFileNotWritable( QWidget *parent );
     static bool choiceFileNotExists( QWidget *parent );
     static bool choiceFileNotReadable( QWidget *parent );
     static bool choiceFileNotWritable( QWidget *parent );
     // files actions
-    static void msgFailedReadFile( QWidget *parent, const QString& file, const bool skipping=false );
-        static void msgFailedReadFile( QWidget *parent, const std::string& file, const bool skipping=false );
+    static void warnEmptyFile( QWidget *parent, const QString& file );
+        static void warnEmptyFile( QWidget *parent, const std::string& file );
+    static void errFailedReadFile( QWidget *parent, const QString& file, const bool skipping=false );
+        static void errFailedReadFile( QWidget *parent, const std::string& file, const bool skipping=false );
 
     // folders permissions
-    static void msgDirNotExists( QWidget *parent, const QString& dir );
-        static void msgDirNotExists( QWidget *parent, const std::string& dir );
-    static void msgDirNotReadable( QWidget *parent );
-    static void msgDirNotWritable( QWidget *parent );
+    static void errDirNotExists( QWidget *parent, const QString& dir );
+        static void errDirNotExists( QWidget *parent, const std::string& dir );
+    static void warnDirNotReadable( QWidget *parent );
+    static void warnDirNotWritable( QWidget *parent );
     static bool choiceDirNotExists( QWidget *parent, const QString& dir );
         static bool choiceDirNotExists( QWidget *parent, const std::string& dir );
     static void choiceDirNotReadable( QWidget *parent );
