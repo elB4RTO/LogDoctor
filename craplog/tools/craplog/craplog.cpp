@@ -25,9 +25,10 @@ Craplog::Craplog()
     this->logs_format_stings[13][2] = "";
 
     // TEMPORARY !!!
-    this->logs_formats[11][1] = this->formatOps.processFormatString( this->logs_format_stings[11][1], 1, 11 );
-    this->logs_formats[11][2] = this->formatOps.processFormatString( this->logs_format_stings[11][2], 2, 11 );
-    this->logs_formats[12][1] = this->formatOps.processFormatString( this->logs_format_stings[12][1], 1, 12 );
+    this->logs_formats[11][1] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(1), 1 );
+    this->logs_formats[11][2] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(2), 2 );
+    this->logs_formats[12][1] = this->formatOps.processFormatString( this->logs_format_stings.at(12).at(1), 1, 12 );
+    this->logs_formats[12][2] = this->formatOps.processFormatString( this->logs_format_stings.at(12).at(2), 2, 12 );
     /* FINAL WILL BE:
     for ( int i=11; i<14; i++ ) {
         for ( int j=1; j<3; j++ ) {
@@ -106,24 +107,24 @@ void Craplog::setWarningSize( int new_size )
 // get the logs format
 FormatOps::LogsFormat Craplog::getAccessLogsFormat( int web_server_id ) &
 {
-    return this->logs_formats[ web_server_id ][1];
+    return this->logs_formats.at( web_server_id ).at( 1 );
 }
 FormatOps::LogsFormat Craplog::getErrorLogsFormat( int web_server_id ) &
 {
-    return this->logs_formats[ web_server_id ][2];
+    return this->logs_formats.at( web_server_id ).at( 2 );
 }
 
 // set the logs format
 void Craplog::setAccessLogsFormat( const int web_server_id, const std::string& format_string )
 {
-    this->logs_formats[web_server_id][1] = this->formatOps.processFormatString(
-        this->logs_format_stings[web_server_id][1],
+    this->logs_formats.at( web_server_id ).at( 1 ) = this->formatOps.processFormatString(
+        this->logs_format_stings.at( web_server_id ).at( 1 ),
         1, web_server_id );
 }
 void Craplog::setErrorLogsFormat(const int web_server_id, const std::string& format_string )
 {
-    this->logs_formats[web_server_id][2] = this->formatOps.processFormatString(
-        this->logs_format_stings[web_server_id][2],
+    this->logs_formats.at( web_server_id ).at( 2 ) = this->formatOps.processFormatString(
+        this->logs_format_stings.at( web_server_id ).at( 2),
         2, web_server_id );
 }
 
@@ -142,12 +143,12 @@ int Craplog::getCurrentWSID() const
 // set the current access logs format
 void Craplog::setCurrentALF()
 {
-    this->current_ALF = this->logs_formats[ this->current_WS ][1];
+    this->current_ALF = this->logs_formats.at( this->current_WS ).at( 1 );
 }
 // set the current error logs format
 void Craplog::setCurrentELF()
 {
-    this->current_ELF = this->logs_formats[ this->current_WS ][2];
+    this->current_ELF = this->logs_formats.at( this->current_WS ).at( 2 );
 }
 
 // get the current access logs format
@@ -227,17 +228,17 @@ void Craplog::scanLogsDir()
 {
     this->logs_list.clear();
     int n=2;
-    auto logs_paths = this->logs_paths[ this->current_WS ];
-    if ( logs_paths[1] == logs_paths[2] ) {
+    auto logs_paths = this->logs_paths.at( this->current_WS );
+    if ( logs_paths.at(1) == logs_paths.at(2) ) {
         // same dir for both access and error logs, loop only once
         n=1;
     }
     for ( int i=0; i<n; i++ ) {
-        string logs_path = logs_paths[i+1];
+        string logs_path = logs_paths.at( i+1 );
         if ( !IOutils::isDir( logs_path ) ) {
             // this directory doesn't exists
             if ( IOutils::exists( logs_path ) ) {
-                DialogSec::msgDirNotExists( nullptr, logs_path );
+                DialogSec::errDirNotExists( nullptr, logs_path );
             }
             continue;
         }
@@ -260,19 +261,26 @@ void Craplog::scanLogsDir()
                 // failed reading
                 proceed = false;
                 // >> err.what() << //
-                DialogSec::msgFailedReadFile( nullptr, name );
+                DialogSec::errFailedReadFile( nullptr, name );
             } catch (...) {
                 // failed somehow
                 proceed = false;
-                QString err_msg = QMessageBox::tr("An error occured while reading");
-                DialogSec::msgGenericError( nullptr, err_msg +":\n"+ QString::fromStdString(name) );
+                QString err_msg = QMessageBox::tr("An error occured while handling the file");
+                DialogSec::errGeneric( nullptr, err_msg +":\n"+ QString::fromStdString(name) );
+            }
+
+            if ( content.size() == 0 ) {
+                if ( this->dialogs_Level > 0 ) {
+                    DialogSec::warnEmptyFile( nullptr, name );
+                }
+                continue;
             }
 
             if ( proceed == true ) {
-                LogOps::LogType log_type = this->logOps.defineFileType( name, content, this->logs_formats[ this->current_WS ] );
+                LogOps::LogType log_type = this->logOps.defineFileType( name, content, this->logs_formats.at( this->current_WS ) );
                 if ( log_type == LogOps::LogType::Failed ) {
                     // failed to get the log type, do not append
-                    DialogSec::msgFailedDefineLogType( nullptr, name );
+                    DialogSec::errFailedDefineLogType( nullptr, name );
                     continue;
                 }
 
@@ -304,20 +312,20 @@ void Craplog::scanLogsDir()
 bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& log_type )
 {
     bool valid = true;
-    if ( this->logs_base_names[ this->current_WS ][ log_type ].starts != "" ) {
-        if ( ! StringOps::startsWith( name, this->logs_base_names[ this->current_WS ][ log_type ].starts ) ) {
+    if ( this->logs_base_names.at( this->current_WS ).at( log_type ).starts != "" ) {
+        if ( ! StringOps::startsWith( name, this->logs_base_names.at( this->current_WS ).at( log_type ).starts ) ) {
             return false;
         }
     }
-    if ( this->logs_base_names[ this->current_WS ][ log_type ].contains != "" ) {
+    if ( this->logs_base_names.at( this->current_WS ).at( log_type ).contains != "" ) {
         if ( ! StringOps::contains(
-                    name.substr( this->logs_base_names[ this->current_WS ][ log_type ].starts.size() ),
-                    this->logs_base_names[ this->current_WS ][ log_type ].contains ) ) {
+                    name.substr( this->logs_base_names.at( this->current_WS ).at( log_type ).starts.size() ),
+                    this->logs_base_names.at( this->current_WS ).at( log_type ).contains ) ) {
             return false;
         }
     }
-    if ( this->logs_base_names[ this->current_WS ][ log_type ].ends != "" ) {
-        if ( ! StringOps::endsWith( name, this->logs_base_names[ this->current_WS ][ log_type ].ends ) ) {
+    if ( this->logs_base_names.at( this->current_WS ).at( log_type ).ends != "" ) {
+        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_WS ).at( log_type ).ends ) ) {
             return false;
         }
     }
@@ -333,7 +341,7 @@ bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& l
             }
             // serach for incremental numbers
             for ( int i=start; i<=stop; i++ ) {
-                if ( StringOps::isNumeric( name[i] ) == false ) {
+                if ( StringOps::isNumeric( name.at( i ) ) == false ) {
                     valid = false;
                     break;
                 }
@@ -342,11 +350,11 @@ bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& l
 
         case 13:
             // further checks for iis
-            start = this->logs_base_names[ 13 ][ log_type ].starts.size();
-            stop = name.size() - this->logs_base_names[ 13 ][ log_type ].ends.size();
+            start = this->logs_base_names.at( 13 ).at( log_type ).starts.size();
+            stop = name.size() - this->logs_base_names.at( 13 ).at( log_type ).ends.size();
             // search for incremental number / date
             for ( int i=start; i<=stop; i++ ) {
-                if ( StringOps::isNumeric( name[i] ) == false ) {
+                if ( StringOps::isNumeric( name.at( i ) ) == false ) {
                     valid = false;
                     break;
                 }
@@ -471,11 +479,11 @@ void Craplog::joinLogLines()
         } catch (const std::ios_base::failure& err) {
             // failed reading
             // >> err.what() << //
-            DialogSec::msgFailedReadFile( nullptr, file.name, true );
+            DialogSec::errFailedReadFile( nullptr, file.name, true );
             continue;
         } catch (...) {
             // failed somehow
-            DialogSec::msgFailedReadFile( nullptr, file.name, true );
+            DialogSec::errFailedReadFile( nullptr, file.name, true );
             continue;
         }
 
