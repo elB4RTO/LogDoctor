@@ -54,6 +54,8 @@ set(PROJECT_SOURCES
         tools/craplog/modules/logs.cpp
         tools/craplog/modules/sha256.h
         tools/craplog/modules/sha256.cpp
+        tools/craplog/modules/store.h
+        tools/craplog/modules/store.cpp
 
         resources/resources.qrc
         ${TS_FILES}

@@ -355,51 +355,6 @@ hr { height: 1px; border-width: 0; }
                 </font>
                </property>
               </column>
-              <item>
-               <property name="text">
-                <string notr="true">access.log.1</string>
-               </property>
-               <property name="toolTip">
-                <string notr="true"/>
-               </property>
-               <property name="statusTip">
-                <string notr="true"/>
-               </property>
-               <property name="whatsThis">
-                <string notr="true"/>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
-               <property name="checkState">
-                <enum>Unchecked</enum>
-               </property>
-               <property name="text">
-                <string notr="true">13.7 MB</string>
-               </property>
-               <property name="toolTip">
-                <string notr="true"/>
-               </property>
-               <property name="statusTip">
-                <string notr="true"/>
-               </property>
-               <property name="whatsThis">
-                <string notr="true"/>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <italic>true</italic>
-                 <underline>false</underline>
-                 <strikeout>false</strikeout>
-                </font>
-               </property>
-               <property name="flags">
-                <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-               </property>
-              </item>
              </widget>
             </item>
             <item row="3" column="0">

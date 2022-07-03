@@ -18,7 +18,7 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
     // enrich the text
     QString rich_content = QString("<!DOCTYPE html><html><head></head><body");
     if ( color_scheme > 0 ) {
-        rich_content += " style=\"background:" + colors["background"] + "; color:" + colors["text"] + "\"";
+        rich_content += " style=\"background:" + colors.at("background") + "; color:" + colors.at("text") + "\"";
     }
     rich_content += ">";
     if ( wide_lines == true ) {
@@ -27,9 +27,9 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
     QString rich_line="", class_name="";
     string sep, fld, fld_str, aux_sep1, aux_sep2;
     bool missing=false;
-    int start, stop=0, i, aux_start1, aux_start2, aux_stop;
-    int line_size;
-    int n_sep = logs_format.separators.size()-1;
+    int start, stop=0, i, aux_start1, aux_start2, aux_stop,
+        line_size, sep_size,
+        n_sep = logs_format.separators.size()-1;
     for ( string& line : StringOps::splitrip( content ) ) {
         i = 0;
         line_size = line.size()-1;
@@ -41,7 +41,7 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
             // color fields
             start = stop; // stop updated at the end of this loop
             if ( i <= n_sep ) {
-                sep = logs_format.separators[i];
+                sep = logs_format.separators.at( i );
                 stop = line.find( sep, start );
             } else if ( i == n_sep+1 ) {
                 // final separator
@@ -66,7 +66,7 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
                 }
                 // iterate over following separators
                 for ( int j=i+1; j<n_sep; j++ ) {
-                    aux_sep2 = logs_format.separators[j];
+                    aux_sep2 = logs_format.separators.at( j );
                     aux_start2 = aux_sep2.find(' ');
                     if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
                         aux_start2 = stop;
@@ -83,14 +83,15 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
                         // probably the current field is missing, skip to this one
                         i = j;
                         aux_stop = aux_start2 + aux_sep2.size();
-                        aux_sep2 = logs_format.separators[j];
+                        aux_sep2 = logs_format.separators.at( j );
                         missing = true;
                     }
                     break;
                 }
             }
+            sep_size = sep.size(); // do not remove, holdss the corretc size to increase stop
             // color the fields
-            fld = logs_format.fields[i];
+            fld = logs_format.fields.at( i );
             fld_str = line.substr(start, stop-start);
             if ( StringOps::startsWith( fld, "date_time" ) ) {
                 if ( StringOps::startsWith( fld_str, "[" ) ) {
@@ -107,19 +108,19 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
             if ( color_scheme > 0 ) {
                 class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
-                    class_name += colors["ip"];
+                    class_name += colors.at("ip");
                 } else if ( fld == "port" ) {
-                    class_name += colors["pt"];
+                    class_name += colors.at("pt");
                 } else if ( StringOps::startsWith( fld, "date_time" ) ) {
-                    class_name += colors["time"];
+                    class_name += colors.at("time");
                 } else if ( fld == "user_agent" || fld == "source_file" ) {
-                    class_name += colors["ua_src"];
+                    class_name += colors.at("ua_src");
                 } else if ( StringOps::startsWith( fld, "request" ) || fld == "error_message" ) {
-                    class_name += colors["req_err"];
+                    class_name += colors.at("req_err");
                 } else if ( fld == "response_code" || fld == "error_level" ) {
-                    class_name += colors["res_lev"];
+                    class_name += colors.at("res_lev");
                 } else {
-                    class_name += colors["x"];
+                    class_name += colors.at("x");
                 }
                 class_name += "\">";
             }
@@ -134,7 +135,7 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
             if ( missing == true ) {
                 stop = aux_stop;
             } else {
-                stop = stop + sep.size();
+                stop += sep_size;
                 i++;
             }
             if ( stop > line_size ) {

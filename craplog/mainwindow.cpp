@@ -121,7 +121,7 @@ MainWindow::MainWindow(QWidget *parent)
     // get a fresh list of LogFiles
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
-    this->on_button_LogFiles_RefreshList_clicked();
+    QTimer::singleShot(500, this, SLOT(on_button_LogFiles_RefreshList_clicked()));
 
 }
 
@@ -229,7 +229,7 @@ QString MainWindow::printableTime( int secs )
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
     if ( this->craplog.getCurrentWSID() != 11
-      && this->allowed_web_servers[11] == true ) {
+      && this->allowed_web_servers.at( 11 ) == true ) {
         // enable the enables
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
@@ -245,7 +245,7 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
     if ( this->craplog.getCurrentWSID() != 12
-      && this->allowed_web_servers[12] == true) {
+      && this->allowed_web_servers.at( 12 ) == true) {
         // enable the enables
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
@@ -261,7 +261,7 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
     if ( this->craplog.getCurrentWSID() != 13
-      && this->allowed_web_servers[13] == true ) {
+      && this->allowed_web_servers.at( 13 ) == true ) {
         // load the list
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
@@ -306,7 +306,7 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
                 continue;
             }
             // display with red foreground
-            item->setForeground( 0, this->COLORS["red"] );
+            item->setForeground( 0, this->COLORS.at( "red" ) );
         }
 
         // preliminary check on file size
@@ -319,13 +319,13 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
             }
             col = "orange";
         }
-        item->setForeground( 1, this->COLORS[ col ] );
+        item->setForeground( 1, this->COLORS.at( col ) );
 
         // set the name
         item->setText( 0, log_file.name );
         // set the size
         item->setText( 1, this->printableSize( log_file.size ) );
-        item->setFont( 1, this->FONTS["main_italic"] );
+        item->setFont( 1, this->FONTS.at("main_italic") );
         // append the item (on top, forced)
         item->setCheckState(0, Qt::CheckState::Unchecked );
         this->ui->listLogFiles->addTopLevelItem( item );
@@ -380,7 +380,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
         } else {
             // this shouldn't be reached, but...
             proceed = false;
-            DialogSec::msgUndefinedLogType( nullptr, item.name );
+            DialogSec::errUndefinedLogType( nullptr, item.name );
         }
 
         if ( proceed == true ) {
@@ -391,12 +391,11 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 // failed reading
                 proceed = false;
                 // >> err.what() << //
-                DialogSec::msgFailedReadFile( nullptr, item.name );
+                DialogSec::errFailedReadFile( nullptr, item.name );
             } catch (...) {
                 // failed somehow
                 proceed = false;
-                QString err_msg = QMessageBox::tr("An error occured while reading");
-                DialogSec::msgGenericError( nullptr, err_msg +":\n"+ item.name );
+                DialogSec::errFailedReadFile( nullptr, item.name );
             }
 
             if ( proceed == true ) {
