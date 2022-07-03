@@ -45,7 +45,7 @@ string HashOps::digestFile( const string& file_path )
 bool HashOps::hasBeenUsed( const std::string &file_hash, const int web_server_id )
 {
     bool found = false;
-    for ( const string &hash : this->hashes[ web_server_id ] ) {
+    for ( const string &hash : this->hashes.at( web_server_id ) ) {
         if ( file_hash == hash ) {
             found = true;
             break;
@@ -60,8 +60,8 @@ bool HashOps::insertHash( const std::string &hash, const int web_server_id )
 {
     bool proceed = true;
     try {
-        if( VecOps::contains( this->hashes[ web_server_id ], hash )) {
-            this->hashes[ web_server_id ].push_back( hash );
+        if( VecOps::contains( this->hashes.at( web_server_id ), hash )) {
+            this->hashes.at( web_server_id ).push_back( hash );
         }
     } catch (...) {
         // failed to insert the hash

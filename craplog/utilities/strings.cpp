@@ -58,11 +58,14 @@ bool StringOps::isNumeric( char chr )
 
 bool StringOps::startsWith( const string& str, const string& flag)
 {
-    bool result = true;
-    for ( int i=0; i<flag.size(); i++ ) {
-        if ( str[i] != flag[i] ) {
-            result = false;
-            break;
+    bool result = false;
+    if ( flag.size() <= str.size() ) {
+        result = true;
+        for ( int i=0; i<flag.size(); i++ ) {
+            if ( str.at(i) != flag.at(i) ) {
+                result = false;
+                break;
+            }
         }
     }
     return result;
@@ -75,7 +78,7 @@ bool StringOps::endsWith( const string& str, const string& flag )
     int str_size = str.size()-1,
         flg_size = flag.size()-1;
     for ( int i=0; i<flg_size; i++ ) {
-        if ( str[str_size-i] != flag[flg_size-i] ) {
+        if ( str.at( str_size-i ) != flag.at( flg_size-i ) ) {
             result = false;
             break;
         }
@@ -110,7 +113,7 @@ string StringOps::lstrip( const string& str, const string& chars )
     int i = 0;
     while ( i < str.size() ) {
         found = false;
-        char str_index = str[i];
+        char str_index = str.at( i );
         for ( const char& chr : chars ) {
             if ( str_index == chr ) {
                 found = true;
@@ -136,7 +139,7 @@ string StringOps::rstrip( const string& str, const string& chars )
     int i = str.size() - 1;
     while ( i >= 0 ) {
         found = false;
-        char str_index = str[i];
+        char str_index = str.at( i );
         for ( const char& chr : chars ) {
             if ( str_index == chr ) {
                 found = true;
