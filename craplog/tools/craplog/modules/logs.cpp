@@ -1,37 +1,48 @@
 
 #include "logs.h"
 
+#include "datetime.h"
+
 
 LogOps::LogOps()
 {
     // from fields to ids
-    this->field2id["date_time"] = 0;
-    this->field2id["date_time_utc"] = 0;
-    this->field2id["date_time_ct"] = 0;
-    this->field2id["date_time_mcs"] = 0;
-    this->field2id["date_time_iso_mcs"] = 0;
+    this->field2id["date_time_year"]    = 1;
+    this->field2id["date_time_month"]   = 2;
+    this->field2id["date_time_day"]     = 3;
+    this->field2id["date_time_hour"]    = 4;
+    this->field2id["date_time_minute"]  = 5;
+    this->field2id["date_time_second"]  = 6;
+        this->field2id["date_time_ncsa"]    = 0;
+        this->field2id["date_time_utc"]     = 0;
+        this->field2id["date_time_iso"]     = 0;
+        this->field2id["date_time_mcs"]     = 0;
+        this->field2id["date_time_iso_mcs"] = 0;
 
-    this->field2id["request_full"] = 0;
-    this->field2id["request_method"] = 10;
-    this->field2id["request_page"] = 11;
-    this->field2id["request_query"] = 12;
-    this->field2id["response_code"] = 13;
-    this->field2id["time_taken"] = 0;
-    this->field2id["time_taken+ms"] = 0;
-    this->field2id["time_taken_ms"] = 14;
-    this->field2id["bytes_sent"] = 15;
-    this->field2id["bytes_received"] = 16;
-    this->field2id["referer"] = 17;
+    this->field2id["request_protocol"]  = 10;
+    this->field2id["request_method"]    = 11;
+    this->field2id["request_page"]      = 12;
+    this->field2id["request_query"]     = 13;
+    this->field2id["response_code"]     = 14;
+        this->field2id["request_full"]      = 0;
 
-    this->field2id["client:port"] = 0;
-    this->field2id["client"] = 20;
-    this->field2id["user_agent"] = 21;
-    this->field2id["cookie"] = 22;
+    this->field2id["time_taken_ms"]     = 15;
+        this->field2id["time_taken_s"]      = 0;
+        this->field2id["time_taken_s.ms"]   = 0;
+    this->field2id["bytes_sent"]        = 16;
+    this->field2id["bytes_received"]    = 17;
 
-    this->field2id["port"] = 30;
-    this->field2id["error_level"] = 31;
+    this->field2id["referer"]           = 18;
+
+    this->field2id["client"]            = 20;
+        this->field2id["client:port"]       = 0;
+    this->field2id["user_agent"]        = 21;
+    this->field2id["cookie"]            = 22;
+
+    this->field2id["port"]          = 30;
+    this->field2id["error_level"]   = 31;
     this->field2id["error_message"] = 32;
-    this->field2id["source_file"] = 33;
+    this->field2id["source_file"]   = 33;
 }
 
 
@@ -355,12 +366,12 @@ LogOps::LogType LogOps::comparativeTypeCheck( const std::string& line, const For
 
 
 
-std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format ) const
+std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
 {
     std::unordered_map<int, std::string> data;
 
-    std::string sep, fld, fld_str, aux_sep1, aux_sep2;
-    bool missing=false;
+    std::string sep, fld, fld_str, aux_fld_str, aux_sep1, aux_sep2;
+    bool missing=false, add_pm=false;
     int start, stop=0, i=0, aux_start1, aux_start2, aux_stop;
     int line_size;
     int n_sep = format.separators.size()-1;
@@ -378,7 +389,14 @@ std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line,
         } else if ( i == n_sep+1 ) {
             // final separator
             sep = format.final;
-            stop = line_size;
+            if ( sep == "" ) {
+                stop = line_size+1;
+            } else {
+                stop = line.find( sep, start );
+                if ( stop > line_size+1 || stop < 0 ) {
+                    stop = line_size +1;
+                }
+            }
         } else {
             // no more separators
             break;
@@ -389,80 +407,219 @@ std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line,
             stop = start;
             continue;
         }
+
         if ( i+1 <= n_sep ) {
-            // not the last separator, check the possibility of missing
-            aux_sep1 = sep;
-            aux_start1 = aux_sep1.find(' ');
-            if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
-                aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
-            }
-            // iterate over following separators
-            for ( int j=i+1; j<n_sep; j++ ) {
-                aux_sep2 = format.separators.at( j );
-                aux_start2 = aux_sep2.find(' ');
-                if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
-                    aux_start2 = stop;
-                } else {
-                    aux_start2 = stop + aux_start2 + 1;
-                    aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
+
+            // tricky error messages from apache
+            aux_fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+            if ( StringOps::startsWith( aux_fld_str, "AH0"  )
+              || StringOps::startsWith( aux_fld_str, "PHP " ) ) {
+                if ( format.fields.at( i ) != "error_message" ) {
+                    // this field is missing, step to the right field
+                    for ( int j=i+1; j<format.fields.size(); j++ ) {
+                        if ( format.fields.at( j ) == "error_message" ) {
+                            i = j;
+                            break;
+                        }
+                    }
                 }
-                // if the 2 seps are identical, skip (for uncertainty)
-                if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
-                    continue;
+                // correct field, check if the next separators has columns. in case, update the stop position
+                int c_count = StringOps::count( aux_fld_str, ": " ),
+                    c_max = 2;
+                if ( StringOps::startsWith( aux_fld_str, "AH00171" )
+                  || StringOps::startsWith( aux_fld_str, "AH00163" ) ) {
+                    c_max = 1;
                 }
-                // check if the next sep is found in the same position of the current one
-                if ( line.find( aux_sep2, aux_start2 ) == aux_start2 ) {
-                    // probably the current field is missing, skip to this one
-                    i = j;
-                    aux_stop = aux_start2 + aux_sep2.size();
+                if ( c_count < c_max ) {
+                    // supposed to contain at least 2 columns
+                    aux_stop = stop;
+                    int j;
+                    for ( j=0; j<c_count; j++ ) {
+                        aux_stop = line.find( ": ", aux_stop );
+                        if ( aux_stop != 0 || aux_stop >= line_size ) {
+                            // column not not found
+                            break;
+                        } else {
+                            // one_setp_further
+                            aux_stop ++;
+                        }
+                    }
+                    // finally update the stop to the next sep
+                    if ( i <= n_sep ) {
+                        sep = format.separators.at( i );
+                        stop = line.find( sep, aux_stop );
+                    } else if ( i == n_sep+1 ) {
+                        // final separator
+                        sep = format.final;
+                        if ( sep == "" ) {
+                            stop = line_size+1;
+                        } else {
+                            stop = line.find( sep, aux_stop );
+                            if ( stop > line_size+1 || stop < 0 ) {
+                                stop = line_size +1;
+                            }
+                        }
+                    }
+                }
+
+            } else {
+
+                // not the last separator, check the possibility of missing
+                aux_sep1 = sep;
+                aux_start1 = aux_sep1.find(' ');
+                if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
+                    aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
+                }
+                // iterate over following separators
+                for ( int j=i+1; j<n_sep; j++ ) {
                     aux_sep2 = format.separators.at( j );
-                    missing = true;
+                    aux_start2 = aux_sep2.find(' ');
+                    if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
+                        aux_start2 = stop;
+                    } else {
+                        aux_start2 = stop + aux_start2 + 1;
+                        aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
+                    }
+                    // if the 2 seps are identical, skip (for uncertainty)
+                    if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
+                        continue;
+                    }
+                    // check if the next sep is found in the same position of the current one
+                    if ( line.find( aux_sep2, stop ) == aux_start2 ) {
+                        // probably the current field is missing, skip to this one
+                        i = j;
+                        aux_stop = aux_start2 + aux_sep2.size();
+                        aux_sep2 = format.separators.at( j );
+                        missing = true;
+                    }
+                    break;
                 }
-                break;
             }
         }
 
         // get the field
         fld = format.fields.at( i );
-        fld_str = line.substr(start, stop-start);
+        if ( fld != "NONE" ) {
+            // only parse the considered fields
+            fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+            this->size += fld_str.size();
 
-        // process the field if needed
-        if ( StringOps::startsWith( fld, "date_time" ) ) {
-            // special case for date in NCSA format being enclosed between square brackets
-            if ( StringOps::startsWith( fld_str, "[" ) ) {
-                fld_str = fld_str.substr( 1, fld_str.size()-1 );
-                if ( StringOps::endsWith( fld_str, "]" ) ) {
-                    fld_str = fld_str.substr( 0, fld_str.size()-1 );
-                    sep = "]" + sep;
+            if ( fld_str != "" ) {
+                int fld_id = this->field2id.at(fld);
+                if ( fld_id > 0 ) {
+                    // no need to process, append directly if non-empty
+                    data.emplace( fld_id, fld_str );
+
+                } else {
+                    // process the field
+
+                    // process the date to get year, month, day, hour and minute
+                    if ( StringOps::startsWith( fld, "date_time" ) ) {
+                        std::vector<std::string> dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part which is useless from now on
+                        if ( dt[0] != "" ) {
+                            // year
+                            data.emplace( this->field2id.at("date_time_year"), dt[0] );
+                        }
+                        if ( dt[1] != "" ) {
+                            // month
+                            data.emplace( this->field2id.at("date_time_month"), dt[1] );
+                        }
+                        if ( dt[2] != "" ) {
+                            // day
+                            data.emplace( this->field2id.at("date_time_day"), dt[2] );
+                        }
+                        if ( dt[3] != "" ) {
+                            // hour
+                            if ( dt[3] == "PM" ) {
+                                add_pm = true;
+                            } else {
+                                data.emplace( this->field2id.at("date_time_hour"), dt[3] );
+                            }
+                        }
+                        if ( dt[4] != "" ) {
+                            // minute
+                            data.emplace( this->field2id.at("date_time_minute"), dt[4] );
+                        }
+                        if ( dt[5] != "" ) {
+                            // second
+                            data.emplace( this->field2id.at("date_time_second"), dt[5] );
+                        }
+
+
+                    // process the request to get the protocol, method, resource and query
+                    } else if ( fld == "request_full" ) {
+                        int aux, fld_size=fld_str.size()-1;
+                        std::string aux_fld, protocol="", method="", page="", query="";
+                        aux_fld = fld_str;
+                        // method
+                        aux = aux_fld.find( ' ' );
+                        if ( aux >= 0 && aux <= fld_size ) {
+                            method = aux_fld.substr( 0, aux );
+                            aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
+
+                            // page & query
+                            aux = aux_fld.find( ' ' );
+                            if ( aux >= 0 && aux <= fld_size ) {
+                                std::string aux_str = aux_fld.substr( 0, aux );
+                                // search for the query
+                                int aux_ = aux_str.find( '?' );
+                                if ( aux_ >= 0 && aux_ <= aux_str.size() ) {
+                                    page = aux_str.substr( 0, aux_ );
+                                    query = aux_str.substr( aux_+1 );
+                                } else {
+                                    // query not found
+                                    page = aux_str;
+                                }
+                                aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
+
+                                // protocol
+                                protocol = aux_fld;
+                            }
+                        }
+                        // append non-empty data
+                        if ( protocol != "" ) {
+                            data.emplace( this->field2id.at("request_protocol"), protocol );
+                        }
+                        if ( method != "" ) {
+                            data.emplace( this->field2id.at("request_method"), method );
+                        }
+                        if ( page != "" ) {
+                            data.emplace( this->field2id.at("request_page"), page );
+                        }
+                        if ( query != "" ) {
+                            data.emplace( this->field2id.at("request_query"), query );
+                        }
+
+
+                    // process the time taken to convert to milliseconds
+                    } else if ( StringOps::startsWith( fld, "time_taken_" ) ) {
+                        float t = std::stof( fld_str );
+                        fld = fld.substr( 11 );
+                        if ( fld == "us" ) {
+                            // from microseconds
+                            t /= 1000;
+                        } else if ( fld == "s" || fld == "s.ms" ) {
+                            // from seconds
+                            t *= 1000;
+                        }
+                        data.emplace( this->field2id.at("time_taken"), std::to_string( (int)t ) );
+
+
+                    // split client:port
+                    } else if ( fld == "client:port" ) {
+                        int aux = fld_str.find( ':' );
+                        if ( aux >= 0 && aux < fld_str.size() ) {
+                            data.emplace( this->field2id.at("client"), fld_str.substr( 0, aux ) );
+                            data.emplace( this->field2id.at("port"), fld_str.substr( aux+1 ) );
+                        }
+
+
+                    // something went wrong
+                    } else {
+                        // hmmm.. no...
+                    }
                 }
             }
-            // process the date to get year, month, day, hour and minute
-            fld = fld.substr( 10 ); // cut away the "date_time_" part which is useless from now on
-            if ( fld == "" ) {
-
-            } else if ( fld == "" ) {
-
-            } else if ( fld == "" ) {
-
-            } else if ( fld == "" ) {
-
-            } else if ( fld == "" ) {
-
-            } else if ( fld == "" ) {
-
-            }
-
-        } else if ( fld == "user_agent" || fld == "source_file" ) {
-            //class_name += colors["ua_src"];
-
-        } else if ( StringOps::startsWith( fld, "request" ) || fld == "error_message" ) {
-            //class_name += colors["req_err"];
-
-        } else if ( fld == "response_code" || fld == "error_level" ) {
-            //class_name += colors["res_lev"];
-
-        } else {
-            //class_name += colors["x"];
         }
 
 
@@ -480,10 +637,21 @@ std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line,
         }
     }
 
+    if ( add_pm == true ) {
+        try {
+            // add +12 hours for PM
+            data[4] = std::to_string( 12 + std::stoi(data[4]) );
+        } catch (...) {
+            // no hour data
+        }
+    }
+
+    this->lines ++;
+
     return data;
 }
 
-std::vector<std::unordered_map<int, std::string>> LogOps::parseLines( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format ) const
+std::vector<std::unordered_map<int, std::string>> LogOps::parseLines( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
 {
     std::vector<std::unordered_map<int, std::string>> collection;
     collection.reserve( lines.size() );
@@ -492,5 +660,20 @@ std::vector<std::unordered_map<int, std::string>> LogOps::parseLines( const std:
     }
 
     return collection;
+}
+
+
+void LogOps::resetPerfData()
+{
+    this->size  = 0;
+    this->lines = 0;
+}
+int LogOps::getSize()
+{
+    return this->size;
+}
+int LogOps::getLines()
+{
+    return this->lines;
 }
 

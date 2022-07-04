@@ -1,8 +1,6 @@
 
 #include "rtf.h"
 
-using std::string, std::unordered_map;
-
 
 RichText::RichText()
 {
@@ -25,12 +23,12 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
         rich_content += "<br/>";
     }
     QString rich_line="", class_name="";
-    string sep, fld, fld_str, aux_sep1, aux_sep2;
+    std::string sep, fld, fld_str, aux_sep1, aux_sep2, aux_fld_str;
     bool missing=false;
     int start, stop=0, i, aux_start1, aux_start2, aux_stop,
         line_size, sep_size,
         n_sep = logs_format.separators.size()-1;
-    for ( string& line : StringOps::splitrip( content ) ) {
+    for ( const std::string& line : StringOps::splitrip( content ) ) {
         i = 0;
         line_size = line.size()-1;
         rich_line = "<p>";
@@ -46,7 +44,14 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
             } else if ( i == n_sep+1 ) {
                 // final separator
                 sep = logs_format.final;
-                stop = line_size;
+                if ( sep == "" ) {
+                    stop = line_size+1;
+                } else {
+                    stop = line.find( sep, start );
+                    if ( stop > line_size+1 || stop < 0 ) {
+                        stop = line_size +1;
+                    }
+                }
             } else {
                 // no more separators
                 break;
@@ -58,37 +63,94 @@ QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFo
                 continue;
             }
             if ( i+1 <= n_sep ) {
-                // not the last separator, check the possibility of missing
-                aux_sep1 = sep;
-                aux_start1 = aux_sep1.find(' ');
-                if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
-                    aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
-                }
-                // iterate over following separators
-                for ( int j=i+1; j<n_sep; j++ ) {
-                    aux_sep2 = logs_format.separators.at( j );
-                    aux_start2 = aux_sep2.find(' ');
-                    if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
-                        aux_start2 = stop;
-                    } else {
-                        aux_start2 = stop + aux_start2 + 1;
-                        aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
+
+                // tricky error messages from apache
+                aux_fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+                if ( StringOps::startsWith( aux_fld_str, "AH0"  )
+                  || StringOps::startsWith( aux_fld_str, "PHP " ) ) {
+                    if ( logs_format.fields.at( i ) != "error_message" ) {
+                        // this field is missing, step to the right field
+                        for ( int j=i+1; j<logs_format.fields.size(); j++ ) {
+                            if ( logs_format.fields.at( j ) == "error_message" ) {
+                                i = j;
+                                break;
+                            }
+                        }
                     }
-                    // if the 2 seps are identical, skip (for uncertainty)
-                    if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
-                        continue;
+                    // correct field, check if the next separators has columns. in case, update the stop position
+                    int c_count = StringOps::count( aux_fld_str, ": " ),
+                        c_max = 2;
+                    if ( StringOps::startsWith( aux_fld_str, "AH00171" )
+                      || StringOps::startsWith( aux_fld_str, "AH00163" ) ) {
+                        c_max = 1;
                     }
-                    // check if the next sep is found in the same position of the current one
-                    if ( line.find( aux_sep2, aux_start2 ) == aux_start2 ) {
-                        // probably the current field is missing, skip to this one
-                        i = j;
-                        aux_stop = aux_start2 + aux_sep2.size();
+                    if ( c_count < c_max ) {
+                        // supposed to contain at least 2 columns
+                        aux_stop = stop;
+                        int j;
+                        for ( j=0; j<c_count; j++ ) {
+                            aux_stop = line.find( ": ", aux_stop );
+                            if ( aux_stop != 0 || aux_stop >= line_size ) {
+                                // column not not found
+                                break;
+                            } else {
+                                // one_setp_further
+                                aux_stop ++;
+                            }
+                        }
+                        // finally update the stop to the next sep
+                        if ( i <= n_sep ) {
+                            sep = logs_format.separators.at( i );
+                            stop = line.find( sep, aux_stop );
+                        } else if ( i == n_sep+1 ) {
+                            // final separator
+                            sep = logs_format.final;
+                            if ( sep == "" ) {
+                                stop = line_size+1;
+                            } else {
+                                stop = line.find( sep, aux_stop );
+                                if ( stop > line_size+1 || stop < 0 ) {
+                                    stop = line_size +1;
+                                }
+                            }
+                        }
+                    }
+
+                } else {
+
+                    // not the last separator, check the possibility of missing
+                    aux_sep1 = sep;
+                    aux_start1 = aux_sep1.find(' ');
+                    if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
+                        aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
+                    }
+                    // iterate over following separators
+                    for ( int j=i+1; j<n_sep; j++ ) {
                         aux_sep2 = logs_format.separators.at( j );
-                        missing = true;
+                        aux_start2 = aux_sep2.find(' ');
+                        if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
+                            aux_start2 = stop;
+                        } else {
+                            aux_start2 = stop + aux_start2 + 1;
+                            aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
+                        }
+                        // if the 2 seps are identical, skip (for uncertainty)
+                        if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
+                            continue;
+                        }
+                        // check if the next sep is found in the same position of the current one
+                        if ( line.find( aux_sep2, aux_start2 ) == aux_start2 ) {
+                            // probably the current field is missing, skip to this one
+                            i = j;
+                            aux_stop = aux_start2 + aux_sep2.size();
+                            aux_sep2 = logs_format.separators.at( j );
+                            missing = true;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
+
             sep_size = sep.size(); // do not remove, holdss the corretc size to increase stop
             // color the fields
             fld = logs_format.fields.at( i );
