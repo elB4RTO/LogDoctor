@@ -1,16 +1,15 @@
 
 #include "colors.h"
 
-using std::string, std::unordered_map;
 
 ColorSec::ColorSec()
 {
 
 }
 
-unordered_map<string, QColor> ColorSec::getColors()
+std::unordered_map<std::string, QColor> ColorSec::getColors()
 {
-    unordered_map<string, QColor> colors;
+    std::unordered_map<std::string, QColor> colors;
                   // greyscale
          colors["black"] = QColor(   0,   0,   0, 255 );
      colors["dark_grey"] = QColor(  63,  63,  63, 255 );
@@ -26,12 +25,12 @@ unordered_map<string, QColor> ColorSec::getColors()
 }
 
 
-unordered_map<int, unordered_map<string, QString>> ColorSec::getColorSchemes()
+std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec::getColorSchemes()
 {
-    unordered_map<int, unordered_map<string, QString>> scheme;
-    scheme.emplace( 1, unordered_map<string, QString>() );
-    scheme.emplace( 2, unordered_map<string, QString>() );
-    scheme.emplace( 3, unordered_map<string, QString>() );
+    std::unordered_map<int, std::unordered_map<std::string, QString>> scheme;
+    scheme.emplace( 1, std::unordered_map<std::string, QString>() );
+    scheme.emplace( 2, std::unordered_map<std::string, QString>() );
+    scheme.emplace( 3, std::unordered_map<std::string, QString>() );
 
     // breeze
     scheme[1].emplace("background","#ffffff");

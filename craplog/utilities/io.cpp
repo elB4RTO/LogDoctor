@@ -82,7 +82,7 @@ bool IOutils::checkDir( const std::string& path, const bool readable, const bool
 
 
 
-std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines ) throw()
+std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines, const bool strip_lines ) throw()
 {
     // read rhe first line only
     bool result = true;
@@ -102,14 +102,18 @@ std::vector<std::string> IOutils::readLines( const std::string& path, const int 
         int n=0;
         while (n < n_lines) {
             if ( file.good() == false ) {
-                throw std::ios_base::failure( "file is not good" );
+                // hopefully nothing more to read
+                break;
             }
             getline(file, line);
-            if ( line.empty() ) {
+            if ( strip_lines == true ) {
+                line = StringOps::strip( line );
+            }
+            if ( line.size() == 0 ) {
               continue;
             }
             // succesfully catched a line
-            lines.push_back( StringOps::strip( line ) );
+            lines.push_back( line );
             n++;
         }
     } catch (const std::ios_base::failure& err) {
