@@ -35,7 +35,7 @@ static QString
     m_FILE_NOT_EXISTS = QMessageBox::tr("The file does not exists"),
     m_DIR_NOT_EXISTS  = QMessageBox::tr("The directory does not exists"),
 
-    m_FILE_EMPTY        = QMessageBox::tr("The file is blank, useless to process it"),
+    m_FILE_EMPTY        = QMessageBox::tr("The file is blank"),
     m_FILE_FAILED_READ  = QMessageBox::tr("An error accured while reading the file"),
 
     m_FILE_ALREADY_USED  = QMessageBox::tr("The file has probably been used already"),
