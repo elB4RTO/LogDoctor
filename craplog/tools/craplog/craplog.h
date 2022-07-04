@@ -71,6 +71,7 @@ public:
     void stopWorking();
     bool isWorking();
     // job performancea
+    void collectPerfData();
     int getTotalSize(),
         getParsedSize(),
         getParsedLines(),
@@ -83,6 +84,7 @@ private:
          proceed = false;
     // perf related
     int total_size = 0,
+        total_lines = 0,
         parsed_size = 0,
         parsed_lines = 0,
         access_size = 0,
@@ -93,16 +95,18 @@ private:
      * log_type_ids
      *      1: access_logs, 2: error_logs
      * log_field_ids
-     *      1: year, 2: month, 3: day, 4: hour, 5: minute,
-     *      10: request_method, 11: request_page, 12: request_query, 13: response_code,
-     *      14: time_taken, 15: bytes_sent, 16: bytes_received, 17: referrer,
+     *      1: year, 2: month, 3: day, 4: hour, 5: minute, 6:second,
+     *      10: request_protocol, 11: request_method, 12: request_page, 13: request_query, 14: response_code,
+     *      15: time_taken, 16: bytes_sent, 17: bytes_received, 18: referrer,
      *      20: ip, 21: user_agent, 22: cookie,
      *      30:port, 31: error_level, 32: error_message, 33: source_file
     */
     std::unordered_map<int, std::vector<std::unordered_map<int, std::string>>> data_collection;
     std::vector<std::string> access_logs_lines, error_logs_lines;
-    void joinLogLines();
-    void parseLogLines();
+    void joinLogLines(),
+         parseLogLines();
+    // used files
+    std::unordered_map<std::string, std::string> used_files_hashes;
 
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
