@@ -18,24 +18,19 @@ Craplog::Craplog()
     this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
     this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";
     this->logs_format_stings[12] = unordered_map<int, string>();
-    this->logs_format_stings[12][1] = "$remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"";
+    this->logs_format_stings[12][1] = "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"";
     this->logs_format_stings[12][2] = "$time_iso8601 [$error_level] $pid: *$cid $error_message";
     this->logs_format_stings[13] = unordered_map<int, string>();
     this->logs_format_stings[13][1] = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken";
     this->logs_format_stings[13][2] = "";
 
-    // TEMPORARY !!!
+    // initialize format strings
     this->logs_formats[11][1] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(1), 1 );
     this->logs_formats[11][2] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(2), 2 );
     this->logs_formats[12][1] = this->formatOps.processFormatString( this->logs_format_stings.at(12).at(1), 1, 12 );
     this->logs_formats[12][2] = this->formatOps.processFormatString( this->logs_format_stings.at(12).at(2), 2, 12 );
-    /* FINAL WILL BE:
-    for ( int i=11; i<14; i++ ) {
-        for ( int j=1; j<3; j++ ) {
-            this->logs_formats[i][j] = this->formatOps.processFormatString( this->logs_format_stings[i][j], j, i );
-        }
-    }
-    */
+    //this->logs_formats[13][1] = this->formatOps.processFormatString( this->logs_format_stings.at(13).at(1), 1, 13 );
+    //this->logs_formats[13][2] = this->formatOps.processFormatString( this->logs_format_stings.at(13).at(2), 2, 13 );
 
     this->current_ALF = this->logs_formats[11][1];
     this->current_ELF = this->logs_formats[11][2];
@@ -98,18 +93,18 @@ int Craplog::getWarningSize()
     return this->warning_size;
 }
 
-void Craplog::setWarningSize( int new_size )
+void Craplog::setWarningSize( const int new_size )
 {
     this->warning_size = new_size;
 }
 
 
 // get the logs format
-FormatOps::LogsFormat Craplog::getAccessLogsFormat( int web_server_id ) &
+FormatOps::LogsFormat Craplog::getAccessLogsFormat( const int web_server_id ) &
 {
     return this->logs_formats.at( web_server_id ).at( 1 );
 }
-FormatOps::LogsFormat Craplog::getErrorLogsFormat( int web_server_id ) &
+FormatOps::LogsFormat Craplog::getErrorLogsFormat( const int web_server_id ) &
 {
     return this->logs_formats.at( web_server_id ).at( 2 );
 }
@@ -130,9 +125,11 @@ void Craplog::setErrorLogsFormat(const int web_server_id, const std::string& for
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( int web_server_id )
+void Craplog::setCurrentWSID( const int web_server_id )
 {
     this->current_WS = web_server_id;
+    this->setCurrentALF();
+    this->setCurrentELF();
 }
 
 int Craplog::getCurrentWSID() const
@@ -172,7 +169,7 @@ int Craplog::getLogsListSize() {
 }
 
 // return the list. rescan if fresh is true
-vector<Craplog::LogFile> Craplog::getLogsList( bool fresh )
+vector<Craplog::LogFile> Craplog::getLogsList( const bool fresh )
 {
     if ( fresh == true ) {
         this->scanLogsDir();
@@ -380,6 +377,7 @@ void Craplog::startWorking()
     this->data_collection[2].clear();
     this->access_logs_lines.clear();
     this->error_logs_lines.clear();
+    this->used_files_hashes.clear();
 }
 void Craplog::stopWorking()
 {
@@ -414,6 +412,12 @@ int Craplog::getErrorSize()
     return this->error_size;
 }
 
+void Craplog::collectPerfData()
+{
+    this->parsed_size  = this->logOps.getSize();
+    this->parsed_lines = this->logOps.getLines();
+}
+
 
 void Craplog::run()
 {
@@ -421,10 +425,16 @@ void Craplog::run()
 
     // collect log lines
     this->joinLogLines();
+    // parse the log lines to fill the collection
+    this->parseLogLines();
 
-    if ( this->proceed == true ) {
-        this->parseLogLines();
-    }
+    // clear log lines data
+    this->access_logs_lines.clear();
+    this->error_logs_lines.clear();
+
+
+    this->hashOps.insertUsedHashes( this->used_files_hashes, this->current_WS );
+    this->used_files_hashes.clear();
 
     this->stopWorking();
 }
@@ -437,6 +447,11 @@ void Craplog::joinLogLines()
     for ( const LogFile& file : this->logs_list ) {
 
         if ( this->proceed == false ) { break; }
+
+        if ( file.selected == false ) {
+            // not selected, skip
+            continue;
+        }
 
         // check again the type
         if ( file.type == LogOps::LogType::Failed ) {
@@ -495,12 +510,23 @@ void Craplog::joinLogLines()
         }
 
         this->total_size += file.size;
+        this->total_lines += content.size();
     }
 }
 
 
 void Craplog::parseLogLines()
 {
+    if ( this-> proceed == true && this->access_logs_lines.size() > 0 ) {
+        this->data_collection[1] = this->logOps.parseLines(
+            this->access_logs_lines,
+            this->logs_formats.at( this->current_WS ).at( 1 ) );
+    }
 
+    if ( this-> proceed == true && this->error_logs_lines.size() > 0 ) {
+        this->data_collection[2] = this->logOps.parseLines(
+            this->error_logs_lines,
+            this->logs_formats.at( this->current_WS ).at( 2 ) );
+    }
 }
 
