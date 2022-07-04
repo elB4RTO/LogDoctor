@@ -47,7 +47,7 @@ private slots:
     void on_button_MakeStats_Start_clicked();
 
     // custom
-    void update_MakeStats_labels();
+    void update_Craplog_PerfData();
 
 private:
     Ui::MainWindow *ui;
@@ -79,9 +79,9 @@ private:
     /////////////////////
     //// GENERAL USE ////
     // get a printable size, from Bytes to the best fit
-    QString printableSize( int bytes ),
-            printableSpeed( int bytes, int secs ),
-            printableTime( int seconds );
+    QString printableSize(const int bytes ),
+            printableSpeed( const int bytes, const int secs ),
+            printableTime( const int seconds );
 
     //////////////
     //// LOGS ////
@@ -100,7 +100,8 @@ private:
 
     //////////////////////////
     //// LOGS PERFORMANCE ////
-    void reset_MakeStats_labels();
+    void update_MakeStats_labels(),
+         reset_MakeStats_labels();
 
 };
 #endif // MAINWINDOW_H
