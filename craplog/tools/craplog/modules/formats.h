@@ -50,8 +50,8 @@ private:
                              /*NOT IN USE->*/"s-sitename", "s-computername", "s-ip", "s-port", "cs-username", "cs-host", "sc-substatus", "sc-win32-status", "streamid"};
 
     // list error logs fields formats
-    const std::vector<std::string> N_ELFs = {"$time_iso8601", "$error_level", "$pid", "$cid", "$error_message",
-                             /*NOT IN USE->*/};
+    const std::vector<std::string> N_ELFs = {"$time_iso8601", "$error_level", "$error_message",
+                             /*NOT IN USE->*/"$pid", "$cid"};
 
     const std::vector<std::string> I_ELFs = {"", "", "", "", "",
                              /*NOT IN USE->*/};
