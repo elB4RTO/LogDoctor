@@ -46,6 +46,8 @@ set(PROJECT_SOURCES
 
         tools/craplog/craplog.h
         tools/craplog/craplog.cpp
+        tools/craplog/modules/datetime.h
+        tools/craplog/modules/datetime.cpp
         tools/craplog/modules/formats.h
         tools/craplog/modules/formats.cpp
         tools/craplog/modules/hash.h
