@@ -19,8 +19,8 @@ public:
     // check if the given hash is from a file which has been used already
     bool hasBeenUsed( const std::string& file_hash, const int web_server_id );
     // insert the given hash/es in the relative list
-    bool insertHash( const std::string& hash, const int web_server_id );
-    bool insertHashes( const std::vector<std::string>& hashes, const int web_server_id );
+    bool insertUsedHash( const std::string& hash, const int web_server_id );
+    bool insertUsedHashes( const std::unordered_map<std::string, std::string>& hashes, const int web_server_id );
 
 private:
     // id constants

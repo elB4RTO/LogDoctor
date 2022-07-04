@@ -4,19 +4,18 @@
 #include "utilities/io.h"
 #include "utilities/vectors.h"
 
+#include "tools/craplog/modules/sha256.h"
+
 #include <sstream>
 #include <iomanip>
 
-#include "tools/craplog/modules/sha256.h"
-
-using std::string, std::vector;
 
 
 HashOps::HashOps()
 {
-    this->hashes.emplace( this->APACHE_ID, vector<string>() );
-    this->hashes.emplace( this->NGINX_ID, vector<string>() );
-    this->hashes.emplace( this->IIS_ID, vector<string>() );
+    this->hashes.emplace( this->APACHE_ID, std::vector<std::string>() );
+    this->hashes.emplace( this->NGINX_ID, std::vector<std::string>() );
+    this->hashes.emplace( this->IIS_ID, std::vector<std::string>() );
 }
 
 
@@ -30,9 +29,9 @@ void HashOps::readLists( const std::string& dir_path )
 
 
 // returns the hash
-string HashOps::digestFile( const string& file_path )
+std::string HashOps::digestFile( const std::string& file_path )
 {
-    string content = IOutils::readFile( file_path );
+    std::string content = IOutils::readFile( file_path );
     SHA256 sha;
     sha.update( content );
     uint8_t * digest = sha.digest();
@@ -45,7 +44,7 @@ string HashOps::digestFile( const string& file_path )
 bool HashOps::hasBeenUsed( const std::string &file_hash, const int web_server_id )
 {
     bool found = false;
-    for ( const string &hash : this->hashes.at( web_server_id ) ) {
+    for ( const std::string &hash : this->hashes.at( web_server_id ) ) {
         if ( file_hash == hash ) {
             found = true;
             break;
@@ -56,7 +55,7 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const int web_server_id
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertHash( const std::string &hash, const int web_server_id )
+bool HashOps::insertUsedHash( const std::string &hash, const int web_server_id )
 {
     bool proceed = true;
     try {
@@ -72,11 +71,11 @@ bool HashOps::insertHash( const std::string &hash, const int web_server_id )
 }
 
 
-bool HashOps::insertHashes( const vector<string>& hashes, const int web_server_id )
+bool HashOps::insertUsedHashes( const std::unordered_map<std::string, std::string>& hashes, const int web_server_id )
 {
     bool proceed = true;
-    for ( const string &hash : hashes ) {
-        if ( this->insertHash( hash, web_server_id ) == false ) {
+    for ( /*const string &hash*/ const auto& [ name, hash ] : hashes ) {
+        if ( this->insertUsedHash( hash, web_server_id ) == false ) {
             proceed = false;
             break;
         }
