@@ -3,8 +3,6 @@
 
 #include "modules/dialogs.h"
 
-#include <iostream>
-
 
 FormatOps::FormatOps()
 {
@@ -25,12 +23,31 @@ FormatOps::FormatOps()
     this->APACHE_ALF["%I"]  = "bytes_received";
     this->APACHE_ALF["%T"]  = "time_taken_s";
     this->APACHE_ALF["%D"]  = "time_taken_ms";
-    // composed items
+    // composed items (only the ones considered)
     this->APACHE_ALF_V["h"] = { {"c",          "client"} };
-    this->APACHE_ALF_V["t"] = { {"%z",         "time_zone"},
-                                {"sec",        "date_time_s"},
-                                {"msec",       "date_time_ms"},
-                                {"usec",       "date_time_us"} };
+    this->APACHE_ALF_V["t"] = { {"sec",        "date_time_epoch_s"},
+                                {"msec",       "date_time_epoch_ms"},
+                                {"usec",       "date_time_epoch_us"},
+                                {"%b",         "date_time_month_str"},
+                                {"%B",         "date_time_month_str"},
+                                {"%c",         "date_time_mcs"},
+                                {"%d",         "date_time_day"},
+                                {"%D",         "date_time_MMDDYY"},
+                                {"%e",         "date_time_day"},
+                                {"%F",         "date_time_YYYYMMDD"},
+                                {"%h",         "date_time_month_str"},
+                                {"%H",         "date_time_hour"},
+                                {"%m",         "date_time_month"},
+                                {"%M",         "date_time_minute"},
+                                {"%p",         "date_time_clock_meridian"},
+                                {"%r",         "date_time_clock_12"},
+                                {"%R",         "date_time_clock_short"},
+                                {"%S",         "date_time_second"},
+                                {"%T",         "date_time_clock_24"},
+                                {"%x",         "date_time_MMDDYY"},
+                                {"%X",         "date_time_clock_24"},
+                                {"%y",         "date_time_year_short"},
+                                {"%Y",         "date_time_year"} };
     this->APACHE_ALF_V["i"] = { {"Cookie",     "cookie"},
                                 {"User-agent", "user_agent"},
                                 {"Referer",    "referer"} };
@@ -70,7 +87,7 @@ FormatOps::FormatOps()
     this->APACHE_ELF["%l"] = "error_level";
     this->APACHE_ELF["%M"] = "error_message";
     this->APACHE_ELF["%F"] = "source_file";
-    this->APACHE_ELF["%t"] = "date_time";
+    this->APACHE_ELF["%t"] = "date_time_mcs";
     // composed
     this->APACHE_ELF_V["t"] = { {"u", "date_time_mcs"},
                                 {"cu","date_time_iso_mcs"}};
@@ -99,7 +116,7 @@ FormatOps::FormatOps()
     this->NGINX_ALF["$remote_addr"]     = "client";
     this->NGINX_ALF["$time_local"]      = "date_time_ncsa";
     this->NGINX_ALF["$time_iso8601"]    = "date_time_iso";
-    this->NGINX_ALF["msec"]             = "date_time_s.ms";
+    this->NGINX_ALF["msec"]             = "date_time_epoch_s.ms";
     this->NGINX_ALF["$request"]         = "request_full";
     this->NGINX_ALF["$status"]          = "response_code";
     this->NGINX_ALF["$bytes_sent"]      = "bytes_sent";
@@ -115,11 +132,11 @@ FormatOps::FormatOps()
     this->NGINX_ALF["pipe"]                 = "NONE";
 
     // error logs fields formats (only the ones considered)
-    this->NGINX_ELF["$error_level"] = "error_level";
+    this->NGINX_ELF["$time_iso8601"]  = "date_time_iso";
+    this->NGINX_ELF["$error_level"]   = "error_level";
     this->NGINX_ELF["$error_message"] = "error_message";
-    this->NGINX_ELF["$time_iso8601"] = "date_time";
-    this->NGINX_ELF["$pid"] = "NONE";
-    this->NGINX_ELF["$cid"] = "NONE";
+    this->NGINX_ELF["$pid"]           = "NONE";
+    this->NGINX_ELF["$cid"]           = "NONE";
 
     /////////////
     //// IIS ////
@@ -292,7 +309,7 @@ FormatOps::LogsFormat FormatOps::processFormatString( const std::string& f_str, 
 
 
 
-FormatOps::LogsFormat FormatOps::processApacheFormatString(const std::string& f_str, const int l_type ) const
+FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str, const int l_type ) const
 {
     std::unordered_map<std::string, std::string> f_map;
     std::unordered_map<std::string ,std::unordered_map<std::string, std::string>> f_map_v;
