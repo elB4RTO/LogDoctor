@@ -10,7 +10,7 @@
 #include <chrono>
 
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow( QWidget *parent )
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -135,7 +135,7 @@ MainWindow::~MainWindow()
 //// GENERAL USE ////
 /////////////////////
 // printable size with suffix and limited decimals
-QString MainWindow::printableSize( int bytes )
+QString MainWindow::printableSize( const int bytes )
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -174,30 +174,34 @@ QString MainWindow::printableSize( int bytes )
 }
 
 // printable speed with suffix and limited decimals
-QString MainWindow::printableSpeed( int bytes, int secs )
+QString MainWindow::printableSpeed( const int bytes, const int secs_ )
 {
     std::string speed_str, speed_sfx=" B/s";
-    float size = (float)bytes;
-    if (size > 1024) {
-        size /= 1024;
+    int secs = secs_;
+    if ( secs == 0 ) {
+        secs = 1;
+    }
+    float speed = (float)bytes / (float)secs;
+    if (speed > 1024) {
+        speed /= 1024;
         speed_sfx = " KiB/s";
-        if (size > 1024) {
-            size /= 1024;
+        if (speed > 1024) {
+            speed /= 1024;
             speed_sfx = " MiB/s";
         }
     }
     // cut decimals depending on how big the floor is
-    speed_str = std::to_string( size / secs );
+    speed_str = std::to_string( speed );
     int cut_index = speed_str.find('.')+1;
     if ( cut_index == 0 ) {
             cut_index = speed_str.find(',')+1;
     }
     int n_decimals = 3;
-    if ( size >= 100 ) {
+    if ( speed >= 100 ) {
         n_decimals = 2;
-        if ( size >= 1000 ) {
+        if ( speed >= 1000 ) {
             n_decimals = 1;
-            if ( size >= 10000 ) {
+            if ( speed >= 10000 ) {
                 n_decimals = 0;
                 cut_index --;
             }
@@ -212,8 +216,9 @@ QString MainWindow::printableSpeed( int bytes, int secs )
     return QString::fromStdString( speed_str.substr(0, cut_index ) + speed_sfx );
 }
 
-QString MainWindow::printableTime( int secs )
+QString MainWindow::printableTime( const int secs_ )
 {
+    int secs = secs_;
     int mins = secs / 60;
     secs = secs - (mins*60);
     std::string mins_str = (mins<10) ? "0"+std::to_string(mins) : std::to_string(mins);
@@ -466,11 +471,9 @@ void MainWindow::on_button_MakeStats_Start_clicked()
     }
 
     if ( proceed == true ) {
-        // reset perfs
-        this->reset_MakeStats_labels();
         // periodically update perfs
         this->craplog_timer = new QTimer(this);
-        connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_MakeStats_labels()));
+        connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
         this->craplog_timer->start(250);
         // run craplog as thread
         this->craplog_timer_start = std::chrono::system_clock::now();
@@ -492,10 +495,10 @@ void MainWindow::reset_MakeStats_labels()
 
 void MainWindow::update_MakeStats_labels()
 {
-    // craplog is running as thread, update the values meanwhile
-    int size, secs;
     // update values
+    int size, secs;
     // size and lines
+    this->craplog.collectPerfData();
     size = this->craplog.getParsedSize();
     this->ui->label_MakeStats_Size->setText( this->printableSize( size ) );
     this->ui->label_MakeStats_Lines->setText( QString::fromStdString(std::to_string(this->craplog.getParsedLines())) );
@@ -507,6 +510,13 @@ void MainWindow::update_MakeStats_labels()
     secs = this->craplog_timer_elapsed.count() / -1000000000;
     this->ui->label_MakeStats_Time->setText( this->printableTime( secs ));
     this->ui->label_MakeStats_Speed->setText( this->printableSpeed( size, secs ));
+}
+
+void MainWindow::update_Craplog_PerfData()
+{
+    // craplog is running as thread, update the values meanwhile
+    this->update_MakeStats_labels();
+    // check if Craplog has finished working
     if ( this->craplog.isWorking() == false ) {
         this->craplog_timer->stop();
         this->craplog_thread.join();
@@ -516,6 +526,9 @@ void MainWindow::update_MakeStats_labels()
 
 void MainWindow::craplogStarted()
 {
+    // reset perfs
+    this->reset_MakeStats_labels();
+    this->craplog.logOps.resetPerfData();
     // disable the LogFiles section
     this->ui->LogBoxFiles->setEnabled(false);
     // disable the start button
@@ -533,6 +546,11 @@ void MainWindow::craplogStarted()
 
 void MainWindow::craplogFinished()
 {
+    // update the perf data one last time, just in case
+    this->update_MakeStats_labels();
+    // clean up temp vars
+    this->craplog.logOps.resetPerfData();
+
     // refresh the logs list
     this->on_button_LogFiles_RefreshList_clicked();
     // enable the LogFiles section
