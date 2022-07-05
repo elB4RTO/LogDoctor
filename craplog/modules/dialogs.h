@@ -8,24 +8,27 @@
 
 static QString
     // questions
-    q_CONTINUE      = QMessageBox::tr("Continue?"),
-    q_YOUR_CHOICE   = QMessageBox::tr("Your choice?"),
-    q_DA            = QMessageBox::tr("Discard it and continue, or Abort all and exit?"),
-    q_DIA           = QMessageBox::tr("Ignore and use it anyway, Discard it and continue, or Abort all and exit?"),
+    q_CONTINUE    = QMessageBox::tr("Continue?"),
+    q_YOUR_CHOICE = QMessageBox::tr("Your choice?"),
+    q_DA          = QMessageBox::tr("Discard it and continue, or Abort all and exit?"),
+    q_DIA         = QMessageBox::tr("Ignore and use it anyway, Discard it and continue, or Abort all and exit?"),
 
     // titles
-    t_ERROR_OCCURED   = QMessageBox::tr("An error occured"),
+    t_ERROR_OCCURED = QMessageBox::tr("An error occured"),
 
-    t_LOGTYPE_FAILED  = QMessageBox::tr("Failed defining type"),
-    t_LOGTYPE_UNDEFINED  = QMessageBox::tr("Undefined type"),
+    t_DB_FAILED_OPENING   = QMessageBox::tr("Failed opening database"),
+    t_DB_FAILED_EXECUTING = QMessageBox::tr("Failed executing on database"),
 
-    t_FILE_ALREADY_USED  = QMessageBox::tr("File already used"),
+    t_LOGTYPE_FAILED    = QMessageBox::tr("Failed defining type"),
+    t_LOGTYPE_UNDEFINED = QMessageBox::tr("Undefined type"),
 
-    t_FILE_NOT_FOUND    = QMessageBox::tr("File not found"),
-    t_FILE_EMPTY        = QMessageBox::tr("File is empty"),
-    t_FILE_FAILED_READ  = QMessageBox::tr("Failed reading"),
+    t_FILE_ALREADY_USED = QMessageBox::tr("File already used"),
 
-    t_DIR_NOT_FOUND   = QMessageBox::tr("Directory not found"),
+    t_FILE_NOT_FOUND   = QMessageBox::tr("File not found"),
+    t_FILE_EMPTY       = QMessageBox::tr("File is empty"),
+    t_FILE_FAILED_READ = QMessageBox::tr("Failed reading"),
+
+    t_DIR_NOT_FOUND = QMessageBox::tr("Directory not found"),
 
     // messages
     m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file"),
@@ -35,19 +38,23 @@ static QString
     m_FILE_NOT_EXISTS = QMessageBox::tr("The file does not exists"),
     m_DIR_NOT_EXISTS  = QMessageBox::tr("The directory does not exists"),
 
-    m_FILE_EMPTY        = QMessageBox::tr("The file is blank"),
-    m_FILE_FAILED_READ  = QMessageBox::tr("An error accured while reading the file"),
+    m_FILE_EMPTY       = QMessageBox::tr("The file is blank"),
+    m_FILE_FAILED_READ = QMessageBox::tr("An error accured while reading the file"),
 
-    m_FILE_ALREADY_USED  = QMessageBox::tr("The file has probably been used already"),
+    m_FILE_ALREADY_USED = QMessageBox::tr("The file has probably been used already"),
 
-    m_LOGTYPE_FAILED  = QMessageBox::tr("Failed to determine if Access or Error type file"),
-    m_LOGTYPE_UNDEFINED  = QMessageBox::tr("This file's LogType is not Access nor Error"),
+    m_DB_FAILED_OPENING   = QMessageBox::tr("An error occured while opening the database"),
+    m_DB_FAILED_EXECUTING = QMessageBox::tr("An error occured while eecuting a statement on the database"),
+
+    m_LOGTYPE_FAILED    = QMessageBox::tr("Failed to determine if Access or Error type file"),
+    m_LOGTYPE_UNDEFINED = QMessageBox::tr("This file's LogType is not Access nor Error"),
 
     // requests
     r_REPORT_ISSUE = QMessageBox::tr("Please report this issue"),
 
     // footers
-    f_SKIPPING = QMessageBox::tr("Skipping")
+    f_SKIPPING = QMessageBox::tr("Skipping"),
+    f_ABORTING = QMessageBox::tr("Aborting")
 ;
 
 
@@ -60,6 +67,12 @@ public:
         static void warnGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
     static void errGeneric( QWidget *parent, const QString& message, const bool report_msg=false );
         static void errGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
+
+    // database
+    static void errDatabaseFailedOpening( QWidget *parent, const QString& db, const QString& err_msg );
+        static void errDatabaseFailedOpening( QWidget *parent, const std::string& db, const std::string& err_msg );
+    static void errDatabaseFailedExecuting( QWidget *parent, const QString& db, const QString& err_msg );
+        static void errDatabaseFailedExecuting( QWidget *parent, const std::string& db, const std::string& err_msg );
 
     // LogsList
     static bool choiceSelectedFileNotFound( QWidget *parent, const QString& file );
