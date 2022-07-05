@@ -498,7 +498,9 @@ void MainWindow::update_MakeStats_labels()
     // update values
     int size, secs;
     // size and lines
-    this->craplog.collectPerfData();
+    if ( this->craplog.isParsing() == true ) {
+        this->craplog.collectPerfData();
+    }
     size = this->craplog.getParsedSize();
     this->ui->label_MakeStats_Size->setText( this->printableSize( size ) );
     this->ui->label_MakeStats_Lines->setText( QString::fromStdString(std::to_string(this->craplog.getParsedLines())) );
@@ -507,6 +509,7 @@ void MainWindow::update_MakeStats_labels()
     this->craplog_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         this->craplog_timer_start - this->craplog_timer_lapse
     );
+    size = this->craplog.getPerfSize();
     secs = this->craplog_timer_elapsed.count() / -1000000000;
     this->ui->label_MakeStats_Time->setText( this->printableTime( secs ));
     this->ui->label_MakeStats_Speed->setText( this->printableSpeed( size, secs ));
@@ -542,6 +545,8 @@ void MainWindow::craplogStarted()
     this->ui->label_MakeStats_Time->setEnabled(true);
     this->ui->icon_MakeStats_Speed->setEnabled(false);
     this->ui->label_MakeStats_Speed->setEnabled(true);
+    // disable the settings tab
+    this->ui->Set->setEnabled(false);
 }
 
 void MainWindow::craplogFinished()
@@ -555,10 +560,12 @@ void MainWindow::craplogFinished()
     this->on_button_LogFiles_RefreshList_clicked();
     // enable the LogFiles section
     this->ui->LogBoxFiles->setEnabled(true);
-    // enable all labels (needed only the first time)
+    // enable all labels (needed only the first time each session)
     this->ui->icon_MakeStats_Size->setEnabled(true);
     this->ui->icon_MakeStats_Lines->setEnabled(true);
     this->ui->icon_MakeStats_Time->setEnabled(true);
     this->ui->icon_MakeStats_Speed->setEnabled(true);
+    // enable the settings tab
+    this->ui->Set->setEnabled(true);
 }
 

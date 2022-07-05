@@ -369,7 +369,6 @@ LogOps::LogType LogOps::comparativeTypeCheck( const std::string& line, const For
 std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
 {
     std::unordered_map<int, std::string> data;
-
     std::string sep, fld, fld_str, aux_fld_str, aux_sep1, aux_sep2;
     bool missing=false, add_pm=false;
     int start, stop=0, i=0, aux_start1, aux_start2, aux_stop;
@@ -645,6 +644,9 @@ std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line,
             // no hour data
         }
     }
+
+    // set the default warning mark ( 0=false )
+    data.emplace( 99, "0" );
 
     this->lines ++;
 
