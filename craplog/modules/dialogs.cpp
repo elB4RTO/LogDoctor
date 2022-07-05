@@ -9,6 +9,35 @@ DialogSec::DialogSec()
 }
 
 
+void DialogSec::errDatabaseFailedOpening( QWidget *parent, const std::string& db, const std::string& err_msg )
+{
+    errDatabaseFailedOpening( parent, QString::fromStdString(db), QString::fromStdString(err_msg) );
+}
+void DialogSec::errDatabaseFailedOpening(QWidget *parent, const QString& db, const QString &err_msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_DB_FAILED_OPENING,
+        QString("%1:\n%2%3\n\n")
+            .arg( m_DB_FAILED_OPENING, db, err_msg, f_ABORTING ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errDatabaseFailedExecuting( QWidget *parent, const std::string& db, const std::string& err_msg )
+{
+    errDatabaseFailedExecuting( parent, QString::fromStdString(db), QString::fromStdString(err_msg) );
+}
+void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db, const QString &err_msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_DB_FAILED_EXECUTING,
+        QString("%1:\n%2%3\n\n")
+            .arg( m_DB_FAILED_EXECUTING, db, err_msg, f_ABORTING ),
+        QMessageBox::Ok );
+}
+
+
 void DialogSec::errFailedDefineLogType( QWidget *parent, const std::string& file )
 {
     errFailedDefineLogType( parent, QString::fromStdString(file) );
