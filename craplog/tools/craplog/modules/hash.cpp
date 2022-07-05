@@ -41,10 +41,10 @@ std::string HashOps::digestFile( const std::string& file_path )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( const std::string &file_hash, const int web_server_id )
+bool HashOps::hasBeenUsed(const std::string &file_hash, const int web_server_id, const int log_type )
 {
     bool found = false;
-    for ( const std::string &hash : this->hashes.at( web_server_id ) ) {
+    for ( const std::string &hash : this->hashes.at( web_server_id ).at( log_type ) ) {
         if ( file_hash == hash ) {
             found = true;
             break;
@@ -55,12 +55,12 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const int web_server_id
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertUsedHash( const std::string &hash, const int web_server_id )
+bool HashOps::insertUsedHash( const std::string& hash, const int web_server_id, const int log_type )
 {
     bool proceed = true;
     try {
-        if( VecOps::contains( this->hashes.at( web_server_id ), hash )) {
-            this->hashes.at( web_server_id ).push_back( hash );
+        if( VecOps::contains( this->hashes.at( web_server_id ).at( log_type ), hash ) == false ) {
+            this->hashes.at( web_server_id ).at( log_type ).push_back( hash );
         }
     } catch (...) {
         // failed to insert the hash
@@ -71,13 +71,15 @@ bool HashOps::insertUsedHash( const std::string &hash, const int web_server_id )
 }
 
 
-bool HashOps::insertUsedHashes( const std::unordered_map<std::string, std::string>& hashes, const int web_server_id )
+bool HashOps::insertUsedHashes( const std::unordered_map<int, std::vector<std::string>>& hashes, const int web_server_id )
 {
     bool proceed = true;
-    for ( /*const string &hash*/ const auto& [ name, hash ] : hashes ) {
-        if ( this->insertUsedHash( hash, web_server_id ) == false ) {
-            proceed = false;
-            break;
+    for ( const auto& [ log_type, data ] : hashes ) {
+        for ( const std::string& hash : data ) {
+            if ( this->insertUsedHash( hash, web_server_id, log_type ) == false ) {
+                proceed = false;
+                break;
+            }
         }
     }
     return proceed;

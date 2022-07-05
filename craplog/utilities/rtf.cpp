@@ -8,7 +8,7 @@ RichText::RichText()
 }
 
 
-QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFormat& logs_format, const TextBrowser &TB )
+QString RichText::enrichLogs(const std::string& content, const FormatOps::LogsFormat& logs_format, const TextBrowser& TB )
 {
     std::unordered_map<std::string, QString> colors = TB.getColorScheme();
     int color_scheme = TB.getColorSchemeID();
