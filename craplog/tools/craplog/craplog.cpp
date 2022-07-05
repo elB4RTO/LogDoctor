@@ -2,6 +2,7 @@
 #include "craplog.h"
 
 #include "utilities.h"
+#include "tools/craplog/modules/store.h"
 
 #include <filesystem>
 
@@ -13,7 +14,26 @@ using std::string, std::vector, std::unordered_map;
 
 Craplog::Craplog()
 {
-    // initialize default values
+    ////////////////////////
+    //// INITIALIZATION ////
+    ////////////////////////
+    // blacklists / whitelists
+    for ( int i=11; i<14; i++ ) {
+        this->warnlists[ i ].emplace( 1, std::unordered_map<int, BWlist>() ); // access
+        this->warnlists[ i ].emplace( 2, std::unordered_map<int, BWlist>() ); // error
+        // access
+        this->warnlists[ i ][ 1 ].emplace( 20, BWlist{ .used=false, .list={} } );
+        this->warnlists[ i ][ 1 ].emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
+        this->warnlists[ i ][ 1 ].emplace( 12, BWlist{ .used=false, .list={} } );
+        this->blacklists[ i ][ 1 ].emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
+        // error
+        this->warnlists[ i ][ 2 ].emplace( 20, BWlist{ .used=false, .list={} } );
+        this->warnlists[ i ][ 2 ].emplace( 31, BWlist{ .used=false, .list={} } );
+        this->blacklists[ i ][ 2 ].emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
+        this->blacklists[ i ][ 2 ].emplace( 31, BWlist{ .used=false, .list={} } );
+    }
+
+    // default format strings
     this->logs_format_stings[11] = unordered_map<int, string>();
     this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
     this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";
@@ -79,6 +99,13 @@ Craplog::Craplog()
     // error logs data
     this->data_collection[2] = std::vector<std::unordered_map<int, std::string>>();
 
+    // hashes of newly parsed files
+    this->used_files_hashes[1] = std::vector<std::string>();
+    this->used_files_hashes[2] = std::vector<std::string>();
+
+    ///////////////////////
+    //// CONFIGURATION ////
+    ///////////////////////
     /*this->readConfigs();
 
     this->hashOps.readLists( this->configs_path );*/
@@ -290,7 +317,7 @@ void Craplog::scanLogsDir()
 
                 auto logfile = LogFile{
                     .selected = false,
-                    .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS ),
+                    .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS, log_type ),
                     .size = size,
                     .name = QString::fromStdString( name ),
                     .hash = hash,
@@ -367,6 +394,7 @@ bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& l
 void Craplog::startWorking()
 {
     this->working = true;
+    this->parsing = true;
     this->proceed = true;
     this->total_size = 0;
     this->parsed_size = 0;
@@ -377,20 +405,32 @@ void Craplog::startWorking()
     this->data_collection[2].clear();
     this->access_logs_lines.clear();
     this->error_logs_lines.clear();
-    this->used_files_hashes.clear();
+    this->used_files_hashes[1].clear();
+    this->used_files_hashes[2].clear();
 }
 void Craplog::stopWorking()
 {
     this->working = false;
+    this->parsing = false;
     this->data_collection[1].clear();
     this->data_collection[2].clear();
+    this->used_files_hashes[1].clear();
+    this->used_files_hashes[2].clear();
 }
 bool Craplog::isWorking()
 {
     return this->working;
 }
+bool Craplog::isParsing()
+{
+    return this->parsing;
+}
 
 // performances
+int Craplog::getPerfSize()
+{
+    return this->perf_size;
+}
 int Craplog::getTotalSize()
 {
     return this->total_size;
@@ -412,10 +452,22 @@ int Craplog::getErrorSize()
     return this->error_size;
 }
 
+void Craplog::sumIgnoredSize( const int size, const int log_type )
+{
+    if ( log_type == 1 ) {
+        this->ignored_access_size += size;
+    } else if ( log_type == 2 ) {
+        this->ignored_error_size += size;
+    } else {
+        // wrong log_type
+    }
+}
+
 void Craplog::collectPerfData()
 {
     this->parsed_size  = this->logOps.getSize();
     this->parsed_lines = this->logOps.getLines();
+    this->perf_size    = this->parsed_size;
 }
 
 
@@ -427,14 +479,16 @@ void Craplog::run()
     this->joinLogLines();
     // parse the log lines to fill the collection
     this->parseLogLines();
-
     // clear log lines data
     this->access_logs_lines.clear();
     this->error_logs_lines.clear();
+    // finished parsing logs
+    this->parsing = false;
+    this->perf_size = this->parsed_size;
 
 
+    // insert the hashes of the used files
     this->hashOps.insertUsedHashes( this->used_files_hashes, this->current_WS );
-    this->used_files_hashes.clear();
 
     this->stopWorking();
 }
@@ -505,8 +559,10 @@ void Craplog::joinLogLines()
         // append to the relative list
         if ( file.type == LogOps::LogType::Access ) {
             this->access_logs_lines.insert( this->access_logs_lines.end(), content.begin(), content.end() );
+            this->used_files_hashes.at( 1 ).push_back( file.hash );
         } else {
             this->error_logs_lines.insert( this->error_logs_lines.end(), content.begin(), content.end() );
+            this->used_files_hashes.at( 2 ).push_back( file.hash );
         }
 
         this->total_size += file.size;
@@ -528,5 +584,101 @@ void Craplog::parseLogLines()
             this->error_logs_lines,
             this->logs_formats.at( this->current_WS ).at( 2 ) );
     }
+}
+
+
+bool Craplog::isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id )
+{
+    return this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).used;
+}
+bool Craplog::isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id )
+{
+    return this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).used;
+}
+const std::vector<std::string>& Craplog::getBlacklist( const int web_server_id, const int log_type, const int log_field_id )
+{
+    return this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).list;
+}
+const std::vector<std::string>& Craplog::getWarnlist( const int web_server_id, const int log_type, const int log_field_id )
+{
+    return this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).list;
+}
+
+
+void Craplog::storeLogLines()
+{
+    bool successful;
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc = sqlite3_open("test.db", &db);
+
+    if ( rc ) {
+        // error opening database
+        this->proceed = false;
+        std::string err_msg = "";
+        if ( this->dialogs_Level == 2 ) {
+            err_msg.append( "\n\nSQLite error message:\n" );
+            err_msg.append( sqlite3_errmsg(db) );
+        }
+        DialogSec::errDatabaseFailedOpening( nullptr, "statistics", err_msg );
+    }
+
+    try {
+        // ACID transaction
+        rc = sqlite3_exec(db, "BEGIN;", nullptr, nullptr, &zErrMsg);
+        if( rc != SQLITE_OK ) {
+            // error opening database
+            this->proceed = false;
+            std::string err_msg = "";
+            if ( this->dialogs_Level > 0 ) {
+                err_msg.append( "\n\nStatement:\n" );
+                err_msg.append( "\"BEGIN;\"" );
+                if ( this->dialogs_Level == 2 ) {
+                    err_msg.append( "\n\nSQLite error message:\n" );
+                    err_msg.append( zErrMsg );
+                }
+            }
+            DialogSec::errDatabaseFailedExecuting( nullptr, "statistics", err_msg );
+            sqlite3_free( zErrMsg );
+        }
+
+        if ( this->proceed == true && this->data_collection.at( 1 ).size() > 0 ) {
+            successful = StoreOps::storeData( db, *this, this->data_collection.at( 1 ), 1 );
+            this->proceed = successful;
+        }
+
+        if ( this->proceed == true && this->data_collection.at( 2 ).size() > 0 ) {
+            successful = StoreOps::storeData( db, *this, this->data_collection.at( 1 ), 2 );
+            this->proceed = successful;
+        }
+
+        if ( this->proceed == true ) {
+            // commit the transaction
+            rc = sqlite3_exec(db, "COMMIT;", nullptr, nullptr, &zErrMsg);
+            if( rc != SQLITE_OK ) {
+                // error opening database
+                this->proceed = false;
+                std::string err_msg = "";
+                if ( this->dialogs_Level > 0 ) {
+                    err_msg.append( "\n\nStatement:\n" );
+                    err_msg.append( "\"COMMIT;\"" );
+                    if ( this->dialogs_Level == 2 ) {
+                        err_msg.append( "\n\nSQLite error message:\n" );
+                        err_msg.append( zErrMsg );
+                    }
+                }
+                DialogSec::errDatabaseFailedExecuting( nullptr, "statistics", err_msg );
+                sqlite3_free( zErrMsg );
+            }
+        }
+
+    } catch (...) {
+        // wrongthing went some...
+        QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
+        DialogSec::errGeneric( nullptr, msg );
+        this->proceed = false;
+    }
+
+    sqlite3_close( db );
 }
 
