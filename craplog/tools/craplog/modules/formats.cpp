@@ -18,7 +18,6 @@ FormatOps::FormatOps()
     this->APACHE_ALF["%q"]  = "request_query";
     this->APACHE_ALF["%s"]  = "response_code";
     this->APACHE_ALF["%>s"] = "response_code";
-    this->APACHE_ALF["%p"]  = "port";
     this->APACHE_ALF["%O"]  = "bytes_sent";
     this->APACHE_ALF["%I"]  = "bytes_received";
     this->APACHE_ALF["%T"]  = "time_taken_s";
@@ -63,6 +62,7 @@ FormatOps::FormatOps()
     this->APACHE_ALF["%k"] = "NONE";
     this->APACHE_ALF["%l"] = "NONE";
     this->APACHE_ALF["%L"] = "NONE";
+    this->APACHE_ALF["%p"] = "NONE";
     this->APACHE_ALF["%P"] = "NONE";
     this->APACHE_ALF["%R"] = "NONE";
     this->APACHE_ALF["%S"] = "NONE";
