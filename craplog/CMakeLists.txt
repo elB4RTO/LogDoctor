@@ -39,6 +39,8 @@ set(PROJECT_SOURCES
         utilities/vectors.cpp
 
         modules.h
+        modules/checks.h
+        modules/checks.cpp
         modules/dialogs.h
         modules/dialogs.cpp
         modules/tb.h
