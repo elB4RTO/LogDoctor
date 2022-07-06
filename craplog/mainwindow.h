@@ -52,6 +52,40 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    // quantoty of informational dialogs to display
+    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
+
+    //////////////////
+    //// GRAPHICS ////
+    //////////////////
+    std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
+    std::unordered_map<std::string, QColor> COLORS;
+    std::unordered_map<std::string, QFont>  FONTS;
+    int font_size       = 13,
+        font_size_big   = 16,
+        font_size_small = 10;
+    // base font families, to build fonts from
+    QString main_font_family,
+            script_font_family;
+
+
+    /////////////////////
+    //// GENERAL USE ////
+    /////////////////////
+    // get a printable size, from Bytes to the best fit
+    QString printableSize(const int bytes ),
+            printableSpeed( const int bytes, const int secs ),
+            printableTime( const int seconds );
+
+    //////////////////
+    //// DATABASE ////
+    std::string db_stats_path,
+                db_hashes_path;
+
+
+    /////////////////
+    //// CRAPLOG ////
+    /////////////////
     Craplog craplog;
     std::thread craplog_thread;
     QTimer *craplog_timer;
@@ -61,27 +95,6 @@ private:
     std::chrono::system_clock::duration craplog_timer_elapsed;
     void craplogStarted();
     void craplogFinished();
-
-    // quantoty of informational dialogs to display
-    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
-
-    std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
-    std::unordered_map<std::string, QColor> COLORS;
-    std::unordered_map<std::string, QFont>  FONTS;
-    int font_size       = 13,
-        font_size_big   = 16,
-        font_size_small = 10;
-
-    // base font families, to build fonts from
-    QString main_font_family,
-            script_font_family;
-
-    /////////////////////
-    //// GENERAL USE ////
-    // get a printable size, from Bytes to the best fit
-    QString printableSize(const int bytes ),
-            printableSpeed( const int bytes, const int secs ),
-            printableTime( const int seconds );
 
     //////////////
     //// LOGS ////
