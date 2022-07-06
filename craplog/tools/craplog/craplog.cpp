@@ -22,9 +22,10 @@ Craplog::Craplog()
         this->warnlists[ i ].emplace( 1, std::unordered_map<int, BWlist>() ); // access
         this->warnlists[ i ].emplace( 2, std::unordered_map<int, BWlist>() ); // error
         // access
-        this->warnlists[ i ][ 1 ].emplace( 20, BWlist{ .used=false, .list={} } );
         this->warnlists[ i ][ 1 ].emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
         this->warnlists[ i ][ 1 ].emplace( 12, BWlist{ .used=false, .list={} } );
+        this->warnlists[ i ][ 1 ].emplace( 20, BWlist{ .used=false, .list={} } );
+        this->warnlists[ i ][ 1 ].emplace( 21, BWlist{ .used=false, .list={} } );
         this->blacklists[ i ][ 1 ].emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
         // error
         this->warnlists[ i ][ 2 ].emplace( 20, BWlist{ .used=false, .list={} } );
@@ -115,7 +116,34 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-int Craplog::getWarningSize()
+const int Craplog::getDialogLevel()
+{
+    return this->dialog_level;
+}
+void Craplog::setDialogLevel( const int new_level )
+{
+    this->dialog_level = new_level;
+}
+
+const std::string& Craplog::getStatsDatabasePath()
+{
+    return this->db_stats_path;
+}
+const std::string& Craplog::getHashesDatabasePath()
+{
+    return this->db_hashes_path;
+}
+
+void Craplog::setStatsDatabasePath( const std::string& path )
+{
+    this->db_stats_path = path;
+}
+void Craplog::setHashesDatabasePath( const std::string& path )
+{
+    this->db_hashes_path = path;
+}
+
+const int Craplog::getWarningSize()
 {
     return this->warning_size;
 }
@@ -127,11 +155,11 @@ void Craplog::setWarningSize( const int new_size )
 
 
 // get the logs format
-FormatOps::LogsFormat Craplog::getAccessLogsFormat( const int web_server_id ) &
+const FormatOps::LogsFormat& Craplog::getAccessLogsFormat( const int web_server_id )
 {
     return this->logs_formats.at( web_server_id ).at( 1 );
 }
-FormatOps::LogsFormat Craplog::getErrorLogsFormat( const int web_server_id ) &
+const FormatOps::LogsFormat& Craplog::getErrorLogsFormat( const int web_server_id )
 {
     return this->logs_formats.at( web_server_id ).at( 2 );
 }
@@ -159,7 +187,7 @@ void Craplog::setCurrentWSID( const int web_server_id )
     this->setCurrentELF();
 }
 
-int Craplog::getCurrentWSID() const
+const int Craplog::getCurrentWSID()
 {
     return this->current_WS;
 }
@@ -176,12 +204,12 @@ void Craplog::setCurrentELF()
 }
 
 // get the current access logs format
-FormatOps::LogsFormat Craplog::getCurrentALF() const&
+const FormatOps::LogsFormat& Craplog::getCurrentALF()
 {
     return this->current_ALF;
 }
 // get the current error logs format
-FormatOps::LogsFormat Craplog::getCurrentELF() const&
+const FormatOps::LogsFormat& Craplog::getCurrentELF()
 {
     return this->current_ELF;
 }
@@ -191,12 +219,12 @@ FormatOps::LogsFormat Craplog::getCurrentELF() const&
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-int Craplog::getLogsListSize() {
+const int Craplog::getLogsListSize() {
     return this->logs_list.size();
 }
 
 // return the list. rescan if fresh is true
-vector<Craplog::LogFile> Craplog::getLogsList( const bool fresh )
+const vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
 {
     if ( fresh == true ) {
         this->scanLogsDir();
@@ -206,34 +234,33 @@ vector<Craplog::LogFile> Craplog::getLogsList( const bool fresh )
 
 
 // return the path of the file matching the given name
-Craplog::LogFile Craplog::getLogFileItem( const QString& file_name )
+const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
 {
-    LogFile logfile;
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
-            logfile = item;
-            break;
+            return item;
         }
     }
-    return logfile;
+    // should be unreachable
+    throw("File item not found");
 }
 
 
 // return the path of the file matching the given name
-string Craplog::getLogFilePath( const QString& file_name )
+const string& Craplog::getLogFilePath( const QString& file_name )
 {
     string path;
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
-            path = item.path;
-            break;
+            return item.path;
         }
     }
-    return path;
+    // should be unreachable
+    throw("File item not found");
 }
 
 // set a file as selected
-bool Craplog::setLogFileSelected( const QString& file_name )
+const bool Craplog::setLogFileSelected( const QString& file_name )
 {
     bool result = false;
     for ( Craplog::LogFile& item : this->logs_list ) {
@@ -294,7 +321,7 @@ void Craplog::scanLogsDir()
             }
 
             if ( content.size() == 0 ) {
-                if ( this->dialogs_Level > 0 ) {
+                if ( this->dialog_level > 0 ) {
                     DialogSec::warnEmptyFile( nullptr, name );
                 }
                 continue;
@@ -304,7 +331,7 @@ void Craplog::scanLogsDir()
                 LogOps::LogType log_type = this->logOps.defineFileType( name, content, this->logs_formats.at( this->current_WS ) );
                 if ( log_type == LogOps::LogType::Failed ) {
                     // failed to get the log type, do not append
-                    DialogSec::errFailedDefineLogType( nullptr, name );
+                    DialogSec::errFailedDefiningLogType( nullptr, name );
                     continue;
                 }
 
@@ -333,7 +360,7 @@ void Craplog::scanLogsDir()
 
 
 
-bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& log_type )
+const bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& log_type )
 {
     bool valid = true;
     if ( this->logs_base_names.at( this->current_WS ).at( log_type ).starts != "" ) {
@@ -417,41 +444,56 @@ void Craplog::stopWorking()
     this->used_files_hashes[1].clear();
     this->used_files_hashes[2].clear();
 }
-bool Craplog::isWorking()
+const bool Craplog::isWorking()
 {
     return this->working;
 }
-bool Craplog::isParsing()
+const bool Craplog::isParsing()
 {
     return this->parsing;
 }
 
 // performances
-int Craplog::getPerfSize()
+const int Craplog::getPerfSize()
 {
     return this->perf_size;
 }
-int Craplog::getTotalSize()
+void Craplog::sumPerfSize( const int size )
+{
+    this->perf_size += size;
+}
+const int Craplog::getTotalSize()
 {
     return this->total_size;
 }
-int Craplog::getParsedSize()
+const int Craplog::getParsedSize()
 {
     return this->parsed_size;
 }
-int Craplog::getParsedLines()
+const int Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
-int Craplog::getAccessSize()
+const int Craplog::getAccessSize()
 {
     return this->access_size;
 }
-int Craplog::getErrorSize()
+const int Craplog::getErrorSize()
 {
     return this->error_size;
 }
 
+const int Craplog::getIgnoredSize( const int log_type )
+{
+    if ( log_type == 1 ) {
+        return this->ignored_access_size;
+    } else if ( log_type == 2 ) {
+        return this->ignored_error_size;
+    } else {
+        // wrong log_type
+        throw( "Unexpected LogType: " + std::to_string(log_type) );
+    }
+}
 void Craplog::sumIgnoredSize( const int size, const int log_type )
 {
     if ( log_type == 1 ) {
@@ -460,6 +502,7 @@ void Craplog::sumIgnoredSize( const int size, const int log_type )
         this->ignored_error_size += size;
     } else {
         // wrong log_type
+        throw( "Unexpected LogType: " + std::to_string(log_type) );
     }
 }
 
@@ -524,7 +567,7 @@ void Craplog::joinLogLines()
         if ( file.used_already == true ) {
             // already used
             QString msg = file.name;
-            if ( this->dialogs_Level == 2 ) {
+            if ( this->dialog_level == 2 ) {
                 msg += "\n" + QString::fromStdString( file.hash );
             }
             int choice = DialogSec::choiceFileAlreadyUsed( nullptr, msg );
@@ -539,6 +582,50 @@ void Craplog::joinLogLines()
                 // choosed to ignore and use the file anyway
             }*/
         }
+
+        // check if the file respects the warning size
+        if ( this->warning_size >= 0 ) {
+            if ( file.size > this->warning_size ) {
+                // exceeds the warning size
+                QString msg = file.name;
+                if ( this->dialog_level >= 1 ) {
+                    std::string size_sfx=" B";
+                    float size; int size_;
+                    size = (float)file.size;
+                    if (size > 1024) {
+                        size /= 1024; size_sfx = " KiB";
+                        if (size > 1024) {
+                            size /= 1024; size_sfx = " MiB";
+                        }
+                    }
+                    size_ = size * 1000; size = size_ / 1000; // cut to 3rd decimal
+                    msg += QString("\n\nSize of the file: %1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
+                    if ( this->dialog_level == 2 ) {
+                        size = (float)this->warning_size;
+                        if (size > 1024) {
+                            size /= 1024; size_sfx = " KiB";
+                            if (size > 1024) {
+                                size /= 1024; size_sfx = " MiB";
+                            }
+                        }
+                        size_ = size * 1000; size = size_ / 1000; // cut to 3rd decimal
+                        msg += QString("\n\nWarning size parameter: %1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
+                    }
+                }
+                int choice = DialogSec::choiceFileSizeWarning( nullptr, msg );
+                if ( choice < 0 ) {
+                    // choosed to abort all
+                    this->proceed = false;
+                    break;
+                } else if ( choice > 0 ) {
+                    // choosed to discard and continue
+                    continue;
+                }/* else {
+                    // choosed to ignore and use the file anyway
+                }*/
+            }
+        }
+
 
         // collect lines
         content.clear();
@@ -587,11 +674,11 @@ void Craplog::parseLogLines()
 }
 
 
-bool Craplog::isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id )
+const bool Craplog::isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id )
 {
     return this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).used;
 }
-bool Craplog::isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id )
+const bool Craplog::isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id )
 {
     return this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).used;
 }
@@ -608,38 +695,52 @@ const std::vector<std::string>& Craplog::getWarnlist( const int web_server_id, c
 void Craplog::storeLogLines()
 {
     bool successful;
+    std::string db_path = this->db_stats_path;
+    QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
+
     sqlite3 *db;
-    char *zErrMsg = 0;
-    int rc = sqlite3_open("test.db", &db);
+    char *errMsg = 0;
+    int rc = sqlite3_open( db_path.c_str(), &db);
 
     if ( rc ) {
         // error opening database
         this->proceed = false;
-        std::string err_msg = "";
-        if ( this->dialogs_Level == 2 ) {
+        QString err_msg = "";
+        if ( this->dialog_level == 2 ) {
             err_msg.append( "\n\nSQLite error message:\n" );
             err_msg.append( sqlite3_errmsg(db) );
         }
-        DialogSec::errDatabaseFailedOpening( nullptr, "statistics", err_msg );
+        DialogSec::errDatabaseFailedOpening( nullptr, db_name, err_msg );
     }
 
     try {
         // ACID transaction
-        rc = sqlite3_exec(db, "BEGIN;", nullptr, nullptr, &zErrMsg);
-        if( rc != SQLITE_OK ) {
+        int tries = 0;
+        while (true) {
+            tries ++;
+            if ( tries > 3 ) {
+                break;
+            }
+            rc = sqlite3_exec(db, "BEGIN;", nullptr, nullptr, &errMsg);
+            if ( rc == SQLITE_BUSY ) {
+                // database busy, wait 1 sec and retry
+                std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+            } else {
+                break;
+            }
+        }
+        if ( rc != SQLITE_OK ) {
             // error opening database
             this->proceed = false;
-            std::string err_msg = "";
-            if ( this->dialogs_Level > 0 ) {
-                err_msg.append( "\n\nStatement:\n" );
-                err_msg.append( "\"BEGIN;\"" );
-                if ( this->dialogs_Level == 2 ) {
-                    err_msg.append( "\n\nSQLite error message:\n" );
-                    err_msg.append( zErrMsg );
+            QString stmt_msg="", err_msg = "";
+            if ( this->dialog_level > 0 ) {
+                stmt_msg = "BEGIN;";
+                if ( this->dialog_level == 2 ) {
+                    err_msg.append( errMsg );
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( nullptr, "statistics", err_msg );
-            sqlite3_free( zErrMsg );
+            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+            sqlite3_free( errMsg );
         }
 
         if ( this->proceed == true && this->data_collection.at( 1 ).size() > 0 ) {
@@ -654,29 +755,73 @@ void Craplog::storeLogLines()
 
         if ( this->proceed == true ) {
             // commit the transaction
-            rc = sqlite3_exec(db, "COMMIT;", nullptr, nullptr, &zErrMsg);
-            if( rc != SQLITE_OK ) {
+            int tries = 0;
+            while (true) {
+                tries ++;
+                if ( tries > 5 ) {
+                    break;
+                }
+                rc = sqlite3_exec(db, "COMMIT;", nullptr, nullptr, &errMsg);
+                if ( rc == SQLITE_BUSY ) {
+                    // database busy, wait 1 sec and retry
+                    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+                } else {
+                    break;
+                }
+            }
+            if ( rc != SQLITE_OK ) {
                 // error opening database
                 this->proceed = false;
-                std::string err_msg = "";
-                if ( this->dialogs_Level > 0 ) {
-                    err_msg.append( "\n\nStatement:\n" );
-                    err_msg.append( "\"COMMIT;\"" );
-                    if ( this->dialogs_Level == 2 ) {
-                        err_msg.append( "\n\nSQLite error message:\n" );
-                        err_msg.append( zErrMsg );
+                QString stmt_msg="", err_msg = "";
+                if ( this->dialog_level > 0 ) {
+                    stmt_msg = "COMMIT;";
+                    if ( this->dialog_level == 2 ) {
+                        err_msg.append( errMsg );
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( nullptr, "statistics", err_msg );
-                sqlite3_free( zErrMsg );
+                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                sqlite3_free( errMsg );
             }
         }
 
     } catch (...) {
-        // wrongthing went some...
-        QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
-        DialogSec::errGeneric( nullptr, msg );
+        // wrongthing w3nt some.,.
         this->proceed = false;
+
+        // rollback the transaction
+        int tries = 0;
+        while (true) {
+            tries ++;
+            if ( tries > 5 ) {
+                break;
+            }
+            rc = sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, &errMsg);
+            if ( rc == SQLITE_BUSY ) {
+                // database busy, wait 1 sec and retry
+                std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+            } else {
+                break;
+            }
+        }
+        bool err_shown = false;
+        if ( rc != SQLITE_OK ) {
+            // error opening database
+            QString stmt_msg="", err_msg = "";
+            if ( this->dialog_level > 0 ) {
+                stmt_msg = "ROLLBACK;";
+                if ( this->dialog_level == 2 ) {
+                    err_msg.append( errMsg );
+                }
+            }
+            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+            sqlite3_free( errMsg );
+            err_shown = true;
+        }
+        if ( err_shown == false ) {
+            // show a message
+            QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
+            DialogSec::errGeneric( nullptr, msg );
+        }
     }
 
     sqlite3_close( db );

@@ -20,19 +20,28 @@ public:
 
     void run();
 
+    const int getDialogLevel();
+    void setDialogLevel( const int new_level );
+
+    const std::string
+        & getStatsDatabasePath(),
+        & getHashesDatabasePath();
+    void setStatsDatabasePath( const std::string& path ),
+         setHashesDatabasePath( const std::string& path );
+
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // logs formats web server specific settings
     void setAccessLogsFormat( const int web_server_id, const std::string& format_string );
     void setErrorLogsFormat( const int web_server_id, const std::string& format_string );
-    FormatOps::LogsFormat getAccessLogsFormat( const int web_server_id ) &;
-    FormatOps::LogsFormat getErrorLogsFormat( const int web_server_id ) &;
+    const FormatOps::LogsFormat& getAccessLogsFormat( const int web_server_id );
+    const FormatOps::LogsFormat& getErrorLogsFormat( const int web_server_id );
     // currently used WS and LF
     void setCurrentWSID( const int web_server_id );
-    int  getCurrentWSID() const;
-    FormatOps::LogsFormat getCurrentALF() const&;
-    FormatOps::LogsFormat getCurrentELF() const&;
+    const int getCurrentWSID();
+    const FormatOps::LogsFormat& getCurrentALF();
+    const FormatOps::LogsFormat& getCurrentELF();
 
     // log type constants
     const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
@@ -47,18 +56,18 @@ public:
         LogOps::LogType type;
     };
     // logs list related methods
-    std::vector<LogFile> getLogsList( const bool fresh=false );
-    int getLogsListSize();
+    const std::vector<LogFile>& getLogsList( const bool fresh=false );
+    const int getLogsListSize();
     // log file related
-    LogFile getLogFileItem( const QString& file_name );
-    std::string getLogFilePath( const QString& file_name );
+    const LogFile& getLogFileItem( const QString& file_name );
+    const std::string& getLogFilePath( const QString& file_name );
     // set a file in the list as selected, to be used for the stats
-    bool setLogFileSelected( const QString& file_name );
+    const bool setLogFileSelected( const QString& file_name );
     // check if a file name respects the one set
-    bool isFileNameValid( const std::string& name, const LogOps::LogType& log_type );
+    const bool isFileNameValid( const std::string& name, const LogOps::LogType& log_type );
 
     // warning file size (in Bytes)
-    int getWarningSize();
+    const int getWarningSize();
     void setWarningSize( const int new_size );
     // logs usage control
     HashOps hashOps;
@@ -71,8 +80,8 @@ public:
         bool used;
         std::vector<std::string> list;
     };
-    bool isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id ),
-         isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id );
+    const bool isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id ),
+               isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id );
     const std::vector<std::string>
         & getBlacklist( const int web_server_id, const int log_type, const int log_field_id ),
         & getWarnlist( const int web_server_id, const int log_type, const int log_field_id );
@@ -80,19 +89,28 @@ public:
     // job related
     void startWorking(),
          stopWorking();
-    bool isWorking(),
-         isParsing();
+    const bool isWorking(),
+               isParsing();
     // job performancea
     void collectPerfData(),
-         sumIgnoredSize( const int size, const int log_type );
-    int getPerfSize(),
-        getTotalSize(),
-        getParsedSize(),
-        getParsedLines(),
-        getAccessSize(),
-        getErrorSize();
+         sumIgnoredSize( const int size, const int log_type ),
+         sumPerfSize( const int size );
+    const int getPerfSize(),
+              getIgnoredSize( const int log_type ),
+              getTotalSize(),
+              getParsedSize(),
+              getParsedLines(),
+              getAccessSize(),
+              getErrorSize();
 
 private:
+    // quantoty of informational dialogs to display
+    int dialog_level = 1; // 0: essential, 1: usefull, 2: explanatory
+
+    // databases paths
+    std::string db_stats_path,
+                db_hashes_path;
+
     // job related
     bool working = false,
          parsing = false,
@@ -130,26 +148,21 @@ private:
     // used files
     std::unordered_map<int, std::vector<std::string>> used_files_hashes;
 
-    // quantoty of informational dialogs to display
-    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
-
     // configs location
     std::string configs_path;
 
-    // web server related
-    int current_WS = 11;
-
-    // logs related
+    // control related
     bool delete_old_hashes = false;
     int  old_hashes_months = 12;
-    int warning_size = 1'048'576; //104'857'600; // in Bytes ( => 100 MiB )
+    int warning_size = 1'048'576; //104'857'600; // in Bytes ( => 100 MiB ) // !!! RESTORE !!!
     // black/warn-list
     // { web_server_id : { log_type : { log_field_id : BWlist } } }
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, BWlist>>>
         blacklists,
         warnlists;
 
-
+    // web server related
+    int current_WS = 11;
     // web server specific paths
     std::unordered_map<int, std::unordered_map<int, std::string>> logs_paths;
     // web server specific file names criterions
@@ -159,6 +172,7 @@ private:
         std::string ends;
     };
     std::unordered_map<int, std::unordered_map<int, LogName>> logs_base_names;
+
     // logs list related
     std::vector<LogFile> logs_list;
     void scanLogsDir();
