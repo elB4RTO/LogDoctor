@@ -9,40 +9,122 @@ DialogSec::DialogSec()
 }
 
 
-void DialogSec::errDatabaseFailedOpening( QWidget *parent, const std::string& db, const std::string& err_msg )
+//////////////////
+//// DATABASE ////
+//////////////////
+bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const std::string& db_name )
 {
-    errDatabaseFailedOpening( parent, QString::fromStdString(db), QString::fromStdString(err_msg) );
+    return choiceDatabaseNotFound( parent,QString::fromStdString( db_name ) );
 }
-void DialogSec::errDatabaseFailedOpening(QWidget *parent, const QString& db, const QString &err_msg )
+bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const QString& db_name )
 {
+    bool choice = false;
+    auto response = QMessageBox::question(parent,
+        t_FILE_NOT_FOUND,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_DB_NOT_FOUND, db_name, q_DB_CREATE ),
+        QMessageBox::Yes | QMessageBox::No );
+    if ( response == QMessageBox::Yes ) {
+        choice = true;
+    }
+    return choice;
+}
+
+void DialogSec::errDatabaseNotReadable( QWidget *parent, const std::string& db_name )
+{
+    errDatabaseNotReadable( parent,QString::fromStdString( db_name ) );
+}
+void DialogSec::errDatabaseNotReadable( QWidget *parent, const QString& db_name )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_FILE_NOT_READABLE,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_DB_NOT_READABLE, db_name, r_SET_PERMISSIONS ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errDatabaseNotWritable( QWidget *parent, const std::string& db_name )
+{
+    errDatabaseNotWritable( parent,QString::fromStdString( db_name ) );
+}
+void DialogSec::errDatabaseNotWritable( QWidget *parent, const QString& db_name )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_FILE_NOT_WRITABLE,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_DB_NOT_WRITABLE, db_name, r_SET_PERMISSIONS ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errDatabaseFailedCreating( QWidget *parent, const std::string& db_name, const std::string& err_msg )
+{
+    errDatabaseFailedCreating( parent, QString::fromStdString(db_name), QString::fromStdString(err_msg) );
+}
+void DialogSec::errDatabaseFailedCreating(QWidget *parent, const QString& db_name, const QString &err_msg )
+{
+    QString msg = db_name;
+    if ( err_msg != "" ) {
+        msg += "\n\n" + m_DB_FAILED_ERRMSG + ":\n" + err_msg;
+    }
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_DB_FAILED_CREATING,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_DB_FAILED_CREATING, msg, f_ABORTING ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errDatabaseFailedOpening( QWidget *parent, const std::string& db_name, const std::string& err_msg )
+{
+    errDatabaseFailedOpening( parent, QString::fromStdString(db_name), QString::fromStdString(err_msg) );
+}
+void DialogSec::errDatabaseFailedOpening(QWidget *parent, const QString& db_name, const QString &err_msg )
+{
+    QString msg = db_name;
+    if ( err_msg != "" ) {
+        msg += "\n\n" + m_DB_FAILED_ERRMSG + ":\n" + err_msg;
+    }
     std::ignore=
     QMessageBox::critical(parent,
         t_DB_FAILED_OPENING,
-        QString("%1:\n%2%3\n\n")
-            .arg( m_DB_FAILED_OPENING, db, err_msg, f_ABORTING ),
+        QString("%1:\n%2\n\n%e")
+            .arg( m_DB_FAILED_OPENING, msg, f_ABORTING ),
         QMessageBox::Ok );
 }
 
-void DialogSec::errDatabaseFailedExecuting( QWidget *parent, const std::string& db, const std::string& err_msg )
+void DialogSec::errDatabaseFailedExecuting( QWidget *parent, const std::string& db_name, const std::string& statement, const std::string& err_msg )
 {
-    errDatabaseFailedExecuting( parent, QString::fromStdString(db), QString::fromStdString(err_msg) );
+    errDatabaseFailedExecuting( parent, QString::fromStdString(db_name), QString::fromStdString(statement), QString::fromStdString(err_msg) );
 }
-void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db, const QString &err_msg )
+void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db_name, const QString& statement, const QString& err_msg )
 {
+    QString msg = db_name;
+    if ( statement != "" ) {
+        msg += "\n\n" + m_DB_FAILED_STATEMENT + ":\n" + statement;
+    }
+    if ( err_msg != "" ) {
+        msg += "\n\n" + m_DB_FAILED_ERRMSG + ":\n" + err_msg;
+    }
     std::ignore=
     QMessageBox::critical(parent,
         t_DB_FAILED_EXECUTING,
-        QString("%1:\n%2%3\n\n")
-            .arg( m_DB_FAILED_EXECUTING, db, err_msg, f_ABORTING ),
+        QString("%1:\n%2n\n%3")
+            .arg( m_DB_FAILED_EXECUTING, msg, f_ABORTING ),
         QMessageBox::Ok );
 }
 
 
-void DialogSec::errFailedDefineLogType( QWidget *parent, const std::string& file )
+
+///////////////////
+//// LOG FILES ////
+///////////////////
+void DialogSec::errFailedDefiningLogType( QWidget *parent, const std::string& file )
 {
-    errFailedDefineLogType( parent, QString::fromStdString(file) );
+    errFailedDefiningLogType( parent, QString::fromStdString(file) );
 }
-void DialogSec::errFailedDefineLogType( QWidget *parent, const QString& file )
+void DialogSec::errFailedDefiningLogType( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::critical(parent,
@@ -73,7 +155,7 @@ bool DialogSec::choiceUndefinedLogType( QWidget *parent, const std::string& file
 }
 bool DialogSec::choiceUndefinedLogType( QWidget *parent, const QString& file )
 {
-    int choice;
+    bool choice;
     auto response = QMessageBox::critical(parent,
         t_ERROR_OCCURED,
         QString("%1:\n%2\n\n%3")
@@ -88,17 +170,40 @@ bool DialogSec::choiceUndefinedLogType( QWidget *parent, const QString& file )
 }
 
 
-int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const std::string& file )
+int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const std::string& msg )
 {
-    return choiceFileAlreadyUsed( parent, QString::fromStdString(file) );
+    return choiceFileAlreadyUsed( parent, QString::fromStdString(msg) );
 }
-int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& file )
+int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& msg )
 {
     int choice;
     auto response = QMessageBox::warning(parent,
         t_FILE_ALREADY_USED,
         QString("%1:\n%2\n\n%3?")
-            .arg( m_FILE_ALREADY_USED, file, q_DIA ),
+            .arg( m_FILE_ALREADY_USED, msg, q_DIA ),
+        QMessageBox::Discard | QMessageBox::Ignore | QMessageBox::Abort );
+    if ( response == QMessageBox::Ignore ) {
+        choice = 0;
+    } else if ( response == QMessageBox::Discard ) {
+        choice = 1;
+    } else {
+        choice = -1;
+    }
+    return choice;
+}
+
+
+int DialogSec::choiceFileSizeWarning( QWidget *parent, const std::string& msg )
+{
+    return choiceFileAlreadyUsed( parent, QString::fromStdString(msg) );
+}
+int DialogSec::choiceFileSizeWarning( QWidget *parent, const QString& msg )
+{
+    int choice;
+    auto response = QMessageBox::warning(parent,
+        t_FILE_SIZE_WARNING,
+        QString("%1:\n%2\n\n%3?")
+            .arg( m_FILE_SIZE_WARNING, msg, q_DIA ),
         QMessageBox::Discard | QMessageBox::Ignore | QMessageBox::Abort );
     if ( response == QMessageBox::Ignore ) {
         choice = 0;
@@ -163,6 +268,9 @@ bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString& file 
 
 
 
+/////////////////////
+//// PERMISSIONS ////
+/////////////////////
 void DialogSec::errDirNotExists(QWidget *parent, const std::string& dir )
 {
     errDirNotExists( parent, QString::fromStdString( dir ) );
@@ -198,7 +306,9 @@ bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 
 
 
-
+//////////////////
+//// GENERICS ////
+//////////////////
 void DialogSec::warnGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
 {
     warnGeneric( parent, QString::fromStdString( msg ), report_msg );
