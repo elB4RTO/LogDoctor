@@ -2,8 +2,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include "modules/dialogs.h"
-
 #include "qtimer.h"
 
 #include <iostream>
@@ -68,6 +66,8 @@ MainWindow::MainWindow( QWidget *parent )
 
     ////////////////////////
     //// INITIALIZATION ////
+    // sqlite databases paths
+    this->db_stats_path = "~/.craplog/db";
     // WebServers for the LogsList
     this->allowed_web_servers[11] = true; // apache2
     this->allowed_web_servers[12] = true; // nginx
@@ -76,6 +76,27 @@ MainWindow::MainWindow( QWidget *parent )
 
     /////////////////
     //// CONFIGS ////
+
+
+    //////////////////////////
+    //// INTEGRITY CHECKS ////
+    // statistics' database
+    if ( CheckSec::checkStatsDatabase( this->db_stats_path ) ) {
+        // checks failed, abort
+        this->close();
+    }
+    this->craplog.setStatsDatabasePath( this->db_stats_path );
+    // used-files' hashes' database
+    if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) ) {
+        // checks failed, abort
+        this->close();
+    }
+    this->craplog.setHashesDatabasePath( this->db_hashes_path );
+    // craplog variables
+    if ( CheckSec::checkCraplog( this->craplog ) ) {
+        // checks failed, abort
+        this->close();
+    }
 
 
     ///////////////////
@@ -122,7 +143,6 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
     QTimer::singleShot(500, this, SLOT(on_button_LogFiles_RefreshList_clicked()));
-
 }
 
 MainWindow::~MainWindow()
