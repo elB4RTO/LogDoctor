@@ -89,9 +89,7 @@ private:
     Craplog craplog;
     std::thread craplog_thread;
     QTimer *craplog_timer;
-    std::chrono::system_clock::time_point
-        craplog_timer_start,
-        craplog_timer_lapse;
+    std::chrono::system_clock::time_point craplog_timer_start;
     std::chrono::system_clock::duration craplog_timer_elapsed;
     void craplogStarted();
     void craplogFinished();
