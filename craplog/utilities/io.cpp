@@ -81,10 +81,32 @@ bool IOutils::checkDir( const std::string& path, const bool readable, const bool
 }
 
 
+// rename an entry with a trailing '.copy'
+bool IOutils::renameAsCopy( const std::string& path )
+{
+    bool result = true;
+    std::string new_path = path;
+    // loop until a valid name is found
+    while (true) {
+        new_path += ".copy";
+        if ( IOutils::exists( new_path ) == false ) {
+            // available name found
+            break;
+        }
+    }
+    try {
+        std::filesystem::rename( path, new_path );
+    } catch (...) {
+        result = false;
+    }
+    return result;
+}
+
+
 
 std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines, const bool strip_lines ) throw()
 {
-    // read rhe first line only
+    // read rhe first N lines only
     bool result = true;
     std::ifstream file;
     std::vector<std::string> lines;
