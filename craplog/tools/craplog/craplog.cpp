@@ -5,9 +5,9 @@
 #include "tools/craplog/modules/store.h"
 
 #include <filesystem>
+#include <thread>
 
 #include <iostream>
-#include <thread>
 
 using std::string, std::vector, std::unordered_map;
 
@@ -527,7 +527,12 @@ void Craplog::run()
     this->error_logs_lines.clear();
     // finished parsing logs
     this->parsing = false;
-    this->perf_size = this->parsed_size;
+    this->parsed_size  = this->logOps.getSize();
+    this->parsed_lines = this->logOps.getLines();
+    this->perf_size    = this->parsed_size;
+
+    // store the new data
+    this->storeLogLines();
 
 
     // insert the hashes of the used files
@@ -538,12 +543,13 @@ void Craplog::run()
 
 
 
-void Craplog::joinLogLines()
+const bool Craplog::checkFiles()
 {
-    std::vector<std::string> content;
+    bool proceed = true;
+    this->log_files_to_use.clear();
     for ( const LogFile& file : this->logs_list ) {
 
-        if ( this->proceed == false ) { break; }
+        if ( proceed == false ) { break; }
 
         if ( file.selected == false ) {
             // not selected, skip
@@ -555,7 +561,7 @@ void Craplog::joinLogLines()
             bool choice = DialogSec::choiceUndefinedLogType( nullptr, file.name );
             if ( choice == false ) {
                 // choosed to abort all
-                this->proceed = false;
+                proceed = false;
                 break;
             } else {
                 // choosed to discard and continue
@@ -573,7 +579,7 @@ void Craplog::joinLogLines()
             int choice = DialogSec::choiceFileAlreadyUsed( nullptr, msg );
             if ( choice < 0 ) {
                 // choosed to abort all
-                this->proceed = false;
+                proceed = false;
                 break;
             } else if ( choice > 0 ) {
                 // choosed to discard and continue
@@ -590,16 +596,14 @@ void Craplog::joinLogLines()
                 QString msg = file.name;
                 if ( this->dialog_level >= 1 ) {
                     std::string size_sfx=" B";
-                    float size; int size_;
-                    size = (float)file.size;
+                    float size = (float)file.size;
                     if (size > 1024) {
                         size /= 1024; size_sfx = " KiB";
                         if (size > 1024) {
                             size /= 1024; size_sfx = " MiB";
                         }
                     }
-                    size_ = size * 1000; size = size_ / 1000; // cut to 3rd decimal
-                    msg += QString("\n\nSize of the file: %1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
+                    msg += QString("\n\nSize of the file:\n%1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
                     if ( this->dialog_level == 2 ) {
                         size = (float)this->warning_size;
                         if (size > 1024) {
@@ -608,14 +612,13 @@ void Craplog::joinLogLines()
                                 size /= 1024; size_sfx = " MiB";
                             }
                         }
-                        size_ = size * 1000; size = size_ / 1000; // cut to 3rd decimal
-                        msg += QString("\n\nWarning size parameter: %1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
+                        msg += QString("\n\nWarning size parameter:\n%1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
                     }
                 }
                 int choice = DialogSec::choiceFileSizeWarning( nullptr, msg );
                 if ( choice < 0 ) {
                     // choosed to abort all
-                    this->proceed = false;
+                    proceed = false;
                     break;
                 } else if ( choice > 0 ) {
                     // choosed to discard and continue
@@ -625,7 +628,20 @@ void Craplog::joinLogLines()
                 }*/
             }
         }
+        this->log_files_to_use.push_back( file );
+    }
 
+    this->proceed = proceed;
+    return proceed;
+}
+
+
+void Craplog::joinLogLines()
+{
+    std::vector<std::string> content;
+    for ( const LogFile& file : this->log_files_to_use ) {
+
+        if ( this->proceed == false ) { break; }
 
         // collect lines
         content.clear();
@@ -655,6 +671,7 @@ void Craplog::joinLogLines()
         this->total_size += file.size;
         this->total_lines += content.size();
     }
+    this->log_files_to_use.clear();
 }
 
 
@@ -695,135 +712,90 @@ const std::vector<std::string>& Craplog::getWarnlist( const int web_server_id, c
 void Craplog::storeLogLines()
 {
     bool successful;
-    std::string db_path = this->db_stats_path;
-    QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
+    QString db_path = QString::fromStdString( this->db_stats_path );
+    QString db_name = QString::fromStdString( this->db_stats_path.substr( this->db_stats_path.find_last_of( '/' ) + 1 ) );
 
-    sqlite3 *db;
-    char *errMsg = 0;
-    int rc = sqlite3_open( db_path.c_str(), &db);
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName( db_path );
 
-    if ( rc ) {
+    if ( db.open() == false ) {
         // error opening database
         this->proceed = false;
         QString err_msg = "";
         if ( this->dialog_level == 2 ) {
-            err_msg.append( "\n\nSQLite error message:\n" );
-            err_msg.append( sqlite3_errmsg(db) );
+            err_msg = db.lastError().text();
         }
         DialogSec::errDatabaseFailedOpening( nullptr, db_name, err_msg );
-    }
 
-    try {
-        // ACID transaction
-        int tries = 0;
-        while (true) {
-            tries ++;
-            if ( tries > 3 ) {
-                break;
-            }
-            rc = sqlite3_exec(db, "BEGIN;", nullptr, nullptr, &errMsg);
-            if ( rc == SQLITE_BUSY ) {
-                // database busy, wait 1 sec and retry
-                std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-            } else {
-                break;
-            }
-        }
-        if ( rc != SQLITE_OK ) {
-            // error opening database
-            this->proceed = false;
-            QString stmt_msg="", err_msg = "";
-            if ( this->dialog_level > 0 ) {
-                stmt_msg = "BEGIN;";
-                if ( this->dialog_level == 2 ) {
-                    err_msg.append( errMsg );
-                }
-            }
-            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
-            sqlite3_free( errMsg );
-        }
+    } else {
 
-        if ( this->proceed == true && this->data_collection.at( 1 ).size() > 0 ) {
-            successful = StoreOps::storeData( db, *this, this->data_collection.at( 1 ), 1 );
-            this->proceed = successful;
-        }
-
-        if ( this->proceed == true && this->data_collection.at( 2 ).size() > 0 ) {
-            successful = StoreOps::storeData( db, *this, this->data_collection.at( 1 ), 2 );
-            this->proceed = successful;
-        }
-
-        if ( this->proceed == true ) {
-            // commit the transaction
-            int tries = 0;
-            while (true) {
-                tries ++;
-                if ( tries > 5 ) {
-                    break;
-                }
-                rc = sqlite3_exec(db, "COMMIT;", nullptr, nullptr, &errMsg);
-                if ( rc == SQLITE_BUSY ) {
-                    // database busy, wait 1 sec and retry
-                    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-                } else {
-                    break;
-                }
-            }
-            if ( rc != SQLITE_OK ) {
+        try {
+            // ACID transaction
+            if ( db.transaction() == false ) {
                 // error opening database
                 this->proceed = false;
                 QString stmt_msg="", err_msg = "";
                 if ( this->dialog_level > 0 ) {
-                    stmt_msg = "COMMIT;";
+                    stmt_msg = "db.transaction()";
                     if ( this->dialog_level == 2 ) {
-                        err_msg.append( errMsg );
+                        err_msg = db.lastError().text();
                     }
                 }
                 DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
-                sqlite3_free( errMsg );
             }
-        }
 
-    } catch (...) {
-        // wrongthing w3nt some.,.
-        this->proceed = false;
+            if ( this->proceed == true && this->data_collection.at( 1 ).size() > 0 ) {
+                successful = StoreOps::storeData( db, *this, this->data_collection.at( 1 ), 1 );
+                this->proceed = successful;
+            }
 
-        // rollback the transaction
-        int tries = 0;
-        while (true) {
-            tries ++;
-            if ( tries > 5 ) {
-                break;
+            if ( this->proceed == true && this->data_collection.at( 2 ).size() > 0 ) {
+                successful = StoreOps::storeData( db, *this, this->data_collection.at( 2 ), 2 );
+                this->proceed = successful;
             }
-            rc = sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, &errMsg);
-            if ( rc == SQLITE_BUSY ) {
-                // database busy, wait 1 sec and retry
-                std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-            } else {
-                break;
-            }
-        }
-        bool err_shown = false;
-        if ( rc != SQLITE_OK ) {
-            // error opening database
-            QString stmt_msg="", err_msg = "";
-            if ( this->dialog_level > 0 ) {
-                stmt_msg = "ROLLBACK;";
-                if ( this->dialog_level == 2 ) {
-                    err_msg.append( errMsg );
+
+            if ( this->proceed == true ) {
+                // commit the transaction
+                if ( db.commit() == false ) {
+                    // error opening database
+                    this->proceed = false;
+                    QString stmt_msg="", err_msg = "";
+                    if ( this->dialog_level > 0 ) {
+                        stmt_msg = "db.commit()";
+                        if ( this->dialog_level == 2 ) {
+                            err_msg= db.lastError().text();
+                        }
+                    }
+                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
-            sqlite3_free( errMsg );
-            err_shown = true;
+
+        } catch (...) {
+            // wrongthing w3nt some.,.
+            this->proceed = false;
+            bool err_shown = false;
+            // rollback the transaction
+            if ( db.rollback() == false ) {
+                // error rolling back commits
+                QString stmt_msg="", err_msg = "";
+                if ( this->dialog_level > 0 ) {
+                    stmt_msg = "db.rollback()";
+                    if ( this->dialog_level == 2 ) {
+                        err_msg = db.lastError().text();
+                    }
+                }
+                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                err_shown = true;
+            }
+            if ( err_shown == false ) {
+                // show a message
+                QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
+                DialogSec::errGeneric( nullptr, msg );
+            }
         }
-        if ( err_shown == false ) {
-            // show a message
-            QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
-            DialogSec::errGeneric( nullptr, msg );
-        }
+
+        db.close();
     }
 
-    sqlite3_close( db );
 }
 

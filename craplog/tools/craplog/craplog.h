@@ -3,9 +3,12 @@
 
 #include <string>
 #include <vector>
-#include "sqlite3.h"
 
 #include <QMainWindow>
+#include <QVariant>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "modules/dialogs.h"
 #include "tools/craplog/modules/formats.h"
@@ -87,6 +90,7 @@ public:
         & getWarnlist( const int web_server_id, const int log_type, const int log_field_id );
 
     // job related
+    const bool checkFiles();
     void startWorking(),
          stopWorking();
     const bool isWorking(),
@@ -141,6 +145,7 @@ private:
      *      30: port, 31: error_level, 32: error_message, 33: source_file
     */
     std::unordered_map<int, std::vector<std::unordered_map<int, std::string>>> data_collection;
+    std::vector<LogFile> log_files_to_use;
     std::vector<std::string> access_logs_lines, error_logs_lines;
     void joinLogLines(),
          parseLogLines(),
