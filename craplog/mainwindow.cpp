@@ -67,7 +67,7 @@ MainWindow::MainWindow( QWidget *parent )
     ////////////////////////
     //// INITIALIZATION ////
     // sqlite databases paths
-    this->db_stats_path = "~/.craplog/db";
+    this->db_stats_path = "test.db";//"~/.craplog/db"; !!! RESTORE
     // WebServers for the LogsList
     this->allowed_web_servers[11] = true; // apache2
     this->allowed_web_servers[12] = true; // nginx
@@ -76,10 +76,16 @@ MainWindow::MainWindow( QWidget *parent )
 
     /////////////////
     //// CONFIGS ////
+    this->craplog.setDialogLevel( 2 ); // !!! DELETE ME WHEN DONE TESTING !!!
 
 
     //////////////////////////
     //// INTEGRITY CHECKS ////
+    // check that the sqlite plugin is available
+    /*if ( CheckSec::checkSQLitePlugin() ) {
+        // checks failed, abort
+        this->close();
+    }*/
     // statistics' database
     if ( CheckSec::checkStatsDatabase( this->db_stats_path ) ) {
         // checks failed, abort
@@ -491,6 +497,13 @@ void MainWindow::on_button_MakeStats_Start_clicked()
     }
 
     if ( proceed == true ) {
+        // check files to be used before to start
+        proceed = this->craplog.checkFiles();
+    } else {
+        this->craplogFinished();
+    }
+
+    if ( proceed == true ) {
         // periodically update perfs
         this->craplog_timer = new QTimer(this);
         connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
@@ -525,9 +538,8 @@ void MainWindow::update_MakeStats_labels()
     this->ui->label_MakeStats_Size->setText( this->printableSize( size ) );
     this->ui->label_MakeStats_Lines->setText( QString::fromStdString(std::to_string(this->craplog.getParsedLines())) );
     // time and speed
-    this->craplog_timer_lapse = std::chrono::system_clock::now();
     this->craplog_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-        this->craplog_timer_start - this->craplog_timer_lapse
+        this->craplog_timer_start - std::chrono::system_clock::now()
     );
     size = this->craplog.getPerfSize();
     secs = this->craplog_timer_elapsed.count() / -1000000000;
