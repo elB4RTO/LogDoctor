@@ -13,13 +13,18 @@
 
 HashOps::HashOps()
 {
-    this->hashes.emplace( this->APACHE_ID, std::vector<std::string>() );
-    this->hashes.emplace( this->NGINX_ID, std::vector<std::string>() );
-    this->hashes.emplace( this->IIS_ID, std::vector<std::string>() );
+    this->hashes[this->APACHE_ID] = std::unordered_map<int, std::vector<std::string>>();
+    this->hashes[this->NGINX_ID] = std::unordered_map<int, std::vector<std::string>>();
+    this->hashes[this->IIS_ID] = std::unordered_map<int, std::vector<std::string>>();
+    for ( int i=1; i<3; i++ ) {
+        this->hashes[this->APACHE_ID].emplace( i, std::vector<std::string>() );
+        this->hashes[this->NGINX_ID].emplace( i, std::vector<std::string>() );
+        this->hashes[this->IIS_ID].emplace( i, std::vector<std::string>() );
+    }
 }
 
 
-// reads the files holding the already used hashes
+// reads the database holding the already used hashes
 void HashOps::readLists( const std::string& dir_path )
 {
     for ( int id=11; id<14; id++ ) {
