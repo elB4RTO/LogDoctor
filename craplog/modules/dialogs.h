@@ -11,15 +11,23 @@ static QString
     q_CONTINUE    = QMessageBox::tr("Continue?"),
     q_YOUR_CHOICE = QMessageBox::tr("Your choice?"),
     q_DA          = QMessageBox::tr("Discard it and continue, or Abort all and exit?"),
-    q_DIA         = QMessageBox::tr("Ignore and use it anyway, Discard it and continue, or Abort all and exit?"),
+    q_DIA         = QMessageBox::tr("Ignore the warning and use it anyway,\nDiscard it and continue, or Abort all and exit?"),
     q_DB_CREATE   = QMessageBox::tr("Create a new database?"),
+    q_DB_RENEW    = QMessageBox::tr("This database will renamed with a trailing '.copy'\nand a new one will be created. Continue?"),
 
     // titles
     t_ERROR_OCCURED = QMessageBox::tr("An error occured"),
 
+    t_ERROR_RENAMING = QMessageBox::tr("Failed renaming"),
+
     t_DB_FAILED_CREATING  = QMessageBox::tr("Failed creating database"),
     t_DB_FAILED_OPENING   = QMessageBox::tr("Failed opening database"),
     t_DB_FAILED_EXECUTING = QMessageBox::tr("Failed executing on database"),
+    t_DB_WRONG_TABLE_NAME  = QMessageBox::tr("Unexpected table"),
+    t_DB_MISSING_TABLE     = QMessageBox::tr("Table not found"),
+    t_DB_WRONG_COLUMN_NAME = QMessageBox::tr("Unexpected column"),
+    t_DB_MISSING_COLUMN    = QMessageBox::tr("Column not found"),
+    t_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("Unexpected data-type"),
 
     t_LOGTYPE_FAILED    = QMessageBox::tr("Failed defining type"),
     t_LOGTYPE_UNDEFINED = QMessageBox::tr("Undefined type"),
@@ -36,6 +44,8 @@ static QString
     t_DIR_NOT_FOUND = QMessageBox::tr("Directory not found"),
 
     // messages
+    m_ERROR_RENAMING = QMessageBox::tr("An error occured while renaming"),
+
     m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file"),
     m_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the file"),
     m_DIR_NOT_FOUND  = QMessageBox::tr("Unable to reach the directory"),
@@ -57,6 +67,11 @@ static QString
     m_DB_FAILED_EXECUTING = QMessageBox::tr("An error occured while executing a statement on the database"),
     m_DB_FAILED_STATEMENT = QMessageBox::tr("Failed at statement"),
     m_DB_FAILED_ERRMSG    = QMessageBox::tr("SQLite error message"),
+    m_DB_WRONG_TABLE_NAME  = QMessageBox::tr("The database contains an unexpected table"),
+    m_DB_MISSING_TABLE     = QMessageBox::tr("It seems that the database is missing a table"),
+    m_DB_WRONG_COLUMN_NAME = QMessageBox::tr("The database contains an unexpected column"),
+    m_DB_MISSING_COLUMN    = QMessageBox::tr("It seems that the table is missing a column"),
+    m_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("A column has an unexpected data-type"),
 
     m_LOGTYPE_FAILED    = QMessageBox::tr("Failed to determine if Access or Error type file"),
     m_LOGTYPE_UNDEFINED = QMessageBox::tr("This file's LogType is not Access nor Error"),
@@ -64,6 +79,7 @@ static QString
     // requests
     r_REPORT_ISSUE    = QMessageBox::tr("Please report this issue"),
     r_SET_PERMISSIONS = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue"),
+    r_DB_DONT_EDIT    = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue"),
 
     // footers
     f_SKIPPING = QMessageBox::tr("Skipping"),
@@ -81,19 +97,26 @@ public:
     static void errGeneric( QWidget *parent, const QString& message, const bool report_msg=false );
         static void errGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
 
+    static void errRenaming( QWidget *parent, const QString& path );
+
     // database
     static bool choiceDatabaseNotFound( QWidget *parent, const QString& db_name );
-        static bool choiceDatabaseNotFound( QWidget *parent, const std::string& db_name );
+        //static bool choiceDatabaseNotFound( QWidget *parent, const std::string& db_name );
+    static bool choiceDatabaseWrongTable( QWidget *parent, const QString& table_name );
+    static bool choiceDatabaseMissingTable( QWidget *parent, const QString& table_name );
+    static bool choiceDatabaseWrongColumn( QWidget *parent, const QString& column_name );
+    static bool choiceDatabaseMissingColumn( QWidget *parent, const QString& column_name );
+    static bool choiceDatabaseWrongDataType( QWidget *parent, const QString& data_type );
     static void errDatabaseNotReadable( QWidget *parent, const QString& db_name );
-        static void errDatabaseNotReadable( QWidget *parent, const std::string& db_name );
+        //static void errDatabaseNotReadable( QWidget *parent, const std::string& db_name );
     static void errDatabaseNotWritable( QWidget *parent, const QString& db_name );
-        static void errDatabaseNotWritable( QWidget *parent, const std::string& db_name );
+        //static void errDatabaseNotWritable( QWidget *parent, const std::string& db_name );
     static void errDatabaseFailedCreating( QWidget *parent, const QString& db_name, const QString& err_msg );
-        static void errDatabaseFailedCreating( QWidget *parent, const std::string& db_name, const std::string& err_msg );
+        //static void errDatabaseFailedCreating( QWidget *parent, const std::string& db_name, const std::string& err_msg );
     static void errDatabaseFailedOpening( QWidget *parent, const QString& db_name, const QString& err_msg );
-        static void errDatabaseFailedOpening( QWidget *parent, const std::string& db_name, const std::string& err_msg );
+        //static void errDatabaseFailedOpening( QWidget *parent, const std::string& db_name, const std::string& err_msg );
     static void errDatabaseFailedExecuting( QWidget *parent, const QString& db_name, const QString& statement="", const QString& err_msg="" );
-        static void errDatabaseFailedExecuting( QWidget *parent, const std::string& db_name, const std::string& statement="", const std::string& err_msg="" );
+        //static void errDatabaseFailedExecuting( QWidget *parent, const std::string& db_name, const std::string& statement="", const std::string& err_msg="" );
 
     // LogsList
     static bool choiceSelectedFileNotFound( QWidget *parent, const QString& file );
@@ -111,7 +134,7 @@ public:
         static int choiceFileAlreadyUsed( QWidget *parent, const std::string& msg );
     // log files size
     static int choiceFileSizeWarning( QWidget *parent, const QString& msg );
-        static int choiceFileSizeWarning( QWidget *parent, const std::string& msg );
+        //static int choiceFileSizeWarning( QWidget *parent, const std::string& msg );
 
     // files permissions
     static void errFileNotExists( QWidget *parent );
@@ -141,8 +164,9 @@ public:
     static bool choiceIgnoreAbort( QWidget *parent );
 
 
-    // overrides
 
+private:
+    static bool choiceDatabaseRenew( QWidget *parent, const QString& title, const QString& msg );
 
 };
 
