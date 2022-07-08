@@ -21,6 +21,9 @@ public:
     // checks if a path exists and it points to a folder and the folder is readable/writable
     static bool checkDir( const std::string& path, const bool readable=false, const bool writable=false );
 
+    // rename an entry with a trailing '.copy'
+    static bool renameAsCopy( const std::string& path );
+
     // read a defined amount of lines (from the start)
     static std::vector<std::string> readLines( const std::string& path, const int n_lines=16, const bool strip_lines=true ) throw();
     // read the entire content
