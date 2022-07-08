@@ -1,6 +1,8 @@
 
 #include "store.h"
 
+#include <QVariant>
+
 #include <thread>
 
 
@@ -11,7 +13,7 @@ StoreOps::StoreOps()
 
 
 
-bool StoreOps::storeData( sqlite3* db, Craplog& craplog, const std::vector<std::unordered_map<int, std::string>>& data, const int log_type )
+bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<std::unordered_map<int, std::string>>& data, const int log_type )
 {
     bool successful = true;
 
@@ -62,7 +64,7 @@ bool StoreOps::storeData( sqlite3* db, Craplog& craplog, const std::vector<std::
     }
 
     // prepare the database related studd
-    std::string table = "";
+    QString table = "";
     switch ( wsID ) {
         case 11:
             table += "apache_";
@@ -89,248 +91,271 @@ bool StoreOps::storeData( sqlite3* db, Craplog& craplog, const std::vector<std::
             throw( "Unexpected LogType: " + std::to_string(log_type) );
     }
 
-    // initialize the SQL statement
-    int rc,
-        tries = 0;
-    sqlite3_stmt *stmt;
-    std::string stmt_str;
-    if ( log_type == LogOps::LogType::Access ) {
-        stmt_str = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, client, user_agent, cookie, referrer) "\
-                   "VALUES (?99, ?1, ?2, ?3, ?4, ?5, ?6, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?20, ?21, ?22);";
-    } else {
-        stmt_str = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, level, message, source_file, client, port) "\
-                   "VALUES (?99, ?1, ?2, ?3, ?4, ?5, ?6, ?31, ?32, ?33, ?20, ?30);";
-    }
-    // encode the statement
-    rc = sqlite3_prepare_v2( db, stmt_str.c_str(), -1, &stmt, NULL ); // set NULL as default value for unused columns
-    if ( rc != SQLITE_OK ) {
-        // error opening database
-        successful = false;
-        QString stmt_msg="", err_msg="";
-        if ( craplog.getDialogLevel() > 0 ) {
-            stmt_msg = "sqlite3_prepare_v2()";
-            if ( craplog.getDialogLevel() == 2 ) {
-                err_msg.append( sqlite3_errmsg(db) );
+
+    int perf_size;
+    bool skip = false,
+         warning = false;
+    QSqlQuery query = QSqlQuery( db );
+    // parse every row of data
+    for ( const std::unordered_map<int, std::string>& row : data ) {
+        // break if failed
+        if ( successful == false ) { break; }
+
+        // check blacklisted clients
+        if ( check_bl_cli == true ) {
+            if ( row.find( 20 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 20 );
+                for ( const auto& item : bl_cli_list ) {
+                    if ( item == target ) {
+                        // match found! skip this line
+                        skip = true;
+                        break;
+                    }
+                }
             }
         }
-        DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
-    }
-
-    if ( successful == true ) {
-        // parse every row of data
-        int perf_size;
-        bool skip = false,
-             warning = false;
-        for ( const std::unordered_map<int, std::string>& row : data ) {
-            // break if failed
-            if ( successful == false ) { break; }
-
-            // check blacklisted clients
-            if ( check_bl_cli == true ) {
-                if ( row.find( 20 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 20 );
-                    for ( const auto& item : bl_cli_list ) {
-                        if ( item == target ) {
-                            // match found! skip this line
-                            skip = true;
-                            break;
-                        }
+        // check blacklisted errors
+        if ( check_bl_err == true && skip == false ) {
+            if ( row.find( 31 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 31 );
+                for ( const auto& item : bl_err_list ) {
+                    if ( item == target ) {
+                        // match found! skip this line
+                        skip = true;
+                        break;
                     }
                 }
             }
-            // check blacklisted errors
-            if ( check_bl_err == true && skip == false ) {
-                if ( row.find( 31 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 31 );
-                    for ( const auto& item : bl_err_list ) {
-                        if ( item == target ) {
-                            // match found! skip this line
-                            skip = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if ( skip == true ) {
-                // append every field to ignored size
-                int ignored_size = 0;
-                for ( const auto& [ id, str ] : row ) {
-                    ignored_size += str.size();
-                }
-                craplog.sumIgnoredSize( ignored_size, log_type );
-                skip=false;
-                continue;
-            }
-
-            // check warnlisted clients
-            if ( check_wl_cli == true ) {
-                if ( row.find( 20 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 20 );
-                    for ( const auto& item : wl_cli_list ) {
-                        if ( item == target ) {
-                            // match found! put a warning on this line
-                            warning = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            // check warnlisted user-agents
-            if ( check_wl_ua == true && warning == false ) {
-                if ( row.find( 21 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 21 );
-                    for ( const auto& item : wl_ua_list ) {
-                        if ( item == target ) {
-                            // match found! skip this line
-                            warning = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            // check warnlisted methods
-            if ( check_wl_met == true && warning == false ) {
-                if ( row.find( 11 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 11 );
-                    for ( const auto& item : wl_met_list ) {
-                        if ( item == target ) {
-                            // match found! skip this line
-                            warning = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            // check warnlisted requests urls
-            if ( check_wl_req == true && warning == false ) {
-                if ( row.find( 12 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 12 );
-                    for ( const auto& item : wl_req_list ) {
-                        if ( item == target ) {
-                            // match found! skip this line
-                            warning = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            // check warnlisted error levels
-            if ( check_wl_err == true && warning == false ) {
-                if ( row.find( 31 ) != row.end() ) {
-                    // this row do contains this row item, check if they match
-                    std::string target = row.at( 31 );
-                    for ( const auto& item : wl_err_list ) {
-                        if ( item == target ) {
-                            // match found! skip this line
-                            warning = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // check request and query for potential threats
-            // !!! IMPLEMENT !!!
-
-
-            // complete and execute the statement
-            perf_size = 0;
+        }
+        if ( skip == true ) {
+            // append every field to ignored size
+            int ignored_size = 0;
             for ( const auto& [ id, str ] : row ) {
-                perf_size += str.size();
-                if ( id == 99 ) {
-                    // bind BOOLEAN value
-                    if ( warning == true ) {
-                        rc = sqlite3_bind_int( stmt, id, 1 );
-                    } else {
-                        rc = sqlite3_bind_int( stmt, id, 0 );
-                    }
-
-                } else if ( (id > 0 && id < 7) || (id > 13 && id < 18) ) {
-                    // bind as INTEGER
-                    rc = sqlite3_bind_int( stmt, id, std::stoi( str ) );
-
-                } else {
-                    // bind everything else as TEXT
-                    const char* txt = str.c_str();
-                    rc = sqlite3_bind_text( stmt, id, txt, sizeof(txt), NULL );
-                }
-
-                if ( rc != SQLITE_OK ) {
-                    // error binding value
-                    successful = false;
-                    QString stmt_msg="", err_msg="";
-                    if ( craplog.getDialogLevel() > 0 ) {
-                        stmt_msg = "sqlite3_bind_*()";
-                        if ( craplog.getDialogLevel() == 2 ) {
-                            err_msg.append( sqlite3_errmsg(db) );
-                        }
-                    }
-                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
-                    break;
-                }
-
+                ignored_size += str.size();
             }
+            craplog.sumIgnoredSize( ignored_size, log_type );
+            skip=false;
+            continue;
+        }
 
-            if ( successful == true ) {
-                // sum stored data size for the perfs
-                craplog.sumPerfSize( perf_size );
-
-                // finalize this statement
-                tries = 0;
-                while (true) {
-                    tries ++;
-                    if ( tries > 3 ) {
+        // check warnlisted clients
+        if ( check_wl_cli == true ) {
+            if ( row.find( 20 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 20 );
+                for ( const auto& item : wl_cli_list ) {
+                    if ( item == target ) {
+                        // match found! put a warning on this line
+                        warning = true;
                         break;
                     }
-                    rc = sqlite3_step(stmt);
-                    if ( rc == SQLITE_BUSY ) {
-                        // database busy, wait 1 sec and retry
-                        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-                    } else {
-                        break;
-                    }
-                }
-                if ( rc != SQLITE_DONE ) {
-                    // error finalizing step
-                    successful = false;
-                    QString stmt_msg="", err_msg="";
-                    if ( craplog.getDialogLevel() > 0 ) {
-                        stmt_msg = "sqlite3_step()";
-                        if ( craplog.getDialogLevel() == 2 ) {
-                            err_msg.append( sqlite3_errmsg(db) );
-                        }
-                    }
-                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
-                    break;
-                }
-
-                // reset the statement to prepare for the next
-                rc = sqlite3_reset(stmt);
-                if ( rc != SQLITE_DONE && rc != SQLITE_OK ) {
-                    // error resetting statement
-                    successful = false;
-                    QString stmt_msg="", err_msg="";
-                    if ( craplog.getDialogLevel() > 0 ) {
-                        stmt_msg = "sqlite3_reset()";
-                        if ( craplog.getDialogLevel() == 2 ) {
-                            err_msg.append( sqlite3_errmsg(db) );
-                        }
-                    }
-                    DialogSec::errDatabaseFailedExecuting( nullptr, "statistics.db", stmt_msg, err_msg );
-                    break;
                 }
             }
         }
+        // check warnlisted user-agents
+        if ( check_wl_ua == true && warning == false ) {
+            if ( row.find( 21 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 21 );
+                for ( const auto& item : wl_ua_list ) {
+                    if ( item == target ) {
+                        // match found! skip this line
+                        warning = true;
+                        break;
+                    }
+                }
+            }
+        }
+        // check warnlisted methods
+        if ( check_wl_met == true && warning == false ) {
+            if ( row.find( 11 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 11 );
+                for ( const auto& item : wl_met_list ) {
+                    if ( item == target ) {
+                        // match found! skip this line
+                        warning = true;
+                        break;
+                    }
+                }
+            }
+        }
+        // check warnlisted requests urls
+        if ( check_wl_req == true && warning == false ) {
+            if ( row.find( 12 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 12 );
+                for ( const auto& item : wl_req_list ) {
+                    if ( item == target ) {
+                        // match found! skip this line
+                        warning = true;
+                        break;
+                    }
+                }
+            }
+        }
+        // check warnlisted error levels
+        if ( check_wl_err == true && warning == false ) {
+            if ( row.find( 31 ) != row.end() ) {
+                // this row do contains this row item, check if they match
+                std::string target = row.at( 31 );
+                for ( const auto& item : wl_err_list ) {
+                    if ( item == target ) {
+                        // match found! skip this line
+                        warning = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // check request and query for potential threats
+        // !!! IMPLEMENT !!!
+
+
+        // initialize the SQL statement
+        QString query_stmt;
+        if ( log_type == LogOps::LogType::Access ) {
+            query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, client, user_agent, cookie, referrer) "\
+                       "VALUES (";
+            /*query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, client, user_agent, cookie, referrer) "\
+                       "VALUES (?99, ?1, ?2, ?3, ?4, ?5, ?6, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?20, ?21, ?22);";*/
+
+        } else {
+            query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, level, message, source_file, client, port) "\
+                       "VALUES (";
+            /*query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, level, message, source_file, client, port) "\
+                       "VALUES (?99, ?1, ?2, ?3, ?4, ?5, ?6, ?31, ?32, ?33, ?20, ?30);";*/
+        }
+
+
+        // complete and execute the statement
+        perf_size = 0;
+        // set values to NULL
+        if ( row.find( 99 ) == row.end() ) {
+            // no value found in the collection, bind NULL
+            query_stmt += "0";
+        } else {
+            // value found, bind it
+            perf_size += row.at( 99 ).size();
+            query_stmt += QString::fromStdString( row.at( 99 ) ).replace("'","''");
+        }
+
+        for ( int i=1; i<7; i++ ) {
+            query_stmt += ", ";
+            if ( row.find( i ) == row.end() ) {
+                // no value found in the collection, bind NULL
+                query_stmt += "NULL";
+            } else {
+                // value found, bind it
+                perf_size += row.at( i ).size();
+                query_stmt += QString::fromStdString( row.at( i ) ).replace("'","''");
+            }
+        }
+
+        if ( log_type == LogOps::LogType::Access ) {
+            // access logs
+            for ( int i=10; i<14; i++ ) {
+                query_stmt += ", ";
+                if ( row.find( i ) == row.end() ) {
+                    // no value found in the collection, bind NULL
+                    query_stmt += "NULL";
+                } else {
+                    // value found, bind it
+                    perf_size += row.at( i ).size();
+                    query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
+                }
+            }
+
+            for ( int i=14; i<18; i++ ) {
+                query_stmt += ", ";
+                if ( row.find( i ) == row.end() ) {
+                    // no value found in the collection, bind NULL
+                    query_stmt += "NULL";
+                } else {
+                    // value found, bind it
+                    perf_size += row.at( i ).size();
+                    query_stmt += QString::fromStdString( row.at( i ) ).replace("'","''");
+                }
+            }
+
+            for ( int i : std::vector<int>({18,20,21,22}) ) {
+                query_stmt += ", ";
+                if ( row.find( i ) == row.end() ) {
+                    // no value found in the collection, bind NULL
+                    query_stmt += "NULL";
+                } else {
+                    // value found, bind it
+                    perf_size += row.at( i ).size();
+                    query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
+                }
+            }
+
+        } else {
+            // error logs
+            for ( int i : std::vector<int>({31,32,33,20}) ) {
+                query_stmt += ", ";
+                if ( row.find( i ) == row.end() ) {
+                    // no value found in the collection, bind NULL
+                    query_stmt += "NULL";
+                } else {
+                    // value found, bind it
+                    perf_size += row.at( i ).size();
+                    query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
+                }
+            }
+
+            query_stmt += ", ";
+            if ( row.find( 30 ) == row.end() ) {
+                // no value found in the collection, bind NULL
+                query_stmt += "NULL";
+            } else {
+                // value found, bind it
+                perf_size += row.at( 30 ).size();
+                query_stmt += QString::fromStdString( row.at( 30 ) ).replace("'","''");
+            }
+        }
+
+
+        // encode the statement
+        query_stmt += ");";
+        if ( query.prepare( query_stmt ) == false ) {
+            // error opening database
+            successful = false;
+            QString query_msg="", err_msg="";
+            if ( craplog.getDialogLevel() > 0 ) {
+                query_msg = "query.prepare()";
+                if ( craplog.getDialogLevel() == 2 ) {
+                    err_msg = query.lastError().text();
+                }
+            }
+            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query_msg, err_msg );
+        }
+
+        // sum stored data size for the perfs
+        craplog.sumPerfSize( perf_size );
+
+        // finalize this statement
+        if ( query.exec() == false ) {
+            // error finalizing step
+            successful = false;
+            QString query_msg="", err_msg="";
+            if ( craplog.getDialogLevel() > 0 ) {
+                query_msg = "query.exec()";
+                if ( craplog.getDialogLevel() == 2 ) {
+                    err_msg = query.lastError().text();
+                }
+            }
+            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query_msg, err_msg );
+            break;
+        }
+
+        // reset the statement to prepare for the next
+        query.finish();
     }
 
-    // destroy the statement to avoid leaks, says SQLite doc
-    sqlite3_finalize(stmt);
 
     return successful;
 }
