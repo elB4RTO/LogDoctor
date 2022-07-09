@@ -4,7 +4,6 @@
 
 #include "qtimer.h"
 
-#include <iostream>
 #include <chrono>
 
 
@@ -67,7 +66,8 @@ MainWindow::MainWindow( QWidget *parent )
     ////////////////////////
     //// INITIALIZATION ////
     // sqlite databases paths
-    this->db_stats_path = "test.db";//"~/.craplog/db"; !!! RESTORE
+    this->db_stats_path  = "collection.db";//"~/.craplog/collection.db"; !!! RESTORE
+    this->db_hashes_path = "hashes.db";//"~/.craplog/hashes.db"; !!! RESTORE
     // WebServers for the LogsList
     this->allowed_web_servers[11] = true; // apache2
     this->allowed_web_servers[12] = true; // nginx
@@ -76,33 +76,7 @@ MainWindow::MainWindow( QWidget *parent )
 
     /////////////////
     //// CONFIGS ////
-    this->craplog.setDialogLevel( 2 ); // !!! DELETE ME WHEN DONE TESTING !!!
-
-
-    //////////////////////////
-    //// INTEGRITY CHECKS ////
-    // check that the sqlite plugin is available
-    /*if ( CheckSec::checkSQLitePlugin() ) {
-        // checks failed, abort
-        this->close();
-    }*/
-    // statistics' database
-    if ( CheckSec::checkStatsDatabase( this->db_stats_path ) ) {
-        // checks failed, abort
-        this->close();
-    }
-    this->craplog.setStatsDatabasePath( this->db_stats_path );
-    // used-files' hashes' database
-    if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) ) {
-        // checks failed, abort
-        this->close();
-    }
-    this->craplog.setHashesDatabasePath( this->db_hashes_path );
-    // craplog variables
-    if ( CheckSec::checkCraplog( this->craplog ) ) {
-        // checks failed, abort
-        this->close();
-    }
+    this->craplog.setDialogLevel( 1 ); // !!! REPLACE WITH CONFIGURATION VALUE !!!
 
 
     ///////////////////
@@ -148,12 +122,74 @@ MainWindow::MainWindow( QWidget *parent )
     // get a fresh list of LogFiles
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
-    QTimer::singleShot(500, this, SLOT(on_button_LogFiles_RefreshList_clicked()));
+    //QTimer::singleShot(500, this, SLOT(on_button_LogFiles_RefreshList_clicked()));
+    //QTimer::singleShot(250, this, SLOT(make_InitialChecks()));
+    //this->craplog_thread = std::thread( &MainWindow::wait_ActiveWindow, this, this );
+    this->craplog_timer = new QTimer(this);
+    connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
+    this->craplog_timer->start(250);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+//////////////////////////
+//// INTEGRITY CHECKS ////
+void MainWindow::wait_ActiveWindow()
+{
+    if ( this->isActiveWindow() == false ) {
+        std::this_thread::sleep_for( std::chrono::milliseconds(250) );
+    } else {
+        this->craplog_timer->stop();
+        this->makeInitialChecks();
+    }
+}
+void MainWindow::makeInitialChecks()
+{
+    bool ok = true;
+    // check that the sqlite plugin is available
+    if ( QSqlDatabase::drivers().contains("QSQLITE") == false ) {
+        // checks failed, abort
+        DialogSec::errSqlDriverNotFound( nullptr, "QSQLITE" );
+        ok = false;
+    }
+
+    if ( ok == true ) {
+        // statistics' database
+        if ( CheckSec::checkStatsDatabase( this->db_stats_path ) == false ) {
+            // checks failed, abort
+            ok = false;
+        } else {
+            this->craplog.setStatsDatabasePath( this->db_stats_path );
+            // used-files' hashes' database
+            if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
+                // checks failed, abort
+                ok = false;
+            } else {
+                this->craplog.setHashesDatabasePath( this->db_hashes_path );
+                if ( this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path ) == false ) {
+                    // failed to load the list, abort
+                    ok = false;
+                } else {
+                    // craplog variables
+                    if ( CheckSec::checkCraplog( this->craplog ) == false ) {
+                        // checks failed, abort
+                        ok = false;
+                    }
+                }
+            }
+        }
+    }
+    if ( ok == false ) {
+        this->close();
+        //QCoreApplication::exit(0);
+        //this->destroy();
+    } else {
+        this->on_button_LogFiles_RefreshList_clicked();
+    }
 }
 
 
@@ -498,7 +534,7 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 
     if ( proceed == true ) {
         // check files to be used before to start
-        proceed = this->craplog.checkFiles();
+        proceed = this->craplog.checkStuff();
     } else {
         this->craplogFinished();
     }
