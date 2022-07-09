@@ -3,12 +3,70 @@
 
 #include "utilities/io.h"
 
-#include <thread>
-
 
 CheckSec::CheckSec()
 {
 
+}
+
+int CheckSec::checkDatabaseTablesNames( QSqlDatabase& db, const std::string& db_path, const QString& db_name )
+{
+    bool make_new=false, ok=true;
+    QSqlQuery query = QSqlQuery( db );
+    if ( query.exec("SELECT name FROM sqlite_schema WHERE type = 'table';") == false ) {
+        // error querying database
+        ok = false;
+        DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
+    } else {
+        std::unordered_map<QString, bool> tables_checks = {
+            {"apache_access",false}, {"apache_error",false},
+            {"nginx_access",false}, {"nginx_error",false},
+            {"iis_access",false}, {"iis_error",false} };
+        while ( query.next() ) {
+            QString table_name = query.value(0).toString();
+            if ( tables_checks.find( table_name ) == tables_checks.end() ) {
+                // unexpected table name
+                if ( DialogSec::choiceDatabaseWrongTable( nullptr, db_name, table_name ) == true ) {
+                    // agreed to renew
+                    make_new = true;
+                } else {
+                    // refused to renew
+                    ok = false;
+                }
+                break;
+
+            } else {
+                // table found
+                tables_checks.at( table_name ) = true;
+            }
+        }
+        if ( ok == true && make_new == false ) {
+            for ( const auto& [ tbl, res ] : tables_checks ) {
+                if ( res == false ) {
+                    // a table has not been found
+                    if ( DialogSec::choiceDatabaseMissingTable( nullptr, db_name, tbl ) == true ) {
+                        // agreed to renew
+                        make_new = true;
+                    } else {
+                        // refused to renew
+                        ok = false;
+                    }
+                    break;
+                }
+            }
+        }
+        tables_checks.clear();
+    }
+    query.finish();
+    if ( ok == true ) {
+        if ( make_new == true ) {
+            return 2;
+        } else {
+            return 1;
+        }
+    } else {
+        return 0;
+    }
 }
 
 bool CheckSec::newStatsDatabase( QSqlDatabase& db, const std::string& db_path, const QString& db_name, const std::vector<QString>& ws_names )
@@ -87,11 +145,12 @@ bool CheckSec::newStatsDatabase( QSqlDatabase& db, const std::string& db_path, c
                 }
             }
             query.finish();
-            /*query.clear();*/
         }
 
-        // finally close the database
-        db.close();
+        // inform about creation
+        if ( successful == true ) {
+            DialogSec::msgDatabaseCreated( nullptr, db_name );
+        }
     }
     return successful;
 }
@@ -126,54 +185,13 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
 
             } else {
                 // database successfully opened, now check the tables
-                std::vector<std::vector<std::string>> results;
-                QSqlQuery query = QSqlQuery( db );
-                int tries;
-                if ( query.exec("SELECT name FROM sqlite_schema WHERE type = 'table';") == false ) {
-                    // error opening database
+                int check = CheckSec::checkDatabaseTablesNames( db, db_path, db_name );
+                if ( check == 0 ) {
                     ok = false;
-                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
+                } else if ( check == 2 ) {
+                    make_new = true;
                 }
-                std::unordered_map<QString, bool> tables_checks = {
-                    {"apache_access",false}, {"apache_error",false},
-                    {"nginx_access",false}, {"nginx_error",false},
-                    {"iis_access",false}, {"iis_error",false} };
-                while ( query.next() ) {
-                    QString table_name = query.value(0).toString();
-                    if ( tables_checks.find( table_name ) == tables_checks.end() ) {
-                        // unexpected table name
-                        if ( DialogSec::choiceDatabaseWrongTable( nullptr, table_name ) == true ) {
-                            // agreed to renew
-                            make_new = true;
-                        } else {
-                            // refused to renew
-                            ok = false;
-                        }
-                        break;
-
-                    } else {
-                        // table found
-                        tables_checks.at( table_name ) = true;
-                    }
-                }
-                if ( ok == true && make_new == false ) {
-                    for ( const auto& [ tbl, res ] : tables_checks ) {
-                        if ( res == false ) {
-                            // a table has not been found
-                            if ( DialogSec::choiceDatabaseMissingTable( nullptr, tbl ) == true ) {
-                                // agreed to renew
-                                make_new = true;
-                            } else {
-                                // refused to renew
-                                ok = false;
-                            }
-                            break;
-                        }
-                    }
-                }
-                query.finish();
-                tables_checks.clear();
-
+                QSqlQuery query = QSqlQuery( db );
                 if ( ok == true && make_new == false ) {
 
                     // check every WebServer table, both access and error
@@ -230,7 +248,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                                     col_type = query.value(1).toString();
                             if ( acc_types.find( col_name ) == acc_types.end() ) {
                                 // unexpected column
-                                if ( DialogSec::choiceDatabaseWrongColumn( nullptr, col_name ) == true ) {
+                                if ( DialogSec::choiceDatabaseWrongColumn( nullptr, db_name, table+"_access", col_name ) == true ) {
                                     // agreed to renew
                                     make_new = true;
                                 } else {
@@ -247,7 +265,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                                     acc_types.at( col_name ) = std::tuple( data_type, true );
                                 } else {
                                     // different data-type, ask to renew
-                                    if ( DialogSec::choiceDatabaseWrongDataType( nullptr, data_type ) == true ) {
+                                    if ( DialogSec::choiceDatabaseWrongDataType( nullptr, db_name, table+"_access", col_name, col_type ) == true ) {
                                         // agreed to renew
                                         make_new = true;
                                     } else {
@@ -262,7 +280,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                             for ( const auto& [ col, tup ] : acc_types ) {
                                 if ( std::get<1>( tup ) == false ) {
                                     // a table has not been found
-                                    if ( DialogSec::choiceDatabaseMissingColumn( nullptr, col ) == true ) {
+                                    if ( DialogSec::choiceDatabaseMissingColumn( nullptr, db_name, table+"_access", col ) == true ) {
                                         // agreed to renew
                                         make_new = true;
                                     } else {
@@ -274,6 +292,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                             }
                         }
 
+                        query.finish();
                         if ( ok == false || make_new == true ) { break; }
 
                         // query table's columns' infoes for error logs
@@ -288,7 +307,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                                     col_type = query.value(1).toString();
                             if ( err_types.find( col_name ) == err_types.end() ) {
                                 // unexpected column
-                                if ( DialogSec::choiceDatabaseWrongColumn( nullptr, col_name ) == true ) {
+                                if ( DialogSec::choiceDatabaseWrongColumn( nullptr, db_name, table+"_error", col_name ) == true ) {
                                     // agreed to renew
                                     make_new = true;
                                 } else {
@@ -305,7 +324,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                                     err_types.at( col_name ) = std::tuple( data_type, true );
                                 } else {
                                     // different data-type, ask to renew
-                                    if ( DialogSec::choiceDatabaseWrongDataType( nullptr, data_type ) == true ) {
+                                    if ( DialogSec::choiceDatabaseWrongDataType( nullptr, db_name, table+"_error", col_name, col_type ) == true ) {
                                         // agreed to renew
                                         make_new = true;
                                     } else {
@@ -320,7 +339,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                             for ( const auto& [ col, tup ] : err_types ) {
                                 if ( std::get<1>( tup ) == false ) {
                                     // a table has not been found
-                                    if ( DialogSec::choiceDatabaseMissingColumn( nullptr, col ) == true ) {
+                                    if ( DialogSec::choiceDatabaseMissingColumn( nullptr, db_name, table+"_error", col ) == true ) {
                                         // agreed to renew
                                         make_new = true;
                                     } else {
@@ -332,6 +351,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                             }
                         }
 
+                        query.finish();
                         if ( ok == false || make_new == true ) { break; }
                     }
                 }
@@ -367,16 +387,183 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
         }
     }
 
+    db.close();
     return ok;
 }
 
 
 
+bool CheckSec::newHashesDatabase( QSqlDatabase& db, const std::string& db_path, const QString& db_name, const std::vector<QString>& ws_names )
+{
+    bool successful = true;
+    // create the database
+    if ( db.open() == false ) {
+        // error opening database
+        successful = false;
+        DialogSec::errDatabaseFailedOpening( nullptr, db_name, db.lastError().text() );
+
+    } else {
+        // succesfully creted database file, now create the tables
+        QSqlQuery query;
+        int tries;
+        for ( const QString& ws_name : ws_names ) {
+            if ( successful == false ) { break; }
+            // compose the statement with the table name for the access logs
+            query.prepare( "\
+                CREATE TABLE "+ws_name+" (\
+                    hash TEXT\
+                );");
+            if ( query.exec() == false ) {
+                // error creating table
+                successful = false;
+                DialogSec::errDatabaseFailedExecuting( nullptr,
+                    QString( db_name ),
+                    QString("CREATE TABLE %1 (...)").arg( ws_name ),
+                    QString( query.lastError().text() ) );
+
+            }
+            query.finish();
+        }
+
+        // inform about creation
+        if ( successful == true ) {
+            DialogSec::msgDatabaseCreated( nullptr, db_name );
+        }
+    }
+    return successful;
+}
+
 bool CheckSec::checkHashesDatabase( const std::string& db_path )
 {
-    bool ok = true;
+    bool make_new=false, ok=true;
+    const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
+    const std::vector<QString> ws_names = {
+        "apache_access", "apache_error",
+        "nginx_access", "nginx_error",
+        "iis_access", "iis_error" };
 
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName( QString::fromStdString( db_path ) );
 
+    // check the existence
+    if ( IOutils::exists( db_path ) ) {
+        // database file exists
+        if ( IOutils::checkFile( db_path, true ) == false ) {
+            // database not readable, abort
+            DialogSec::errDatabaseNotReadable( nullptr, QString(db_name) );
+            ok = false;
+        } else if ( IOutils::checkFile( db_path, false, true ) == false ) {
+            // database not writable, abort
+            DialogSec::errDatabaseNotWritable( nullptr, QString(db_name) );
+            ok = false;
+
+        } else {
+            // database file has read and write permissions, now try to open
+            if ( db.open() == false ) {
+                // error opening database
+                ok = false;
+                DialogSec::errDatabaseFailedOpening( nullptr, db_name, db.lastError().text() );
+
+            } else {
+                // database successfully opened, now check the tables
+                int check = CheckSec::checkDatabaseTablesNames( db, db_path, db_name );
+                if ( check == 0 ) {
+                    ok = false;
+                } else if ( check == 2 ) {
+                    make_new = true;
+                }
+                QSqlQuery query = QSqlQuery( db );
+                if ( ok == true && make_new == false ) {
+
+                    // check every WebServer table, both access and error
+                    for ( const QString& table : ws_names ) {
+
+                        if ( ok == false || make_new == true ) { break; }
+                        // column's name:type associations
+                        bool name_ok = false,
+                             type_ok = false;
+
+                        // query table's columns' infoes for access logs
+                        if ( query.exec( "SELECT name, type FROM pragma_table_info('"+table+"') AS tbinfo;" ) == false ) {
+                            // error opening database
+                            ok = false;
+                            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
+                        }
+                        // iterate over results
+                        while ( query.next() ) {
+                            QString col_name = query.value(0).toString(),
+                                    col_type = query.value(1).toString();
+                            if ( col_name != "hash" ) {
+                                // unexpected column
+                                if ( DialogSec::choiceDatabaseWrongColumn( nullptr, db_name, table, col_name ) == true ) {
+                                    // agreed to renew
+                                    make_new = true;
+                                } else {
+                                    // refused to renew
+                                    ok = false;
+                                }
+                                break;
+
+                            } else {
+                                // column found, check the data-type
+                                name_ok = true;
+                                if ( col_type == "TEXT" ) {
+                                    // same data-type
+                                    type_ok = true;
+                                } else {
+                                    // different data-type, ask to renew
+                                    if ( DialogSec::choiceDatabaseWrongDataType( nullptr, db_name, table, col_name, col_type ) == true ) {
+                                        // agreed to renew
+                                        make_new = true;
+                                    } else {
+                                        // refused to renew
+                                        ok = false;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if ( ok == true && make_new == false ) {
+                            if ( name_ok == false || type_ok == false ) {
+                                ok = false;
+                            }
+                        }
+                        query.finish();
+                    }
+                }
+            }
+        }
+
+    } else {
+        // database does not exist, yet, ask to create a new one
+        if ( DialogSec::choiceDatabaseNotFound( nullptr, QString(db_name) ) ) {
+            // choosed to create it
+            make_new = true;
+
+        } else {
+            // refused to create it, abort
+            ok = false;
+        }
+    }
+
+    if ( ok == true && make_new == true ) {
+        // rename the current db file as a 'copy'
+        if ( IOutils::exists( db_path ) ) {
+            // a database already exists, try rename it
+            if ( IOutils::renameAsCopy( db_path ) == false ) {
+                // failed to rename
+                ok = false;
+                DialogSec::errRenaming( nullptr, QString::fromStdString(db_path) );
+            }/* else {
+                // renamed successfully, make new one
+            }*/
+        }
+        if ( ok == true ) {
+            ok = CheckSec::newHashesDatabase( db, db_path, db_name, ws_names );
+        }
+    }
+
+    db.close();
     return ok;
 }
 
