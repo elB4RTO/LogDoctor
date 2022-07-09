@@ -5,10 +5,6 @@
 #include <vector>
 
 #include <QMainWindow>
-#include <QVariant>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 
 #include "modules/dialogs.h"
 #include "tools/craplog/modules/formats.h"
@@ -90,7 +86,7 @@ public:
         & getWarnlist( const int web_server_id, const int log_type, const int log_field_id );
 
     // job related
-    const bool checkFiles();
+    const bool checkStuff();
     void startWorking(),
          stopWorking();
     const bool isWorking(),
@@ -109,7 +105,7 @@ public:
 
 private:
     // quantoty of informational dialogs to display
-    int dialog_level = 1; // 0: essential, 1: usefull, 2: explanatory
+    int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
 
     // databases paths
     std::string db_stats_path,
@@ -159,7 +155,7 @@ private:
     // control related
     bool delete_old_hashes = false;
     int  old_hashes_months = 12;
-    int warning_size = 1'048'576; //104'857'600; // in Bytes ( => 100 MiB ) // !!! RESTORE !!!
+    int warning_size = 1'048'576 +1; //104'857'600; // in Bytes ( => 100 MiB ) // !!! RESTORE !!!
     // black/warn-list
     // { web_server_id : { log_type : { log_field_id : BWlist } } }
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, BWlist>>>
