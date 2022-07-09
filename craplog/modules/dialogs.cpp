@@ -12,6 +12,16 @@ DialogSec::DialogSec()
 //////////////////
 //// DATABASE ////
 //////////////////
+void DialogSec::errSqlDriverNotFound( QWidget *parent, const QString& driver )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_DB_DRIVER_NOT_FOUND,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_DB_DRIVER_NOT_FOUND, driver, f_ABORTING ),
+        QMessageBox::Ok );
+}
+
 /*bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const std::string& db_name )
 {
     return choiceDatabaseNotFound( parent,QString::fromStdString( db_name ) );
@@ -30,35 +40,35 @@ bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const QString& db_name 
     return choice;
 }
 
-bool DialogSec::choiceDatabaseWrongTable( QWidget *parent, const QString& table_name )
+bool DialogSec::choiceDatabaseWrongTable(QWidget *parent, const QString& db_name, const QString& table_name )
 {
-    QString msg = QString("%1:\n%2").arg( m_DB_WRONG_TABLE_NAME, table_name );
-    return choiceDatabaseRenew( parent, t_DB_WRONG_TABLE_NAME, table_name );
+    QString msg = QString("%1:\n%2 -> %3").arg( m_DB_WRONG_TABLE_NAME, db_name, table_name );
+    return choiceDatabaseRenew( parent, t_DB_WRONG_TABLE_NAME, msg );
 }
-bool DialogSec::choiceDatabaseMissingTable( QWidget *parent, const QString& table_name )
+bool DialogSec::choiceDatabaseMissingTable(QWidget *parent, const QString& db_name, const QString& table_name )
 {
-    QString msg = QString("%1:\n%2").arg( m_DB_MISSING_TABLE, table_name );
+    QString msg = QString("%1:\n%2 -> %3").arg( m_DB_MISSING_TABLE, db_name, table_name );
     return choiceDatabaseRenew( parent, t_DB_MISSING_TABLE, msg );
 }
-bool DialogSec::choiceDatabaseWrongColumn( QWidget *parent, const QString& column_name )
+bool DialogSec::choiceDatabaseWrongColumn(QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name )
 {
-    QString msg = QString("%1:\n%2").arg( m_DB_WRONG_COLUMN_NAME, column_name );
+    QString msg = QString("%1:\n%2 -> %3 -> %4").arg( m_DB_WRONG_COLUMN_NAME, db_name, table_name, column_name );
     return choiceDatabaseRenew( parent, t_DB_WRONG_COLUMN_NAME, msg );
 }
-bool DialogSec::choiceDatabaseMissingColumn( QWidget *parent, const QString& column_name )
+bool DialogSec::choiceDatabaseMissingColumn(QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name )
 {
-    QString msg = QString("%1:\n%2").arg( m_DB_MISSING_COLUMN, column_name );
+    QString msg = QString("%1:\n%2 -> %3 -> %4").arg( m_DB_MISSING_COLUMN, db_name, table_name, column_name );
     return choiceDatabaseRenew( parent, t_DB_MISSING_COLUMN, msg );
 }
-bool DialogSec::choiceDatabaseWrongDataType( QWidget *parent, const QString& data_type )
+bool DialogSec::choiceDatabaseWrongDataType(QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type )
 {
-    QString msg = QString("%1:\n%2").arg( m_DB_WRONG_COLUMN_TYPE, data_type );
+    QString msg = QString("%1:\n%2 -> %3 -> %4 -> %5").arg( m_DB_WRONG_COLUMN_TYPE, db_name, table_name, column_name, data_type );
     return choiceDatabaseRenew( parent, t_DB_WRONG_COLUMN_TYPE, msg );
 }
 bool DialogSec::choiceDatabaseRenew(QWidget *parent, const QString& title, const QString& msg )
 {
     bool choice = false;
-    auto response = QMessageBox::question(parent,
+    auto response = QMessageBox::warning(parent,
         title,
         QString("%1\n\n%2")
             .arg( msg, q_DB_RENEW ),
@@ -67,6 +77,15 @@ bool DialogSec::choiceDatabaseRenew(QWidget *parent, const QString& title, const
         choice = true;
     }
     return choice;
+}
+void DialogSec::msgDatabaseCreated( QWidget *parent, const QString& db_name )
+{
+    std::ignore=
+    QMessageBox::information(parent,
+        t_DB_CREATED,
+        QString("%1:\n%2")
+            .arg( m_DB_CREATED, db_name ),
+        QMessageBox::Ok );
 }
 
 /*void DialogSec::errDatabaseNotReadable( QWidget *parent, const std::string& db_name )
@@ -159,10 +178,10 @@ void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db_na
 ///////////////////
 //// LOG FILES ////
 ///////////////////
-void DialogSec::errFailedDefiningLogType( QWidget *parent, const std::string& file )
+/*void DialogSec::errFailedDefiningLogType( QWidget *parent, const std::string& file )
 {
     errFailedDefiningLogType( parent, QString::fromStdString(file) );
-}
+}*/
 void DialogSec::errFailedDefiningLogType( QWidget *parent, const QString& file )
 {
     std::ignore=
@@ -174,10 +193,10 @@ void DialogSec::errFailedDefiningLogType( QWidget *parent, const QString& file )
 }
 
 
-void DialogSec::errUndefinedLogType( QWidget *parent, const std::string& file )
+/*void DialogSec::errUndefinedLogType( QWidget *parent, const std::string& file )
 {
     errUndefinedLogType( parent, QString::fromStdString(file) );
-}
+}*/
 void DialogSec::errUndefinedLogType( QWidget *parent, const QString& file )
 {
     std::ignore=
@@ -188,10 +207,10 @@ void DialogSec::errUndefinedLogType( QWidget *parent, const QString& file )
         QMessageBox::Ok );
 }
 
-bool DialogSec::choiceUndefinedLogType( QWidget *parent, const std::string& file )
+/*bool DialogSec::choiceUndefinedLogType( QWidget *parent, const std::string& file )
 {
     return choiceUndefinedLogType( parent, QString::fromStdString(file) );
-}
+}*/
 bool DialogSec::choiceUndefinedLogType( QWidget *parent, const QString& file )
 {
     bool choice;
@@ -209,10 +228,10 @@ bool DialogSec::choiceUndefinedLogType( QWidget *parent, const QString& file )
 }
 
 
-int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const std::string& msg )
+/*int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const std::string& msg )
 {
     return choiceFileAlreadyUsed( parent, QString::fromStdString(msg) );
-}
+}*/
 int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& msg )
 {
     int choice;
@@ -255,10 +274,10 @@ int DialogSec::choiceFileSizeWarning( QWidget *parent, const QString& msg )
 }
 
 
-void DialogSec::errFailedReadFile(QWidget *parent, const std::string& file , const bool skipping)
+/*void DialogSec::errFailedReadFile(QWidget *parent, const std::string& file , const bool skipping)
 {
     errFailedReadFile( parent, QString::fromStdString( file ), skipping );
-}
+}*/
 void DialogSec::errFailedReadFile(QWidget *parent, const QString& file , const bool skipping )
 {
     std::ignore=
@@ -270,11 +289,10 @@ void DialogSec::errFailedReadFile(QWidget *parent, const QString& file , const b
 }
 
 
-void DialogSec::warnEmptyFile( QWidget *parent, const std::string& file )
+/*void DialogSec::warnEmptyFile( QWidget *parent, const std::string& file )
 {
     warnEmptyFile( parent, QString::fromStdString( file ) );
-}
-
+}*/
 void DialogSec::warnEmptyFile( QWidget *parent, const QString& file )
 {
     std::ignore=
@@ -285,12 +303,22 @@ void DialogSec::warnEmptyFile( QWidget *parent, const QString& file )
         QMessageBox::Ok );
 }
 
+void DialogSec::warnFileNotReadable( QWidget *parent, const QString& file )
+{
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_FILE_NOT_READABLE,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_FILE_NOT_READABLE, file, f_SKIPPING ),
+        QMessageBox::Ok );
+}
 
 
-bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const std::string& file )
+
+/*bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const std::string& file )
 {
     return choiceSelectedFileNotFound( parent, QString::fromStdString( file ) );
-}
+}*/
 bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString& file )
 {
     bool proceed = false;
@@ -310,10 +338,10 @@ bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString& file 
 /////////////////////
 //// PERMISSIONS ////
 /////////////////////
-void DialogSec::errDirNotExists(QWidget *parent, const std::string& dir )
+/*void DialogSec::errDirNotExists(QWidget *parent, const std::string& dir )
 {
     errDirNotExists( parent, QString::fromStdString( dir ) );
-}
+}*/
 void DialogSec::errDirNotExists(QWidget *parent, const QString& dir )
 {
     std::ignore=
@@ -325,10 +353,10 @@ void DialogSec::errDirNotExists(QWidget *parent, const QString& dir )
 }
 
 
-bool DialogSec::choiceDirNotExists(QWidget *parent, const std::string& dir )
+/*bool DialogSec::choiceDirNotExists(QWidget *parent, const std::string& dir )
 {
     return choiceDirNotExists( parent, QString::fromStdString( dir ) );
-}
+}*/
 bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 {
     bool proceed = false;
@@ -348,10 +376,10 @@ bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 //////////////////
 //// GENERICS ////
 //////////////////
-void DialogSec::warnGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
+/*void DialogSec::warnGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
 {
     warnGeneric( parent, QString::fromStdString( msg ), report_msg );
-}
+}*/
 void DialogSec::warnGeneric(QWidget *parent, const QString& msg, const bool report_msg )
 {
     QString footer = "";
@@ -368,10 +396,10 @@ void DialogSec::warnGeneric(QWidget *parent, const QString& msg, const bool repo
 
 
 
-void DialogSec::errGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
+/*void DialogSec::errGeneric(QWidget *parent, const std::string& msg, const bool report_msg )
 {
     errGeneric( parent, QString::fromStdString( msg ), report_msg );
-}
+}*/
 void DialogSec::errGeneric(QWidget *parent, const QString& msg, const bool report_msg )
 {
     QString footer = "";
