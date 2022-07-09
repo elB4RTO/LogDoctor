@@ -47,6 +47,8 @@ private slots:
     void on_button_MakeStats_Start_clicked();
 
     // custom
+    void wait_ActiveWindow();
+
     void update_Craplog_PerfData();
 
 private:
@@ -54,6 +56,8 @@ private:
 
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
+
+    void makeInitialChecks();
 
     //////////////////
     //// GRAPHICS ////
