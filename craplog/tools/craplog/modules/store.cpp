@@ -3,8 +3,6 @@
 
 #include <QVariant>
 
-#include <thread>
-
 
 StoreOps::StoreOps()
 {
