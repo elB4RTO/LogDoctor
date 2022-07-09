@@ -2,14 +2,13 @@
 #include "craplog.h"
 
 #include "utilities.h"
+#include "modules/checks.h"
 #include "tools/craplog/modules/store.h"
 
 #include <filesystem>
 #include <thread>
 
 #include <iostream>
-
-using std::string, std::vector, std::unordered_map;
 
 
 Craplog::Craplog()
@@ -35,13 +34,13 @@ Craplog::Craplog()
     }
 
     // default format strings
-    this->logs_format_stings[11] = unordered_map<int, string>();
+    this->logs_format_stings[11] = std::unordered_map<int, std::string>();
     this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
     this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";
-    this->logs_format_stings[12] = unordered_map<int, string>();
+    this->logs_format_stings[12] = std::unordered_map<int, std::string>();
     this->logs_format_stings[12][1] = "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"";
     this->logs_format_stings[12][2] = "$time_iso8601 [$error_level] $pid: *$cid $error_message";
-    this->logs_format_stings[13] = unordered_map<int, string>();
+    this->logs_format_stings[13] = std::unordered_map<int, std::string>();
     this->logs_format_stings[13][1] = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken";
     this->logs_format_stings[13][2] = "";
 
@@ -57,20 +56,20 @@ Craplog::Craplog()
     this->current_ELF = this->logs_formats[11][2];
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( 11, unordered_map<int, string>() );
+    this->logs_paths.emplace( 11, std::unordered_map<int, std::string>() );
     this->logs_paths[11].emplace( 1, "/var/log/apache2" );
     this->logs_paths[11].emplace( 2, "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( 12, unordered_map<int, string>() );
+    this->logs_paths.emplace( 12, std::unordered_map<int, std::string>() );
     this->logs_paths[12].emplace( 1, "/var/log/nginx" );
     this->logs_paths[12].emplace( 2, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( 13, unordered_map<int, string>() );
+    this->logs_paths.emplace( 13, std::unordered_map<int, std::string>() );
     this->logs_paths[13].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
     this->logs_paths[13].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
 
     // apache2 access/error log files' names
-    this->logs_base_names.emplace( 11, unordered_map<int, LogName>() );
+    this->logs_base_names.emplace( 11, std::unordered_map<int, LogName>() );
     this->logs_base_names[11].emplace( 1, LogName { .starts   = "access.log.",
                                                     .contains = "",
                                                     .ends     = "" });
@@ -78,7 +77,7 @@ Craplog::Craplog()
                                                     .contains = "",
                                                     .ends     = "" });
     // nginx access/error log files' names
-    this->logs_base_names.emplace( 12, unordered_map<int, LogName>() );
+    this->logs_base_names.emplace( 12, std::unordered_map<int, LogName>() );
     this->logs_base_names[12].emplace( 1, LogName { .starts   = "access.log.",
                                                     .contains = "",
                                                     .ends     = "" });
@@ -86,7 +85,7 @@ Craplog::Craplog()
                                                     .contains = "",
                                                     .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( 13, unordered_map<int, LogName>() );
+    this->logs_base_names.emplace( 13, std::unordered_map<int, LogName>() );
     this->logs_base_names[13].emplace( 1, LogName { .starts   = "nc",
                                                     .contains = "",
                                                     .ends     = ".log" });
@@ -123,6 +122,7 @@ const int Craplog::getDialogLevel()
 void Craplog::setDialogLevel( const int new_level )
 {
     this->dialog_level = new_level;
+    this->hashOps.setDialogLevel( new_level );
 }
 
 const std::string& Craplog::getStatsDatabasePath()
@@ -224,7 +224,7 @@ const int Craplog::getLogsListSize() {
 }
 
 // return the list. rescan if fresh is true
-const vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
+const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
 {
     if ( fresh == true ) {
         this->scanLogsDir();
@@ -247,9 +247,9 @@ const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
 
 
 // return the path of the file matching the given name
-const string& Craplog::getLogFilePath( const QString& file_name )
+const std::string& Craplog::getLogFilePath( const QString& file_name )
 {
-    string path;
+    std::string path;
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
             return item.path;
@@ -285,11 +285,11 @@ void Craplog::scanLogsDir()
         n=1;
     }
     for ( int i=0; i<n; i++ ) {
-        string logs_path = logs_paths.at( i+1 );
+        std::string logs_path = logs_paths.at( i+1 );
         if ( !IOutils::isDir( logs_path ) ) {
             // this directory doesn't exists
             if ( IOutils::exists( logs_path ) ) {
-                DialogSec::errDirNotExists( nullptr, logs_path );
+                DialogSec::errDirNotExists( nullptr, QString::fromStdString( logs_path ) );
             }
             continue;
         }
@@ -297,10 +297,13 @@ void Craplog::scanLogsDir()
         for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
             // get the attributes
             int size = dir_entry.file_size();
-            string path = dir_entry.path().string();
-            string name = dir_entry.path().filename().string();
+            std::string path = dir_entry.path().string();
+            QString name = QString::fromStdString( dir_entry.path().filename().string() );
             // check the readability
-            if ( IOutils::checkFile(path,true) == false ) {
+            if ( IOutils::checkFile( path, true ) == false ) {
+                if ( this->dialog_level == 2 ) {
+                    DialogSec::warnEmptyFile( nullptr, name );
+                }
                 continue;
             }
 
@@ -317,18 +320,18 @@ void Craplog::scanLogsDir()
                 // failed somehow
                 proceed = false;
                 QString err_msg = QMessageBox::tr("An error occured while handling the file");
-                DialogSec::errGeneric( nullptr, err_msg +":\n"+ QString::fromStdString(name) );
+                DialogSec::errGeneric( nullptr, err_msg +":\n"+ name );
             }
 
             if ( content.size() == 0 ) {
-                if ( this->dialog_level > 0 ) {
+                if ( this->dialog_level == 2 ) {
                     DialogSec::warnEmptyFile( nullptr, name );
                 }
                 continue;
             }
 
             if ( proceed == true ) {
-                LogOps::LogType log_type = this->logOps.defineFileType( name, content, this->logs_formats.at( this->current_WS ) );
+                LogOps::LogType log_type = this->logOps.defineFileType( name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
                 if ( log_type == LogOps::LogType::Failed ) {
                     // failed to get the log type, do not append
                     DialogSec::errFailedDefiningLogType( nullptr, name );
@@ -336,7 +339,7 @@ void Craplog::scanLogsDir()
                 }
 
                 // match only valid files names
-                if ( this->isFileNameValid( name, log_type ) == false ) {
+                if ( this->isFileNameValid( name.toStdString(), log_type ) == false ) {
                     continue;
                 }
 
@@ -346,7 +349,7 @@ void Craplog::scanLogsDir()
                     .selected = false,
                     .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS, log_type ),
                     .size = size,
-                    .name = QString::fromStdString( name ),
+                    .name = name,
                     .hash = hash,
                     .path = path,
                     .type = log_type
@@ -536,14 +539,14 @@ void Craplog::run()
 
 
     // insert the hashes of the used files
-    this->hashOps.insertUsedHashes( this->used_files_hashes, this->current_WS );
+    this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
 
     this->stopWorking();
 }
 
 
 
-const bool Craplog::checkFiles()
+const bool Craplog::checkStuff()
 {
     bool proceed = true;
     this->log_files_to_use.clear();
@@ -593,7 +596,7 @@ const bool Craplog::checkFiles()
         if ( this->warning_size >= 0 ) {
             if ( file.size > this->warning_size ) {
                 // exceeds the warning size
-                QString msg = file.name;
+                QString size_str, msg = file.name;
                 if ( this->dialog_level >= 1 ) {
                     std::string size_sfx=" B";
                     float size = (float)file.size;
@@ -603,7 +606,8 @@ const bool Craplog::checkFiles()
                             size /= 1024; size_sfx = " MiB";
                         }
                     }
-                    msg += QString("\n\nSize of the file:\n%1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
+                    size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
+                    msg += QString("\n\nSize of the file:\n%1%2").arg( size_str, size_sfx.c_str() );
                     if ( this->dialog_level == 2 ) {
                         size = (float)this->warning_size;
                         if (size > 1024) {
@@ -612,7 +616,8 @@ const bool Craplog::checkFiles()
                                 size /= 1024; size_sfx = " MiB";
                             }
                         }
-                        msg += QString("\n\nWarning size parameter:\n%1%2").arg( std::to_string(size).c_str(), size_sfx.c_str() );
+                        size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
+                        msg += QString("\n\nWarning size parameter:\n%1%2").arg( size_str, size_sfx.c_str() );
                     }
                 }
                 int choice = DialogSec::choiceFileSizeWarning( nullptr, msg );
@@ -628,6 +633,19 @@ const bool Craplog::checkFiles()
                 }*/
             }
         }
+
+        // check if the statistics' database is fune
+        if ( CheckSec::checkStatsDatabase( this->db_stats_path ) == false ) {
+            // checks failed, abort
+            proceed = false;
+            break;
+        }
+        if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
+            // checks failed, abort
+            proceed = false;
+            break;
+        }
+
         this->log_files_to_use.push_back( file );
     }
 
@@ -768,6 +786,10 @@ void Craplog::storeLogLines()
                     }
                     DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
                 }
+            }
+            if ( proceed == false ) {
+                // rollback
+                throw (std::exception());
             }
 
         } catch (...) {
