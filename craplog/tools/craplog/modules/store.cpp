@@ -105,7 +105,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 // this row do contains this row item, check if they match
                 std::string target = row.at( 20 );
                 for ( const auto& item : bl_cli_list ) {
-                    if ( item == target ) {
+                    if ( StringOps::startsWith( target, item ) ) {
                         // match found! skip this line
                         skip = true;
                         break;
@@ -113,7 +113,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 }
             }
         }
-        // check blacklisted errors
+        // check blacklisted error levels
         if ( check_bl_err == true && skip == false ) {
             if ( row.find( 31 ) != row.end() ) {
                 // this row do contains this row item, check if they match
@@ -133,7 +133,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             for ( const auto& [ id, str ] : row ) {
                 ignored_size += str.size();
             }
-            craplog.sumIgnoredSize( ignored_size, log_type );
+            craplog.sumBlacklistededSize( ignored_size, log_type );
             skip=false;
             continue;
         }
@@ -144,7 +144,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 // this row do contains this row item, check if they match
                 std::string target = row.at( 20 );
                 for ( const auto& item : wl_cli_list ) {
-                    if ( item == target ) {
+                    if ( StringOps::startsWith( target, item ) ) {
                         // match found! put a warning on this line
                         warning = true;
                         break;
@@ -158,7 +158,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 // this row do contains this row item, check if they match
                 std::string target = row.at( 21 );
                 for ( const auto& item : wl_ua_list ) {
-                    if ( item == target ) {
+                    if ( StringOps::startsWith( target, item ) ) {
                         // match found! skip this line
                         warning = true;
                         break;
@@ -186,7 +186,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 // this row do contains this row item, check if they match
                 std::string target = row.at( 12 );
                 for ( const auto& item : wl_req_list ) {
-                    if ( item == target ) {
+                    if ( StringOps::startsWith( target, item ) ) {
                         // match found! skip this line
                         warning = true;
                         break;
@@ -208,9 +208,6 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 }
             }
         }
-
-        // check request and query for potential threats
-        // !!! IMPLEMENT !!!
 
 
         // initialize the SQL statement
@@ -333,7 +330,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         }
 
         // sum stored data size for the perfs
-        craplog.sumPerfSize( perf_size );
+        craplog.sumPerfSize( perf_size, log_type );
 
         // finalize this statement
         if ( query.exec() == false ) {
