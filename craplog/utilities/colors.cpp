@@ -46,12 +46,12 @@ std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec::getC
     // monokai
     scheme[2].emplace("background","#272822");
     scheme[2].emplace("text","#706c5a");
-    scheme[2].emplace("x","#d1d1cb");
+    scheme[2].emplace("x","#a6a6a0");
     scheme[2].emplace("ip","#57adbc");
     scheme[2].emplace("pt","#c1b864");
     scheme[2].emplace("time","#9773db");
     scheme[2].emplace("ua_src","#a6e22e");
-    scheme[2].emplace("req_err","#bebeb8");
+    scheme[2].emplace("req_err","#d1d1cb");
     scheme[2].emplace("res_lev","#f92672");
 
     // radical
