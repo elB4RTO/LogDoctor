@@ -1,8 +1,8 @@
 
 #include "craplog.h"
 
-#include "utilities.h"
 #include "modules/checks.h"
+#include "qpainter.h"
 #include "tools/craplog/modules/store.h"
 
 #include <filesystem>
@@ -22,7 +22,7 @@ Craplog::Craplog()
         this->warnlists[ i ].emplace( 2, std::unordered_map<int, BWlist>() ); // error
         // access
         this->warnlists[ i ][ 1 ].emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists[ i ][ 1 ].emplace( 12, BWlist{ .used=false, .list={} } );
+        this->warnlists[ i ][ 1 ].emplace( 12, BWlist{ .used=true,  .list={"/shell","/.env","phpMyAdmin","/wp-login.php","/wp-content","/cgi-bin","/setup.cgi"} } );
         this->warnlists[ i ][ 1 ].emplace( 20, BWlist{ .used=false, .list={} } );
         this->warnlists[ i ][ 1 ].emplace( 21, BWlist{ .used=false, .list={} } );
         this->blacklists[ i ][ 1 ].emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
@@ -42,7 +42,7 @@ Craplog::Craplog()
     this->logs_format_stings[12][2] = "$time_iso8601 [$error_level] $pid: *$cid $error_message";
     this->logs_format_stings[13] = std::unordered_map<int, std::string>();
     this->logs_format_stings[13][1] = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken";
-    this->logs_format_stings[13][2] = "";
+    this->logs_format_stings[13][2] = ""; // !!! COMPLETE !!!
 
     // initialize format strings
     this->logs_formats[11][1] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(1), 1 );
@@ -426,11 +426,19 @@ void Craplog::startWorking()
     this->working = true;
     this->parsing = true;
     this->proceed = true;
+
+    this->perf_size = 0;
     this->total_size = 0;
     this->parsed_size = 0;
+    this->total_lines = 0;
     this->parsed_lines = 0;
-    this->access_size = 0;
-    this->error_size = 0;
+    this->total_access_size = 0;
+    this->total_error_size = 0;
+    this->parsed_access_size = 0;
+    this->parsed_error_size = 0;
+    this->blacklisted_access_size = 0;
+    this->blacklisted_error_size = 0;
+
     this->data_collection[1].clear();
     this->data_collection[2].clear();
     this->access_logs_lines.clear();
@@ -442,8 +450,6 @@ void Craplog::stopWorking()
 {
     this->working = false;
     this->parsing = false;
-    this->data_collection[1].clear();
-    this->data_collection[2].clear();
     this->used_files_hashes[1].clear();
     this->used_files_hashes[2].clear();
 }
@@ -461,9 +467,17 @@ const int Craplog::getPerfSize()
 {
     return this->perf_size;
 }
-void Craplog::sumPerfSize( const int size )
+void Craplog::sumPerfSize( const int size, const int log_type )
 {
     this->perf_size += size;
+    if ( log_type == 1 ) {
+        this->parsed_access_size += size;
+    } else if ( log_type == 2 ) {
+        this->parsed_error_size += size;
+    } else {
+        // wrong log_type
+        throw( "Unexpected LogType: " + std::to_string(log_type) );
+    }
 }
 const int Craplog::getTotalSize()
 {
@@ -477,7 +491,7 @@ const int Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
-const int Craplog::getAccessSize()
+/*const int Craplog::getAccessSize()
 {
     return this->access_size;
 }
@@ -496,13 +510,13 @@ const int Craplog::getIgnoredSize( const int log_type )
         // wrong log_type
         throw( "Unexpected LogType: " + std::to_string(log_type) );
     }
-}
-void Craplog::sumIgnoredSize( const int size, const int log_type )
+}*/
+void Craplog::sumBlacklistededSize( const int size, const int log_type )
 {
     if ( log_type == 1 ) {
-        this->ignored_access_size += size;
+        this->blacklisted_access_size += size;
     } else if ( log_type == 2 ) {
-        this->ignored_error_size += size;
+        this->blacklisted_error_size += size;
     } else {
         // wrong log_type
         throw( "Unexpected LogType: " + std::to_string(log_type) );
@@ -516,30 +530,43 @@ void Craplog::collectPerfData()
     this->perf_size    = this->parsed_size;
 }
 
+void Craplog::clearDataCollection()
+{
+    this->data_collection[1].clear();
+    this->data_collection[2].clear();
+}
+
 
 void Craplog::run()
 {
     this->startWorking();
 
-    // collect log lines
-    this->joinLogLines();
-    // parse the log lines to fill the collection
-    this->parseLogLines();
+    if ( this->proceed == true ) {
+        // collect log lines
+        this->joinLogLines();
+    }
+    if ( this->proceed == true ) {
+        // parse the log lines to fill the collection
+        this->parseLogLines();
+        // finished parsing logs
+        this->parsing = false;
+        this->parsed_size  = this->logOps.getSize();
+        this->parsed_lines = this->logOps.getLines();
+        this->perf_size    = this->parsed_size;
+    }
     // clear log lines data
     this->access_logs_lines.clear();
     this->error_logs_lines.clear();
-    // finished parsing logs
-    this->parsing = false;
-    this->parsed_size  = this->logOps.getSize();
-    this->parsed_lines = this->logOps.getLines();
-    this->perf_size    = this->parsed_size;
 
-    // store the new data
-    this->storeLogLines();
+    if ( this->proceed == true ) {
+        // store the new data
+        this->storeLogLines();
+    }
 
-
-    // insert the hashes of the used files
-    this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
+    if ( this->proceed == true ) {
+        // insert the hashes of the used files
+        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
+    }
 
     this->stopWorking();
 }
@@ -681,9 +708,11 @@ void Craplog::joinLogLines()
         if ( file.type == LogOps::LogType::Access ) {
             this->access_logs_lines.insert( this->access_logs_lines.end(), content.begin(), content.end() );
             this->used_files_hashes.at( 1 ).push_back( file.hash );
+            this->total_access_size += file.size;
         } else {
             this->error_logs_lines.insert( this->error_logs_lines.end(), content.begin(), content.end() );
             this->used_files_hashes.at( 2 ).push_back( file.hash );
+            this->total_error_size += file.size;
         }
 
         this->total_size += file.size;
@@ -818,6 +847,114 @@ void Craplog::storeLogLines()
 
         db.close();
     }
+
+}
+
+
+QString Craplog::printableSize( const int bytes )
+{
+    std::string size_str, size_sfx=" B";
+    float size = (float)bytes;
+    if (size > 1024) {
+        size /= 1024;
+        size_sfx = " KiB";
+        if (size > 1024) {
+            size /= 1024;
+            size_sfx = " MiB";
+        }
+    }
+    // cut decimals depending on how big the floor is
+    size_str = std::to_string( size );
+    int cut_index = size_str.find('.')+1;
+    if ( cut_index == 0 ) {
+            cut_index = size_str.find(',')+1;
+    }
+    int n_decimals = 3;
+    if ( size >= 100 ) {
+        n_decimals = 2;
+        if ( size >= 1000 ) {
+            n_decimals = 1;
+            if ( size >= 10000 ) {
+                n_decimals = 0;
+                cut_index --;
+            }
+        }
+    }
+    if ( cut_index >= 1 ) {
+        cut_index += n_decimals;
+        if ( cut_index > size_str.size()-1 ) {
+            cut_index = size_str.size()-1;
+        }
+    }
+    return QString::fromStdString( size_str.substr(0, cut_index ) + size_sfx );
+}
+
+
+void Craplog::makeGraphs( const QFont& font, QChartView& acc_graph, QChartView& err_graph, QChartView& traf_graph )
+{
+    QString access_chart_name      = QMessageBox::tr("Access Logs Breakdown"),
+            error_chart_name       = QMessageBox::tr("Error Logs Breakdown"),
+            parsed_slice_name      = QMessageBox::tr("Parsed"),
+            blacklisted_slice_name = QMessageBox::tr("Blacklisted"),
+            ignored_slice_name     = QMessageBox::tr("Ignored");
+
+    // access logs donut chart
+    QPieSeries *access_donut = new QPieSeries();
+    access_donut->setName( this->printableSize( this->total_access_size ) );
+    access_donut->append(
+        parsed_slice_name + "@" + this->printableSize( this->parsed_access_size ),
+        this->parsed_access_size );
+    access_donut->append(
+        blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_access_size ),
+        this->blacklisted_access_size);
+    access_donut->append(
+        ignored_slice_name + "@" + this->printableSize( this->total_access_size-this->parsed_access_size-this->blacklisted_access_size ),
+        this->total_access_size-this->parsed_access_size-this->blacklisted_access_size );
+
+    DonutBreakdown *accessBreakdown = new DonutBreakdown();
+    accessBreakdown->setAnimationOptions( QChart::AllAnimations );
+    accessBreakdown->setTitle( access_chart_name );
+    if ( this->total_access_size > 0 ) {
+        accessBreakdown->legend()->setAlignment( Qt::AlignRight );
+        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::darkCyan, font );
+    } else {
+        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::white, font );
+        access_donut->setVisible( false );
+    }
+
+    acc_graph.setChart( accessBreakdown );
+    acc_graph.setRenderHint( QPainter::Antialiasing );
+
+
+    // error logs donut chart
+    QPieSeries *error_donut = new QPieSeries();
+    error_donut->setName( this->printableSize( this->total_error_size ) );
+    error_donut->append(
+        parsed_slice_name + "@" + this->printableSize( this->parsed_error_size ),
+        this->parsed_error_size );
+    error_donut->append(
+        blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_error_size ),
+        this->blacklisted_error_size );
+    error_donut->append(
+        ignored_slice_name + "@" + this->printableSize( this->total_error_size-this->parsed_error_size-this->blacklisted_error_size ),
+        this->total_error_size-this->parsed_error_size-this->blacklisted_error_size );
+
+    DonutBreakdown *errorBreakdown = new DonutBreakdown();
+    errorBreakdown->setAnimationOptions( QChart::AllAnimations );
+    errorBreakdown->setTitle( error_chart_name );
+    if ( this->total_error_size > 0 ) {
+        errorBreakdown->legend()->setAlignment( Qt::AlignLeft );
+        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::darkRed, font );
+    } else {
+        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::white, font );
+        error_donut->setVisible( false );
+    }
+
+    err_graph.setChart( errorBreakdown );
+    err_graph.setRenderHint( QPainter::Antialiasing );
+
+
+    // logs traffic bars chart
 
 }
 
