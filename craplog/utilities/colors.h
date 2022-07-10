@@ -13,8 +13,8 @@ class ColorSec
 public:
     ColorSec();
 
-    static std::unordered_map<std::string, QColor> getColors();
-    static std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes();
+    static const std::unordered_map<std::string, QColor> getColors();
+    static const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes();
 };
 
 #endif // COLORS_H

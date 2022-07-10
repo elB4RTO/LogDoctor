@@ -21,8 +21,8 @@ public:
         std::vector<std::string> fields;
     };
 
-    LogsFormat processFormatString(const std::string& formatted_string, const int log_type, const int web_server_id ) const;
-    LogsFormat processApacheFormatString(const std::string& formatted_string, const int log_type ) const;
+    const LogsFormat processFormatString(const std::string& formatted_string, const int log_type, const int web_server_id );
+    const LogsFormat processApacheFormatString(const std::string& formatted_string, const int log_type );
 
 private:
     std::unordered_map<std::string, std::string>

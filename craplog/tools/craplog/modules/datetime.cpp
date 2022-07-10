@@ -12,7 +12,7 @@ DateTimeOps::DateTimeOps()
 }
 
 
-std::string DateTimeOps::convertMonth( const std::string& month )
+const std::string DateTimeOps::convertMonth( const std::string& month )
 {
     std::string m;
     if ( month == "Jan" ) {
@@ -47,7 +47,7 @@ std::string DateTimeOps::convertMonth( const std::string& month )
 
 
 
-std::vector<std::string> DateTimeOps::processDateTime( const std::string& datetime_, const std::string& format )
+const std::vector<std::string> DateTimeOps::processDateTime( const std::string& datetime_, const std::string& format )
 {
     std::string aux, datetime=datetime_;
     std::string year="", month="", day="", hour="", minute="", second="";
