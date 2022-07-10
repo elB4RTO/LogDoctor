@@ -49,18 +49,25 @@ MainWindow::MainWindow( QWidget *parent )
         this->font_size );
 
     // parent font for every tab
-    this->ui->CrapTabs->setFont( this->FONTS["main_big"] );
+    this->ui->CrapTabs->setFont( this->FONTS.at("main_big") );
 
     // TreeView for the LogFiles
-    this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS["main_small"] );
-    this->ui->listLogFiles->setFont( this->FONTS["main"] );
+    this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS.at("main_small") );
+    this->ui->listLogFiles->setFont( this->FONTS.at("main") );
     // TextBrowser for the LogFiles
-    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES[1] );
+    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES.at(1) );
     this->TB.setFontFamily( this->main_font_family );
-    this->TB.setFont( QFont(
-        this->main_font_family,
-        this->font_size ));
+    this->TB.setFont( this->FONTS.at("main") );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
+    // MakeStats labels
+    this->ui->label_MakeStats_Size->setFont( this->FONTS.at("main") );
+    this->ui->label_MakeStats_Lines->setFont( this->FONTS.at("main") );
+    this->ui->label_MakeStats_Time->setFont( this->FONTS.at("main") );
+    this->ui->label_MakeStats_Speed->setFont( this->FONTS.at("main") );
+    // MakeStats charts
+    this->ui->chart_MakeStats_Access->setFont( this->FONTS.at("main") );
+    this->ui->chart_MakeStats_Error->setFont( this->FONTS.at("main") );
+    this->ui->chart_MakeStats_Traffic->setFont( this->FONTS.at("main") );
 
 
     ////////////////////////
@@ -621,7 +628,9 @@ void MainWindow::craplogFinished()
 {
     // update the perf data one last time, just in case
     this->update_MakeStats_labels();
+    this->craplog.makeGraphs( this->FONTS.at("main_small"), *this->ui->chart_MakeStats_Access, *this->ui->chart_MakeStats_Error, *this->ui->chart_MakeStats_Traffic );
     // clean up temp vars
+    this->craplog.clearDataCollection();
     this->craplog.logOps.resetPerfData();
 
     // refresh the logs list

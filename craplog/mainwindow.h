@@ -6,6 +6,7 @@
 #include "qmessagebox.h"
 
 #include "qtreewidget.h"
+#include "qchartview.h"
 
 #include <thread>
 
@@ -77,7 +78,7 @@ private:
     //// GENERAL USE ////
     /////////////////////
     // get a printable size, from Bytes to the best fit
-    QString printableSize(const int bytes ),
+    QString printableSize( const int bytes ),
             printableSpeed( const int bytes, const int secs ),
             printableTime( const int seconds );
 
@@ -116,7 +117,9 @@ private:
     //////////////////////////
     //// LOGS PERFORMANCE ////
     void update_MakeStats_labels(),
-         reset_MakeStats_labels();
+         update_MakeStats_graphs(),
+         reset_MakeStats_labels(),
+         reset_MakeStats_graphs();
 
 };
 #endif // MAINWINDOW_H
