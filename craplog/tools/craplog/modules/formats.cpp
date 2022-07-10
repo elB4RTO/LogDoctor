@@ -172,7 +172,7 @@ FormatOps::FormatOps()
 }
 
 
-FormatOps::LogsFormat FormatOps::processFormatString( const std::string& f_str, const int l_type, const int ws_id ) const
+const FormatOps::LogsFormat FormatOps::processFormatString( const std::string& f_str, const int l_type, const int ws_id )
 {
     std::unordered_map<std::string, std::string> f_map;
     std::vector<std::string> f_flds;
@@ -309,7 +309,7 @@ FormatOps::LogsFormat FormatOps::processFormatString( const std::string& f_str, 
 
 
 
-FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str, const int l_type ) const
+const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str, const int l_type )
 {
     std::unordered_map<std::string, std::string> f_map;
     std::unordered_map<std::string ,std::unordered_map<std::string, std::string>> f_map_v;

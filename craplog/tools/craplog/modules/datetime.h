@@ -10,11 +10,11 @@ class DateTimeOps
 public:
     DateTimeOps();
 
-    static std::vector<std::string> processDateTime( const std::string& datetime, const std::string& format );
+    static const std::vector<std::string> processDateTime( const std::string& datetime, const std::string& format );
 
 private:
 
-    static std::string convertMonth( const std::string& month );
+    static const std::string convertMonth( const std::string& month );
 
 };
 

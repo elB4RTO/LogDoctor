@@ -16,13 +16,13 @@ class RichText
 public:
     RichText();
 
-    static QString enrichLogs(
+    static const QString enrichLogs(
         const std::string& content,
         const FormatOps::LogsFormat& logs_format,
         const TextBrowser& TB );
 
-    static QString richLogsDefault();
-    static QString richLogsFailure();
+    static const QString richLogsDefault();
+    static const QString richLogsFailure();
 };
 
 #endif // RTF_H

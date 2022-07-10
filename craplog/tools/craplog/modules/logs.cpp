@@ -366,7 +366,7 @@ LogOps::LogType LogOps::comparativeTypeCheck( const std::string& line, const For
 
 
 
-std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
+const std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
 {
     std::unordered_map<int, std::string> data;
     std::string sep, fld, fld_str, aux_fld_str, aux_sep1, aux_sep2;
@@ -653,7 +653,7 @@ std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line,
     return data;
 }
 
-std::vector<std::unordered_map<int, std::string>> LogOps::parseLines( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
+const std::vector<std::unordered_map<int, std::string> > LogOps::parseLines( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
 {
     std::vector<std::unordered_map<int, std::string>> collection;
     collection.reserve( lines.size() );

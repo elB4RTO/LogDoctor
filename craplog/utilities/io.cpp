@@ -104,7 +104,7 @@ bool IOutils::renameAsCopy( const std::string& path )
 
 
 
-std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines, const bool strip_lines ) throw()
+const std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines, const bool strip_lines ) throw()
 {
     // read rhe first N lines only
     bool result = true;
