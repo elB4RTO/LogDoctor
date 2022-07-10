@@ -7,7 +7,7 @@ ColorSec::ColorSec()
 
 }
 
-std::unordered_map<std::string, QColor> ColorSec::getColors()
+const std::unordered_map<std::string, QColor> ColorSec::getColors()
 {
     std::unordered_map<std::string, QColor> colors;
                   // greyscale
@@ -25,7 +25,7 @@ std::unordered_map<std::string, QColor> ColorSec::getColors()
 }
 
 
-std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec::getColorSchemes()
+const std::unordered_map<int, std::unordered_map<std::string, QString> > ColorSec::getColorSchemes()
 {
     std::unordered_map<int, std::unordered_map<std::string, QString>> scheme;
     scheme.emplace( 1, std::unordered_map<std::string, QString>() );
