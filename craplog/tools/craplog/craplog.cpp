@@ -851,7 +851,7 @@ void Craplog::storeLogLines()
 }
 
 
-QString Craplog::printableSize( const int bytes )
+const QString Craplog::printableSize( const int bytes )
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -890,13 +890,33 @@ QString Craplog::printableSize( const int bytes )
 }
 
 
-void Craplog::makeGraphs( const QFont& font, QChartView& acc_graph, QChartView& err_graph, QChartView& traf_graph )
+const std::vector<int> Craplog::calcDayTraffic( const int log_type )
+{
+    std::vector<int> traffic = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    if ( this->data_collection.at( log_type ).size() > 0 ) {
+        for ( const auto& data : this->data_collection.at( log_type ) ) {
+            if ( data.find( 4 ) != data.end() ) {
+                try {
+                    traffic.at( std::stoi(data.at(4)) ) ++;
+                } catch (...) {
+                    continue;
+                }
+            }
+        }
+    }
+    return traffic;
+}
+
+void Craplog::makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& err_chart, QChartView& traf_chart )
 {
     QString access_chart_name      = QMessageBox::tr("Access Logs Breakdown"),
             error_chart_name       = QMessageBox::tr("Error Logs Breakdown"),
             parsed_slice_name      = QMessageBox::tr("Parsed"),
             blacklisted_slice_name = QMessageBox::tr("Blacklisted"),
-            ignored_slice_name     = QMessageBox::tr("Ignored");
+            ignored_slice_name     = QMessageBox::tr("Ignored"),
+            traffic_chart_name     = QMessageBox::tr("Time of Day Logs Traffic Ensemble"),
+            access_bar_name        = QMessageBox::tr("Access Logs"),
+            error_bar_name         = QMessageBox::tr("Error Logs");
 
     // access logs donut chart
     QPieSeries *access_donut = new QPieSeries();
@@ -922,8 +942,8 @@ void Craplog::makeGraphs( const QFont& font, QChartView& acc_graph, QChartView& 
         access_donut->setVisible( false );
     }
 
-    acc_graph.setChart( accessBreakdown );
-    acc_graph.setRenderHint( QPainter::Antialiasing );
+    acc_chart.setChart( accessBreakdown );
+    acc_chart.setRenderHint( QPainter::Antialiasing );
 
 
     // error logs donut chart
@@ -950,11 +970,62 @@ void Craplog::makeGraphs( const QFont& font, QChartView& acc_graph, QChartView& 
         error_donut->setVisible( false );
     }
 
-    err_graph.setChart( errorBreakdown );
-    err_graph.setRenderHint( QPainter::Antialiasing );
+    err_chart.setChart( errorBreakdown );
+    err_chart.setRenderHint( QPainter::Antialiasing );
 
 
     // logs traffic bars chart
+    QColor col;
+    QBarSet *access_bars = new QBarSet( access_bar_name );
+    col = Qt::GlobalColor::darkCyan;
+    access_bars->setColor( col.lighter( 130 ) );
+    QBarSet *error_bars  = new QBarSet( error_bar_name );
+    col = Qt::GlobalColor::darkRed;
+    error_bars->setColor( col.lighter( 130 ) );
+
+    int max_traf = 0;
+    for ( const int& tfc : this->calcDayTraffic( 1 ) ) {
+        *access_bars << tfc;
+        if ( tfc > max_traf ) {
+            max_traf = tfc;
+        }
+    }
+    for ( const int& tfc : this->calcDayTraffic( 2 ) ) {
+        *error_bars << tfc;
+        if ( tfc > max_traf ) {
+            max_traf = tfc;
+        }
+    }
+
+    QBarSeries *bars = new QBarSeries();
+    bars->append( access_bars );
+    bars->append( error_bars );
+
+    QChart *t_chart = new QChart();
+    t_chart->addSeries( bars );
+    t_chart->setTitle( traffic_chart_name );
+    t_chart->setAnimationOptions( QChart::SeriesAnimations );
+
+    QStringList categories;
+    categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
+               << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append( categories );
+    t_chart->addAxis( axisX, Qt::AlignBottom );
+    bars->attachAxis( axisX );
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setLabelFormat( "%d" );
+    axisY->setRange( 0, max_traf );
+    t_chart->addAxis( axisY, Qt::AlignLeft );
+    bars->attachAxis( axisY) ;
+
+    t_chart->legend()->setVisible( true );
+    t_chart->legend()->setAlignment( Qt::AlignBottom );
+
+    traf_chart.setChart( t_chart );
+    traf_chart.setRenderHint( QPainter::Antialiasing );
 
 }
 
