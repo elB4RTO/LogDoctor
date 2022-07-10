@@ -6,6 +6,8 @@
 
 #include <QMainWindow>
 
+#include "utilities.h"
+#include "modules/charts/donuts.h"
 #include "modules/dialogs.h"
 #include "tools/craplog/modules/formats.h"
 #include "tools/craplog/modules/hash.h"
@@ -88,20 +90,22 @@ public:
     // job related
     const bool checkStuff();
     void startWorking(),
-         stopWorking();
+         stopWorking(),
+         makeGraphs( const QFont& font, QChartView& acc_graph, QChartView& err_graph, QChartView& traf_graph ),
+         clearDataCollection();
     const bool isWorking(),
                isParsing();
     // job performancea
     void collectPerfData(),
-         sumIgnoredSize( const int size, const int log_type ),
-         sumPerfSize( const int size );
+         sumBlacklistededSize( const int size, const int log_type ),
+         sumPerfSize( const int size, const int log_type );
     const int getPerfSize(),
-              getIgnoredSize( const int log_type ),
               getTotalSize(),
               getParsedSize(),
-              getParsedLines(),
-              getAccessSize(),
-              getErrorSize();
+              getParsedLines();
+              //getAccessSize(),
+              //getErrorSize(),
+              //getBlacklistedSize( const int log_type );
 
 private:
     // quantoty of informational dialogs to display
@@ -119,14 +123,18 @@ private:
     int perf_size = 0,
         total_size = 0,
         parsed_size = 0,
-        access_size = 0,
-        error_size = 0,
-        ignored_access_size = 0,
-        ignored_error_size = 0,
-        total_lines = 0,
+        total_lines  = 0,
         parsed_lines = 0,
-        access_lines = 0,
-        error_lines = 0;
+
+        total_access_size = 0,
+        total_error_size  = 0,
+        parsed_access_size = 0,
+        parsed_error_size  = 0,
+        blacklisted_access_size = 0,
+        blacklisted_error_size  = 0;
+    // chart related
+    QString printableSize( const int bytes );
+
     // data collection
     /* structure
      *      { log_type_id : [ { log_field_id : "data" } ] }
