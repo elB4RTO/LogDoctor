@@ -91,7 +91,7 @@ public:
     const bool checkStuff();
     void startWorking(),
          stopWorking(),
-         makeGraphs( const QFont& font, QChartView& acc_graph, QChartView& err_graph, QChartView& traf_graph ),
+         makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& err_chart, QChartView& traf_chart ),
          clearDataCollection();
     const bool isWorking(),
                isParsing();
@@ -133,7 +133,8 @@ private:
         blacklisted_access_size = 0,
         blacklisted_error_size  = 0;
     // chart related
-    QString printableSize( const int bytes );
+    const QString printableSize( const int bytes );
+    const std::vector<int> calcDayTraffic( const int log_type );
 
     // data collection
     /* structure
