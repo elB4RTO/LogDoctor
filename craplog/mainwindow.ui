@@ -59,6 +59,12 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>88</width>
+        <height>44</height>
+       </size>
+      </property>
       <property name="movable">
        <bool>true</bool>
       </property>
@@ -72,11 +78,16 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <attribute name="icon">
+        <iconset resource="resources/resources.qrc">
+         <normaloff>:/icons/icons/make_off.png</normaloff>
+         <normalon>:/icons/icons/make_on.png</normalon>:/icons/icons/make_off.png</iconset>
+       </attribute>
        <attribute name="title">
-        <string notr="true"></string>
+        <string/>
        </attribute>
        <attribute name="toolTip">
-        <string>Parse logs to create statistics</string>
+        <string>Parse logs</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -98,7 +109,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>722</width>
+             <width>706</width>
              <height>441</height>
             </rect>
            </property>
@@ -410,7 +421,7 @@ hr { height: 1px; border-width: 0; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>722</width>
+             <width>706</width>
              <height>441</height>
             </rect>
            </property>
@@ -945,38 +956,80 @@ hr { height: 1px; border-width: 0; }
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <attribute name="icon">
+        <iconset resource="resources/resources.qrc">
+         <normaloff>:/icons/icons/view_off.png</normaloff>
+         <normalon>:/icons/icons/view_on.png</normalon>:/icons/icons/view_off.png</iconset>
+       </attribute>
        <attribute name="title">
-        <string notr="true"></string>
+        <string notr="true"/>
        </attribute>
        <attribute name="toolTip">
         <string>View your statistics</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QFrame" name="frame_2">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
           </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+          <property name="iconSize">
+           <size>
+            <width>192</width>
+            <height>32</height>
+           </size>
           </property>
+          <property name="documentMode">
+           <bool>true</bool>
+          </property>
+          <property name="movable">
+           <bool>true</bool>
+          </property>
+          <property name="tabBarAutoHide">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="Count">
+           <attribute name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/icons/icons/count_off.png</normaloff>
+             <normalon>:/icons/icons/count_on.png</normalon>:/icons/icons/count_off.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Group and count identical elements in a single date</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="DayTime">
+           <attribute name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/icons/icons/daytime_off.png</normaloff>
+             <normalon>:/icons/icons/daytime_on.png</normalon>:/icons/icons/daytime_off.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Time of day perspective: sum of values for a single date, mean value for a period</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="Relational">
+           <attribute name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/icons/icons/relational_off.png</normaloff>
+             <normalon>:/icons/icons/relational_on.png</normalon>:/icons/icons/relational_off.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Relational chart for two elements in a period</string>
+           </attribute>
+          </widget>
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="Up">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <attribute name="title">
-        <string notr="true"></string>
-       </attribute>
-       <attribute name="toolTip">
-        <string>Update Craplog</string>
-       </attribute>
       </widget>
       <widget class="QWidget" name="Set">
        <property name="sizePolicy">
@@ -985,8 +1038,13 @@ hr { height: 1px; border-width: 0; }
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <attribute name="icon">
+        <iconset resource="resources/resources.qrc">
+         <normaloff>:/icons/icons/config_off.png</normaloff>
+         <normalon>:/icons/icons/config_on.png</normalon>:/icons/icons/config_off.png</iconset>
+       </attribute>
        <attribute name="title">
-        <string notr="true"></string>
+        <string/>
        </attribute>
        <attribute name="toolTip">
         <string>Configure Craplog</string>
