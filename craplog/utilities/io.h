@@ -22,12 +22,12 @@ public:
     static bool checkDir( const std::string& path, const bool readable=false, const bool writable=false );
 
     // rename an entry with a trailing '.copy'
-    static bool renameAsCopy( const std::string& path );
+    static bool renameAsCopy( const std::string& path ) noexcept(true);
 
     // read a defined amount of lines (from the start)
-    static const std::vector<std::string> readLines( const std::string& path, const int n_lines=16, const bool strip_lines=true ) throw();
+    static const std::vector<std::string> readLines( const std::string& path, const int n_lines=16, const bool random=false, const bool strip_lines=true );
     // read the entire content
-    static std::string readFile( const std::string& path ) throw();
+    static const std::string readFile( const std::string& path );
 };
 
 #endif // IO_H
