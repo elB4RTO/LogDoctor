@@ -2,6 +2,7 @@
 #include "io.h"
 
 #include "utilities/strings.h"
+#include "utilities/vectors.h"
 
 #include <fstream>
 #include <filesystem>
@@ -27,7 +28,7 @@ bool IOutils::isFile( const std::string& path )
     }
     return result;
 }
-// returns whether a file is readable
+// returns whether a file is readable/writable
 bool IOutils::checkFile( const std::string& path, const bool readable, const bool writable )
 {
     bool result = false;
@@ -58,7 +59,7 @@ bool IOutils::isDir( const std::string& path )
     }
     return result;
 }
-// returns whether a file is readable
+// returns whether a folder is readable/writable
 bool IOutils::checkDir( const std::string& path, const bool readable, const bool writable )
 {
     bool result = false;
@@ -82,7 +83,7 @@ bool IOutils::checkDir( const std::string& path, const bool readable, const bool
 
 
 // rename an entry with a trailing '.copy'
-bool IOutils::renameAsCopy( const std::string& path )
+bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
 {
     bool result = true;
     std::string new_path = path;
@@ -104,50 +105,83 @@ bool IOutils::renameAsCopy( const std::string& path )
 
 
 
-const std::vector<std::string> IOutils::readLines( const std::string& path, const int n_lines, const bool strip_lines ) throw()
+const std::vector<std::string> IOutils::readLines(const std::string& path, const int n_lines, const bool random, const bool strip_lines )
 {
     // read rhe first N lines only
     bool result = true;
     std::ifstream file;
-    std::vector<std::string> lines;
     std::string line;
+    std::vector<std::string> lines, aux_lines;
     try {
-        constexpr std::size_t read_size = std::size_t(4096);
-        file = std::ifstream(path);
-        if ( file.is_open() == false ) {
-            throw std::ios_base::failure( "file is not open" );
-        }
-        // add bit exceptions
-        file.exceptions(std::ifstream::failbit);
-        file.exceptions(std::ios_base::badbit);
-        // get non-empty lines
-        int n=0;
-        while (n < n_lines) {
-            if ( file.good() == false ) {
-                // hopefully nothing more to read
-                break;
+        if ( random == false ) {
+            // read the initial lines of the file
+            constexpr std::size_t read_size = std::size_t(4096);
+            file = std::ifstream(path);
+            if ( file.is_open() == false ) {
+                throw std::ios_base::failure( "file is not open" );
             }
-            getline(file, line);
-            if ( strip_lines == true ) {
-                line = StringOps::strip( line );
+            // add bit exceptions
+            file.exceptions(std::ifstream::failbit);
+            file.exceptions(std::ios_base::badbit);
+            // get non-empty lines
+            int n=0;
+            while (n < n_lines) {
+                if ( file.good() == false ) {
+                    // hopefully nothing more to read
+                    break;
+                }
+                getline(file, line);
+                if ( strip_lines == true ) {
+                    line = StringOps::strip( line );
+                }
+                if ( line.size() == 0 ) {
+                  continue;
+                }
+                // succesfully catched a line
+                lines.push_back( line );
+                n++;
             }
-            if ( line.size() == 0 ) {
-              continue;
+        } else {
+            // pick random lines
+            aux_lines = StringOps::split( IOutils::readFile( path ) );
+            int max = aux_lines.size();
+            if ( max > 0 ) {
+                time_t nTime;
+                srand((unsigned) time(&nTime));
+                for( int i=0 ; i<n_lines ; i++ ) {
+                    while (true) {
+                        line = aux_lines.at(rand() % max);
+                        if ( VecOps::contains( lines, line ) == true ) {
+                            continue;
+                        }
+                        break;
+                    }
+                    if ( strip_lines == true ) {
+                        line = StringOps::strip( line );
+                    }
+                    lines.push_back( line );
+                }
             }
-            // succesfully catched a line
-            lines.push_back( line );
-            n++;
+            aux_lines.clear();
         }
     } catch (const std::ios_base::failure& err) {
         // failed reading
         lines.clear();
+        aux_lines.clear();
         result = false;
-        // >> err.what() << // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+        if ( file.is_open() ) {
+            file.close();
+        }
+        throw err;
     } catch (...) {
         lines.clear();
+        aux_lines.clear();
         result = false;
+        if ( file.is_open() ) {
+            file.close();
+        }
+        throw std::exception();
     }
-
     if ( file.is_open() ) {
         file.close();
     }
@@ -155,7 +189,7 @@ const std::vector<std::string> IOutils::readLines( const std::string& path, cons
 }
 
 
-std::string IOutils::readFile( const std::string& path ) throw()
+const std::string IOutils::readFile( const std::string& path )
 {
     // read the whole file
     std::ifstream file;
@@ -179,9 +213,18 @@ std::string IOutils::readFile( const std::string& path ) throw()
     } catch (const std::ios_base::failure& err) {
         // failed reading
         content = "";
-        // >> err.what() << // !!! PUT A DIALOG ERROR MESSAGE HERE !!!
+        if ( file.is_open() == true ) {
+            file.close();
+        }
+        throw err;
+    } catch (...) {
+        content = "";
+        if ( file.is_open() == true ) {
+            file.close();
+        }
+        throw std::exception();
     }
-    if ( file.is_open() ) {
+    if ( file.is_open() == true ) {
         file.close();
     }
     return content;

@@ -54,10 +54,12 @@ bool StringOps::isNumeric( char chr )
 }
 
 
-bool StringOps::startsWith( const std::string& str, const std::string& flag)
+bool StringOps::startsWith( const std::string& str, const std::string& flag )
 {
     bool result = false;
-    if ( flag.size() <= str.size() ) {
+    if ( flag.size() == 0 ) {
+        result = true;
+    } else if ( flag.size() <= str.size() ) {
         result = true;
         for ( int i=0; i<flag.size(); i++ ) {
             if ( str.at(i) != flag.at(i) ) {
