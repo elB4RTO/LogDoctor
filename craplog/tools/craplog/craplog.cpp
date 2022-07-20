@@ -302,7 +302,7 @@ void Craplog::scanLogsDir()
             // check the readability
             if ( IOutils::checkFile( path, true ) == false ) {
                 if ( this->dialog_level == 2 ) {
-                    DialogSec::warnEmptyFile( nullptr, name );
+                    DialogSec::warnFileNotReadable( nullptr, name );
                 }
                 continue;
             }
@@ -310,7 +310,7 @@ void Craplog::scanLogsDir()
             bool proceed = true;
             std::vector<std::string> content;
             try {
-                content = IOutils::readLines( path );
+                content = IOutils::readLines( path, 32, true );
             } catch (const std::ios_base::failure& err) {
                 // failed reading
                 proceed = false;
@@ -345,7 +345,7 @@ void Craplog::scanLogsDir()
 
                 std::string hash = this->hashOps.digestFile( path );
 
-                auto logfile = LogFile{
+                LogFile logfile = {
                     .selected = false,
                     .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS, log_type ),
                     .size = size,

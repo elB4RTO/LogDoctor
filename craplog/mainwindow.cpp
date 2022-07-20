@@ -51,6 +51,10 @@ MainWindow::MainWindow( QWidget *parent )
     // parent font for every tab
     this->ui->CrapTabs->setFont( this->FONTS.at("main_big") );
 
+    // WebServers buttons for the LogFiles
+    this->ui->button_LogFiles_Apache->setFont( this->FONTS.at("main") );
+    this->ui->button_LogFiles_Nginx->setFont( this->FONTS.at("main") );
+    this->ui->button_LogFiles_Iis->setFont( this->FONTS.at("main") );
     // TreeView for the LogFiles
     this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS.at("main_small") );
     this->ui->listLogFiles->setFont( this->FONTS.at("main") );
@@ -91,7 +95,7 @@ MainWindow::MainWindow( QWidget *parent )
     // disable the unallowed WebServers
     int ws = 14;
     for ( int id=11; id<14; id++ ) {
-        if ( this->allowed_web_servers[ id ] == true ) {
+        if ( this->allowed_web_servers.at( id ) == true ) {
             ws = ( id < ws ) ? id : ws;
         } else {
             switch (id) {
@@ -105,7 +109,7 @@ MainWindow::MainWindow( QWidget *parent )
         // no WS is allowed (???), fallback to the default one
         ws = 11;
         this->craplog.setCurrentWSID( 11 );
-        this->allowed_web_servers[ 11 ] = true;
+        this->allowed_web_servers.at( 11 ) = true;
         this->on_button_LogFiles_Apache_clicked();
         this->ui->button_LogFiles_Apache->setEnabled( true );
     }
