@@ -7,18 +7,20 @@
     <qresource prefix="/icons">
         <file alias="Craplogo">icons/crapicon.svg</file>
 
-        <file>icons/make_on.png</file>
         <file>icons/make_off.png</file>
-        <file>icons/view_on.png</file>
+        <file>icons/make_on.png</file>
         <file>icons/view_off.png</file>
-        <file>icons/config_on.png</file>
+        <file>icons/view_on.png</file>
         <file>icons/config_off.png</file>
+        <file>icons/config_on.png</file>
 
-        <file>icons/count_on.png</file>
         <file>icons/count_off.png</file>
-        <file>icons/daytime_on.png</file>
+        <file>icons/count_on.png</file>
+        <file>icons/speed_off.png</file>
+        <file>icons/speed_on.png</file>
         <file>icons/daytime_off.png</file>
-        <file>icons/relational_on.png</file>
+        <file>icons/daytime_on.png</file>
         <file>icons/relational_off.png</file>
+        <file>icons/relational_on.png</file>
     </qresource>
 </RCC>
