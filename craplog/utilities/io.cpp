@@ -146,20 +146,27 @@ const std::vector<std::string> IOutils::readLines(const std::string& path, const
             aux_lines = StringOps::split( IOutils::readFile( path ) );
             int max = aux_lines.size();
             if ( max > 0 ) {
-                time_t nTime;
-                srand((unsigned) time(&nTime));
-                for( int i=0 ; i<n_lines ; i++ ) {
-                    while (true) {
-                        line = aux_lines.at(rand() % max);
-                        if ( VecOps::contains( lines, line ) == true ) {
-                            continue;
+                if ( max <= n_lines ) {
+                    lines = aux_lines;
+                } else {
+                    time_t nTime;
+                    srand((unsigned) time(&nTime));
+                    int index;
+                    std::vector<int> picked_indexes;
+                    for( int i=0 ; i<n_lines ; i++ ) {
+                        while (true) {
+                            index = rand() % max;
+                            if ( VecOps::contains( picked_indexes, index ) == true ) {
+                                continue;
+                            }
+                            break;
                         }
-                        break;
+                        line = aux_lines.at( index );
+                        if ( strip_lines == true ) {
+                            line = StringOps::strip( line );
+                        }
+                        lines.push_back( line );
                     }
-                    if ( strip_lines == true ) {
-                        line = StringOps::strip( line );
-                    }
-                    lines.push_back( line );
                 }
             }
             aux_lines.clear();
