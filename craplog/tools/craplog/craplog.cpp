@@ -310,6 +310,7 @@ void Craplog::scanLogsDir()
             bool proceed = true;
             std::vector<std::string> content;
             try {
+                // read 32 random lines
                 content = IOutils::readLines( path, 32, true );
             } catch (const std::ios_base::failure& err) {
                 // failed reading
