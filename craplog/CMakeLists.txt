@@ -64,6 +64,9 @@ set(PROJECT_SOURCES
         tools/craplog/modules/store.h
         tools/craplog/modules/store.cpp
 
+        tools/crapview/crapview.h
+        tools/crapview/crapview.cpp
+
         resources/resources.qrc
         ${TS_FILES}
 )
