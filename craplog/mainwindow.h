@@ -13,6 +13,7 @@
 #include "utilities.h"
 #include "modules.h"
 #include "tools/craplog/craplog.h"
+#include "tools/crapview/crapview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,6 +30,12 @@ public:
     //void operator()( int a );
 
 private slots:
+    // custom
+    void wait_ActiveWindow();
+
+    void update_Craplog_PerfData();
+
+    // Qt's
     void on_button_LogFiles_ViewFile_clicked();
 
     void on_checkBox_LogFiles_CheckAll_stateChanged(int arg1);
@@ -47,10 +54,13 @@ private slots:
 
     void on_button_MakeStats_Start_clicked();
 
-    // custom
-    void wait_ActiveWindow();
+    void on_box_StatsSpeed_WebServer_currentIndexChanged(int index);
 
-    void update_Craplog_PerfData();
+    void on_box_StatsSpeed_Year_currentIndexChanged(int index);
+
+    void on_box_StatsSpeed_Month_currentIndexChanged(int index);
+
+    void on_button_StatsSpeed_Draw_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -120,6 +130,14 @@ private:
          update_MakeStats_graphs(),
          reset_MakeStats_labels(),
          reset_MakeStats_graphs();
+
+
+    //////////////////
+    //// CRAPVIEW ////
+    //////////////////
+    Crapview crapview;
+    // refresh dates: query a new collection from the db and apply to the tabs
+    void refreshStatsDates();
 
 };
 #endif // MAINWINDOW_H
