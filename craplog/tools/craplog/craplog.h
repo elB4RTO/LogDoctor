@@ -108,7 +108,7 @@ public:
               //getBlacklistedSize( const int log_type );
 
 private:
-    // quantoty of informational dialogs to display
+    // quantity of informational dialogs to display
     int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
 
     // databases paths
