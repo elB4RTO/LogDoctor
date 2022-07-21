@@ -6,6 +6,8 @@
 
 #include <chrono>
 
+#include <iostream> // !!! REMOVE !!!
+
 
 MainWindow::MainWindow( QWidget *parent )
     : QMainWindow(parent)
@@ -73,12 +75,20 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->chart_MakeStats_Error->setFont( this->FONTS.at("main") );
     this->ui->chart_MakeStats_Traffic->setFont( this->FONTS.at("main") );
 
+    // StatsSpeed table
+    this->ui->table_StatsSpeed_Fields->setFont( this->FONTS.at("main") );
+
+    // adjust LogsList headers width
+    this->ui->listLogFiles->header()->resizeSection(0,200);
+    this->ui->listLogFiles->header()->resizeSection(1,100);
+
 
     ////////////////////////
     //// INITIALIZATION ////
     // sqlite databases paths
     this->db_stats_path  = "collection.db";//"~/.craplog/collection.db"; !!! RESTORE
     this->db_hashes_path = "hashes.db";//"~/.craplog/hashes.db"; !!! RESTORE
+    this->crapview.setDbPath( this->db_stats_path );
     // WebServers for the LogsList
     this->allowed_web_servers[11] = true; // apache2
     this->allowed_web_servers[12] = true; // nginx
@@ -94,28 +104,50 @@ MainWindow::MainWindow( QWidget *parent )
     //// POLISHING ////
     // disable the unallowed WebServers
     int ws = 14;
-    for ( int id=11; id<14; id++ ) {
+    for ( int id=13; id>10; id-- ) {
         if ( this->allowed_web_servers.at( id ) == true ) {
             ws = ( id < ws ) ? id : ws;
         } else {
             switch (id) {
-                case 11: this->ui->button_LogFiles_Apache->setEnabled( false ); break;
-                case 12: this->ui->button_LogFiles_Nginx->setEnabled( false ); break;
-                case 13: this->ui->button_LogFiles_Iis->setEnabled( false ); break;
+                case 11:
+                    this->ui->button_LogFiles_Apache->setEnabled( false );
+                    this->ui->box_StatsCount_WebServer->removeItem( 0 );
+                    this->ui->box_StatsSpeed_WebServer->removeItem( 0 );
+                    this->ui->box_StatsDay_WebServer->removeItem(   0 );
+                    this->ui->box_StatsRelat_WebServer->removeItem( 0 );
+                    break;
+                case 12:
+                    this->ui->button_LogFiles_Nginx->setEnabled( false );
+                    this->ui->box_StatsCount_WebServer->removeItem( 1 );
+                    this->ui->box_StatsSpeed_WebServer->removeItem( 1 );
+                    this->ui->box_StatsDay_WebServer->removeItem(   1 );
+                    this->ui->box_StatsRelat_WebServer->removeItem( 1 );
+                    break;
+                case 13:
+                    this->ui->button_LogFiles_Iis->setEnabled( false );
+                    this->ui->box_StatsCount_WebServer->removeItem( 2 );
+                    this->ui->box_StatsSpeed_WebServer->removeItem( 2 );
+                    this->ui->box_StatsDay_WebServer->removeItem(   2 );
+                    this->ui->box_StatsRelat_WebServer->removeItem( 2 );
+                    break;
             }
         }
     }
     if ( ws == 14 ) {
         // no WS is allowed (???), fallback to the default one
         ws = 11;
-        this->craplog.setCurrentWSID( 11 );
-        this->allowed_web_servers.at( 11 ) = true;
+        this->craplog.setCurrentWSID( ws );
+        this->allowed_web_servers.at( ws ) = true;
         this->on_button_LogFiles_Apache_clicked();
         this->ui->button_LogFiles_Apache->setEnabled( true );
+        this->ui->box_StatsCount_WebServer->addItem( "Apache2" );
+        this->ui->box_StatsSpeed_WebServer->addItem( "Apache2" );
+        this->ui->box_StatsDay_WebServer->addItem(   "Apache2" );
+        this->ui->box_StatsRelat_WebServer->addItem( "Apache2" );
     }
     // set the LogList to the current WebServer
-    if ( this->allowed_web_servers[ this->craplog.getCurrentWSID() ] == false ) {
-        // the current WS is not allowed, fallback to the default one
+    if ( this->allowed_web_servers.at( this->craplog.getCurrentWSID() ) == false ) {
+        // the current craplog's WS is not allowed, fallback to the default one
         this->craplog.setCurrentWSID( ws );
     }
     // set the current WS for the LogList
@@ -129,13 +161,44 @@ MainWindow::MainWindow( QWidget *parent )
         case 13:
             this->ui->button_LogFiles_Iis->setFlat( false );
             break;
+        default:
+            // shouldn't be here
+            throw( &"Unexpected WebServer ID for Craplog: "[this->craplog.getCurrentWSID()] );
     }
+    // set the current WS for the ViewStats
+    switch ( ws ) {
+        case 11:
+            // already set to index 0 by default
+            break;
+        case 12:
+            for ( int i=0; i<this->ui->box_StatsCount_WebServer->count(); i++ ) {
+                if ( this->ui->box_StatsCount_WebServer->itemText( i ) == "Nginx" ) {
+                    this->ui->box_StatsCount_WebServer->setCurrentIndex( i );
+                    this->ui->box_StatsSpeed_WebServer->setCurrentIndex( i );
+                    this->ui->box_StatsDay_WebServer->setCurrentIndex(   i );
+                    this->ui->box_StatsRelat_WebServer->setCurrentIndex( i );
+                    break;
+                }
+            }
+            break;
+        case 13:
+            for ( int i=0; i<this->ui->box_StatsCount_WebServer->count(); i++ ) {
+                if ( this->ui->box_StatsCount_WebServer->itemText( i ) == "IIS" ) {
+                    this->ui->box_StatsCount_WebServer->setCurrentIndex( i );
+                    this->ui->box_StatsSpeed_WebServer->setCurrentIndex( i );
+                    this->ui->box_StatsDay_WebServer->setCurrentIndex(   i );
+                    this->ui->box_StatsRelat_WebServer->setCurrentIndex( i );
+                    break;
+                }
+            }
+            break;
+        default:
+            // shouldn't be here
+            throw( &"Unexpected WebServer ID: "[ws] );
+    }
+
+
     // get a fresh list of LogFiles
-    this->ui->listLogFiles->header()->resizeSection(0,200);
-    this->ui->listLogFiles->header()->resizeSection(1,100);
-    //QTimer::singleShot(500, this, SLOT(on_button_LogFiles_RefreshList_clicked()));
-    //QTimer::singleShot(250, this, SLOT(make_InitialChecks()));
-    //this->craplog_thread = std::thread( &MainWindow::wait_ActiveWindow, this, this );
     this->craplog_timer = new QTimer(this);
     connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
     this->craplog_timer->start(250);
@@ -199,6 +262,9 @@ void MainWindow::makeInitialChecks()
         //QCoreApplication::exit(0);
         //this->destroy();
     } else {
+        // get available stats dates
+        this->refreshStatsDates();
+        // get a fresh list of log files
         this->on_button_LogFiles_RefreshList_clicked();
     }
 }
@@ -624,7 +690,8 @@ void MainWindow::craplogStarted()
     this->ui->label_MakeStats_Time->setEnabled(true);
     this->ui->icon_MakeStats_Speed->setEnabled(false);
     this->ui->label_MakeStats_Speed->setEnabled(true);
-    // disable the settings tab
+    // disable the stats/settings tab
+    this->ui->View->setEnabled(false);
     this->ui->Set->setEnabled(false);
 }
 
@@ -646,7 +713,69 @@ void MainWindow::craplogFinished()
     this->ui->icon_MakeStats_Lines->setEnabled(true);
     this->ui->icon_MakeStats_Time->setEnabled(true);
     this->ui->icon_MakeStats_Speed->setEnabled(true);
-    // enable the settings tab
+    // enable back the stats/settings tab
+    this->ui->View->setEnabled(true);
     this->ui->Set->setEnabled(true);
+    // get a fresh collection of available stats dates
+    this->refreshStatsDates();
 }
 
+
+
+///////////////
+//// STATS ////
+///////////////
+// refresh all the dates boxes
+void MainWindow::refreshStatsDates()
+{
+    this->crapview.refreshDates();
+    this->on_box_StatsSpeed_WebServer_currentIndexChanged( 0 );
+}
+
+///////////////
+//// SPEED ////
+void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged( int index )
+{
+    this->ui->box_StatsSpeed_Year->clear();
+    this->ui->box_StatsSpeed_Year->addItems(
+        this->crapview.getYears(
+            this->ui->box_StatsSpeed_WebServer->currentText(),
+            "Access" ) );
+    this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+}
+
+void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
+{
+    this->ui->box_StatsSpeed_Month->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsSpeed_Month->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsSpeed_WebServer->currentText(),
+                "Access",
+                this->ui->box_StatsSpeed_Year->currentText() ) );
+        this->ui->box_StatsSpeed_Month->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
+{
+    this->ui->box_StatsSpeed_Day->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsSpeed_Day->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsSpeed_WebServer->currentText(),
+                "Access",
+                this->ui->box_StatsSpeed_Year->currentText(),
+                this->ui->box_StatsSpeed_Month->currentText() ) );
+        this->ui->box_StatsSpeed_Day->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_button_StatsSpeed_Draw_clicked()
+{
+
+}
+
+
+///////////////
+//// COUNT ////
