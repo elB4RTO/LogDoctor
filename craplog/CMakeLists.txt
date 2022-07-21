@@ -66,6 +66,8 @@ set(PROJECT_SOURCES
 
         tools/crapview/crapview.h
         tools/crapview/crapview.cpp
+        tools/crapview/modules/query.h
+        tools/crapview/modules/query.cpp
 
         resources/resources.qrc
         ${TS_FILES}
