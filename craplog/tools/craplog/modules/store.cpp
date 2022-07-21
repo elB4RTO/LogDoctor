@@ -215,14 +215,10 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         if ( log_type == LogOps::LogType::Access ) {
             query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, client, user_agent, cookie, referrer) "\
                        "VALUES (";
-            /*query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, client, user_agent, cookie, referrer) "\
-                       "VALUES (?99, ?1, ?2, ?3, ?4, ?5, ?6, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?20, ?21, ?22);";*/
 
         } else {
             query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, level, message, source_file, client, port) "\
                        "VALUES (";
-            /*query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, level, message, source_file, client, port) "\
-                       "VALUES (?99, ?1, ?2, ?3, ?4, ?5, ?6, ?31, ?32, ?33, ?20, ?30);";*/
         }
 
 
