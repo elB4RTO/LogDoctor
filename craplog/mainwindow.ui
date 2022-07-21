@@ -421,8 +421,8 @@ hr { height: 1px; border-width: 0; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>794</width>
-             <height>441</height>
+             <width>608</width>
+             <height>414</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -971,7 +971,7 @@ hr { height: 1px; border-width: 0; }
         <item row="0" column="0">
          <widget class="QTabWidget" name="StatsTabs">
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -988,675 +988,6 @@ hr { height: 1px; border-width: 0; }
           <property name="tabBarAutoHide">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="Count">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/count_off.png</normaloff>
-             <normalon>:/icons/icons/count_on.png</normalon>:/icons/icons/count_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Group and count identical elements in a single date</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_4">
-            <item row="0" column="0">
-             <widget class="QFrame" name="frame_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>321</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>321</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_8">
-               <item row="0" column="0" colspan="3">
-                <spacer name="verticalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>298</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="0">
-                <spacer name="horizontalSpacer_10">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="box_StatsCount_WebServer">
-                 <property name="minimumSize">
-                  <size>
-                   <width>112</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>112</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                  </font>
-                 </property>
-                 <property name="toolTip">
-                  <string>Select a Web Server</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <spacer name="horizontalSpacer_9">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="2" column="0" colspan="3">
-                <widget class="Line" name="line">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0" colspan="3">
-                <widget class="QFrame" name="frame_4">
-                 <layout class="QGridLayout" name="gridLayout_5">
-                  <item row="2" column="1">
-                   <widget class="QComboBox" name="box_StatsCount_Month">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_StatsCount_Year">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Year</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="label_StatsCount_Month">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Month</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QComboBox" name="box_StatsCount_Year">
-                    <property name="maximumSize">
-                     <size>
-                      <width>80</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="label_StatsCount_Day">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Day</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="2">
-                   <widget class="QComboBox" name="box_StatsCount_Day">
-                    <property name="maximumSize">
-                     <size>
-                      <width>64</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item row="4" column="0" colspan="3">
-                <spacer name="verticalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>298</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="5" column="0" colspan="3">
-                <widget class="QTabWidget" name="tabs_StatsCount_AccErr">
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                  </font>
-                 </property>
-                 <property name="tabPosition">
-                  <enum>QTabWidget::South</enum>
-                 </property>
-                 <property name="currentIndex">
-                  <number>0</number>
-                 </property>
-                 <widget class="QWidget" name="tabAcc">
-                  <attribute name="title">
-                   <string>Access</string>
-                  </attribute>
-                  <layout class="QGridLayout" name="gridLayout_6">
-                   <item row="0" column="0">
-                    <widget class="QScrollArea" name="scrollArea_StatsCount_Access">
-                     <property name="frameShape">
-                      <enum>QFrame::NoFrame</enum>
-                     </property>
-                     <property name="verticalScrollBarPolicy">
-                      <enum>Qt::ScrollBarAlwaysOn</enum>
-                     </property>
-                     <property name="horizontalScrollBarPolicy">
-                      <enum>Qt::ScrollBarAlwaysOff</enum>
-                     </property>
-                     <widget class="QWidget" name="scrollAreaContent_StatsCount_Access">
-                      <property name="geometry">
-                       <rect>
-                        <x>0</x>
-                        <y>0</y>
-                        <width>263</width>
-                        <height>402</height>
-                       </rect>
-                      </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_5">
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Protocol">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Request protocol</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Method">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Request method</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Request">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Request URI</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Query">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Request query</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Response">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Response code</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Referrer">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Referrer</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_AccClient">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Client</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_UserAgent">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">User-agent</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Cookie">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Cookie</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                 <widget class="QWidget" name="tabErr">
-                  <attribute name="title">
-                   <string>Error</string>
-                  </attribute>
-                  <layout class="QGridLayout" name="gridLayout_7">
-                   <item row="0" column="0">
-                    <widget class="QScrollArea" name="scrollArea_StatsCount_Error">
-                     <property name="frameShape">
-                      <enum>QFrame::NoFrame</enum>
-                     </property>
-                     <property name="verticalScrollBarPolicy">
-                      <enum>Qt::ScrollBarAlwaysOn</enum>
-                     </property>
-                     <property name="horizontalScrollBarPolicy">
-                      <enum>Qt::ScrollBarAlwaysOff</enum>
-                     </property>
-                     <widget class="QWidget" name="scrollAreaContent_StatsCount_Error">
-                      <property name="geometry">
-                       <rect>
-                        <x>0</x>
-                        <y>0</y>
-                        <width>263</width>
-                        <height>229</height>
-                       </rect>
-                      </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_7">
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Level">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Error level</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Message">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Error message</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Source">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Source file</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_Port">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Port</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="button_StatsCount_ErrClient">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>96</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>13</pointsize>
-                          </font>
-                         </property>
-                         <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
-                         </property>
-                         <property name="text">
-                          <string notr="true">Client</string>
-                         </property>
-                         <property name="flat">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QGraphicsView" name="graphicsView"/>
-            </item>
-           </layout>
-          </widget>
           <widget class="QWidget" name="Speed">
            <attribute name="icon">
             <iconset resource="resources/resources.qrc">
@@ -1726,6 +1057,24 @@ hr { height: 1px; border-width: 0; }
                  <property name="toolTip">
                   <string>Select a Web Server</string>
                  </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QComboBox::AdjustToContents</enum>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Apache2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Nginx</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">IIS</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item row="2" column="0" colspan="3">
@@ -1883,12 +1232,78 @@ hr { height: 1px; border-width: 0; }
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
-              <widget class="QTableView" name="table_StatsSpeed_Fields">
+              <widget class="QTableWidget" name="table_StatsSpeed_Fields">
                <property name="font">
                 <font>
                  <pointsize>13</pointsize>
                 </font>
                </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="showDropIndicator" stdset="0">
+                <bool>false</bool>
+               </property>
+               <property name="dragDropOverwriteMode">
+                <bool>false</bool>
+               </property>
+               <property name="sortingEnabled">
+                <bool>true</bool>
+               </property>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>64</number>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>128</number>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>TimeTaken</string>
+                </property>
+                <property name="toolTip">
+                 <string>Time taken by the server to serve the content, in milliseconds </string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>URI</string>
+                </property>
+                <property name="toolTip">
+                 <string>Query carried along with the requested URI</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Query</string>
+                </property>
+                <property name="toolTip">
+                 <string>Query carried along with the requested URI</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Method</string>
+                </property>
+                <property name="toolTip">
+                 <string>Method of the request</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Protocol</string>
+                </property>
+                <property name="toolTip">
+                 <string>Protocol of the request</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Response code</string>
+                </property>
+                <property name="toolTip">
+                 <string>Response code from the server</string>
+                </property>
+               </column>
               </widget>
               <widget class="QGraphicsView" name="graphicsView_4"/>
              </widget>
@@ -2148,6 +1563,693 @@ hr { height: 1px; border-width: 0; }
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="Count">
+           <attribute name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/icons/icons/count_off.png</normaloff>
+             <normalon>:/icons/icons/count_on.png</normalon>:/icons/icons/count_off.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string notr="true"/>
+           </attribute>
+           <attribute name="toolTip">
+            <string>Group and count identical elements in a single date</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QFrame" name="frame_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>321</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>321</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_8">
+               <item row="0" column="0" colspan="3">
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>298</width>
+                   <height>8</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0">
+                <spacer name="horizontalSpacer_10">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="box_StatsCount_WebServer">
+                 <property name="minimumSize">
+                  <size>
+                   <width>112</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>112</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Select a Web Server</string>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QComboBox::AdjustToContents</enum>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Apache2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Nginx</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">IIS</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="0" colspan="3">
+                <widget class="Line" name="line">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>8</height>
+                  </size>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="3">
+                <widget class="QFrame" name="frame_4">
+                 <layout class="QGridLayout" name="gridLayout_5">
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="box_StatsCount_Month">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_StatsCount_Year">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Year</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="label_StatsCount_Month">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Month</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QComboBox" name="box_StatsCount_Year">
+                    <property name="maximumSize">
+                     <size>
+                      <width>80</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_StatsCount_Day">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Day</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QComboBox" name="box_StatsCount_Day">
+                    <property name="maximumSize">
+                     <size>
+                      <width>64</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="4" column="0" colspan="3">
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>298</width>
+                   <height>8</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="5" column="0" colspan="3">
+                <widget class="QTabWidget" name="tabs_StatsCount_AccErr">
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="tabPosition">
+                  <enum>QTabWidget::South</enum>
+                 </property>
+                 <property name="currentIndex">
+                  <number>1</number>
+                 </property>
+                 <widget class="QWidget" name="tabAcc">
+                  <attribute name="title">
+                   <string>Access</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_6">
+                   <item row="0" column="0">
+                    <widget class="QScrollArea" name="scrollArea_StatsCount_Access">
+                     <property name="frameShape">
+                      <enum>QFrame::NoFrame</enum>
+                     </property>
+                     <property name="verticalScrollBarPolicy">
+                      <enum>Qt::ScrollBarAlwaysOn</enum>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <widget class="QWidget" name="scrollAreaContent_StatsCount_Access">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>263</width>
+                        <height>402</height>
+                       </rect>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_5">
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Protocol">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Request protocol</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Method">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Request method</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Request">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Request URI</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Query">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Request query</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Response">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Response code</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Referrer">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Referrer</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Cookie">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Cookie</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_UserAgent">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">User-agent</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_AccClient">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Client</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="tabErr">
+                  <attribute name="title">
+                   <string>Error</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_7">
+                   <item row="0" column="0">
+                    <widget class="QScrollArea" name="scrollArea_StatsCount_Error">
+                     <property name="frameShape">
+                      <enum>QFrame::NoFrame</enum>
+                     </property>
+                     <property name="verticalScrollBarPolicy">
+                      <enum>Qt::ScrollBarAlwaysOn</enum>
+                     </property>
+                     <property name="horizontalScrollBarPolicy">
+                      <enum>Qt::ScrollBarAlwaysOff</enum>
+                     </property>
+                     <widget class="QWidget" name="scrollAreaContent_StatsCount_Error">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>263</width>
+                        <height>229</height>
+                       </rect>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_7">
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Level">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Error level</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Message">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Error message</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Source">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Source file</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_Port">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Port</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="button_StatsCount_ErrClient">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>96</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string>Parse logs from the Nginx web server</string>
+                         </property>
+                         <property name="text">
+                          <string notr="true">Client</string>
+                         </property>
+                         <property name="flat">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGraphicsView" name="graphicsView"/>
+            </item>
+           </layout>
+          </widget>
           <widget class="QWidget" name="DayTime">
            <attribute name="icon">
             <iconset resource="resources/resources.qrc">
@@ -2177,7 +2279,7 @@ hr { height: 1px; border-width: 0; }
                 <widget class="QPushButton" name="button_StatsDay_Draw">
                  <property name="minimumSize">
                   <size>
-                   <width>100</width>
+                   <width>106</width>
                    <height>88</height>
                   </size>
                  </property>
@@ -2257,6 +2359,16 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log type to choose fields from</string>
                     </property>
+                    <item>
+                     <property name="text">
+                      <string notr="true">Access</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string notr="true">Error</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item row="1" column="0">
@@ -2290,6 +2402,51 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log field to view</string>
                     </property>
+                    <item>
+                     <property name="text">
+                      <string>Protocol</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Method</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>URI</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Query</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Response code</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Referrer</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Cookie</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>User-agent</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Client</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item row="2" column="0">
@@ -2350,6 +2507,24 @@ hr { height: 1px; border-width: 0; }
                  <property name="toolTip">
                   <string>Select a Web Server</string>
                  </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QComboBox::AdjustToContents</enum>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Apache2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Nginx</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">IIS</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item row="0" column="2" rowspan="3">
@@ -2603,7 +2778,7 @@ hr { height: 1px; border-width: 0; }
             <string notr="true"/>
            </attribute>
            <attribute name="toolTip">
-            <string>Relational chart for two elements in a period</string>
+            <string>Relational chart for two elements in a period: how many times a specific value brought to another</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_18">
             <item row="0" column="0">
@@ -2635,7 +2810,7 @@ hr { height: 1px; border-width: 0; }
                 </spacer>
                </item>
                <item row="1" column="0">
-                <widget class="QComboBox" name="box_StatsCount_WebServercomboBox_StatsSpeed_WebServer">
+                <widget class="QComboBox" name="box_StatsRelat_WebServer">
                  <property name="minimumSize">
                   <size>
                    <width>100</width>
@@ -2656,6 +2831,24 @@ hr { height: 1px; border-width: 0; }
                  <property name="toolTip">
                   <string>Select a Web Server</string>
                  </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QComboBox::AdjustToContents</enum>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Apache2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Nginx</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">IIS</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item row="0" column="2" rowspan="3">
@@ -2884,7 +3077,7 @@ hr { height: 1px; border-width: 0; }
                 <widget class="QPushButton" name="button_StatsRelat_Draw">
                  <property name="minimumSize">
                   <size>
-                   <width>100</width>
+                   <width>106</width>
                    <height>88</height>
                   </size>
                  </property>
@@ -2972,6 +3165,66 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log field to view</string>
                     </property>
+                    <item>
+                     <property name="text">
+                      <string>Protocol</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Method</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>URI</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Query</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Response code</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Time taken</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Bytes sent</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Bytes received</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Referrer</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Cookie</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>User-agent</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Client</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item row="0" column="4" rowspan="2">
@@ -3009,7 +3262,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '&lt;' or '&gt;' to declare what to filter (default to '&gt;')</string>
                     </property>
                    </widget>
                   </item>
@@ -3050,6 +3303,16 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log type to choose fields from</string>
                     </property>
+                    <item>
+                     <property name="text">
+                      <string notr="true">Access</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string notr="true">Error</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item row="2" column="2" rowspan="2">
@@ -3095,6 +3358,66 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log field to view</string>
                     </property>
+                    <item>
+                     <property name="text">
+                      <string>Protocol</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Method</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>URI</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Query</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Response code</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Time taken</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Bytes sent</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Bytes received</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Referrer</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Cookie</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>User-agent</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Client</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item row="2" column="4" rowspan="2">
@@ -3132,7 +3455,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '&lt;' or '&gt;' to declare what to filter (default to '&gt;')</string>
                     </property>
                    </widget>
                   </item>
