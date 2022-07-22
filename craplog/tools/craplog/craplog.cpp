@@ -908,7 +908,7 @@ const std::vector<int> Craplog::calcDayTraffic( const int log_type )
     return traffic;
 }
 
-void Craplog::makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& err_chart, QChartView& traf_chart )
+void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart )
 {
     QString access_chart_name      = QMessageBox::tr("Access Logs Breakdown"),
             error_chart_name       = QMessageBox::tr("Error Logs Breakdown"),
@@ -935,16 +935,18 @@ void Craplog::makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& 
     DonutBreakdown *accessBreakdown = new DonutBreakdown();
     accessBreakdown->setAnimationOptions( QChart::AllAnimations );
     accessBreakdown->setTitle( access_chart_name );
+    accessBreakdown->setTitleFont( fonts.at("main") );
     if ( this->total_access_size > 0 ) {
         accessBreakdown->legend()->setAlignment( Qt::AlignRight );
-        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::darkCyan, font );
+        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
     } else {
-        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::white, font );
+        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::white, fonts.at("main_small") );
         access_donut->setVisible( false );
     }
+    //accessBreakdown->setTheme( QChart::ChartTheme::ChartThemeDark );
 
-    acc_chart.setChart( accessBreakdown );
-    acc_chart.setRenderHint( QPainter::Antialiasing );
+    acc_chart->setChart( accessBreakdown );
+    acc_chart->setRenderHint( QPainter::Antialiasing );
 
 
     // error logs donut chart
@@ -963,16 +965,18 @@ void Craplog::makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& 
     DonutBreakdown *errorBreakdown = new DonutBreakdown();
     errorBreakdown->setAnimationOptions( QChart::AllAnimations );
     errorBreakdown->setTitle( error_chart_name );
+    errorBreakdown->setTitleFont( fonts.at("main") );
     if ( this->total_error_size > 0 ) {
         errorBreakdown->legend()->setAlignment( Qt::AlignLeft );
-        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::darkRed, font );
+        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::darkRed, fonts.at("main_small") );
     } else {
-        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::white, font );
+        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::white, fonts.at("main_small") );
         error_donut->setVisible( false );
     }
+    //errorBreakdown->setTheme( QChart::ChartTheme::ChartThemeDark );
 
-    err_chart.setChart( errorBreakdown );
-    err_chart.setRenderHint( QPainter::Antialiasing );
+    err_chart->setChart( errorBreakdown );
+    err_chart->setRenderHint( QPainter::Antialiasing );
 
 
     // logs traffic bars chart
@@ -1005,7 +1009,10 @@ void Craplog::makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& 
     QChart *t_chart = new QChart();
     t_chart->addSeries( bars );
     t_chart->setTitle( traffic_chart_name );
+    t_chart->setTitleFont( fonts.at("main") );
+    t_chart->legend()->setFont( fonts.at("main_small") );
     t_chart->setAnimationOptions( QChart::SeriesAnimations );
+    //t_chart->setBackgroundBrush( Qt::darkGray );
 
     QStringList categories;
     categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
@@ -1013,20 +1020,23 @@ void Craplog::makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& 
 
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     axisX->append( categories );
+    axisX->setLabelsFont( fonts.at( "main_small" ) );
     t_chart->addAxis( axisX, Qt::AlignBottom );
     bars->attachAxis( axisX );
 
     QValueAxis *axisY = new QValueAxis();
     axisY->setLabelFormat( "%d" );
     axisY->setRange( 0, max_traf );
+    axisY->setLabelsFont( fonts.at( "main_small" ) );
     t_chart->addAxis( axisY, Qt::AlignLeft );
     bars->attachAxis( axisY) ;
 
     t_chart->legend()->setVisible( true );
     t_chart->legend()->setAlignment( Qt::AlignBottom );
+    //t_chart->setTheme( QChart::ChartTheme::ChartThemeBrownSand );
 
-    traf_chart.setChart( t_chart );
-    traf_chart.setRenderHint( QPainter::Antialiasing );
+    traf_chart->setChart( t_chart );
+    traf_chart->setRenderHint( QPainter::Antialiasing );
 
 }
 
