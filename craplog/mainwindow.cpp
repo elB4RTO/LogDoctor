@@ -70,10 +70,6 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->label_MakeStats_Lines->setFont( this->FONTS.at("main") );
     this->ui->label_MakeStats_Time->setFont( this->FONTS.at("main") );
     this->ui->label_MakeStats_Speed->setFont( this->FONTS.at("main") );
-    // MakeStats charts
-    this->ui->chart_MakeStats_Access->setFont( this->FONTS.at("main") );
-    this->ui->chart_MakeStats_Error->setFont( this->FONTS.at("main") );
-    this->ui->chart_MakeStats_Traffic->setFont( this->FONTS.at("main") );
 
     // StatsSpeed table
     this->ui->table_StatsSpeed_Fields->setFont( this->FONTS.at("main") );
@@ -264,6 +260,9 @@ void MainWindow::makeInitialChecks()
     } else {
         // get available stats dates
         this->refreshStatsDates();
+        // initialize logs fields boxes
+        this->on_box_StatsDay_LogsType_currentIndexChanged(0);
+        this->on_box_StatsRelat_LogsType_currentIndexChanged(0);
         // get a fresh list of log files
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -699,7 +698,7 @@ void MainWindow::craplogFinished()
 {
     // update the perf data one last time, just in case
     this->update_MakeStats_labels();
-    this->craplog.makeGraphs( this->FONTS.at("main_small"), *this->ui->chart_MakeStats_Access, *this->ui->chart_MakeStats_Error, *this->ui->chart_MakeStats_Traffic );
+    this->craplog.makeGraphs( this->FONTS, this->ui->chart_MakeStats_Access, this->ui->chart_MakeStats_Error, this->ui->chart_MakeStats_Traffic );
     // clean up temp vars
     this->craplog.clearDataCollection();
     this->craplog.logOps.resetPerfData();
@@ -729,11 +728,27 @@ void MainWindow::craplogFinished()
 void MainWindow::refreshStatsDates()
 {
     this->crapview.refreshDates();
-    this->on_box_StatsSpeed_WebServer_currentIndexChanged( 0 );
+    this->on_box_StatsSpeed_WebServer_currentIndexChanged(0);
+    this->on_box_StatsCount_WebServer_currentIndexChanged(0);
+    this->on_box_StatsDay_WebServer_currentIndexChanged(0);
+    this->on_box_StatsRelat_WebServer_currentIndexChanged(0);
 }
 
 ///////////////
 //// SPEED ////
+void MainWindow::checkStatsSpeedDrawable()
+{
+    if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
+      && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
+      && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
+        // enable the draw buttpn
+        this->ui->button_StatsSpeed_Draw->setEnabled(true);
+    } else {
+        // disable the draw button
+        this->ui->button_StatsSpeed_Draw->setEnabled(false);
+    }
+}
+
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged( int index )
 {
     this->ui->box_StatsSpeed_Year->clear();
@@ -742,6 +757,7 @@ void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged( int index )
             this->ui->box_StatsSpeed_WebServer->currentText(),
             "Access" ) );
     this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+    this->checkStatsSpeedDrawable();
 }
 
 void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
@@ -773,9 +789,587 @@ void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
-
+    this->crapview.drawSpeed(
+        this->ui->table_StatsSpeed_Fields,
+        this->ui->chart_SatsSpeed,
+        this->FONTS,
+        this->ui->box_StatsSpeed_WebServer->currentText(),
+        this->ui->box_StatsSpeed_Year->currentText(),
+        this->ui->box_StatsSpeed_Month->currentText(),
+        this->ui->box_StatsSpeed_Day->currentText(),
+        this->ui->inLine_StatsSpeed_Protocol->text(),
+        this->ui->inLine_StatsSpeed_Method->text(),
+        this->ui->inLine_StatsSpeed_Uri->text(),
+        this->ui->inLine_StatsSpeed_Query->text(),
+        this->ui->inLine_StatsSpeed_Response->text() );
 }
 
 
 ///////////////
 //// COUNT ////
+void MainWindow::checkStatsCountDrawable()
+{
+    if ( this->ui->box_StatsCount_Year->currentIndex() >= 0
+      && this->ui->box_StatsCount_Month->currentIndex() >= 0
+      && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
+        // enable the draw buttpn
+        this->ui->scrollArea_StatsCount_Access->setEnabled(true);
+        this->ui->scrollArea_StatsCount_Error->setEnabled(true);
+    } else {
+        // disable the draw button
+        this->ui->scrollArea_StatsCount_Access->setEnabled(false);
+        this->ui->scrollArea_StatsCount_Error->setEnabled(false);
+    }
+}
+
+void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
+{
+    this->ui->box_StatsCount_Year->clear();
+    this->ui->box_StatsCount_Year->addItems(
+        this->crapview.getYears(
+            this->ui->box_StatsCount_WebServer->currentText(),
+            this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() )));
+    this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
+    this->resetStatsCountAccButtons();
+    this->resetStatsCountErrButtons();
+    this->checkStatsCountDrawable();
+}
+
+void MainWindow::on_tabs_StatsCount_AccErr_currentChanged(int index)
+{
+    this->ui->box_StatsCount_Year->clear();
+    this->ui->box_StatsCount_Year->addItems(
+        this->crapview.getYears(
+            this->ui->box_StatsCount_WebServer->currentText(),
+            this->ui->tabs_StatsCount_AccErr->tabText( index ) ));
+    this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
+    this->checkStatsCountDrawable();
+}
+
+void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
+{
+    this->ui->box_StatsCount_Month->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsCount_Month->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsCount_WebServer->currentText(),
+                this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+                this->ui->box_StatsCount_Year->currentText() ) );
+        this->ui->box_StatsCount_Month->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
+{
+    this->ui->box_StatsCount_Day->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsCount_Day->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsCount_WebServer->currentText(),
+                this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+                this->ui->box_StatsCount_Year->currentText(),
+                this->ui->box_StatsCount_Month->currentText() ) );
+        this->ui->box_StatsCount_Day->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::resetStatsCountAccButtons()
+{
+    this->ui->button_StatsCount_Protocol->setFlat( true );
+    this->ui->button_StatsCount_Method->setFlat( true );
+    this->ui->button_StatsCount_Request->setFlat( true );
+    this->ui->button_StatsCount_Query->setFlat( true );
+    this->ui->button_StatsCount_Response->setFlat( true );
+    this->ui->button_StatsCount_Referrer->setFlat( true );
+    this->ui->button_StatsCount_Cookie->setFlat( true );
+    this->ui->button_StatsCount_UserAgent->setFlat( true );
+    this->ui->button_StatsCount_AccClient->setFlat( true );
+}
+
+void MainWindow::resetStatsCountErrButtons()
+{
+    this->ui->button_StatsCount_Level->setFlat( true );
+    this->ui->button_StatsCount_Message->setFlat( true );
+    this->ui->button_StatsCount_Source->setFlat( true );
+    this->ui->button_StatsCount_Port->setFlat( true );
+    this->ui->button_StatsCount_ErrClient->setFlat( true );
+}
+
+void MainWindow::on_button_StatsCount_Protocol_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Protocol->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Protocol->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Method_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Method->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Method->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Request_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Request->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Request->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Query_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Query->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Query->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Response_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Response->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Response->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Referrer_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Referrer->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Referrer->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Cookie_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Cookie->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_Cookie->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_UserAgent_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_UserAgent->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_UserAgent->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_AccClient_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_AccClient->text() );
+    this->resetStatsCountErrButtons();
+    this->resetStatsCountAccButtons();
+    this->ui->button_StatsCount_AccClient->setFlat( false );
+}
+
+
+void MainWindow::on_button_StatsCount_Level_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Level->text() );
+    this->resetStatsCountAccButtons();
+    this->resetStatsCountErrButtons();
+    this->ui->button_StatsCount_Level->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Message_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Message->text() );
+    this->resetStatsCountAccButtons();
+    this->resetStatsCountErrButtons();
+    this->ui->button_StatsCount_Message->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Source_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Source->text() );
+    this->resetStatsCountAccButtons();
+    this->resetStatsCountErrButtons();
+    this->ui->button_StatsCount_Source->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_Port_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_Port->text() );
+    this->resetStatsCountAccButtons();
+    this->resetStatsCountErrButtons();
+    this->ui->button_StatsCount_Port->setFlat( false );
+}
+
+void MainWindow::on_button_StatsCount_ErrClient_clicked()
+{
+    this->crapview.drawCount(
+        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
+        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->button_StatsCount_ErrClient->text() );
+    this->resetStatsCountAccButtons();
+    this->resetStatsCountErrButtons();
+    this->ui->button_StatsCount_ErrClient->setFlat( false );
+}
+
+
+/////////////
+//// DAY ////
+void MainWindow::checkStatsDayDrawable()
+{
+    bool aux = true;
+    // secondary date (period)
+    if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+        if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
+          && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
+          && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
+           aux = false;
+        } else {
+            if ( this->ui->box_StatsDay_ToYear->currentText().toInt() < this->ui->box_StatsDay_FromYear->currentText().toInt() ) {
+                // year 'to' is less than 'from'
+                aux = false;
+            } else {
+                if ( this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() ) < this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() ) ) {
+                    // month 'to' is less than 'from'
+                    aux = false;
+                } else {
+                    if ( this->ui->box_StatsDay_ToDay->currentText().toInt() < this->ui->box_StatsDay_FromDay->currentText().toInt() ) {
+                        // day 'to' is less than 'from'
+                        aux = false;
+                    }
+                }
+            }
+        }
+    }
+    // primary date
+    if ( this->ui->box_StatsDay_FromYear->currentIndex() >= 0
+      && this->ui->box_StatsDay_FromMonth->currentIndex() >= 0
+      && this->ui->box_StatsDay_FromDay->currentIndex() >= 0
+      && aux == true ) {
+        // enable the draw buttpn
+        this->ui->button_StatsDay_Draw->setEnabled(true);
+    } else {
+        // disable the draw button
+        this->ui->button_StatsDay_Draw->setEnabled(false);
+    }
+}
+
+void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
+{
+    QStringList years = this->crapview.getYears(
+        this->ui->box_StatsDay_WebServer->currentText(),
+        this->ui->box_StatsDay_LogsType->currentText() );
+
+    this->ui->box_StatsDay_FromYear->clear();
+    this->ui->box_StatsDay_FromYear->addItems( years );
+    this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
+    if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+        this->ui->box_StatsDay_ToYear->clear();
+        this->ui->box_StatsDay_ToYear->addItems( years );
+        this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+    }
+    years.clear();
+    this->checkStatsDayDrawable();
+}
+
+void MainWindow::on_box_StatsDay_LogsType_currentIndexChanged(int index)
+{
+    this->on_box_StatsDay_WebServer_currentIndexChanged(0);
+    this->ui->box_StatsDay_LogsField->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsDay_LogsField->addItems(
+            this->crapview.getFields(
+                "Daytime",
+                this->ui->box_StatsDay_LogsType->currentText() ));
+        this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
+    }
+}
+
+
+void MainWindow::on_box_StatsDay_LogsField_currentIndexChanged(int index)
+{
+    this->ui->inLine_StatsDay_Filter->clear();
+}
+
+void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
+{
+    this->ui->box_StatsDay_FromMonth->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsDay_FromMonth->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsDay_WebServer->currentText(),
+                this->ui->box_StatsDay_LogsType->currentText(),
+                this->ui->box_StatsDay_FromYear->currentText() ) );
+        this->ui->box_StatsDay_FromMonth->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
+{
+    this->ui->box_StatsDay_FromDay->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsDay_FromDay->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsDay_WebServer->currentText(),
+                this->ui->box_StatsDay_LogsType->currentText(),
+                this->ui->box_StatsDay_FromYear->currentText(),
+                this->ui->box_StatsDay_FromMonth->currentText() ) );
+        this->ui->box_StatsDay_FromDay->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
+{
+    if ( state == Qt::CheckState::Checked ) {
+        this->ui->box_StatsDay_ToYear->setEnabled( true );
+        this->ui->box_StatsDay_ToMonth->setEnabled( true );
+        this->ui->box_StatsDay_ToDay->setEnabled( true );
+        // add available dates
+        this->ui->box_StatsDay_ToYear->addItems( this->crapview.getYears(
+            this->ui->box_StatsDay_WebServer->currentText(),
+            this->ui->box_StatsDay_LogsType->currentText() ) );
+        this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+    } else {
+        this->ui->box_StatsDay_ToYear->clear();
+        this->ui->box_StatsDay_ToYear->setEnabled( false );
+        this->ui->box_StatsDay_ToMonth->clear();
+        this->ui->box_StatsDay_ToMonth->setEnabled( false );
+        this->ui->box_StatsDay_ToDay->clear();
+        this->ui->box_StatsDay_ToDay->setEnabled( false );
+    }
+}
+
+void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
+{
+    this->ui->box_StatsDay_ToMonth->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsDay_ToMonth->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsDay_WebServer->currentText(),
+                this->ui->box_StatsDay_LogsType->currentText(),
+                this->ui->box_StatsDay_ToYear->currentText() ) );
+        this->ui->box_StatsDay_ToMonth->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
+{
+    this->ui->box_StatsDay_ToDay->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsDay_ToDay->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsDay_WebServer->currentText(),
+                this->ui->box_StatsDay_LogsType->currentText(),
+                this->ui->box_StatsDay_ToYear->currentText(),
+                this->ui->box_StatsDay_ToMonth->currentText() ) );
+        this->ui->box_StatsDay_ToDay->setCurrentIndex( 0 );
+    }
+}
+
+
+
+void MainWindow::on_button_StatsDay_Draw_clicked()
+{
+    this->crapview.drawDay(
+        this->ui->chart_StatsDay,
+        this->FONTS,
+        this->ui->box_StatsDay_WebServer->currentText(),
+        this->ui->box_StatsDay_LogsType->currentText(),
+        this->ui->box_StatsDay_FromYear->currentText(),
+        this->ui->box_StatsDay_FromMonth->currentText(),
+        this->ui->box_StatsDay_FromDay->currentText(),
+        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToYear->currentText() : "",
+        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
+        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
+        this->ui->box_StatsDay_LogsField->currentText(),
+        this->ui->inLine_StatsDay_Filter->text() );
+}
+
+
+////////////////////
+//// RELATIONAL ////
+void MainWindow::checkStatsRelatDrawable()
+{
+    if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
+      && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
+      && this->ui->box_StatsRelat_FromDay->currentIndex() >= 0
+      && this->ui->box_StatsRelat_ToYear->currentIndex() >= 0
+      && this->ui->box_StatsRelat_ToMonth->currentIndex() >= 0
+      && this->ui->box_StatsRelat_ToDay->currentIndex() >= 0 ) {
+        // enable the draw buttpn
+        this->ui->button_StatsRelat_Draw->setEnabled(true);
+    } else {
+        // disable the draw button
+        this->ui->button_StatsRelat_Draw->setEnabled(false);
+    }
+}
+
+void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
+{
+    QStringList years = this->crapview.getYears(
+        this->ui->box_StatsRelat_WebServer->currentText(),
+        this->ui->box_StatsRelat_LogsType->currentText() );
+    // from
+    this->ui->box_StatsRelat_FromYear->clear();
+    this->ui->box_StatsRelat_FromYear->addItems( years );
+    this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
+    // to
+    this->ui->box_StatsRelat_ToYear->clear();
+    this->ui->box_StatsRelat_ToYear->addItems( years );
+    this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
+    years.clear();
+    this->checkStatsRelatDrawable();
+}
+
+void MainWindow::on_box_StatsRelat_LogsType_currentIndexChanged(int index)
+{
+    this->on_box_StatsRelat_WebServer_currentIndexChanged(0);
+    this->ui->box_StatsRelat_LogsField_1->clear();
+    this->ui->box_StatsRelat_LogsField_2->clear();
+    if ( index != -1 ) {
+        QStringList fields = this->crapview.getFields(
+            "Relational",
+            this->ui->box_StatsRelat_LogsType->currentText() );
+        this->ui->box_StatsRelat_LogsField_1->addItems( fields );
+        this->ui->box_StatsRelat_LogsField_2->addItems( fields );
+        this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
+        this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsRelat_LogsField_1_currentIndexChanged(int index)
+{
+    this->ui->inLine_StatsRelat_Filter_1->clear();
+}
+
+void MainWindow::on_box_StatsRelat_LogsField_2_currentIndexChanged(int index)
+{
+    this->ui->inLine_StatsRelat_Filter_2->clear();
+}
+
+void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
+{
+    this->ui->box_StatsRelat_FromMonth->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsRelat_FromMonth->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->ui->box_StatsRelat_LogsType->currentText(),
+                this->ui->box_StatsRelat_FromYear->currentText() ) );
+        this->ui->box_StatsRelat_FromMonth->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
+{
+    this->ui->box_StatsRelat_FromDay->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsRelat_FromDay->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->ui->box_StatsRelat_LogsType->currentText(),
+                this->ui->box_StatsRelat_FromYear->currentText(),
+                this->ui->box_StatsRelat_FromMonth->currentText() ) );
+        this->ui->box_StatsRelat_FromDay->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
+{
+    this->ui->box_StatsRelat_ToMonth->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsRelat_ToMonth->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->ui->box_StatsRelat_LogsType->currentText(),
+                this->ui->box_StatsRelat_FromYear->currentText() ) );
+        this->ui->box_StatsRelat_ToMonth->setCurrentIndex( 0 );
+    }
+}
+
+void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
+{
+    this->ui->box_StatsRelat_ToDay->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsRelat_ToDay->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->ui->box_StatsRelat_LogsType->currentText(),
+                this->ui->box_StatsRelat_FromYear->currentText(),
+                this->ui->box_StatsRelat_FromMonth->currentText() ) );
+        this->ui->box_StatsRelat_ToDay->setCurrentIndex( 0 );
+    }
+}
+
+
+void MainWindow::on_button_StatsRelat_Draw_clicked()
+{
+    this->crapview.drawRelat(
+        this->ui->chart_StatsRelat,
+        this->FONTS,
+        this->ui->box_StatsRelat_WebServer->currentText(),
+        this->ui->box_StatsRelat_LogsType->currentText(),
+        this->ui->box_StatsRelat_FromYear->currentText(),
+        this->ui->box_StatsRelat_FromMonth->currentText(),
+        this->ui->box_StatsRelat_FromDay->currentText(),
+        this->ui->box_StatsRelat_ToYear->currentText(),
+        this->ui->box_StatsRelat_ToMonth->currentText(),
+        this->ui->box_StatsRelat_ToDay->currentText(),
+        this->ui->box_StatsRelat_LogsField_1->currentText(),
+        this->ui->inLine_StatsRelat_Filter_1->text(),
+        this->ui->box_StatsRelat_LogsField_2->currentText(),
+        this->ui->inLine_StatsRelat_Filter_2->text() );
+}
+
