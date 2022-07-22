@@ -421,8 +421,8 @@ hr { height: 1px; border-width: 0; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>608</width>
-             <height>414</height>
+             <width>794</width>
+             <height>441</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -971,7 +971,7 @@ hr { height: 1px; border-width: 0; }
         <item row="0" column="0">
          <widget class="QTabWidget" name="StatsTabs">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <property name="iconSize">
            <size>
@@ -1305,7 +1305,7 @@ hr { height: 1px; border-width: 0; }
                 </property>
                </column>
               </widget>
-              <widget class="QGraphicsView" name="graphicsView_4"/>
+              <widget class="QChartView" name="chart_SatsSpeed"/>
              </widget>
             </item>
             <item row="1" column="0">
@@ -1697,11 +1697,11 @@ hr { height: 1px; border-width: 0; }
                <item row="3" column="0" colspan="3">
                 <widget class="QFrame" name="frame_4">
                  <layout class="QGridLayout" name="gridLayout_5">
-                  <item row="2" column="1">
-                   <widget class="QComboBox" name="box_StatsCount_Month">
+                  <item row="2" column="0">
+                   <widget class="QComboBox" name="box_StatsCount_Year">
                     <property name="maximumSize">
                      <size>
-                      <width>16777215</width>
+                      <width>80</width>
                       <height>32</height>
                      </size>
                     </property>
@@ -1715,41 +1715,11 @@ hr { height: 1px; border-width: 0; }
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_StatsCount_Year">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Year</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="label_StatsCount_Month">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Month</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QComboBox" name="box_StatsCount_Year">
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="box_StatsCount_Month">
                     <property name="maximumSize">
                      <size>
-                      <width>80</width>
+                      <width>16777215</width>
                       <height>32</height>
                      </size>
                     </property>
@@ -1778,6 +1748,21 @@ hr { height: 1px; border-width: 0; }
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_StatsCount_Year">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Year</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="2" column="2">
                    <widget class="QComboBox" name="box_StatsCount_Day">
                     <property name="maximumSize">
@@ -1793,6 +1778,21 @@ hr { height: 1px; border-width: 0; }
                     </property>
                     <property name="layoutDirection">
                      <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="label_StatsCount_Month">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Month</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -1826,11 +1826,11 @@ hr { height: 1px; border-width: 0; }
                   <enum>QTabWidget::South</enum>
                  </property>
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="tabAcc">
                   <attribute name="title">
-                   <string>Access</string>
+                   <string notr="true">Access</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_6">
                    <item row="0" column="0">
@@ -1848,7 +1848,7 @@ hr { height: 1px; border-width: 0; }
                       <property name="geometry">
                        <rect>
                         <x>0</x>
-                        <y>0</y>
+                        <y>-170</y>
                         <width>263</width>
                         <height>402</height>
                        </rect>
@@ -1877,7 +1877,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Parse logs from the Nginx web server</string>
                          </property>
                          <property name="text">
-                          <string notr="true">Request protocol</string>
+                          <string notr="true">Protocol</string>
                          </property>
                          <property name="flat">
                           <bool>true</bool>
@@ -1901,7 +1901,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Parse logs from the Nginx web server</string>
                          </property>
                          <property name="text">
-                          <string notr="true">Request method</string>
+                          <string notr="true">Method</string>
                          </property>
                          <property name="flat">
                           <bool>true</bool>
@@ -1925,7 +1925,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Parse logs from the Nginx web server</string>
                          </property>
                          <property name="text">
-                          <string notr="true">Request URI</string>
+                          <string notr="true">URI</string>
                          </property>
                          <property name="flat">
                           <bool>true</bool>
@@ -1949,7 +1949,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Parse logs from the Nginx web server</string>
                          </property>
                          <property name="text">
-                          <string notr="true">Request query</string>
+                          <string notr="true">Query</string>
                          </property>
                          <property name="flat">
                           <bool>true</bool>
@@ -2084,7 +2084,7 @@ hr { height: 1px; border-width: 0; }
                  </widget>
                  <widget class="QWidget" name="tabErr">
                   <attribute name="title">
-                   <string>Error</string>
+                   <string notr="true">Error</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_7">
                    <item row="0" column="0">
@@ -2131,7 +2131,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Parse logs from the Nginx web server</string>
                          </property>
                          <property name="text">
-                          <string notr="true">Error level</string>
+                          <string notr="true">Level</string>
                          </property>
                          <property name="flat">
                           <bool>true</bool>
@@ -2155,7 +2155,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Parse logs from the Nginx web server</string>
                          </property>
                          <property name="text">
-                          <string notr="true">Error message</string>
+                          <string notr="true">Message</string>
                          </property>
                          <property name="flat">
                           <bool>true</bool>
@@ -2246,7 +2246,7 @@ hr { height: 1px; border-width: 0; }
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QGraphicsView" name="graphicsView"/>
+             <widget class="QChartView" name="chart_StatsCount"/>
             </item>
            </layout>
           </widget>
@@ -2264,7 +2264,7 @@ hr { height: 1px; border-width: 0; }
            </attribute>
            <layout class="QGridLayout" name="gridLayout_13">
             <item row="2" column="0">
-             <widget class="QGraphicsView" name="graphicsView_2"/>
+             <widget class="QChartView" name="chart_StatsDay"/>
             </item>
             <item row="1" column="0">
              <widget class="QFrame" name="frame_3">
@@ -2402,51 +2402,6 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log field to view</string>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Protocol</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Method</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>URI</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Query</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Response code</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Referrer</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Cookie</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>User-agent</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Client</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="2" column="0">
@@ -2537,7 +2492,7 @@ hr { height: 1px; border-width: 0; }
                  </property>
                  <layout class="QGridLayout" name="gridLayout_9">
                   <item row="2" column="3">
-                   <widget class="QComboBox" name="box_StatsCount_ToDay">
+                   <widget class="QComboBox" name="box_StatsDay_ToDay">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
@@ -2618,7 +2573,7 @@ hr { height: 1px; border-width: 0; }
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QComboBox" name="box_StatsCount_FromYear">
+                   <widget class="QComboBox" name="box_StatsDay_FromYear">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -2642,7 +2597,7 @@ hr { height: 1px; border-width: 0; }
                    </widget>
                   </item>
                   <item row="1" column="2">
-                   <widget class="QComboBox" name="box_StatsCount_FromMonth">
+                   <widget class="QComboBox" name="box_StatsDay_FromMonth">
                     <property name="minimumSize">
                      <size>
                       <width>120</width>
@@ -2666,7 +2621,7 @@ hr { height: 1px; border-width: 0; }
                    </widget>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QComboBox" name="box_StatsCount_ToYear">
+                   <widget class="QComboBox" name="box_StatsDay_ToYear">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
@@ -2687,7 +2642,7 @@ hr { height: 1px; border-width: 0; }
                    </widget>
                   </item>
                   <item row="2" column="2">
-                   <widget class="QComboBox" name="box_StatsCount_ToMonth">
+                   <widget class="QComboBox" name="box_StatsDay_ToMonth">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
@@ -2708,7 +2663,7 @@ hr { height: 1px; border-width: 0; }
                    </widget>
                   </item>
                   <item row="1" column="3">
-                   <widget class="QComboBox" name="box_StatsCount_FromDay">
+                   <widget class="QComboBox" name="box_StatsDay_FromDay">
                     <property name="maximumSize">
                      <size>
                       <width>56</width>
@@ -3165,66 +3120,6 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log field to view</string>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Protocol</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Method</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>URI</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Query</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Response code</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Time taken</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Bytes sent</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Bytes received</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Referrer</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Cookie</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>User-agent</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Client</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="0" column="4" rowspan="2">
@@ -3358,66 +3253,6 @@ hr { height: 1px; border-width: 0; }
                     <property name="toolTip">
                      <string>Select a log field to view</string>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Protocol</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Method</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>URI</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Query</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Response code</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Time taken</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Bytes sent</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Bytes received</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Referrer</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Cookie</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>User-agent</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Client</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="2" column="4" rowspan="2">
@@ -3505,7 +3340,7 @@ hr { height: 1px; border-width: 0; }
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QGraphicsView" name="graphicsView_3"/>
+             <widget class="QChartView" name="chart_StatsRelat"/>
             </item>
            </layout>
           </widget>
