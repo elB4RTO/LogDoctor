@@ -62,6 +62,78 @@ private slots:
 
     void on_button_StatsSpeed_Draw_clicked();
 
+    void on_box_StatsCount_WebServer_currentIndexChanged(int index);
+
+    void on_tabs_StatsCount_AccErr_currentChanged(int index);
+
+    void on_box_StatsCount_Year_currentIndexChanged(int index);
+
+    void on_box_StatsCount_Month_currentIndexChanged(int index);
+
+    void on_button_StatsCount_Protocol_clicked();
+
+    void on_button_StatsCount_Method_clicked();
+
+    void on_button_StatsCount_Request_clicked();
+
+    void on_button_StatsCount_Query_clicked();
+
+    void on_button_StatsCount_Response_clicked();
+
+    void on_button_StatsCount_Referrer_clicked();
+
+    void on_button_StatsCount_Cookie_clicked();
+
+    void on_button_StatsCount_UserAgent_clicked();
+
+    void on_button_StatsCount_AccClient_clicked();
+
+    void on_button_StatsCount_Level_clicked();
+
+    void on_button_StatsCount_Message_clicked();
+
+    void on_button_StatsCount_Source_clicked();
+
+    void on_button_StatsCount_Port_clicked();
+
+    void on_button_StatsCount_ErrClient_clicked();
+
+    void on_box_StatsDay_WebServer_currentIndexChanged(int index);
+
+    void on_box_StatsDay_LogsType_currentIndexChanged(int index);
+
+    void on_box_StatsDay_LogsField_currentIndexChanged(int index);
+
+    void on_box_StatsDay_FromYear_currentIndexChanged(int index);
+
+    void on_box_StatsDay_FromMonth_currentIndexChanged(int index);
+
+    void on_checkBox_StatsDay_Period_stateChanged(int state);
+
+    void on_box_StatsDay_ToYear_currentIndexChanged(int index);
+
+    void on_box_StatsDay_ToMonth_currentIndexChanged(int index);
+
+    void on_button_StatsDay_Draw_clicked();
+
+    void on_box_StatsRelat_WebServer_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_LogsType_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_LogsField_1_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_LogsField_2_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_FromYear_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_FromMonth_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_ToYear_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_ToMonth_currentIndexChanged(int index);
+
+    void on_button_StatsRelat_Draw_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -138,6 +210,14 @@ private:
     Crapview crapview;
     // refresh dates: query a new collection from the db and apply to the tabs
     void refreshStatsDates();
+    // check if drawing conditions are met
+    void checkStatsSpeedDrawable();
+    void checkStatsCountDrawable();
+    void checkStatsDayDrawable();
+    void checkStatsRelatDrawable();
+    // polishing
+    void resetStatsCountAccButtons();
+    void resetStatsCountErrButtons();
 
 };
 #endif // MAINWINDOW_H
