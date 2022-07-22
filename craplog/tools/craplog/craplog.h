@@ -91,7 +91,7 @@ public:
     const bool checkStuff();
     void startWorking(),
          stopWorking(),
-         makeGraphs( const QFont& font, QChartView& acc_chart, QChartView& err_chart, QChartView& traf_chart ),
+         makeGraphs( const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart ),
          clearDataCollection();
     const bool isWorking(),
                isParsing();
