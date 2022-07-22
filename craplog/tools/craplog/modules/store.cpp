@@ -213,7 +213,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         // initialize the SQL statement
         QString query_stmt;
         if ( log_type == LogOps::LogType::Access ) {
-            query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, client, user_agent, cookie, referrer) "\
+            query_stmt = "INSERT INTO "+table+" (warning, year, month, day, hour, minute, second, protocol, method, request, query, response, time_taken, bytes_sent, bytes_received, referrer, client, user_agent, cookie) "\
                        "VALUES (";
 
         } else {
