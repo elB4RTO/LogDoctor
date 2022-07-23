@@ -2260,7 +2260,8 @@ hr { height: 1px; border-width: 0; }
             <string notr="true"/>
            </attribute>
            <attribute name="toolTip">
-            <string>Time of day perspective: sum of values for a single date, mean value of the sums for a period</string>
+            <string>Time of day perspective with a 10 minutes gap for every hour.
+Counts of the elements for a single date, mean value of the counts for a period.</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_13">
             <item row="2" column="0">
@@ -2733,7 +2734,8 @@ hr { height: 1px; border-width: 0; }
             <string notr="true"/>
            </attribute>
            <attribute name="toolTip">
-            <string>Relational chart for two elements in a period: how many times a specific value brought to another</string>
+            <string>Relational chart for two elements: how many times a specific value brought to another.
+Time of day counts for a single date, entire days counts in a period.</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_18">
             <item row="0" column="0">
@@ -3157,7 +3159,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '&lt;' or '&gt;' to declare what to filter (default to '&gt;')</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter</string>
                     </property>
                    </widget>
                   </item>
@@ -3290,7 +3292,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '&lt;' or '&gt;' to declare what to filter (default to '&gt;')</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter</string>
                     </property>
                    </widget>
                   </item>
