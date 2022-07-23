@@ -37,18 +37,35 @@ public:
     void setDbPath( const std::string& path );
     //const std::string getDbPath( const int web_server );
 
-    const std::tuple<const bool, const std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>> refreshDates();
+    void refreshDates( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>>& result );
 
-    const std::tuple<bool, std::vector<std::tuple<QString, int>>> getItemsCount(
+    void getItemsCount(
+        std::tuple<bool, std::vector<std::tuple<QString, int>>>& result,
         const QString& web_server, const QString& log_type,
-        const QString& year, const QString& month, const QString& day,
+        const QString& year,       const QString& month,    const QString& day,
         const QString& log_field );
 
-    const std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> getDaytimeCounts(
+    void getDaytimeCounts(
+        std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>>& result,
         const QString& web_server, const QString& log_type,
         const QString& from_year_, const QString& from_month_, const QString& from_day_,
-        const QString& to_year_, const QString& to_month_, const QString& to_day_,
+        const QString& to_year_,   const QString& to_month_,   const QString& to_day_,
         const QString& log_field_, const QString& field_filter );
+
+    void getRelationalCountsDay(
+        std::tuple<bool, std::vector<int>>& result,
+        const QString& web_server,   const QString& log_type,
+        const QString& year_,        const QString& month_,         const QString& day_,
+        const QString& log_field_1_, const QString& field_filter_1,
+        const QString& log_field_2_, const QString& field_filter_2 );
+
+    void getRelationalCountsPeriod(
+        std::tuple<bool, std::vector<int>>& result,
+        const QString& web_server,   const QString& log_type,
+        const QString& from_year_,   const QString& from_month_,    const QString& from_day_,
+        const QString& to_year_,     const QString& to_month_,      const QString& to_day_,
+        const QString& log_field_1_, const QString& field_filter_1,
+        const QString& log_field_2_, const QString& field_filter_2 );
 
 private:
     // quantity of informational dialogs to display
