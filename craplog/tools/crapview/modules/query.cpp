@@ -286,7 +286,7 @@ const std::tuple<bool, std::vector<std::tuple<QString, int>>> DbQuery::getItemsC
 }
 
 
-const std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> DbQuery::getDaytimeCounts(const QString& web_server, const QString& log_type, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field, const QString& field_filter )
+const std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> DbQuery::getDaytimeCounts(const QString& web_server, const QString& log_type, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter )
 {
     bool successful = true;
     std::unordered_map<int, std::unordered_map<int, int>> data = {
@@ -332,12 +332,12 @@ const std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> Db
         if ( successful == true ) {
             if ( log_type == "Access" ) {
                 table += "access";
-            } else if ( web_server == "Error" ) {
+            } else if ( log_type == "Error" ) {
                 table += "error";
             } else {
                 // unexpected LogType
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("Unexpected LogType:\n%1").arg( web_server ), true );
+                DialogSec::errGeneric( nullptr, QString("Unexpected LogType:\n%1").arg( log_type ), true );
             }
         }
         int from_year, from_month, from_day,
@@ -361,21 +361,40 @@ const std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> Db
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
+            QString log_field = this->LogFields_to_DbFields.value( log_field_ );
 
-            // select years
-            for ( int year=from_year; year<=to_year; year++ ) {
-                stmt = QString("SELECT %1, year, month, day, hour, minute FROM %2 WHERE year=%3")
-                    .arg( this->LogFields_to_DbFields.value( log_field ))
-                    .arg( table )
-                    .arg( year );
-
-                for ( int month=from_month; month<=to_month; month++ ) {
-
-
+            int n_months = 0,
+                n_days = 0;
+            if ( from_year == to_year ) {
+                // same year
+                if ( from_month == to_month ) {
+                    // same month
+                    n_months = 1;
+                } else {
+                    // different months
+                    n_months = to_month - from_month + 1;
                 }
+            } else {
+                // different years
+                n_months += 13 - from_month; // months to the end of the first year
+                n_months += to_month; // months from the beginning of the last year
+                n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every middle year (0 if none)
+            }
 
+            int year = from_year,
+                month = from_month,
+                day, hour, minute;
+            QList<int> days_l;
+            QString item;
 
-                // quary the database
+            if ( n_months == 1 ) {
+                // 1 month, no need to loop
+                stmt = QString("SELECT %1, day, hour, minute FROM %2 WHERE year=%3 AND month=%4 AND day>=%5 AND day<=%6;")
+                    .arg( log_field )
+                    .arg( table )
+                    .arg( year )
+                    .arg( month )
+                    .arg( from_day ).arg( to_day );
                 if ( query.exec( stmt.replace("'","''") ) == false ) {
                     // error querying database
                     successful = false;
@@ -383,14 +402,127 @@ const std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> Db
 
                 } else {
                     try {
-                        // get data
+                        // clear the list of found days
+                        days_l.clear();
+                        // get query data
                         while ( query.next() ) {
-
+                            item = query.value(0).toString();
+                            if ( item.startsWith( field_filter ) == false ) {
+                                // filtered out
+                                continue;
+                            }
+                            day    = query.value(1).toInt();
+                            hour   = query.value(2).toInt();
+                            minute = query.value(3).toInt();
+                            // increase the count
+                            if ( minute >= 0 && minute < 10 ) {
+                                data.at( hour ).at( 10 ) ++;
+                            } else if ( minute >= 10 && minute < 20 ) {
+                                data.at( hour ).at( 20 ) ++;
+                            } else if ( minute >= 20 && minute < 30 ) {
+                                data.at( hour ).at( 30 ) ++;
+                            } else if ( minute >= 30 && minute < 40 ) {
+                                data.at( hour ).at( 40 ) ++;
+                            } else if ( minute >= 40 && minute < 50 ) {
+                                data.at( hour ).at( 50 ) ++;
+                            } else if ( minute >= 50 && minute < 60 ) {
+                                data.at( hour ).at( 60 ) ++;
+                            } else {
+                                // unexpected value
+                                throw std::exception();
+                            }
+                            // append the day as newly found if not found yet
+                            if ( days_l.indexOf( day ) < 0 ) {
+                                days_l.push_back( day );
+                            }
                         }
+                        n_days += days_l.size();
                     } catch (...) {
                         // something failed
                         successful = false;
                         DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                    }
+                }
+
+
+            } else {
+                for ( int m=1; m<=n_months; m++ ) {
+                    stmt = QString("SELECT %1, day, hour, minute FROM %2 WHERE year=%3 AND month=%4")
+                        .arg( log_field )
+                        .arg( table )
+                        .arg( year )
+                        .arg( month );
+                    if ( m == 1 ) {
+                        // first month, only get the day from the beginning day
+                        stmt += QString(" AND day>=%1").arg( from_day );
+                    } else if ( m == n_months ) {
+                        // last month, only get the days until the ending day
+                        stmt += QString(" AND day<=%1").arg( to_day );
+                    }
+
+                    // quary the database
+                    stmt += ";";
+                    if ( query.exec( stmt.replace("'","''") ) == false ) {
+                        // error querying database
+                        successful = false;
+                        DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
+
+                    } else {
+                        try {
+                            // clear the list of found days
+                            days_l.clear();
+                            // get query data
+                            while ( query.next() ) {
+                                item = query.value(0).toString();
+                                if ( item.startsWith( field_filter ) == false ) {
+                                    // filtered out
+                                    continue;
+                                }
+                                day    = query.value(1).toInt();
+                                hour   = query.value(2).toInt();
+                                minute = query.value(3).toInt();
+                                // increase the count
+                                if ( minute >= 0 && minute < 10 ) {
+                                    data.at( hour ).at( 10 ) ++;
+                                } else if ( minute >= 10 && minute < 20 ) {
+                                    data.at( hour ).at( 20 ) ++;
+                                } else if ( minute >= 20 && minute < 30 ) {
+                                    data.at( hour ).at( 30 ) ++;
+                                } else if ( minute >= 30 && minute < 40 ) {
+                                    data.at( hour ).at( 40 ) ++;
+                                } else if ( minute >= 40 && minute < 50 ) {
+                                    data.at( hour ).at( 50 ) ++;
+                                } else if ( minute >= 50 && minute < 60 ) {
+                                    data.at( hour ).at( 60 ) ++;
+                                } else {
+                                    // unexpected value
+                                    throw std::exception();
+                                }
+                                // append the day as newly found if not found yet
+                                if ( days_l.indexOf( day ) < 0 ) {
+                                    days_l.push_back( day );
+                                }
+                            }
+                            n_days += days_l.size();
+                            month ++;
+                            if ( month > 12 ) {
+                                month = 1;
+                                year ++;
+                            }
+                        } catch (...) {
+                            // something failed
+                            successful = false;
+                            DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                            break;
+                        }
+                    }
+                }
+            }
+            if ( successful == true && n_days > 0 ) {
+                // divide the count by the number of days to get the mean value
+                for ( const auto& [h,data_] : data ) {
+                    for ( const auto& [m,c] : data_ ) {
+                        data.at( h ).at( m ) /= n_days;
                     }
                 }
             }
