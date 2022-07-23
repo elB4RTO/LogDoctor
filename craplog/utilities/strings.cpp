@@ -204,9 +204,9 @@ std::string StringOps::lstripUntil( const std::string& str, const std::string& c
 
 
 
-std::vector<std::string> StringOps::split( const std::string& str, const std::string& sep )
+void StringOps::split( std::vector<std::string>& list, const std::string& str, const std::string& sep )
 {
-    std::vector<std::string> splitted;
+    list.clear();
     std::string slice;
     int start=0, stop;
     while (true) {
@@ -214,31 +214,31 @@ std::vector<std::string> StringOps::split( const std::string& str, const std::st
         if ( stop >= str.size() ) {
             slice = str.substr( start );
             if ( slice.size() > 0 ) {
-                splitted.push_back( slice );
+                list.push_back( slice );
             }
             break;
         } else {
             slice = str.substr( start, stop-start );
             if ( slice.size() > 0 ) {
-                splitted.push_back( slice );
+                list.push_back( slice );
             }
             start = stop+sep.size();
         }
     }
-    return splitted;
 }
 
 
-std::vector<std::string> StringOps::splitrip( const std::string& str, const std::string& sep, const std::string& chars )
+void StringOps::splitrip( std::vector<std::string>& list, const std::string& str, const std::string& sep, const std::string& chars )
 {
-    std::vector<std::string> splitted, aux;
+    list.clear();
+    std::vector<std::string> aux;
     const std::string str_ = StringOps::strip( str );
-    aux = StringOps::split( str_ );
+    StringOps::split( aux, str_ );
     for ( const std::string& str_ : aux ) {
         if ( str_.size() == 0 ) {
             continue;
         }
-        splitted.push_back( StringOps::strip( str_ ) );
+        list.push_back( StringOps::strip( str_ ) );
     }
-    return splitted;
+    aux.clear();
 }

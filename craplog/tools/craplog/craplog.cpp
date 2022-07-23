@@ -492,26 +492,7 @@ const int Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
-/*const int Craplog::getAccessSize()
-{
-    return this->access_size;
-}
-const int Craplog::getErrorSize()
-{
-    return this->error_size;
-}
 
-const int Craplog::getIgnoredSize( const int log_type )
-{
-    if ( log_type == 1 ) {
-        return this->ignored_access_size;
-    } else if ( log_type == 2 ) {
-        return this->ignored_error_size;
-    } else {
-        // wrong log_type
-        throw( "Unexpected LogType: " + std::to_string(log_type) );
-    }
-}*/
 void Craplog::sumBlacklistededSize( const int size, const int log_type )
 {
     if ( log_type == 1 ) {
@@ -690,10 +671,9 @@ void Craplog::joinLogLines()
         if ( this->proceed == false ) { break; }
 
         // collect lines
-        content.clear();
         try {
             // try reading
-            content = StringOps::splitrip( IOutils::readFile( file.path ) );
+            StringOps::splitrip( content, IOutils::readFile( file.path ) );
         } catch (const std::ios_base::failure& err) {
             // failed reading
             // >> err.what() << //
@@ -719,6 +699,7 @@ void Craplog::joinLogLines()
         this->total_size += file.size;
         this->total_lines += content.size();
     }
+    content.clear();
     this->log_files_to_use.clear();
 }
 
@@ -726,13 +707,15 @@ void Craplog::joinLogLines()
 void Craplog::parseLogLines()
 {
     if ( this-> proceed == true && this->access_logs_lines.size() > 0 ) {
-        this->data_collection[1] = this->logOps.parseLines(
+        this->logOps.parseLines(
+            this->data_collection[1],
             this->access_logs_lines,
             this->logs_formats.at( this->current_WS ).at( 1 ) );
     }
 
     if ( this-> proceed == true && this->error_logs_lines.size() > 0 ) {
-        this->data_collection[2] = this->logOps.parseLines(
+        this->logOps.parseLines(
+            this->data_collection[2],
             this->error_logs_lines,
             this->logs_formats.at( this->current_WS ).at( 2 ) );
     }
