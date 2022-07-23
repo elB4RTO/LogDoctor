@@ -48,7 +48,7 @@ public:
         const QString& web_server, const QString& log_type,
         const QString& from_year_, const QString& from_month_, const QString& from_day_,
         const QString& to_year_, const QString& to_month_, const QString& to_day_,
-        const QString& log_field, const QString& field_filter );
+        const QString& log_field_, const QString& field_filter );
 
 private:
     // quantity of informational dialogs to display
@@ -81,7 +81,7 @@ private:
         Months_s2i = {
             {MONTHS.value(1),1},   {MONTHS.value(2),2},   {MONTHS.value(3),3},
             {MONTHS.value(4),4},   {MONTHS.value(5),5},   {MONTHS.value(6),6},
-            {MONTHS.value(7),7},   {MONTHS.value(9),8},   {MONTHS.value(9),9},
+            {MONTHS.value(7),7},   {MONTHS.value(8),8},   {MONTHS.value(9),9},
             {MONTHS.value(10),10}, {MONTHS.value(11),11}, {MONTHS.value(12),12} };
 
     /*const std::unordered_map<std::string, int>
