@@ -28,7 +28,8 @@ void Crapview::setDbPath( const std::string& path )
 
 void Crapview::refreshDates()
 {
-    auto result = this->dbQuery.refreshDates();
+    std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>> result;
+    this->dbQuery.refreshDates( result );
     if ( std::get<0>(result) == true ) {
         this->dates = std::get<1>(result);
     }
@@ -85,10 +86,15 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
 
 void Crapview::drawCount(QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& field )
 {
-    auto result = this->dbQuery.getItemsCount( web_server, log_type, year, month, day, field );
+    std::tuple<bool, std::vector<std::tuple<QString, int>>> result;
+    this->dbQuery.getItemsCount(
+        result,
+        web_server, log_type,
+        year, month, day,
+        field );
     if ( std::get<0>(result) == true ) {
         // get data
-        std::vector<std::tuple<QString, int>> aux_items = std::get<1>(result);
+        std::vector<std::tuple<QString, int>> &aux_items = std::get<1>(result);
         std::vector<std::tuple<QString, int>> items;
         items.reserve( 32 );
 
@@ -126,6 +132,9 @@ void Crapview::drawCount(QtCharts::QChartView* chart, const std::unordered_map<s
 
         chart->setChart( p_chart );
         chart->setRenderHint( QPainter::Antialiasing );
+
+        items.clear();
+        aux_items.clear();
     }
 }
 
@@ -133,7 +142,9 @@ void Crapview::drawCount(QtCharts::QChartView* chart, const std::unordered_map<s
 
 void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter )
 {
-    auto result = this->dbQuery.getDaytimeCounts(
+    std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> result;
+    this->dbQuery.getDaytimeCounts(
+        result,
         web_server, log_type,
         from_year, from_month, from_day,
         to_year, to_month, to_day,
@@ -141,7 +152,7 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
     if ( std::get<0>(result) == true ) {
         // get data
         // { hour : { 10th_minutes : count } }
-        const std::unordered_map<int, std::unordered_map<int, int>> items = std::get<1>(result);
+        std::unordered_map<int, std::unordered_map<int, int>> &items = std::get<1>(result);
 
         // draw the chart
         QColor col = Qt::GlobalColor::darkGreen;
@@ -231,6 +242,8 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
 
         chart->setChart( t_chart );
         chart->setRenderHint( QPainter::Antialiasing );
+
+        items.clear();
     }
 }
 
@@ -238,5 +251,103 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
 
 void Crapview::drawRelat(QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 )
 {
+    bool period = true;
+    std::tuple<bool, std::vector<int>> result;
+    if ( from_year == to_year
+      && from_month == to_month
+      && from_day == to_day ) {
+        period = false;
+        this->dbQuery.getRelativeCountsDay(
+            result,
+            web_server, log_type,
+            from_year, from_month, from_day,
+            field_1, filter_1,
+            field_2, filter_2 );
+    } else {
+        this->dbQuery.getRelativeCountsPeriod(
+            result,
+            web_server, log_type,
+            from_year, from_month, from_day,
+            to_year, to_month, to_day,
+            field_1, filter_1,
+            field_2, filter_2 );
+    }
 
+    if ( std::get<0>(result) == true ) {
+        // get data
+        // { hour : { 10th_minutes : count } }
+        std::vector<int> &items = std::get<1>(result);
+
+        // draw the relational chart
+        QLineSeries *line = new QLineSeries();
+
+        int max_y=0, x=0;
+        for ( const int& count : items ) {
+            *line << QPointF(x, count);
+            if ( count > max_y ) {
+                max_y = count;
+            }
+            x++;
+        }
+
+        QColor col( 255, 127, 127 );
+        QAreaSeries *area  = new QAreaSeries( line );
+        if ( period == false ) {
+            area->setName(QString("%1-%2-%3").arg( from_year ).arg( this->Months_s2i.value(from_month) ).arg( from_day ));
+        } else {
+            area->setName(QString("from %1-%2-%3 to %4-%5-%6").arg( from_year ).arg( this->Months_s2i.value(from_month) ).arg( from_day ).arg( to_year ).arg( this->Months_s2i.value(to_month) ).arg( to_day ));
+        }
+        //area->setColor( QColor( 255, 127, 127 ) );
+        QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
+        gradient.setColorAt(0.0, col.lighter( 50 ) );
+        gradient.setColorAt(1.0, col.lighter( 140 ));
+        gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+        area->setBrush( gradient );
+        area->setBorderColor( col.lighter( 50 ) );
+
+        // fictitious area
+        QAreaSeries *area_ = new QAreaSeries( );
+        area_->setBrush( gradient );
+        area_->setBorderColor( col.lighter( 50 ) );
+
+        QChart *a_chart = new QChart();
+        a_chart->addSeries( area );
+        a_chart->addSeries( area_ );
+        a_chart->setTitle("Relational Count: "+field_1+" -> "+field_2);
+        a_chart->setTitleFont( fonts.at("main") );
+        a_chart->legend()->setFont( fonts.at( "main_small" ) );
+        a_chart->legend()->setAlignment( Qt::AlignBottom );
+
+        QStringList x_labels;
+        if ( period == false ) {
+            x_labels << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
+                     << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
+        } else {
+            for ( int i=0; i<items.size(); i++ ) {
+                x_labels << QString::fromStdString( std::to_string(i) );
+            }
+        }
+
+        QBarCategoryAxis *axisX = new QBarCategoryAxis();
+        axisX->append( x_labels );
+        axisX->setLabelsFont( fonts.at( "main_small" ) );
+        if ( period == true ) {
+            axisX->setLabelsVisible( false );
+        }
+        a_chart->addAxis( axisX, Qt::AlignBottom );
+        area->attachAxis( axisX );
+
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setLabelFormat( "%d" );
+        axisY->setTickCount( ( max_y < 16 ) ? max_y : 16 );
+        axisY->setRange( 0, max_y );
+        axisY->setLabelsFont( fonts.at( "main_small" ) );
+        a_chart->addAxis( axisY, Qt::AlignLeft );
+        area->attachAxis( axisY) ;
+
+        chart->setChart( a_chart );
+        chart->setRenderHint(QPainter::Antialiasing);
+
+        items.clear();
+    }
 }
