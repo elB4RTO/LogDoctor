@@ -141,9 +141,96 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
     if ( std::get<0>(result) == true ) {
         // get data
         // { hour : { 10th_minutes : count } }
-        std::unordered_map<int, std::unordered_map<int, int>> aux_items = std::get<1>(result);
+        const std::unordered_map<int, std::unordered_map<int, int>> items = std::get<1>(result);
 
         // draw the chart
+        QColor col = Qt::GlobalColor::darkGreen;
+        QBarSet *b_10 = new QBarSet( "" );
+        b_10->setColor( col );
+        QBarSet *b_20 = new QBarSet( "" );
+        b_20->setColor( col );
+        QBarSet *b_30 = new QBarSet( " 10 minutes gap per hour" );
+        b_30->setColor( col );
+        QBarSet *b_40 = new QBarSet( "" );
+        b_40->setColor( col );
+        QBarSet *b_50 = new QBarSet( "" );
+        b_50->setColor( col );
+        QBarSet *b_60 = new QBarSet( "" );
+        b_60->setColor( col );
+
+        int count, max_count=0;
+        for ( int h=0; h<24; h++ ) {
+            auto& data = items.at( h );
+            count = data.at( 10 );
+            *b_10 << count;
+            if ( count > max_count ) {
+                max_count = count;
+            }
+            count = data.at( 20 );
+            *b_20 << count;
+            if ( count > max_count ) {
+                max_count = count;
+            }
+            count = data.at( 30 );
+            *b_30 << count;
+            if ( count > max_count ) {
+                max_count = count;
+            }
+            count = data.at( 40 );
+            *b_40 << count;
+            if ( count > max_count ) {
+                max_count = count;
+            }
+            count = data.at( 50 );
+            *b_50 << count;
+            if ( count > max_count ) {
+                max_count = count;
+            }
+            count = data.at( 60 );
+            *b_60 << count;
+            if ( count > max_count ) {
+                max_count = count;
+            }
+        }
+
+        QBarSeries *bars = new QBarSeries();
+        bars->append( b_10 ); bars->append( b_20 ); bars->append( b_30 );
+        bars->append( b_40 ); bars->append( b_50 ); bars->append( b_60 );
+        bars->setBarWidth( 1 );
+
+        QChart *t_chart = new QChart();
+        t_chart->addSeries( bars );
+        t_chart->setTitle( QString("Time of Day Count: %1").arg( field ) );
+        t_chart->setTitleFont( fonts.at("main") );
+        t_chart->legend()->setFont( fonts.at("main_small") );
+        t_chart->legend()->setVisible( false );
+        t_chart->setAnimationOptions( QChart::SeriesAnimations );
+        //t_chart->setBackgroundBrush( Qt::darkGray );
+
+        QStringList categories;
+        categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
+                   << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
+
+        QBarCategoryAxis *axisX = new QBarCategoryAxis();
+        axisX->append( categories );
+        axisX->setLabelsFont( fonts.at( "main_small" ) );
+        t_chart->addAxis( axisX, Qt::AlignBottom );
+        bars->attachAxis( axisX );
+
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setLabelFormat( "%d" );
+        axisY->setTickCount( ( max_count < 16 ) ? max_count : 16 );
+        axisY->setRange( 0, max_count );
+        axisY->setLabelsFont( fonts.at( "main_small" ) );
+        t_chart->addAxis( axisY, Qt::AlignLeft );
+        bars->attachAxis( axisY) ;
+
+        t_chart->legend()->setVisible( true );
+        t_chart->legend()->setAlignment( Qt::AlignBottom );
+        //t_chart->setTheme( QChart::ChartTheme::ChartThemeBrownSand );
+
+        chart->setChart( t_chart );
+        chart->setRenderHint( QPainter::Antialiasing );
     }
 }
 
