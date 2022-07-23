@@ -1077,15 +1077,22 @@ void MainWindow::checkStatsDayDrawable()
           && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
            aux = false;
         } else {
-            if ( this->ui->box_StatsDay_ToYear->currentText().toInt() < this->ui->box_StatsDay_FromYear->currentText().toInt() ) {
+            int a,b;
+            a = this->ui->box_StatsDay_ToYear->currentText().toInt();
+            b = this->ui->box_StatsDay_FromYear->currentText().toInt();
+            if ( a < b ) {
                 // year 'to' is less than 'from'
                 aux = false;
-            } else {
-                if ( this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() ) < this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() ) ) {
+            } else if ( a == b ) {
+                a = this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() );
+                b = this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() );
+                if ( a < b ) {
                     // month 'to' is less than 'from'
                     aux = false;
-                } else {
-                    if ( this->ui->box_StatsDay_ToDay->currentText().toInt() < this->ui->box_StatsDay_FromDay->currentText().toInt() ) {
+                } else if ( a == b ) {
+                    a = this->ui->box_StatsDay_ToDay->currentText().toInt();
+                    b = this->ui->box_StatsDay_FromDay->currentText().toInt();
+                    if ( a < b ) {
                         // day 'to' is less than 'from'
                         aux = false;
                     }
@@ -1154,6 +1161,7 @@ void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
                 this->ui->box_StatsDay_FromYear->currentText() ) );
         this->ui->box_StatsDay_FromMonth->setCurrentIndex( 0 );
     }
+    this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
@@ -1168,6 +1176,12 @@ void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
                 this->ui->box_StatsDay_FromMonth->currentText() ) );
         this->ui->box_StatsDay_FromDay->setCurrentIndex( 0 );
     }
+    this->checkStatsDayDrawable();
+}
+
+void MainWindow::on_box_StatsDay_FromDay_currentIndexChanged(int index)
+{
+    this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
@@ -1202,6 +1216,7 @@ void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
                 this->ui->box_StatsDay_ToYear->currentText() ) );
         this->ui->box_StatsDay_ToMonth->setCurrentIndex( 0 );
     }
+    this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
@@ -1216,12 +1231,18 @@ void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
                 this->ui->box_StatsDay_ToMonth->currentText() ) );
         this->ui->box_StatsDay_ToDay->setCurrentIndex( 0 );
     }
+    this->checkStatsDayDrawable();
 }
 
+void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
+{
+    this->checkStatsDayDrawable();
+}
 
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
+    std::cout << this->ui->inLine_StatsDay_Filter->text().toStdString() << std::endl;
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->FONTS,
@@ -1238,22 +1259,45 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 }
 
 
+
 ////////////////////
 //// RELATIONAL ////
 void MainWindow::checkStatsRelatDrawable()
 {
+    bool aux = true;
     if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
       && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
       && this->ui->box_StatsRelat_FromDay->currentIndex() >= 0
       && this->ui->box_StatsRelat_ToYear->currentIndex() >= 0
       && this->ui->box_StatsRelat_ToMonth->currentIndex() >= 0
       && this->ui->box_StatsRelat_ToDay->currentIndex() >= 0 ) {
-        // enable the draw buttpn
-        this->ui->button_StatsRelat_Draw->setEnabled(true);
+        // check period validity
+        int a,b;
+        a = this->ui->box_StatsRelat_ToYear->currentText().toInt();
+        b = this->ui->box_StatsRelat_FromYear->currentText().toInt();
+        if ( a < b ) {
+            // year 'to' is less than 'from'
+            aux = false;
+        } else if ( a == b ) {
+            a = this->crapview.getMonthNumber( this->ui->box_StatsRelat_ToMonth->currentText() );
+            b = this->crapview.getMonthNumber( this->ui->box_StatsRelat_FromMonth->currentText() );
+            if ( a < b ) {
+                // month 'to' is less than 'from'
+                aux = false;
+            } else if ( a == b ) {
+                a = this->ui->box_StatsRelat_ToDay->currentText().toInt();
+                b = this->ui->box_StatsRelat_FromDay->currentText().toInt();
+                if ( a < b ) {
+                    // day 'to' is less than 'from'
+                    aux = false;
+                }
+            }
+        }
     } else {
         // disable the draw button
-        this->ui->button_StatsRelat_Draw->setEnabled(false);
+        aux = false;
     }
+    this->ui->button_StatsRelat_Draw->setEnabled( aux );
 }
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
@@ -1326,6 +1370,11 @@ void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
     }
 }
 
+void MainWindow::on_box_StatsRelat_FromDay_currentIndexChanged(int index)
+{
+
+}
+
 void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_ToMonth->clear();
@@ -1353,6 +1402,11 @@ void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
     }
 }
 
+void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
+{
+
+}
+
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
@@ -1372,4 +1426,6 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
         this->ui->box_StatsRelat_LogsField_2->currentText(),
         this->ui->inLine_StatsRelat_Filter_2->text() );
 }
+
+
 
