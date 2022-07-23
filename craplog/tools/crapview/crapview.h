@@ -89,7 +89,7 @@ private:
         Months_s2i = {
             {MONTHS.value(1),1},   {MONTHS.value(2),2},   {MONTHS.value(3),3},
             {MONTHS.value(4),4},   {MONTHS.value(5),5},   {MONTHS.value(6),6},
-            {MONTHS.value(7),7},   {MONTHS.value(9),8},   {MONTHS.value(9),9},
+            {MONTHS.value(7),7},   {MONTHS.value(8),8},   {MONTHS.value(9),9},
             {MONTHS.value(10),10}, {MONTHS.value(11),11}, {MONTHS.value(12),12} };
 
     const QHash<int, QString>
