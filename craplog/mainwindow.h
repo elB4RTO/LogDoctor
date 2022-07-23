@@ -108,11 +108,15 @@ private slots:
 
     void on_box_StatsDay_FromMonth_currentIndexChanged(int index);
 
+    void on_box_StatsDay_FromDay_currentIndexChanged(int index);
+
     void on_checkBox_StatsDay_Period_stateChanged(int state);
 
     void on_box_StatsDay_ToYear_currentIndexChanged(int index);
 
     void on_box_StatsDay_ToMonth_currentIndexChanged(int index);
+
+    void on_box_StatsDay_ToDay_currentIndexChanged(int index);
 
     void on_button_StatsDay_Draw_clicked();
 
@@ -128,9 +132,13 @@ private slots:
 
     void on_box_StatsRelat_FromMonth_currentIndexChanged(int index);
 
+    void on_box_StatsRelat_FromDay_currentIndexChanged(int index);
+
     void on_box_StatsRelat_ToYear_currentIndexChanged(int index);
 
     void on_box_StatsRelat_ToMonth_currentIndexChanged(int index);
+
+    void on_box_StatsRelat_ToDay_currentIndexChanged(int index);
 
     void on_button_StatsRelat_Draw_clicked();
 
