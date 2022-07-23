@@ -27,9 +27,9 @@ public:
     static std::string rstrip( const std::string& str, const std::string& chars=" \n\t\b\r\v" );
     static std::string lstripUntil( const std::string& str, const std::string& chr, const bool inclusive=true, const bool consecutives=true );
 
-    static std::vector<std::string> split( const std::string& str, const std::string& sep="\n" );
+    static void split( std::vector<std::string>& list, const std::string& str, const std::string& sep="\n" );
 
-    static std::vector<std::string> splitrip( const std::string& str, const std::string& sep="\n", const std::string& chars=" \n\t\b\r\v" );
+    static void splitrip( std::vector<std::string>& list, const std::string& str, const std::string& sep="\n", const std::string& chars=" \n\t\b\r\v" );
 };
 
 #endif // STRINGS_H

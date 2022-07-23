@@ -143,7 +143,7 @@ const std::vector<std::string> IOutils::readLines(const std::string& path, const
             }
         } else {
             // pick random lines
-            aux_lines = StringOps::split( IOutils::readFile( path ) );
+            StringOps::split( aux_lines, IOutils::readFile( path ) );
             int max = aux_lines.size();
             if ( max > 0 ) {
                 if ( max <= n_lines ) {

@@ -653,15 +653,13 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
     return data;
 }
 
-const std::vector<std::unordered_map<int, std::string> > LogOps::parseLines( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
+void LogOps::parseLines( std::vector<std::unordered_map<int, std::string>>& data, const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
 {
-    std::vector<std::unordered_map<int, std::string>> collection;
-    collection.reserve( lines.size() );
+    data.clear();
+    data.reserve( lines.size() );
     for ( const std::string& line : lines ) {
-        collection.push_back( this->parseLine( line, format ) );
+        data.push_back( this->parseLine( line, format ) );
     }
-
-    return collection;
 }
 
 
