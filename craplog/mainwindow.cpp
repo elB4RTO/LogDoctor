@@ -380,8 +380,11 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
         // load the list
         this->craplog.setCurrentWSID( 11 );
         this->on_button_LogFiles_RefreshList_clicked();
-        this->ui->textLogFiles->setText( RichText::richLogsDefault() );
+        QString rich_text;
+        RichText::richLogsDefault( rich_text );
+        this->ui->textLogFiles->setText( rich_text );
         this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        rich_text.clear();
     }
 }
 // switch to nginx web server
@@ -396,8 +399,11 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
         // load the list
         this->craplog.setCurrentWSID( 12 );
         this->on_button_LogFiles_RefreshList_clicked();
-        this->ui->textLogFiles->setText( RichText::richLogsDefault() );
+        QString rich_text;
+        RichText::richLogsDefault( rich_text );
+        this->ui->textLogFiles->setText( rich_text );
         this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        rich_text.clear();
     }
 }
 // switch to iis web server
@@ -412,8 +418,11 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
         // load the list
         this->craplog.setCurrentWSID( 13 );
         this->on_button_LogFiles_RefreshList_clicked();
-        this->ui->textLogFiles->setText( RichText::richLogsDefault() );
+        QString rich_text;
+        RichText::richLogsDefault( rich_text );
+        this->ui->textLogFiles->setText( rich_text );
         this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        rich_text.clear();
     }
 }
 
@@ -543,16 +552,20 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
             if ( proceed == true ) {
                 // succesfully read, now enriched and display
-                this->ui->textLogFiles->setText(
-                    RichText::enrichLogs(
-                        content,
-                        format,
-                        this->TB ));
+                QString rich_content;
+                RichText::enrichLogs(
+                    rich_content, content,
+                    format, this->TB );
+                this->ui->textLogFiles->setText( rich_content );
+                rich_content.clear();
             }
+            content.clear();
         }
         if ( proceed == false ) {
             // failed to read
-            this->ui->textLogFiles->setText( RichText::richLogsFailure() );
+            QString rich_text;
+            RichText::richLogsFailure( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
             this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         }
     }
@@ -1331,6 +1344,7 @@ void MainWindow::on_box_StatsRelat_LogsType_currentIndexChanged(int index)
         this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
         this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
     }
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_LogsField_1_currentIndexChanged(int index)
@@ -1354,6 +1368,7 @@ void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
                 this->ui->box_StatsRelat_FromYear->currentText() ) );
         this->ui->box_StatsRelat_FromMonth->setCurrentIndex( 0 );
     }
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
@@ -1368,11 +1383,12 @@ void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
                 this->ui->box_StatsRelat_FromMonth->currentText() ) );
         this->ui->box_StatsRelat_FromDay->setCurrentIndex( 0 );
     }
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_FromDay_currentIndexChanged(int index)
 {
-
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
@@ -1386,6 +1402,7 @@ void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
                 this->ui->box_StatsRelat_FromYear->currentText() ) );
         this->ui->box_StatsRelat_ToMonth->setCurrentIndex( 0 );
     }
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
@@ -1400,11 +1417,12 @@ void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
                 this->ui->box_StatsRelat_FromMonth->currentText() ) );
         this->ui->box_StatsRelat_ToDay->setCurrentIndex( 0 );
     }
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 {
-
+    this->checkStatsRelatDrawable();
 }
 
 

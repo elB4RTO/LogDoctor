@@ -29,7 +29,8 @@ public:
         );
 
     // parse log lines to get data
-    const std::vector<std::unordered_map<int, std::string>> parseLines(
+    void parseLines(
+        std::vector<std::unordered_map<int, std::string>>& data,
         const std::vector<std::string>& lines,
         const FormatOps::LogsFormat& format
         );
