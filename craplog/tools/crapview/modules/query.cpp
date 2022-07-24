@@ -8,6 +8,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
+#include <QDateTime>
 
 
 DbQuery::DbQuery()
@@ -25,6 +26,84 @@ void DbQuery::setDbPath( const std::string& path )
 {
     this->db_path = path;
     this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1 ) );
+}
+
+
+const int DbQuery::getMinuteGap(const int minute , const int gap )
+{
+    int m = -1;
+    if ( minute < 0 || minute >= 60 ) {
+        // unexpected value
+        throw ( "Unexpected Minute: "[minute] );
+    }
+    int n = 0;
+    for ( int g=0; g<60; g+=gap ) {
+        if ( minute >= g && minute < g+gap ) {
+            m = gap * n;
+            break;
+        }
+        n++;
+    }
+    return m;
+}
+
+const int DbQuery::getMonthDays( const int year, const int month )
+{
+    int n_days;
+    switch (month) {
+        case 1:  n_days = 31; break;
+        case 2:  n_days = ( year%4 == 0 ) ? 29 : 28 ; break;
+        case 3:  n_days = 31; break;
+        case 4:  n_days = 30; break;
+        case 5:  n_days = 31; break;
+        case 6:  n_days = 30; break;
+        case 7:  n_days = 31; break;
+        case 8:  n_days = 31; break;
+        case 9:  n_days = 30; break;
+        case 10: n_days = 31; break;
+        case 11: n_days = 30; break;
+        case 12: n_days = 31; break;
+        default:
+            // unexpected month
+            throw ( "Unexpected Month: "[month] );
+    }
+    return n_days;
+}
+
+const int DbQuery::getMonthsCount( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month )
+{
+    int from_year_, from_month_, to_year_, to_month_;
+    try {
+        from_year_  = from_year.toInt();
+        from_month_ = this->Months_s2i.value( from_month );
+        to_year_  = ( to_year.size() == 0 )  ? from_year_  : to_year.toInt() ;
+        to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->Months_s2i.value( to_month ) ;
+    } catch (...) {
+        // failed to convert to integers
+        throw std::exception();
+    }
+    return this->getMonthsCount( from_year_, from_month_, to_year_, to_month_ );
+}
+
+const int DbQuery::getMonthsCount( const int from_year, const int from_month, const int to_year, const int to_month )
+{
+    int n_months = 0;
+    if ( from_year == to_year ) {
+        // same year
+        if ( from_month == to_month ) {
+            // same month
+            n_months = 1;
+        } else {
+            // different months
+            n_months = to_month - from_month + 1;
+        }
+    } else {
+        // different years
+        n_months += 13 - from_month; // months to the end of the first year
+        n_months += to_month; // months from the beginning of the last year
+        n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every middle year (0 if none)
+    }
+    return n_months;
 }
 
 
@@ -205,7 +284,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("Unexpected WebServer:\n%1").arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
         }
         if ( successful == true ) {
             if ( log_type == TYPES.value(1) ) {
@@ -253,7 +332,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
                 } catch (...) {
                     // something failed
                     successful = false;
-                    DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                    DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                 }
             }
         }
@@ -295,18 +374,18 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
 {
     bool successful = true;
     std::unordered_map<int, std::unordered_map<int, int>> data = {
-        {0,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {1,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {2,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {3,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {4,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {5,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {6,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {7,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {8,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {9,  {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {10, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {11, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {12, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {13, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {14, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {15, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {16, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {17, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {18, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {19, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {20, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {21, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
-        {22, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},  {23, {{10,0},{20,0},{30,0},{40,0},{50,0},{60,0}}},
+        {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {2,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {3,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {4,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {5,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {6,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {7,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {8,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {9,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {10, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {11, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {12, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {13, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {14, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {15, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {16, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {17, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {18, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {19, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {20, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {21, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
+        {22, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {23, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
     };
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -332,7 +411,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("Unexpected WebServer:\n%1").arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
         }
         if ( successful == true ) {
             if ( log_type == TYPES.value(1) ) {
@@ -342,7 +421,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             } else {
                 // unexpected LogType
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("Unexpected LogType:\n%1").arg( log_type ), true );
+                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
             }
         }
         int from_year, from_month, from_day,
@@ -359,7 +438,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("An error occured while processing dates"), true );
+                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
             }
         }
         if ( successful == true ) {
@@ -368,29 +447,13 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             QString stmt;
             QString log_field = this->LogFields_to_DbFields.value( log_field_ );
 
-            int n_months = 0,
-                n_days = 0;
-            if ( from_year == to_year ) {
-                // same year
-                if ( from_month == to_month ) {
-                    // same month
-                    n_months = 1;
-                } else {
-                    // different months
-                    n_months = to_month - from_month + 1;
-                }
-            } else {
-                // different years
-                n_months += 13 - from_month; // months to the end of the first year
-                n_months += to_month; // months from the beginning of the last year
-                n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every middle year (0 if none)
-            }
+            int n_days   = 0,
+                n_months = this->getMonthsCount( from_year, from_month, to_year, to_month );
 
             int year = from_year,
                 month = from_month,
                 day, hour, minute;
             QList<int> days_l;
-            QString item;
 
             if ( n_months == 1 ) {
                 // 1 month, no need to loop
@@ -426,22 +489,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                             hour   = query.value(1).toInt();
                             minute = query.value(2).toInt();
                             // increase the count
-                            if ( minute >= 0 && minute < 10 ) {
-                                data.at( hour ).at( 10 ) ++;
-                            } else if ( minute >= 10 && minute < 20 ) {
-                                data.at( hour ).at( 20 ) ++;
-                            } else if ( minute >= 20 && minute < 30 ) {
-                                data.at( hour ).at( 30 ) ++;
-                            } else if ( minute >= 30 && minute < 40 ) {
-                                data.at( hour ).at( 40 ) ++;
-                            } else if ( minute >= 40 && minute < 50 ) {
-                                data.at( hour ).at( 50 ) ++;
-                            } else if ( minute >= 50 && minute < 60 ) {
-                                data.at( hour ).at( 60 ) ++;
-                            } else {
-                                // unexpected value
-                                throw std::exception();
-                            }
+                            data.at( hour ).at( this->getMinuteGap( minute ) ) ++;
                             // append the day as newly found if not found yet
                             if ( days_l.indexOf( day ) < 0 ) {
                                 days_l.push_back( day );
@@ -451,7 +499,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                     } catch (...) {
                         // something failed
                         successful = false;
-                        DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                     }
                 }
 
@@ -497,22 +545,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                                 hour   = query.value(1).toInt();
                                 minute = query.value(2).toInt();
                                 // increase the count
-                                if ( minute >= 0 && minute < 10 ) {
-                                    data.at( hour ).at( 10 ) ++;
-                                } else if ( minute >= 10 && minute < 20 ) {
-                                    data.at( hour ).at( 20 ) ++;
-                                } else if ( minute >= 20 && minute < 30 ) {
-                                    data.at( hour ).at( 30 ) ++;
-                                } else if ( minute >= 30 && minute < 40 ) {
-                                    data.at( hour ).at( 40 ) ++;
-                                } else if ( minute >= 40 && minute < 50 ) {
-                                    data.at( hour ).at( 50 ) ++;
-                                } else if ( minute >= 50 && minute < 60 ) {
-                                    data.at( hour ).at( 60 ) ++;
-                                } else {
-                                    // unexpected value
-                                    throw std::exception();
-                                }
+                                data.at( hour ).at( this->getMinuteGap( minute ) );
                                 // append the day as newly found if not found yet
                                 if ( days_l.indexOf( day ) < 0 ) {
                                     days_l.push_back( day );
@@ -527,7 +560,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                         } catch (...) {
                             // something failed
                             successful = false;
-                            DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                            DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                             break;
                         }
                     }
@@ -557,13 +590,10 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result, const QString& web_server, const QString& log_type, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& log_type, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
 {
     bool successful = true;
-    std::vector<int> data;
-    for ( int i=0; i<24; i++ ) {
-        data.push_back( 0 );
-    }
+    std::vector<std::tuple<long long, int>> data;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
@@ -588,7 +618,7 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("Unexpected WebServer:\n%1").arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
         }
         if ( successful == true ) {
             if ( log_type == TYPES.value(1) ) {
@@ -598,9 +628,10 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
             } else {
                 // unexpected LogType
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("Unexpected LogType:\n%1").arg( log_type ), true );
+                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
             }
         }
+
         int year, month, day;
         if ( successful == true ) {
             // setup period limits
@@ -611,20 +642,22 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("An error occured while processing dates"), true );
+                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
             }
         }
         if ( successful == true ) {
+            QDateTime time;
+            time.setDate( QDate( year, month , day ) );
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
             QString log_field_1 = this->LogFields_to_DbFields.value( log_field_1_ ),
                     log_field_2 = this->LogFields_to_DbFields.value( log_field_2_ );
 
-            int hour, aux_hour, count;
+            int hour, aux_hour, minute, aux_minute, count;
 
             // 1 month, no need to loop
-            stmt = QString("SELECT \"hour\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
+            stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                 .arg( table.replace("'","''") )
                 .arg( year ).arg( month )
                 .arg( day );
@@ -639,14 +672,14 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
                   || log_field_1 == "time_taken"
                   || log_field_1 == "bytes_sent"
                   || log_field_1 == "bytes_received" ) {
-                // numbers
-                if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
-                    // no operator found, set defult to '='
-                    filter = QString("=%1").arg( field_filter_1 );
-                }
-                stmt += QString(" AND \"%1\"%2")
-                    .arg( log_field_1.replace("'","''") )
-                    .arg( filter.replace("'","''") );
+                    // numbers
+                    if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
+                        // no operator found, set defult to '='
+                        filter = QString("=%1").arg( field_filter_1 );
+                    }
+                    stmt += QString(" AND \"%1\"%2")
+                        .arg( log_field_1.replace("'","''") )
+                        .arg( filter.replace("'","''") );
 
                 } else {
                     stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
@@ -664,14 +697,14 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
                   || log_field_2 == "time_taken"
                   || log_field_2 == "bytes_sent"
                   || log_field_2 == "bytes_received" ) {
-                // numbers
-                if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
-                    // no operator found, set defult to '='
-                    filter = QString("=%1").arg( field_filter_2 );
-                }
-                stmt += QString(" AND \"%1\"%2")
-                    .arg( log_field_2.replace("'","''") )
-                    .arg( filter.replace("'","''") );
+                    // numbers
+                    if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
+                        // no operator found, set defult to '='
+                        filter = QString("=%1").arg( field_filter_2 );
+                    }
+                    stmt += QString(" AND \"%1\"%2")
+                        .arg( log_field_2.replace("'","''") )
+                        .arg( filter.replace("'","''") );
 
                 } else {
                     stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
@@ -680,7 +713,7 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
                 }
             }
 
-            stmt += QString(" ORDER BY \"hour\" ASC;");
+            stmt += QString(" ORDER BY \"hour\",\"minute\" ASC;");
             if ( query.exec( stmt ) == false ) {
                 // error querying database
                 successful = false;
@@ -689,28 +722,101 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
             } else {
                 try {
                     // get query data
+                    int gap = 20;
                     hour = -1;
-                    count = 0;
-                    while ( query.next() ) {
-                        aux_hour = query.value(0).toInt();
-                        if ( aux_hour == hour ) {
-                            count ++;
-                        } else {
-                            if ( hour != -1 ) {
-                                // any loop-round except the first
-                                data.at( hour ) += count;
+                    minute = count = 0;
+                    if ( query.size() == 0 ) {
+                        // no result found, append missing days with 0 value
+                        for ( int h=0; h<24; h++ ) {
+                            for ( int m=0; m<60; m+=gap ) {
+                                time.setTime( QTime( h, m ) );
+                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                             }
-                            hour = aux_hour;
-                            count = 1;
                         }
 
+                    } else {
+                        while ( query.next() ) {
+                            aux_hour   = query.value(0).toInt();
+                            aux_minute = this->getMinuteGap( query.value(1).toInt(), gap );
+                            if ( aux_hour == hour && aux_minute == minute ) {
+                                count ++;
+                            } else {
+                                if ( aux_hour == hour ) {
+                                    // same hour new minute gap, append the last count
+                                    time.setTime( QTime( hour, minute ) );
+                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                                    // and any missing gap
+                                    for ( int m=minute+gap; m<aux_minute; m+=gap ) {
+                                        time.setTime( QTime( hour, m ) );
+                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                    }
+                                } else {
+                                    // minute is always different when the hour is different
+                                    if ( hour >= 0 ) {
+                                        // apend the last minute-gap count if not in the first round of the loop
+                                        time.setTime( QTime( hour, minute ) );
+                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                                        // append any missing gap in the current hour
+                                        for ( int m=minute+gap; m<60; m+=gap ) {
+                                            time.setTime( QTime( hour, m ) );
+                                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                        }
+                                        hour ++;
+                                    } else {
+                                        // prepare to add missing gaps from 00:00 (+gap will be added to the minute)
+                                        hour = 0;
+                                    }
+                                    // append any missing gap in every hour between the current and the next found (aux)
+                                    for ( int h=hour; h<aux_hour; h++ ) {
+                                        for ( int m=0; m<60; m+=gap ) {
+                                            time.setTime( QTime( h, m ) );
+                                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                        }
+                                    }
+                                    // append any missing gap in the netx found hour
+                                    for ( int m=0; m<aux_minute; m+=gap ) {
+                                        time.setTime( QTime( aux_hour, m ) );
+                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                    }
+                                    hour = aux_hour;
+                                }
+                                minute = aux_minute;
+                                count = 1;
+                            }
+                        }
+                        // append the last count
+                        time.setTime( QTime( hour, minute ) );
+                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                        // yet again, append any missing gap
+                        for ( int m=minute+gap; m<60; m+=gap ) {
+                            time.setTime( QTime( hour, m ) );
+                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                        }
+                        for ( int h=hour+1; h<24; h++ ) {
+                            for ( int m=0; m<60; m+=gap ) {
+                                time.setTime( QTime( h, m ) );
+                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                            }
+                        }
+                        // append the real last fictitious count
+                        day ++;
+                        if ( day > this->getMonthDays( year, month ) ) {
+                            day = 1;
+                            month ++;
+                            if ( month > 12 ) {
+                                month = 1;
+                                year ++;
+                            }
+                        }
+                        time.setDate( QDate( year, month , day ) );
+                        time.setTime( QTime( 0, 0 ) );
+                        //time.setTime( QTime( 23, 59, 59, 999 ) );
+                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                     }
-                    // append the last count
-                    data.at( hour ) += count;
                 } catch (...) {
                     // something failed
                     successful = false;
-                    DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                    DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                 }
             }
         }
@@ -727,10 +833,10 @@ void DbQuery::getRelationalCountsDay( std::tuple<bool, std::vector<int>>& result
 
 
 
-void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& result, const QString& web_server, const QString& log_type, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& log_type, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
 {
     bool successful = true;
-    std::vector<int> data;
+    std::vector<std::tuple<long long, int>> data;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
@@ -755,7 +861,7 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("Unexpected WebServer:\n%1").arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
         }
         if ( successful == true ) {
             if ( log_type == TYPES.value(1) ) {
@@ -765,7 +871,7 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
             } else {
                 // unexpected LogType
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("Unexpected LogType:\n%1").arg( log_type ), true );
+                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
             }
         }
         int from_year, from_month, from_day,
@@ -782,7 +888,7 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, QString("An error occured while processing dates"), true );
+                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
             }
         }
         if ( successful == true ) {
@@ -792,24 +898,10 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
             QString log_field_1 = this->LogFields_to_DbFields.value( log_field_1_ ),
                     log_field_2 = this->LogFields_to_DbFields.value( log_field_2_ );
 
-            int n_months = 0,
-                n_days = 0;
-            if ( from_year == to_year ) {
-                // same year
-                if ( from_month == to_month ) {
-                    // same month
-                    n_months = 1;
-                } else {
-                    // different months
-                    n_months = to_month - from_month + 1;
-                }
-            } else {
-                // different years
-                n_months += 13 - from_month; // months to the end of the first year
-                n_months += to_month; // months from the beginning of the last year
-                n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every middle year (0 if none)
-            }
+            int n_days   = 0,
+                n_months = this->getMonthsCount( from_year, from_month, to_year, to_month );
 
+            QDateTime time;
             int year  = from_year,
                 month = from_month,
                 day, aux_day, count;
@@ -882,26 +974,98 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
                     try {
                         // get query data
                         day = count = 0;
-                        while ( query.next() ) {
-                            aux_day = query.value(0).toInt();
-                            if ( aux_day == day ) {
-                                count ++;
-                            } else {
-                                if ( day != 0 ) {
-                                    // any loop-round except the first
-                                    data.push_back( count );
-                                }
-                                day = aux_day;
-                                count = 1;
+                        if ( query.size() == 0 ) {
+                            // no days found, append missing days with 0 value
+                            for ( int d=from_day; d<=to_day; d++ ) {
+                                time.setDate( QDate( year, month , d ) );
+                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                             }
 
+                        } else {
+                            while ( query.next() ) {
+                                aux_day = query.value(0).toInt();
+                                if ( aux_day == day ) {
+                                    count ++;
+                                } else {
+                                    if ( day > 0 ) {
+                                        // any loop-round except the first
+                                        time.setDate( QDate( year, month , day ) );
+                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                                        for ( int d=day+1; d<aux_day; d++ ) {
+                                            // append any missing day with a zero value
+                                            time.setDate( QDate( year, month , d ) );
+                                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                        }
+                                    } else {
+                                        // append any missing day from 1 day before the first until the next found
+                                        int d = from_day - 1,
+                                            m = month,
+                                            y = year;
+                                        if ( d < 1 ) {
+                                            m --;
+                                            if ( m < 1 ) {
+                                                m = 12;
+                                                y --;
+                                            }
+                                            d = this->getMonthDays( y, m );
+                                        }
+                                        for ( ; d!=aux_day; d++ ) {
+                                            if ( d > this->getMonthDays( y, m ) ) {
+                                                d = 1;
+                                                m ++;
+                                                if ( m > 12 ) {
+                                                    m = 1;
+                                                    y ++;
+                                                }
+                                            }
+                                            time.setDate( QDate( y, m , d ) );
+                                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                        }
+                                    }
+                                    day = aux_day;
+                                    count = 1;
+                                }
+                            }
+                            // append the last count
+                            time.setDate( QDate( year, month , day ) );
+                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                            // append any missing day from the last found until 1 day fater the last one
+                            day++;
+                            if ( day > this->getMonthDays( year, month ) ) {
+                                month ++;
+                                if ( month > 12 ) {
+                                    month = 1;
+                                    year ++;
+                                }
+                                day = this->getMonthDays( year, month );
+                            }
+                            to_day += 2;
+                            if ( to_day > this->getMonthDays( year, month ) ) {
+                                int m = month + 1,
+                                    y = year;
+                                if ( m > 12 ) {
+                                    m = 1;
+                                    y ++;
+                                }
+                                to_day = this->getMonthDays( y, m );
+                            }
+                            for ( ; day!=to_day; day++ ) {
+                                if ( day > this->getMonthDays( year, month ) ) {
+                                    day = 1;
+                                    month ++;
+                                    if ( month > 12 ) {
+                                        month = 1;
+                                        year ++;
+                                    }
+                                }
+                                time.setDate( QDate( year, month , day ) );
+                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                            }
                         }
-                        // append the last count
-                        data.push_back( count );
                     } catch (...) {
                         // something failed
                         successful = false;
-                        DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                     }
                 }
 
@@ -930,14 +1094,14 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
                           || log_field_1 == "time_taken"
                           || log_field_1 == "bytes_sent"
                           || log_field_1 == "bytes_received" ) {
-                        // numbers
-                        if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
-                            // no operator found, set defult to '='
-                            filter = QString("=%1").arg( field_filter_1 );
-                        }
-                        stmt += QString(" AND \"%1\"%2")
-                            .arg( log_field_1.replace("'","''") )
-                            .arg( filter.replace("'","''") );
+                            // numbers
+                            if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
+                                // no operator found, set defult to '='
+                                filter = QString("=%1").arg( field_filter_1 );
+                            }
+                            stmt += QString(" AND \"%1\"%2")
+                                .arg( log_field_1.replace("'","''") )
+                                .arg( filter.replace("'","''") );
 
                         } else {
                             stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
@@ -955,14 +1119,14 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
                           || log_field_2 == "time_taken"
                           || log_field_2 == "bytes_sent"
                           || log_field_2 == "bytes_received" ) {
-                        // numbers
-                        if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
-                            // no operator found, set defult to '='
-                            filter = QString("=%1").arg( field_filter_2 );
-                        }
-                        stmt += QString(" AND \"%1\"%2")
-                            .arg( log_field_2.replace("'","''") )
-                            .arg( filter.replace("'","''") );
+                            // numbers
+                            if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
+                                // no operator found, set defult to '='
+                                filter = QString("=%1").arg( field_filter_2 );
+                            }
+                            stmt += QString(" AND \"%1\"%2")
+                                .arg( log_field_2.replace("'","''") )
+                                .arg( filter.replace("'","''") );
 
                         } else {
                             stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
@@ -982,21 +1146,60 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
                         try {
                             // get query data
                             day = count = 0;
-                            while ( query.next() ) {
-                                aux_day = query.value(0).toInt();
-                                if ( aux_day == day ) {
-                                    count ++;
-                                } else {
-                                    if ( day != 0 ) {
-                                        // any loop-round except the first
-                                        data.push_back( count );
+                            if ( query.size() == 0 ) {
+                                // no days found, append missing days with 0 value
+                                int f_d = 1,
+                                    t_d = this->getMonthDays( year, month );
+                                if ( m == 1 ) {
+                                    // first month, only get the day from the beginning day
+                                    f_d = from_day;
+                                } else if ( m == n_months ) {
+                                    // last month, only get the days until the ending day
+                                    t_d = to_day;
+                                }
+                                for ( ; f_d<=t_d; f_d++ ) {
+                                    time.setDate( QDate( year, month , f_d ) );
+                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                }
+
+                            } else {
+                                while ( query.next() ) {
+                                    aux_day = query.value(0).toInt();
+                                    if ( aux_day == day ) {
+                                        count ++;
+                                    } else {
+                                        if ( day > 0 ) {
+                                            // any loop-round except the first
+                                            time.setDate( QDate( year, month , day ) );
+                                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                                            for ( int d=day+1; d<aux_day; d++ ) {
+                                                // append any missing day with a zero value
+                                                time.setDate( QDate( year, month , d ) );
+                                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                            }
+                                        } else {
+                                            // append any missing day until the next found day
+                                            day = 1;
+                                            for ( int d=day; d<aux_day; d++ ) {
+                                                time.setDate( QDate( year, month , d ) );
+                                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                                            }
+                                        }
+                                        day = aux_day;
+                                        count = 1;
                                     }
-                                    day = aux_day;
-                                    count = 1;
+                                }
+                                // append the last count
+                                if ( day > 0 ) {
+                                    time.setDate( QDate( year, month , day ) );
+                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
+                                }
+                                // append any missing day to the end of the month with a zero value
+                                for ( int d=day+1; d<=this->getMonthDays(year,month); d++ ) {
+                                    time.setDate( QDate( year, month , d ) );
+                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }
                             }
-                            // append the last count
-                            data.push_back( count );
                             // increase the month
                             month ++;
                             if ( month > 12 ) {
@@ -1006,11 +1209,20 @@ void DbQuery::getRelationalCountsPeriod( std::tuple<bool, std::vector<int>>& res
                         } catch (...) {
                             // something failed
                             successful = false;
-                            DialogSec::errGeneric( nullptr, QString("An error occured while processing"), true );
+                            DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                             break;
                         }
                     }
                 }
+                // append the first day of 1 month after the last one as the last one day
+                day = 1;
+                month = to_month +1;
+                if ( month > 12 ) {
+                    month = 1;
+                    year ++;
+                }
+                time.setDate( QDate( year, month , day ) );
+                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
             }
         }
     }
