@@ -65,6 +65,13 @@ private:
 
     DbQuery dbQuery;
 
+    QString TEXT_COUNT_OTHERS = QMessageBox::tr("Others"),
+            TITLE_DAY  = QMessageBox::tr("Time of Day Count"),
+            LEGEND_DAY = QMessageBox::tr(" 10 minutes gap per hour"),
+            TITLE_RELAT       = QMessageBox::tr("Relational Count"),
+            LEGEND_RELAT_FROM = QMessageBox::tr("from"),
+            LEGEND_RELAT_TO   = QMessageBox::tr("to");
+
     // collection of available dates
     // { web_server : { log_type : { year : { month_str : [ days ] } } } }
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> dates;
