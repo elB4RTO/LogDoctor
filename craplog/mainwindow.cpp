@@ -1399,7 +1399,7 @@ void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
             this->crapview.getMonths(
                 this->ui->box_StatsRelat_WebServer->currentText(),
                 this->ui->box_StatsRelat_LogsType->currentText(),
-                this->ui->box_StatsRelat_FromYear->currentText() ) );
+                this->ui->box_StatsRelat_ToYear->currentText() ) );
         this->ui->box_StatsRelat_ToMonth->setCurrentIndex( 0 );
     }
     this->checkStatsRelatDrawable();
@@ -1413,8 +1413,8 @@ void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
             this->crapview.getDays(
                 this->ui->box_StatsRelat_WebServer->currentText(),
                 this->ui->box_StatsRelat_LogsType->currentText(),
-                this->ui->box_StatsRelat_FromYear->currentText(),
-                this->ui->box_StatsRelat_FromMonth->currentText() ) );
+                this->ui->box_StatsRelat_ToYear->currentText(),
+                this->ui->box_StatsRelat_ToMonth->currentText() ) );
         this->ui->box_StatsRelat_ToDay->setCurrentIndex( 0 );
     }
     this->checkStatsRelatDrawable();
