@@ -72,7 +72,7 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->label_MakeStats_Speed->setFont( this->FONTS.at("main") );
 
     // StatsSpeed table
-    this->ui->table_StatsSpeed_Fields->setFont( this->FONTS.at("main") );
+    this->ui->table_StatsSpeed->setFont( this->FONTS.at("main") );
 
     // adjust LogsList headers width
     this->ui->listLogFiles->header()->resizeSection(0,200);
@@ -741,11 +741,118 @@ void MainWindow::craplogFinished()
 void MainWindow::refreshStatsDates()
 {
     this->crapview.refreshDates();
+    this->on_box_StatsWarn_WebServer_currentIndexChanged(0);
     this->on_box_StatsSpeed_WebServer_currentIndexChanged(0);
     this->on_box_StatsCount_WebServer_currentIndexChanged(0);
     this->on_box_StatsDay_WebServer_currentIndexChanged(0);
     this->on_box_StatsRelat_WebServer_currentIndexChanged(0);
 }
+
+
+//////////////
+//// WARN ////
+void MainWindow::checkStatsWarnDrawable()
+{
+    if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
+      && this->ui->box_StatsWarn_Month->currentIndex() >= 0
+      && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
+        // enable the draw buttpn
+        this->ui->button_StatsWarn_Draw->setEnabled( true );
+    } else {
+        // disable the draw button
+        this->ui->button_StatsWarn_Draw->setEnabled( false );
+    }
+}
+
+void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
+{
+    this->ui->box_StatsWarn_LogsType->setCurrentIndex( 0 );
+    this->checkStatsWarnDrawable();
+}
+
+void MainWindow::on_box_StatsWarn_LogsType_currentIndexChanged(int index)
+{
+    this->on_box_StatsWarn_WebServer_currentIndexChanged(0);
+    this->ui->box_StatsWarn_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsWarn_Year->addItems(
+            this->crapview.getYears(
+                this->ui->box_StatsWarn_WebServer->currentText(),
+                this->ui->box_StatsWarn_LogsType->currentText() ));
+        this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
+    }
+    this->checkStatsWarnDrawable();
+}
+
+void MainWindow::on_box_StatsWarn_Year_currentIndexChanged(int index)
+{
+    this->ui->box_StatsWarn_Month->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsWarn_Month->addItems(
+            this->crapview.getMonths(
+                this->ui->box_StatsWarn_WebServer->currentText(),
+                this->ui->box_StatsWarn_LogsType->currentText(),
+                this->ui->box_StatsWarn_Year->currentText() ) );
+        this->ui->box_StatsWarn_Month->setCurrentIndex( 0 );
+    }
+    this->checkStatsWarnDrawable();
+}
+
+void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
+{
+    this->ui->box_StatsWarn_Day->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsWarn_Day->addItems(
+            this->crapview.getDays(
+                this->ui->box_StatsWarn_WebServer->currentText(),
+                this->ui->box_StatsWarn_LogsType->currentText(),
+                this->ui->box_StatsWarn_Year->currentText(),
+                this->ui->box_StatsWarn_Month->currentText() ) );
+        this->ui->box_StatsWarn_Day->setCurrentIndex( 0 );
+    }
+    this->checkStatsWarnDrawable();
+}
+
+void MainWindow::on_box_StatsWarn_Day_currentIndexChanged(int index)
+{
+    if ( this->ui->checkBox_StatsWarn_Hour->isChecked() == true ) {
+        this->ui->box_StatsWarn_Hour->clear();
+        if ( index != -1 ) {
+            this->ui->box_StatsWarn_Hour->addItems(
+                this->crapview.getHours(
+                    this->ui->box_StatsWarn_WebServer->currentText(),
+                    this->ui->box_StatsWarn_LogsType->currentText(),
+                    this->ui->box_StatsWarn_Year->currentText(),
+                    this->ui->box_StatsWarn_Month->currentText(),
+                    this->ui->box_StatsWarn_Day->currentText() ) );
+            this->ui->box_StatsWarn_Hour->setCurrentIndex( 0 );
+        }
+    }
+    this->checkStatsWarnDrawable();
+}
+
+void MainWindow::on_checkBox_StatsWarn_Hour_stateChanged(int state)
+{
+    if ( state == Qt::CheckState::Checked ) {
+        this->ui->box_StatsWarn_Hour->setEnabled( true );
+        // add available dates
+        this->on_box_StatsWarn_Day_currentIndexChanged( 0 );
+    } else {
+        this->ui->box_StatsWarn_Hour->clear();
+        this->ui->box_StatsWarn_Hour->setEnabled( false );
+    }
+}
+
+void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
+{
+    this->checkStatsWarnDrawable();
+}
+
+void MainWindow::on_button_StatsWarn_Draw_clicked()
+{
+
+}
+
 
 ///////////////
 //// SPEED ////
@@ -755,10 +862,10 @@ void MainWindow::checkStatsSpeedDrawable()
       && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
       && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
         // enable the draw buttpn
-        this->ui->button_StatsSpeed_Draw->setEnabled(true);
+        this->ui->button_StatsSpeed_Draw->setEnabled( true );
     } else {
         // disable the draw button
-        this->ui->button_StatsSpeed_Draw->setEnabled(false);
+        this->ui->button_StatsSpeed_Draw->setEnabled( false );
     }
 }
 
@@ -784,6 +891,7 @@ void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
                 this->ui->box_StatsSpeed_Year->currentText() ) );
         this->ui->box_StatsSpeed_Month->setCurrentIndex( 0 );
     }
+    this->checkStatsSpeedDrawable();
 }
 
 void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
@@ -798,12 +906,20 @@ void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
                 this->ui->box_StatsSpeed_Month->currentText() ) );
         this->ui->box_StatsSpeed_Day->setCurrentIndex( 0 );
     }
+    this->checkStatsSpeedDrawable();
+}
+
+void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
+{
+    this->checkStatsSpeedDrawable();
 }
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
+    //this->ui->table_StatsSpeed->clear();
+    this->ui->table_StatsSpeed->setRowCount(0);
     this->crapview.drawSpeed(
-        this->ui->table_StatsSpeed_Fields,
+        this->ui->table_StatsSpeed,
         this->ui->chart_SatsSpeed,
         this->FONTS,
         this->ui->box_StatsSpeed_WebServer->currentText(),
@@ -826,12 +942,12 @@ void MainWindow::checkStatsCountDrawable()
       && this->ui->box_StatsCount_Month->currentIndex() >= 0
       && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
         // enable the draw buttpn
-        this->ui->scrollArea_StatsCount_Access->setEnabled(true);
-        this->ui->scrollArea_StatsCount_Error->setEnabled(true);
+        this->ui->scrollArea_StatsCount_Access->setEnabled( true );
+        this->ui->scrollArea_StatsCount_Error->setEnabled( true );
     } else {
         // disable the draw button
-        this->ui->scrollArea_StatsCount_Access->setEnabled(false);
-        this->ui->scrollArea_StatsCount_Error->setEnabled(false);
+        this->ui->scrollArea_StatsCount_Access->setEnabled( false );
+        this->ui->scrollArea_StatsCount_Error->setEnabled( false );
     }
 }
 
@@ -870,6 +986,7 @@ void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
                 this->ui->box_StatsCount_Year->currentText() ) );
         this->ui->box_StatsCount_Month->setCurrentIndex( 0 );
     }
+    this->checkStatsCountDrawable();
 }
 
 void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
@@ -884,6 +1001,12 @@ void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
                 this->ui->box_StatsCount_Month->currentText() ) );
         this->ui->box_StatsCount_Day->setCurrentIndex( 0 );
     }
+    this->checkStatsCountDrawable();
+}
+
+void MainWindow::on_box_StatsCount_Day_currentIndexChanged(int index)
+{
+    this->checkStatsCountDrawable();
 }
 
 void MainWindow::resetStatsCountAccButtons()
@@ -1114,16 +1237,16 @@ void MainWindow::checkStatsDayDrawable()
         }
     }
     // primary date
-    if ( this->ui->box_StatsDay_FromYear->currentIndex() >= 0
-      && this->ui->box_StatsDay_FromMonth->currentIndex() >= 0
-      && this->ui->box_StatsDay_FromDay->currentIndex() >= 0
-      && aux == true ) {
-        // enable the draw buttpn
-        this->ui->button_StatsDay_Draw->setEnabled(true);
-    } else {
-        // disable the draw button
-        this->ui->button_StatsDay_Draw->setEnabled(false);
+    if ( this->ui->box_StatsDay_FromYear->currentIndex() < 0
+      && this->ui->box_StatsDay_FromMonth->currentIndex() < 0
+      && this->ui->box_StatsDay_FromDay->currentIndex() < 0 ) {
+        aux = false;
     }
+    // check log field validity
+    if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
+        aux = false;
+    }
+    this->ui->button_StatsDay_Draw->setEnabled( aux);
 }
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
@@ -1155,12 +1278,14 @@ void MainWindow::on_box_StatsDay_LogsType_currentIndexChanged(int index)
                 this->ui->box_StatsDay_LogsType->currentText() ));
         this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
     }
+    this->checkStatsDayDrawable();
 }
 
 
 void MainWindow::on_box_StatsDay_LogsField_currentIndexChanged(int index)
 {
     this->ui->inLine_StatsDay_Filter->clear();
+    this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
@@ -1310,6 +1435,11 @@ void MainWindow::checkStatsRelatDrawable()
         // disable the draw button
         aux = false;
     }
+    // check log field validity
+    if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() < 0
+      || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
+        aux = false;
+    }
     this->ui->button_StatsRelat_Draw->setEnabled( aux );
 }
 
@@ -1350,11 +1480,13 @@ void MainWindow::on_box_StatsRelat_LogsType_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_LogsField_1_currentIndexChanged(int index)
 {
     this->ui->inLine_StatsRelat_Filter_1->clear();
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_LogsField_2_currentIndexChanged(int index)
 {
     this->ui->inLine_StatsRelat_Filter_2->clear();
+    this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
@@ -1444,6 +1576,4 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
         this->ui->box_StatsRelat_LogsField_2->currentText(),
         this->ui->inLine_StatsRelat_Filter_2->text() );
 }
-
-
 

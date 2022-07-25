@@ -54,11 +54,29 @@ private slots:
 
     void on_button_MakeStats_Start_clicked();
 
+    void on_box_StatsWarn_WebServer_currentIndexChanged(int index);
+
+    void on_box_StatsWarn_LogsType_currentIndexChanged(int index);
+
+    void on_box_StatsWarn_Year_currentIndexChanged(int index);
+
+    void on_box_StatsWarn_Month_currentIndexChanged(int index);
+
+    void on_box_StatsWarn_Day_currentIndexChanged(int index);
+
+    void on_checkBox_StatsWarn_Hour_stateChanged(int state);
+
+    void on_box_StatsWarn_Hour_currentIndexChanged(int index);
+
+    void on_button_StatsWarn_Draw_clicked();
+
     void on_box_StatsSpeed_WebServer_currentIndexChanged(int index);
 
     void on_box_StatsSpeed_Year_currentIndexChanged(int index);
 
     void on_box_StatsSpeed_Month_currentIndexChanged(int index);
+
+    void on_box_StatsSpeed_Day_currentIndexChanged(int index);
 
     void on_button_StatsSpeed_Draw_clicked();
 
@@ -69,6 +87,8 @@ private slots:
     void on_box_StatsCount_Year_currentIndexChanged(int index);
 
     void on_box_StatsCount_Month_currentIndexChanged(int index);
+
+    void on_box_StatsCount_Day_currentIndexChanged(int index);
 
     void on_button_StatsCount_Protocol_clicked();
 
@@ -219,6 +239,7 @@ private:
     // refresh dates: query a new collection from the db and apply to the tabs
     void refreshStatsDates();
     // check if drawing conditions are met
+    void checkStatsWarnDrawable();
     void checkStatsSpeedDrawable();
     void checkStatsCountDrawable();
     void checkStatsDayDrawable();
