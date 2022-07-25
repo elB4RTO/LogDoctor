@@ -14,7 +14,7 @@ FormatOps::FormatOps()
     this->APACHE_ALF["%r"]  = "request_full";
     this->APACHE_ALF["%H"]  = "request_protocol";
     this->APACHE_ALF["%m"]  = "request_method";
-    this->APACHE_ALF["%U"]  = "request_page";
+    this->APACHE_ALF["%U"]  = "request_uri";
     this->APACHE_ALF["%q"]  = "request_query";
     this->APACHE_ALF["%s"]  = "response_code";
     this->APACHE_ALF["%>s"] = "response_code";
@@ -146,7 +146,7 @@ FormatOps::FormatOps()
     this->IIS_ALF["time"]           = "date_time_utc_t";
     this->IIS_ALF["cs-version"]     = "request_protocol";
     this->IIS_ALF["cs-method"]      = "request_method";
-    this->IIS_ALF["cs-uri-stem"]    = "request_page";
+    this->IIS_ALF["cs-uri-stem"]    = "request_uri";
     this->IIS_ALF["cs-uri-query"]   = "request_query";
     this->IIS_ALF["sc-status"]      = "response_code";
     this->IIS_ALF["sc-bytes"]       = "bytes_sent";

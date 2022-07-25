@@ -96,7 +96,7 @@ bool CheckSec::newStatsDatabase( QSqlDatabase& db, const std::string& db_path, c
                     second TINYINT,\
                     protocol TEXT,\
                     method TEXT,\
-                    request TEXT,\
+                    uri TEXT,\
                     query TEXT,\
                     response SMALLINT,\
                     time_taken INTEGER,\
@@ -210,7 +210,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                                         {"second", { "TINYINT",  false} },
                                       {"protocol", { "TEXT",     false} },
                                         {"method", { "TEXT",     false} },
-                                       {"request", { "TEXT",     false} },
+                                           {"uri", { "TEXT",     false} },
                                          {"query", { "TEXT",     false} },
                                       {"response", { "SMALLINT", false} },
                                     {"time_taken", { "INTEGER",  false} },

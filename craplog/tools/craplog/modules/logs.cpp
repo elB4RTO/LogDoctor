@@ -21,7 +21,7 @@ LogOps::LogOps()
 
     this->field2id["request_protocol"]  = 10;
     this->field2id["request_method"]    = 11;
-    this->field2id["request_page"]      = 12;
+    this->field2id["request_uri"]       = 12;
     this->field2id["request_query"]     = 13;
     this->field2id["response_code"]     = 14;
         this->field2id["request_full"]      = 0;
@@ -583,7 +583,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                             data.emplace( this->field2id.at("request_method"), method );
                         }
                         if ( page != "" ) {
-                            data.emplace( this->field2id.at("request_page"), page );
+                            data.emplace( this->field2id.at("request_uri"), page );
                         }
                         if ( query != "" ) {
                             data.emplace( this->field2id.at("request_query"), query );
