@@ -27,12 +27,19 @@ public:
     const QStringList getYears( const QString& web_server, const QString& logs_type );
     const QStringList getMonths( const QString& web_server, const QString& logs_type, const QString& year );
     const QStringList getDays( const QString& web_server, const QString& logs_type, const QString& year, const QString& month );
+    const QStringList getHours( const QString& web_server, const QString& logs_type, const QString& year, const QString& month, const QString& day );
 
     const QStringList getFields( const QString& tab, const QString& logs_type );
 
+    void drawWarn(
+        QTableWidget* table, QtCharts::QChartView* chart,
+        const std::unordered_map<std::string, QFont>& fonts,
+        const QString& web_server,
+        const QString& year, const QString& month, const QString& day, const QString& hour );
+
     void drawSpeed(
         QTableWidget* table, QtCharts::QChartView* chart,
-         const std::unordered_map<std::string, QFont>& fonts,
+        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
         const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response );
@@ -65,7 +72,8 @@ private:
 
     DbQuery dbQuery;
 
-    QString TEXT_COUNT_OTHERS = QMessageBox::tr("Others"),
+    QString TITLE_SPEED = QMessageBox::tr("Time Taken to Serve Requests"),
+            TEXT_COUNT_OTHERS = QMessageBox::tr("Others"),
             TITLE_DAY  = QMessageBox::tr("Time of Day Count"),
             LEGEND_DAY = QMessageBox::tr(" 10 minutes gap per hour"),
             TITLE_RELAT       = QMessageBox::tr("Relational Count"),
@@ -87,6 +95,8 @@ private:
             {TYPES.value(2),  {FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }}
     };
 
+    const QString printableDate( const QString& year, const int month, const QString& day );
+
     // conversion between text and IDs
     const QHash<QString, int>
         WebServer_s2i = {
@@ -100,16 +110,6 @@ private:
             {MONTHS.value(10),10}, {MONTHS.value(11),11}, {MONTHS.value(12),12} };
 
     const QHash<int, QString>
-        /*WebServer_i2s = {
-            {11,"Apache2"}, {12,"Nginx"}, {13,"IIS"} },
-        LogsType_i2s  = {
-            {1,"Access"}, {2,"Error"} },
-        LogField_i2s  = {
-            {1,"year"}, {2,"month"}, {3,"day"}, {4,"hour"}, {5,"minute"}, {6,"second"},
-            {10,"protocol"}, {11,"method"}, {12,"request"}, {13,"query"}, {14,"response"},
-            {15,"time_taken"}, {16,"bytes_sent"}, {17,"bytes_received"}, {18,"referrer"},
-            {20,"client"}, {21,"user_agent"}, {22,"cookie"},
-            {30,"port"}, {31,"level"}, {32,"message"}, {33,"source_file"} },*/
         Months_i2s = {
             {1,MONTHS.value(1)},   {2,MONTHS.value(2)},   {3,MONTHS.value(3)},
             {4,MONTHS.value(4)},   {5,MONTHS.value(5)},   {6,MONTHS.value(6)},
