@@ -41,6 +41,12 @@ public:
 
     void refreshDates( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>>& result );
 
+    void getSpeedData(
+            std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result,
+            const QString& web_server,
+            const QString& year_, const QString& month_, const QString& day_,
+            const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f );
+
     void getItemsCount(
         std::tuple<bool, std::vector<std::tuple<QString, int>>>& result,
         const QString& web_server, const QString& log_type,
@@ -85,7 +91,7 @@ private:
         LogFields_to_DbFields = {
             {FIELDS.value(10), "protocol"},
             {FIELDS.value(11), "method"},
-            {FIELDS.value(12), "request"},
+            {FIELDS.value(12), "uri"},
             {FIELDS.value(13), "query"},
             {FIELDS.value(14), "response"},
             {FIELDS.value(15), "time_taken"},
@@ -111,36 +117,6 @@ private:
     const int getMinuteGap( const int minute, const int gap=10 ),
               getMonthDays( const int year, const int month ),
               getMonthsCount( const int from_year, const int from_month, const int to_year, const int to_month );
-
-    /*const std::unordered_map<std::string, int>
-        WebServer_str2int = {
-            {"Apache2",11}, {"Nginx",12}, {"IIS",13} },
-        LogsType_str2int  = {
-            {"Access",1}, {"Error",2} },
-        LogField_str2int  = {
-            {"year",1}, {"month",2}, {"day",3}, {"hour",4}, {"minute",5}, {"second",6},
-            {"protocol",10}, {"method",11}, {"request",12}, {"query",13}, {"response",14},
-            {"time_taken",15}, {"bytes_sent",16}, {"bytes_received",17}, {"referrer",18},
-            {"client",20}, {"user_agent",21}, {"cookie",22},
-            {"port",30}, {"level",31}, {"message",32}, {"source_file",33} },
-        Months_str2int    = {
-            {"January",1}, {"February",2}, {"March",3}, {"April",4}, {"May",5}, {"June",6},
-            {"July",7}, {"August",8}, {"September",9}, {"October",10}, {"November",11}, {"December",12} };
-
-    const std::unordered_map<int, QString>
-        WebServer_int2str = {
-            {11,"Apache2"}, {12,"Nginx"}, {13,"IIS"} },
-        LogsType_int2str  = {
-            {1,"Access"}, {2,"Error"} },
-        LogField_int2str  = {
-            {1,"year"}, {2,"month"}, {3,"day"}, {4,"hour"}, {5,"minute"}, {6,"second"},
-            {10,"protocol"}, {11,"method"}, {12,"request"}, {13,"query"}, {14,"response"},
-            {15,"time_taken"}, {16,"bytes_sent"}, {17,"bytes_received"}, {18,"referrer"},
-            {20,"client"}, {21,"user_agent"}, {22,"cookie"},
-            {30,"port"}, {31,"level"}, {32,"message"}, {33,"source_file"} },
-        Months_int2str    = {
-            {1,"January"}, {2,"February"}, {3,"March"}, {4,"April"}, {5,"May"}, {6,"June"},
-            {7,"July"}, {8,"August"}, {9,"September"}, {10,"October"}, {11,"November"}, {12,"December"} };*/
 };
 
 #endif // QUERY_H

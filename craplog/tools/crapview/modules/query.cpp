@@ -254,6 +254,240 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
 
 
 
+// get day-time values for the time-taken field
+void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f )
+{
+    bool successful = true;
+    std::vector<std::tuple<long long, std::vector<QString>>> data;
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName( QString::fromStdString( this->db_path ));
+
+    if ( db.open() == false ) {
+        // error opening database
+        successful = false;
+        QString err_msg = "";
+        if ( this->dialog_level == 2 ) {
+            err_msg = db.lastError().text();
+        }
+        DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
+
+    } else {
+        QString table;
+        if ( web_server == "Apache2" ) {
+            table += "apache_access";
+        } else if ( web_server == "Nginx" ) {
+            table += "nginx_access";
+        } else if ( web_server == "Apache2" ) {
+            table += "iis_access";
+        } else {
+            // unexpected WebServer
+            successful = false;
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+        }
+        int year, month, day;
+        if ( successful == true ) {
+            // setup period limits
+            try {
+                year  = year_.toInt();
+                month = this->Months_s2i.value( month_ );
+                day   = day_.toInt();
+            } catch (...) {
+                // failed to convert to integers
+                successful = false;
+                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+            }
+        }
+        if ( successful == true ) {
+            QDateTime time;
+            time.setDate( QDate( year, month , day ) );
+            // build the query statement
+            QSqlQuery query = QSqlQuery( db );
+            QString stmt, filter;
+
+            // prepare the statement
+            stmt = QString("SELECT \"hour\",\"minute\",\"second\",\"time_taken\",\"uri\",\"query\",\"method\",\"protocol\",\"response\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 AND \"time_taken\" IS NOT NULL")
+                .arg( table.replace("'","''") )
+                .arg( year ).arg( month )
+                .arg( day );
+
+            // apply a filter if present
+            if ( protocol_f.size() > 0 ) {
+                stmt += QString(" AND \"protocol\" LIKE '%1' || '%'")
+                    .arg( QString(protocol_f).replace("'","''") );
+            }
+            if ( method_f.size() > 0 ) {
+                stmt += QString(" AND \"method\" LIKE '%1' || '%'")
+                    .arg( QString(method_f).replace("'","''") );
+            }
+            if ( uri_f.size() > 0 ) {
+                stmt += QString(" AND \"uri\" LIKE '%1' || '%'")
+                    .arg( QString(uri_f).replace("'","''") );
+            }
+            if ( query_f.size() > 0 ) {
+                stmt += QString(" AND \"query\" LIKE '%1' || '%'")
+                    .arg( QString(query_f).replace("'","''") );
+            }
+            if ( response_f.size() > 0 ) {
+                // numbers
+                if ( StringOps::isNumeric( response_f.toStdString() ) == true ) {
+                    // no operator found, set defult to '='
+                    filter = QString("=%1").arg( response_f );
+                } else {
+                    filter = response_f;
+                }
+                stmt += QString(" AND \"response\"%1")
+                    .arg( filter.replace("'","''") );
+            }
+
+            stmt += QString(" ORDER BY \"hour\",\"minute\",\"second\" ASC;");
+            if ( query.exec( stmt ) == false ) {
+                // error querying database
+                successful = false;
+                DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
+
+            } else {
+                int hour, aux_hour, minute, aux_minute, second, aux_second;
+                try {
+                    // get query data
+                    int gap = 5;
+                    hour = -1;
+                    minute = second = 0;
+                    if ( query.size() == 0 ) {
+                        // no result found
+                        ;
+
+                    } else {
+                        QString tt, ur, qr, mt, pt, rs;
+                        while ( query.next() ) {
+                            aux_hour   = query.value(0).toInt();
+                            aux_minute = query.value(1).toInt();
+                            aux_second = query.value(2).toInt();
+
+                            if ( aux_hour == hour && aux_minute == minute && aux_second == second ) {
+                                time.setTime( QTime( hour, minute, second ));
+                                data.push_back( std::make_tuple(
+                                    time.toMSecsSinceEpoch(),
+                                    std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                            } else {
+                                if ( aux_hour == hour ) {
+                                    // same hour new minute/second, append the last count
+                                    time.setTime( QTime( hour, minute, second ));
+                                    data.push_back( std::make_tuple(
+                                        time.toMSecsSinceEpoch(),
+                                        std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                                    // append the second after the last one with value 0, if it is not equaò to the next
+                                    if ( aux_minute > minute
+                                      || (aux_minute == minute && aux_second > second+1) ) {
+                                        time.setTime( QTime( hour, minute, second+1 ));
+                                        data.push_back( std::make_tuple(
+                                            time.toMSecsSinceEpoch(),
+                                            std::vector<QString>{"","","","","",""} ));
+                                    }
+                                } else {
+                                    // minute/second are always different when the hour is different
+                                    if ( hour >= 0 ) {
+                                        // apend the last p count if not in the first round of the loop
+                                        time.setTime( QTime( hour, minute, second ));
+                                        data.push_back( std::make_tuple(
+                                            time.toMSecsSinceEpoch(),
+                                            std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                                        // append the next as zero
+                                        time.setTime( QTime( hour, minute, second+1 ));
+                                        data.push_back( std::make_tuple(
+                                            time.toMSecsSinceEpoch(),
+                                            std::vector<QString>{"","","","","",""} ));
+                                        hour ++;
+                                    } else {
+                                        // append the second 0 of the day, if it is not the next found
+                                        if ( aux_hour != 0 || aux_minute != 0 || aux_second > 0 ) {
+                                            time.setTime( QTime( 0, 0, 0 ));
+                                            data.push_back( std::make_tuple(
+                                                time.toMSecsSinceEpoch(),
+                                                std::vector<QString>{"","","","","",""} ));
+                                            // append the second before the first found with value 0
+                                            int h=aux_hour, m=aux_minute, s=aux_second;
+                                            s --;
+                                            if ( s < 0 ) {
+                                                s = 59;
+                                                m --;
+                                                if ( m < 0 ) {
+                                                    m = 59;
+                                                    h --;
+                                                    if ( h < 0 ) {
+                                                        // abort
+                                                        h=0, m=0, s=0;
+                                                    }
+                                                }
+                                            }
+                                            if ( h != 0 || m != 0 || s != 0 ) {
+                                                time.setTime( QTime( h, m, s ));
+                                                data.push_back( std::make_tuple(
+                                                    time.toMSecsSinceEpoch(),
+                                                    std::vector<QString>{"","","","","",""} ));
+                                            }
+                                        }
+                                    }
+                                    hour = aux_hour;
+                                }
+                                minute = aux_minute;
+                                second = aux_second;
+                            }
+                            tt = query.value(3).toString();
+                            ur = query.value(4).toString();
+                            qr = query.value(5).toString();
+                            mt = query.value(6).toString();
+                            pt = query.value(7).toString();
+                            rs = query.value(8).toString();
+                        }
+                        // append the last count
+                        time.setTime( QTime( hour, minute, second ));
+                        data.push_back( std::make_tuple(
+                            time.toMSecsSinceEpoch(),
+                            std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                        // append 1 second after the last with 0
+                        if ( hour != 23 || minute != 59 || second < 59 ) {
+                            time.setTime( QTime( hour, minute, second+1 ));
+                            data.push_back( std::make_tuple(
+                                time.toMSecsSinceEpoch(),
+                                std::vector<QString>{"","","","","",""} ));
+                        }
+                        // append the real last fictitious count
+                        day ++;
+                        if ( day > this->getMonthDays( year, month ) ) {
+                            day = 1;
+                            month ++;
+                            if ( month > 12 ) {
+                                month = 1;
+                                year ++;
+                            }
+                        }
+                        time.setDate( QDate( year, month , day ) );
+                        time.setTime( QTime( 0, 0, 0 ));
+                        data.push_back( std::make_tuple(
+                            time.toMSecsSinceEpoch(),
+                            std::vector<QString>{"","","","","",""} ));
+                    }
+                } catch (...) {
+                    // something failed
+                    successful = false;
+                    DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                }
+            }
+        }
+    }
+
+    if ( successful == false ) {
+        data.clear();
+    }
+    if ( db.isOpen() == true ) {
+        db.close();
+    }
+    result = std::make_tuple( successful, data );
+}
+
+
+
 // get, group and count identical items of a specific field in a date
 void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, int>>>& result, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& log_field )
 {
