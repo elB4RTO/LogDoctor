@@ -26,6 +26,23 @@ void Crapview::setDbPath( const std::string& path )
 }
 
 
+const QString Crapview::printableDate( const QString& year, const int month, const QString& day )
+{
+    QString date = QString("%1-").arg( year );
+    if ( month < 10 ) {
+        date += QString("0%1-").arg( month );
+    } else {
+        date += QString("%1-").arg( month );
+    }
+    if ( day.size() < 2 ) {
+        date += QString("0%1").arg( day );
+    } else {
+        date += day;
+    }
+    return date;
+}
+
+
 void Crapview::refreshDates()
 {
     std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>> result;
@@ -67,6 +84,10 @@ const QStringList Crapview::getDays( const QString& web_server, const QString& l
     }
     return days;
 }
+const QStringList Crapview::getHours( const QString& web_server, const QString& logs_type, const QString& year, const QString& month, const QString& day )
+{
+    return QStringList({"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
+}
 
 const QStringList Crapview::getFields( const QString& tab, const QString& logs_type )
 {
@@ -77,9 +98,133 @@ const QStringList Crapview::getFields( const QString& tab, const QString& logs_t
 ////////////////
 //// CHARTS ////
 ////////////////
-void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response )
+void drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour )
 {
 
+}
+
+
+
+void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response )
+{
+    std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>> result;
+    this->dbQuery.getSpeedData(
+        result,
+        web_server,
+        year, month, day,
+        protocol, method, uri, query, response );
+    if ( std::get<0>(result) == true ) {
+        // get data
+        // { hour : { 10th_minutes : count } }
+        std::vector<std::tuple<long long, std::vector<QString>>> &items = std::get<1>(result);
+
+        // draw the relational chart
+        QLineSeries *line = new QLineSeries();
+        line->setName( this->printableDate( year, this->Months_s2i.value(month), day ));
+
+        // build the line upon data
+        int i=0, max_i=items.size(), max_t=0, aux;
+        long long time /* xD */, aux_time=0, t=0, aux_t, count=1;
+        time = std::get<0>(items.at(0));
+        QDateTime dt;
+        std::vector<QString> data;
+        for ( const auto& item : items ) {
+            i++;
+            // append a value to the chart
+            aux_time = std::get<0>(item);
+            data = std::get<1>(item);
+            aux_t = data.at( 0 ).toLongLong();
+            // append only if the second is different, else sum
+            if ( aux_time > time ) {
+                t = t/count;
+                if ( i == max_i ) {
+                    // initial/final
+                    time = aux_time;
+                }
+                line->append( time, t );
+                if ( t > max_t ) {
+                    max_t = t;
+                }
+                time = aux_time;
+                t = aux_t;
+                count = 1;
+            } else {
+                count ++;
+                t += aux_t;
+            }
+            // fill the teble with data
+            if ( data.at(0).size() > 0 || data.at(1).size() > 0 || data.at(2).size() > 0 || data.at(3).size() > 0 || data.at(4).size() > 0 || data.at(5).size() > 0 ) {
+                aux = table->rowCount();
+                table->insertRow( aux );
+                aux --;
+                table->setItem( aux,  0, new QTableWidgetItem( data.at(0) ));
+                table->setItem( aux,  1, new QTableWidgetItem( data.at(1) ));
+                table->setItem( aux,  2, new QTableWidgetItem( data.at(2) ));
+                table->setItem( aux,  3, new QTableWidgetItem( data.at(3) ));
+                table->setItem( aux,  4, new QTableWidgetItem( data.at(4) ));
+                table->setItem( aux,  5, new QTableWidgetItem( data.at(5) ));
+                dt = QDateTime::fromMSecsSinceEpoch( aux_time );
+                table->setItem( aux,  6, new QTableWidgetItem( dt.time().toString("hh:mm:ss") ));
+            }
+        }
+        table->verticalHeader()->setVisible( false );
+
+        // fictitious line
+        QLineSeries *line_ = new QLineSeries();
+
+        // color the area
+        QColor col1 = Qt::GlobalColor::red,
+               col2 = Qt::GlobalColor::green,
+               col3 = Qt::GlobalColor::blue;
+        //area->setColor( col );
+        QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
+        gradient.setColorAt(0.3, col1.lighter( 90 ) );
+        gradient.setColorAt(0.7, col2.lighter( 90 ) );
+        gradient.setColorAt(1.0, col3.lighter( 90 ) );
+        gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+
+        QPen pen = line->pen();
+        pen.setBrush( gradient );
+        pen.setWidth( 1 );
+        line->setPen(pen);
+
+        pen = line_->pen();
+        pen.setBrush( gradient );
+        pen.setWidth( 1 );
+        line_->setPen(pen);
+
+        // build the chart
+        QChart *l_chart = new QChart();
+        l_chart->addSeries( line );
+        l_chart->addSeries( line_ );
+        l_chart->setTitle( this->TITLE_SPEED );
+        l_chart->setTitleFont( fonts.at("main") );
+        l_chart->legend()->setFont( fonts.at( "main_small" ) );
+        l_chart->legend()->setAlignment( Qt::AlignBottom );
+
+        // set-up the date-time axis (X)
+        QDateTimeAxis *axisX = new QDateTimeAxis();
+        axisX->setLabelsFont( fonts.at( "main_small" ) );
+        axisX->setFormat( "hh:mm" );
+        axisX->setTickCount( 25 );
+        l_chart->addAxis( axisX, Qt::AlignBottom );
+        line->attachAxis( axisX );
+
+        // set-up the count values axis (Y)
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setLabelFormat( "%d" );
+        axisY->setTickCount( ( max_t < 16 ) ? max_t : 16 );
+        axisY->setRange( 0, max_t );
+        axisY->setLabelsFont( fonts.at( "main_small" ) );
+        l_chart->addAxis( axisY, Qt::AlignLeft );
+        line->attachAxis( axisY) ;
+
+        // add the chart to the view
+        chart->setChart( l_chart );
+        chart->setRenderHint(QPainter::Antialiasing);
+
+        items.clear();
+    }
 }
 
 
@@ -301,23 +446,24 @@ void Crapview::drawRelat(QtCharts::QChartView* chart, const std::unordered_map<s
         // build the area
         QAreaSeries *area  = new QAreaSeries( line );
         if ( period == false ) {
-            area->setName(QString("%1-%2-%3")
-                .arg( from_year ).arg( this->Months_s2i.value(from_month) ).arg( from_day ));
+            area->setName( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ));
         } else {
-            area->setName(QString("%1 %2-%3-%4 %5 %6-%7-%8")
+            area->setName(QString("%1 %2 %3 %4")
                 .arg( this->LEGEND_RELAT_FROM )
-                .arg( from_year ).arg( this->Months_s2i.value(from_month) ).arg( from_day )
+                .arg( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ))
                 .arg( this->LEGEND_RELAT_TO )
-                .arg( to_year ).arg( this->Months_s2i.value(to_month) ).arg( to_day ));
+                .arg( this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )));
         }
 
         // color the area
         QColor col1 = Qt::GlobalColor::red,
-               col2 = Qt::GlobalColor::yellow;
+               col2 = Qt::GlobalColor::yellow,
+               col3 = Qt::GlobalColor::magenta;
         //area->setColor( col );
         QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
-        gradient.setColorAt(0.1, col1.lighter( 80 ) );
-        gradient.setColorAt(1.0, col2.lighter( 90 ) );
+        gradient.setColorAt(0.25, col3.lighter( 70 ) );
+        gradient.setColorAt(0.5,  col1.lighter( 80 ) );
+        gradient.setColorAt(1.0,  col2.lighter( 90 ) );
         gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
         area->setBrush( gradient );
         area->setBorderColor( col1.lighter( 50 ) );
