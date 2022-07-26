@@ -347,12 +347,12 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                 DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
 
             } else {
-                int hour, aux_hour, minute, aux_minute, second, aux_second;
                 try {
                     // get query data
-                    int gap = 5;
-                    hour = -1;
-                    minute = second = 0;
+                    int hour=-1,  aux_hour,   prev_hour=0,   h,
+                        minute=0, aux_minute, prev_minute=0, m,
+                        second=0, aux_second, prev_second=0, s;
+
                     if ( query.size() == 0 ) {
                         // no result found
                         ;
@@ -371,56 +371,109 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                                     std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
                             } else {
                                 if ( aux_hour == hour ) {
+                                    h=hour; m=minute; s=second-1;
+                                    if ( s < 0 ) {
+                                        s=59; m--;
+                                        if ( m < 0 ) {
+                                            m=59; h--;
+                                            if ( h < 0 ) {
+                                                h=m=s=0;
+                                            }
+                                        }
+                                    }
+                                    // append the second before the last one found, if it is not equal to the prev
+                                    if ( prev_hour < h || prev_minute < m || prev_second < s ) {
+                                        time.setTime( QTime( h, m, s ));
+                                        data.push_back( std::make_tuple(
+                                            time.toMSecsSinceEpoch(),
+                                            std::vector<QString>{"","","","","",""} ));
+                                    }
                                     // same hour new minute/second, append the last count
                                     time.setTime( QTime( hour, minute, second ));
                                     data.push_back( std::make_tuple(
                                         time.toMSecsSinceEpoch(),
                                         std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
-                                    // append the second after the last one with value 0, if it is not equaò to the next
-                                    if ( aux_minute > minute
-                                      || (aux_minute == minute && aux_second > second+1) ) {
-                                        time.setTime( QTime( hour, minute, second+1 ));
+                                    // append the second after the last one found, if it is not equal to the next
+                                    h=hour; m=minute; s=second+1;
+                                    if ( s > 59 ) {
+                                        s=0; m++;
+                                        if ( m > 59 ) {
+                                            m=0; h++;
+                                            if ( h > 23 ) {
+                                                h=23;m=59;s=59;
+                                            }
+                                        }
+                                    }
+                                    if ( aux_hour > h || aux_minute > m || aux_second > s ) {
+                                        time.setTime( QTime( h, m, s ));
                                         data.push_back( std::make_tuple(
                                             time.toMSecsSinceEpoch(),
                                             std::vector<QString>{"","","","","",""} ));
                                     }
+                                    prev_hour = hour; // update now to avoid getting aux_hour's value
                                 } else {
-                                    // minute/second are always different when the hour is different
+                                    // minute & second are always different when the hour is different
                                     if ( hour >= 0 ) {
+                                        // here only in the first round of the loop
+                                        // append the prev as zero
+                                        h=hour; m=minute; s=second-1;
+                                        if ( s < 0 ) {
+                                            s=59; m--;
+                                            if ( m < 0 ) {
+                                                m=59; h--;
+                                                if ( h < 0 ) {
+                                                    h=m=s=0;
+                                                }
+                                            }
+                                        }
+                                        if ( prev_hour < h || prev_minute < m || prev_second < s ) {
+                                            time.setTime( QTime( h, m, s ));
+                                            data.push_back( std::make_tuple(
+                                                time.toMSecsSinceEpoch(),
+                                                std::vector<QString>{"","","","","",""} ));
+                                        }
                                         // apend the last p count if not in the first round of the loop
                                         time.setTime( QTime( hour, minute, second ));
                                         data.push_back( std::make_tuple(
                                             time.toMSecsSinceEpoch(),
                                             std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
                                         // append the next as zero
-                                        time.setTime( QTime( hour, minute, second+1 ));
-                                        data.push_back( std::make_tuple(
-                                            time.toMSecsSinceEpoch(),
-                                            std::vector<QString>{"","","","","",""} ));
-                                        hour ++;
+                                        h=hour; m=minute; s=second+1;
+                                        if ( s > 59 ) {
+                                            s=0; m++;
+                                            if ( m > 59 ) {
+                                                m=0; h++;
+                                                if ( h > 23 ) {
+                                                    h=23;m=59;s=59;
+                                                }
+                                            }
+                                        }
+                                        if ( aux_hour > h || aux_minute > m || aux_second > s ) {
+                                            time.setTime( QTime( h, m, s ));
+                                            data.push_back( std::make_tuple(
+                                                time.toMSecsSinceEpoch(),
+                                                std::vector<QString>{"","","","","",""} ));
+                                        }
                                     } else {
                                         // append the second 0 of the day, if it is not the next found
-                                        if ( aux_hour != 0 || aux_minute != 0 || aux_second > 0 ) {
+                                        if ( aux_hour > 0 || aux_minute > 0 || aux_second > 0 ) {
                                             time.setTime( QTime( 0, 0, 0 ));
                                             data.push_back( std::make_tuple(
                                                 time.toMSecsSinceEpoch(),
                                                 std::vector<QString>{"","","","","",""} ));
-                                            // append the second before the first found with value 0
-                                            int h=aux_hour, m=aux_minute, s=aux_second;
-                                            s --;
+                                            // append the second before the first found
+                                            h=aux_hour; m=aux_minute; s=aux_second-1;
                                             if ( s < 0 ) {
-                                                s = 59;
-                                                m --;
+                                                s=59; m--;
                                                 if ( m < 0 ) {
-                                                    m = 59;
-                                                    h --;
+                                                    m=59; h--;
                                                     if ( h < 0 ) {
                                                         // abort
-                                                        h=0, m=0, s=0;
+                                                        h=m=s=0;
                                                     }
                                                 }
                                             }
-                                            if ( h != 0 || m != 0 || s != 0 ) {
+                                            if ( h > 0 || m > 0 || s > 0 ) {
                                                 time.setTime( QTime( h, m, s ));
                                                 data.push_back( std::make_tuple(
                                                     time.toMSecsSinceEpoch(),
@@ -428,9 +481,12 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                                             }
                                         }
                                     }
+                                    prev_hour = hour;
                                     hour = aux_hour;
                                 }
+                                prev_minute = minute;
                                 minute = aux_minute;
+                                prev_second = second;
                                 second = aux_second;
                             }
                             tt = query.value(3).toString();
@@ -440,14 +496,41 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                             pt = query.value(7).toString();
                             rs = query.value(8).toString();
                         }
+                        // last one, append the prev
+                        h=hour; m=minute; s=second-1;
+                        if ( s < 0 ) {
+                            s=59; m--;
+                            if ( m < 0 ) {
+                                m=59; h--;
+                                if ( h < 0 ) {
+                                    h=m=s=0;
+                                }
+                            }
+                        }
+                        if ( prev_hour < h || prev_minute < m || prev_second < s ) {
+                            time.setTime( QTime( h, m, s ));
+                            data.push_back( std::make_tuple(
+                                time.toMSecsSinceEpoch(),
+                                std::vector<QString>{"","","","","",""} ));
+                        }
                         // append the last count
                         time.setTime( QTime( hour, minute, second ));
                         data.push_back( std::make_tuple(
                             time.toMSecsSinceEpoch(),
                             std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
-                        // append 1 second after the last with 0
-                        if ( hour != 23 || minute != 59 || second < 59 ) {
-                            time.setTime( QTime( hour, minute, second+1 ));
+                        // append 1 second after the last
+                        h=hour; m=minute; s=second+1;
+                        if ( s > 59 ) {
+                            s=0; m++;
+                            if ( m > 59 ) {
+                                m=0; h++;
+                                if ( h > 23 ) {
+                                    h=23;m=59;s=59;
+                                }
+                            }
+                        }
+                        if ( h > hour || m > minute || s > second ) {
+                            time.setTime( QTime( h, m, s ));
                             data.push_back( std::make_tuple(
                                 time.toMSecsSinceEpoch(),
                                 std::vector<QString>{"","","","","",""} ));
