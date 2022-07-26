@@ -1,11 +1,13 @@
 <RCC>
+    <qresource prefix="/logo">
+        <file>logo/logdoctor.svg</file>
+    </qresource>
     <qresource prefix="/fonts">
         <file alias="3270">fonts/3270.ttf</file>
         <file alias="Hack">fonts/Hack.ttf</file>
         <file alias="Metropolis">fonts/Metropolis.ttf</file>
     </qresource>
     <qresource prefix="/icons">
-        <file alias="Craplogo">icons/crapicon.svg</file>
         <file>icons/make_off.png</file>
         <file>icons/make_on.png</file>
         <file>icons/view_off.png</file>
