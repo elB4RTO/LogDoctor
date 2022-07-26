@@ -95,6 +95,8 @@ MainWindow::MainWindow( QWidget *parent )
     //// CONFIGS ////
     this->craplog.setDialogLevel( 1 ); // !!! REPLACE WITH CONFIGURATION VALUE !!!
 
+    // set user-definet tabs indexes => this->ui->StatsTabs->widget( 0 );
+
 
     ///////////////////
     //// POLISHING ////
@@ -203,6 +205,16 @@ MainWindow::MainWindow( QWidget *parent )
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent (QCloseEvent *event)
+{
+    // save actual configurations
+
+    // save tabs positions => this->ui->CrapTabs->tabText( 0 );
+    //                     => this->ui->CrapTabs->tabText( 0 );
+    this->ui->StatsTabs->move( 0,1 );
+    // save splitters sizes => this->ui->splitter_StatsCount->sizes();
 }
 
 
@@ -1011,193 +1023,149 @@ void MainWindow::on_box_StatsCount_Day_currentIndexChanged(int index)
 
 void MainWindow::resetStatsCountAccButtons()
 {
-    this->ui->button_StatsCount_Protocol->setFlat( true );
-    this->ui->button_StatsCount_Method->setFlat( true );
-    this->ui->button_StatsCount_Request->setFlat( true );
-    this->ui->button_StatsCount_Query->setFlat( true );
-    this->ui->button_StatsCount_Response->setFlat( true );
-    this->ui->button_StatsCount_Referrer->setFlat( true );
-    this->ui->button_StatsCount_Cookie->setFlat( true );
-    this->ui->button_StatsCount_UserAgent->setFlat( true );
-    this->ui->button_StatsCount_AccClient->setFlat( true );
+    if ( this->ui->button_StatsCount_Protocol->isFlat() == false ) {
+        this->ui->button_StatsCount_Protocol->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Method->isFlat() == false ) {
+        this->ui->button_StatsCount_Method->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Request->isFlat() == false ) {
+        this->ui->button_StatsCount_Request->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Query->isFlat() == false ) {
+        this->ui->button_StatsCount_Query->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Response->isFlat() == false ) {
+        this->ui->button_StatsCount_Response->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Referrer->isFlat() == false ) {
+        this->ui->button_StatsCount_Referrer->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Cookie->isFlat() == false ) {
+        this->ui->button_StatsCount_Cookie->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_UserAgent->isFlat() == false ) {
+        this->ui->button_StatsCount_UserAgent->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_AccClient->isFlat() == false ) {
+        this->ui->button_StatsCount_AccClient->setFlat( true );
+    }
 }
 
 void MainWindow::resetStatsCountErrButtons()
 {
-    this->ui->button_StatsCount_Level->setFlat( true );
-    this->ui->button_StatsCount_Message->setFlat( true );
-    this->ui->button_StatsCount_Source->setFlat( true );
-    this->ui->button_StatsCount_Port->setFlat( true );
-    this->ui->button_StatsCount_ErrClient->setFlat( true );
+    if ( this->ui->button_StatsCount_Level->isFlat() == false ) {
+        this->ui->button_StatsCount_Level->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Message->isFlat() == false ) {
+        this->ui->button_StatsCount_Message->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Source->isFlat() == false ) {
+        this->ui->button_StatsCount_Source->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_Port->isFlat() == false ) {
+        this->ui->button_StatsCount_Port->setFlat( true );
+    }
+    if ( this->ui->button_StatsCount_ErrClient->isFlat() == false ) {
+        this->ui->button_StatsCount_ErrClient->setFlat( true );
+    }
 }
 
 void MainWindow::on_button_StatsCount_Protocol_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Protocol->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Protocol->text() );
     this->ui->button_StatsCount_Protocol->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Method_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Method->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Method->text() );
     this->ui->button_StatsCount_Method->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Request_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Request->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Request->text() );
     this->ui->button_StatsCount_Request->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Query_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Query->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Query->text() );
     this->ui->button_StatsCount_Query->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Response_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Response->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Response->text() );
     this->ui->button_StatsCount_Response->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Referrer_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Referrer->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Referrer->text() );
     this->ui->button_StatsCount_Referrer->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Cookie_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Cookie->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Cookie->text() );
     this->ui->button_StatsCount_Cookie->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_UserAgent_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_UserAgent->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_UserAgent->text() );
     this->ui->button_StatsCount_UserAgent->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_AccClient_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_AccClient->text() );
-    this->resetStatsCountErrButtons();
-    this->resetStatsCountAccButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_AccClient->text() );
     this->ui->button_StatsCount_AccClient->setFlat( false );
 }
 
 
 void MainWindow::on_button_StatsCount_Level_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Level->text() );
-    this->resetStatsCountAccButtons();
-    this->resetStatsCountErrButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Level->text() );
     this->ui->button_StatsCount_Level->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Message_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Message->text() );
-    this->resetStatsCountAccButtons();
-    this->resetStatsCountErrButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Message->text() );
     this->ui->button_StatsCount_Message->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Source_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Source->text() );
-    this->resetStatsCountAccButtons();
-    this->resetStatsCountErrButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Source->text() );
     this->ui->button_StatsCount_Source->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_Port_clicked()
 {
-    this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_Port->text() );
-    this->resetStatsCountAccButtons();
-    this->resetStatsCountErrButtons();
+    this->drawStatsCount( this->ui->button_StatsCount_Port->text() );
     this->ui->button_StatsCount_Port->setFlat( false );
 }
 
 void MainWindow::on_button_StatsCount_ErrClient_clicked()
 {
+    this->drawStatsCount( this->ui->button_StatsCount_ErrClient->text() );
+    this->ui->button_StatsCount_ErrClient->setFlat( false );
+}
+
+void MainWindow::drawStatsCount( const QString& field )
+{
+    this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
-        this->ui->chart_StatsCount, this->FONTS,
+        this->ui->table_StatsCount, this->ui->chart_StatsCount, this->FONTS,
         this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
-        this->ui->button_StatsCount_ErrClient->text() );
+        field );
     this->resetStatsCountAccButtons();
     this->resetStatsCountErrButtons();
-    this->ui->button_StatsCount_ErrClient->setFlat( false );
 }
 
 
@@ -1380,7 +1348,6 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
-    std::cout << this->ui->inLine_StatsDay_Filter->text().toStdString() << std::endl;
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->FONTS,
