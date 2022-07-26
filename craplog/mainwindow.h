@@ -1,12 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "qmainwindow.h"
-#include "qfontdatabase.h"
-#include "qmessagebox.h"
+#include <QMainWindow>
+#include <QCloseEvent>
 
-#include "qtreewidget.h"
-#include "qchartview.h"
+#include <QFontDatabase>
+#include <QMessageBox>
+#include <QTreeWidget>
+#include <QChartView>
 
 #include <thread>
 
@@ -24,8 +25,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow( QWidget *parent=nullptr );
     ~MainWindow();
+    void closeEvent( QCloseEvent *event );
 
     //void operator()( int a );
 
@@ -247,6 +249,8 @@ private:
     // polishing
     void resetStatsCountAccButtons();
     void resetStatsCountErrButtons();
+    // draw
+    void drawStatsCount( const QString& field );
 
 };
 #endif // MAINWINDOW_H
