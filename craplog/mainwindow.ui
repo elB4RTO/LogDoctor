@@ -23,11 +23,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Craplog</string>
+   <string>LogDoctor</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources/resources.qrc">
-    <normaloff>:/icons/Craplogo</normaloff>:/icons/Craplogo</iconset>
+    <normaloff>:/logo/logo/logdoctor.svg</normaloff>:/logo/logo/logdoctor.svg</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -1026,6 +1026,9 @@ hr { height: 1px; border-width: 0; }
                    <pointsize>23</pointsize>
                   </font>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="toolTip">
                   <string>Draw the chart</string>
                  </property>
@@ -1379,7 +1382,7 @@ hr { height: 1px; border-width: 0; }
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QSplitter" name="splitter_2">
+             <widget class="QSplitter" name="splitter_StatsWarn">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -1734,7 +1737,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
              </widget>
             </item>
             <item row="0" column="1" rowspan="3">
-             <widget class="QSplitter" name="splitter">
+             <widget class="QSplitter" name="splitter_StatsSpeed">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -2044,6 +2047,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   <font>
                    <pointsize>23</pointsize>
                   </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="text">
                   <string></string>
@@ -2387,6 +2393,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2410,6 +2419,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <font>
                            <pointsize>13</pointsize>
                           </font>
+                         </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
@@ -2435,6 +2447,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2458,6 +2473,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <font>
                            <pointsize>13</pointsize>
                           </font>
+                         </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
@@ -2483,6 +2501,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2506,6 +2527,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <font>
                            <pointsize>13</pointsize>
                           </font>
+                         </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
@@ -2531,6 +2555,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2555,6 +2582,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2578,6 +2608,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <font>
                            <pointsize>13</pointsize>
                           </font>
+                         </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
@@ -2641,6 +2674,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2664,6 +2700,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <font>
                            <pointsize>13</pointsize>
                           </font>
+                         </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
@@ -2689,6 +2728,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2712,6 +2754,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <font>
                            <pointsize>13</pointsize>
                           </font>
+                         </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
@@ -2737,6 +2782,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                            <pointsize>13</pointsize>
                           </font>
                          </property>
+                         <property name="cursor">
+                          <cursorShape>PointingHandCursor</cursorShape>
+                         </property>
                          <property name="toolTip">
                           <string>Parse logs from the Nginx web server</string>
                          </property>
@@ -2760,7 +2808,59 @@ If more than 1 request if found for the same time, the mean value is used.</stri
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QChartView" name="chart_StatsCount"/>
+             <widget class="QSplitter" name="splitter_StatsCount">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <widget class="QTableWidget" name="table_StatsCount">
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                </font>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="showDropIndicator" stdset="0">
+                <bool>false</bool>
+               </property>
+               <property name="dragDropOverwriteMode">
+                <bool>false</bool>
+               </property>
+               <property name="sortingEnabled">
+                <bool>true</bool>
+               </property>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>64</number>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>128</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderStretchLastSection">
+                <bool>false</bool>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Count</string>
+                </property>
+                <property name="toolTip">
+                 <string>Number of occurrences</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Item</string>
+                </property>
+                <property name="toolTip">
+                 <string>Value of the field</string>
+                </property>
+               </column>
+              </widget>
+              <widget class="QChartView" name="chart_StatsCount"/>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -2808,6 +2908,9 @@ Counts of the elements for a single date, mean value of the counts for a period.
                   <font>
                    <pointsize>23</pointsize>
                   </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
                   <string>Draw the chart</string>
@@ -3562,6 +3665,9 @@ Time of day counts for a single date, entire days counts in a period.</string>
                   <font>
                    <pointsize>23</pointsize>
                   </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
                   <string>Draw the chart</string>
