@@ -45,7 +45,8 @@ public:
         const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response );
 
     void drawCount(
-        QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts,
+        QTableWidget* table, QtCharts::QChartView* chart,
+        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& year, const QString& month, const QString& day,
         const QString& field );

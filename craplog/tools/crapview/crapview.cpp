@@ -137,10 +137,6 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
             // append only if the second is different, else sum
             if ( aux_time > time ) {
                 t = t/count;
-                if ( i == max_i ) {
-                    // initial/final
-                    time = aux_time;
-                }
                 line->append( time, t );
                 if ( t > max_t ) {
                     max_t = t;
@@ -148,15 +144,29 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
                 time = aux_time;
                 t = aux_t;
                 count = 1;
+                if ( i == max_i ) {
+                    // final
+                    line->append( time, t );
+                    if ( t > max_t ) {
+                        max_t = t;
+                    }
+                }
             } else {
                 count ++;
                 t += aux_t;
+                if ( i == max_i ) {
+                    // final
+                    t = t/count;
+                    line->append( aux_time, t );
+                    if ( t > max_t ) {
+                        max_t = t;
+                    }
+                }
             }
             // fill the teble with data
             if ( data.at(0).size() > 0 || data.at(1).size() > 0 || data.at(2).size() > 0 || data.at(3).size() > 0 || data.at(4).size() > 0 || data.at(5).size() > 0 ) {
                 aux = table->rowCount();
                 table->insertRow( aux );
-                aux --;
                 table->setItem( aux,  0, new QTableWidgetItem( data.at(0) ));
                 table->setItem( aux,  1, new QTableWidgetItem( data.at(1) ));
                 table->setItem( aux,  2, new QTableWidgetItem( data.at(2) ));
@@ -229,7 +239,7 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
 
 
 
-void Crapview::drawCount(QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& field )
+void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& field )
 {
     std::tuple<bool, std::vector<std::tuple<QString, int>>> result;
     this->dbQuery.getItemsCount(
@@ -240,26 +250,29 @@ void Crapview::drawCount(QtCharts::QChartView* chart, const std::unordered_map<s
     if ( std::get<0>(result) == true ) {
         // get data
         std::vector<std::tuple<QString, int>> &aux_items = std::get<1>(result);
-        std::vector<std::tuple<QString, int>> items;
-        items.reserve( 32 );
 
+        // make the pie
+        QPieSeries *pie = new QPieSeries();
         // cut off exdceeding elements for the chart
         const int max_items=15;
-        int oth_count=0;
+        int aux, count, oth_count=0;
+        QString item;
         for ( int i=0; i<aux_items.size(); i++ ) {
+            item = std::get<0>( aux_items.at(i) );
+            count = std::get<1>( aux_items.at(i) );
             if ( i >= max_items ) {
-                oth_count += std::get<1>( aux_items.at(i) );
+                oth_count += count;
             } else {
-                items.push_back( aux_items.at( i ) );
+                pie->append( item, count );
+                //items.push_back( aux_items.at( i ) );
             }
+            aux = table->rowCount();
+            table->insertRow( aux );
+            table->setItem( aux,  0, new QTableWidgetItem( QString::fromStdString( std::to_string(count) )));
+            table->setItem( aux,  1, new QTableWidgetItem( std::get<0>( aux_items.at(i) ) ));
         }
+        table->verticalHeader()->setVisible( false );
         aux_items.clear();
-
-        // draw the chart
-        QPieSeries *pie = new QPieSeries();
-        for ( const auto& item : items ) {
-            pie->append( std::get<0>(item), std::get<1>(item) );
-        }
 
         if ( oth_count > 0 ) {
             pie->append( this->TEXT_COUNT_OTHERS, oth_count );
@@ -277,9 +290,6 @@ void Crapview::drawCount(QtCharts::QChartView* chart, const std::unordered_map<s
 
         chart->setChart( p_chart );
         chart->setRenderHint( QPainter::Antialiasing );
-
-        items.clear();
-        aux_items.clear();
     }
 }
 
