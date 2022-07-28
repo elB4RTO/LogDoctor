@@ -13,6 +13,7 @@ const QHash<int, QString>
     TYPES = {
         {1,QMessageBox::tr("Access")}, {2,QMessageBox::tr("Error")} },
     FIELDS = {
+        {0, QMessageBox::tr("Warning")},
         {10,QMessageBox::tr("Protocol")},   {11,QMessageBox::tr("Method")},
         {12,QMessageBox::tr("URI")},        {13,QMessageBox::tr("Query")},      {14,QMessageBox::tr("Response code")},
         {15,QMessageBox::tr("Time taken")}, {16,QMessageBox::tr("Bytes sent")}, {17,QMessageBox::tr("Bytes received")},
@@ -40,6 +41,15 @@ public:
     const int getMonthsCount( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month );
 
     void refreshDates( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>>& result );
+
+    void updateWarnings(
+        const QString& web_server, const QString& log_type,
+        const std::vector<std::tuple<int, int>>& updates );
+
+    void getWarnCounts(
+        std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>>& result,
+        const QString& web_server, const QString& log_type,
+        const QString& year_,      const QString& month_,   const QString& day_, const QString& hour_ );
 
     void getSpeedData(
             std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result,
@@ -89,6 +99,7 @@ private:
 
     const QHash<QString, QString>
         LogFields_to_DbFields = {
+            {FIELDS.value(0),  "warning"},
             {FIELDS.value(10), "protocol"},
             {FIELDS.value(11), "method"},
             {FIELDS.value(12), "uri"},
