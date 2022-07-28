@@ -253,6 +253,237 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
 }
 
 
+// update the values for the warnings
+void DbQuery::updateWarnings( const QString& web_server, const QString& log_type, const std::vector<std::tuple<int, int>>& updates )
+{
+    bool successful = true;
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName( QString::fromStdString( this->db_path ));
+
+    if ( db.open() == false ) {
+        // error opening database
+        successful = false;
+        QString err_msg = "";
+        if ( this->dialog_level == 2 ) {
+            err_msg = db.lastError().text();
+        }
+        DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
+
+    } else {
+        QString table;
+        if ( web_server == "Apache2" ) {
+            table += "apache_";
+        } else if ( web_server == "Nginx" ) {
+            table += "nginx_";
+        } else if ( web_server == "IIS" ) {
+            table += "iis_";
+        } else {
+            // unexpected WebServer
+            successful = false;
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+        }
+        if ( successful == true ) {
+            if ( log_type == TYPES.value(1) ) {
+                table += "access";
+            } else if ( log_type == TYPES.value(2) ) {
+                table += "error";
+            } else {
+                // unexpected LogType
+                successful = false;
+                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
+            }
+        }
+
+        if ( successful == true ) {
+            // update the database
+            QSqlQuery query = QSqlQuery( db );
+
+            for ( const auto& data : updates ) {
+                // build the query statement
+                QString stmt = QString("UPDATE \"%1\" SET warning=%2 WHERE rowid=%3;")
+                        .arg( table )
+                        .arg( std::get<1>(data) )
+                        .arg( std::get<0>(data) );
+
+                if ( query.exec( stmt.replace("'","''") ) == false ) {
+                    // error querying database
+                    DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
+                    break;
+                }
+            }
+        }
+    }
+    if ( db.isOpen() == true ) {
+        db.close();
+    }
+}
+
+
+// get daytime values for the warnings
+void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> &result, const QString& web_server, const QString& log_type, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ )
+{
+    bool successful = true;
+    std::vector<std::vector<std::vector<std::vector<QString>>>> items;
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName( QString::fromStdString( this->db_path ));
+
+    if ( db.open() == false ) {
+        // error opening database
+        successful = false;
+        QString err_msg = "";
+        if ( this->dialog_level == 2 ) {
+            err_msg = db.lastError().text();
+        }
+        DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
+
+    } else {
+        QString table;
+        if ( web_server == "Apache2" ) {
+            table += "apache_";
+        } else if ( web_server == "Nginx" ) {
+            table += "nginx_";
+        } else if ( web_server == "IIS" ) {
+            table += "iis_";
+        } else {
+            // unexpected WebServer
+            successful = false;
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+        }
+        bool acc_type = false;
+        if ( successful == true ) {
+            if ( log_type == TYPES.value(1) ) {
+                table += "access";
+                acc_type = true;
+            } else if ( log_type == TYPES.value(2) ) {
+                table += "error";
+            } else {
+                // unexpected LogType
+                successful = false;
+                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
+            }
+        }
+        int year, month, day, hour, minute;
+        if ( successful == true ) {
+            // setup period limits
+            try {
+                year  = year_.toInt();
+                month = this->Months_s2i.value( month_ );
+                day   = day_.toInt();
+                if ( hour_.size() > 0 ) {
+                    hour = hour_.toInt();
+                }
+            } catch (...) {
+                // failed to convert to integers
+                successful = false;
+                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+            }
+        }
+        if ( successful == true ) {
+            // build the query statement
+            QSqlQuery query = QSqlQuery( db );
+            QString stmt = QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
+                    .arg( table )
+                    .arg( year )
+                    .arg( month )
+                    .arg( day );
+
+            if ( hour_.size() == 0 ) {
+                // entire day
+                for ( int h=0; h<24; h++ ) {
+                    items.push_back( std::vector<std::vector<std::vector<QString>>>() );
+                    std::vector<std::vector<std::vector<QString>>>& aux = items.at( h );
+                    for ( int m=0; m<60; m+=10 ) {
+                        aux.push_back( std::vector<std::vector<QString>>() );
+                    }
+                }
+
+                stmt += " ORDER BY \"hour\",\"minute\",\"second\" ASC;";
+                if ( query.exec( stmt.replace("'","''") ) == false ) {
+                    // error querying database
+                    successful = false;
+                    DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
+
+                } else {
+                    try {
+                        // get query data
+                        while ( query.next() ) {
+                            std::vector<QString> aux;
+                            for ( int i=1; i<13; i++ ) {
+                                aux.push_back( query.value( i ).toString() );
+                            }
+                            if ( acc_type == true ) {
+                                for ( int i=19; i>12; i-- ) {
+                                    aux.push_back( query.value( i ).toString() );
+                                }
+                            }
+                            aux.push_back( query.value( 0 ).toString() );
+                            // append the line
+                            items.at( query.value(5).toInt() )
+                                 .at( this->getMinuteGap( query.value(6).toInt() )/10 )
+                                 .push_back( aux );
+                        }
+                    } catch (...) {
+                        // something failed
+                        successful = false;
+                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                    }
+                }
+
+            } else {
+                // 1 hour
+                for ( int g=0; g<6; g++ ) {
+                    items.push_back( std::vector<std::vector<std::vector<QString>>>() );
+                    std::vector<std::vector<std::vector<QString>>>& aux = items.at( g );
+                    for ( int m=0; m<10; m++ ) {
+                        aux.push_back( std::vector<std::vector<QString>>() );
+                    }
+                }
+
+                stmt += QString(" AND \"hour\"=%5 ORDER BY \"minute\",\"second\" ASC;").arg( hour );
+                if ( query.exec( stmt.replace("'","''") ) == false ) {
+                    // error querying database
+                    successful = false;
+                    DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
+
+                } else {
+                    try {
+                        // get query data
+                        while ( query.next() ) {
+                            std::vector<QString> aux;
+                            for ( int i=1; i<13; i++ ) {
+                                aux.push_back( query.value( i ).toString() );
+                            }
+                            if ( acc_type == true ) {
+                                for ( int i=19; i>12; i-- ) {
+                                    aux.push_back( query.value( i ).toString() );
+                                }
+                            }
+                            aux.push_back( query.value( 0 ).toString() );
+                            // append the line
+                            items.at( this->getMinuteGap( query.value(6).toInt() )/10 )
+                                 .at( query.value(6).toInt()%10 )
+                                 .push_back( aux );
+                        }
+                    } catch (...) {
+                        // something failed
+                        successful = false;
+                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                    }
+                }
+            }
+        }
+    }
+    if ( successful == false ) {
+        items.clear();
+    }
+    if ( db.isOpen() == true ) {
+        db.close();
+    }
+    result = std::make_tuple( successful, items );
+}
+
 
 // get day-time values for the time-taken field
 void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f )
@@ -278,7 +509,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
             table += "apache_access";
         } else if ( web_server == "Nginx" ) {
             table += "nginx_access";
-        } else if ( web_server == "Apache2" ) {
+        } else if ( web_server == "IIS" ) {
             table += "iis_access";
         } else {
             // unexpected WebServer
@@ -303,7 +534,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
             time.setDate( QDate( year, month , day ) );
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
-            QString stmt, filter;
+            QString stmt;
 
             // prepare the statement
             stmt = QString("SELECT \"hour\",\"minute\",\"second\",\"time_taken\",\"uri\",\"query\",\"method\",\"protocol\",\"response\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 AND \"time_taken\" IS NOT NULL")
@@ -313,31 +544,72 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
 
             // apply a filter if present
             if ( protocol_f.size() > 0 ) {
-                stmt += QString(" AND \"protocol\" LIKE '%1' || '%'")
-                    .arg( QString(protocol_f).replace("'","''") );
+                if ( protocol_f == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"protocol\" IS NULL");
+                } else if ( protocol_f == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"protocol\" IS NOT NULL");
+                } else {
+                    stmt += QString(" AND \"protocol\" LIKE '%1' || '%'")
+                        .arg( QString(protocol_f).replace("'","''") );
+                }
             }
             if ( method_f.size() > 0 ) {
-                stmt += QString(" AND \"method\" LIKE '%1' || '%'")
-                    .arg( QString(method_f).replace("'","''") );
+                if ( method_f == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"method\" IS NULL");
+                } else if ( method_f == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"method\" IS NOT NULL");
+                } else {
+                    stmt += QString(" AND \"method\" LIKE '%1' || '%'")
+                        .arg( QString(method_f).replace("'","''") );
+                }
             }
             if ( uri_f.size() > 0 ) {
-                stmt += QString(" AND \"uri\" LIKE '%1' || '%'")
-                    .arg( QString(uri_f).replace("'","''") );
+                if ( uri_f == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"uri\" IS NULL");
+                } else if ( uri_f == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"uri\" IS NOT NULL");
+                } else {
+                    stmt += QString(" AND \"uri\" LIKE '%1' || '%'")
+                        .arg( QString(uri_f).replace("'","''") );
+                }
             }
             if ( query_f.size() > 0 ) {
-                stmt += QString(" AND \"query\" LIKE '%1' || '%'")
-                    .arg( QString(query_f).replace("'","''") );
+                if ( query_f == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"query\" IS NULL");
+                } else if ( query_f == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"query\" IS NOT NULL");
+                } else {
+                    stmt += QString(" AND \"query\" LIKE '%1' || '%'")
+                        .arg( QString(query_f).replace("'","''") );
+                }
             }
             if ( response_f.size() > 0 ) {
                 // numbers
-                if ( StringOps::isNumeric( response_f.toStdString() ) == true ) {
-                    // no operator found, set defult to '='
-                    filter = QString("=%1").arg( response_f );
+                if ( response_f == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"response\" IS NULL");
+                } else if ( response_f == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"response\" IS NOT NULL");
                 } else {
-                    filter = response_f;
+                    QString filter;
+                    if ( StringOps::isNumeric( response_f.toStdString() ) == true ) {
+                        // no operator found, set defult to '='
+                        filter = QString("=%1").arg( response_f );
+                    } else {
+                        filter = response_f;
+                    }
+                    stmt += QString(" AND \"response\"%1")
+                        .arg( filter.replace("'","''") );
                 }
-                stmt += QString(" AND \"response\"%1")
-                    .arg( filter.replace("'","''") );
             }
 
             stmt += QString(" ORDER BY \"hour\",\"minute\",\"second\" ASC;");
@@ -596,7 +868,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
             table += "apache_";
         } else if ( web_server == "Nginx" ) {
             table += "nginx_";
-        } else if ( web_server == "Apache2" ) {
+        } else if ( web_server == "IIS" ) {
             table += "iis_";
         } else {
             // unexpected WebServer
@@ -723,7 +995,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             table += "apache_";
         } else if ( web_server == "Nginx" ) {
             table += "nginx_";
-        } else if ( web_server == "Apache2" ) {
+        } else if ( web_server == "IIS" ) {
             table += "iis_";
         } else {
             // unexpected WebServer
@@ -780,14 +1052,38 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                     .arg( month )
                     .arg( from_day ).arg( to_day );
 
-                // only select non-NULL values
-                stmt += QString(" AND \"%1\" IS NOT NULL")
-                    .arg( log_field.replace("'","''") );
                 // apply a filter if present
                 if ( field_filter.size() > 0 ) {
-                    stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                        .arg( log_field.replace("'","''") )
-                        .arg( QString(field_filter).replace("'","''") );
+                    QString filter = field_filter;
+                    if ( filter == "NULL" ) {
+                        // only select NULL values
+                        stmt += QString(" AND \"%1\" IS NULL")
+                            .arg( log_field.replace("'","''") );
+                    } else if ( filter == "NOT NULL" ) {
+                        // only select non-NULL values
+                        stmt += QString(" AND \"%1\" IS NOT NULL")
+                            .arg( log_field.replace("'","''") );
+                    } else {
+                        // filter
+                        if ( log_field == "response"
+                          || log_field == "time_taken"
+                          || log_field == "bytes_sent"
+                          || log_field == "bytes_received" ) {
+                            // numbers
+                            if ( StringOps::isNumeric( field_filter.toStdString() ) == true ) {
+                                // no operator found, set defult to '='
+                                filter = QString("=%1").arg( field_filter );
+                            }
+                            stmt += QString(" AND \"%1\"%2")
+                                .arg( log_field.replace("'","''") )
+                                .arg( filter.replace("'","''") );
+
+                        } else {
+                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                                .arg( log_field.replace("'","''") )
+                                .arg( filter.replace("'","''") );
+                        }
+                    }
                 }
 
                 stmt += ";";
@@ -835,14 +1131,40 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                         stmt += QString(" AND \"day\"<=%1").arg( to_day );
                     }
 
-                    // only select non-NULL values
-                    stmt += QString(" AND \"%1\" IS NOT NULL")
-                        .arg( log_field.replace("'","''") );
                     // apply a filter if present
                     if ( field_filter.size() > 0 ) {
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                            .arg( log_field.replace("'","''") )
-                            .arg( QString(field_filter).replace("'","''") );
+                        QString filter = field_filter;
+                        if ( filter == "NULL" ) {
+                            // only select NULL values
+                            stmt += QString(" AND \"%1\" IS NULL")
+                                .arg( log_field.replace("'","''") );
+                        } else if ( filter == "NOT NULL" ) {
+                            // only select non-NULL values
+                            stmt += QString(" AND \"%1\" IS NOT NULL")
+                                .arg( log_field.replace("'","''") );
+                        } else {
+                            // filter
+                            if ( log_field == "warning"
+                              || log_field == "response"
+                              || log_field == "time_taken"
+                              || log_field == "bytes_sent"
+                              || log_field == "bytes_received" ) {
+                                // numbers
+                                if ( StringOps::isNumeric( field_filter.toStdString() ) == true ) {
+                                    // no operator found, set defult to '='
+                                    filter = QString("=%1").arg( field_filter );
+                                }
+                                stmt += QString(" AND \"%1\"%2")
+                                    .arg( log_field.replace("'","''") )
+                                    .arg( filter.replace("'","''") );
+
+                            } else {
+                                // only values starting-with
+                                stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                                    .arg( log_field.replace("'","''") )
+                                    .arg( filter.replace("'","''") );
+                            }
+                        }
                     }
 
                     // quary the database
@@ -862,7 +1184,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                                 hour   = query.value(1).toInt();
                                 minute = query.value(2).toInt();
                                 // increase the count
-                                data.at( hour ).at( this->getMinuteGap( minute ) );
+                                data.at( hour ).at( this->getMinuteGap( minute ) ) ++;
                                 // append the day as newly found if not found yet
                                 if ( days_l.indexOf( day ) < 0 ) {
                                     days_l.push_back( day );
@@ -930,7 +1252,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             table += "apache_";
         } else if ( web_server == "Nginx" ) {
             table += "nginx_";
-        } else if ( web_server == "Apache2" ) {
+        } else if ( web_server == "IIS" ) {
             table += "iis_";
         } else {
             // unexpected WebServer
@@ -979,54 +1301,74 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                 .arg( year ).arg( month )
                 .arg( day );
 
-            // only select non-NULL values
-            stmt += QString(" AND \"%1\" IS NOT NULL")
-                .arg( log_field_1.replace("'","''") );
             // apply a filter if present
             if ( field_filter_1.size() > 0 ) {
                 QString filter = field_filter_1;
-                if ( log_field_1 == "response"
-                  || log_field_1 == "time_taken"
-                  || log_field_1 == "bytes_sent"
-                  || log_field_1 == "bytes_received" ) {
-                    // numbers
-                    if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
-                        // no operator found, set defult to '='
-                        filter = QString("=%1").arg( field_filter_1 );
-                    }
-                    stmt += QString(" AND \"%1\"%2")
-                        .arg( log_field_1.replace("'","''") )
-                        .arg( filter.replace("'","''") );
-
+                if ( filter == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"%1\" IS NULL")
+                        .arg( log_field_1.replace("'","''") );
+                } else if ( filter == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"%1\" IS NOT NULL")
+                        .arg( log_field_1.replace("'","''") );
                 } else {
-                    stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                        .arg( log_field_1.replace("'","''") )
-                        .arg( filter.replace("'","''") );
+                    // filter
+                    if ( log_field_1 == "warning"
+                      || log_field_1 == "response"
+                      || log_field_1 == "time_taken"
+                      || log_field_1 == "bytes_sent"
+                      || log_field_1 == "bytes_received" ) {
+                        // numbers
+                        if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
+                            // no operator found, set defult to '='
+                            filter = QString("=%1").arg( field_filter_1 );
+                        }
+                        stmt += QString(" AND \"%1\"%2")
+                            .arg( log_field_1.replace("'","''") )
+                            .arg( filter.replace("'","''") );
+
+                    } else {
+                        // only values starting-with
+                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            .arg( log_field_1.replace("'","''") )
+                            .arg( filter.replace("'","''") );
+                    }
                 }
             }
-            // only select non-NULL values
-            stmt += QString(" AND \"%1\" IS NOT NULL")
-                .arg( log_field_2.replace("'","''") );
             // apply a filter if present
             if ( field_filter_2.size() > 0 ) {
                 QString filter = field_filter_2;
-                if ( log_field_2 == "response"
-                  || log_field_2 == "time_taken"
-                  || log_field_2 == "bytes_sent"
-                  || log_field_2 == "bytes_received" ) {
-                    // numbers
-                    if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
-                        // no operator found, set defult to '='
-                        filter = QString("=%1").arg( field_filter_2 );
-                    }
-                    stmt += QString(" AND \"%1\"%2")
-                        .arg( log_field_2.replace("'","''") )
-                        .arg( filter.replace("'","''") );
-
+                if ( filter == "NULL" ) {
+                    // only select NULL values
+                    stmt += QString(" AND \"%1\" IS NULL")
+                        .arg( log_field_2.replace("'","''") );
+                } else if ( filter == "NOT NULL" ) {
+                    // only select non-NULL values
+                    stmt += QString(" AND \"%1\" IS NOT NULL")
+                        .arg( log_field_2.replace("'","''") );
                 } else {
-                    stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                        .arg( log_field_2.replace("'","''") )
-                        .arg( QString(field_filter_2).replace("'","''") );
+                    // filter
+                    if ( log_field_2 == "warning"
+                      || log_field_2 == "response"
+                      || log_field_2 == "time_taken"
+                      || log_field_2 == "bytes_sent"
+                      || log_field_2 == "bytes_received" ) {
+                        // numbers
+                        if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
+                            // no operator found, set defult to '='
+                            filter = QString("=%1").arg( field_filter_2 );
+                        }
+                        stmt += QString(" AND \"%1\"%2")
+                            .arg( log_field_2.replace("'","''") )
+                            .arg( filter.replace("'","''") );
+
+                    } else {
+                        // only values starting-with
+                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            .arg( log_field_2.replace("'","''") )
+                            .arg( QString(field_filter_2).replace("'","''") );
+                    }
                 }
             }
 
@@ -1173,7 +1515,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
             table += "apache_";
         } else if ( web_server == "Nginx" ) {
             table += "nginx_";
-        } else if ( web_server == "Apache2" ) {
+        } else if ( web_server == "IIS" ) {
             table += "iis_";
         } else {
             // unexpected WebServer
