@@ -72,6 +72,8 @@ private slots:
 
     void on_button_StatsWarn_Draw_clicked();
 
+    void on_button_StatsWarn_Update_clicked();
+
     void on_box_StatsSpeed_WebServer_currentIndexChanged(int index);
 
     void on_box_StatsSpeed_Year_currentIndexChanged(int index);

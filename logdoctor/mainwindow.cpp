@@ -778,13 +778,12 @@ void MainWindow::checkStatsWarnDrawable()
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsWarn_LogsType->setCurrentIndex( 0 );
+    this->ui->box_StatsWarn_LogsType->currentIndexChanged( 0 );
     this->checkStatsWarnDrawable();
 }
 
 void MainWindow::on_box_StatsWarn_LogsType_currentIndexChanged(int index)
 {
-    this->on_box_StatsWarn_WebServer_currentIndexChanged(0);
     this->ui->box_StatsWarn_Year->clear();
     if ( index != -1 ) {
         this->ui->box_StatsWarn_Year->addItems(
@@ -830,13 +829,7 @@ void MainWindow::on_box_StatsWarn_Day_currentIndexChanged(int index)
     if ( this->ui->checkBox_StatsWarn_Hour->isChecked() == true ) {
         this->ui->box_StatsWarn_Hour->clear();
         if ( index != -1 ) {
-            this->ui->box_StatsWarn_Hour->addItems(
-                this->crapview.getHours(
-                    this->ui->box_StatsWarn_WebServer->currentText(),
-                    this->ui->box_StatsWarn_LogsType->currentText(),
-                    this->ui->box_StatsWarn_Year->currentText(),
-                    this->ui->box_StatsWarn_Month->currentText(),
-                    this->ui->box_StatsWarn_Day->currentText() ) );
+            this->ui->box_StatsWarn_Hour->addItems( this->crapview.getHours() );
             this->ui->box_StatsWarn_Hour->setCurrentIndex( 0 );
         }
     }
@@ -862,7 +855,27 @@ void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
+    this->ui->table_StatsWarn->setRowCount(0);
+    this->crapview.drawWarn(
+        this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
+        this->FONTS,
+        this->ui->box_StatsWarn_WebServer->currentText(),
+        this->ui->box_StatsWarn_LogsType->currentText(),
+        this->ui->box_StatsWarn_Year->currentText(),
+        this->ui->box_StatsWarn_Month->currentText(),
+        this->ui->box_StatsWarn_Day->currentText(),
+        (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
+    this->ui->button_StatsWarn_Update->setEnabled( true );
+}
 
+
+void MainWindow::on_button_StatsWarn_Update_clicked()
+{
+    this->crapview.updateWarn(
+        this->ui->table_StatsWarn,
+        this->ui->box_StatsWarn_WebServer->currentText(),
+        this->ui->box_StatsWarn_LogsType->currentText() );
+    this->on_button_StatsWarn_Draw_clicked();
 }
 
 
@@ -938,11 +951,11 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
         this->ui->box_StatsSpeed_Day->currentText(),
-        this->ui->inLine_StatsSpeed_Protocol->text(),
-        this->ui->inLine_StatsSpeed_Method->text(),
-        this->ui->inLine_StatsSpeed_Uri->text(),
-        this->ui->inLine_StatsSpeed_Query->text(),
-        this->ui->inLine_StatsSpeed_Response->text() );
+        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ),
+        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ),
+        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ),
+        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ),
+        this->crapview.parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ) );
 }
 
 
@@ -1348,6 +1361,15 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
+    QString filter;
+    if ( this->ui->box_StatsDay_LogsField->currentIndex() == 0 ) {
+        filter = this->crapview.parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() );
+    } else if ( this->ui->box_StatsDay_LogsType->currentIndex() == 0
+      && this->ui->box_StatsDay_LogsField->currentIndex() == 5 ) {
+        filter = this->crapview.parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
+    } else {
+        filter = this->crapview.parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
+    }
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->FONTS,
@@ -1360,7 +1382,7 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
         ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
         ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
         this->ui->box_StatsDay_LogsField->currentText(),
-        this->ui->inLine_StatsDay_Filter->text() );
+        filter );
 }
 
 
@@ -1527,6 +1549,37 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
+    int aux;
+    QString filter1, filter2;
+    if ( this->ui->box_StatsRelat_LogsType->currentIndex() == 0 ) {
+        aux = this->ui->box_StatsRelat_LogsField_1->currentIndex();
+        if ( aux == 0 ) {
+            filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
+        } else if ( aux >= 5 && aux <= 8 ) {
+            filter1 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
+        } else {
+            filter1 = this->ui->inLine_StatsRelat_Filter_1->text();
+        }
+        aux = this->ui->box_StatsRelat_LogsField_2->currentIndex();
+        if ( aux == 0 ) {
+            filter2 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        } else if ( aux >= 5 && aux <= 8 ) {
+            filter2 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        } else {
+            filter2 = this->crapview.parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        }
+    } else {
+        if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() == 0 ) {
+            filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
+        } else {
+            filter1 = this->ui->inLine_StatsRelat_Filter_1->text();
+        }
+        if ( this->ui->box_StatsRelat_LogsField_2->currentIndex() == 0 ) {
+            filter2 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        } else {
+            filter2 = this->crapview.parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        }
+    }
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
         this->FONTS,
@@ -1538,9 +1591,7 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
         this->ui->box_StatsRelat_ToYear->currentText(),
         this->ui->box_StatsRelat_ToMonth->currentText(),
         this->ui->box_StatsRelat_ToDay->currentText(),
-        this->ui->box_StatsRelat_LogsField_1->currentText(),
-        this->ui->inLine_StatsRelat_Filter_1->text(),
-        this->ui->box_StatsRelat_LogsField_2->currentText(),
-        this->ui->inLine_StatsRelat_Filter_2->text() );
+        this->ui->box_StatsRelat_LogsField_1->currentText(), filter1,
+        this->ui->box_StatsRelat_LogsField_2->currentText(), filter2 );
 }
 
