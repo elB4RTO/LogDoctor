@@ -24,5 +24,7 @@
         <file>icons/relational_on.png</file>
         <file>icons/warn_on.png</file>
         <file>icons/warn_off.png</file>
+        <file>icons/global_on.png</file>
+        <file>icons/global_off.png</file>
     </qresource>
 </RCC>
