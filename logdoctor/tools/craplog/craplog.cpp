@@ -673,6 +673,7 @@ void Craplog::joinLogLines()
         // collect lines
         try {
             // try reading
+            content.clear();
             StringOps::splitrip( content, IOutils::readFile( file.path ) );
         } catch (const std::ios_base::failure& err) {
             // failed reading
@@ -690,10 +691,13 @@ void Craplog::joinLogLines()
             this->access_logs_lines.insert( this->access_logs_lines.end(), content.begin(), content.end() );
             this->used_files_hashes.at( 1 ).push_back( file.hash );
             this->total_access_size += file.size;
-        } else {
+        } else if ( file.type == LogOps::LogType::Access ) {
             this->error_logs_lines.insert( this->error_logs_lines.end(), content.begin(), content.end() );
             this->used_files_hashes.at( 2 ).push_back( file.hash );
             this->total_error_size += file.size;
+        } else {
+            // unexpected log type
+            throw ("Unexpected LogTpye: "[file.type]);
         }
 
         this->total_size += file.size;
