@@ -1,6 +1,8 @@
 
 #include "crapview.h"
+#include "utilities/strings.h"
 
+#include <QGraphicsItem>
 #include <iostream> // !!! REMOVE !!!
 
 
@@ -40,6 +42,157 @@ const QString Crapview::printableDate( const QString& year, const int month, con
         date += day;
     }
     return date;
+}
+
+
+const QString Crapview::printableDate( const int year, const int month, const int day )
+{
+    QString date;
+    if ( year < 10 ) {
+        date += QString("0%1:").arg( year );
+    } else {
+        date += QString("%1:").arg( year );
+    }
+    if ( month < 10 ) {
+        date += QString("0%1:").arg( month );
+    } else {
+        date += QString("%1:").arg( month );
+    }
+    if ( day < 10 ) {
+        date += QString("0%1").arg( day );
+    } else {
+        date += QString("%1").arg( day );
+    }
+    return date;
+}
+
+
+const QString Crapview::printableTime( const int hour, const int minute, const int second )
+{
+    QString time;
+    if ( hour < 10 ) {
+        time += QString("0%1:").arg( hour );
+    } else {
+        time += QString("%1:").arg( hour );
+    }
+    if ( minute < 10 ) {
+        time += QString("0%1:").arg( minute );
+    } else {
+        time += QString("%1:").arg( minute );
+    }
+    if ( second < 10 ) {
+        time += QString("0%1").arg( second );
+    } else {
+        time += QString("%1").arg( second );
+    }
+    return time;
+}
+
+
+const QStringList Crapview::getWarnHeader( const QString& log_type )
+{
+    QStringList header;
+    if ( log_type == TYPES.value(1) ) {
+        header = QStringList({
+            FIELDS.value(0),
+            this->DATE,this->TIME,
+            FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),
+            FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20),
+            FIELDS.value(17),FIELDS.value(16),FIELDS.value(15),"rowid" });
+    } else if ( log_type == TYPES.value(2) ) {
+        header = QStringList({
+            FIELDS.value(0),
+            this->DATE,this->TIME,
+            FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),
+            FIELDS.value(30),FIELDS.value(20),"rowid" });
+    } else {
+        // unexpected LogType
+        throw ("Unexpected LogType: "+log_type.toStdString() );
+    }
+    return header;
+}
+
+
+const QString Crapview::printableWarn( const int value )
+{
+    if ( value == 0 ) {
+        return "FALSE";
+    } else {
+        return "TRUE";
+    }
+}
+
+
+const QString Crapview::parseBooleanFilter( const QString& filter_str )
+{
+    QString aux = filter_str;
+    aux = aux.replace( "TRUE", "1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "FALSE","0", Qt::CaseSensitivity::CaseInsensitive );
+    return this->parseNumericFilter( aux );
+}
+
+
+const QString Crapview::parseNumericFilter( const QString& filter_str )
+{
+    QString final_str = "";
+    if ( filter_str.size() > 0 ) {
+        QString aux = this->parseTextualFilter( filter_str );
+        if ( aux == "NULL" || aux == "NOT NULL" ) {
+            final_str = aux;
+        } else {
+            std::vector<std::string> f_list;
+            StringOps::splitrip( f_list, filter_str.toStdString(), " " );
+            if ( f_list.size() > 0 ) {
+                std::string& aux = f_list.at(0);
+                if ( StringOps::isNumeric( aux ) == true ) {
+                    // no symbol specified, set '=' as default
+                    final_str += "=";
+                    final_str += QString::fromStdString( aux );
+                } else {
+                    if ( StringOps::isNumeric( StringOps::lstrip( aux, "<=>" ) ) == true ) {
+                        // symbol/value
+                        final_str += QString::fromStdString( aux ).replace("==","=");
+                    } else if ( StringOps::lstrip( aux, "<=>" ).size() == 0 ) {
+                        // symbol at first, maybe a value follows
+                        if ( f_list.size() > 1 ) {
+                            final_str += QString::fromStdString( aux ).replace("==","=");
+                            int ck = final_str.size();
+                            for ( int i=1; i<f_list.size(); i++ ) {
+                                aux = f_list.at( i );
+                                if ( StringOps::isNumeric( aux ) ) {
+                                    final_str += QString::fromStdString( aux );
+                                    break;
+                                }
+                            }
+                            if ( final_str.size() == ck ) {
+                                final_str = "";
+                            }
+                        }
+
+                    }/* else {
+                        // skip
+                    }*/
+                }
+            }
+            f_list.clear();
+        }
+    }
+    return final_str.replace("==","=");
+}
+
+
+const QString Crapview::parseTextualFilter( const QString& filter_str )
+{
+    QString aux = filter_str;
+    if ( filter_str.size() > 0 ) {
+        std::string str = StringOps::strip( filter_str.toUpper().toStdString() );
+        if ( str == "NULL" ) {
+            aux = "NULL";
+        } else if ( str == "NOT NULL" || str == "*" ) {
+            aux = "NOT NULL";
+        }
+    }
+    return aux;
 }
 
 
@@ -84,7 +237,7 @@ const QStringList Crapview::getDays( const QString& web_server, const QString& l
     }
     return days;
 }
-const QStringList Crapview::getHours( const QString& web_server, const QString& logs_type, const QString& year, const QString& month, const QString& day )
+const QStringList Crapview::getHours()
 {
     return QStringList({"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 }
@@ -98,9 +251,198 @@ const QStringList Crapview::getFields( const QString& tab, const QString& logs_t
 ////////////////
 //// CHARTS ////
 ////////////////
-void drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour )
+void Crapview::updateWarn( QTableWidget* table , const QString& web_server, const QString& log_type )
 {
+    std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
+    for ( int i=0; i<table->rowCount(); i++ ) {
+        QTableWidgetItem* item = table->item( i, 0 );
+        if ( item->checkState() == Qt::CheckState::Checked && item->text() == "FALSE" ) {
+            // remove warning
+            updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 1 ) );
+        } else if (item->checkState() == Qt::CheckState::Unchecked && item->text() == "TRUE" ) {
+            // add warning
+            updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 0 ) );
+        }
+    }
+    this->dbQuery.updateWarnings( web_server, log_type, updates );
+    updates.clear();
+}
 
+void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& hour )
+{
+    std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> result;
+    this->dbQuery.getWarnCounts(
+        result,
+        web_server, log_type,
+        year, month, day, hour );
+    if ( std::get<0>(result) == true ) {
+        // get data
+        // { hour : { 10th_minutes : count } }
+        std::vector<std::vector<std::vector<std::vector<QString>>>> &items = std::get<1>(result);
+
+        // bars
+        std::vector<std::vector<QBarSet*>> sets;
+
+        // table
+        QStringList header_labels = this->getWarnHeader( log_type );
+        table->setColumnCount( header_labels.size() );
+        table->setHorizontalHeaderLabels( header_labels );
+
+        // build the bars and the table upon data
+        QColor warn_col = QColor( 255, 140, 0, 255 );
+        int norm_count, warn_count, sum_count, max_count=0, aux;
+        if ( hour.size() == 0 ) {
+            // entire day
+            for ( int i=0; i<6; i++ ) {
+                sets.push_back( std::vector<QBarSet*>() );
+                sets.at( i ).push_back( new QBarSet("") );
+                sets.at( i ).push_back( new QBarSet("") );
+            }
+            for ( int h=0; h<24; h++ ) {
+                for ( int m=0; m<6; m++ ) {
+                    auto& data = items.at( h ).at( m );
+                    norm_count = warn_count = 0;
+                    for ( const std::vector<QString>& line : data ) {
+                        aux = table->rowCount();
+                        table->insertRow( aux );
+                        table->setItem( aux, 0, new QTableWidgetItem( this->printableWarn( line.at( 0 ).toInt() )));
+                        if ( line.at( 0 ).toInt() != 0 ) {
+                            table->item( aux, 0 )->setForeground( warn_col );
+                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Checked );
+                        } else {
+                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Unchecked );
+                        }
+                        table->setItem( aux, 1, new QTableWidgetItem( this->printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
+                        table->setItem( aux, 2, new QTableWidgetItem( this->printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
+                        for ( int i=7; i<line.size(); i++ ) {
+                            table->setItem( aux, i-4, new QTableWidgetItem( line.at( i ) ));
+                        }
+                        if ( line.at( 0 ) == "0" ) {
+                            norm_count ++;
+                        } else {
+                            warn_count ++;
+                        }
+                    }
+                    sets.at( m ).at( 0 )->append( norm_count );
+                    sets.at( m ).at( 1 )->append( warn_count );
+                    sum_count = norm_count + warn_count;
+                    if ( sum_count > max_count ) {
+                        max_count = sum_count;
+                    }
+                }
+            }
+            sets.at( 2 ).at( 1 )->setLabel( this->printableDate( year, this->getMonthNumber( month ), day ) );
+        } else {
+            // 1 hour
+            for ( int i=0; i<10; i++ ) {
+                sets.push_back( std::vector<QBarSet*>() );
+                sets.at( i ).push_back( new QBarSet("") );
+                sets.at( i ).push_back( new QBarSet("") );
+            }
+            for ( int g=0; g<6; g++ ) {
+                for ( int m=0; m<10; m++ ) {
+                    auto& data = items.at( g ).at( m );
+                    norm_count = warn_count = 0;
+                    for ( const std::vector<QString>& line : data ) {
+                        aux = table->rowCount();
+                        table->insertRow( aux );
+                        table->setItem( aux, 0, new QTableWidgetItem( this->printableWarn( line.at( 0 ).toInt() )));
+                        if ( line.at( 0 ).toInt() != 0 ) {
+                            table->item( aux, 0 )->setForeground( warn_col );
+                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Checked );
+                        } else {
+                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Unchecked );
+                        }
+                        table->setItem( aux, 1, new QTableWidgetItem( this->printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
+                        table->setItem( aux, 2, new QTableWidgetItem( this->printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
+                        for ( int i=7; i<line.size(); i++ ) {
+                            table->setItem( aux, i-4, new QTableWidgetItem( line.at( i ) ));
+                        }
+                        if ( line.at( 0 ) == "0" ) {
+                            norm_count ++;
+                        } else {
+                            warn_count ++;
+                        }
+                    }
+                    sets.at( m ).at( 0 )->append( norm_count );
+                    sets.at( m ).at( 1 )->append( warn_count );
+                    sum_count = norm_count + warn_count;
+                    if ( sum_count > max_count ) {
+                        max_count = sum_count;
+                    }
+                }
+            }
+            sets.at( 4 ).at( 1 )->setLabel( this->printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour );
+        }
+        table->verticalHeader()->setVisible( false );
+
+        // apply the colors and append to the series
+        QColor cols[] = {QColor(127,127,127), QColor(237,80,61)};
+        //QColor cols[] = {QColor(18,175,194), QColor(237,80,61)};
+        std::vector<QStackedBarSeries*> b_series;
+        for ( int i=0; i<sets.size(); i++ ) {
+            auto& set = sets.at( i );
+            b_series.push_back( new QStackedBarSeries() );
+            for ( int w=0; w<2; w++ ) {
+                QBarSet* b = set.at( w );
+                b->setColor( cols[ w ] );
+                b_series.at( i )->append( b );
+            }
+        }
+        for ( auto *s : b_series ) {
+            s->setBarWidth( 1 );
+        }
+
+        // set-up the bars chart
+        QChart *b_chart = new QChart();
+        foreach ( auto& bars, b_series ) {
+            b_chart->addSeries( bars );
+        }
+        //b_chart->setTitle( QString("%1: %2").arg( this->TITLE_WARN ) );
+        b_chart->setTitle( this->TITLE_WARN );
+        b_chart->setTitleFont( fonts.at("main") );
+        //b_chart->legend()->setVisible( false );
+        b_chart->legend()->setFont( fonts.at("main_small") );
+        b_chart->legend()->setAlignment( Qt::AlignBottom );
+        b_chart->setAnimationOptions( QChart::SeriesAnimations );
+        //b_chart->setTheme( QChart::ChartTheme::ChartThemeBrownSand );
+        //t_chart->setBackgroundBrush( Qt::darkGray );
+
+        // craft the X-axis labels
+        QStringList categories;
+        if ( hour.size() == 0 ) {
+            categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
+                       << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
+        } else {
+            categories << "00" << "10" << "20" << "30" << "40" << "50";
+        }
+
+        // set-up the time-of-day axis (X)
+        QBarCategoryAxis *axisX = new QBarCategoryAxis();
+        axisX->append( categories );
+        axisX->setLabelsFont( fonts.at( "main_small" ) );
+        b_chart->addAxis( axisX, Qt::AlignBottom );
+        for ( auto *s : b_series ) {
+            s->attachAxis( axisX );
+        }
+
+        // set-up the count values axis (Y)
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setLabelFormat( "%d" );
+        axisY->setTickCount( ( max_count < 16 ) ? max_count : 16 );
+        axisY->setRange( 0, max_count );
+        axisY->setLabelsFont( fonts.at( "main_small" ) );
+        b_chart->addAxis( axisY, Qt::AlignLeft );
+        for ( auto *s : b_series ) {
+            s->attachAxis( axisY );
+        }
+
+        // apply the chart to the view
+        chart->setChart( b_chart );
+        chart->setRenderHint( QPainter::Antialiasing );
+
+        items.clear();
+    }
 }
 
 
@@ -315,7 +657,16 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
         b_10->setColor( col );
         QBarSet *b_20 = new QBarSet( "" );
         b_20->setColor( col );
-        QBarSet *b_30 = new QBarSet( this->LEGEND_DAY );
+        QBarSet *b_30 = new QBarSet( "" );
+        if ( to_year.size() == 0 || to_month.size() == 0 || to_day.size() == 0 ) {
+            b_30->setLabel( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ) );
+        } else {
+            b_30->setLabel( QString("%1 %2 %3 %4")
+                .arg( this->LEGEND_FROM )
+                .arg( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ))
+                .arg( this->LEGEND_TO )
+                .arg( this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )) );
+        }
         b_30->setColor( col );
         QBarSet *b_40 = new QBarSet( "" );
         b_40->setColor( col );
@@ -459,9 +810,9 @@ void Crapview::drawRelat(QtCharts::QChartView* chart, const std::unordered_map<s
             area->setName( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ));
         } else {
             area->setName(QString("%1 %2 %3 %4")
-                .arg( this->LEGEND_RELAT_FROM )
+                .arg( this->LEGEND_FROM )
                 .arg( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ))
-                .arg( this->LEGEND_RELAT_TO )
+                .arg( this->LEGEND_TO )
                 .arg( this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )));
         }
 
