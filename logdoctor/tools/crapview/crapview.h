@@ -20,21 +20,28 @@ public:
 
     void setDbPath( const std::string& path );
 
+    const QString parseBooleanFilter( const QString& filter_str );
+    const QString parseNumericFilter( const QString& filter_str );
+    const QString parseTextualFilter( const QString& filter_str );
+
     int getMonthNumber( const QString& month_str );
 
     void refreshDates();
 
-    const QStringList getYears( const QString& web_server, const QString& logs_type );
+    const QStringList getYears(  const QString& web_server, const QString& logs_type );
     const QStringList getMonths( const QString& web_server, const QString& logs_type, const QString& year );
-    const QStringList getDays( const QString& web_server, const QString& logs_type, const QString& year, const QString& month );
-    const QStringList getHours( const QString& web_server, const QString& logs_type, const QString& year, const QString& month, const QString& day );
+    const QStringList getDays(   const QString& web_server, const QString& logs_type, const QString& year, const QString& month );
+    const QStringList getHours();
 
     const QStringList getFields( const QString& tab, const QString& logs_type );
 
+    void updateWarn(
+        QTableWidget* table,
+        const QString& web_server, const QString& log_type );
     void drawWarn(
         QTableWidget* table, QtCharts::QChartView* chart,
         const std::unordered_map<std::string, QFont>& fonts,
-        const QString& web_server,
+        const QString& web_server, const QString& log_type,
         const QString& year, const QString& month, const QString& day, const QString& hour );
 
     void drawSpeed(
@@ -73,13 +80,16 @@ private:
 
     DbQuery dbQuery;
 
-    QString TITLE_SPEED = QMessageBox::tr("Time Taken to Serve Requests"),
+    QString TITLE_WARN = QMessageBox::tr("Log Lines Marked as Warning"),
+            TITLE_SPEED = QMessageBox::tr("Time Taken to Serve Requests"),
             TEXT_COUNT_OTHERS = QMessageBox::tr("Others"),
             TITLE_DAY  = QMessageBox::tr("Time of Day Count"),
-            LEGEND_DAY = QMessageBox::tr(" 10 minutes gap per hour"),
             TITLE_RELAT       = QMessageBox::tr("Relational Count"),
-            LEGEND_RELAT_FROM = QMessageBox::tr("from"),
-            LEGEND_RELAT_TO   = QMessageBox::tr("to");
+            LEGEND_FROM = QMessageBox::tr("from"),
+            LEGEND_TO   = QMessageBox::tr("to"),
+
+            DATE = QMessageBox::tr("Date"),
+            TIME = QMessageBox::tr("Time");
 
     // collection of available dates
     // { web_server : { log_type : { year : { month_str : [ days ] } } } }
@@ -89,14 +99,19 @@ private:
     // { tab : { log_type_str : [ fields ] } }
     const QHash<QString, QHash<QString, QStringList>> fields = {
         {"Daytime", {
-            {TYPES.value(1),  {FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)}},
-            {TYPES.value(2),  {FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }},
+            {TYPES.value(1),  {FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)}},
+            {TYPES.value(2),  {FIELDS.value(0),FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }},
         {"Relational", {
-            {TYPES.value(1),  {FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(15),FIELDS.value(16),FIELDS.value(17),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)}},
-            {TYPES.value(2),  {FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }}
+            {TYPES.value(1),  {FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(15),FIELDS.value(16),FIELDS.value(17),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)}},
+            {TYPES.value(2),  {FIELDS.value(0),FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }}
     };
 
-    const QString printableDate( const QString& year, const int month, const QString& day );
+    const QString printableDate( const QString& year, const int month,  const QString& day );
+    const QString printableDate( const int year,      const int month,  const int day );
+    const QString printableTime( const int hour, const int minute, const int second );
+    const QString printableWarn( const int value );
+
+    const QStringList getWarnHeader( const QString& log_type );
 
     // conversion between text and IDs
     const QHash<QString, int>
