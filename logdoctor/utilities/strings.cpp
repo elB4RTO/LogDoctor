@@ -33,11 +33,14 @@ int StringOps::count(const std::string& str, const std::string& flag, bool conse
 
 bool StringOps::isNumeric( const std::string& str )
 {
-    bool result = true;
-    for ( const char& chr : str ) {
-        if ( StringOps::isNumeric( chr ) == false ) {
-            result = false;
+    bool result = false;
+    if ( str.size() > 0 ) {
+        result = true;
+        for ( const char& chr : str ) {
+            if ( StringOps::isNumeric( chr ) == false ) {
+                result = false;
 
+            }
         }
     }
     return result;
@@ -109,7 +112,7 @@ std::string StringOps::strip( const std::string& str, const std::string& chars )
 
 std::string StringOps::lstrip( const std::string& str, const std::string& chars )
 {
-    bool found = true;
+    bool found;
     int i = 0;
     while ( i < str.size() ) {
         found = false;
@@ -152,7 +155,7 @@ std::string StringOps::rstrip( const std::string& str, const std::string& chars 
         i--;
     }
     std::string stripped = "";
-    if ( i > 0 ) {
+    if ( i >= 0 ) {
         stripped = str.substr( 0, str.size() - (str.size() - i) + 1 );
     }
     return stripped;
@@ -204,41 +207,39 @@ std::string StringOps::lstripUntil( const std::string& str, const std::string& c
 
 
 
-void StringOps::split( std::vector<std::string>& list, const std::string& str, const std::string& sep )
+void StringOps::split( std::vector<std::string>& list, const std::string& target_str, const std::string& separator )
 {
-    list.clear();
     std::string slice;
     int start=0, stop;
     while (true) {
-        stop = str.find( sep, start );
-        if ( stop >= str.size() ) {
-            slice = str.substr( start );
+        stop = target_str.find( separator, start );
+        if ( stop >= target_str.size() ) {
+            slice = target_str.substr( start );
             if ( slice.size() > 0 ) {
                 list.push_back( slice );
             }
             break;
         } else {
-            slice = str.substr( start, stop-start );
+            slice = target_str.substr( start, stop-start );
             if ( slice.size() > 0 ) {
                 list.push_back( slice );
             }
-            start = stop+sep.size();
+            start = stop+separator.size();
         }
     }
 }
 
 
-void StringOps::splitrip( std::vector<std::string>& list, const std::string& str, const std::string& sep, const std::string& chars )
+void StringOps::splitrip( std::vector<std::string>& list, const std::string& target_str, const std::string& separator, const std::string& strip )
 {
-    list.clear();
     std::vector<std::string> aux;
-    const std::string str_ = StringOps::strip( str );
-    StringOps::split( aux, str_ );
-    for ( const std::string& str_ : aux ) {
-        if ( str_.size() == 0 ) {
+    const std::string str = StringOps::strip( target_str, strip );
+    StringOps::split( aux, str, separator );
+    for ( const std::string& str : aux ) {
+        if ( str.size() == 0 ) {
             continue;
         }
-        list.push_back( StringOps::strip( str_ ) );
+        list.push_back( StringOps::strip( str, strip ) );
     }
     aux.clear();
 }
