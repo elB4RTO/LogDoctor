@@ -421,8 +421,8 @@ hr { height: 1px; border-width: 0; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>608</width>
-             <height>414</height>
+             <width>794</width>
+             <height>441</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -971,7 +971,7 @@ hr { height: 1px; border-width: 0; }
         <item row="0" column="0">
          <widget class="QTabWidget" name="StatsTabs">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -985,6 +985,16 @@ hr { height: 1px; border-width: 0; }
           <property name="movable">
            <bool>true</bool>
           </property>
+          <widget class="QWidget" name="Global">
+           <attribute name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/icons/icons/global_off.png</normaloff>
+             <normalon>:/icons/icons/global_on.png</normalon>:/icons/icons/global_off.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string notr="true"/>
+           </attribute>
+          </widget>
           <widget class="QWidget" name="Warn">
            <attribute name="icon">
             <iconset resource="resources/resources.qrc">
@@ -1378,6 +1388,39 @@ hr { height: 1px; border-width: 0; }
                  </property>
                 </spacer>
                </item>
+               <item row="0" column="6">
+                <widget class="QPushButton" name="button_StatsWarn_Update">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>88</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>64</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>23</pointsize>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Update the database with current Warning States</string>
+                 </property>
+                 <property name="text">
+                  <string></string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -1420,10 +1463,31 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
+                 <string>Date</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
                  <string>Time</string>
                 </property>
                 <property name="toolTip">
                  <string>Time when the request arrived (hh:mm:ss)</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Protocol</string>
+                </property>
+                <property name="toolTip">
+                 <string>Protocol of the request</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Method</string>
+                </property>
+                <property name="toolTip">
+                 <string>Method of the request</string>
                 </property>
                </column>
                <column>
@@ -1444,22 +1508,6 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Method</string>
-                </property>
-                <property name="toolTip">
-                 <string>Method of the request</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Protocol</string>
-                </property>
-                <property name="toolTip">
-                 <string>Protocol of the request</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
                  <string>Response code</string>
                 </property>
                 <property name="toolTip">
@@ -1472,6 +1520,11 @@ hr { height: 1px; border-width: 0; }
                 </property>
                 <property name="toolTip">
                  <string>Where the request was redirected from</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Cookie</string>
                 </property>
                </column>
                <column>
@@ -1491,7 +1544,7 @@ hr { height: 1px; border-width: 0; }
                 </property>
                </column>
               </widget>
-              <widget class="QChartView" name="chart_SatsWarn"/>
+              <widget class="QChartView" name="chart_StatsWarn"/>
              </widget>
             </item>
            </layout>
@@ -2943,9 +2996,304 @@ Counts of the elements for a single date, mean value of the counts for a period.
                  </property>
                 </spacer>
                </item>
+               <item row="0" column="0">
+                <widget class="QComboBox" name="box_StatsDay_WebServer">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Select a Web Server</string>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QComboBox::AdjustToContents</enum>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Apache2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">Nginx</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string notr="true">IIS</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="0" column="2" rowspan="3">
+                <widget class="QFrame" name="frame_StatsDay_Date">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_9">
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="label_StatsDay_Month">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Month</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="label_StatsDay_Day">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Day</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_StatsDay_From">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>From:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="box_StatsDay_ToYear">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>72</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="box_StatsDay_FromYear">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>72</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_StatsDay_Year">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Year</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QComboBox" name="box_StatsDay_FromDay">
+                    <property name="maximumSize">
+                     <size>
+                      <width>56</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QComboBox" name="box_StatsDay_ToMonth">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QCheckBox" name="checkBox_StatsDay_Period">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>To:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="3">
+                   <widget class="QComboBox" name="box_StatsDay_ToDay">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>56</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QComboBox" name="box_StatsDay_FromMonth">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="1" rowspan="3">
+                <widget class="Line" name="gline_StatsDay_1">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="4" rowspan="3">
                 <widget class="QFrame" name="frame_StatsDay_Field">
                  <layout class="QGridLayout" name="gridLayout_10">
+                  <item row="2" column="1">
+                   <widget class="QLineEdit" name="inLine_StatsDay_Filter">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>Filter out field values not starting with this string</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_StatsDay_Filter">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Filter:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_StatsDay_LogsType">
                     <property name="font">
@@ -3022,302 +3370,7 @@ Counts of the elements for a single date, mean value of the counts for a period.
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_StatsDay_Filter">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Filter:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QLineEdit" name="inLine_StatsDay_Filter">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="toolTip">
-                     <string>Filter out field values not starting with this string</string>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QComboBox" name="box_StatsDay_WebServer">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                  </font>
-                 </property>
-                 <property name="toolTip">
-                  <string>Select a Web Server</string>
-                 </property>
-                 <property name="sizeAdjustPolicy">
-                  <enum>QComboBox::AdjustToContents</enum>
-                 </property>
-                 <item>
-                  <property name="text">
-                   <string notr="true">Apache2</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string notr="true">Nginx</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string notr="true">IIS</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="0" column="2" rowspan="3">
-                <widget class="QFrame" name="frame_StatsDay_Date">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Sunken</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_9">
-                  <item row="2" column="3">
-                   <widget class="QComboBox" name="box_StatsDay_ToDay">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>56</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_StatsDay_Month">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Month</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="3">
-                   <widget class="QLabel" name="label_StatsDay_Day">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Day</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_StatsDay_From">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>From:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLabel" name="label_StatsDay_Year">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Year</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QComboBox" name="box_StatsDay_FromYear">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>72</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QComboBox" name="box_StatsDay_FromMonth">
-                    <property name="minimumSize">
-                     <size>
-                      <width>120</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QComboBox" name="box_StatsDay_ToYear">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>72</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="2">
-                   <widget class="QComboBox" name="box_StatsDay_ToMonth">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="3">
-                   <widget class="QComboBox" name="box_StatsDay_FromDay">
-                    <property name="maximumSize">
-                     <size>
-                      <width>56</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QCheckBox" name="checkBox_StatsDay_Period">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>To:</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item row="0" column="1" rowspan="3">
-                <widget class="Line" name="gline_StatsDay_1">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
                 </widget>
                </item>
               </layout>
