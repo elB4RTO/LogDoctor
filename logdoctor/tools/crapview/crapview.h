@@ -59,19 +59,25 @@ public:
         const QString& field );
 
     void drawDay(
-        QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts,
+        QtCharts::QChartView* chart,
+        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
         const QString& field, const QString& filter );
 
     void drawRelat(
-        QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts,
+        QtCharts::QChartView* chart,
+        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
         const QString& field_1, const QString& filter_1,
         const QString& field_2, const QString& filter_2 );
+
+    void calcGlobals(
+        const std::unordered_map<std::string, QFont>& fonts,
+        const QString& web_server, const QString& log_type );
 
 
 private:
