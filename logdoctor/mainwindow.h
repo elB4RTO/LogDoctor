@@ -166,6 +166,12 @@ private slots:
 
     void on_button_StatsRelat_Draw_clicked();
 
+    void on_button_StatsGlob_Apache_clicked();
+
+    void on_button_StatsGlob_Nginx_clicked();
+
+    void on_button_StatsGlob_Iis_clicked();
+
 private:
     Ui::MainWindow *ui;
 

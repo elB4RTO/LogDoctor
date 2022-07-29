@@ -1595,3 +1595,30 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
         this->ui->box_StatsRelat_LogsField_2->currentText(), filter2 );
 }
 
+
+
+////////////////
+//// GLOBAL ////
+void MainWindow::on_button_StatsGlob_Apache_clicked()
+{
+    this->crapview.calcGlobals();
+    if ( this->ui->button_StatsGlob_Apache->isFlat() == true ) {
+        // un-flat
+        this->ui->button_StatsGlob_Apache->setFlat( false );
+        this->ui->button_StatsGlob_Nginx->setFlat( true );
+        this->ui->button_StatsGlob_Iis->setFlat( true );
+    }
+}
+
+
+void MainWindow::on_button_StatsGlob_Nginx_clicked()
+{
+
+}
+
+
+void MainWindow::on_button_StatsGlob_Iis_clicked()
+{
+
+}
+
