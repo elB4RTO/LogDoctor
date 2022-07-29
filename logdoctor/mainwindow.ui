@@ -16,14 +16,8 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>64</width>
-    <height>400</height>
-   </size>
-  </property>
   <property name="windowTitle">
-   <string>LogDoctor</string>
+   <string notr="true">LogDoctor</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources/resources.qrc">
@@ -127,7 +121,7 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0" colspan="4">
-             <widget class="QFrame" name="frame">
+             <widget class="QFrame" name="frame_LogFiles_WebServer">
               <property name="maximumSize">
                <size>
                 <width>320</width>
@@ -147,6 +141,9 @@
                   <font>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
                   <string>Parse logs from the Apache2 web server</string>
@@ -172,6 +169,9 @@
                    <pointsize>13</pointsize>
                   </font>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="toolTip">
                   <string>Parse logs from the Nginx web server</string>
                  </property>
@@ -195,6 +195,9 @@
                   <font>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
                   <string>Parse logs from the Microsoft IIS web server</string>
@@ -253,6 +256,9 @@ hr { height: 1px; border-width: 0; }
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
               <property name="mouseTracking">
                <bool>false</bool>
               </property>
@@ -265,7 +271,7 @@ hr { height: 1px; border-width: 0; }
              </widget>
             </item>
             <item row="1" column="2">
-             <spacer name="horizontalSpacer_2">
+             <spacer name="spacer_LogFiles_1">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -298,6 +304,9 @@ hr { height: 1px; border-width: 0; }
                <font>
                 <pointsize>15</pointsize>
                </font>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
               </property>
               <property name="toolTip">
                <string>Inspect a log file</string>
@@ -387,6 +396,9 @@ hr { height: 1px; border-width: 0; }
                 <pointsize>13</pointsize>
                </font>
               </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
               <property name="toolTip">
                <string>Refresh the list</string>
               </property>
@@ -399,7 +411,7 @@ hr { height: 1px; border-width: 0; }
              </widget>
             </item>
             <item row="3" column="1" colspan="3">
-             <spacer name="horizontalSpacer">
+             <spacer name="spacer_LogFiles_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -454,7 +466,7 @@ hr { height: 1px; border-width: 0; }
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <spacer name="horizontalSpacer_3">
+                <spacer name="spacer_MakeStats_1">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -548,7 +560,7 @@ hr { height: 1px; border-width: 0; }
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_4">
+                <spacer name="spacer_MakeStats_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -642,7 +654,7 @@ hr { height: 1px; border-width: 0; }
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_5">
+                <spacer name="spacer_MakeStats_3">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -677,6 +689,9 @@ hr { height: 1px; border-width: 0; }
                    <height>64</height>
                   </size>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="focusPolicy">
                   <enum>Qt::TabFocus</enum>
                  </property>
@@ -689,7 +704,7 @@ hr { height: 1px; border-width: 0; }
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_6">
+                <spacer name="spacer_MakeStats_4">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -783,7 +798,7 @@ hr { height: 1px; border-width: 0; }
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_7">
+                <spacer name="spacer_MakeStats_5">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -880,7 +895,7 @@ hr { height: 1px; border-width: 0; }
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_8">
+                <spacer name="spacer_MakeStats_6">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -971,7 +986,7 @@ hr { height: 1px; border-width: 0; }
         <item row="0" column="0">
          <widget class="QTabWidget" name="StatsTabs">
           <property name="currentIndex">
-           <number>0</number>
+           <number>5</number>
           </property>
           <property name="iconSize">
            <size>
@@ -985,16 +1000,6 @@ hr { height: 1px; border-width: 0; }
           <property name="movable">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="Global">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/global_off.png</normaloff>
-             <normalon>:/icons/icons/global_on.png</normalon>:/icons/icons/global_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-          </widget>
           <widget class="QWidget" name="Warn">
            <attribute name="icon">
             <iconset resource="resources/resources.qrc">
@@ -1983,7 +1988,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Filter out field values not starting with this string</string>
+                  <string>Use '&lt;','=','&gt;' to filter out non-matching values</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -2399,7 +2404,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   <enum>QTabWidget::South</enum>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="tabAcc">
                   <attribute name="title">
@@ -2450,7 +2455,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Protocol of the request</string>
                          </property>
                          <property name="text">
                           <string notr="true">Protocol</string>
@@ -2477,7 +2482,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Method of the request</string>
                          </property>
                          <property name="text">
                           <string notr="true">Method</string>
@@ -2504,7 +2509,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Requested URI</string>
                          </property>
                          <property name="text">
                           <string notr="true">URI</string>
@@ -2531,7 +2536,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Query carried along with the URI</string>
                          </property>
                          <property name="text">
                           <string notr="true">Query</string>
@@ -2558,7 +2563,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Response code from the server</string>
                          </property>
                          <property name="text">
                           <string notr="true">Response code</string>
@@ -2585,7 +2590,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Referrer for the request</string>
                          </property>
                          <property name="text">
                           <string notr="true">Referrer</string>
@@ -2612,7 +2617,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Cookie used for the request</string>
                          </property>
                          <property name="text">
                           <string notr="true">Cookie</string>
@@ -2639,7 +2644,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>User-agent of the client which made the request</string>
                          </property>
                          <property name="text">
                           <string notr="true">User-agent</string>
@@ -2666,7 +2671,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>IP address of the client which made the request</string>
                          </property>
                          <property name="text">
                           <string notr="true">Client</string>
@@ -2731,7 +2736,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Error level</string>
                          </property>
                          <property name="text">
                           <string notr="true">Level</string>
@@ -2758,7 +2763,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Error message</string>
                          </property>
                          <property name="text">
                           <string notr="true">Message</string>
@@ -2785,7 +2790,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Source file which the error generated from</string>
                          </property>
                          <property name="text">
                           <string notr="true">Source file</string>
@@ -2812,7 +2817,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Internal port in use</string>
                          </property>
                          <property name="text">
                           <string notr="true">Port</string>
@@ -2839,7 +2844,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Parse logs from the Nginx web server</string>
+                          <string>Client which made the request that generated the error (if any)</string>
                          </property>
                          <property name="text">
                           <string notr="true">Client</string>
@@ -3275,7 +3280,7 @@ Counts of the elements for a single date, mean value of the counts for a period.
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter in</string>
                     </property>
                    </widget>
                   </item>
@@ -3832,7 +3837,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter in</string>
                     </property>
                    </widget>
                   </item>
@@ -3965,7 +3970,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter</string>
+                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter in</string>
                     </property>
                    </widget>
                   </item>
@@ -4016,6 +4021,1269 @@ Time of day counts for a single date, entire days counts in a period.</string>
             </item>
             <item row="1" column="0">
              <widget class="QChartView" name="chart_StatsRelat"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="Global">
+           <attribute name="icon">
+            <iconset resource="resources/resources.qrc">
+             <normaloff>:/icons/icons/global_off.png</normaloff>
+             <normalon>:/icons/icons/global_on.png</normalon>:/icons/icons/global_off.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string notr="true"/>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_25">
+            <item row="0" column="0">
+             <widget class="QFrame" name="frame_StatsGlob_WebServer">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>64</height>
+               </size>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <spacer name="spacer_StatsGlob_1">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>234</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_StatsGlob_1">
+                 <property name="maximumSize">
+                  <size>
+                   <width>320</width>
+                   <height>48</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <item>
+                   <widget class="QPushButton" name="button_StatsGlob_Apache">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>96</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="toolTip">
+                     <string>Parse logs from the Apache2 web server</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true">Apache2</string>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="button_StatsGlob_Nginx">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>96</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="toolTip">
+                     <string>Parse logs from the Nginx web server</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true">Nginx</string>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="button_StatsGlob_Iis">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>96</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="toolTip">
+                     <string>Parse logs from the Microsoft IIS web server</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true">IIS</string>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <spacer name="spacer_StatsGlob_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>234</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QSplitter" name="splitter_StatsGlob_main">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="handleWidth">
+               <number>8</number>
+              </property>
+              <property name="childrenCollapsible">
+               <bool>false</bool>
+              </property>
+              <widget class="QSplitter" name="splitter_StatsGlob_Left">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="handleWidth">
+                <number>8</number>
+               </property>
+               <property name="childrenCollapsible">
+                <bool>false</bool>
+               </property>
+               <widget class="QFrame" name="frame_4">
+                <layout class="QGridLayout" name="gridLayout_28">
+                 <item row="1" column="0" colspan="2">
+                  <widget class="QScrollArea" name="scrollArea">
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="scrollAreaWidgetContents">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>348</width>
+                      <height>348</height>
+                     </rect>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_31">
+                     <item row="0" column="0">
+                      <widget class="QFrame" name="frame">
+                       <layout class="QGridLayout" name="gridLayout_30">
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_10">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_5">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Protocol</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="2">
+                         <widget class="QLabel" name="label_9">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_8">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="2">
+                         <widget class="QLabel" name="label_6">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Method</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="2">
+                         <widget class="QLabel" name="label_7">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="1" rowspan="3">
+                         <widget class="Line" name="line_10">
+                          <property name="orientation">
+                           <enum>Qt::Vertical</enum>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QFrame" name="frame_2">
+                       <layout class="QGridLayout" name="gridLayout_32">
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_13">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_12">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>URI</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_11">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="Line" name="line_2">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QFrame" name="frame_8">
+                       <layout class="QGridLayout" name="gridLayout_33">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_16">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>URI</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_14">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_15">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="Line" name="line_3">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QLabel" name="label">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Most recurrent</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QFrame" name="frame_6">
+                <layout class="QGridLayout" name="gridLayout_29">
+                 <item row="1" column="0" colspan="2">
+                  <widget class="QScrollArea" name="scrollArea_2">
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>-212</y>
+                      <width>348</width>
+                      <height>348</height>
+                     </rect>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_36">
+                     <item row="0" column="0">
+                      <widget class="QFrame" name="frame_9">
+                       <layout class="QGridLayout" name="gridLayout_34">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_17">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Date ever</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_18">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_19">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QFrame" name="frame_10">
+                       <layout class="QGridLayout" name="gridLayout_35">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_20">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Day of the week</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_21">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_22">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QFrame" name="frame_11">
+                       <layout class="QGridLayout" name="gridLayout_38">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_26">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Hour of the day</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_27">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_28">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="Line" name="line_6">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="Line" name="line_7">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QLabel" name="label_2">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Most trafficked</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+              <widget class="QSplitter" name="splitter_StatsGlob_Right">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="handleWidth">
+                <number>8</number>
+               </property>
+               <property name="childrenCollapsible">
+                <bool>false</bool>
+               </property>
+               <widget class="QFrame" name="frame_5">
+                <layout class="QGridLayout" name="gridLayout_26">
+                 <item row="1" column="0" colspan="2">
+                  <widget class="QScrollArea" name="scrollArea_3">
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>352</width>
+                      <height>276</height>
+                     </rect>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_46">
+                     <item row="1" column="0">
+                      <widget class="Line" name="line_4">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QFrame" name="frame_15">
+                       <layout class="QGridLayout" name="gridLayout_43">
+                        <item row="0" column="0" colspan="2">
+                         <widget class="QLabel" name="label_31">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Time taken</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_37">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="1">
+                         <widget class="QLabel" name="label_38">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QFrame" name="frame_17">
+                       <layout class="QGridLayout" name="gridLayout_45">
+                        <item row="0" column="0" colspan="2">
+                         <widget class="QLabel" name="label_41">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Bytes sent</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_42">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="1">
+                         <widget class="QLabel" name="label_43">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QFrame" name="frame_16">
+                       <layout class="QGridLayout" name="gridLayout_44">
+                        <item row="0" column="0" colspan="2">
+                         <widget class="QLabel" name="label_34">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Bytes received</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_39">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="1">
+                         <widget class="QLabel" name="label_40">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="Line" name="line_5">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QLabel" name="label_3">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Mean/Max performances</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QFrame" name="frame_7">
+                <layout class="QGridLayout" name="gridLayout_27">
+                 <item row="1" column="0" colspan="2">
+                  <widget class="QScrollArea" name="scrollArea_4">
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>352</width>
+                      <height>276</height>
+                     </rect>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_42">
+                     <item row="4" column="0">
+                      <widget class="QFrame" name="frame_13">
+                       <layout class="QGridLayout" name="gridLayout_40">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_32">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Bytes sent</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_33">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="Line" name="line_8">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QFrame" name="frame_12">
+                       <layout class="QGridLayout" name="gridLayout_39">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_29">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Requests received</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_30">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QFrame" name="frame_14">
+                       <layout class="QGridLayout" name="gridLayout_41">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_35">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>13</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Time taken</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="label_36">
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>32</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>15</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>-</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="Line" name="line_9">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QLabel" name="label_4">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Total work</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </widget>
             </item>
            </layout>
           </widget>
