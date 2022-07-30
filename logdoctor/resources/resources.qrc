@@ -26,5 +26,9 @@
         <file>icons/warn_off.png</file>
         <file>icons/global_on.png</file>
         <file>icons/global_off.png</file>
+        <file>icons/err.png</file>
+        <file>icons/help.png</file>
+        <file>icons/add.png</file>
+        <file>icons/rem.png</file>
     </qresource>
 </RCC>
