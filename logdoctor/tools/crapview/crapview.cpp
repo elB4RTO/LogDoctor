@@ -878,3 +878,10 @@ void Crapview::drawRelat(QtCharts::QChartView* chart, const std::unordered_map<s
         items.clear();
     }
 }
+
+
+// calculate global informations
+void Crapview::calcGlobals( const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type )
+{
+
+}
