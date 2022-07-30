@@ -1601,7 +1601,10 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 //// GLOBAL ////
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
-    this->crapview.calcGlobals();
+    this->crapview.calcGlobals(
+        this->FONTS,
+        this->ui->button_StatsGlob_Apache->text(),
+        "Access" );
     if ( this->ui->button_StatsGlob_Apache->isFlat() == true ) {
         // un-flat
         this->ui->button_StatsGlob_Apache->setFlat( false );
