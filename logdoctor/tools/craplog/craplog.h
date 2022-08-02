@@ -34,8 +34,12 @@ public:
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // logs formats web server specific settings
-    void setAccessLogsFormat( const int web_server_id, const std::string& format_string );
-    void setErrorLogsFormat( const int web_server_id, const std::string& format_string );
+    void setApacheALF( const std::string& format_string );
+    void setNginxALF(  const std::string& format_string );
+    void setIisALF(    const std::string& format_string, const int log_module );
+    void setApacheELF( const std::string& format_string );
+    void setNginxELF(  const std::string& format_string );
+    //void setIisELF(    const std::string& format_string );
     const FormatOps::LogsFormat& getAccessLogsFormat( const int web_server_id );
     const FormatOps::LogsFormat& getErrorLogsFormat( const int web_server_id );
     // currently used WS and LF
