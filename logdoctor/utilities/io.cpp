@@ -108,7 +108,6 @@ bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
 const std::vector<std::string> IOutils::readLines(const std::string& path, const int n_lines, const bool random, const bool strip_lines )
 {
     // read rhe first N lines only
-    bool result = true;
     std::ifstream file;
     std::string line;
     std::vector<std::string> lines, aux_lines;
@@ -175,7 +174,6 @@ const std::vector<std::string> IOutils::readLines(const std::string& path, const
         // failed reading
         lines.clear();
         aux_lines.clear();
-        result = false;
         if ( file.is_open() ) {
             file.close();
         }
@@ -183,7 +181,6 @@ const std::vector<std::string> IOutils::readLines(const std::string& path, const
     } catch (...) {
         lines.clear();
         aux_lines.clear();
-        result = false;
         if ( file.is_open() ) {
             file.close();
         }
@@ -192,6 +189,7 @@ const std::vector<std::string> IOutils::readLines(const std::string& path, const
     if ( file.is_open() ) {
         file.close();
     }
+    aux_lines.clear();
     return lines;
 }
 
@@ -203,7 +201,7 @@ const std::string IOutils::readFile( const std::string& path )
     std::string content = std::string();
     try {
         constexpr std::size_t read_size = std::size_t(4096);
-        std::ifstream file(path);
+        file = std::ifstream(path);
         if ( file.is_open() == false ) {
             throw std::ios_base::failure( "file is not open" );
         }
@@ -219,13 +217,11 @@ const std::string IOutils::readFile( const std::string& path )
             std::istreambuf_iterator<char>() );
     } catch (const std::ios_base::failure& err) {
         // failed reading
-        content = "";
         if ( file.is_open() == true ) {
             file.close();
         }
         throw err;
     } catch (...) {
-        content = "";
         if ( file.is_open() == true ) {
             file.close();
         }

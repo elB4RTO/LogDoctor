@@ -27,7 +27,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     QString rich_line="", class_name="";
     std::string sep, fld, fld_str, aux_sep1, aux_sep2, aux_fld_str;
     bool missing=false;
-    int start, stop=0, i, aux_start1, aux_start2, aux_stop,
+    int start, stop, i, aux_start1, aux_start2, aux_stop,
         line_size, sep_size,
         n_sep = logs_format.separators.size()-1;
     std::vector<std::string> lines;

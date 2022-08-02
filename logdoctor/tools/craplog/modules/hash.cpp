@@ -33,13 +33,6 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
 {
     bool successful = true;
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
-    const std::unordered_map<int, QString> ws_names = {
-        {11, "apache"},
-        {12, "nginx"},
-        {13, "iis"} };
-    const std::unordered_map<int, QString> log_types = {
-        {1, "access"},
-        {2, "error"} };
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( db_path ) );
@@ -55,8 +48,8 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
 
     } else {
         QSqlQuery query = QSqlQuery( db );
-        for ( const auto& [wid,name] : ws_names ) {
-            for ( const auto& [tid,type] : log_types ) {
+        for ( const auto& [wid,name] : this->ws_names ) {
+            for ( const auto& [tid,type] : this->log_types ) {
                 if ( query.exec("SELECT hash FROM "+name+"_"+type+";") == false ) {
                     // error querying database
                     successful = false;
