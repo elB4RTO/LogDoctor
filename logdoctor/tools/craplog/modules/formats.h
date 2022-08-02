@@ -48,6 +48,23 @@ private:
     */
 
     // list of access logs fields formats
+    const  std::unordered_map<std::string, std::vector<std::string>> A_ALFs_v = {
+        {"h", {"c"} },
+        {"t", {"sec","msec","usec","\%b","\%B","\%c","\%d","\%D","\%e","\%F","\%h","\%H","\%m","\%M","\%r","\%R","\%S","\%T","\%x","\%X","\%y","\%Y"} },
+        {"i", {"Cookie","User-agent","Referer"} },
+        {"T", {"s","ms","us"} },
+        // composed not in use
+        {"a",   {}},
+        {"c",   {}},
+        {"e",   {}},
+        {"n",   {}},
+        {"o",   {}},
+        {"p",   {}},
+        {"P",   {}},
+        {"^ti", {}},
+        {"^to", {}}
+        };
+
     const  std::vector<std::string> N_ALFs = {"$remote_addr", "$time_local", "$time_iso8601", "$msec", "$request", "$status", "$bytes_sent", "$request_length", "$request_time", "$http_referer", "$http_user_agent",
                              /*NOT IN USE->*/"$remote_user", "$gzip_ratio", "$connection", "$connection_requests", "$pipe"};
 

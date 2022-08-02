@@ -198,7 +198,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
     int n_fld=0,
         start, stop=0, aux, aux_start, aux_stop,
         max=f_str.size()-1;
-    std::string aux_fld, aux_fld_v, cur_fld, cur_sep;
+    std::string aux_fld, aux_fld_v, cur_fld, cur_sep="";
     // find and convert any field
     while (true) {
         // start after the last found field
@@ -210,10 +210,17 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                 // hunt the next field
                 aux = f_str.find_first_of( '%', stop );
                 // check if false positive
-                if ( aux > 0 && aux <= max ) {
-                    if ( f_str.at(aux-1) == '%' || f_str.at(aux-1) == '\\' ) {
+                if ( aux >= 0 && aux <= max ) {
+                    if ( aux > 0) {
+                        if ( f_str.at(aux-1) == '%' || f_str.at(aux-1) == '\\' ) {
+                            // the percent sign character
+                            stop = aux + 1;
+                            continue;
+                        }
+                    }
+                    if ( f_str.at(aux+1) == '%' ) {
                         // the percent sign character
-                        stop = aux + 1;
+                        stop = aux + 2;
                         continue;
                     }
                 }
@@ -243,42 +250,102 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     aux - aux_start );
                 // get the module
                 aux_fld_v = f_str.at( aux+1 );
-                try {
-                    // try if the module is valid
-                    cur_fld = f_map_v->at( aux_fld_v ).at( aux_fld );
-                    // if here, is valid. stop hunting and append
-                    stop = aux_stop;
-                    break;
-
-                } catch (...) {
+                if ( aux_fld_v == "^" ) {
+                    aux_stop += 2;
+                    aux_fld_v = f_str.substr( aux+1, 3 );
+                }
+                if ( f_map_v->find( aux_fld_v ) == f_map_v->end() ) {
                     // invalid, append all as separator and restart hunting
                     cur_sep += f_str.substr( stop, aux_stop-stop );
-                    stop = aux_stop;
+                    start = stop = aux_stop;
+                    continue;
+                } else {
+                    // module is valud
+                    const auto &aux_map = f_map_v->at( aux_fld_v );
+                    bool skip;
+                    int aux_aux_start,
+                        aux_aux_stop = 0,
+                        aux_aux;
+                    std::string aux_aux_fld;
+                    while (true) {
+                        // loop inside the composed field
+                        skip = true;
+                        aux_aux_start = aux_aux_stop;
+                        for ( const std::string& fld : this->A_ALFs_v.at( aux_fld_v ) ) {
+                            aux_aux = aux_fld.find( fld, aux_aux_start );
+                            // check if has been found
+                            if ( aux_aux >= 0 && aux_aux <= aux_fld.size() ) {
+                                // check if false positive
+                                if ( aux_fld.at(aux_aux) == '%' ) {
+                                    if ( aux_fld.at(aux_aux-1) == '%' || aux_fld.at(aux_aux-1) == '\\' ) {
+                                        // the percent sign character
+                                        aux_aux_start = aux_aux + 1;
+                                        continue;
+                                    } else if ( f_str.at(aux+1) == '%' ) {
+                                        // the percent sign character
+                                        aux_aux_start = aux_aux + 2;
+                                        continue;
+                                    }
+                                }
+                                skip = false;
+                                aux_aux_stop = aux_aux + fld.size();
+                                break;
+                            } else {
+                                continue;
+                            }
+                        }
+                        if ( skip == true ) {
+                            break;
+                        }
+                        // append the current separator
+                        cur_sep += aux_fld.substr( aux_aux_start, aux_aux-aux_aux_start );
+                        aux_aux_fld = aux_fld.substr( aux_aux, aux_aux_stop-aux_aux );
+                        // check if the module is valid
+                        if ( aux_map.size() == 0 ) {
+                            // not considered
+                            fields.push_back( "NONE" );
+                            // append to separators list
+                            separators.push_back( cur_sep );
+                            cur_sep = "";
+
+                        } else if ( aux_map.find( aux_aux_fld ) != aux_map.end() ) {
+                            // valid, append
+                            cur_fld = aux_map.at( aux_aux_fld );
+                            fields.push_back( cur_fld );
+                            // append to separators list
+                            separators.push_back( cur_sep );
+                            cur_sep = "";
+
+                        } else {
+                            // invalid, append as separator and keep hunting
+                            cur_sep += aux_fld.substr( aux_aux, aux_aux_stop-aux_aux );
+                        }
+                    }
+                    // items already appended as needed, next main hunting loop round
+                    start = stop = aux_stop;
                     continue;
                 }
 
             } else {
                 // normal
-                try {
-                    // try if the module is valid
+                aux_fld = f_str.substr( aux, 2 );
+                aux_stop = aux+2;
+                if ( aux_fld == "%>" ) {
                     aux_fld = f_str.substr( aux, 3 );
                     aux_stop = aux+3;
-                    if ( aux_fld != "%>s" ) {
-                        aux_fld = f_str.substr( aux, 2 );
-                        aux_stop = aux+2;
-                    }
+                }
+                // check if the module is valid
+                if ( f_map->find( aux_fld ) != f_map->end() ) {
+                    // valid
                     cur_fld = f_map->at( aux_fld );
-                    // if here, is valid. stop hunting and append
                     stop = aux_stop;
                     break;
-
-                } catch (...) {
+                } else {
                     // invalid, append all as separator and restart hunting
-                    stop ++;
-                    cur_sep += f_str.at( stop );
+                    cur_sep += aux_fld;
+                    stop = aux_stop;
                     continue;
                 }
-
             }
         }
         // outside hunting loop
@@ -307,6 +374,8 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
         n_fld++;
 
     }
+    //delete f_map;
+    //delete f_map_v;
 
     return FormatOps::LogsFormat{
             .string  = f_str,
@@ -343,8 +412,8 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
     int n_fld=0,
-        start, aux=0, stop=0,
-        min_dist=0, max_dist=f_str.size()-1;
+        start, aux, stop=0,
+        min_dist, max_dist=f_str.size()-1;
     std::string cur_fld, cur_sep;
     // find and convert any field
     while (true) {
@@ -356,7 +425,7 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         for ( const std::string& fld : *f_flds ) {
             // run untill a valid field is found
             aux = f_str.find( fld, start );
-            if ( aux < 0 | aux > min_dist ) {
+            if ( aux < 0 || aux > min_dist ) {
                 // not found, skip to the next
                 continue;
             }
@@ -421,6 +490,8 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         // step at the end of the current field for the next start
         stop = min_dist + cur_fld.size();
     }
+    //delete f_map;
+    //delete f_flds;
 
     return FormatOps::LogsFormat{
             .string  = f_str,
@@ -468,7 +539,7 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                 for ( const std::string& fld : f_flds ) {
                     // run untill a valid field is found
                     aux = f_str.find( fld, start );
-                    if ( aux < 0 | aux > min_dist ) {
+                    if ( aux < 0 || aux > min_dist ) {
                         // not found, skip to the next
                         continue;
                     }
