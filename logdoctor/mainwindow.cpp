@@ -449,7 +449,7 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
     // iterate over elements of list
     for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
         // new entry for the tree widget
-        QTreeWidgetItem * item = new QTreeWidgetItem();
+        QTreeWidgetItem *item = new QTreeWidgetItem();
 
         // preliminary check for file-type display
         if ( this->display_access_logs == false && log_file.type == LogOps::LogType::Access ) {
@@ -1549,9 +1549,9 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
-    int aux;
     QString filter1, filter2;
     if ( this->ui->box_StatsRelat_LogsType->currentIndex() == 0 ) {
+        int aux;
         aux = this->ui->box_StatsRelat_LogsField_1->currentIndex();
         if ( aux == 0 ) {
             filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
