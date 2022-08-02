@@ -279,8 +279,15 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                     query_stmt += "NULL";
                 } else {
                     // value found, bind it
-                    perf_size += row.at( i ).size();
-                    query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
+                    if ( i == 21 && wsID == 13 ) {
+                        // iis logs the user-agent using '+' instead of ' ' (spaces)
+                        QString str = QString::fromStdString( row.at( i ) ).replace("+"," ");
+                        perf_size += str.size();
+                        query_stmt += QString("'%1'").arg( str.replace("'","''") );
+                    } else {
+                        perf_size += row.at( i ).size();
+                        query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
+                    }
                 }
             }
 
