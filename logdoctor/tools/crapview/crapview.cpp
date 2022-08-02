@@ -136,9 +136,9 @@ const QString Crapview::parseNumericFilter( const QString& filter_str )
 {
     QString final_str = "";
     if ( filter_str.size() > 0 ) {
-        QString aux = this->parseTextualFilter( filter_str );
-        if ( aux == "NULL" || aux == "NOT NULL" ) {
-            final_str = aux;
+        QString aux_ = this->parseTextualFilter( filter_str );
+        if ( aux_ == "NULL" || aux_ == "NOT NULL" ) {
+            final_str = aux_;
         } else {
             std::vector<std::string> f_list;
             StringOps::splitrip( f_list, filter_str.toStdString(), " " );
@@ -466,7 +466,7 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
 
         // build the line upon data
         int i=0, max_i=items.size(), max_t=0, aux;
-        long long time /* xD */, aux_time=0, t=0, aux_t, count=1;
+        long long time /* xD */, aux_time, t=0, aux_t, count=1;
         time = std::get<0>(items.at(0));
         QDateTime dt;
         std::vector<QString> data;
