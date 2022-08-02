@@ -138,7 +138,7 @@ std::string StringOps::lstrip( const std::string& str, const std::string& chars 
 
 std::string StringOps::rstrip( const std::string& str, const std::string& chars )
 {
-    bool found = true;
+    bool found;
     int i = str.size() - 1;
     while ( i >= 0 ) {
         found = false;
@@ -233,8 +233,8 @@ void StringOps::split( std::vector<std::string>& list, const std::string& target
 void StringOps::splitrip( std::vector<std::string>& list, const std::string& target_str, const std::string& separator, const std::string& strip )
 {
     std::vector<std::string> aux;
-    const std::string str = StringOps::strip( target_str, strip );
-    StringOps::split( aux, str, separator );
+    const std::string str_ = StringOps::strip( target_str, strip );
+    StringOps::split( aux, str_, separator );
     for ( const std::string& str : aux ) {
         if ( str.size() == 0 ) {
             continue;

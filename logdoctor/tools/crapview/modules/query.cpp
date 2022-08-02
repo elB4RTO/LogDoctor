@@ -263,7 +263,6 @@ void DbQuery::updateWarnings( const QString& web_server, const QString& log_type
 
     if ( db.open() == false ) {
         // error opening database
-        successful = false;
         QString err_msg = "";
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
@@ -364,7 +363,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                 DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
             }
         }
-        int year, month, day, hour, minute;
+        int year, month, day, hour;
         if ( successful == true ) {
             // setup period limits
             try {
@@ -620,16 +619,16 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
 
             } else {
                 try {
-                    // get query data
-                    int hour=-1,  aux_hour,   prev_hour=0,   h,
-                        minute=0, aux_minute, prev_minute=0, m,
-                        second=0, aux_second, prev_second=0, s;
 
                     if ( query.size() == 0 ) {
                         // no result found
                         ;
 
                     } else {
+                        // get query data
+                        int hour=-1,  aux_hour,   prev_hour=0,   h,
+                            minute=0, aux_minute, prev_minute=0, m,
+                            second=0, aux_second, prev_second=0, s;
                         QString tt, ur, qr, mt, pt, rs;
                         while ( query.next() ) {
                             aux_hour   = query.value(0).toInt();
@@ -1293,8 +1292,6 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             QString log_field_1 = this->LogFields_to_DbFields.value( log_field_1_ ),
                     log_field_2 = this->LogFields_to_DbFields.value( log_field_2_ );
 
-            int hour, aux_hour, minute, aux_minute, count;
-
             // 1 month, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                 .arg( table.replace("'","''") )
@@ -1381,6 +1378,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             } else {
                 try {
                     // get query data
+                    int hour, aux_hour, minute, aux_minute, count;
                     int gap = 20;
                     hour = -1;
                     minute = count = 0;
@@ -1557,8 +1555,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
             QString log_field_1 = this->LogFields_to_DbFields.value( log_field_1_ ),
                     log_field_2 = this->LogFields_to_DbFields.value( log_field_2_ );
 
-            int n_days   = 0,
-                n_months = this->getMonthsCount( from_year, from_month, to_year, to_month );
+            int n_months = this->getMonthsCount( from_year, from_month, to_year, to_month );
 
             QDateTime time;
             int year  = from_year,

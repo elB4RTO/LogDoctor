@@ -81,7 +81,6 @@ bool CheckSec::newStatsDatabase( QSqlDatabase& db, const std::string& db_path, c
     } else {
         // succesfully creted database file, now create the tables
         QSqlQuery query;
-        int tries;
         for ( const QString& ws_name : ws_names ) {
             if ( successful == false ) { break; }
             // compose the statement with the table name for the access logs
@@ -405,7 +404,6 @@ bool CheckSec::newHashesDatabase( QSqlDatabase& db, const std::string& db_path, 
     } else {
         // succesfully creted database file, now create the tables
         QSqlQuery query;
-        int tries;
         for ( const QString& ws_name : ws_names ) {
             if ( successful == false ) { break; }
             // compose the statement with the table name for the access logs
