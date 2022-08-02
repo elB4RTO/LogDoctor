@@ -61,7 +61,7 @@ private:
         const FormatOps::LogsFormat& format
         );
     // temporary vars
-    int size, lines;
+    int size=0, lines=0;
 
 
 };
