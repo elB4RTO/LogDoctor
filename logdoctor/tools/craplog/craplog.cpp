@@ -17,91 +17,104 @@ Craplog::Craplog()
     //// INITIALIZATION ////
     ////////////////////////
     // blacklists / whitelists
-    for ( int i=11; i<14; i++ ) {
-        this->warnlists[ i ].emplace( 1, std::unordered_map<int, BWlist>() ); // access
-        this->warnlists[ i ].emplace( 2, std::unordered_map<int, BWlist>() ); // error
+    for ( int i=this->APACHE_ID; i<=this->IIS_ID; i++ ) {
+        this->warnlists.emplace( i , std::unordered_map<int, std::unordered_map<int, BWlist>>() );
+        this->warnlists.at( i ).emplace( this->ACCESS_LOGS, std::unordered_map<int, BWlist>() ); // access
+        this->warnlists.at( i ).emplace( this->ERROR_LOGS, std::unordered_map<int, BWlist>() ); // error
+        this->blacklists.emplace( i , std::unordered_map<int, std::unordered_map<int, BWlist>>() );
+        this->blacklists.at( i ).emplace( this->ACCESS_LOGS, std::unordered_map<int, BWlist>() ); // access
+        this->blacklists.at( i ).emplace( this->ERROR_LOGS, std::unordered_map<int, BWlist>() ); // error
         // access
-        this->warnlists[ i ][ 1 ].emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists[ i ][ 1 ].emplace( 12, BWlist{ .used=true,  .list={"/shell","/.env","phpMyAdmin","/wp-login.php","/wp-content","/cgi-bin","/setup.cgi"} } );
-        this->warnlists[ i ][ 1 ].emplace( 20, BWlist{ .used=false, .list={} } );
-        this->warnlists[ i ][ 1 ].emplace( 21, BWlist{ .used=false, .list={} } );
-        this->blacklists[ i ][ 1 ].emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
+        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
+        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 12, BWlist{ .used=true,  .list={"/shell","/.env","/robots.txt","/../","/./","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
+        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 20, BWlist{ .used=false, .list={} } );
+        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 21, BWlist{ .used=false, .list={} } );
+        this->blacklists.at( i ).at( this->ACCESS_LOGS ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
         // error
-        this->warnlists[ i ][ 2 ].emplace( 20, BWlist{ .used=false, .list={} } );
-        this->warnlists[ i ][ 2 ].emplace( 31, BWlist{ .used=false, .list={} } );
-        this->blacklists[ i ][ 2 ].emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
-        this->blacklists[ i ][ 2 ].emplace( 31, BWlist{ .used=false, .list={} } );
+        this->warnlists.at( i ).at( this->ERROR_LOGS ).emplace( 20, BWlist{ .used=false, .list={} } );
+        this->warnlists.at( i ).at( this->ERROR_LOGS ).emplace( 31, BWlist{ .used=false, .list={} } );
+        this->blacklists.at( i ).at( this->ERROR_LOGS ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
+        this->blacklists.at( i ).at( this->ERROR_LOGS ).emplace( 31, BWlist{ .used=false, .list={} } );
     }
 
     // default format strings
-    this->logs_format_stings[11] = std::unordered_map<int, std::string>();
-    this->logs_format_stings[11][1] = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
-    this->logs_format_stings[11][2] = "[%t] [%l] [pid %P] %F: %E: [client %a] %M";
-    this->logs_format_stings[12] = std::unordered_map<int, std::string>();
-    this->logs_format_stings[12][1] = "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"";
-    this->logs_format_stings[12][2] = "$time_iso8601 [$error_level] $pid: *$cid $error_message";
-    this->logs_format_stings[13] = std::unordered_map<int, std::string>();
-    this->logs_format_stings[13][1] = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken";
-    this->logs_format_stings[13][2] = ""; // !!! COMPLETE !!!
+    this->logs_format_stings.emplace( this->APACHE_ID, std::unordered_map<int, std::string>() );
+    this->logs_format_stings.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
+    this->logs_format_stings.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  "[%t] [%l] [pid %P] %F: %E: [client %a] %M" );
+    this->logs_format_stings.emplace( this->NGINX_ID, std::unordered_map<int, std::string>() );
+    this->logs_format_stings.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
+    this->logs_format_stings.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  "$time_iso8601 [$error_level] $pid: *$cid $error_message" );
+    this->logs_format_stings.emplace( this->IIS_ID, std::unordered_map<int, std::string>() );
+    this->logs_format_stings.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken" );
+    this->logs_format_stings.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  "" );
 
     // initialize format strings
-    this->logs_formats[11][1] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(1), 1 );
-    this->logs_formats[11][2] = this->formatOps.processApacheFormatString( this->logs_format_stings.at(11).at(2), 2 );
-    this->logs_formats[12][1] = this->formatOps.processFormatString( this->logs_format_stings.at(12).at(1), 1, 12 );
-    this->logs_formats[12][2] = this->formatOps.processFormatString( this->logs_format_stings.at(12).at(2), 2, 12 );
-    //this->logs_formats[13][1] = this->formatOps.processFormatString( this->logs_format_stings.at(13).at(1), 1, 13 );
-    //this->logs_formats[13][2] = this->formatOps.processFormatString( this->logs_format_stings.at(13).at(2), 2, 13 );
+    this->logs_formats.emplace( this->APACHE_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
+    this->logs_formats.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processApacheFormatString( this->logs_format_stings.at(this->APACHE_ID).at(this->ACCESS_LOGS), this->ACCESS_LOGS ) );
+    this->logs_formats.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  this->formatOps.processApacheFormatString( this->logs_format_stings.at(this->APACHE_ID).at(this->ERROR_LOGS),  this->ERROR_LOGS ) );
+    this->logs_formats.emplace( this->NGINX_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
+    this->logs_formats.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processNginxFormatString( this->logs_format_stings.at(this->NGINX_ID).at(this->ACCESS_LOGS), this->ACCESS_LOGS ) );
+    this->logs_formats.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  this->formatOps.processNginxFormatString( this->logs_format_stings.at(this->NGINX_ID).at(this->ERROR_LOGS),  this->ERROR_LOGS ) );
+    this->logs_formats.emplace( this->IIS_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
+    this->logs_formats.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processIisFormatString( this->logs_format_stings.at(this->IIS_ID).at(this->ACCESS_LOGS), 3 ) );
+    this->logs_formats.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  FormatOps::LogsFormat {} );
 
-    this->current_ALF = this->logs_formats[11][1];
-    this->current_ELF = this->logs_formats[11][2];
+    this->current_ALF = this->logs_formats.at( this->APACHE_ID ).at( this->ACCESS_LOGS );
+    this->current_ELF = this->logs_formats.at( this->APACHE_ID ).at( this->ERROR_LOGS );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( 11, std::unordered_map<int, std::string>() );
-    this->logs_paths[11].emplace( 1, "/var/log/apache2" );
-    this->logs_paths[11].emplace( 2, "/var/log/apache2" );
+    this->logs_paths.emplace( this->APACHE_ID, std::unordered_map<int, std::string>() );
+    this->logs_paths.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, "/var/log/apache2" );
+    this->logs_paths.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( 12, std::unordered_map<int, std::string>() );
-    this->logs_paths[12].emplace( 1, "/var/log/nginx" );
-    this->logs_paths[12].emplace( 2, "/var/log/nginx" );
+    this->logs_paths.emplace( this->NGINX_ID, std::unordered_map<int, std::string>() );
+    this->logs_paths.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, "/var/log/nginx" );
+    this->logs_paths.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( 13, std::unordered_map<int, std::string>() );
-    this->logs_paths[13].emplace( 1, "C:\\inetpub\\logs\\LogFiles\\W3SVC" );
-    this->logs_paths[13].emplace( 2, "C:\\Windows\\System32\\LogFiles\\HTTPERR" );
+    this->logs_paths.emplace( this->IIS_ID, std::unordered_map<int, std::string>() );
+    this->logs_paths.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "C:\\inetpub\\logs\\LogFiles\\" );
+    this->logs_paths.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  "C:\\inetpub\\logs\\FailedReqLogFiles\\" );
 
     // apache2 access/error log files' names
-    this->logs_base_names.emplace( 11, std::unordered_map<int, LogName>() );
-    this->logs_base_names[11].emplace( 1, LogName { .starts   = "access.log.",
+    this->logs_base_names.emplace( this->APACHE_ID, std::unordered_map<int, LogName>() );
+    this->logs_base_names.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, LogName {
+                                                    .starts   = "access.log.",
                                                     .contains = "",
                                                     .ends     = "" });
-    this->logs_base_names[11].emplace( 2, LogName { .starts   = "error.log.",
+    this->logs_base_names.at( this->APACHE_ID ).emplace( this->ERROR_LOGS, LogName {
+                                                    .starts   = "error.log.",
                                                     .contains = "",
                                                     .ends     = "" });
     // nginx access/error log files' names
-    this->logs_base_names.emplace( 12, std::unordered_map<int, LogName>() );
-    this->logs_base_names[12].emplace( 1, LogName { .starts   = "access.log.",
+    this->logs_base_names.emplace( this->NGINX_ID, std::unordered_map<int, LogName>() );
+    this->logs_base_names.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, LogName {
+                                                    .starts   = "access.log.",
                                                     .contains = "",
                                                     .ends     = "" });
-    this->logs_base_names[12].emplace( 2, LogName { .starts   = "error.log.",
+    this->logs_base_names.at( this->NGINX_ID ).emplace( this->ERROR_LOGS, LogName {
+                                                    .starts   = "error.log.",
                                                     .contains = "",
                                                     .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( 13, std::unordered_map<int, LogName>() );
-    this->logs_base_names[13].emplace( 1, LogName { .starts   = "nc",
+    this->logs_base_names.emplace( this->IIS_ID, std::unordered_map<int, LogName>() );
+    this->logs_base_names.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, LogName {
+                                                    .starts   = "u_",
                                                     .contains = "",
                                                     .ends     = ".log" });
-    this->logs_base_names[13].emplace( 2, LogName { .starts   = "",
+    this->logs_base_names.at( this->IIS_ID ).emplace( this->ERROR_LOGS, LogName {
+                                                    .starts   = "fr",
                                                     .contains = "",
-                                                    .ends     = "" });
+                                                    .ends     = ".xml" });
 
 
     // access logs data
-    this->data_collection[1] = std::vector<std::unordered_map<int, std::string>>();
+    this->data_collection.emplace( this->ACCESS_LOGS, std::vector<std::unordered_map<int, std::string>>() );
     // error logs data
-    this->data_collection[2] = std::vector<std::unordered_map<int, std::string>>();
+    this->data_collection.emplace( this->ERROR_LOGS,  std::vector<std::unordered_map<int, std::string>>() );
 
     // hashes of newly parsed files
-    this->used_files_hashes[1] = std::vector<std::string>();
-    this->used_files_hashes[2] = std::vector<std::string>();
+    this->used_files_hashes.emplace( this->ACCESS_LOGS, std::vector<std::string>() );
+    this->used_files_hashes.emplace( this->ERROR_LOGS,  std::vector<std::string>() );
 
     ///////////////////////
     //// CONFIGURATION ////
@@ -165,17 +178,35 @@ const FormatOps::LogsFormat& Craplog::getErrorLogsFormat( const int web_server_i
 }
 
 // set the logs format
-void Craplog::setAccessLogsFormat( const int web_server_id, const std::string& format_string )
+void Craplog::setApacheALF( const std::string& format_string )
 {
-    this->logs_formats.at( web_server_id ).at( 1 ) = this->formatOps.processFormatString(
-        this->logs_format_stings.at( web_server_id ).at( 1 ),
-        1, web_server_id );
+    // apache
+    this->logs_formats.at( this->APACHE_ID ).at( this->ACCESS_LOGS ) =
+        this->formatOps.processApacheFormatString( format_string, this->ACCESS_LOGS );
 }
-void Craplog::setErrorLogsFormat(const int web_server_id, const std::string& format_string )
+void Craplog::setNginxALF( const std::string& format_string )
 {
-    this->logs_formats.at( web_server_id ).at( 2 ) = this->formatOps.processFormatString(
-        this->logs_format_stings.at( web_server_id ).at( 2),
-        2, web_server_id );
+    // nginx
+    this->logs_formats.at( this->NGINX_ID ).at( this->ACCESS_LOGS ) =
+        this->formatOps.processApacheFormatString( format_string, this->ACCESS_LOGS );
+}
+void Craplog::setIisALF( const std::string& format_string, const int log_module )
+{
+    // iis
+    this->logs_formats.at( this->IIS_ID ).at( this->ACCESS_LOGS ) =
+        this->formatOps.processApacheFormatString( format_string, log_module );
+}
+void Craplog::setApacheELF( const std::string& format_string )
+{
+    // apache
+    this->logs_formats.at( this->APACHE_ID ).at( this->ERROR_LOGS ) =
+        this->formatOps.processApacheFormatString( format_string, this->ERROR_LOGS );
+}
+void Craplog::setNginxELF( const std::string& format_string )
+{
+    // nginx
+    this->logs_formats.at( this->NGINX_ID ).at( this->ERROR_LOGS ) =
+        this->formatOps.processApacheFormatString( format_string, this->ERROR_LOGS );
 }
 
 
@@ -249,7 +280,6 @@ const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
 // return the path of the file matching the given name
 const std::string& Craplog::getLogFilePath( const QString& file_name )
 {
-    std::string path;
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
             return item.path;
@@ -279,13 +309,13 @@ void Craplog::scanLogsDir()
 {
     this->logs_list.clear();
     int n=2;
-    auto logs_paths = this->logs_paths.at( this->current_WS );
-    if ( logs_paths.at(1) == logs_paths.at(2) ) {
+    auto &logs_paths_ = this->logs_paths.at( this->current_WS );
+    if ( logs_paths_.at(1) == logs_paths_.at(2) ) {
         // same dir for both access and error logs, loop only once
         n=1;
     }
     for ( int i=0; i<n; i++ ) {
-        std::string logs_path = logs_paths.at( i+1 );
+        std::string &logs_path = logs_paths_.at( i+1 );
         if ( !IOutils::isDir( logs_path ) ) {
             // this directory doesn't exists
             if ( IOutils::exists( logs_path ) ) {
@@ -307,19 +337,19 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            bool proceed = true;
+            bool successful = true;
             std::vector<std::string> content;
             try {
                 // read 32 random lines
                 content = IOutils::readLines( path, 32, true );
             } catch (const std::ios_base::failure& err) {
                 // failed reading
-                proceed = false;
+                successful = false;
                 // >> err.what() << //
                 DialogSec::errFailedReadFile( nullptr, name );
             } catch (...) {
                 // failed somehow
-                proceed = false;
+                successful = false;
                 QString err_msg = QMessageBox::tr("An error occured while handling the file");
                 DialogSec::errGeneric( nullptr, err_msg +":\n"+ name );
             }
@@ -331,7 +361,7 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            if ( proceed == true ) {
+            if ( successful == true ) {
                 LogOps::LogType log_type = this->logOps.defineFileType( name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
                 if ( log_type == LogOps::LogType::Failed ) {
                     // failed to get the log type, do not append
@@ -557,11 +587,11 @@ void Craplog::run()
 
 const bool Craplog::checkStuff()
 {
-    bool proceed = true;
+    this->proceed = true;
     this->log_files_to_use.clear();
     for ( const LogFile& file : this->logs_list ) {
 
-        if ( proceed == false ) { break; }
+        if ( this->proceed == false ) { break; }
 
         if ( file.selected == false ) {
             // not selected, skip
@@ -573,7 +603,7 @@ const bool Craplog::checkStuff()
             bool choice = DialogSec::choiceUndefinedLogType( nullptr, file.name );
             if ( choice == false ) {
                 // choosed to abort all
-                proceed = false;
+                this->proceed = false;
                 break;
             } else {
                 // choosed to discard and continue
@@ -591,7 +621,7 @@ const bool Craplog::checkStuff()
             int choice = DialogSec::choiceFileAlreadyUsed( nullptr, msg );
             if ( choice < 0 ) {
                 // choosed to abort all
-                proceed = false;
+                this->proceed = false;
                 break;
             } else if ( choice > 0 ) {
                 // choosed to discard and continue
@@ -632,7 +662,7 @@ const bool Craplog::checkStuff()
                 int choice = DialogSec::choiceFileSizeWarning( nullptr, msg );
                 if ( choice < 0 ) {
                     // choosed to abort all
-                    proceed = false;
+                    this->proceed = false;
                     break;
                 } else if ( choice > 0 ) {
                     // choosed to discard and continue
@@ -646,20 +676,19 @@ const bool Craplog::checkStuff()
         // check if the statistics' database is fune
         if ( CheckSec::checkStatsDatabase( this->db_stats_path ) == false ) {
             // checks failed, abort
-            proceed = false;
+            this->proceed = false;
             break;
         }
         if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
             // checks failed, abort
-            proceed = false;
+            this->proceed = false;
             break;
         }
 
         this->log_files_to_use.push_back( file );
     }
 
-    this->proceed = proceed;
-    return proceed;
+    return this->proceed;
 }
 
 
@@ -746,7 +775,6 @@ const std::vector<std::string>& Craplog::getWarnlist( const int web_server_id, c
 
 void Craplog::storeLogLines()
 {
-    bool successful;
     QString db_path = QString::fromStdString( this->db_stats_path );
     QString db_name = QString::fromStdString( this->db_stats_path.substr( this->db_stats_path.find_last_of( '/' ) + 1 ) );
 
@@ -764,6 +792,7 @@ void Craplog::storeLogLines()
 
     } else {
 
+        bool successful;
         try {
             // ACID transaction
             if ( db.transaction() == false ) {
