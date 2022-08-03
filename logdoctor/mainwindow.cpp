@@ -29,47 +29,47 @@ MainWindow::MainWindow( QWidget *parent )
     this->script_font_family = QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/3270")).at(0);
     // initialize the fonts map
-    this->FONTS["main"] = QFont(
+    this->FONTS.emplace( "main", QFont(
         this->main_font_family,
-        this->font_size );
-    this->FONTS["main_italic"] = QFont(
-        this->main_font_family,
-        this->font_size,
-        -1, true );
-    this->FONTS["main_bold"] = QFont(
+        this->font_size ) );
+    this->FONTS.emplace( "main_italic", QFont(
         this->main_font_family,
         this->font_size,
-        1 );
-    this->FONTS["main_big"] = QFont(
+        -1, true ) );
+    this->FONTS.emplace( "main_bold", QFont(
         this->main_font_family,
-        this->font_size_big );
-    this->FONTS["main_small"] = QFont(
+        this->font_size,
+        1 ) );
+    this->FONTS.emplace( "main_big", QFont(
         this->main_font_family,
-        this->font_size_small );
-    this->FONTS["script"] = QFont(
+        this->font_size_big ) );
+    this->FONTS.emplace( "main_small", QFont(
+        this->main_font_family,
+        this->font_size_small ) );
+    this->FONTS.emplace( "script", QFont(
         this->script_font_family,
-        this->font_size );
+        this->font_size ) );
 
     // parent font for every tab
-    this->ui->CrapTabs->setFont( this->FONTS.at("main_big") );
+    this->ui->CrapTabs->setFont( this->FONTS.at( "main_big" ) );
 
     // WebServers buttons for the LogFiles
-    this->ui->button_LogFiles_Apache->setFont( this->FONTS.at("main") );
-    this->ui->button_LogFiles_Nginx->setFont( this->FONTS.at("main") );
-    this->ui->button_LogFiles_Iis->setFont( this->FONTS.at("main") );
+    this->ui->button_LogFiles_Apache->setFont( this->FONTS.at( "main" ) );
+    this->ui->button_LogFiles_Nginx->setFont( this->FONTS.at(  "main" ) );
+    this->ui->button_LogFiles_Iis->setFont( this->FONTS.at(    "main" ) );
     // TreeView for the LogFiles
-    this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS.at("main_small") );
-    this->ui->listLogFiles->setFont( this->FONTS.at("main") );
+    this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS.at( "main_small" ) );
+    this->ui->listLogFiles->setFont( this->FONTS.at( "main" ) );
     // TextBrowser for the LogFiles
-    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES.at(1) );
+    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES.at( 1 ) );
     this->TB.setFontFamily( this->main_font_family );
-    this->TB.setFont( this->FONTS.at("main") );
+    this->TB.setFont( this->FONTS.at( "main" ) );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
     // MakeStats labels
-    this->ui->label_MakeStats_Size->setFont( this->FONTS.at("main") );
-    this->ui->label_MakeStats_Lines->setFont( this->FONTS.at("main") );
-    this->ui->label_MakeStats_Time->setFont( this->FONTS.at("main") );
-    this->ui->label_MakeStats_Speed->setFont( this->FONTS.at("main") );
+    this->ui->label_MakeStats_Size->setFont( this->FONTS.at(  "main"  ) );
+    this->ui->label_MakeStats_Lines->setFont( this->FONTS.at( "main" ) );
+    this->ui->label_MakeStats_Time->setFont( this->FONTS.at(  "main" ) );
+    this->ui->label_MakeStats_Speed->setFont( this->FONTS.at( "main" ) );
 
     // StatsSpeed table
     this->ui->table_StatsSpeed->setFont( this->FONTS.at("main") );
@@ -86,9 +86,9 @@ MainWindow::MainWindow( QWidget *parent )
     this->db_hashes_path = "hashes.db";//"~/.craplog/hashes.db"; !!! RESTORE
     this->crapview.setDbPath( this->db_stats_path );
     // WebServers for the LogsList
-    this->allowed_web_servers[11] = true; // apache2
-    this->allowed_web_servers[12] = true; // nginx
-    this->allowed_web_servers[13] = true; // iis
+    this->allowed_web_servers.emplace( this->APACHE_ID, true );
+    this->allowed_web_servers.emplace( this->NGINX_ID,  true );
+    this->allowed_web_servers.emplace( this->IIS_ID,    true );
 
 
     /////////////////
@@ -104,29 +104,35 @@ MainWindow::MainWindow( QWidget *parent )
     int ws = 14;
     for ( int id=13; id>10; id-- ) {
         if ( this->allowed_web_servers.at( id ) == true ) {
-            ws = ( id < ws ) ? id : ws;
+            ws = ( id < ws ) ? id : ws; // to be used later on
         } else {
             switch (id) {
                 case 11:
                     this->ui->button_LogFiles_Apache->setEnabled( false );
+                    this->ui->box_StatsWarn_WebServer->removeItem(  0 );
                     this->ui->box_StatsCount_WebServer->removeItem( 0 );
                     this->ui->box_StatsSpeed_WebServer->removeItem( 0 );
                     this->ui->box_StatsDay_WebServer->removeItem(   0 );
                     this->ui->box_StatsRelat_WebServer->removeItem( 0 );
+                    this->ui->button_StatsGlob_Apache->setEnabled( false );
                     break;
                 case 12:
                     this->ui->button_LogFiles_Nginx->setEnabled( false );
+                    this->ui->box_StatsWarn_WebServer->removeItem(  1 );
                     this->ui->box_StatsCount_WebServer->removeItem( 1 );
                     this->ui->box_StatsSpeed_WebServer->removeItem( 1 );
                     this->ui->box_StatsDay_WebServer->removeItem(   1 );
                     this->ui->box_StatsRelat_WebServer->removeItem( 1 );
+                    this->ui->button_StatsGlob_Nginx->setEnabled( false );
                     break;
                 case 13:
                     this->ui->button_LogFiles_Iis->setEnabled( false );
+                    this->ui->box_StatsWarn_WebServer->removeItem(  2 );
                     this->ui->box_StatsCount_WebServer->removeItem( 2 );
                     this->ui->box_StatsSpeed_WebServer->removeItem( 2 );
                     this->ui->box_StatsDay_WebServer->removeItem(   2 );
                     this->ui->box_StatsRelat_WebServer->removeItem( 2 );
+                    this->ui->button_StatsGlob_Iis->setEnabled( false );
                     break;
             }
         }
@@ -138,10 +144,12 @@ MainWindow::MainWindow( QWidget *parent )
         this->allowed_web_servers.at( ws ) = true;
         this->on_button_LogFiles_Apache_clicked();
         this->ui->button_LogFiles_Apache->setEnabled( true );
+        this->ui->box_StatsWarn_WebServer->addItem(  "Apache2" );
         this->ui->box_StatsCount_WebServer->addItem( "Apache2" );
         this->ui->box_StatsSpeed_WebServer->addItem( "Apache2" );
         this->ui->box_StatsDay_WebServer->addItem(   "Apache2" );
         this->ui->box_StatsRelat_WebServer->addItem( "Apache2" );
+        this->ui->button_StatsGlob_Apache->setEnabled( true );
     }
     // set the LogList to the current WebServer
     if ( this->allowed_web_servers.at( this->craplog.getCurrentWSID() ) == false ) {
@@ -163,14 +171,21 @@ MainWindow::MainWindow( QWidget *parent )
             // shouldn't be here
             throw( &"Unexpected WebServer ID for Craplog: "[this->craplog.getCurrentWSID()] );
     }
-    // set the current WS for the ViewStats
+
+    // set the current WS for the ViewStats and make them initialize
     switch ( ws ) {
         case 11:
             // already set to index 0 by default
+            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
+            this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
+            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
+            this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
+            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
             break;
         case 12:
             for ( int i=0; i<this->ui->box_StatsCount_WebServer->count(); i++ ) {
                 if ( this->ui->box_StatsCount_WebServer->itemText( i ) == "Nginx" ) {
+                    this->ui->box_StatsWarn_WebServer->setCurrentIndex(  i );
                     this->ui->box_StatsCount_WebServer->setCurrentIndex( i );
                     this->ui->box_StatsSpeed_WebServer->setCurrentIndex( i );
                     this->ui->box_StatsDay_WebServer->setCurrentIndex(   i );
@@ -182,6 +197,7 @@ MainWindow::MainWindow( QWidget *parent )
         case 13:
             for ( int i=0; i<this->ui->box_StatsCount_WebServer->count(); i++ ) {
                 if ( this->ui->box_StatsCount_WebServer->itemText( i ) == "IIS" ) {
+                    this->ui->box_StatsWarn_WebServer->setCurrentIndex(  i );
                     this->ui->box_StatsCount_WebServer->setCurrentIndex( i );
                     this->ui->box_StatsSpeed_WebServer->setCurrentIndex( i );
                     this->ui->box_StatsDay_WebServer->setCurrentIndex(   i );
@@ -194,6 +210,16 @@ MainWindow::MainWindow( QWidget *parent )
             // shouldn't be here
             throw( &"Unexpected WebServer ID: "[ws] );
     }
+
+
+    // make the Configs initialize
+    this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
+    this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme );
+    this->ui->slider_ConfDialogs_General->setValue( this->dialogs_Level );
+    this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
+    this->ui->slider_ConfDialogs_Stats->setValue( this->crapview.getDialogsLevel() );
+    this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( this->TB.getColorSchemeID() );
+    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->charts_theme );
 
 
     // get a fresh list of LogFiles
@@ -778,7 +804,7 @@ void MainWindow::checkStatsWarnDrawable()
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsWarn_LogsType->currentIndexChanged( 0 );
+    this->ui->box_StatsWarn_LogsType->setCurrentIndex( 0 );
     this->checkStatsWarnDrawable();
 }
 
@@ -894,7 +920,7 @@ void MainWindow::checkStatsSpeedDrawable()
     }
 }
 
-void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged( int index )
+void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Year->clear();
     this->ui->box_StatsSpeed_Year->addItems(
@@ -1232,32 +1258,33 @@ void MainWindow::checkStatsDayDrawable()
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    QStringList years = this->crapview.getYears(
-        this->ui->box_StatsDay_WebServer->currentText(),
-        this->ui->box_StatsDay_LogsType->currentText() );
-
-    this->ui->box_StatsDay_FromYear->clear();
-    this->ui->box_StatsDay_FromYear->addItems( years );
-    this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
-    if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
-        this->ui->box_StatsDay_ToYear->clear();
-        this->ui->box_StatsDay_ToYear->addItems( years );
-        this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
-    }
-    years.clear();
+    this->ui->box_StatsDay_LogsType->setCurrentIndex( 0 );
     this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_box_StatsDay_LogsType_currentIndexChanged(int index)
 {
-    this->on_box_StatsDay_WebServer_currentIndexChanged(0);
     this->ui->box_StatsDay_LogsField->clear();
     if ( index != -1 ) {
+        // refresh fields
         this->ui->box_StatsDay_LogsField->addItems(
             this->crapview.getFields(
                 "Daytime",
                 this->ui->box_StatsDay_LogsType->currentText() ));
         this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
+        // refresh dates
+        QStringList years = this->crapview.getYears(
+            this->ui->box_StatsDay_WebServer->currentText(),
+            this->ui->box_StatsDay_LogsType->currentText() );
+        this->ui->box_StatsDay_FromYear->clear();
+        this->ui->box_StatsDay_FromYear->addItems( years );
+        this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
+        if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+            this->ui->box_StatsDay_ToYear->clear();
+            this->ui->box_StatsDay_ToYear->addItems( years );
+            this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+        }
+        years.clear();
     }
     this->checkStatsDayDrawable();
 }
@@ -1434,27 +1461,16 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    QStringList years = this->crapview.getYears(
-        this->ui->box_StatsRelat_WebServer->currentText(),
-        this->ui->box_StatsRelat_LogsType->currentText() );
-    // from
-    this->ui->box_StatsRelat_FromYear->clear();
-    this->ui->box_StatsRelat_FromYear->addItems( years );
-    this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
-    // to
-    this->ui->box_StatsRelat_ToYear->clear();
-    this->ui->box_StatsRelat_ToYear->addItems( years );
-    this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
-    years.clear();
+    this->ui->box_StatsRelat_LogsType->setCurrentIndex( 0 );
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_LogsType_currentIndexChanged(int index)
 {
-    this->on_box_StatsRelat_WebServer_currentIndexChanged(0);
     this->ui->box_StatsRelat_LogsField_1->clear();
     this->ui->box_StatsRelat_LogsField_2->clear();
     if ( index != -1 ) {
+        // refresh fields
         QStringList fields = this->crapview.getFields(
             "Relational",
             this->ui->box_StatsRelat_LogsType->currentText() );
@@ -1462,6 +1478,19 @@ void MainWindow::on_box_StatsRelat_LogsType_currentIndexChanged(int index)
         this->ui->box_StatsRelat_LogsField_2->addItems( fields );
         this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
         this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
+        // refresh dates
+        QStringList years = this->crapview.getYears(
+            this->ui->box_StatsRelat_WebServer->currentText(),
+            this->ui->box_StatsRelat_LogsType->currentText() );
+        // from
+        this->ui->box_StatsRelat_FromYear->clear();
+        this->ui->box_StatsRelat_FromYear->addItems( years );
+        this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
+        // to
+        this->ui->box_StatsRelat_ToYear->clear();
+        this->ui->box_StatsRelat_ToYear->addItems( years );
+        this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
+        years.clear();
     }
     this->checkStatsRelatDrawable();
 }
@@ -1624,4 +1653,582 @@ void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
 
 }
+
+
+
+/////////////////
+//// CONFIGS ////
+/////////////////
+
+/////////////////
+//// GENERAL ////
+////////////////
+//// WINDOW ////
+// window geometry
+void MainWindow::on_checkBox_ConfGeneral_Window_clicked(bool checked)
+{
+    this->remember_window = checked;
+}
+
+// dialogs levels
+void MainWindow::on_slider_ConfGeneral_General_sliderReleased()
+{
+    this->dialogs_Level = this->ui->slider_ConfDialogs_General->value();
+}
+void MainWindow::on_slider_ConfGeneral_Logs_sliderReleased()
+{
+    this->craplog.setDialogLevel( this->ui->slider_ConfDialogs_Logs->value() );
+}
+void MainWindow::on_slider_ConfGeneral_Stats_sliderReleased()
+{
+    this->crapview.setDialogLevel( this->ui->slider_ConfDialogs_Stats->value() );
+}
+
+// themes
+void MainWindow::on_box_ConfGeneral_Theme_Window_currentIndexChanged(int index)
+{
+
+}
+void MainWindow::on_box_ConfGeneral_Theme_TextBrowser_currentIndexChanged(int index)
+{
+
+}
+void MainWindow::on_box_ConfGeneral_Theme_Charts_currentIndexChanged(int index)
+{
+
+}
+
+
+//////////////
+//// LOGS ////
+/////////////////
+//// CONTROL ////
+// usage control
+void MainWindow::on_checkBox_ConfControl_Usage_clicked(bool checked)
+{
+    this->display_used_files = checked;
+}
+
+// size warning
+void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
+{
+    if ( checked == false ) {
+        // disable size warning
+        this->ui->spinBox_ConfControl_Size->setEnabled( false );
+        this->craplog.setWarningSize( 0 );
+    } else {
+        // enable warning
+        this->ui->spinBox_ConfControl_Size->setEnabled( true );
+        this->craplog.setWarningSize( this->ui->spinBox_ConfControl_Size->value() );
+    }
+}
+void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
+{
+    this->craplog.setWarningSize( this->ui->spinBox_ConfControl_Size->value() );
+}
+
+
+////////////////
+//// APACHE ////
+// paths
+void MainWindow::on_checkBox_ConfApache_Paths_Different_clicked(bool checked)
+{
+    if ( checked == true ) {
+        // enable the error logs path line
+        this->ui->label_ConfApache_Paths_Access->setEnabled( true );
+        this->ui->label_ConfApache_Paths_Error->setEnabled( true );
+        this->ui->inLine_ConfApache_Paths_ErrPath->setEnabled( true );
+        this->ui->inLine_ConfApache_Paths_ErrPath->setText( QString::fromStdString(
+            this->craplog.getLogsPath( this->APACHE_ID, this->ERROR_LOGS ) ) );
+        this->on_inLine_ConfApache_Paths_ErrPath_textChanged(
+            this->ui->inLine_ConfApache_Paths_ErrPath->text() );
+    } else {
+        // disable the error logs path line
+        this->ui->label_ConfApache_Paths_Access->setEnabled( false );
+        this->ui->label_ConfApache_Paths_Error->setEnabled( false );
+        this->ui->inLine_ConfApache_Paths_ErrPath->setEnabled( false );
+        this->ui->icon_ConfApache_Paths_ErrWrong->setVisible( false );
+        // set the error logs path equals to the access logs path
+        this->craplog.setLogsPath( this->APACHE_ID, this->ERROR_LOGS,
+            this->craplog.getLogsPath( this->APACHE_ID, this->ACCESS_LOGS ) );
+    }
+}
+
+void MainWindow::on_inLine_ConfApache_Paths_AccPath_textChanged(const QString &arg1)
+{
+    if ( IOutils::checkDir( arg1.toStdString() ) == true ) {
+        this->ui->icon_ConfApache_Paths_AccWrong->setVisible( false );
+        if ( this->ui->icon_ConfApache_Paths_ErrWrong->isVisible() == false ) {
+            this->ui->button_ConfApache_Paths_SavePaths->setEnabled( true );
+        } else {
+            this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
+        }
+    }
+}
+
+void MainWindow::on_inLine_ConfApache_Paths_ErrPath_textChanged(const QString &arg1)
+{
+    if ( IOutils::checkDir( arg1.toStdString() ) == true ) {
+        this->ui->icon_ConfApache_Paths_ErrWrong->setVisible( false );
+        if ( this->ui->icon_ConfApache_Paths_AccWrong->isVisible() == false ) {
+            this->ui->button_ConfApache_Paths_SavePaths->setEnabled( true );
+        } else {
+            this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
+        }
+    }
+}
+
+void MainWindow::on_button_ConfApache_Paths_SavePaths_clicked()
+{
+    if ( this->ui->icon_ConfApache_Paths_ErrWrong->isVisible() == false
+      && this->ui->icon_ConfApache_Paths_AccWrong->isVisible() == false ) {
+        // set the paths
+        this->craplog.setLogsPath( this->APACHE_ID, this->ACCESS_LOGS,
+            this->ui->inLine_ConfApache_Paths_AccPath->text().toStdString() );
+        if ( this->ui->checkBox_ConfApache_Paths_Different->isChecked() == true ) {
+            this->craplog.setLogsPath( this->APACHE_ID, this->ERROR_LOGS,
+                this->ui->inLine_ConfApache_Paths_ErrPath->text().toStdString() );
+        }
+    }
+}
+
+// formats
+void MainWindow::on_inLine_ConfApache_Formats_AccString_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfApache_Format_AccSave->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Format_AccSave->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfApache_Format_AccSave_clicked()
+{
+    this->craplog.setApacheALF( this->ui->inLine_ConfApache_Formats_AccString->text().toStdString() );
+}
+void MainWindow::on_button_ConfApache_Formats_AccSample_clicked()
+{
+    this->ui->label_ConfApache_Formats_AccString->setText(
+        this->craplog.getLogsFormatSample( this->APACHE_ID, this->ACCESS_LOGS ) );
+}
+void MainWindow::on_button_ConfApache_Formats_AccHelp_clicked()
+{
+    // !!! 2 COMPLETE !!!
+}
+
+void MainWindow::on_inLine_ConfApache_Formats_ErrString_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfApache_Format_ErrSave->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Format_ErrSave->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfApache_Format_ErrSave_clicked()
+{
+    this->craplog.setApacheELF( this->ui->inLine_ConfApache_Formats_ErrString->text().toStdString() );
+}
+void MainWindow::on_button_ConfApache_Formats_ErrSample_clicked()
+{
+    this->ui->label_ConfApache_Formats_ErrString->setText(
+        this->craplog.getLogsFormatSample( this->APACHE_ID, this->ERROR_LOGS ) );
+}
+void MainWindow::on_button_ConfApache_Formats_ErrHelp_clicked()
+{
+    // !!! 2 COMPLETE !!!
+}
+
+// warnlists
+void MainWindow::on_box_ConfApache_Warnlist_Acc_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfApache_Warnlist_Acc->clear();
+    this->ui->list_ConfApache_Warnlist_Acc->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getWarnlist(
+        this->APACHE_ID, this->ACCESS_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfApache_Warnlist_Acc->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isWarnlistUsed(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ) );
+    this->ui->checkBox_ConfApache_Warnlist_AccUsed->setChecked( used );
+    this->on_checkBox_ConfApache_Warnlist_AccUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfApache_Warnlist_AccUsed_clicked(bool checked)
+{
+    this->craplog.setWarnlistUsed(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+        checked );
+    if ( this->ui->checkBox_ConfApache_Warnlist_AccUsed->isChecked() == true ) {
+        this->ui->inLine_ConfApache_Warnlist_Acc->setEnabled( true );
+        this->ui->list_ConfApache_Warnlist_Acc->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfApache_Warnlist_Acc->clear();
+        this->ui->inLine_ConfApache_Warnlist_Acc->setEnabled( false );
+        this->ui->list_ConfApache_Warnlist_Acc->clearSelection();
+        this->ui->list_ConfApache_Warnlist_Acc->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfApache_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfApache_Warnlist_AccAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Warnlist_AccAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfApache_Warnlist_Acc_returnPressed()
+{
+    this->on_button_ConfApache_Warnlist_AccAdd_clicked();
+}
+void MainWindow::on_button_ConfApache_Warnlist_AccAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfApache_Warnlist_Acc->text();
+    this->ui->list_ConfApache_Warnlist_Acc->addItem( item );
+    this->craplog.warnlistAdd(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+        item.toStdString() );
+    this->ui->inLine_ConfApache_Warnlist_Acc->clear();
+}
+
+void MainWindow::on_list_ConfApache_Warnlist_Acc_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfApache_Warnlist_Acc->selectedItems().size() > 0 ) {
+        this->ui->button_ConfApache_Warnlist_AccRemove->setEnabled( true );
+        this->ui->button_ConfApache_Warnlist_AccUp->setEnabled( true );
+        this->ui->button_ConfApache_Warnlist_AccDown->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Warnlist_AccRemove->setEnabled( false );
+        this->ui->button_ConfApache_Warnlist_AccUp->setEnabled( false );
+        this->ui->button_ConfApache_Warnlist_AccDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfApache_Warnlist_AccRemove_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Warnlist_Acc->selectedItems() ) {
+        this->craplog.warnlistRemove(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Warnlist_AccUp_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Warnlist_Acc->selectedItems() ) {
+        this->craplog.warnlistMoveUp(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Warnlist_AccDown_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Warnlist_Acc->selectedItems() ) {
+        this->craplog.warnlistMoveDown(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+            item->text().toStdString() );
+    }
+}
+
+
+void MainWindow::on_box_ConfApache_Warnlist_Err_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfApache_Warnlist_Err->clear();
+    this->ui->list_ConfApache_Warnlist_Err->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getWarnlist(
+        this->APACHE_ID, this->ERROR_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfApache_Warnlist_Err->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isWarnlistUsed(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ) );
+    this->ui->checkBox_ConfApache_Warnlist_ErrUsed->setChecked( used );
+    this->on_checkBox_ConfApache_Warnlist_ErrUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfApache_Warnlist_ErrUsed_clicked(bool checked)
+{
+    this->craplog.setWarnlistUsed(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+        checked );
+    if ( this->ui->checkBox_ConfApache_Warnlist_ErrUsed->isChecked() == true ) {
+        this->ui->inLine_ConfApache_Warnlist_Err->setEnabled( true );
+        this->ui->list_ConfApache_Warnlist_Err->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfApache_Warnlist_Err->clear();
+        this->ui->inLine_ConfApache_Warnlist_Err->setEnabled( false );
+        this->ui->list_ConfApache_Warnlist_Err->clearSelection();
+        this->ui->list_ConfApache_Warnlist_Err->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfApache_Warnlist_Err_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfApache_Warnlist_ErrAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Warnlist_ErrAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfApache_Warnlist_Err_returnPressed()
+{
+    this->on_button_ConfApache_Warnlist_ErrAdd_clicked();
+}
+void MainWindow::on_button_ConfApache_Warnlist_ErrAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfApache_Warnlist_Err->text();
+    this->ui->list_ConfApache_Warnlist_Err->addItem( item );
+    this->craplog.warnlistAdd(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+        item.toStdString() );
+    this->ui->inLine_ConfApache_Warnlist_Err->clear();
+}
+
+void MainWindow::on_list_ConfApache_Warnlist_Err_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfApache_Warnlist_Err->selectedItems().size() > 0 ) {
+        this->ui->button_ConfApache_Warnlist_ErrRemove->setEnabled( true );
+        this->ui->button_ConfApache_Warnlist_ErrUp->setEnabled( true );
+        this->ui->button_ConfApache_Warnlist_ErrDown->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Warnlist_ErrRemove->setEnabled( false );
+        this->ui->button_ConfApache_Warnlist_ErrUp->setEnabled( false );
+        this->ui->button_ConfApache_Warnlist_ErrDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfApache_Warnlist_ErrRemove_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Warnlist_Err->selectedItems() ) {
+        this->craplog.warnlistRemove(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Warnlist_ErrUp_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Warnlist_Err->selectedItems() ) {
+        this->craplog.warnlistMoveUp(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Warnlist_ErrDown_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Warnlist_Err->selectedItems() ) {
+        this->craplog.warnlistMoveDown(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+            item->text().toStdString() );
+    }
+}
+
+
+// blacklist
+void MainWindow::on_box_ConfApache_Blacklist_Acc_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfApache_Blacklist_Acc->clear();
+    this->ui->list_ConfApache_Blacklist_Acc->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getBlacklist(
+        this->APACHE_ID, this->ACCESS_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfApache_Blacklist_Acc->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isBlacklistUsed(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ) );
+    this->ui->checkBox_ConfApache_Blacklist_AccUsed->setChecked( used );
+    this->on_checkBox_ConfApache_Blacklist_AccUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfApache_Blacklist_AccUsed_clicked(bool checked)
+{
+    this->craplog.setBlacklistUsed(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+        checked );
+    if ( this->ui->checkBox_ConfApache_Blacklist_AccUsed->isChecked() == true ) {
+        this->ui->inLine_ConfApache_Blacklist_Acc->setEnabled( true );
+        this->ui->list_ConfApache_Blacklist_Acc->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfApache_Blacklist_Acc->clear();
+        this->ui->inLine_ConfApache_Blacklist_Acc->setEnabled( false );
+        this->ui->list_ConfApache_Blacklist_Acc->clearSelection();
+        this->ui->list_ConfApache_Blacklist_Acc->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfApache_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfApache_Blacklist_AccAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Blacklist_AccAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfApache_Blacklist_Acc_returnPressed()
+{
+    this->on_button_ConfApache_Blacklist_AccAdd_clicked();
+}
+void MainWindow::on_button_ConfApache_Blacklist_AccAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfApache_Blacklist_Acc->text();
+    this->ui->list_ConfApache_Blacklist_Acc->addItem( item );
+    this->craplog.blacklistAdd(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+        item.toStdString() );
+    this->ui->inLine_ConfApache_Blacklist_Acc->clear();
+}
+
+void MainWindow::on_list_ConfApache_Blacklist_Acc_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfApache_Blacklist_Acc->selectedItems().size() > 0 ) {
+        this->ui->button_ConfApache_Blacklist_AccRemove->setEnabled( true );
+        this->ui->button_ConfApache_Blacklist_AccUp->setEnabled( true );
+        this->ui->button_ConfApache_Blacklist_AccDown->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Blacklist_AccRemove->setEnabled( false );
+        this->ui->button_ConfApache_Blacklist_AccUp->setEnabled( false );
+        this->ui->button_ConfApache_Blacklist_AccDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfApache_Blacklist_AccRemove_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Blacklist_Acc->selectedItems() ) {
+        this->craplog.blacklistRemove(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Blacklist_AccUp_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Blacklist_Acc->selectedItems() ) {
+        this->craplog.blacklistMoveUp(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Blacklist_AccDown_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Blacklist_Acc->selectedItems() ) {
+        this->craplog.blacklistMoveDown(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+            item->text().toStdString() );
+    }
+}
+
+
+void MainWindow::on_box_ConfApache_Blacklist_Err_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfApache_Blacklist_Err->clear();
+    this->ui->list_ConfApache_Blacklist_Err->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getBlacklist(
+        this->APACHE_ID, this->ERROR_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfApache_Blacklist_Err->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isBlacklistUsed(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ) );
+    this->ui->checkBox_ConfApache_Blacklist_ErrUsed->setChecked( used );
+    this->on_checkBox_ConfApache_Blacklist_ErrUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfApache_Blacklist_ErrUsed_clicked(bool checked)
+{
+    this->craplog.setBlacklistUsed(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+        checked );
+    if ( this->ui->checkBox_ConfApache_Blacklist_ErrUsed->isChecked() == true ) {
+        this->ui->inLine_ConfApache_Blacklist_Err->setEnabled( true );
+        this->ui->list_ConfApache_Blacklist_Err->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfApache_Blacklist_Err->clear();
+        this->ui->inLine_ConfApache_Blacklist_Err->setEnabled( false );
+        this->ui->list_ConfApache_Blacklist_Err->clearSelection();
+        this->ui->list_ConfApache_Blacklist_Err->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfApache_Blacklist_Err_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfApache_Blacklist_ErrAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Blacklist_ErrAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfApache_Blacklist_Err_returnPressed()
+{
+    this->on_button_ConfApache_Blacklist_ErrAdd_clicked();
+}
+void MainWindow::on_button_ConfApache_Blacklist_ErrAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfApache_Blacklist_Err->text();
+    this->ui->list_ConfApache_Blacklist_Err->addItem( item );
+    this->craplog.blacklistAdd(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+        item.toStdString() );
+    this->ui->inLine_ConfApache_Blacklist_Err->clear();
+}
+
+void MainWindow::on_list_ConfApache_Blacklist_Err_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfApache_Blacklist_Err->selectedItems().size() > 0 ) {
+        this->ui->button_ConfApache_Blacklist_ErrRemove->setEnabled( true );
+        this->ui->button_ConfApache_Blacklist_ErrUp->setEnabled( true );
+        this->ui->button_ConfApache_Blacklist_ErrDown->setEnabled( true );
+    } else {
+        this->ui->button_ConfApache_Blacklist_ErrRemove->setEnabled( false );
+        this->ui->button_ConfApache_Blacklist_ErrUp->setEnabled( false );
+        this->ui->button_ConfApache_Blacklist_ErrDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfApache_Blacklist_ErrRemove_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Blacklist_Err->selectedItems() ) {
+        this->craplog.blacklistRemove(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Blacklist_ErrUp_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Blacklist_Err->selectedItems() ) {
+        this->craplog.blacklistMoveUp(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+            item->text().toStdString() );
+    }
+}
+void MainWindow::on_button_ConfApache_Blacklist_ErrDown_clicked()
+{
+    for ( auto& item : this->ui->list_ConfApache_Blacklist_Err->selectedItems() ) {
+        this->craplog.blacklistMoveDown(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+            item->text().toStdString() );
+    }
+}
+
+
 
