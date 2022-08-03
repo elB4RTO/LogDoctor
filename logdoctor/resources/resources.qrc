@@ -30,5 +30,7 @@
         <file>icons/help.png</file>
         <file>icons/add.png</file>
         <file>icons/rem.png</file>
+        <file>icons/up.png</file>
+        <file>icons/down.png</file>
     </qresource>
 </RCC>
