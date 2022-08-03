@@ -20,7 +20,7 @@ public:
         QString& rich_content,
         const std::string& content,
         const FormatOps::LogsFormat& logs_format,
-        const TextBrowser& TB );
+        TextBrowser& TB );
 
     static void richLogsDefault( QString& rich_str );
     static void richLogsFailure( QString& rich_str );
