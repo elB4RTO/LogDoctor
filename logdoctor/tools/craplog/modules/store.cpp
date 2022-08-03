@@ -323,9 +323,9 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             // error opening database
             successful = false;
             QString query_msg="", err_msg="";
-            if ( craplog.getDialogLevel() > 0 ) {
+            if ( craplog.getDialogsLevel() > 0 ) {
                 query_msg = "query.prepare()";
-                if ( craplog.getDialogLevel() == 2 ) {
+                if ( craplog.getDialogsLevel() == 2 ) {
                     err_msg = query.lastError().text();
                 }
             }
@@ -340,9 +340,9 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             // error finalizing step
             successful = false;
             QString query_msg="", err_msg="";
-            if ( craplog.getDialogLevel() > 0 ) {
+            if ( craplog.getDialogsLevel() > 0 ) {
                 query_msg = "query.exec()";
-                if ( craplog.getDialogLevel() == 2 ) {
+                if ( craplog.getDialogsLevel() == 2 ) {
                     err_msg = query.lastError().text();
                 }
             }
