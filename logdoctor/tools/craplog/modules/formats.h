@@ -26,8 +26,9 @@ public:
     const LogsFormat processNginxFormatString(const std::string& formatted_string, const int log_type );
     const LogsFormat processIisFormatString(const std::string& formatted_string, const int log_module );
 
-    const QString getApacheFormatTranslation( const LogsFormat& log_format );
-    const QString getApacheLogSample( const LogsFormat& log_format );
+    const QString getApacheLogSample( const LogsFormat& log_format, const int log_type );
+    const QString getNginxLogSample( const LogsFormat& log_format, const int log_type );
+    const QString getIisLogSample( const LogsFormat& log_format/*, const int log_type*/ );
 
 private:
     /*std::unordered_map<std::string, std::string>
@@ -48,7 +49,7 @@ private:
     */
 
     // list of access logs fields formats
-    const  std::unordered_map<std::string, std::vector<std::string>> A_ALFs_v = {
+    const std::unordered_map<std::string, std::vector<std::string>> A_ALFs_v = {
         {"h", {"c"} },
         {"t", {"sec","msec","usec","\%b","\%B","\%c","\%d","\%D","\%e","\%F","\%h","\%H","\%m","\%M","\%r","\%R","\%S","\%T","\%x","\%X","\%y","\%Y"} },
         {"i", {"Cookie","User-agent","Referer"} },
@@ -65,7 +66,7 @@ private:
         {"^to", {}}
         };
 
-    const  std::vector<std::string> N_ALFs = {"$remote_addr", "$time_local", "$time_iso8601", "$msec", "$request", "$status", "$bytes_sent", "$request_length", "$request_time", "$http_referer", "$http_user_agent",
+    const std::vector<std::string> N_ALFs = {"$remote_addr", "$time_local", "$time_iso8601", "$msec", "$request", "$status", "$bytes_sent", "$request_length", "$request_time", "$http_referer", "$http_user_agent",
                              /*NOT IN USE->*/"$remote_user", "$gzip_ratio", "$connection", "$connection_requests", "$pipe"};
 
     const std::vector<std::string> I_ALFs = {"c-ip", "time", "cs-version", "cs-method", "cs-uri-stem", "cs-uri-query", "sc-status", "sc-bytes", "cs-bytes", "time-taken", "cs(Referrer)", "cs(Cookie)", "cs(User-Agent)",
