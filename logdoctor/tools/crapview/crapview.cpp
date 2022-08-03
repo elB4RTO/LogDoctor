@@ -12,7 +12,7 @@ Crapview::Crapview()
 }
 
 
-const int Crapview::getDialogLevel()
+const int Crapview::getDialogsLevel()
 {
     return this->dialog_level;
 }
@@ -203,6 +203,12 @@ void Crapview::refreshDates()
     if ( std::get<0>(result) == true ) {
         this->dates = std::get<1>(result);
     }
+}
+
+
+int Crapview::getLogFieldID ( const QString& field_str )
+{
+    return this->LogFields_s2i.value( field_str );
 }
 
 

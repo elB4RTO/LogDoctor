@@ -15,8 +15,10 @@ class Crapview
 public:
     Crapview();
 
-    const int getDialogLevel();
+    const int getDialogsLevel();
     void setDialogLevel( const int new_level );
+
+    void setChartsTheme( const int new_theme_id );
 
     void setDbPath( const std::string& path );
 
@@ -24,7 +26,8 @@ public:
     const QString parseNumericFilter( const QString& filter_str );
     const QString parseTextualFilter( const QString& filter_str );
 
-    int getMonthNumber( const QString& month_str );
+    int getLogFieldID ( const QString& field_str ),
+        getMonthNumber( const QString& month_str );
 
     void refreshDates();
 
@@ -84,6 +87,9 @@ private:
     // quantity of informational dialogs to display
     int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
 
+    // charts theme
+    int charts_theme = 0;
+
     DbQuery dbQuery;
 
     QString TITLE_WARN = QMessageBox::tr("Log Lines Marked as Warning"),
@@ -125,6 +131,25 @@ private:
             {"Apache2",11}, {"Nginx",12}, {"IIS",13} },
         LogsType_s2i  = {
             {TYPES.value(1),1}, {TYPES.value(2),2} },
+        LogFields_s2i = {
+            {FIELDS.value(0), 0},
+            {FIELDS.value(10),10},
+            {FIELDS.value(11),11},
+            {FIELDS.value(12),12},
+            {FIELDS.value(13),13},
+            {FIELDS.value(14),14},
+            {FIELDS.value(15),15},
+            {FIELDS.value(16),16},
+            {FIELDS.value(17),17},
+            {FIELDS.value(18),18},
+            {FIELDS.value(20),20},
+            {FIELDS.value(21),21},
+            {FIELDS.value(22),22},
+            {FIELDS.value(30),30},
+            {FIELDS.value(31),31},
+            {FIELDS.value(32),32},
+            {FIELDS.value(33),33}
+        },
         Months_s2i = {
             {MONTHS.value(1),1},   {MONTHS.value(2),2},   {MONTHS.value(3),3},
             {MONTHS.value(4),4},   {MONTHS.value(5),5},   {MONTHS.value(6),6},
