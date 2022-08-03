@@ -21,17 +21,16 @@ public:
 
     void run();
 
-    const int getDialogLevel();
+    const int getDialogsLevel();
     void setDialogLevel( const int new_level );
+
+    void setChartsTheme( const int new_theme_id );
 
     const std::string
         & getStatsDatabasePath(),
         & getHashesDatabasePath();
     void setStatsDatabasePath( const std::string& path ),
          setHashesDatabasePath( const std::string& path );
-
-    // web servers ID constants
-    const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // logs formats web server specific settings
     void setApacheALF( const std::string& format_string );
@@ -40,16 +39,21 @@ public:
     void setApacheELF( const std::string& format_string );
     void setNginxELF(  const std::string& format_string );
     //void setIisELF(    const std::string& format_string );
+    const std::string& getAccessLogsFormatString( const int web_server_id );
+    const std::string& getErrorLogsFormatString( const int web_server_id );
     const FormatOps::LogsFormat& getAccessLogsFormat( const int web_server_id );
     const FormatOps::LogsFormat& getErrorLogsFormat( const int web_server_id );
+    const QString getLogsFormatSample( const int web_server_id, const int log_type );
     // currently used WS and LF
     void setCurrentWSID( const int web_server_id );
     const int getCurrentWSID();
     const FormatOps::LogsFormat& getCurrentALF();
     const FormatOps::LogsFormat& getCurrentELF();
 
-    // log type constants
-    const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
+    // logs paths
+    const std::string& getLogsPath( const int web_server, const int log_type );
+    void setLogsPath( const int web_server, const int log_type, const std::string& new_path );
+
     // log file item's infoes
     struct LogFile {
         bool selected;
@@ -87,9 +91,19 @@ public:
     };
     const bool isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id ),
                isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id );
+    void setBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id, const bool used ),
+         setWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id, const bool used );
     const std::vector<std::string>
-        & getBlacklist( const int web_server_id, const int log_type, const int log_field_id ),
-        & getWarnlist( const int web_server_id, const int log_type, const int log_field_id );
+        &getBlacklist( const int web_server_id, const int log_type, const int log_field_id ),
+        &getWarnlist( const int web_server_id, const int log_type, const int log_field_id );
+    void blacklistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         warnlistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         blacklistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         warnlistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         blacklistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         warnlistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         blacklistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
+         warnlistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item );
 
     // job related
     const bool checkStuff();
@@ -114,6 +128,11 @@ public:
 private:
     // quantity of informational dialogs to display
     int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
+
+    // web servers ID constants
+    const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
+    // log type constants
+    const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
 
     // databases paths
     std::string db_stats_path,
@@ -166,8 +185,6 @@ private:
     std::string configs_path;
 
     // control related
-    bool delete_old_hashes = false;
-    int  old_hashes_months = 12;
     int warning_size = 1'048'576 +1; //104'857'600; // in Bytes ( => 100 MiB ) // !!! RESTORE !!!
     // black/warn-list
     // { web_server_id : { log_type : { log_field_id : BWlist } } }
@@ -193,7 +210,7 @@ private:
 
     // logs format related
     FormatOps formatOps;
-    std::unordered_map<int, std::unordered_map<int, std::string>> logs_format_stings;
+    std::unordered_map<int, std::unordered_map<int, std::string>> logs_format_strings;
     std::unordered_map<int, std::unordered_map<int, FormatOps::LogsFormat>> logs_formats;
     void setCurrentALF();
     void setCurrentELF();
