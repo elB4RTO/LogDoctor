@@ -386,6 +386,35 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
         };
 
 }
+// sample
+const QString FormatOps::getApacheLogSample( const LogsFormat& log_format, const int log_type )
+{
+    QString sample = "";
+    const std::unordered_map<std::string, QString>* map;
+    switch ( log_type ) {
+        case 1:
+            map  = &this->APACHE_ALF_SAMPLES;
+            break;
+        case 2:
+            map  = &this->APACHE_ELF_SAMPLES;
+            break;
+        default:
+            // shouldn't be here
+            throw (&"Unexpected LogType for Apache: "[log_type]);
+    }
+    // append the initial characters
+    sample += QString::fromStdString( log_format.initial );
+    for ( int i=0; i<log_format.separators.size(); i++ ) {
+        // append fields and separators
+        sample += map->at( log_format.fields.at( i ) );
+        sample += QString::fromStdString( log_format.separators.at( i ) );
+    }
+    // add the last field
+    sample += map->at( log_format.fields.back() );
+    // and the final characters
+    sample += QString::fromStdString( log_format.initial );
+    return sample;
+}
 
 
 
@@ -500,6 +529,35 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
             .separators = separators,
             .fields     = fields
         };
+}
+// sample
+const QString FormatOps::getNginxLogSample( const LogsFormat& log_format, const int log_type )
+{
+    QString sample = "";
+    const std::unordered_map<std::string, QString>* map;
+    switch ( log_type ) {
+        case 1:
+            map  = &this->NGINX_ALF_SAMPLES;
+            break;
+        case 2:
+            map  = &this->NGINX_ELF_SAMPLES;
+            break;
+        default:
+            // shouldn't be here
+            throw (&"Unexpected LogType for Apache: "[log_type]);
+    }
+    // append the initial characters
+    sample += QString::fromStdString( log_format.initial );
+    for ( int i=0; i<log_format.separators.size(); i++ ) {
+        // append fields and separators
+        sample += map->at( log_format.fields.at( i ) );
+        sample += QString::fromStdString( log_format.separators.at( i ) );
+    }
+    // add the last field
+    sample += map->at( log_format.fields.back() );
+    // and the final characters
+    sample += QString::fromStdString( log_format.initial );
+    return sample;
 }
 
 
@@ -618,4 +676,33 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
             .separators = separators,
             .fields     = fields
         };
+}
+// sample
+const QString FormatOps::getIisLogSample( const LogsFormat& log_format/*, const int log_type*/ )
+{
+    QString sample = "";
+    const std::unordered_map<std::string, QString>& map = this->IIS_ALF_SAMPLES;
+    /*switch ( log_type ) {
+        case 1:
+            map  = &this->IIS_ALF_SAMPLES;
+            break;
+        case 2:
+            map  = &this->IIS_ELF_SAMPLES;
+            break;
+        default:
+            // shouldn't be here
+            throw (&"Unexpected LogType for Apache: "[log_type]);
+    }*/
+    // append the initial characters
+    sample += QString::fromStdString( log_format.initial );
+    for ( int i=0; i<log_format.separators.size(); i++ ) {
+        // append fields and separators
+        sample += map.at( log_format.fields.at( i ) );
+        sample += QString::fromStdString( log_format.separators.at( i ) );
+    }
+    // add the last field
+    sample += map.at( log_format.fields.back() );
+    // and the final characters
+    sample += QString::fromStdString( log_format.initial );
+    return sample;
 }
