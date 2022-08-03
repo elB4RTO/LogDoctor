@@ -172,19 +172,147 @@ private slots:
 
     void on_button_StatsGlob_Iis_clicked();
 
+    void on_checkBox_ConfGeneral_Window_clicked(bool checked);
+
+    void on_slider_ConfGeneral_General_sliderReleased();
+
+    void on_slider_ConfGeneral_Logs_sliderReleased();
+
+    void on_slider_ConfGeneral_Stats_sliderReleased();
+
+    void on_box_ConfGeneral_Theme_Window_currentIndexChanged(int index);
+
+    void on_box_ConfGeneral_Theme_TextBrowser_currentIndexChanged(int index);
+
+    void on_box_ConfGeneral_Theme_Charts_currentIndexChanged(int index);
+
+    void on_checkBox_ConfControl_Usage_clicked(bool checked);
+
+    void on_checkBox_ConfControl_Size_clicked(bool checked);
+
+    void on_spinBox_ConfControl_Size_editingFinished();
+
+    void on_checkBox_ConfApache_Paths_Different_clicked(bool checked);
+
+    void on_inLine_ConfApache_Paths_AccPath_textChanged(const QString &arg1);
+
+    void on_inLine_ConfApache_Paths_ErrPath_textChanged(const QString &arg1);
+
+    void on_button_ConfApache_Paths_SavePaths_clicked();
+
+    void on_inLine_ConfApache_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
+
+    void on_button_ConfApache_Format_AccSave_clicked();
+
+    void on_button_ConfApache_Formats_AccSample_clicked();
+
+    void on_button_ConfApache_Formats_AccHelp_clicked();
+
+    void on_inLine_ConfApache_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
+
+    void on_button_ConfApache_Format_ErrSave_clicked();
+
+    void on_button_ConfApache_Formats_ErrSample_clicked();
+
+    void on_button_ConfApache_Formats_ErrHelp_clicked();
+
+    void on_box_ConfApache_Warnlist_Acc_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfApache_Warnlist_AccUsed_clicked(bool checked);
+
+    void on_inLine_ConfApache_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfApache_Warnlist_Acc_returnPressed();
+
+    void on_button_ConfApache_Warnlist_AccAdd_clicked();
+
+    void on_list_ConfApache_Warnlist_Acc_itemSelectionChanged();
+
+    void on_button_ConfApache_Warnlist_AccRemove_clicked();
+
+    void on_button_ConfApache_Warnlist_AccUp_clicked();
+
+    void on_button_ConfApache_Warnlist_AccDown_clicked();
+
+    void on_box_ConfApache_Warnlist_Err_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfApache_Warnlist_ErrUsed_clicked(bool checked);
+
+    void on_inLine_ConfApache_Warnlist_Err_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfApache_Warnlist_Err_returnPressed();
+
+    void on_button_ConfApache_Warnlist_ErrAdd_clicked();
+
+    void on_list_ConfApache_Warnlist_Err_itemSelectionChanged();
+
+    void on_button_ConfApache_Warnlist_ErrRemove_clicked();
+
+    void on_button_ConfApache_Warnlist_ErrUp_clicked();
+
+    void on_button_ConfApache_Warnlist_ErrDown_clicked();
+
+    void on_box_ConfApache_Blacklist_Acc_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfApache_Blacklist_AccUsed_clicked(bool checked);
+
+    void on_inLine_ConfApache_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfApache_Blacklist_Acc_returnPressed();
+
+    void on_button_ConfApache_Blacklist_AccAdd_clicked();
+
+    void on_list_ConfApache_Blacklist_Acc_itemSelectionChanged();
+
+    void on_button_ConfApache_Blacklist_AccRemove_clicked();
+
+    void on_button_ConfApache_Blacklist_AccUp_clicked();
+
+    void on_button_ConfApache_Blacklist_AccDown_clicked();
+
+    void on_box_ConfApache_Blacklist_Err_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfApache_Blacklist_ErrUsed_clicked(bool checked);
+
+    void on_inLine_ConfApache_Blacklist_Err_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfApache_Blacklist_Err_returnPressed();
+
+    void on_button_ConfApache_Blacklist_ErrAdd_clicked();
+
+    void on_list_ConfApache_Blacklist_Err_itemSelectionChanged();
+
+    void on_button_ConfApache_Blacklist_ErrRemove_clicked();
+
+    void on_button_ConfApache_Blacklist_ErrUp_clicked();
+
+    void on_button_ConfApache_Blacklist_ErrDown_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     // quantoty of informational dialogs to display
     int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
 
+    // web servers ID constants
+    const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
+    // log type constants
+    const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
+
     void makeInitialChecks();
 
     //////////////////
     //// GRAPHICS ////
     //////////////////
+    // remember window position and sizes
+    bool remember_window = true;
+    // themes
+    int window_theme = 0,
+        charts_theme = 0;
+    // color schemes
     std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
     std::unordered_map<std::string, QColor> COLORS;
+    // fonts
     std::unordered_map<std::string, QFont>  FONTS;
     int font_size       = 13,
         font_size_big   = 16,
