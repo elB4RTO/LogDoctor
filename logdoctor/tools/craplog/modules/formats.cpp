@@ -173,6 +173,79 @@ FormatOps::FormatOps()
 }
 
 
+std::string FormatOps::parseApacheEscapes( const std::string& string )
+{
+    int i = 0,
+        max = string.size()-1;
+    std::string str1 = "",
+                str2 = "";
+    char c, cc;
+    // parse the first time, no control-character added
+    while (true) {
+        if ( i >= max ) {
+            // no need to check the final char
+            if ( i == max ) {
+                str1.push_back( string.at( i ) );
+            }
+            break;
+        }
+        c = string.at( i );
+        cc = string.at( i+1 );
+        if ( c == '\\' && cc == '\\' ) {
+            str1.push_back( c );
+            i++;
+        } else if ( c == '%' && cc == '%' ) {
+            str1.push_back( c );
+            i++;
+        } else {
+            str1.push_back( c );
+        }
+        i++;
+    }
+    i = 0;
+    max = str1.size()-1;
+    // parse the second time, adding control-characters
+    while (true) {
+        if ( i >= max ) {
+            // no need to check the final char
+            if ( i == max ) {
+                str2.push_back( str1.at( i ) );
+            }
+            break;
+        }
+        c = str1.at( i );
+        cc = str1.at( i+1 );
+        if ( c == '\\' ) {
+            // just the ones supported by apache
+            if ( cc == '\\' ) {
+                str2.push_back( c );
+                i++;
+            } else if ( cc == 'n' ) {
+                str2.push_back( '\n' );
+                i++;
+            } else if ( cc == 'r' ) {
+                str2.push_back( '\r' );
+                i++;
+            } else if ( cc == 't' ) {
+                str2.push_back( '\t' );
+                i++;
+            } else {
+                if ( cc == '%' ) {
+                    // backslashed percent sign results in a backslash + percent sign
+                    str2.push_back( c );
+                }
+                str2.push_back( cc );
+                i++;
+            }
+        } else {
+            str2.push_back( c );
+        }
+        i++;
+    }
+
+    return str2;
+}
+
 
 const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str, const int l_type )
 {
@@ -211,13 +284,8 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                 aux = f_str.find_first_of( '%', stop );
                 // check if false positive
                 if ( aux >= 0 && aux <= max ) {
-                    if ( aux > 0) {
-                        if ( f_str.at(aux-1) == '%' || f_str.at(aux-1) == '\\' ) {
-                            // the percent sign character
-                            stop = aux + 1;
-                            continue;
-                        }
-                    }
+                    // apache only escapes a format field using the double percent sign
+                    // backslashes are valid for control-characters only, or get reduced to 1 escape only
                     if ( f_str.at(aux+1) == '%' ) {
                         // the percent sign character
                         stop = aux + 2;
@@ -229,7 +297,9 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
             if ( aux < 0 || aux > max ) {
                 // no more fields, append the last section as final separator
-                final = f_str.substr( start );
+                cur_sep += f_str.substr( start );
+                /*final = cur_sep + f_str.substr( start );
+                final = this->parseApacheEscapes( final );*/
                 n_fld = -1;
                 break;
             }
@@ -343,7 +413,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                 } else {
                     // invalid, append all as separator and restart hunting
                     cur_sep += aux_fld;
-                    stop = aux_stop;
+                    start = stop = aux_stop;
                     continue;
                 }
             }
@@ -352,15 +422,16 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
         if ( n_fld < 0 ) {
             // final reached, stop looping
+            final = this->parseApacheEscapes( cur_sep );
             break;
 
         } else if ( n_fld == 0 ) {
             // first field found, assign the separator as the initial one
-            initial = cur_sep;
+            initial = this->parseApacheEscapes( cur_sep );
 
         } else {
             // append to separators list
-            separators.push_back( cur_sep );
+            separators.push_back( this->parseApacheEscapes( cur_sep ) );
         }
 
         // append the field
@@ -410,9 +481,11 @@ const QString FormatOps::getApacheLogSample( const LogsFormat& log_format, const
         sample += QString::fromStdString( log_format.separators.at( i ) );
     }
     // add the last field
-    sample += map->at( log_format.fields.back() );
+    if ( log_format.fields.size() > 0 ) {
+        sample += map->at( log_format.fields.back() );
+    }
     // and the final characters
-    sample += QString::fromStdString( log_format.initial );
+    sample += QString::fromStdString( log_format.final );
     return sample;
 }
 
@@ -556,7 +629,7 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format, const 
     // add the last field
     sample += map->at( log_format.fields.back() );
     // and the final characters
-    sample += QString::fromStdString( log_format.initial );
+    sample += QString::fromStdString( log_format.final );
     return sample;
 }
 
@@ -703,6 +776,6 @@ const QString FormatOps::getIisLogSample( const LogsFormat& log_format/*, const 
     // add the last field
     sample += map.at( log_format.fields.back() );
     // and the final characters
-    sample += QString::fromStdString( log_format.initial );
+    sample += QString::fromStdString( log_format.final );
     return sample;
 }
