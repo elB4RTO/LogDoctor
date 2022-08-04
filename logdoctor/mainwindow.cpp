@@ -25,6 +25,9 @@ MainWindow::MainWindow( QWidget *parent )
     // load the main font
     this->main_font_family = QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/Metropolis")).at(0);
+    // load the alternative font
+    this->alternative_font_family = QFontDatabase::applicationFontFamilies(
+        QFontDatabase::addApplicationFont(":/fonts/Hack")).at(0);
     // load the script font
     this->script_font_family = QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/3270")).at(0);
@@ -46,6 +49,9 @@ MainWindow::MainWindow( QWidget *parent )
     this->FONTS.emplace( "main_small", QFont(
         this->main_font_family,
         this->font_size_small ) );
+    this->FONTS.emplace( "alternative", QFont(
+        this->alternative_font_family,
+        this->font_size ) );
     this->FONTS.emplace( "script", QFont(
         this->script_font_family,
         this->font_size ) );
@@ -213,13 +219,38 @@ MainWindow::MainWindow( QWidget *parent )
 
 
     // make the Configs initialize
+    // window
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
-    this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme );
+    this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme_id );
+    // dialogs
     this->ui->slider_ConfDialogs_General->setValue( this->dialogs_Level );
     this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
     this->ui->slider_ConfDialogs_Stats->setValue( this->crapview.getDialogsLevel() );
+    // text browser
+    this->ui->box_ConfTextBrowser_Font->setCurrentText( this->TB.getFontFamily() );
+    this->ui->checkBox_ConfTextBrowser_WideLines->setChecked( this->TB.getWideLinesUsage() );
     this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( this->TB.getColorSchemeID() );
-    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->charts_theme );
+    this->refreshTextBrowserPreview();
+    // charts
+    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->CHARTS_THEMES.at( this->charts_theme_id ) );
+    this->refreshChartsPreview();
+    // logs control
+    this->ui->checkBox_ConfControl_Usage->setChecked( ! this->display_used_files );
+    this->ui->spinBox_ConfControl_Size->setValue( this->craplog.getWarningSize() / 1'048'576 );
+    if ( this->craplog.getWarningSize() > 0 ) {
+        this->ui->checkBox_ConfControl_Size->setChecked( true );
+    } else {
+        this->ui->checkBox_ConfControl_Size->setChecked( false );
+    }
+    // apache
+    this->ui->inLine_ConfApache_Paths_AccPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->APACHE_ID, this->ACCESS_LOGS )) );
+    if ( this->craplog.getLogsPath( this->APACHE_ID, this->ACCESS_LOGS ) != this->craplog.getLogsPath( this->APACHE_ID, this->ERROR_LOGS ) ) {
+        this->ui->checkBox_ConfApache_Paths_Different->setChecked( true );
+        this->ui->inLine_ConfApache_Paths_ErrPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->APACHE_ID, this->ERROR_LOGS )) );
+    } else {
+        this->ui->icon_ConfApache_Paths_ErrWrong->setVisible( false );
+    }
+
 
 
     // get a fresh list of LogFiles
@@ -595,6 +626,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     rich_content, content,
                     format, this->TB );
                 this->ui->textLogFiles->setText( rich_content );
+                this->ui->textLogFiles->setFont( this->TB.getFont() );
                 rich_content.clear();
             }
             content.clear();
@@ -749,7 +781,9 @@ void MainWindow::craplogFinished()
 {
     // update the perf data one last time, just in case
     this->update_MakeStats_labels();
-    this->craplog.makeGraphs( this->FONTS, this->ui->chart_MakeStats_Access, this->ui->chart_MakeStats_Error, this->ui->chart_MakeStats_Traffic );
+    this->craplog.makeCharts(
+        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+        this->ui->chart_MakeStats_Access, this->ui->chart_MakeStats_Error, this->ui->chart_MakeStats_Traffic );
     // clean up temp vars
     this->craplog.clearDataCollection();
     this->craplog.logOps.resetPerfData();
@@ -804,7 +838,11 @@ void MainWindow::checkStatsWarnDrawable()
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsWarn_LogsType->setCurrentIndex( 0 );
+    if ( this->ui->box_StatsWarn_LogsType->currentIndex() != 0 ) {
+        this->ui->box_StatsWarn_LogsType->setCurrentIndex( 0 );
+    } else {
+        this->on_box_StatsWarn_LogsType_currentIndexChanged( 0 );
+    }
     this->checkStatsWarnDrawable();
 }
 
@@ -884,7 +922,7 @@ void MainWindow::on_button_StatsWarn_Draw_clicked()
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->box_StatsWarn_WebServer->currentText(),
         this->ui->box_StatsWarn_LogsType->currentText(),
         this->ui->box_StatsWarn_Year->currentText(),
@@ -972,7 +1010,7 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_SatsSpeed,
-        this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->box_StatsSpeed_WebServer->currentText(),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
@@ -1199,7 +1237,8 @@ void MainWindow::drawStatsCount( const QString& field )
 {
     this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
-        this->ui->table_StatsCount, this->ui->chart_StatsCount, this->FONTS,
+        this->ui->table_StatsCount, this->ui->chart_StatsCount,
+        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->box_StatsCount_WebServer->currentText(), this->ui->tabs_StatsCount_AccErr->tabText( this->ui->tabs_StatsCount_AccErr->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
         field );
@@ -1258,7 +1297,11 @@ void MainWindow::checkStatsDayDrawable()
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsDay_LogsType->setCurrentIndex( 0 );
+    if ( this->ui->box_StatsDay_LogsType->currentIndex() != 0 ) {
+        this->ui->box_StatsDay_LogsType->setCurrentIndex( 0 );
+    } else {
+        this->on_box_StatsDay_LogsType_currentIndexChanged( 0 );
+    }
     this->checkStatsDayDrawable();
 }
 
@@ -1399,7 +1442,7 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
     }
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
-        this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->box_StatsDay_WebServer->currentText(),
         this->ui->box_StatsDay_LogsType->currentText(),
         this->ui->box_StatsDay_FromYear->currentText(),
@@ -1461,7 +1504,11 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsRelat_LogsType->setCurrentIndex( 0 );
+    if ( this->ui->box_StatsRelat_LogsType->currentIndex() != 0 ) {
+        this->ui->box_StatsRelat_LogsType->setCurrentIndex( 0 );
+    } else {
+        this->on_box_StatsRelat_LogsType_currentIndexChanged( 0 );
+    }
     this->checkStatsRelatDrawable();
 }
 
@@ -1611,7 +1658,7 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
     }
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
-        this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->box_StatsRelat_WebServer->currentText(),
         this->ui->box_StatsRelat_LogsType->currentText(),
         this->ui->box_StatsRelat_FromYear->currentText(),
@@ -1656,60 +1703,157 @@ void MainWindow::on_button_StatsGlob_Iis_clicked()
 
 
 
-/////////////////
-//// CONFIGS ////
-/////////////////
+/////////////////////////
+//////// CONFIGS ////////
+/////////////////////////
 
 /////////////////
 //// GENERAL ////
+/////////////////
+
 ////////////////
 //// WINDOW ////
-// window geometry
-void MainWindow::on_checkBox_ConfGeneral_Window_clicked(bool checked)
+void MainWindow::on_checkBox_ConfWindow_Geometry_clicked(bool checked)
 {
     this->remember_window = checked;
 }
 
-// dialogs levels
-void MainWindow::on_slider_ConfGeneral_General_sliderReleased()
+void MainWindow::on_box_ConfWindow_Theme_currentIndexChanged(int index)
+{
+
+}
+
+
+/////////////////
+//// DIALOGS ////
+void MainWindow::on_slider_ConfDialogs_General_sliderReleased()
 {
     this->dialogs_Level = this->ui->slider_ConfDialogs_General->value();
 }
-void MainWindow::on_slider_ConfGeneral_Logs_sliderReleased()
+void MainWindow::on_slider_ConfDialogs_Logs_sliderReleased()
 {
     this->craplog.setDialogLevel( this->ui->slider_ConfDialogs_Logs->value() );
 }
-void MainWindow::on_slider_ConfGeneral_Stats_sliderReleased()
+void MainWindow::on_slider_ConfDialogs_Stats_sliderReleased()
 {
     this->crapview.setDialogLevel( this->ui->slider_ConfDialogs_Stats->value() );
 }
 
-// themes
-void MainWindow::on_box_ConfGeneral_Theme_Window_currentIndexChanged(int index)
-{
 
+//////////////////////
+//// TEXT BROWSER ////
+void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
+{
+    QFont font;
+    switch ( index ) {
+        case 0:
+            font = this->FONTS.at( "main" );
+            break;
+        case 1:
+            font = this->FONTS.at( "alternative" );
+            break;
+        case 2:
+            font = this->FONTS.at( "script" );
+            break;
+        default:
+            throw ("Unexpected Font index: "[index]);
+    }
+    this->TB.setFont( font );
+    this->TB.setFontFamily( this->ui->box_ConfTextBrowser_Font->currentText() );
+    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( font );
 }
-void MainWindow::on_box_ConfGeneral_Theme_TextBrowser_currentIndexChanged(int index)
+void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 {
-
+    this->TB.setWideLinesUsage( checked );
+    this->refreshTextBrowserPreview();
 }
-void MainWindow::on_box_ConfGeneral_Theme_Charts_currentIndexChanged(int index)
+void MainWindow::on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int index)
 {
+    this->TB.setColorScheme( index, this->TB_COLOR_SCHEMES.at( index ) );
+    this->refreshTextBrowserPreview();
+}
+void MainWindow::refreshTextBrowserPreview()
+{
+    QString content = "";
+    this->TB.makePreview( content );
+    this->ui->textBrowser_ConfTextBrowser_Preview->setText( content );
+    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( this->TB.getFont() );
+}
 
+
+////////////////
+//// CHARTS ////
+void MainWindow::on_box_ConfCharts_Theme_currentIndexChanged(int index)
+{
+    this->charts_theme_id = index;
+    this->refreshChartsPreview();
+}
+void MainWindow::refreshChartsPreview()
+{
+    QColor col;
+    QBarSet *bars_1 = new QBarSet( "Bars 1" );
+    col = Qt::GlobalColor::darkCyan;
+    bars_1->setColor( col.lighter( 130 ) );
+    QBarSet *bars_2 = new QBarSet( "Bars 2" );
+    col = Qt::GlobalColor::darkRed;
+    bars_2->setColor( col.lighter( 130 ) );
+
+    int aux, max=0;
+    for ( int i=0; i<24; i++ ) {
+        aux = rand() %100; *bars_1 << aux;
+        if ( aux > max ) { max = aux; }
+        aux = rand() %100; *bars_2 << aux;
+        if ( aux > max ) { max = aux; }
+    }
+
+    QBarSeries *bars = new QBarSeries();
+    bars->append( bars_1 ); bars->append( bars_2 );
+
+    QChart *t_chart = new QChart();
+    // apply the theme
+    t_chart->setTheme( this->CHARTS_THEMES.at( this->charts_theme_id ) );
+
+    t_chart->addSeries( bars );
+    t_chart->setTitle( "Sample preview" );
+    t_chart->setTitleFont( this->FONTS.at("main") );
+    t_chart->legend()->setFont( this->FONTS.at("main_small") );
+    t_chart->setAnimationOptions( QChart::SeriesAnimations );
+
+    QStringList categories;
+    categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
+               << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append( categories );
+    axisX->setLabelsFont( this->FONTS.at( "main_small" ) );
+    t_chart->addAxis( axisX, Qt::AlignBottom );
+    bars->attachAxis( axisX );
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setLabelFormat( "%d" );
+    axisY->setRange( 0, max );
+    axisY->setLabelsFont( this->FONTS.at( "main_small" ) );
+    t_chart->addAxis( axisY, Qt::AlignLeft );
+    bars->attachAxis( axisY) ;
+
+    t_chart->legend()->setVisible( true );
+    t_chart->legend()->setAlignment( Qt::AlignBottom );
+
+    this->ui->chart_ConfCharts_Preview->setChart( t_chart );
+    this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
 }
 
 
 //////////////
 //// LOGS ////
+//////////////
+
 /////////////////
 //// CONTROL ////
-// usage control
 void MainWindow::on_checkBox_ConfControl_Usage_clicked(bool checked)
 {
-    this->display_used_files = checked;
+    this->display_used_files = ! checked;
 }
-
-// size warning
 void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
 {
     if ( checked == false ) {
@@ -1719,12 +1863,12 @@ void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
     } else {
         // enable warning
         this->ui->spinBox_ConfControl_Size->setEnabled( true );
-        this->craplog.setWarningSize( this->ui->spinBox_ConfControl_Size->value() );
+        this->craplog.setWarningSize( (this->ui->spinBox_ConfControl_Size->value() * 1'048'576) +1 );
     }
 }
 void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 {
-    this->craplog.setWarningSize( this->ui->spinBox_ConfControl_Size->value() );
+    this->craplog.setWarningSize( (this->ui->spinBox_ConfControl_Size->value() * 1'048'576) +1 );
 }
 
 
@@ -1756,26 +1900,36 @@ void MainWindow::on_checkBox_ConfApache_Paths_Different_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfApache_Paths_AccPath_textChanged(const QString &arg1)
 {
-    if ( IOutils::checkDir( arg1.toStdString() ) == true ) {
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
         this->ui->icon_ConfApache_Paths_AccWrong->setVisible( false );
         if ( this->ui->icon_ConfApache_Paths_ErrWrong->isVisible() == false ) {
             this->ui->button_ConfApache_Paths_SavePaths->setEnabled( true );
         } else {
             this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
         }
+    } else {
+        this->ui->icon_ConfApache_Paths_AccWrong->setVisible( true );
+        this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
     }
+    this->ui->inLine_ConfApache_Paths_AccPath->setText( QString::fromStdString( path ) );
 }
 
 void MainWindow::on_inLine_ConfApache_Paths_ErrPath_textChanged(const QString &arg1)
 {
-    if ( IOutils::checkDir( arg1.toStdString() ) == true ) {
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
         this->ui->icon_ConfApache_Paths_ErrWrong->setVisible( false );
         if ( this->ui->icon_ConfApache_Paths_AccWrong->isVisible() == false ) {
             this->ui->button_ConfApache_Paths_SavePaths->setEnabled( true );
         } else {
             this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
         }
+    } else {
+        this->ui->icon_ConfApache_Paths_ErrWrong->setVisible( true );
+        this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
     }
+    this->ui->inLine_ConfApache_Paths_ErrPath->setText( QString::fromStdString( path ) );
 }
 
 void MainWindow::on_button_ConfApache_Paths_SavePaths_clicked()
@@ -1783,13 +1937,22 @@ void MainWindow::on_button_ConfApache_Paths_SavePaths_clicked()
     if ( this->ui->icon_ConfApache_Paths_ErrWrong->isVisible() == false
       && this->ui->icon_ConfApache_Paths_AccWrong->isVisible() == false ) {
         // set the paths
-        this->craplog.setLogsPath( this->APACHE_ID, this->ACCESS_LOGS,
-            this->ui->inLine_ConfApache_Paths_AccPath->text().toStdString() );
-        if ( this->ui->checkBox_ConfApache_Paths_Different->isChecked() == true ) {
-            this->craplog.setLogsPath( this->APACHE_ID, this->ERROR_LOGS,
-                this->ui->inLine_ConfApache_Paths_ErrPath->text().toStdString() );
+        std::string path = StringOps::strip( this->ui->inLine_ConfApache_Paths_AccPath->text().toStdString() );
+        if ( StringOps::endsWith( path, "/" ) ) {
+            path = StringOps::rstrip( path, "/" );
         }
+        this->craplog.setLogsPath( this->APACHE_ID, this->ACCESS_LOGS, path );
+        // check if the logs path is different or not
+        if ( this->ui->checkBox_ConfApache_Paths_Different->isChecked() == true ) {
+            // handle the error logs path too
+            path = StringOps::strip( this->ui->inLine_ConfApache_Paths_ErrPath->text().toStdString() );
+            if ( StringOps::endsWith( path, "/" ) ) {
+                path = StringOps::rstrip( path, "/" );
+            }
+        }
+        this->craplog.setLogsPath( this->APACHE_ID, this->ERROR_LOGS, path );
     }
+    this->ui->button_ConfApache_Paths_SavePaths->setEnabled( false );
 }
 
 // formats
@@ -1807,7 +1970,7 @@ void MainWindow::on_button_ConfApache_Format_AccSave_clicked()
 }
 void MainWindow::on_button_ConfApache_Formats_AccSample_clicked()
 {
-    this->ui->label_ConfApache_Formats_AccString->setText(
+    this->ui->preview_ConfApache_Formats_AccSample->setText(
         this->craplog.getLogsFormatSample( this->APACHE_ID, this->ACCESS_LOGS ) );
 }
 void MainWindow::on_button_ConfApache_Formats_AccHelp_clicked()
@@ -1829,7 +1992,7 @@ void MainWindow::on_button_ConfApache_Format_ErrSave_clicked()
 }
 void MainWindow::on_button_ConfApache_Formats_ErrSample_clicked()
 {
-    this->ui->label_ConfApache_Formats_ErrString->setText(
+    this->ui->preview_ConfApache_Formats_ErrSample->setText(
         this->craplog.getLogsFormatSample( this->APACHE_ID, this->ERROR_LOGS ) );
 }
 void MainWindow::on_button_ConfApache_Formats_ErrHelp_clicked()
@@ -2229,6 +2392,8 @@ void MainWindow::on_button_ConfApache_Blacklist_ErrDown_clicked()
             item->text().toStdString() );
     }
 }
+
+
 
 
 

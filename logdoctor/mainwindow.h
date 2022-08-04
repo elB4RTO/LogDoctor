@@ -38,6 +38,9 @@ private slots:
     void update_Craplog_PerfData();
 
     // Qt's
+    /////////////////
+    //// CRAPLOG ////
+
     void on_button_LogFiles_ViewFile_clicked();
 
     void on_checkBox_LogFiles_CheckAll_stateChanged(int arg1);
@@ -55,6 +58,11 @@ private slots:
     void on_button_LogFiles_Iis_clicked();
 
     void on_button_MakeStats_Start_clicked();
+
+    //////////////////
+    //// CRAPVIEW ////
+
+    //// WARNINGS ////
 
     void on_box_StatsWarn_WebServer_currentIndexChanged(int index);
 
@@ -74,6 +82,8 @@ private slots:
 
     void on_button_StatsWarn_Update_clicked();
 
+    //// SPEED ////
+
     void on_box_StatsSpeed_WebServer_currentIndexChanged(int index);
 
     void on_box_StatsSpeed_Year_currentIndexChanged(int index);
@@ -83,6 +93,8 @@ private slots:
     void on_box_StatsSpeed_Day_currentIndexChanged(int index);
 
     void on_button_StatsSpeed_Draw_clicked();
+
+    //// COUNTS ////
 
     void on_box_StatsCount_WebServer_currentIndexChanged(int index);
 
@@ -122,6 +134,8 @@ private slots:
 
     void on_button_StatsCount_ErrClient_clicked();
 
+    //// DAY-TIME ////
+
     void on_box_StatsDay_WebServer_currentIndexChanged(int index);
 
     void on_box_StatsDay_LogsType_currentIndexChanged(int index);
@@ -143,6 +157,8 @@ private slots:
     void on_box_StatsDay_ToDay_currentIndexChanged(int index);
 
     void on_button_StatsDay_Draw_clicked();
+
+    //// RELATIONSL ////
 
     void on_box_StatsRelat_WebServer_currentIndexChanged(int index);
 
@@ -172,25 +188,44 @@ private slots:
 
     void on_button_StatsGlob_Iis_clicked();
 
-    void on_checkBox_ConfGeneral_Window_clicked(bool checked);
+    /////////////////
+    //// CRAPSET ////
 
-    void on_slider_ConfGeneral_General_sliderReleased();
+    //// WINDOW ////
 
-    void on_slider_ConfGeneral_Logs_sliderReleased();
+    void on_checkBox_ConfWindow_Geometry_clicked(bool checked);
 
-    void on_slider_ConfGeneral_Stats_sliderReleased();
+    void on_box_ConfWindow_Theme_currentIndexChanged(int index);
 
-    void on_box_ConfGeneral_Theme_Window_currentIndexChanged(int index);
+    //// DIALOGS ////
 
-    void on_box_ConfGeneral_Theme_TextBrowser_currentIndexChanged(int index);
+    void on_slider_ConfDialogs_General_sliderReleased();
 
-    void on_box_ConfGeneral_Theme_Charts_currentIndexChanged(int index);
+    void on_slider_ConfDialogs_Logs_sliderReleased();
+
+    void on_slider_ConfDialogs_Stats_sliderReleased();
+
+    //// TEXT BROWSER ////
+
+    void on_box_ConfTextBrowser_Font_currentIndexChanged(int index);
+
+    void on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked);
+
+    void on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int index);
+
+    //// CHARTS ////
+
+    void on_box_ConfCharts_Theme_currentIndexChanged(int index);
+
+    //// LOGS CONTROL ////
 
     void on_checkBox_ConfControl_Usage_clicked(bool checked);
 
     void on_checkBox_ConfControl_Size_clicked(bool checked);
 
     void on_spinBox_ConfControl_Size_editingFinished();
+
+    //// APACHE ////
 
     void on_checkBox_ConfApache_Paths_Different_clicked(bool checked);
 
@@ -307,8 +342,14 @@ private:
     // remember window position and sizes
     bool remember_window = true;
     // themes
-    int window_theme = 0,
-        charts_theme = 0;
+    int window_theme_id = 0,
+        charts_theme_id = 0;
+    const std::vector<QChart::ChartTheme> CHARTS_THEMES = {
+        QChart::ChartTheme::ChartThemeLight,
+        QChart::ChartTheme::ChartThemeDark,
+        QChart::ChartTheme::ChartThemeBrownSand,
+        QChart::ChartTheme::ChartThemeBlueCerulean
+    };
     // color schemes
     std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
     std::unordered_map<std::string, QColor> COLORS;
@@ -319,6 +360,7 @@ private:
         font_size_small = 10;
     // base font families, to build fonts from
     QString main_font_family,
+            alternative_font_family,
             script_font_family;
 
 
@@ -387,6 +429,13 @@ private:
     void resetStatsCountErrButtons();
     // draw
     void drawStatsCount( const QString& field );
+
+
+    /////////////////
+    //// CRAPSET ////
+    /////////////////
+    void refreshTextBrowserPreview();
+    void refreshChartsPreview();
 
 };
 #endif // MAINWINDOW_H
