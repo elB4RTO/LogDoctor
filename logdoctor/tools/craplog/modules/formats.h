@@ -31,6 +31,9 @@ public:
     const QString getIisLogSample( const LogsFormat& log_format/*, const int log_type*/ );
 
 private:
+
+    std::string parseApacheEscapes( const std::string& string );
+
     /*std::unordered_map<std::string, std::string>
         APACHE_ALF,   APACHE_ELF,
         NGINX_ALF,    NGINX_ELF,
@@ -235,7 +238,8 @@ private:
         {"NONE",              "DISCARDED"},
         {"date_time_mcs",     "Sat Jan 01 23:59:59.123456 0000"},
         {"date_time_iso_mcs", "2000-01-01 23:59:59.123456"},
-        {"client:port",       "192.168.1.123:54321"},
+        {"client",            "192.168.1.123"},
+        {"port",              "54321"},
         {"error_level",       "group:level"},
         {"error_message",     "AH00123: some infoes: some details"},
         {"source_file",       "file.c"} };
