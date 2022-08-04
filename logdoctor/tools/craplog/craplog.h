@@ -109,7 +109,7 @@ public:
     const bool checkStuff();
     void startWorking(),
          stopWorking(),
-         makeGraphs( const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart ),
+         makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart ),
          clearDataCollection();
     const bool isWorking(),
                isParsing();
@@ -185,7 +185,7 @@ private:
     std::string configs_path;
 
     // control related
-    int warning_size = 1'048'576 +1; //104'857'600; // in Bytes ( => 100 MiB ) // !!! RESTORE !!!
+    long int warning_size = (1'048'576 * 50) +1; // in Bytes ( => 1 MiB * x )
     // black/warn-list
     // { web_server_id : { log_type : { log_field_id : BWlist } } }
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, BWlist>>>
