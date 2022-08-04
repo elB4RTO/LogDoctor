@@ -256,6 +256,11 @@ hr { height: 1px; border-width: 0; }
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+               </font>
+              </property>
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
               </property>
@@ -302,7 +307,7 @@ hr { height: 1px; border-width: 0; }
               </property>
               <property name="font">
                <font>
-                <pointsize>15</pointsize>
+                <pointsize>16</pointsize>
                </font>
               </property>
               <property name="cursor">
@@ -5312,14 +5317,11 @@ Time of day counts for a single date, entire days counts in a period.</string>
        <layout class="QGridLayout" name="gridLayout_37">
         <item row="0" column="0">
          <widget class="QTabWidget" name="ConfTabs">
-          <property name="toolTip">
-           <string>Options about the log files usage control</string>
-          </property>
           <property name="tabPosition">
            <enum>QTabWidget::West</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="documentMode">
            <bool>true</bool>
@@ -5340,7 +5342,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                </font>
               </property>
               <property name="currentIndex">
-               <number>0</number>
+               <number>3</number>
               </property>
               <widget class="QWidget" name="tab_ConfWindow">
                <attribute name="title">
@@ -5430,25 +5432,6 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="gline_ConfGeneral_1">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QFrame" name="frame_ConfWindow_Theme">
                   <layout class="QGridLayout" name="gridLayout_50">
                    <item row="0" column="0" colspan="3">
@@ -5471,7 +5454,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Theme to use</string>
+                      <string>Theme to use for the window</string>
                      </property>
                      <property name="text">
                       <string>Theme</string>
@@ -5601,7 +5584,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Quantity of informations in the dialog messages</string>
+                      <string>Define the quantity of dialog mesages/informations shown</string>
                      </property>
                      <property name="text">
                       <string>Dialogs level</string>
@@ -5643,6 +5626,9 @@ Time of day counts for a single date, entire days counts in a period.</string>
                        <pointsize>10</pointsize>
                       </font>
                      </property>
+                     <property name="toolTip">
+                      <string>Reduced quantity of dialog messages shown</string>
+                     </property>
                      <property name="text">
                       <string>Essential</string>
                      </property>
@@ -5670,6 +5656,9 @@ Time of day counts for a single date, entire days counts in a period.</string>
                        <pointsize>10</pointsize>
                       </font>
                      </property>
+                     <property name="toolTip">
+                      <string>Normal quantity of dialog messages shown</string>
+                     </property>
                      <property name="text">
                       <string>Normal</string>
                      </property>
@@ -5696,6 +5685,9 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       <font>
                        <pointsize>10</pointsize>
                       </font>
+                     </property>
+                     <property name="toolTip">
+                      <string>More informations inside the shown dialog messages</string>
                      </property>
                      <property name="text">
                       <string>Explanatory</string>
@@ -6008,17 +6000,17 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </property>
                      <item>
                       <property name="text">
-                       <string>Metropolis</string>
+                       <string notr="true">Metropolis</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Hack</string>
+                       <string notr="true">Hack</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>3270</string>
+                       <string notr="true">3270</string>
                       </property>
                      </item>
                     </widget>
@@ -6056,7 +6048,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Theme to use</string>
+                      <string>Font to use for the Text Browser</string>
                      </property>
                      <property name="text">
                       <string>Font</string>
@@ -6067,29 +6059,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="gline_ConfGeneral_2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QFrame" name="frame_ConfTextBrowser_ColorScheme">
-                  <layout class="QGridLayout" name="gridLayout_80">
+                 <widget class="QFrame" name="frame_ConfTextBrowser_Lines">
+                  <layout class="QGridLayout" name="gridLayout_84">
                    <item row="1" column="0">
-                    <spacer name="spacer_ConfTextBrowser_ColorScheme_1">
+                    <spacer name="spacer_ConfTextBrowser_Lines1">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -6104,6 +6077,72 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </property>
                     </spacer>
                    </item>
+                   <item row="1" column="1">
+                    <widget class="QCheckBox" name="checkBox_ConfTextBrowser_WideLines">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>13</pointsize>
+                      </font>
+                     </property>
+                     <property name="toolTip">
+                      <string>Double-spaced lines</string>
+                     </property>
+                     <property name="text">
+                      <string>Use wide lines</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" colspan="2">
+                    <widget class="QLabel" name="label_ConfTextBrowser_Lines">
+                     <property name="minimumSize">
+                      <size>
+                       <width>128</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>16</pointsize>
+                      </font>
+                     </property>
+                     <property name="toolTip">
+                      <string>Define the spacing between lines</string>
+                     </property>
+                     <property name="text">
+                      <string>Lines spacing</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="frame_ConfTextBrowser_ColorScheme">
+                  <layout class="QGridLayout" name="gridLayout_80">
                    <item row="1" column="1">
                     <widget class="QComboBox" name="box_ConfTextBrowser_ColorScheme">
                      <property name="sizePolicy">
@@ -6136,17 +6175,17 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Breeze</string>
+                       <string notr="true">Breeze</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Monokai</string>
+                       <string notr="true">Monokai</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Radical</string>
+                       <string notr="true">Radical</string>
                       </property>
                      </item>
                     </widget>
@@ -6184,28 +6223,113 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Theme to use</string>
+                      <string>Color scheme to use for the Text Browser</string>
                      </property>
                      <property name="text">
                       <string>Color scheme</string>
                      </property>
                     </widget>
                    </item>
+                   <item row="1" column="0">
+                    <spacer name="spacer_ConfTextBrowser_ColorScheme_1">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>16</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="spacer_ConfTextBrowser_1">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
+                 <widget class="Line" name="gline_ConfTextBrowser_2">
+                  <property name="minimumSize">
                    <size>
-                    <width>698</width>
-                    <height>257</height>
+                    <width>0</width>
+                    <height>32</height>
                    </size>
                   </property>
-                 </spacer>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="frame_ConfTextBrowser_Preview">
+                  <layout class="QGridLayout" name="gridLayout_82">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_ConfTextBrowser_Preview">
+                     <property name="minimumSize">
+                      <size>
+                       <width>128</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>16</pointsize>
+                      </font>
+                     </property>
+                     <property name="toolTip">
+                      <string>The appearance of the Text Browser with the current settings</string>
+                     </property>
+                     <property name="text">
+                      <string>Preview</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QTextBrowser" name="textBrowser_ConfTextBrowser_Preview">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>64</height>
+                      </size>
+                     </property>
+                     <property name="mouseTracking">
+                      <bool>false</bool>
+                     </property>
+                     <property name="acceptDrops">
+                      <bool>false</bool>
+                     </property>
+                     <property name="lineWrapMode">
+                      <enum>QTextEdit::NoWrap</enum>
+                     </property>
+                     <property name="html">
+                      <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="openLinks">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -6313,7 +6437,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Theme to use</string>
+                      <string>Theme to use for the Charts</string>
                      </property>
                      <property name="text">
                       <string>Theme</string>
@@ -6324,17 +6448,63 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="spacer_ConfCharts_1">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
+                 <widget class="Line" name="gline_ConfCharts_1">
+                  <property name="minimumSize">
                    <size>
-                    <width>708</width>
-                    <height>392</height>
+                    <width>0</width>
+                    <height>32</height>
                    </size>
                   </property>
-                 </spacer>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="frame_ConfCharts_Preview">
+                  <layout class="QGridLayout" name="gridLayout_83">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_ConfCharts_Preview">
+                     <property name="minimumSize">
+                      <size>
+                       <width>128</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>16</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Preview</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QChartView" name="chart_ConfCharts_Preview">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>256</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -6358,7 +6528,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                </font>
               </property>
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <widget class="QWidget" name="tab_ConfLogs_Control">
                <attribute name="title">
@@ -6608,6 +6778,9 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <property name="text">
                       <string>Warn me when using files with a size exceeding:</string>
                      </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="2">
@@ -6696,7 +6869,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                    </font>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>1</number>
                   </property>
                   <property name="documentMode">
                    <bool>true</bool>
@@ -6981,6 +7154,28 @@ Time of day counts for a single date, entire days counts in a period.</string>
                         <item>
                          <widget class="QFrame" name="frame_ConfApache_Formats_Acc_1">
                           <layout class="QGridLayout" name="gridLayout_66">
+                           <item row="0" column="0">
+                            <widget class="QLabel" name="label_ConfApache_Formats_AccString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Logs format string</string>
+                             </property>
+                             <property name="text">
+                              <string>Format string</string>
+                             </property>
+                            </widget>
+                           </item>
                            <item row="1" column="0">
                             <widget class="QLineEdit" name="inLine_ConfApache_Formats_AccString">
                              <property name="minimumSize">
@@ -7046,7 +7241,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="5" column="0">
+                           <item row="4" column="0">
                             <widget class="QPushButton" name="button_ConfApache_Formats_AccSample">
                              <property name="minimumSize">
                               <size>
@@ -7069,63 +7264,66 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="6" column="0" colspan="2">
-                            <widget class="QLabel" name="preview_ConfApache_Formats_AccSample">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>36</height>
-                              </size>
-                             </property>
+                           <item row="5" column="0" colspan="2">
+                            <widget class="QScrollArea" name="scrollArea_ConfApache_Formats_AccSample">
                              <property name="maximumSize">
                               <size>
                                <width>16777215</width>
-                               <height>36</height>
+                               <height>64</height>
                               </size>
                              </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>13</pointsize>
-                              </font>
+                             <property name="verticalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
                              </property>
-                             <property name="toolTip">
-                              <string>Please check the correctness of this line.
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOn</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_5">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>722</width>
+                                <height>54</height>
+                               </rect>
+                              </property>
+                              <layout class="QHBoxLayout" name="horizontalLayout_9">
+                               <item>
+                                <widget class="QLabel" name="preview_ConfApache_Formats_AccSample">
+                                 <property name="minimumSize">
+                                  <size>
+                                   <width>0</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>16777215</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="font">
+                                  <font>
+                                   <pointsize>13</pointsize>
+                                  </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>Please check the correctness of this line.
 Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
-                             </property>
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Sunken</enum>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
+                                 </property>
+                                 <property name="text">
+                                  <string/>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
                             </widget>
                            </item>
-                           <item row="0" column="0">
-                            <widget class="QLabel" name="label_ConfApache_Formats_AccString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Logs format string</string>
-                             </property>
-                             <property name="text">
-                              <string>Format string</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="4" column="0" colspan="2">
+                           <item row="3" column="0" colspan="2">
                             <spacer name="spacer_ConfApache_Formats_Acc_2">
                              <property name="orientation">
                               <enum>Qt::Vertical</enum>
@@ -7242,6 +7440,47 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                         <item>
                          <widget class="QFrame" name="frame_ConfApache_Formats_Err_1">
                           <layout class="QGridLayout" name="gridLayout_67">
+                           <item row="0" column="0">
+                            <widget class="QLabel" name="label_ConfApache_Formats_ErrString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Logs format string</string>
+                             </property>
+                             <property name="text">
+                              <string>Format string</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="1" column="0">
+                            <widget class="QLineEdit" name="inLine_ConfApache_Formats_ErrString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Insert the format string you're using</string>
+                             </property>
+                            </widget>
+                           </item>
                            <item row="1" column="1">
                             <widget class="QPushButton" name="button_ConfApache_Format_ErrSave">
                              <property name="enabled">
@@ -7288,82 +7527,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                             </widget>
                            </item>
-                           <item row="6" column="0" colspan="2">
-                            <widget class="QLabel" name="preview_ConfApache_Formats_ErrSample">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>13</pointsize>
-                              </font>
-                             </property>
-                             <property name="toolTip">
-                              <string>Please check the correctness of this line.
-Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
-                             </property>
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Sunken</enum>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="0" column="0">
-                            <widget class="QLabel" name="label_ConfApache_Formats_ErrString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Logs format string</string>
-                             </property>
-                             <property name="text">
-                              <string>Format string</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="1" column="0">
-                            <widget class="QLineEdit" name="inLine_ConfApache_Formats_ErrString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Insert the format string you're using</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="5" column="0">
+                           <item row="4" column="0">
                             <widget class="QPushButton" name="button_ConfApache_Formats_ErrSample">
                              <property name="minimumSize">
                               <size>
@@ -7386,7 +7550,66 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="4" column="0" colspan="2">
+                           <item row="5" column="0" colspan="2">
+                            <widget class="QScrollArea" name="scrollArea_ConfApache_Formats_ErrSample">
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>64</height>
+                              </size>
+                             </property>
+                             <property name="verticalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
+                             </property>
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOn</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_6">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>722</width>
+                                <height>54</height>
+                               </rect>
+                              </property>
+                              <layout class="QHBoxLayout" name="horizontalLayout_10">
+                               <item>
+                                <widget class="QLabel" name="preview_ConfApache_Formats_ErrSample">
+                                 <property name="minimumSize">
+                                  <size>
+                                   <width>0</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>16777215</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="font">
+                                  <font>
+                                   <pointsize>13</pointsize>
+                                  </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>Please check the correctness of this line.
+Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
+                                 </property>
+                                 <property name="text">
+                                  <string/>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
+                            </widget>
+                           </item>
+                           <item row="3" column="0" colspan="2">
                             <spacer name="spacer_ConfApache_Formats_Err_2">
                              <property name="orientation">
                               <enum>Qt::Vertical</enum>
@@ -8731,7 +8954,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                    </font>
                   </property>
                   <property name="currentIndex">
-                   <number>3</number>
+                   <number>1</number>
                   </property>
                   <property name="documentMode">
                    <bool>true</bool>
@@ -9012,10 +9235,32 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                        <attribute name="title">
                         <string notr="true">Access</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_17">
+                       <layout class="QVBoxLayout" name="verticalLayout_14">
                         <item>
                          <widget class="QFrame" name="frame_ConfNginx_Formats_Acc_1">
-                          <layout class="QGridLayout" name="gridLayout_98">
+                          <layout class="QGridLayout" name="gridLayout_85">
+                           <item row="0" column="0">
+                            <widget class="QLabel" name="label_ConfNginx_Formats_AccString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Logs format string</string>
+                             </property>
+                             <property name="text">
+                              <string>Format string</string>
+                             </property>
+                            </widget>
+                           </item>
                            <item row="1" column="0">
                             <widget class="QLineEdit" name="inLine_ConfNginx_Formats_AccString">
                              <property name="minimumSize">
@@ -9078,7 +9323,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="5" column="0">
+                           <item row="4" column="0">
                             <widget class="QPushButton" name="button_ConfNginx_Formats_AccSample">
                              <property name="minimumSize">
                               <size>
@@ -9101,63 +9346,66 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="6" column="0" colspan="2">
-                            <widget class="QLabel" name="preview_ConfNginx_Formats_AccSample">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>36</height>
-                              </size>
-                             </property>
+                           <item row="5" column="0" colspan="2">
+                            <widget class="QScrollArea" name="scrollArea_ConfNginx_Formats_AccSample">
                              <property name="maximumSize">
                               <size>
                                <width>16777215</width>
-                               <height>36</height>
+                               <height>64</height>
                               </size>
                              </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>13</pointsize>
-                              </font>
+                             <property name="verticalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
                              </property>
-                             <property name="toolTip">
-                              <string>Please check the correctness of this line.
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOn</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_7">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>722</width>
+                                <height>54</height>
+                               </rect>
+                              </property>
+                              <layout class="QHBoxLayout" name="horizontalLayout_11">
+                               <item>
+                                <widget class="QLabel" name="preview_ConfNginx_Formats_AccSample">
+                                 <property name="minimumSize">
+                                  <size>
+                                   <width>0</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>16777215</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="font">
+                                  <font>
+                                   <pointsize>13</pointsize>
+                                  </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>Please check the correctness of this line.
 Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
-                             </property>
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Sunken</enum>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
+                                 </property>
+                                 <property name="text">
+                                  <string/>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
                             </widget>
                            </item>
-                           <item row="0" column="0">
-                            <widget class="QLabel" name="label_ConfNginx_Formats_AccString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Logs format string</string>
-                             </property>
-                             <property name="text">
-                              <string>Format string</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="4" column="0" colspan="2">
+                           <item row="3" column="0" colspan="2">
                             <spacer name="spacer_ConfNginx_Formats_Acc_2">
                              <property name="orientation">
                               <enum>Qt::Vertical</enum>
@@ -9270,10 +9518,51 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                        <attribute name="title">
                         <string notr="true">Error</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_18">
+                       <layout class="QVBoxLayout" name="verticalLayout_15">
                         <item>
                          <widget class="QFrame" name="frame_ConfNginx_Formats_Err_1">
-                          <layout class="QGridLayout" name="gridLayout_99">
+                          <layout class="QGridLayout" name="gridLayout_86">
+                           <item row="0" column="0">
+                            <widget class="QLabel" name="label_ConfNginx_Formats_ErrString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Logs format string</string>
+                             </property>
+                             <property name="text">
+                              <string>Format string</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="1" column="0">
+                            <widget class="QLineEdit" name="inLine_ConfNginx_Formats_ErrString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Insert the format string you're using</string>
+                             </property>
+                            </widget>
+                           </item>
                            <item row="1" column="1">
                             <widget class="QPushButton" name="button_ConfNginx_Format_ErrSave">
                              <property name="enabled">
@@ -9320,82 +9609,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                             </widget>
                            </item>
-                           <item row="6" column="0" colspan="2">
-                            <widget class="QLabel" name="preview_ConfNginx_Formats_ErrSample">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>13</pointsize>
-                              </font>
-                             </property>
-                             <property name="toolTip">
-                              <string>Please check the correctness of this line.
-Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
-                             </property>
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Sunken</enum>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="0" column="0">
-                            <widget class="QLabel" name="label_ConfNginx_Formats_ErrString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Logs format string</string>
-                             </property>
-                             <property name="text">
-                              <string>Format string</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="1" column="0">
-                            <widget class="QLineEdit" name="inLine_ConfNginx_Formats_ErrString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Insert the format string you're using</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="5" column="0">
+                           <item row="4" column="0">
                             <widget class="QPushButton" name="button_ConfNginx_Formats_ErrSample">
                              <property name="minimumSize">
                               <size>
@@ -9418,7 +9632,66 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="4" column="0" colspan="2">
+                           <item row="5" column="0" colspan="2">
+                            <widget class="QScrollArea" name="scrollArea_ConfNginx_Formats_ErrSample">
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>64</height>
+                              </size>
+                             </property>
+                             <property name="verticalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
+                             </property>
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOn</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_8">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>722</width>
+                                <height>54</height>
+                               </rect>
+                              </property>
+                              <layout class="QHBoxLayout" name="horizontalLayout_12">
+                               <item>
+                                <widget class="QLabel" name="preview_ConfNginx_Formats_ErrSample">
+                                 <property name="minimumSize">
+                                  <size>
+                                   <width>0</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>16777215</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="font">
+                                  <font>
+                                   <pointsize>13</pointsize>
+                                  </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>Please check the correctness of this line.
+Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
+                                 </property>
+                                 <property name="text">
+                                  <string/>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
+                            </widget>
+                           </item>
+                           <item row="3" column="0" colspan="2">
                             <spacer name="spacer_ConfNginx_Formats_Err_2">
                              <property name="orientation">
                               <enum>Qt::Vertical</enum>
@@ -10763,7 +11036,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                    </font>
                   </property>
                   <property name="currentIndex">
-                   <number>2</number>
+                   <number>1</number>
                   </property>
                   <property name="documentMode">
                    <bool>true</bool>
@@ -11035,7 +11308,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                        <enum>QTabWidget::South</enum>
                       </property>
                       <property name="currentIndex">
-                       <number>1</number>
+                       <number>0</number>
                       </property>
                       <property name="documentMode">
                        <bool>true</bool>
@@ -11044,154 +11317,10 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                        <attribute name="title">
                         <string notr="true">Access</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_20">
+                       <layout class="QVBoxLayout" name="verticalLayout_18">
                         <item>
                          <widget class="QFrame" name="frame_ConfIis_Formats_Acc_1">
-                          <layout class="QGridLayout" name="gridLayout_113">
-                           <item row="7" column="0" colspan="2">
-                            <widget class="QLabel" name="preview_ConfIis_Formats_AccSample">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>13</pointsize>
-                              </font>
-                             </property>
-                             <property name="toolTip">
-                              <string>Please check the correctness of this line.
-Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
-                             </property>
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Sunken</enum>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="2" column="1">
-                            <widget class="QPushButton" name="button_ConfIis_Format_AccSave">
-                             <property name="enabled">
-                              <bool>false</bool>
-                             </property>
-                             <property name="minimumSize">
-                              <size>
-                               <width>32</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>32</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>16</pointsize>
-                              </font>
-                             </property>
-                             <property name="cursor">
-                              <cursorShape>PointingHandCursor</cursorShape>
-                             </property>
-                             <property name="toolTip">
-                              <string>Apply the current string</string>
-                             </property>
-                             <property name="text">
-                              <string></string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="6" column="0">
-                            <widget class="QPushButton" name="button_ConfIis_Formats_AccSample">
-                             <property name="minimumSize">
-                              <size>
-                               <width>160</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>160</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
-                             </property>
-                             <property name="text">
-                              <string>Generate sample</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="1" column="0">
-                            <widget class="QLabel" name="label_ConfIis_Formats_AccString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Logs format string</string>
-                             </property>
-                             <property name="text">
-                              <string>Format string</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="2" column="0">
-                            <widget class="QLineEdit" name="inLine_ConfIis_Formats_AccString">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="toolTip">
-                              <string>Insert the format string you're using</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="3" column="0" colspan="2">
-                            <widget class="Line" name="gline_ConfIis_Formats_Acc">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>16</height>
-                              </size>
-                             </property>
-                             <property name="orientation">
-                              <enum>Qt::Horizontal</enum>
-                             </property>
-                            </widget>
-                           </item>
+                          <layout class="QGridLayout" name="gridLayout_88">
                            <item row="0" column="0">
                             <widget class="QFrame" name="frame_ConfIis_Format_Modules">
                              <property name="sizePolicy">
@@ -11270,7 +11399,176 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </layout>
                             </widget>
                            </item>
-                           <item row="5" column="0" colspan="2">
+                           <item row="1" column="0">
+                            <widget class="QLabel" name="label_ConfIis_Formats_AccString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Logs format string</string>
+                             </property>
+                             <property name="text">
+                              <string>Format string</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="2" column="0">
+                            <widget class="QLineEdit" name="inLine_ConfIis_Formats_AccString">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Insert the format string you're using</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="2" column="1">
+                            <widget class="QPushButton" name="button_ConfIis_Format_AccSave">
+                             <property name="enabled">
+                              <bool>false</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>32</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>32</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>16</pointsize>
+                              </font>
+                             </property>
+                             <property name="cursor">
+                              <cursorShape>PointingHandCursor</cursorShape>
+                             </property>
+                             <property name="toolTip">
+                              <string>Apply the current string</string>
+                             </property>
+                             <property name="text">
+                              <string></string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="3" column="0" colspan="2">
+                            <widget class="Line" name="gline_ConfIis_Formats_Acc">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>16</height>
+                              </size>
+                             </property>
+                             <property name="orientation">
+                              <enum>Qt::Horizontal</enum>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="5" column="0">
+                            <widget class="QPushButton" name="button_ConfIis_Formats_AccSample">
+                             <property name="minimumSize">
+                              <size>
+                               <width>160</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>160</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="toolTip">
+                              <string>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
+Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
+                             </property>
+                             <property name="text">
+                              <string>Generate sample</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="6" column="0" colspan="2">
+                            <widget class="QScrollArea" name="scrollArea_ConfIis_Formats_AccSample">
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>64</height>
+                              </size>
+                             </property>
+                             <property name="verticalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
+                             </property>
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOn</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_10">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>722</width>
+                                <height>54</height>
+                               </rect>
+                              </property>
+                              <layout class="QHBoxLayout" name="horizontalLayout_19">
+                               <item>
+                                <widget class="QLabel" name="preview_ConfIis_Formats_AccSample">
+                                 <property name="minimumSize">
+                                  <size>
+                                   <width>0</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>16777215</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="font">
+                                  <font>
+                                   <pointsize>13</pointsize>
+                                  </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>Please check the correctness of this line.
+Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
+                                 </property>
+                                 <property name="text">
+                                  <string/>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
+                            </widget>
+                           </item>
+                           <item row="4" column="0" colspan="2">
                             <spacer name="spacer_ConfIis_Formats_Acc_2">
                              <property name="orientation">
                               <enum>Qt::Vertical</enum>
@@ -11383,93 +11681,10 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                        <attribute name="title">
                         <string notr="true">Error</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_21">
+                       <layout class="QVBoxLayout" name="verticalLayout_17">
                         <item>
                          <widget class="QFrame" name="frame_ConfIis_Formats_Err_1">
-                          <layout class="QGridLayout" name="gridLayout_114">
-                           <item row="1" column="1">
-                            <widget class="QPushButton" name="button_ConfIis_Format_ErrSave">
-                             <property name="enabled">
-                              <bool>false</bool>
-                             </property>
-                             <property name="minimumSize">
-                              <size>
-                               <width>32</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>32</width>
-                               <height>32</height>
-                              </size>
-                             </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>16</pointsize>
-                              </font>
-                             </property>
-                             <property name="cursor">
-                              <cursorShape>PointingHandCursor</cursorShape>
-                             </property>
-                             <property name="toolTip">
-                              <string>Apply the current string</string>
-                             </property>
-                             <property name="text">
-                              <string></string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="2" column="0" colspan="2">
-                            <widget class="Line" name="gline_ConfIis_Formats_Err">
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>16</height>
-                              </size>
-                             </property>
-                             <property name="orientation">
-                              <enum>Qt::Horizontal</enum>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="6" column="0" colspan="2">
-                            <widget class="QLabel" name="preview_ConfIis_Formats_ErrSample">
-                             <property name="enabled">
-                              <bool>false</bool>
-                             </property>
-                             <property name="minimumSize">
-                              <size>
-                               <width>0</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>16777215</width>
-                               <height>36</height>
-                              </size>
-                             </property>
-                             <property name="font">
-                              <font>
-                               <pointsize>13</pointsize>
-                              </font>
-                             </property>
-                             <property name="toolTip">
-                              <string>Please check the correctness of this line.
-Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
-                             </property>
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Sunken</enum>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
-                            </widget>
-                           </item>
+                          <layout class="QGridLayout" name="gridLayout_87">
                            <item row="0" column="0">
                             <widget class="QLabel" name="label_ConfIis_Formats_ErrString">
                              <property name="enabled">
@@ -11517,7 +11732,53 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                             </widget>
                            </item>
-                           <item row="5" column="0">
+                           <item row="1" column="1">
+                            <widget class="QPushButton" name="button_ConfIis_Format_ErrSave">
+                             <property name="enabled">
+                              <bool>false</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>32</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>32</width>
+                               <height>32</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>16</pointsize>
+                              </font>
+                             </property>
+                             <property name="cursor">
+                              <cursorShape>PointingHandCursor</cursorShape>
+                             </property>
+                             <property name="toolTip">
+                              <string>Apply the current string</string>
+                             </property>
+                             <property name="text">
+                              <string></string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="2" column="0" colspan="2">
+                            <widget class="Line" name="gline_ConfIis_Formats_Err">
+                             <property name="minimumSize">
+                              <size>
+                               <width>0</width>
+                               <height>16</height>
+                              </size>
+                             </property>
+                             <property name="orientation">
+                              <enum>Qt::Horizontal</enum>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="4" column="0">
                             <widget class="QPushButton" name="button_ConfIis_Formats_ErrSample">
                              <property name="enabled">
                               <bool>false</bool>
@@ -11543,7 +11804,69 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                              </property>
                             </widget>
                            </item>
-                           <item row="4" column="0" colspan="2">
+                           <item row="5" column="0" colspan="2">
+                            <widget class="QScrollArea" name="scrollArea_ConfIis_Formats_ErrSample">
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>64</height>
+                              </size>
+                             </property>
+                             <property name="verticalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
+                             </property>
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOn</enum>
+                             </property>
+                             <property name="widgetResizable">
+                              <bool>true</bool>
+                             </property>
+                             <widget class="QWidget" name="scrollAreaWidgetContents_9">
+                              <property name="geometry">
+                               <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>722</width>
+                                <height>54</height>
+                               </rect>
+                              </property>
+                              <layout class="QHBoxLayout" name="horizontalLayout_18">
+                               <item>
+                                <widget class="QLabel" name="preview_ConfIis_Formats_ErrSample">
+                                 <property name="enabled">
+                                  <bool>false</bool>
+                                 </property>
+                                 <property name="minimumSize">
+                                  <size>
+                                   <width>0</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="maximumSize">
+                                  <size>
+                                   <width>16777215</width>
+                                   <height>36</height>
+                                  </size>
+                                 </property>
+                                 <property name="font">
+                                  <font>
+                                   <pointsize>13</pointsize>
+                                  </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>Please check the correctness of this line.
+Fields marked as 'DISCARDED' got parsed correctly, but are not considered by LogDoctor</string>
+                                 </property>
+                                 <property name="text">
+                                  <string/>
+                                 </property>
+                                </widget>
+                               </item>
+                              </layout>
+                             </widget>
+                            </widget>
+                           </item>
+                           <item row="3" column="0" colspan="2">
                             <spacer name="spacer_ConfIis_Formats_Err_2">
                              <property name="orientation">
                               <enum>Qt::Vertical</enum>
