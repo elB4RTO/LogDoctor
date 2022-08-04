@@ -43,12 +43,14 @@ public:
         const QString& web_server, const QString& log_type );
     void drawWarn(
         QTableWidget* table, QtCharts::QChartView* chart,
+        const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& year, const QString& month, const QString& day, const QString& hour );
 
     void drawSpeed(
         QTableWidget* table, QtCharts::QChartView* chart,
+        const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
@@ -56,6 +58,7 @@ public:
 
     void drawCount(
         QTableWidget* table, QtCharts::QChartView* chart,
+        const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& year, const QString& month, const QString& day,
@@ -63,6 +66,7 @@ public:
 
     void drawDay(
         QtCharts::QChartView* chart,
+            const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& from_year, const QString& from_month, const QString& from_day,
@@ -71,6 +75,7 @@ public:
 
     void drawRelat(
         QtCharts::QChartView* chart,
+        const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server, const QString& log_type,
         const QString& from_year, const QString& from_month, const QString& from_day,

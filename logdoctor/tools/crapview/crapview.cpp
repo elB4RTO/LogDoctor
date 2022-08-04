@@ -274,7 +274,7 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server, cons
     updates.clear();
 }
 
-void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& hour )
+void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& hour )
 {
     std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> result;
     this->dbQuery.getWarnCounts(
@@ -401,6 +401,9 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
 
         // set-up the bars chart
         QChart *b_chart = new QChart();
+        // apply the theme
+        b_chart->setTheme( theme );
+        // append the bars
         foreach ( auto& bars, b_series ) {
             b_chart->addSeries( bars );
         }
@@ -411,8 +414,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         b_chart->legend()->setFont( fonts.at("main_small") );
         b_chart->legend()->setAlignment( Qt::AlignBottom );
         b_chart->setAnimationOptions( QChart::SeriesAnimations );
-        //b_chart->setTheme( QChart::ChartTheme::ChartThemeBrownSand );
-        //t_chart->setBackgroundBrush( Qt::darkGray );
+        //b_chart->setBackgroundBrush( Qt::darkGray );
 
         // craft the X-axis labels
         QStringList categories;
@@ -453,7 +455,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
 
 
 
-void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response )
+void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response )
 {
     std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>> result;
     this->dbQuery.getSpeedData(
@@ -553,6 +555,7 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
 
         // build the chart
         QChart *l_chart = new QChart();
+        l_chart->setTheme( theme );
         l_chart->addSeries( line );
         l_chart->addSeries( line_ );
         l_chart->setTitle( this->TITLE_SPEED );
@@ -587,7 +590,7 @@ void Crapview::drawSpeed(QTableWidget* table, QtCharts::QChartView* chart, const
 
 
 
-void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& field )
+void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& field )
 {
     std::tuple<bool, std::vector<std::tuple<QString, int>>> result;
     this->dbQuery.getItemsCount(
@@ -630,11 +633,11 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
         pie->setLabelsVisible();
 
         QChart *p_chart = new QChart();
+        p_chart->setTheme( theme );
         p_chart->addSeries( pie );
         p_chart->setTitle( field );
         p_chart->setTitleFont( fonts.at( "main_big" ) );
         p_chart->legend()->hide();
-        //p_chart->setTheme( QChart::ChartTheme::ChartThemeDark );
 
         chart->setChart( p_chart );
         chart->setRenderHint( QPainter::Antialiasing );
@@ -643,7 +646,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 
 
-void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter )
+void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter )
 {
     std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> result;
     this->dbQuery.getDaytimeCounts(
@@ -725,6 +728,7 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
 
         // set-up the bars chart
         QChart *b_chart = new QChart();
+        b_chart->setTheme( theme );
         b_chart->addSeries( bars );
         b_chart->setTitle( QString("%1: %2").arg( this->TITLE_DAY ).arg( field ) );
         b_chart->setTitleFont( fonts.at("main") );
@@ -732,8 +736,7 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
         //b_chart->legend()->setVisible( true );
         b_chart->legend()->setAlignment( Qt::AlignBottom );
         b_chart->setAnimationOptions( QChart::SeriesAnimations );
-        //b_chart->setTheme( QChart::ChartTheme::ChartThemeBrownSand );
-        //t_chart->setBackgroundBrush( Qt::darkGray );
+        //b_chart->setBackgroundBrush( Qt::darkGray );
 
         // craft the X-axis labels
         QStringList categories;
@@ -766,7 +769,7 @@ void Crapview::drawDay(QtCharts::QChartView* chart, const std::unordered_map<std
 
 
 
-void Crapview::drawRelat(QtCharts::QChartView* chart, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 )
+void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& log_type, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 )
 {
     bool period = true;
     std::tuple<bool, std::vector<std::tuple<long long, int>>> result;
@@ -842,6 +845,7 @@ void Crapview::drawRelat(QtCharts::QChartView* chart, const std::unordered_map<s
 
         // build the area
         QChart *a_chart = new QChart();
+        a_chart->setTheme( theme );
         a_chart->addSeries( area );
         a_chart->addSeries( area_ );
         a_chart->setTitle( QString("%1: %2 -> %3").arg(this->TITLE_RELAT).arg(field_1).arg(field_2) );
