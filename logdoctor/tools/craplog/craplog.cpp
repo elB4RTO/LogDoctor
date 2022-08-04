@@ -72,7 +72,8 @@ Craplog::Craplog()
     this->logs_paths.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  "/var/log/nginx" );
     // iis access/error logs location
     this->logs_paths.emplace( this->IIS_ID, std::unordered_map<int, std::string>() );
-    this->logs_paths.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "C:\\inetpub\\logs\\LogFiles\\" );
+    //this->logs_paths.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "C:\\inetpub\\logs\\LogFiles\\" );
+    this->logs_paths.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "/var/log/iis/LogFiles/SiteName" );
     this->logs_paths.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  "C:\\inetpub\\logs\\FailedReqLogFiles\\" );
 
     // apache2 access/error log files' names
@@ -297,12 +298,12 @@ const QString Craplog::getLogsFormatSample( const int web_server_id, const int l
 {
     QString sample;
     if ( web_server_id == this->APACHE_ID ) {
-        sample = this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ).at( this->APACHE_ID ), log_type );
+        sample = this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ).at( log_type ), log_type );
     } else if ( web_server_id == this->NGINX_ID ) {
-        sample = this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ).at( this->NGINX_ID ), log_type );
+        sample = this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ).at( log_type ), log_type );
     } else if ( web_server_id == this->IIS_ID ) {
         if ( log_type == this->ACCESS_LOGS ) {
-            sample = this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ).at( this->IIS_ID )/*, log_type*/ );
+            sample = this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ).at( log_type )/*, log_type*/ );
         }
     } else {
         // unexpected WebServer
@@ -429,24 +430,34 @@ void Craplog::scanLogsDir()
     }
     for ( int i=0; i<n; i++ ) {
         std::string &logs_path = logs_paths_.at( i+1 );
-        if ( !IOutils::isDir( logs_path ) ) {
+        if ( IOutils::isDir( logs_path ) == false ) {
             // this directory doesn't exists
             if ( IOutils::exists( logs_path ) ) {
                 DialogSec::errDirNotExists( nullptr, QString::fromStdString( logs_path ) );
             }
             continue;
         }
+        int size;
+        QString name;
+        std::string path;
         // iterate over entries in the logs folder
         for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
             // get the attributes
-            int size = dir_entry.file_size();
-            std::string path = dir_entry.path().string();
-            QString name = QString::fromStdString( dir_entry.path().filename().string() );
-            // check the readability
-            if ( IOutils::checkFile( path, true ) == false ) {
-                if ( this->dialog_level == 2 ) {
-                    DialogSec::warnFileNotReadable( nullptr, name );
+            path = dir_entry.path().string();
+            name = QString::fromStdString( dir_entry.path().filename().string() );
+            // check if it is actually a file
+            if ( IOutils::checkFile( path ) == true ) {
+                // it's a file, check the readability
+                if ( IOutils::checkFile( path, true ) == false ) {
+                    // not readable, skip
+                    if ( this->dialog_level == 2 ) {
+                        DialogSec::warnFileNotReadable( nullptr, name );
+                    }
+                    continue;
                 }
+                // it's readable, get the size
+                size = dir_entry.file_size();
+            } else {
                 continue;
             }
 
@@ -476,6 +487,7 @@ void Craplog::scanLogsDir()
 
             if ( successful == true ) {
                 LogOps::LogType log_type = this->logOps.defineFileType( name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
+                content.clear();
                 if ( log_type == LogOps::LogType::Failed ) {
                     // failed to get the log type, do not append
                     DialogSec::errFailedDefiningLogType( nullptr, name );
@@ -833,7 +845,7 @@ void Craplog::joinLogLines()
             this->access_logs_lines.insert( this->access_logs_lines.end(), content.begin(), content.end() );
             this->used_files_hashes.at( 1 ).push_back( file.hash );
             this->total_access_size += file.size;
-        } else if ( file.type == LogOps::LogType::Access ) {
+        } else if ( file.type == LogOps::LogType::Error ) {
             this->error_logs_lines.insert( this->error_logs_lines.end(), content.begin(), content.end() );
             this->used_files_hashes.at( 2 ).push_back( file.hash );
             this->total_error_size += file.size;
@@ -1020,7 +1032,7 @@ const std::vector<int> Craplog::calcDayTraffic( const int log_type )
     return traffic;
 }
 
-void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart )
+void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart )
 {
     QString access_chart_name      = QMessageBox::tr("Access Logs Breakdown"),
             error_chart_name       = QMessageBox::tr("Error Logs Breakdown"),
@@ -1045,6 +1057,7 @@ void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, Q
         this->total_access_size-this->parsed_access_size-this->blacklisted_access_size );
 
     DonutBreakdown *accessBreakdown = new DonutBreakdown();
+    accessBreakdown->setTheme( theme );
     accessBreakdown->setAnimationOptions( QChart::AllAnimations );
     accessBreakdown->setTitle( access_chart_name );
     accessBreakdown->setTitleFont( fonts.at("main") );
@@ -1055,7 +1068,6 @@ void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, Q
         accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::white, fonts.at("main_small") );
         access_donut->setVisible( false );
     }
-    //accessBreakdown->setTheme( QChart::ChartTheme::ChartThemeDark );
 
     acc_chart->setChart( accessBreakdown );
     acc_chart->setRenderHint( QPainter::Antialiasing );
@@ -1075,6 +1087,7 @@ void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, Q
         this->total_error_size-this->parsed_error_size-this->blacklisted_error_size );
 
     DonutBreakdown *errorBreakdown = new DonutBreakdown();
+    errorBreakdown->setTheme( theme );
     errorBreakdown->setAnimationOptions( QChart::AllAnimations );
     errorBreakdown->setTitle( error_chart_name );
     errorBreakdown->setTitleFont( fonts.at("main") );
@@ -1085,7 +1098,6 @@ void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, Q
         errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::white, fonts.at("main_small") );
         error_donut->setVisible( false );
     }
-    //errorBreakdown->setTheme( QChart::ChartTheme::ChartThemeDark );
 
     err_chart->setChart( errorBreakdown );
     err_chart->setRenderHint( QPainter::Antialiasing );
@@ -1119,6 +1131,7 @@ void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, Q
     bars->append( error_bars );
 
     QChart *t_chart = new QChart();
+    t_chart->setTheme( theme );
     t_chart->addSeries( bars );
     t_chart->setTitle( traffic_chart_name );
     t_chart->setTitleFont( fonts.at("main") );
@@ -1145,7 +1158,6 @@ void Craplog::makeGraphs( const std::unordered_map<std::string, QFont>& fonts, Q
 
     t_chart->legend()->setVisible( true );
     t_chart->legend()->setAlignment( Qt::AlignBottom );
-    //t_chart->setTheme( QChart::ChartTheme::ChartThemeBrownSand );
 
     traf_chart->setChart( t_chart );
     traf_chart->setRenderHint( QPainter::Antialiasing );
