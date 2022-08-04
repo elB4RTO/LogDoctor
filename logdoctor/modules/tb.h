@@ -25,6 +25,9 @@ public:
     void setFontFamily( const QString& font_family );
     void setFont( const QFont& font );
 
+    // preview
+    void makePreview( QString& content );
+
 private:
     bool wide_lines = false;
     int  color_scheme_id = 1;
