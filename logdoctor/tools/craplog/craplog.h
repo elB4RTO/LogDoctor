@@ -99,11 +99,11 @@ public:
     void blacklistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
          warnlistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
          blacklistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
-         warnlistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
-         blacklistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
-         warnlistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
-         blacklistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item ),
-         warnlistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item );
+         warnlistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& item );
+    int blacklistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& item ),
+        warnlistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& item ),
+        blacklistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& item ),
+        warnlistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& item );
 
     // job related
     const bool checkStuff();

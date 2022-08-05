@@ -26,7 +26,7 @@ Craplog::Craplog()
         this->blacklists.at( i ).emplace( this->ERROR_LOGS, std::unordered_map<int, BWlist>() ); // error
         // access
         this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 12, BWlist{ .used=true,  .list={"/shell","/.env","/robots.txt","/../","/./","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
+        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
         this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 20, BWlist{ .used=false, .list={} } );
         this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 21, BWlist{ .used=false, .list={} } );
         this->blacklists.at( i ).at( this->ACCESS_LOGS ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
@@ -48,7 +48,7 @@ Craplog::Craplog()
     this->logs_format_strings.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken" );
     this->logs_format_strings.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  "" );
 
-    // initialize format strings
+    // initialize formats
     this->logs_formats.emplace( this->APACHE_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
     this->logs_formats.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID).at(this->ACCESS_LOGS), this->ACCESS_LOGS ) );
     this->logs_formats.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID).at(this->ERROR_LOGS),  this->ERROR_LOGS ) );
@@ -56,7 +56,7 @@ Craplog::Craplog()
     this->logs_formats.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID).at(this->ACCESS_LOGS), this->ACCESS_LOGS ) );
     this->logs_formats.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID).at(this->ERROR_LOGS),  this->ERROR_LOGS ) );
     this->logs_formats.emplace( this->IIS_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
-    this->logs_formats.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processIisFormatString( this->logs_format_strings.at(this->IIS_ID).at(this->ACCESS_LOGS), 3 ) );
+    this->logs_formats.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processIisFormatString( this->logs_format_strings.at(this->IIS_ID).at(this->ACCESS_LOGS), 0 ) );
     this->logs_formats.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  FormatOps::LogsFormat {} );
 
     this->current_ALF = this->logs_formats.at( this->APACHE_ID ).at( this->ACCESS_LOGS );
@@ -182,11 +182,11 @@ const bool Craplog::isWarnlistUsed( const int web_server_id, const int log_type,
 
 void Craplog::setBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id, const bool used )
 {
-
+    this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).used = used;
 }
 void Craplog::setWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id, const bool used )
 {
-
+    this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).used = used;
 }
 
 const std::vector<std::string>& Craplog::getBlacklist( const int web_server_id, const int log_type, const int log_field_id )
@@ -200,38 +200,94 @@ const std::vector<std::string>& Craplog::getWarnlist( const int web_server_id, c
 
 void Craplog::blacklistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
 {
-
+    this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list.push_back( new_item );
 }
 void Craplog::warnlistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
 {
-
+    this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list.push_back( new_item );
 }
 
-void Craplog::blacklistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
+void Craplog::blacklistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
 {
-
+    auto& list = this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    // move the item to the end, then pop it
+    for ( int i=0; i<list.size()-1; i++ ) {
+        if ( list.at( i ) == item ) {
+            list.at( i ) = list.at( i+1 );
+            list.at( i+1 ) = item;
+        }
+    }
+    list.pop_back();
 }
-void Craplog::warnlistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
+void Craplog::warnlistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
 {
-
+    auto& list = this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    // move the item to the end, then pop it
+    for ( int i=0; i<list.size()-1; i++ ) {
+        if ( list.at( i ) == item ) {
+            list.at( i ) = list.at( i+1 );
+            list.at( i+1 ) = item;
+        }
+    }
+    list.pop_back();
 }
 
-void Craplog::blacklistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
+int Craplog::blacklistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
 {
-
+    int i;
+    auto& list = this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    for ( i=1; i<list.size(); i++ ) {
+        if ( list.at( i ) == item ) {
+            list.at( i ) = list.at( i-1 );
+            list.at( i-1 ) = item;
+            i--;
+            break;
+        }
+    }
+    return i;
 }
-void Craplog::warnlistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
+int Craplog::warnlistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
 {
-
+    int i;
+    auto& list = this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    for ( i=1; i<list.size(); i++ ) {
+        if ( list.at( i ) == item ) {
+            list.at( i ) = list.at( i-1 );
+            list.at( i-1 ) = item;
+            i--;
+            break;
+        }
+    }
+    return i;
 }
 
-void Craplog::blacklistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
+int Craplog::blacklistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
 {
-
+    int i;
+    auto& list = this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    for ( i=0; i<list.size()-1; i++ ) {
+        if ( list.at( i ) == item ) {
+            list.at( i ) = list.at( i+1 );
+            list.at( i+1 ) = item;
+            i++;
+            break;
+        }
+    }
+    return i;
 }
-void Craplog::warnlistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
+int Craplog::warnlistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
 {
-
+    int i;
+    auto& list = this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    for ( i=0; i<list.size()-1; i++ ) {
+        if ( list.at( i ) == item ) {
+            list.at( i ) = list.at( i+1 );
+            list.at( i+1 ) = item;
+            i++;
+            break;
+        }
+    }
+    return i;
 }
 
 
@@ -270,14 +326,14 @@ void Craplog::setNginxALF( const std::string& format_string )
     // nginx
     this->logs_format_strings.at( this->NGINX_ID ).at( this->ACCESS_LOGS ) = format_string;
     this->logs_formats.at( this->NGINX_ID ).at( this->ACCESS_LOGS ) =
-        this->formatOps.processApacheFormatString( format_string, this->ACCESS_LOGS );
+        this->formatOps.processNginxFormatString( format_string, this->ACCESS_LOGS );
 }
 void Craplog::setIisALF( const std::string& format_string, const int log_module )
 {
     // iis
     this->logs_format_strings.at( this->IIS_ID ).at( this->ACCESS_LOGS ) = format_string;
     this->logs_formats.at( this->IIS_ID ).at( this->ACCESS_LOGS ) =
-        this->formatOps.processApacheFormatString( format_string, log_module );
+        this->formatOps.processIisFormatString( format_string, log_module );
 }
 void Craplog::setApacheELF( const std::string& format_string )
 {
@@ -291,7 +347,7 @@ void Craplog::setNginxELF( const std::string& format_string )
     // nginx
     this->logs_format_strings.at( this->NGINX_ID ).at( this->ERROR_LOGS ) = format_string;
     this->logs_formats.at( this->NGINX_ID ).at( this->ERROR_LOGS ) =
-        this->formatOps.processApacheFormatString( format_string, this->ERROR_LOGS );
+        this->formatOps.processNginxFormatString( format_string, this->ERROR_LOGS );
 }
 
 const QString Craplog::getLogsFormatSample( const int web_server_id, const int log_type )
