@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>952</width>
-    <height>632</height>
+    <height>634</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -104,7 +104,7 @@
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>473</height>
+             <height>475</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -6528,7 +6528,7 @@ hr { height: 1px; border-width: 0; }
                </font>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>3</number>
               </property>
               <widget class="QWidget" name="tab_ConfLogs_Control">
                <attribute name="title">
@@ -6869,7 +6869,7 @@ hr { height: 1px; border-width: 0; }
                    </font>
                   </property>
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>3</number>
                   </property>
                   <property name="documentMode">
                    <bool>true</bool>
@@ -7196,7 +7196,7 @@ hr { height: 1px; border-width: 0; }
                             </widget>
                            </item>
                            <item row="1" column="1">
-                            <widget class="QPushButton" name="button_ConfApache_Format_AccSave">
+                            <widget class="QPushButton" name="button_ConfApache_Formats_AccSave">
                              <property name="enabled">
                               <bool>false</bool>
                              </property>
@@ -7482,7 +7482,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                             </widget>
                            </item>
                            <item row="1" column="1">
-                            <widget class="QPushButton" name="button_ConfApache_Format_ErrSave">
+                            <widget class="QPushButton" name="button_ConfApache_Formats_ErrSave">
                              <property name="enabled">
                               <bool>false</bool>
                              </property>
@@ -7572,7 +7572,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>722</width>
+                                <width>62</width>
                                 <height>54</height>
                                </rect>
                               </property>
@@ -7738,7 +7738,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                        <enum>QTabWidget::South</enum>
                       </property>
                       <property name="currentIndex">
-                       <number>0</number>
+                       <number>1</number>
                       </property>
                       <property name="documentMode">
                        <bool>true</bool>
@@ -7769,22 +7769,22 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Methods</string>
+                               <string>Method</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>URIs</string>
+                               <string>URI</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>User-agents</string>
+                               <string>User-agent</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -8067,17 +8067,17 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Error levels</string>
+                               <string>Level</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Source files</string>
+                               <string>Source file</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -8385,7 +8385,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -8668,12 +8668,12 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Error levels</string>
+                               <string>Level</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -8954,7 +8954,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                    </font>
                   </property>
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>3</number>
                   </property>
                   <property name="documentMode">
                    <bool>true</bool>
@@ -9281,7 +9281,10 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                             </widget>
                            </item>
                            <item row="1" column="1">
-                            <widget class="QPushButton" name="button_ConfNginx_Format_AccSave">
+                            <widget class="QPushButton" name="button_ConfNginx_Formats_AccSave">
+                             <property name="enabled">
+                              <bool>false</bool>
+                             </property>
                              <property name="minimumSize">
                               <size>
                                <width>32</width>
@@ -9564,7 +9567,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                             </widget>
                            </item>
                            <item row="1" column="1">
-                            <widget class="QPushButton" name="button_ConfNginx_Format_ErrSave">
+                            <widget class="QPushButton" name="button_ConfNginx_Formats_ErrSave">
                              <property name="enabled">
                               <bool>false</bool>
                              </property>
@@ -9654,7 +9657,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>722</width>
+                                <width>62</width>
                                 <height>54</height>
                                </rect>
                               </property>
@@ -9820,7 +9823,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                        <enum>QTabWidget::South</enum>
                       </property>
                       <property name="currentIndex">
-                       <number>0</number>
+                       <number>1</number>
                       </property>
                       <property name="documentMode">
                        <bool>true</bool>
@@ -9851,22 +9854,22 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Methods</string>
+                               <string>Method</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>URIs</string>
+                               <string>URI</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>User-agents</string>
+                               <string>User-agent</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -10149,17 +10152,17 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Error levels</string>
+                               <string>Level</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Source files</string>
+                               <string>Source file</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -10297,13 +10300,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                             </widget>
                            </item>
-                           <item row="2" column="1" rowspan="4" colspan="3">
-                            <widget class="QListView" name="list_ConfNginx_Warnlist_Err">
-                             <property name="editTriggers">
-                              <set>QAbstractItemView::NoEditTriggers</set>
-                             </property>
-                            </widget>
-                           </item>
                            <item row="3" column="0">
                             <widget class="QPushButton" name="button_ConfNginx_Warnlist_ErrUp">
                              <property name="enabled">
@@ -10411,6 +10407,13 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                             </spacer>
                            </item>
+                           <item row="2" column="1" rowspan="4" colspan="3">
+                            <widget class="QListWidget" name="list_ConfNginx_Warnlist_Err">
+                             <property name="editTriggers">
+                              <set>QAbstractItemView::NoEditTriggers</set>
+                             </property>
+                            </widget>
+                           </item>
                           </layout>
                          </widget>
                         </item>
@@ -10467,7 +10470,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -10750,12 +10753,12 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Error levels</string>
+                               <string>Level</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -11441,7 +11444,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                             </widget>
                            </item>
                            <item row="2" column="1">
-                            <widget class="QPushButton" name="button_ConfIis_Format_AccSave">
+                            <widget class="QPushButton" name="button_ConfIis_Formats_AccSave">
                              <property name="enabled">
                               <bool>false</bool>
                              </property>
@@ -11733,7 +11736,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                             </widget>
                            </item>
                            <item row="1" column="1">
-                            <widget class="QPushButton" name="button_ConfIis_Format_ErrSave">
+                            <widget class="QPushButton" name="button_ConfIis_Formats_ErrSave">
                              <property name="enabled">
                               <bool>false</bool>
                              </property>
@@ -11826,7 +11829,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>722</width>
+                                <width>62</width>
                                 <height>54</height>
                                </rect>
                               </property>
@@ -12026,22 +12029,22 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Methods</string>
+                               <string>Method</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>URIs</string>
+                               <string>URI</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>User-agents</string>
+                               <string>User-agent</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -12327,17 +12330,17 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Error levels</string>
+                               <string>Level</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Source files</string>
+                               <string>Source file</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -12529,7 +12532,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                             </widget>
                            </item>
                            <item row="4" column="0">
-                            <widget class="QPushButton" name="button_ConfIis_Warnlist_AccDown_2">
+                            <widget class="QPushButton" name="button_ConfIis_Warnlist_ErrDown">
                              <property name="enabled">
                               <bool>false</bool>
                              </property>
@@ -12623,7 +12626,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                        <enum>QTabWidget::South</enum>
                       </property>
                       <property name="currentIndex">
-                       <number>1</number>
+                       <number>0</number>
                       </property>
                       <property name="documentMode">
                        <bool>true</bool>
@@ -12654,7 +12657,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
@@ -12940,12 +12943,12 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                              </property>
                              <item>
                               <property name="text">
-                               <string>Error levels</string>
+                               <string>Level</string>
                               </property>
                              </item>
                              <item>
                               <property name="text">
-                               <string>Clients</string>
+                               <string>Client</string>
                               </property>
                              </item>
                             </widget>
