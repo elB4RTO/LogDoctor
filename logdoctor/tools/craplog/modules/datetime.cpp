@@ -129,6 +129,24 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
             day    = datetime.substr( 3, 2 );
             year   = "20" + datetime.substr( 6, 2 );
 
+        } else if ( format == "MDYY" ) {
+            int aux;
+            if ( datetime.at(2) == '/' ) {
+                month = datetime.substr( 0, 2 );
+                aux = 3;
+            } else {
+                month = "0" + datetime.substr( 0, 1 );
+                aux = 2;
+            }
+            if ( datetime.at(aux+2) == '/' ) {
+                day = datetime.substr( aux, 2 );
+                aux += 3;
+            } else {
+                day = "0" + datetime.substr( aux, 1 );
+                aux = +2;
+            }
+            year = "20" + datetime.substr( aux );
+
         } else if ( StringOps::startsWith( format, "year" ) ) {
             year = datetime;
             if ( format == "year_short" ) {
