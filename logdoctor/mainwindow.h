@@ -237,7 +237,7 @@ private slots:
 
     void on_inLine_ConfApache_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfApache_Format_AccSave_clicked();
+    void on_button_ConfApache_Formats_AccSave_clicked();
 
     void on_button_ConfApache_Formats_AccSample_clicked();
 
@@ -245,7 +245,7 @@ private slots:
 
     void on_inLine_ConfApache_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfApache_Format_ErrSave_clicked();
+    void on_button_ConfApache_Formats_ErrSave_clicked();
 
     void on_button_ConfApache_Formats_ErrSample_clicked();
 
@@ -322,6 +322,208 @@ private slots:
     void on_button_ConfApache_Blacklist_ErrUp_clicked();
 
     void on_button_ConfApache_Blacklist_ErrDown_clicked();
+
+    //// NGINX ////
+
+    void on_checkBox_ConfNginx_Paths_Different_clicked(bool checked);
+
+    void on_inLine_ConfNginx_Paths_AccPath_textChanged(const QString &arg1);
+
+    void on_inLine_ConfNginx_Paths_ErrPath_textChanged(const QString &arg1);
+
+    void on_button_ConfNginx_Paths_SavePaths_clicked();
+
+    void on_inLine_ConfNginx_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
+
+    void on_button_ConfNginx_Formats_AccSave_clicked();
+
+    void on_button_ConfNginx_Formats_AccSample_clicked();
+
+    void on_button_ConfNginx_Formats_AccHelp_clicked();
+
+    void on_inLine_ConfNginx_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
+
+    void on_button_ConfNginx_Formats_ErrSave_clicked();
+
+    void on_button_ConfNginx_Formats_ErrSample_clicked();
+
+    void on_button_ConfNginx_Formats_ErrHelp_clicked();
+
+    void on_box_ConfNginx_Warnlist_Acc_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfNginx_Warnlist_AccUsed_clicked(bool checked);
+
+    void on_inLine_ConfNginx_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfNginx_Warnlist_Acc_returnPressed();
+
+    void on_button_ConfNginx_Warnlist_AccAdd_clicked();
+
+    void on_list_ConfNginx_Warnlist_Acc_itemSelectionChanged();
+
+    void on_button_ConfNginx_Warnlist_AccRemove_clicked();
+
+    void on_button_ConfNginx_Warnlist_AccUp_clicked();
+
+    void on_button_ConfNginx_Warnlist_AccDown_clicked();
+
+    void on_box_ConfNginx_Warnlist_Err_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfNginx_Warnlist_ErrUsed_clicked(bool checked);
+
+    void on_inLine_ConfNginx_Warnlist_Err_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfNginx_Warnlist_Err_returnPressed();
+
+    void on_button_ConfNginx_Warnlist_ErrAdd_clicked();
+
+    void on_list_ConfNginx_Warnlist_Err_itemSelectionChanged();
+
+    void on_button_ConfNginx_Warnlist_ErrRemove_clicked();
+
+    void on_button_ConfNginx_Warnlist_ErrUp_clicked();
+
+    void on_button_ConfNginx_Warnlist_ErrDown_clicked();
+
+    void on_box_ConfNginx_Blacklist_Acc_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfNginx_Blacklist_AccUsed_clicked(bool checked);
+
+    void on_inLine_ConfNginx_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfNginx_Blacklist_Acc_returnPressed();
+
+    void on_button_ConfNginx_Blacklist_AccAdd_clicked();
+
+    void on_list_ConfNginx_Blacklist_Acc_itemSelectionChanged();
+
+    void on_button_ConfNginx_Blacklist_AccRemove_clicked();
+
+    void on_button_ConfNginx_Blacklist_AccUp_clicked();
+
+    void on_button_ConfNginx_Blacklist_AccDown_clicked();
+
+    void on_box_ConfNginx_Blacklist_Err_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfNginx_Blacklist_ErrUsed_clicked(bool checked);
+
+    void on_inLine_ConfNginx_Blacklist_Err_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfNginx_Blacklist_Err_returnPressed();
+
+    void on_button_ConfNginx_Blacklist_ErrAdd_clicked();
+
+    void on_list_ConfNginx_Blacklist_Err_itemSelectionChanged();
+
+    void on_button_ConfNginx_Blacklist_ErrRemove_clicked();
+
+    void on_button_ConfNginx_Blacklist_ErrUp_clicked();
+
+    void on_button_ConfNginx_Blacklist_ErrDown_clicked();
+
+    //// IIS ////
+
+    void on_checkBox_ConfIis_Paths_Different_clicked(bool checked);
+
+    void on_inLine_ConfIis_Paths_AccPath_textChanged(const QString &arg1);
+
+    void on_inLine_ConfIis_Paths_ErrPath_textChanged(const QString &arg1);
+
+    void on_button_ConfIis_Paths_SavePaths_clicked();
+
+    void on_radio_ConfIis_Formats_W3C_toggled(bool checked);
+
+    void on_radio_ConfIis_Formats_NCSA_toggled(bool checked);
+
+    void on_radio_ConfIis_Formats_IIS_toggled(bool checked);
+
+    void on_inLine_ConfIis_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
+
+    void on_button_ConfIis_Formats_AccSave_clicked();
+
+    void on_button_ConfIis_Formats_AccSample_clicked();
+
+    void on_button_ConfIis_Formats_AccHelp_clicked();
+
+    void on_inLine_ConfIis_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
+
+    void on_button_ConfIis_Formats_ErrSave_clicked();
+
+    void on_button_ConfIis_Formats_ErrSample_clicked();
+
+    void on_button_ConfIis_Formats_ErrHelp_clicked();
+
+    void on_box_ConfIis_Warnlist_Acc_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfIis_Warnlist_AccUsed_clicked(bool checked);
+
+    void on_inLine_ConfIis_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfIis_Warnlist_Acc_returnPressed();
+
+    void on_button_ConfIis_Warnlist_AccAdd_clicked();
+
+    void on_list_ConfIis_Warnlist_Acc_itemSelectionChanged();
+
+    void on_button_ConfIis_Warnlist_AccRemove_clicked();
+
+    void on_button_ConfIis_Warnlist_AccUp_clicked();
+
+    void on_button_ConfIis_Warnlist_AccDown_clicked();
+
+    void on_box_ConfIis_Warnlist_Err_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfIis_Warnlist_ErrUsed_clicked(bool checked);
+
+    void on_inLine_ConfIis_Warnlist_Err_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfIis_Warnlist_Err_returnPressed();
+
+    void on_button_ConfIis_Warnlist_ErrAdd_clicked();
+
+    void on_list_ConfIis_Warnlist_Err_itemSelectionChanged();
+
+    void on_button_ConfIis_Warnlist_ErrRemove_clicked();
+
+    void on_button_ConfIis_Warnlist_ErrUp_clicked();
+
+    void on_button_ConfIis_Warnlist_ErrDown_clicked();
+
+    void on_box_ConfIis_Blacklist_Acc_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfIis_Blacklist_AccUsed_clicked(bool checked);
+
+    void on_inLine_ConfIis_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfIis_Blacklist_Acc_returnPressed();
+
+    void on_button_ConfIis_Blacklist_AccAdd_clicked();
+
+    void on_list_ConfIis_Blacklist_Acc_itemSelectionChanged();
+
+    void on_button_ConfIis_Blacklist_AccRemove_clicked();
+
+    void on_button_ConfIis_Blacklist_AccUp_clicked();
+
+    void on_button_ConfIis_Blacklist_AccDown_clicked();
+
+    void on_box_ConfIis_Blacklist_Err_currentTextChanged(const QString &arg1);
+
+    void on_checkBox_ConfIis_Blacklist_ErrUsed_clicked(bool checked);
+
+    void on_inLine_ConfIis_Blacklist_Err_cursorPositionChanged(int arg1, int arg2);
+
+    void on_inLine_ConfIis_Blacklist_Err_returnPressed();
+
+    void on_button_ConfIis_Blacklist_ErrAdd_clicked();
+
+    void on_list_ConfIis_Blacklist_Err_itemSelectionChanged();
+
+    void on_button_ConfIis_Blacklist_ErrRemove_clicked();
+
+    void on_button_ConfIis_Blacklist_ErrUp_clicked();
+
+    void on_button_ConfIis_Blacklist_ErrDown_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -436,6 +638,7 @@ private:
     /////////////////
     void refreshTextBrowserPreview();
     void refreshChartsPreview();
+    const int getIisLogsModule();
 
 };
 #endif // MAINWINDOW_H

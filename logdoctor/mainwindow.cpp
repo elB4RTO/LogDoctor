@@ -242,7 +242,7 @@ MainWindow::MainWindow( QWidget *parent )
     } else {
         this->ui->checkBox_ConfControl_Size->setChecked( false );
     }
-    // apache
+    // apache paths
     this->ui->inLine_ConfApache_Paths_AccPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->APACHE_ID, this->ACCESS_LOGS )) );
     if ( this->craplog.getLogsPath( this->APACHE_ID, this->ACCESS_LOGS ) != this->craplog.getLogsPath( this->APACHE_ID, this->ERROR_LOGS ) ) {
         this->ui->checkBox_ConfApache_Paths_Different->setChecked( true );
@@ -250,6 +250,55 @@ MainWindow::MainWindow( QWidget *parent )
     } else {
         this->ui->icon_ConfApache_Paths_ErrWrong->setVisible( false );
     }
+    // apache formats
+    this->ui->inLine_ConfApache_Formats_AccString->setText( QString::fromStdString( this->craplog.getAccessLogsFormatString( this->APACHE_ID ) ) );
+    this->ui->button_ConfApache_Formats_AccSave->setEnabled( false );
+    this->ui->inLine_ConfApache_Formats_ErrString->setText( QString::fromStdString( this->craplog.getErrorLogsFormatString( this->APACHE_ID ) ) );
+    this->ui->button_ConfApache_Formats_ErrSave->setEnabled( false );
+    // apache warnlists
+    this->on_box_ConfApache_Warnlist_Acc_currentTextChanged( this->ui->box_ConfApache_Warnlist_Acc->currentText() );
+    this->on_box_ConfApache_Warnlist_Err_currentTextChanged( this->ui->box_ConfApache_Warnlist_Err->currentText() );
+    // apache blacklists
+    this->on_box_ConfApache_Blacklist_Acc_currentTextChanged( this->ui->box_ConfApache_Blacklist_Acc->currentText() );
+    this->on_box_ConfApache_Blacklist_Err_currentTextChanged( this->ui->box_ConfApache_Blacklist_Err->currentText() );
+    // nginx paths
+    this->ui->inLine_ConfNginx_Paths_AccPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->NGINX_ID, this->ACCESS_LOGS )) );
+    if ( this->craplog.getLogsPath( this->NGINX_ID, this->ACCESS_LOGS ) != this->craplog.getLogsPath( this->NGINX_ID, this->ERROR_LOGS ) ) {
+        this->ui->checkBox_ConfNginx_Paths_Different->setChecked( true );
+        this->ui->inLine_ConfNginx_Paths_ErrPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->NGINX_ID, this->ERROR_LOGS )) );
+    } else {
+        this->ui->icon_ConfNginx_Paths_ErrWrong->setVisible( false );
+    }
+    // nginx formats
+    this->ui->inLine_ConfNginx_Formats_AccString->setText( QString::fromStdString( this->craplog.getAccessLogsFormatString( this->NGINX_ID ) ) );
+    this->ui->button_ConfNginx_Formats_AccSave->setEnabled( false );
+    this->ui->inLine_ConfNginx_Formats_ErrString->setText( QString::fromStdString( this->craplog.getErrorLogsFormatString( this->NGINX_ID ) ) );
+    this->ui->button_ConfNginx_Formats_ErrSave->setEnabled( false );
+    // nginx warnlists
+    this->on_box_ConfNginx_Warnlist_Acc_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Acc->currentText() );
+    this->on_box_ConfNginx_Warnlist_Err_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Err->currentText() );
+    // nginx blacklists
+    this->on_box_ConfNginx_Blacklist_Acc_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Acc->currentText() );
+    this->on_box_ConfNginx_Blacklist_Err_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Err->currentText() );
+    // iis paths
+    this->ui->inLine_ConfIis_Paths_AccPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->IIS_ID, this->ACCESS_LOGS )) );
+    if ( this->craplog.getLogsPath( this->IIS_ID, this->ACCESS_LOGS ) != this->craplog.getLogsPath( this->IIS_ID, this->ERROR_LOGS ) ) {
+        this->ui->checkBox_ConfIis_Paths_Different->setChecked( true );
+        this->ui->inLine_ConfIis_Paths_ErrPath->setText( QString::fromStdString(this->craplog.getLogsPath( this->IIS_ID, this->ERROR_LOGS )) );
+    } else {
+        this->ui->icon_ConfIis_Paths_ErrWrong->setVisible( false );
+    }
+    // iis formats
+    this->ui->inLine_ConfIis_Formats_AccString->setText( QString::fromStdString( this->craplog.getAccessLogsFormatString( this->IIS_ID ) ) );
+    this->ui->button_ConfIis_Formats_AccSave->setEnabled( false );
+    this->ui->inLine_ConfIis_Formats_ErrString->setText( QString::fromStdString( this->craplog.getErrorLogsFormatString( this->IIS_ID ) ) );
+    this->ui->button_ConfIis_Formats_ErrSave->setEnabled( false );
+    // iis warnlists
+    this->on_box_ConfIis_Warnlist_Acc_currentTextChanged( this->ui->box_ConfIis_Warnlist_Acc->currentText() );
+    this->on_box_ConfIis_Warnlist_Err_currentTextChanged( this->ui->box_ConfIis_Warnlist_Err->currentText() );
+    // iis blacklists
+    this->on_box_ConfIis_Blacklist_Acc_currentTextChanged( this->ui->box_ConfIis_Blacklist_Acc->currentText() );
+    this->on_box_ConfIis_Blacklist_Err_currentTextChanged( this->ui->box_ConfIis_Blacklist_Err->currentText() );
 
 
 
@@ -671,43 +720,59 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 
 void MainWindow::on_button_MakeStats_Start_clicked()
 {
-    // take actions on Craplog's start
-    this->craplogStarted();
-
-    // feed craplog with the checked files
     bool proceed = true;
-    QTreeWidgetItemIterator i(this->ui->listLogFiles);
-    while ( *i ) {
-        if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
-            // tell Craplog to set this file as selected
-            if ( this->craplog.setLogFileSelected( (*i)->text(0) ) == false ) {
-                // this shouldn't be, but...
-                if ( DialogSec::choiceSelectedFileNotFound( nullptr, (*i)->text(0) ) == false ) {
-                    proceed = false;
-                    break;
+    // check that the format has been set
+    const FormatOps::LogsFormat& lf = this->craplog.getAccessLogsFormat( this->craplog.getCurrentWSID() );
+    if ( lf.string.size() == 0 ) {
+        // format string not set
+        proceed = false;
+        warn
+    } else if ( lf.fields.size() == 0 ) {
+        // no field, useless to parse
+        proceed = false;
+    } else if ( lf.separators.size() == 0 && lf.fields.size() > 1 ) {
+        // no separator, but more than one field
+        proceed = false;
+    }
+
+    if ( proceed == true ) {
+        // take actions on Craplog's start
+        this->craplogStarted();
+
+        // feed craplog with the checked files
+        QTreeWidgetItemIterator i(this->ui->listLogFiles);
+        while ( *i ) {
+            if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
+                // tell Craplog to set this file as selected
+                if ( this->craplog.setLogFileSelected( (*i)->text(0) ) == false ) {
+                    // this shouldn't be, but...
+                    if ( DialogSec::choiceSelectedFileNotFound( nullptr, (*i)->text(0) ) == false ) {
+                        proceed = false;
+                        break;
+                    }
                 }
             }
+            ++i;
         }
-        ++i;
-    }
 
-    if ( proceed == true ) {
-        // check files to be used before to start
-        proceed = this->craplog.checkStuff();
-    } else {
-        this->craplogFinished();
-    }
+        if ( proceed == true ) {
+            // check files to be used before to start
+            proceed = this->craplog.checkStuff();
+        } else {
+            this->craplogFinished();
+        }
 
-    if ( proceed == true ) {
-        // periodically update perfs
-        this->craplog_timer = new QTimer(this);
-        connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
-        this->craplog_timer->start(250);
-        // run craplog as thread
-        this->craplog_timer_start = std::chrono::system_clock::now();
-        this->craplog_thread = std::thread( &Craplog::run, &this->craplog );
-    } else {
-        this->craplogFinished();
+        if ( proceed == true ) {
+            // periodically update perfs
+            this->craplog_timer = new QTimer(this);
+            connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
+            this->craplog_timer->start(250);
+            // run craplog as thread
+            this->craplog_timer_start = std::chrono::system_clock::now();
+            this->craplog_thread = std::thread( &Craplog::run, &this->craplog );
+        } else {
+            this->craplogFinished();
+        }
     }
 }
 
@@ -1959,14 +2024,15 @@ void MainWindow::on_button_ConfApache_Paths_SavePaths_clicked()
 void MainWindow::on_inLine_ConfApache_Formats_AccString_cursorPositionChanged(int arg1, int arg2)
 {
     if ( arg2 > 0 ) {
-        this->ui->button_ConfApache_Format_AccSave->setEnabled( true );
+        this->ui->button_ConfApache_Formats_AccSave->setEnabled( true );
     } else {
-        this->ui->button_ConfApache_Format_AccSave->setEnabled( false );
+        this->ui->button_ConfApache_Formats_AccSave->setEnabled( false );
     }
 }
-void MainWindow::on_button_ConfApache_Format_AccSave_clicked()
+void MainWindow::on_button_ConfApache_Formats_AccSave_clicked()
 {
     this->craplog.setApacheALF( this->ui->inLine_ConfApache_Formats_AccString->text().toStdString() );
+    this->ui->button_ConfApache_Formats_AccSave->setEnabled( false );
 }
 void MainWindow::on_button_ConfApache_Formats_AccSample_clicked()
 {
@@ -1981,14 +2047,15 @@ void MainWindow::on_button_ConfApache_Formats_AccHelp_clicked()
 void MainWindow::on_inLine_ConfApache_Formats_ErrString_cursorPositionChanged(int arg1, int arg2)
 {
     if ( arg2 > 0 ) {
-        this->ui->button_ConfApache_Format_ErrSave->setEnabled( true );
+        this->ui->button_ConfApache_Formats_ErrSave->setEnabled( true );
     } else {
-        this->ui->button_ConfApache_Format_ErrSave->setEnabled( false );
+        this->ui->button_ConfApache_Formats_ErrSave->setEnabled( false );
     }
 }
-void MainWindow::on_button_ConfApache_Format_ErrSave_clicked()
+void MainWindow::on_button_ConfApache_Formats_ErrSave_clicked()
 {
     this->craplog.setApacheELF( this->ui->inLine_ConfApache_Formats_ErrString->text().toStdString() );
+    this->ui->button_ConfApache_Formats_ErrSave->setEnabled( false );
 }
 void MainWindow::on_button_ConfApache_Formats_ErrSample_clicked()
 {
@@ -2024,7 +2091,7 @@ void MainWindow::on_checkBox_ConfApache_Warnlist_AccUsed_clicked(bool checked)
         this->APACHE_ID, this->ACCESS_LOGS,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
         checked );
-    if ( this->ui->checkBox_ConfApache_Warnlist_AccUsed->isChecked() == true ) {
+    if ( checked == true ) {
         this->ui->inLine_ConfApache_Warnlist_Acc->setEnabled( true );
         this->ui->list_ConfApache_Warnlist_Acc->setEnabled( true );
     } else {
@@ -2050,20 +2117,43 @@ void MainWindow::on_inLine_ConfApache_Warnlist_Acc_returnPressed()
 void MainWindow::on_button_ConfApache_Warnlist_AccAdd_clicked()
 {
     const QString& item = this->ui->inLine_ConfApache_Warnlist_Acc->text();
-    this->ui->list_ConfApache_Warnlist_Acc->addItem( item );
-    this->craplog.warnlistAdd(
-        this->APACHE_ID, this->ACCESS_LOGS,
-        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
-        item.toStdString() );
+    if ( this->ui->list_ConfApache_Warnlist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        // not in the list yet, append
+        this->ui->list_ConfApache_Warnlist_Acc->addItem( item );
+        this->craplog.warnlistAdd(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfApache_Warnlist_Acc->clearSelection();
+    this->ui->list_ConfApache_Warnlist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
     this->ui->inLine_ConfApache_Warnlist_Acc->clear();
 }
 
 void MainWindow::on_list_ConfApache_Warnlist_Acc_itemSelectionChanged()
 {
-    if ( this->ui->list_ConfApache_Warnlist_Acc->selectedItems().size() > 0 ) {
+    if ( this->ui->list_ConfApache_Warnlist_Acc->selectedItems().size() == 1 ) {
         this->ui->button_ConfApache_Warnlist_AccRemove->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_AccUp->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_AccDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfApache_Warnlist_Acc->selectedItems().at(0);
+        const int max = this->ui->list_ConfApache_Warnlist_Acc->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfApache_Warnlist_AccUp->setEnabled( false );
+            this->ui->button_ConfApache_Warnlist_AccDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfApache_Warnlist_Acc->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfApache_Warnlist_AccUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfApache_Warnlist_AccDown->setEnabled( false );
+                    }
+                }
+            }
+        }
     } else {
         this->ui->button_ConfApache_Warnlist_AccRemove->setEnabled( false );
         this->ui->button_ConfApache_Warnlist_AccUp->setEnabled( false );
@@ -2072,30 +2162,39 @@ void MainWindow::on_list_ConfApache_Warnlist_Acc_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Warnlist_AccRemove_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Warnlist_Acc->selectedItems() ) {
-        this->craplog.warnlistRemove(
-            this->APACHE_ID, this->ACCESS_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Warnlist_Acc->selectedItems().at(0);
+    this->craplog.warnlistRemove(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Warnlist_Acc_currentTextChanged( this->ui->box_ConfApache_Warnlist_Acc->currentText() );
 }
 void MainWindow::on_button_ConfApache_Warnlist_AccUp_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Warnlist_Acc->selectedItems() ) {
-        this->craplog.warnlistMoveUp(
-            this->APACHE_ID, this->ACCESS_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Warnlist_Acc->selectedItems().at(0);
+    const int i = this->craplog.warnlistMoveUp(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Warnlist_Acc_currentTextChanged( this->ui->box_ConfApache_Warnlist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Warnlist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Warnlist_Acc->setFocus();
 }
 void MainWindow::on_button_ConfApache_Warnlist_AccDown_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Warnlist_Acc->selectedItems() ) {
-        this->craplog.warnlistMoveDown(
-            this->APACHE_ID, this->ACCESS_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Warnlist_Acc->selectedItems().at(0);
+    const int i = this->craplog.warnlistMoveDown(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Warnlist_Acc_currentTextChanged( this->ui->box_ConfApache_Warnlist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Warnlist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Warnlist_Acc->setFocus();
 }
 
 
@@ -2122,7 +2221,7 @@ void MainWindow::on_checkBox_ConfApache_Warnlist_ErrUsed_clicked(bool checked)
         this->APACHE_ID, this->ERROR_LOGS,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
         checked );
-    if ( this->ui->checkBox_ConfApache_Warnlist_ErrUsed->isChecked() == true ) {
+    if ( checked == true ) {
         this->ui->inLine_ConfApache_Warnlist_Err->setEnabled( true );
         this->ui->list_ConfApache_Warnlist_Err->setEnabled( true );
     } else {
@@ -2148,11 +2247,16 @@ void MainWindow::on_inLine_ConfApache_Warnlist_Err_returnPressed()
 void MainWindow::on_button_ConfApache_Warnlist_ErrAdd_clicked()
 {
     const QString& item = this->ui->inLine_ConfApache_Warnlist_Err->text();
-    this->ui->list_ConfApache_Warnlist_Err->addItem( item );
-    this->craplog.warnlistAdd(
-        this->APACHE_ID, this->ERROR_LOGS,
-        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
-        item.toStdString() );
+    if ( this->ui->list_ConfApache_Warnlist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        this->ui->list_ConfApache_Warnlist_Err->addItem( item );
+        this->craplog.warnlistAdd(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfApache_Warnlist_Err->clearSelection();
+    this->ui->list_ConfApache_Warnlist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
     this->ui->inLine_ConfApache_Warnlist_Err->clear();
 }
 
@@ -2162,6 +2266,23 @@ void MainWindow::on_list_ConfApache_Warnlist_Err_itemSelectionChanged()
         this->ui->button_ConfApache_Warnlist_ErrRemove->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_ErrUp->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_ErrDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfApache_Warnlist_Err->selectedItems().at(0);
+        const int max = this->ui->list_ConfApache_Warnlist_Err->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfApache_Warnlist_ErrUp->setEnabled( false );
+            this->ui->button_ConfApache_Warnlist_ErrDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfApache_Warnlist_Err->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfApache_Warnlist_ErrUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfApache_Warnlist_ErrDown->setEnabled( false );
+                    }
+                }
+            }
+        }
     } else {
         this->ui->button_ConfApache_Warnlist_ErrRemove->setEnabled( false );
         this->ui->button_ConfApache_Warnlist_ErrUp->setEnabled( false );
@@ -2170,30 +2291,39 @@ void MainWindow::on_list_ConfApache_Warnlist_Err_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Warnlist_ErrRemove_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Warnlist_Err->selectedItems() ) {
-        this->craplog.warnlistRemove(
-            this->APACHE_ID, this->ERROR_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Warnlist_Err->selectedItems().at(0);
+    this->craplog.warnlistRemove(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Warnlist_Err_currentTextChanged( this->ui->box_ConfApache_Warnlist_Err->currentText() );
 }
 void MainWindow::on_button_ConfApache_Warnlist_ErrUp_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Warnlist_Err->selectedItems() ) {
-        this->craplog.warnlistMoveUp(
-            this->APACHE_ID, this->ERROR_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Warnlist_Err->selectedItems().at(0);
+    int i = this->craplog.warnlistMoveUp(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Warnlist_Err_currentTextChanged( this->ui->box_ConfApache_Warnlist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Warnlist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Warnlist_Err->setFocus();
 }
 void MainWindow::on_button_ConfApache_Warnlist_ErrDown_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Warnlist_Err->selectedItems() ) {
-        this->craplog.warnlistMoveDown(
-            this->APACHE_ID, this->ERROR_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Warnlist_Err->selectedItems().at(0);
+    int i = this->craplog.warnlistMoveDown(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Warnlist_Err_currentTextChanged( this->ui->box_ConfApache_Warnlist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Warnlist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Warnlist_Err->setFocus();
 }
 
 
@@ -2221,7 +2351,7 @@ void MainWindow::on_checkBox_ConfApache_Blacklist_AccUsed_clicked(bool checked)
         this->APACHE_ID, this->ACCESS_LOGS,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
         checked );
-    if ( this->ui->checkBox_ConfApache_Blacklist_AccUsed->isChecked() == true ) {
+    if ( checked == true ) {
         this->ui->inLine_ConfApache_Blacklist_Acc->setEnabled( true );
         this->ui->list_ConfApache_Blacklist_Acc->setEnabled( true );
     } else {
@@ -2247,20 +2377,43 @@ void MainWindow::on_inLine_ConfApache_Blacklist_Acc_returnPressed()
 void MainWindow::on_button_ConfApache_Blacklist_AccAdd_clicked()
 {
     const QString& item = this->ui->inLine_ConfApache_Blacklist_Acc->text();
-    this->ui->list_ConfApache_Blacklist_Acc->addItem( item );
-    this->craplog.blacklistAdd(
-        this->APACHE_ID, this->ACCESS_LOGS,
-        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
-        item.toStdString() );
+    if ( this->ui->list_ConfApache_Blacklist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        // not in the list yet, append
+        this->ui->list_ConfApache_Blacklist_Acc->addItem( item );
+        this->craplog.blacklistAdd(
+            this->APACHE_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfApache_Blacklist_Acc->clearSelection();
+    this->ui->list_ConfApache_Blacklist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
     this->ui->inLine_ConfApache_Blacklist_Acc->clear();
 }
 
 void MainWindow::on_list_ConfApache_Blacklist_Acc_itemSelectionChanged()
 {
-    if ( this->ui->list_ConfApache_Blacklist_Acc->selectedItems().size() > 0 ) {
+    if ( this->ui->list_ConfApache_Blacklist_Acc->selectedItems().size() == 1 ) {
         this->ui->button_ConfApache_Blacklist_AccRemove->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_AccUp->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_AccDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfApache_Blacklist_Acc->selectedItems().at(0);
+        const int max = this->ui->list_ConfApache_Blacklist_Acc->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfApache_Blacklist_AccUp->setEnabled( false );
+            this->ui->button_ConfApache_Blacklist_AccDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfApache_Blacklist_Acc->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfApache_Blacklist_AccUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfApache_Blacklist_AccDown->setEnabled( false );
+                    }
+                }
+            }
+        }
     } else {
         this->ui->button_ConfApache_Blacklist_AccRemove->setEnabled( false );
         this->ui->button_ConfApache_Blacklist_AccUp->setEnabled( false );
@@ -2269,30 +2422,39 @@ void MainWindow::on_list_ConfApache_Blacklist_Acc_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Blacklist_AccRemove_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Blacklist_Acc->selectedItems() ) {
-        this->craplog.blacklistRemove(
-            this->APACHE_ID, this->ACCESS_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Blacklist_Acc->selectedItems().at(0);
+    this->craplog.blacklistRemove(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Blacklist_Acc_currentTextChanged( this->ui->box_ConfApache_Blacklist_Acc->currentText() );
 }
 void MainWindow::on_button_ConfApache_Blacklist_AccUp_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Blacklist_Acc->selectedItems() ) {
-        this->craplog.blacklistMoveUp(
-            this->APACHE_ID, this->ACCESS_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Blacklist_Acc->selectedItems().at(0);
+    const int i = this->craplog.blacklistMoveUp(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Blacklist_Acc_currentTextChanged( this->ui->box_ConfApache_Blacklist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Blacklist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Blacklist_Acc->setFocus();
 }
 void MainWindow::on_button_ConfApache_Blacklist_AccDown_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Blacklist_Acc->selectedItems() ) {
-        this->craplog.blacklistMoveDown(
-            this->APACHE_ID, this->ACCESS_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Blacklist_Acc->selectedItems().at(0);
+    const int i = this->craplog.blacklistMoveDown(
+        this->APACHE_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Blacklist_Acc_currentTextChanged( this->ui->box_ConfApache_Blacklist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Blacklist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Blacklist_Acc->setFocus();
 }
 
 
@@ -2319,7 +2481,7 @@ void MainWindow::on_checkBox_ConfApache_Blacklist_ErrUsed_clicked(bool checked)
         this->APACHE_ID, this->ERROR_LOGS,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
         checked );
-    if ( this->ui->checkBox_ConfApache_Blacklist_ErrUsed->isChecked() == true ) {
+    if ( checked == true ) {
         this->ui->inLine_ConfApache_Blacklist_Err->setEnabled( true );
         this->ui->list_ConfApache_Blacklist_Err->setEnabled( true );
     } else {
@@ -2345,11 +2507,16 @@ void MainWindow::on_inLine_ConfApache_Blacklist_Err_returnPressed()
 void MainWindow::on_button_ConfApache_Blacklist_ErrAdd_clicked()
 {
     const QString& item = this->ui->inLine_ConfApache_Blacklist_Err->text();
-    this->ui->list_ConfApache_Blacklist_Err->addItem( item );
-    this->craplog.blacklistAdd(
-        this->APACHE_ID, this->ERROR_LOGS,
-        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
-        item.toStdString() );
+    if ( this->ui->list_ConfApache_Blacklist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        this->ui->list_ConfApache_Blacklist_Err->addItem( item );
+        this->craplog.blacklistAdd(
+            this->APACHE_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfApache_Blacklist_Err->clearSelection();
+    this->ui->list_ConfApache_Blacklist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
     this->ui->inLine_ConfApache_Blacklist_Err->clear();
 }
 
@@ -2359,6 +2526,23 @@ void MainWindow::on_list_ConfApache_Blacklist_Err_itemSelectionChanged()
         this->ui->button_ConfApache_Blacklist_ErrRemove->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_ErrUp->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_ErrDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfApache_Blacklist_Err->selectedItems().at(0);
+        const int max = this->ui->list_ConfApache_Blacklist_Err->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfApache_Blacklist_ErrUp->setEnabled( false );
+            this->ui->button_ConfApache_Blacklist_ErrDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfApache_Blacklist_Err->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfApache_Blacklist_ErrUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfApache_Blacklist_ErrDown->setEnabled( false );
+                    }
+                }
+            }
+        }
     } else {
         this->ui->button_ConfApache_Blacklist_ErrRemove->setEnabled( false );
         this->ui->button_ConfApache_Blacklist_ErrUp->setEnabled( false );
@@ -2367,33 +2551,1381 @@ void MainWindow::on_list_ConfApache_Blacklist_Err_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Blacklist_ErrRemove_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Blacklist_Err->selectedItems() ) {
-        this->craplog.blacklistRemove(
-            this->APACHE_ID, this->ERROR_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Blacklist_Err->selectedItems().at(0);
+    this->craplog.blacklistRemove(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Blacklist_Err_currentTextChanged( this->ui->box_ConfApache_Blacklist_Err->currentText() );
 }
 void MainWindow::on_button_ConfApache_Blacklist_ErrUp_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Blacklist_Err->selectedItems() ) {
-        this->craplog.blacklistMoveUp(
-            this->APACHE_ID, this->ERROR_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Blacklist_Err->selectedItems().at(0);
+    int i = this->craplog.blacklistMoveUp(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Blacklist_Err_currentTextChanged( this->ui->box_ConfApache_Blacklist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Blacklist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Blacklist_Err->setFocus();
 }
 void MainWindow::on_button_ConfApache_Blacklist_ErrDown_clicked()
 {
-    for ( auto& item : this->ui->list_ConfApache_Blacklist_Err->selectedItems() ) {
-        this->craplog.blacklistMoveDown(
-            this->APACHE_ID, this->ERROR_LOGS,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
-            item->text().toStdString() );
-    }
+    const auto& item = this->ui->list_ConfApache_Blacklist_Err->selectedItems().at(0);
+    int i = this->craplog.blacklistMoveDown(
+        this->APACHE_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfApache_Blacklist_Err_currentTextChanged( this->ui->box_ConfApache_Blacklist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfApache_Blacklist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfApache_Blacklist_Err->setFocus();
 }
 
 
+////////////////
+//// NGINX ////
+// paths
+void MainWindow::on_checkBox_ConfNginx_Paths_Different_clicked(bool checked)
+{
+    if ( checked == true ) {
+        // enable the error logs path line
+        this->ui->label_ConfNginx_Paths_Access->setEnabled( true );
+        this->ui->label_ConfNginx_Paths_Error->setEnabled( true );
+        this->ui->inLine_ConfNginx_Paths_ErrPath->setEnabled( true );
+        this->ui->inLine_ConfNginx_Paths_ErrPath->setText( QString::fromStdString(
+            this->craplog.getLogsPath( this->NGINX_ID, this->ERROR_LOGS ) ) );
+        this->on_inLine_ConfNginx_Paths_ErrPath_textChanged(
+            this->ui->inLine_ConfNginx_Paths_ErrPath->text() );
+    } else {
+        // disable the error logs path line
+        this->ui->label_ConfNginx_Paths_Access->setEnabled( false );
+        this->ui->label_ConfNginx_Paths_Error->setEnabled( false );
+        this->ui->inLine_ConfNginx_Paths_ErrPath->setEnabled( false );
+        this->ui->icon_ConfNginx_Paths_ErrWrong->setVisible( false );
+        // set the error logs path equals to the access logs path
+        this->craplog.setLogsPath( this->NGINX_ID, this->ERROR_LOGS,
+            this->craplog.getLogsPath( this->NGINX_ID, this->ACCESS_LOGS ) );
+    }
+}
+
+void MainWindow::on_inLine_ConfNginx_Paths_AccPath_textChanged(const QString &arg1)
+{
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
+        this->ui->icon_ConfNginx_Paths_AccWrong->setVisible( false );
+        if ( this->ui->icon_ConfNginx_Paths_ErrWrong->isVisible() == false ) {
+            this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( true );
+        } else {
+            this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( false );
+        }
+    } else {
+        this->ui->icon_ConfNginx_Paths_AccWrong->setVisible( true );
+        this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( false );
+    }
+    this->ui->inLine_ConfNginx_Paths_AccPath->setText( QString::fromStdString( path ) );
+}
+
+void MainWindow::on_inLine_ConfNginx_Paths_ErrPath_textChanged(const QString &arg1)
+{
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
+        this->ui->icon_ConfNginx_Paths_ErrWrong->setVisible( false );
+        if ( this->ui->icon_ConfNginx_Paths_AccWrong->isVisible() == false ) {
+            this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( true );
+        } else {
+            this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( false );
+        }
+    } else {
+        this->ui->icon_ConfNginx_Paths_ErrWrong->setVisible( true );
+        this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( false );
+    }
+    this->ui->inLine_ConfNginx_Paths_ErrPath->setText( QString::fromStdString( path ) );
+}
+
+void MainWindow::on_button_ConfNginx_Paths_SavePaths_clicked()
+{
+    if ( this->ui->icon_ConfNginx_Paths_ErrWrong->isVisible() == false
+      && this->ui->icon_ConfNginx_Paths_AccWrong->isVisible() == false ) {
+        // set the paths
+        std::string path = StringOps::strip( this->ui->inLine_ConfNginx_Paths_AccPath->text().toStdString() );
+        if ( StringOps::endsWith( path, "/" ) ) {
+            path = StringOps::rstrip( path, "/" );
+        }
+        this->craplog.setLogsPath( this->NGINX_ID, this->ACCESS_LOGS, path );
+        // check if the logs path is different or not
+        if ( this->ui->checkBox_ConfNginx_Paths_Different->isChecked() == true ) {
+            // handle the error logs path too
+            path = StringOps::strip( this->ui->inLine_ConfNginx_Paths_ErrPath->text().toStdString() );
+            if ( StringOps::endsWith( path, "/" ) ) {
+                path = StringOps::rstrip( path, "/" );
+            }
+        }
+        this->craplog.setLogsPath( this->NGINX_ID, this->ERROR_LOGS, path );
+    }
+    this->ui->button_ConfNginx_Paths_SavePaths->setEnabled( false );
+}
+
+// formats
+void MainWindow::on_inLine_ConfNginx_Formats_AccString_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfNginx_Formats_AccSave->setEnabled( true );
+    } else {
+        this->ui->button_ConfNginx_Formats_AccSave->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfNginx_Formats_AccSave_clicked()
+{
+    this->craplog.setNginxALF( this->ui->inLine_ConfNginx_Formats_AccString->text().toStdString() );
+    this->ui->button_ConfNginx_Formats_AccSave->setEnabled( false );
+}
+void MainWindow::on_button_ConfNginx_Formats_AccSample_clicked()
+{
+    this->ui->preview_ConfNginx_Formats_AccSample->setText(
+        this->craplog.getLogsFormatSample( this->NGINX_ID, this->ACCESS_LOGS ) );
+}
+void MainWindow::on_button_ConfNginx_Formats_AccHelp_clicked()
+{
+    // !!! 2 COMPLETE !!!
+}
+
+void MainWindow::on_inLine_ConfNginx_Formats_ErrString_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfNginx_Formats_ErrSave->setEnabled( true );
+    } else {
+        this->ui->button_ConfNginx_Formats_ErrSave->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfNginx_Formats_ErrSave_clicked()
+{
+    this->craplog.setNginxELF( this->ui->inLine_ConfNginx_Formats_ErrString->text().toStdString() );
+    this->ui->button_ConfNginx_Formats_ErrSave->setEnabled( false );
+}
+void MainWindow::on_button_ConfNginx_Formats_ErrSample_clicked()
+{
+    this->ui->preview_ConfNginx_Formats_ErrSample->setText(
+        this->craplog.getLogsFormatSample( this->NGINX_ID, this->ERROR_LOGS ) );
+}
+void MainWindow::on_button_ConfNginx_Formats_ErrHelp_clicked()
+{
+    // !!! 2 COMPLETE !!!
+}
+
+// warnlists
+void MainWindow::on_box_ConfNginx_Warnlist_Acc_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfNginx_Warnlist_Acc->clear();
+    this->ui->list_ConfNginx_Warnlist_Acc->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getWarnlist(
+        this->NGINX_ID, this->ACCESS_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfNginx_Warnlist_Acc->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isWarnlistUsed(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Acc->currentText() ) );
+    this->ui->checkBox_ConfNginx_Warnlist_AccUsed->setChecked( used );
+    this->on_checkBox_ConfNginx_Warnlist_AccUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfNginx_Warnlist_AccUsed_clicked(bool checked)
+{
+    this->craplog.setWarnlistUsed(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Acc->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfNginx_Warnlist_Acc->setEnabled( true );
+        this->ui->list_ConfNginx_Warnlist_Acc->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfNginx_Warnlist_Acc->clear();
+        this->ui->inLine_ConfNginx_Warnlist_Acc->setEnabled( false );
+        this->ui->list_ConfNginx_Warnlist_Acc->clearSelection();
+        this->ui->list_ConfNginx_Warnlist_Acc->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfNginx_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfNginx_Warnlist_AccAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfNginx_Warnlist_AccAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfNginx_Warnlist_Acc_returnPressed()
+{
+    this->on_button_ConfNginx_Warnlist_AccAdd_clicked();
+}
+void MainWindow::on_button_ConfNginx_Warnlist_AccAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfNginx_Warnlist_Acc->text();
+    if ( this->ui->list_ConfNginx_Warnlist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        // not in the list yet, append
+        this->ui->list_ConfNginx_Warnlist_Acc->addItem( item );
+        this->craplog.warnlistAdd(
+            this->NGINX_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Acc->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfNginx_Warnlist_Acc->clearSelection();
+    this->ui->list_ConfNginx_Warnlist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfNginx_Warnlist_Acc->clear();
+}
+
+void MainWindow::on_list_ConfNginx_Warnlist_Acc_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfNginx_Warnlist_Acc->selectedItems().size() == 1 ) {
+        this->ui->button_ConfNginx_Warnlist_AccRemove->setEnabled( true );
+        this->ui->button_ConfNginx_Warnlist_AccUp->setEnabled( true );
+        this->ui->button_ConfNginx_Warnlist_AccDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfNginx_Warnlist_Acc->selectedItems().at(0);
+        const int max = this->ui->list_ConfNginx_Warnlist_Acc->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfNginx_Warnlist_AccUp->setEnabled( false );
+            this->ui->button_ConfNginx_Warnlist_AccDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfNginx_Warnlist_Acc->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfNginx_Warnlist_AccUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfNginx_Warnlist_AccDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfNginx_Warnlist_AccRemove->setEnabled( false );
+        this->ui->button_ConfNginx_Warnlist_AccUp->setEnabled( false );
+        this->ui->button_ConfNginx_Warnlist_AccDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfNginx_Warnlist_AccRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Warnlist_Acc->selectedItems().at(0);
+    this->craplog.warnlistRemove(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Warnlist_Acc_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Acc->currentText() );
+}
+void MainWindow::on_button_ConfNginx_Warnlist_AccUp_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Warnlist_Acc->selectedItems().at(0);
+    const int i = this->craplog.warnlistMoveUp(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Warnlist_Acc_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Warnlist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Warnlist_Acc->setFocus();
+}
+void MainWindow::on_button_ConfNginx_Warnlist_AccDown_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Warnlist_Acc->selectedItems().at(0);
+    const int i = this->craplog.warnlistMoveDown(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Warnlist_Acc_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Warnlist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Warnlist_Acc->setFocus();
+}
+
+
+void MainWindow::on_box_ConfNginx_Warnlist_Err_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfNginx_Warnlist_Err->clear();
+    this->ui->list_ConfNginx_Warnlist_Err->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getWarnlist(
+        this->NGINX_ID, this->ERROR_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfNginx_Warnlist_Err->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isWarnlistUsed(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Err->currentText() ) );
+    this->ui->checkBox_ConfNginx_Warnlist_ErrUsed->setChecked( used );
+    this->on_checkBox_ConfNginx_Warnlist_ErrUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfNginx_Warnlist_ErrUsed_clicked(bool checked)
+{
+    this->craplog.setWarnlistUsed(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Err->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfNginx_Warnlist_Err->setEnabled( true );
+        this->ui->list_ConfNginx_Warnlist_Err->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfNginx_Warnlist_Err->clear();
+        this->ui->inLine_ConfNginx_Warnlist_Err->setEnabled( false );
+        this->ui->list_ConfNginx_Warnlist_Err->clearSelection();
+        this->ui->list_ConfNginx_Warnlist_Err->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfNginx_Warnlist_Err_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfNginx_Warnlist_ErrAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfNginx_Warnlist_ErrAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfNginx_Warnlist_Err_returnPressed()
+{
+    this->on_button_ConfNginx_Warnlist_ErrAdd_clicked();
+}
+void MainWindow::on_button_ConfNginx_Warnlist_ErrAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfNginx_Warnlist_Err->text();
+    if ( this->ui->list_ConfNginx_Warnlist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        this->ui->list_ConfNginx_Warnlist_Err->addItem( item );
+        this->craplog.warnlistAdd(
+            this->NGINX_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Err->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfNginx_Warnlist_Err->clearSelection();
+    this->ui->list_ConfNginx_Warnlist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfNginx_Warnlist_Err->clear();
+}
+
+void MainWindow::on_list_ConfNginx_Warnlist_Err_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfNginx_Warnlist_Err->selectedItems().size() > 0 ) {
+        this->ui->button_ConfNginx_Warnlist_ErrRemove->setEnabled( true );
+        this->ui->button_ConfNginx_Warnlist_ErrUp->setEnabled( true );
+        this->ui->button_ConfNginx_Warnlist_ErrDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfNginx_Warnlist_Err->selectedItems().at(0);
+        const int max = this->ui->list_ConfNginx_Warnlist_Err->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfNginx_Warnlist_ErrUp->setEnabled( false );
+            this->ui->button_ConfNginx_Warnlist_ErrDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfNginx_Warnlist_Err->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfNginx_Warnlist_ErrUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfNginx_Warnlist_ErrDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfNginx_Warnlist_ErrRemove->setEnabled( false );
+        this->ui->button_ConfNginx_Warnlist_ErrUp->setEnabled( false );
+        this->ui->button_ConfNginx_Warnlist_ErrDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfNginx_Warnlist_ErrRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Warnlist_Err->selectedItems().at(0);
+    this->craplog.warnlistRemove(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Warnlist_Err_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Err->currentText() );
+}
+void MainWindow::on_button_ConfNginx_Warnlist_ErrUp_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Warnlist_Err->selectedItems().at(0);
+    int i = this->craplog.warnlistMoveUp(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Warnlist_Err_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Warnlist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Warnlist_Err->setFocus();
+}
+void MainWindow::on_button_ConfNginx_Warnlist_ErrDown_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Warnlist_Err->selectedItems().at(0);
+    int i = this->craplog.warnlistMoveDown(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Warnlist_Err_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Warnlist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Warnlist_Err->setFocus();
+}
+
+
+// blacklist
+void MainWindow::on_box_ConfNginx_Blacklist_Acc_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfNginx_Blacklist_Acc->clear();
+    this->ui->list_ConfNginx_Blacklist_Acc->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getBlacklist(
+        this->NGINX_ID, this->ACCESS_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfNginx_Blacklist_Acc->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isBlacklistUsed(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Acc->currentText() ) );
+    this->ui->checkBox_ConfNginx_Blacklist_AccUsed->setChecked( used );
+    this->on_checkBox_ConfNginx_Blacklist_AccUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfNginx_Blacklist_AccUsed_clicked(bool checked)
+{
+    this->craplog.setBlacklistUsed(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Acc->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfNginx_Blacklist_Acc->setEnabled( true );
+        this->ui->list_ConfNginx_Blacklist_Acc->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfNginx_Blacklist_Acc->clear();
+        this->ui->inLine_ConfNginx_Blacklist_Acc->setEnabled( false );
+        this->ui->list_ConfNginx_Blacklist_Acc->clearSelection();
+        this->ui->list_ConfNginx_Blacklist_Acc->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfNginx_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfNginx_Blacklist_AccAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfNginx_Blacklist_AccAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfNginx_Blacklist_Acc_returnPressed()
+{
+    this->on_button_ConfNginx_Blacklist_AccAdd_clicked();
+}
+void MainWindow::on_button_ConfNginx_Blacklist_AccAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfNginx_Blacklist_Acc->text();
+    if ( this->ui->list_ConfNginx_Blacklist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        // not in the list yet, append
+        this->ui->list_ConfNginx_Blacklist_Acc->addItem( item );
+        this->craplog.blacklistAdd(
+            this->NGINX_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Acc->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfNginx_Blacklist_Acc->clearSelection();
+    this->ui->list_ConfNginx_Blacklist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfNginx_Blacklist_Acc->clear();
+}
+
+void MainWindow::on_list_ConfNginx_Blacklist_Acc_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfNginx_Blacklist_Acc->selectedItems().size() == 1 ) {
+        this->ui->button_ConfNginx_Blacklist_AccRemove->setEnabled( true );
+        this->ui->button_ConfNginx_Blacklist_AccUp->setEnabled( true );
+        this->ui->button_ConfNginx_Blacklist_AccDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfNginx_Blacklist_Acc->selectedItems().at(0);
+        const int max = this->ui->list_ConfNginx_Blacklist_Acc->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfNginx_Blacklist_AccUp->setEnabled( false );
+            this->ui->button_ConfNginx_Blacklist_AccDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfNginx_Blacklist_Acc->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfNginx_Blacklist_AccUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfNginx_Blacklist_AccDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfNginx_Blacklist_AccRemove->setEnabled( false );
+        this->ui->button_ConfNginx_Blacklist_AccUp->setEnabled( false );
+        this->ui->button_ConfNginx_Blacklist_AccDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfNginx_Blacklist_AccRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Blacklist_Acc->selectedItems().at(0);
+    this->craplog.blacklistRemove(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Blacklist_Acc_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Acc->currentText() );
+}
+void MainWindow::on_button_ConfNginx_Blacklist_AccUp_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Blacklist_Acc->selectedItems().at(0);
+    const int i = this->craplog.blacklistMoveUp(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Blacklist_Acc_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Blacklist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Blacklist_Acc->setFocus();
+}
+void MainWindow::on_button_ConfNginx_Blacklist_AccDown_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Blacklist_Acc->selectedItems().at(0);
+    const int i = this->craplog.blacklistMoveDown(
+        this->NGINX_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Blacklist_Acc_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Blacklist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Blacklist_Acc->setFocus();
+}
+
+
+void MainWindow::on_box_ConfNginx_Blacklist_Err_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfNginx_Blacklist_Err->clear();
+    this->ui->list_ConfNginx_Blacklist_Err->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getBlacklist(
+        this->NGINX_ID, this->ERROR_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfNginx_Blacklist_Err->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isBlacklistUsed(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Err->currentText() ) );
+    this->ui->checkBox_ConfNginx_Blacklist_ErrUsed->setChecked( used );
+    this->on_checkBox_ConfNginx_Blacklist_ErrUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfNginx_Blacklist_ErrUsed_clicked(bool checked)
+{
+    this->craplog.setBlacklistUsed(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Err->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfNginx_Blacklist_Err->setEnabled( true );
+        this->ui->list_ConfNginx_Blacklist_Err->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfNginx_Blacklist_Err->clear();
+        this->ui->inLine_ConfNginx_Blacklist_Err->setEnabled( false );
+        this->ui->list_ConfNginx_Blacklist_Err->clearSelection();
+        this->ui->list_ConfNginx_Blacklist_Err->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfNginx_Blacklist_Err_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfNginx_Blacklist_ErrAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfNginx_Blacklist_ErrAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfNginx_Blacklist_Err_returnPressed()
+{
+    this->on_button_ConfNginx_Blacklist_ErrAdd_clicked();
+}
+void MainWindow::on_button_ConfNginx_Blacklist_ErrAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfNginx_Blacklist_Err->text();
+    if ( this->ui->list_ConfNginx_Blacklist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        this->ui->list_ConfNginx_Blacklist_Err->addItem( item );
+        this->craplog.blacklistAdd(
+            this->NGINX_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Err->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfNginx_Blacklist_Err->clearSelection();
+    this->ui->list_ConfNginx_Blacklist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfNginx_Blacklist_Err->clear();
+}
+
+void MainWindow::on_list_ConfNginx_Blacklist_Err_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfNginx_Blacklist_Err->selectedItems().size() > 0 ) {
+        this->ui->button_ConfNginx_Blacklist_ErrRemove->setEnabled( true );
+        this->ui->button_ConfNginx_Blacklist_ErrUp->setEnabled( true );
+        this->ui->button_ConfNginx_Blacklist_ErrDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfNginx_Blacklist_Err->selectedItems().at(0);
+        const int max = this->ui->list_ConfNginx_Blacklist_Err->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfNginx_Blacklist_ErrUp->setEnabled( false );
+            this->ui->button_ConfNginx_Blacklist_ErrDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfNginx_Blacklist_Err->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfNginx_Blacklist_ErrUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfNginx_Blacklist_ErrDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfNginx_Blacklist_ErrRemove->setEnabled( false );
+        this->ui->button_ConfNginx_Blacklist_ErrUp->setEnabled( false );
+        this->ui->button_ConfNginx_Blacklist_ErrDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfNginx_Blacklist_ErrRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Blacklist_Err->selectedItems().at(0);
+    this->craplog.blacklistRemove(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Blacklist_Err_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Err->currentText() );
+}
+void MainWindow::on_button_ConfNginx_Blacklist_ErrUp_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Blacklist_Err->selectedItems().at(0);
+    int i = this->craplog.blacklistMoveUp(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Blacklist_Err_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Blacklist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Blacklist_Err->setFocus();
+}
+void MainWindow::on_button_ConfNginx_Blacklist_ErrDown_clicked()
+{
+    const auto& item = this->ui->list_ConfNginx_Blacklist_Err->selectedItems().at(0);
+    int i = this->craplog.blacklistMoveDown(
+        this->NGINX_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfNginx_Blacklist_Err_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfNginx_Blacklist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfNginx_Blacklist_Err->setFocus();
+}
+
+
+////////////////
+//// IIS ////
+// paths
+void MainWindow::on_checkBox_ConfIis_Paths_Different_clicked(bool checked)
+{
+    if ( checked == true ) {
+        // enable the error logs path line
+        this->ui->label_ConfIis_Paths_Access->setEnabled( true );
+        this->ui->label_ConfIis_Paths_Error->setEnabled( true );
+        this->ui->inLine_ConfIis_Paths_ErrPath->setEnabled( true );
+        this->ui->inLine_ConfIis_Paths_ErrPath->setText( QString::fromStdString(
+            this->craplog.getLogsPath( this->IIS_ID, this->ERROR_LOGS ) ) );
+        this->on_inLine_ConfIis_Paths_ErrPath_textChanged(
+            this->ui->inLine_ConfIis_Paths_ErrPath->text() );
+    } else {
+        // disable the error logs path line
+        this->ui->label_ConfIis_Paths_Access->setEnabled( false );
+        this->ui->label_ConfIis_Paths_Error->setEnabled( false );
+        this->ui->inLine_ConfIis_Paths_ErrPath->setEnabled( false );
+        this->ui->icon_ConfIis_Paths_ErrWrong->setVisible( false );
+        // set the error logs path equals to the access logs path
+        this->craplog.setLogsPath( this->IIS_ID, this->ERROR_LOGS,
+            this->craplog.getLogsPath( this->IIS_ID, this->ACCESS_LOGS ) );
+    }
+}
+
+void MainWindow::on_inLine_ConfIis_Paths_AccPath_textChanged(const QString &arg1)
+{
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
+        this->ui->icon_ConfIis_Paths_AccWrong->setVisible( false );
+        if ( this->ui->icon_ConfIis_Paths_ErrWrong->isVisible() == false ) {
+            this->ui->button_ConfIis_Paths_SavePaths->setEnabled( true );
+        } else {
+            this->ui->button_ConfIis_Paths_SavePaths->setEnabled( false );
+        }
+    } else {
+        this->ui->icon_ConfIis_Paths_AccWrong->setVisible( true );
+        this->ui->button_ConfIis_Paths_SavePaths->setEnabled( false );
+    }
+    this->ui->inLine_ConfIis_Paths_AccPath->setText( QString::fromStdString( path ) );
+}
+
+void MainWindow::on_inLine_ConfIis_Paths_ErrPath_textChanged(const QString &arg1)
+{
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
+        this->ui->icon_ConfIis_Paths_ErrWrong->setVisible( false );
+        if ( this->ui->icon_ConfIis_Paths_AccWrong->isVisible() == false ) {
+            this->ui->button_ConfIis_Paths_SavePaths->setEnabled( true );
+        } else {
+            this->ui->button_ConfIis_Paths_SavePaths->setEnabled( false );
+        }
+    } else {
+        this->ui->icon_ConfIis_Paths_ErrWrong->setVisible( true );
+        this->ui->button_ConfIis_Paths_SavePaths->setEnabled( false );
+    }
+    this->ui->inLine_ConfIis_Paths_ErrPath->setText( QString::fromStdString( path ) );
+}
+
+void MainWindow::on_button_ConfIis_Paths_SavePaths_clicked()
+{
+    if ( this->ui->icon_ConfIis_Paths_ErrWrong->isVisible() == false
+      && this->ui->icon_ConfIis_Paths_AccWrong->isVisible() == false ) {
+        // set the paths
+        std::string path = StringOps::strip( this->ui->inLine_ConfIis_Paths_AccPath->text().toStdString() );
+        if ( StringOps::endsWith( path, "/" ) ) {
+            path = StringOps::rstrip( path, "/" );
+        }
+        this->craplog.setLogsPath( this->IIS_ID, this->ACCESS_LOGS, path );
+        // check if the logs path is different or not
+        if ( this->ui->checkBox_ConfIis_Paths_Different->isChecked() == true ) {
+            // handle the error logs path too
+            path = StringOps::strip( this->ui->inLine_ConfIis_Paths_ErrPath->text().toStdString() );
+            if ( StringOps::endsWith( path, "/" ) ) {
+                path = StringOps::rstrip( path, "/" );
+            }
+        }
+        this->craplog.setLogsPath( this->IIS_ID, this->ERROR_LOGS, path );
+    }
+    this->ui->button_ConfIis_Paths_SavePaths->setEnabled( false );
+}
+
+// formats
+const int MainWindow::getIisLogsModule()
+{
+    int module = 0;
+    if ( this->ui->radio_ConfIis_Formats_NCSA->isChecked() == true ) {
+        module = 1;
+    } else if ( this->ui->radio_ConfIis_Formats_IIS->isChecked() == true ) {
+        module = 2;
+    }
+    return module;
+}
+
+void MainWindow::on_radio_ConfIis_Formats_W3C_toggled(bool checked)
+{
+    if ( checked == true ) {
+        this->craplog.setIisALF( "", 0 );
+        this->ui->inLine_ConfIis_Formats_AccString->clear();
+        this->ui->inLine_ConfIis_Formats_AccString->setEnabled( true );
+        this->ui->inLine_ConfIis_Formats_AccString->setFocus();
+    }
+}
+void MainWindow::on_radio_ConfIis_Formats_NCSA_toggled(bool checked)
+{
+    if ( checked == true ) {
+        this->craplog.setIisALF( "c-ip s-sitename s-computername [date:time] sc-status sc-bytes", 1 );
+        this->ui->inLine_ConfIis_Formats_AccString->clear();
+        this->ui->inLine_ConfIis_Formats_AccString->setText( QString::fromStdString( this->craplog.getAccessLogsFormatString( this->IIS_ID ) ) );
+        this->ui->inLine_ConfIis_Formats_AccString->setEnabled( false );
+        this->ui->button_ConfIis_Formats_AccSave->setEnabled( false );
+    }
+}
+void MainWindow::on_radio_ConfIis_Formats_IIS_toggled(bool checked)
+{
+    if ( checked == true ) {
+        this->craplog.setIisALF( "c-ip, cs-username, date, time, s-sitename, s-computername, s-ip, time-taken, cs-bytes, sc-bytes, sc-status, sc-win32-status, cs-method, cs-uri-stem, cs-uri-query,", 2 );
+        this->ui->inLine_ConfIis_Formats_AccString->clear();
+        this->ui->inLine_ConfIis_Formats_AccString->setText( QString::fromStdString( this->craplog.getAccessLogsFormatString( this->IIS_ID ) ) );
+        this->ui->inLine_ConfIis_Formats_AccString->setEnabled( false );
+        this->ui->button_ConfIis_Formats_AccSave->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfIis_Formats_AccString_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfIis_Formats_AccSave->setEnabled( true );
+    } else {
+        this->ui->button_ConfIis_Formats_AccSave->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfIis_Formats_AccSave_clicked()
+{
+    this->craplog.setIisALF( StringOps::strip( this->ui->inLine_ConfIis_Formats_AccString->text().toStdString() ), this->getIisLogsModule() );
+    this->ui->button_ConfIis_Formats_AccSave->setEnabled( false );
+}
+void MainWindow::on_button_ConfIis_Formats_AccSample_clicked()
+{
+    this->ui->preview_ConfIis_Formats_AccSample->setText(
+        this->craplog.getLogsFormatSample( this->IIS_ID, this->ACCESS_LOGS ) );
+}
+void MainWindow::on_button_ConfIis_Formats_AccHelp_clicked()
+{
+    // !!! 2 COMPLETE !!!
+}
+
+void MainWindow::on_inLine_ConfIis_Formats_ErrString_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfIis_Formats_ErrSave->setEnabled( true );
+    } else {
+        this->ui->button_ConfIis_Formats_ErrSave->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfIis_Formats_ErrSave_clicked()
+{
+    /*this->craplog.setIisELF( this->ui->inLine_ConfIis_Formats_ErrString->text().toStdString() );
+    this->ui->button_ConfIis_Formats_ErrSave->setEnabled( false );*/
+}
+void MainWindow::on_button_ConfIis_Formats_ErrSample_clicked()
+{
+    this->ui->preview_ConfIis_Formats_ErrSample->setText(
+        this->craplog.getLogsFormatSample( this->IIS_ID, this->ERROR_LOGS ) );
+}
+void MainWindow::on_button_ConfIis_Formats_ErrHelp_clicked()
+{
+    // !!! 2 COMPLETE !!!
+}
+
+// warnlists
+void MainWindow::on_box_ConfIis_Warnlist_Acc_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfIis_Warnlist_Acc->clear();
+    this->ui->list_ConfIis_Warnlist_Acc->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getWarnlist(
+        this->IIS_ID, this->ACCESS_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfIis_Warnlist_Acc->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isWarnlistUsed(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Acc->currentText() ) );
+    this->ui->checkBox_ConfIis_Warnlist_AccUsed->setChecked( used );
+    this->on_checkBox_ConfIis_Warnlist_AccUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfIis_Warnlist_AccUsed_clicked(bool checked)
+{
+    this->craplog.setWarnlistUsed(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Acc->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfIis_Warnlist_Acc->setEnabled( true );
+        this->ui->list_ConfIis_Warnlist_Acc->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfIis_Warnlist_Acc->clear();
+        this->ui->inLine_ConfIis_Warnlist_Acc->setEnabled( false );
+        this->ui->list_ConfIis_Warnlist_Acc->clearSelection();
+        this->ui->list_ConfIis_Warnlist_Acc->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfIis_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfIis_Warnlist_AccAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfIis_Warnlist_AccAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfIis_Warnlist_Acc_returnPressed()
+{
+    this->on_button_ConfIis_Warnlist_AccAdd_clicked();
+}
+void MainWindow::on_button_ConfIis_Warnlist_AccAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfIis_Warnlist_Acc->text();
+    if ( this->ui->list_ConfIis_Warnlist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        // not in the list yet, append
+        this->ui->list_ConfIis_Warnlist_Acc->addItem( item );
+        this->craplog.warnlistAdd(
+            this->IIS_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Acc->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfIis_Warnlist_Acc->clearSelection();
+    this->ui->list_ConfIis_Warnlist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfIis_Warnlist_Acc->clear();
+}
+
+void MainWindow::on_list_ConfIis_Warnlist_Acc_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfIis_Warnlist_Acc->selectedItems().size() == 1 ) {
+        this->ui->button_ConfIis_Warnlist_AccRemove->setEnabled( true );
+        this->ui->button_ConfIis_Warnlist_AccUp->setEnabled( true );
+        this->ui->button_ConfIis_Warnlist_AccDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfIis_Warnlist_Acc->selectedItems().at(0);
+        const int max = this->ui->list_ConfIis_Warnlist_Acc->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfIis_Warnlist_AccUp->setEnabled( false );
+            this->ui->button_ConfIis_Warnlist_AccDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfIis_Warnlist_Acc->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfIis_Warnlist_AccUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfIis_Warnlist_AccDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfIis_Warnlist_AccRemove->setEnabled( false );
+        this->ui->button_ConfIis_Warnlist_AccUp->setEnabled( false );
+        this->ui->button_ConfIis_Warnlist_AccDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfIis_Warnlist_AccRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Warnlist_Acc->selectedItems().at(0);
+    this->craplog.warnlistRemove(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Warnlist_Acc_currentTextChanged( this->ui->box_ConfIis_Warnlist_Acc->currentText() );
+}
+void MainWindow::on_button_ConfIis_Warnlist_AccUp_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Warnlist_Acc->selectedItems().at(0);
+    const int i = this->craplog.warnlistMoveUp(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Warnlist_Acc_currentTextChanged( this->ui->box_ConfIis_Warnlist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Warnlist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Warnlist_Acc->setFocus();
+}
+void MainWindow::on_button_ConfIis_Warnlist_AccDown_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Warnlist_Acc->selectedItems().at(0);
+    const int i = this->craplog.warnlistMoveDown(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Warnlist_Acc_currentTextChanged( this->ui->box_ConfIis_Warnlist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Warnlist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Warnlist_Acc->setFocus();
+}
+
+
+void MainWindow::on_box_ConfIis_Warnlist_Err_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfIis_Warnlist_Err->clear();
+    this->ui->list_ConfIis_Warnlist_Err->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getWarnlist(
+        this->IIS_ID, this->ERROR_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfIis_Warnlist_Err->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isWarnlistUsed(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Err->currentText() ) );
+    this->ui->checkBox_ConfIis_Warnlist_ErrUsed->setChecked( used );
+    this->on_checkBox_ConfIis_Warnlist_ErrUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfIis_Warnlist_ErrUsed_clicked(bool checked)
+{
+    this->craplog.setWarnlistUsed(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Err->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfIis_Warnlist_Err->setEnabled( true );
+        this->ui->list_ConfIis_Warnlist_Err->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfIis_Warnlist_Err->clear();
+        this->ui->inLine_ConfIis_Warnlist_Err->setEnabled( false );
+        this->ui->list_ConfIis_Warnlist_Err->clearSelection();
+        this->ui->list_ConfIis_Warnlist_Err->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfIis_Warnlist_Err_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfIis_Warnlist_ErrAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfIis_Warnlist_ErrAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfIis_Warnlist_Err_returnPressed()
+{
+    this->on_button_ConfIis_Warnlist_ErrAdd_clicked();
+}
+void MainWindow::on_button_ConfIis_Warnlist_ErrAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfIis_Warnlist_Err->text();
+    if ( this->ui->list_ConfIis_Warnlist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        this->ui->list_ConfIis_Warnlist_Err->addItem( item );
+        this->craplog.warnlistAdd(
+            this->IIS_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Err->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfIis_Warnlist_Err->clearSelection();
+    this->ui->list_ConfIis_Warnlist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfIis_Warnlist_Err->clear();
+}
+
+void MainWindow::on_list_ConfIis_Warnlist_Err_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfIis_Warnlist_Err->selectedItems().size() > 0 ) {
+        this->ui->button_ConfIis_Warnlist_ErrRemove->setEnabled( true );
+        this->ui->button_ConfIis_Warnlist_ErrUp->setEnabled( true );
+        this->ui->button_ConfIis_Warnlist_ErrDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfIis_Warnlist_Err->selectedItems().at(0);
+        const int max = this->ui->list_ConfIis_Warnlist_Err->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfIis_Warnlist_ErrUp->setEnabled( false );
+            this->ui->button_ConfIis_Warnlist_ErrDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfIis_Warnlist_Err->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfIis_Warnlist_ErrUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfIis_Warnlist_ErrDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfIis_Warnlist_ErrRemove->setEnabled( false );
+        this->ui->button_ConfIis_Warnlist_ErrUp->setEnabled( false );
+        this->ui->button_ConfIis_Warnlist_ErrDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfIis_Warnlist_ErrRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Warnlist_Err->selectedItems().at(0);
+    this->craplog.warnlistRemove(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Warnlist_Err_currentTextChanged( this->ui->box_ConfIis_Warnlist_Err->currentText() );
+}
+void MainWindow::on_button_ConfIis_Warnlist_ErrUp_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Warnlist_Err->selectedItems().at(0);
+    int i = this->craplog.warnlistMoveUp(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Warnlist_Err_currentTextChanged( this->ui->box_ConfIis_Warnlist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Warnlist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Warnlist_Err->setFocus();
+}
+void MainWindow::on_button_ConfIis_Warnlist_ErrDown_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Warnlist_Err->selectedItems().at(0);
+    int i = this->craplog.warnlistMoveDown(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Warnlist_Err_currentTextChanged( this->ui->box_ConfIis_Warnlist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Warnlist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Warnlist_Err->setFocus();
+}
+
+
+// blacklist
+void MainWindow::on_box_ConfIis_Blacklist_Acc_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfIis_Blacklist_Acc->clear();
+    this->ui->list_ConfIis_Blacklist_Acc->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getBlacklist(
+        this->IIS_ID, this->ACCESS_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfIis_Blacklist_Acc->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isBlacklistUsed(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Acc->currentText() ) );
+    this->ui->checkBox_ConfIis_Blacklist_AccUsed->setChecked( used );
+    this->on_checkBox_ConfIis_Blacklist_AccUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfIis_Blacklist_AccUsed_clicked(bool checked)
+{
+    this->craplog.setBlacklistUsed(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Acc->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfIis_Blacklist_Acc->setEnabled( true );
+        this->ui->list_ConfIis_Blacklist_Acc->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfIis_Blacklist_Acc->clear();
+        this->ui->inLine_ConfIis_Blacklist_Acc->setEnabled( false );
+        this->ui->list_ConfIis_Blacklist_Acc->clearSelection();
+        this->ui->list_ConfIis_Blacklist_Acc->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfIis_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfIis_Blacklist_AccAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfIis_Blacklist_AccAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfIis_Blacklist_Acc_returnPressed()
+{
+    this->on_button_ConfIis_Blacklist_AccAdd_clicked();
+}
+void MainWindow::on_button_ConfIis_Blacklist_AccAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfIis_Blacklist_Acc->text();
+    if ( this->ui->list_ConfIis_Blacklist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        // not in the list yet, append
+        this->ui->list_ConfIis_Blacklist_Acc->addItem( item );
+        this->craplog.blacklistAdd(
+            this->IIS_ID, this->ACCESS_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Acc->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfIis_Blacklist_Acc->clearSelection();
+    this->ui->list_ConfIis_Blacklist_Acc->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfIis_Blacklist_Acc->clear();
+}
+
+void MainWindow::on_list_ConfIis_Blacklist_Acc_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfIis_Blacklist_Acc->selectedItems().size() == 1 ) {
+        this->ui->button_ConfIis_Blacklist_AccRemove->setEnabled( true );
+        this->ui->button_ConfIis_Blacklist_AccUp->setEnabled( true );
+        this->ui->button_ConfIis_Blacklist_AccDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfIis_Blacklist_Acc->selectedItems().at(0);
+        const int max = this->ui->list_ConfIis_Blacklist_Acc->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfIis_Blacklist_AccUp->setEnabled( false );
+            this->ui->button_ConfIis_Blacklist_AccDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfIis_Blacklist_Acc->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfIis_Blacklist_AccUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfIis_Blacklist_AccDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfIis_Blacklist_AccRemove->setEnabled( false );
+        this->ui->button_ConfIis_Blacklist_AccUp->setEnabled( false );
+        this->ui->button_ConfIis_Blacklist_AccDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfIis_Blacklist_AccRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Blacklist_Acc->selectedItems().at(0);
+    this->craplog.blacklistRemove(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Blacklist_Acc_currentTextChanged( this->ui->box_ConfIis_Blacklist_Acc->currentText() );
+}
+void MainWindow::on_button_ConfIis_Blacklist_AccUp_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Blacklist_Acc->selectedItems().at(0);
+    const int i = this->craplog.blacklistMoveUp(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Blacklist_Acc_currentTextChanged( this->ui->box_ConfIis_Blacklist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Blacklist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Blacklist_Acc->setFocus();
+}
+void MainWindow::on_button_ConfIis_Blacklist_AccDown_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Blacklist_Acc->selectedItems().at(0);
+    const int i = this->craplog.blacklistMoveDown(
+        this->IIS_ID, this->ACCESS_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Acc->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Blacklist_Acc_currentTextChanged( this->ui->box_ConfIis_Blacklist_Acc->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Blacklist_Acc->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Blacklist_Acc->setFocus();
+}
+
+
+void MainWindow::on_box_ConfIis_Blacklist_Err_currentTextChanged(const QString &arg1)
+{
+    this->ui->inLine_ConfIis_Blacklist_Err->clear();
+    this->ui->list_ConfIis_Blacklist_Err->clear();
+    // update the list
+    const std::vector<std::string>& list = this->craplog.getBlacklist(
+        this->IIS_ID, this->ERROR_LOGS, this->crapview.getLogFieldID( arg1 ) );
+    for ( const std::string& item : list ) {
+        this->ui->list_ConfIis_Blacklist_Err->addItem( QString::fromStdString( item ) );
+    }
+    // check/uncheck the usage option
+    bool used = this->craplog.isBlacklistUsed(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Err->currentText() ) );
+    this->ui->checkBox_ConfIis_Blacklist_ErrUsed->setChecked( used );
+    this->on_checkBox_ConfIis_Blacklist_ErrUsed_clicked( used );
+}
+void MainWindow::on_checkBox_ConfIis_Blacklist_ErrUsed_clicked(bool checked)
+{
+    this->craplog.setBlacklistUsed(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Err->currentText() ),
+        checked );
+    if ( checked == true ) {
+        this->ui->inLine_ConfIis_Blacklist_Err->setEnabled( true );
+        this->ui->list_ConfIis_Blacklist_Err->setEnabled( true );
+    } else {
+        this->ui->inLine_ConfIis_Blacklist_Err->clear();
+        this->ui->inLine_ConfIis_Blacklist_Err->setEnabled( false );
+        this->ui->list_ConfIis_Blacklist_Err->clearSelection();
+        this->ui->list_ConfIis_Blacklist_Err->setEnabled( false );
+    }
+}
+
+void MainWindow::on_inLine_ConfIis_Blacklist_Err_cursorPositionChanged(int arg1, int arg2)
+{
+    if ( arg2 > 0 ) {
+        this->ui->button_ConfIis_Blacklist_ErrAdd->setEnabled( true );
+    } else {
+        this->ui->button_ConfIis_Blacklist_ErrAdd->setEnabled( false );
+    }
+}
+void MainWindow::on_inLine_ConfIis_Blacklist_Err_returnPressed()
+{
+    this->on_button_ConfIis_Blacklist_ErrAdd_clicked();
+}
+void MainWindow::on_button_ConfIis_Blacklist_ErrAdd_clicked()
+{
+    const QString& item = this->ui->inLine_ConfIis_Blacklist_Err->text();
+    if ( this->ui->list_ConfIis_Blacklist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+        this->ui->list_ConfIis_Blacklist_Err->addItem( item );
+        this->craplog.blacklistAdd(
+            this->IIS_ID, this->ERROR_LOGS,
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Err->currentText() ),
+            item.toStdString() );
+    }
+    // select the item in the list, in both cases it was already in or it has been just inserted
+    this->ui->list_ConfIis_Blacklist_Err->clearSelection();
+    this->ui->list_ConfIis_Blacklist_Err->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).at(0)->setSelected( true );
+    this->ui->inLine_ConfIis_Blacklist_Err->clear();
+}
+
+void MainWindow::on_list_ConfIis_Blacklist_Err_itemSelectionChanged()
+{
+    if ( this->ui->list_ConfIis_Blacklist_Err->selectedItems().size() > 0 ) {
+        this->ui->button_ConfIis_Blacklist_ErrRemove->setEnabled( true );
+        this->ui->button_ConfIis_Blacklist_ErrUp->setEnabled( true );
+        this->ui->button_ConfIis_Blacklist_ErrDown->setEnabled( true );
+        // polishing
+        const auto& item = this->ui->list_ConfIis_Blacklist_Err->selectedItems().at(0);
+        const int max = this->ui->list_ConfIis_Blacklist_Err->count() -1;
+        if ( max == 0 ) {
+            this->ui->button_ConfIis_Blacklist_ErrUp->setEnabled( false );
+            this->ui->button_ConfIis_Blacklist_ErrDown->setEnabled( false );
+        } else {
+            for ( int i=0; i<=max; i++ ) {
+                if ( this->ui->list_ConfIis_Blacklist_Err->item(i) == item ) {
+                    if ( i == 0 ) {
+                        this->ui->button_ConfIis_Blacklist_ErrUp->setEnabled( false );
+                    } else if ( i == max ) {
+                        this->ui->button_ConfIis_Blacklist_ErrDown->setEnabled( false );
+                    }
+                }
+            }
+        }
+    } else {
+        this->ui->button_ConfIis_Blacklist_ErrRemove->setEnabled( false );
+        this->ui->button_ConfIis_Blacklist_ErrUp->setEnabled( false );
+        this->ui->button_ConfIis_Blacklist_ErrDown->setEnabled( false );
+    }
+}
+void MainWindow::on_button_ConfIis_Blacklist_ErrRemove_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Blacklist_Err->selectedItems().at(0);
+    this->craplog.blacklistRemove(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Blacklist_Err_currentTextChanged( this->ui->box_ConfIis_Blacklist_Err->currentText() );
+}
+void MainWindow::on_button_ConfIis_Blacklist_ErrUp_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Blacklist_Err->selectedItems().at(0);
+    int i = this->craplog.blacklistMoveUp(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Blacklist_Err_currentTextChanged( this->ui->box_ConfIis_Blacklist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Blacklist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Blacklist_Err->setFocus();
+}
+void MainWindow::on_button_ConfIis_Blacklist_ErrDown_clicked()
+{
+    const auto& item = this->ui->list_ConfIis_Blacklist_Err->selectedItems().at(0);
+    int i = this->craplog.blacklistMoveDown(
+        this->IIS_ID, this->ERROR_LOGS,
+        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Err->currentText() ),
+        item->text().toStdString() );
+    // refresh the list
+    this->on_box_ConfIis_Blacklist_Err_currentTextChanged( this->ui->box_ConfIis_Blacklist_Err->currentText() );
+    // re-select the item
+    this->ui->list_ConfIis_Blacklist_Err->item( i )->setSelected( true );
+    this->ui->list_ConfIis_Blacklist_Err->setFocus();
+}
 
 
 
