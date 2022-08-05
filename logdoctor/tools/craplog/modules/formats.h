@@ -22,9 +22,9 @@ public:
         std::vector<std::string> fields;
     };
 
-    const LogsFormat processApacheFormatString(const std::string& formatted_string, const int log_type );
-    const LogsFormat processNginxFormatString(const std::string& formatted_string, const int log_type );
-    const LogsFormat processIisFormatString(const std::string& formatted_string, const int log_module );
+    const LogsFormat processApacheFormatString( const std::string& formatted_string, const int log_type );
+    const LogsFormat processNginxFormatString( const std::string& formatted_string, const int log_type );
+    const LogsFormat processIisFormatString( const std::string& formatted_string, const int log_module );
 
     const QString getApacheLogSample( const LogsFormat& log_format, const int log_type );
     const QString getNginxLogSample( const LogsFormat& log_format, const int log_type );
@@ -32,7 +32,8 @@ public:
 
 private:
 
-    std::string parseApacheEscapes( const std::string& string );
+    const std::string parseApacheEscapes( const std::string& string );
+    const std::string parseNginxEscapes( const std::string& string );
 
     /*std::unordered_map<std::string, std::string>
         APACHE_ALF,   APACHE_ELF,
@@ -72,7 +73,7 @@ private:
     const std::vector<std::string> N_ALFs = {"$remote_addr", "$time_local", "$time_iso8601", "$msec", "$request", "$status", "$bytes_sent", "$request_length", "$request_time", "$http_referer", "$http_user_agent",
                              /*NOT IN USE->*/"$remote_user", "$gzip_ratio", "$connection", "$connection_requests", "$pipe"};
 
-    const std::vector<std::string> I_ALFs = {"c-ip", "time", "cs-version", "cs-method", "cs-uri-stem", "cs-uri-query", "sc-status", "sc-bytes", "cs-bytes", "time-taken", "cs(Referrer)", "cs(Cookie)", "cs(User-Agent)",
+    const std::vector<std::string> I_ALFs = {"c-ip", "date", "time", "cs-version", "cs-method", "cs-uri-stem", "cs-uri-query", "sc-status", "sc-bytes", "cs-bytes", "time-taken", "cs(Referrer)", "cs(Cookie)", "cs(User-Agent)",
                              /*NOT IN USE->*/"s-sitename", "s-computername", "s-ip", "s-port", "cs-username", "cs-host", "sc-substatus", "sc-win32-status", "streamid"};
 
     // list error logs fields formats
@@ -128,26 +129,26 @@ private:
         {"t", { {"sec",        "date_time_epoch_s"},
                 {"msec",       "date_time_epoch_ms"},
                 {"usec",       "date_time_epoch_us"},
-                {"\%b",         "date_time_month_str"},
-                {"\%B",         "date_time_month_str"},
-                {"\%c",         "date_time_mcs"},
-                {"\%d",         "date_time_day"},
-                {"\%D",         "date_time_MMDDYY"},
-                {"\%e",         "date_time_day"},
-                {"\%F",         "date_time_YYYYMMDD"},
-                {"\%h",         "date_time_month_str"},
-                {"\%H",         "date_time_hour"},
-                {"\%m",         "date_time_month"},
-                {"\%M",         "date_time_minute"},
-                //{"\%p",         "date_time_clock_meridian"},
-                {"\%r",         "date_time_clock_12"},
-                {"\%R",         "date_time_clock_short"},
-                {"\%S",         "date_time_second"},
-                {"\%T",         "date_time_clock_24"},
-                {"\%x",         "date_time_MMDDYY"},
-                {"\%X",         "date_time_clock_24"},
-                {"\%y",         "date_time_year_short"},
-                {"\%Y",         "date_time_year"} } },
+                {"\%b",        "date_time_month_str"},
+                {"\%B",        "date_time_month_str"},
+                {"\%c",        "date_time_mcs"},
+                {"\%d",        "date_time_day"},
+                {"\%D",        "date_time_MMDDYY"},
+                {"\%e",        "date_time_day"},
+                {"\%F",        "date_time_YYYYMMDD"},
+                {"\%h",        "date_time_month_str"},
+                {"\%H",        "date_time_hour"},
+                {"\%m",        "date_time_month"},
+                {"\%M",        "date_time_minute"},
+                //{"\%p",        "date_time_clock_meridian"},
+                {"\%r",        "date_time_clock_12"},
+                {"\%R",        "date_time_clock_short"},
+                {"\%S",        "date_time_second"},
+                {"\%T",        "date_time_clock_24"},
+                {"\%x",        "date_time_MMDDYY"},
+                {"\%X",        "date_time_clock_24"},
+                {"\%y",        "date_time_year_short"},
+                {"\%Y",        "date_time_year"} } },
         {"i", { {"Cookie",     "cookie"},
                 {"User-agent", "user_agent"},
                 {"Referer",    "referer"} } },
@@ -167,40 +168,40 @@ private:
 
     // access logs fields formats samples
     const std::unordered_map<std::string, QString> APACHE_ALF_SAMPLES = {
-        {"NONE",                  "DISCARDED"},
-        {"date_time_epoch_s",     "946771199"},
-        {"date_time_epoch_ms",    "946771199000"},
-        {"date_time_epoch_us",    "946771199000000"},
-        {"date_time_ncsa",        "[01/Jan/2000:23:59:59 +0000]"},
-        {"date_time_mcs",         "Sat Jan 01 23:59:59 2000"},
-        {"date_time_YYYYMMDD",    "2000-01-01"},
-        {"date_time_MMDDYY",      "01/01/00"},
-        {"date_time_year",        "2000"},
-        {"date_time_year_short",  "00"},
-        {"date_time_month_str",   "January"},
-        {"date_time_month",       "01"},
-        {"date_time_day",         "01"},
-        {"date_time_clock_12",    "11:59:59 pm"},
-        {"date_time_clock_24",    "23:59:59"},
-        {"date_time_clock_short", "23:59"},
-        {"date_time_hour",        "23"},
-        {"date_time_minute",      "59"},
-        {"date_time_second",      "59"},
-        {"request_full",          "GET /index.php?query=x HTTP/1.1"},
-        {"request_protocol",      "HTTP/1.1"},
-        {"request_method",        "GET"},
-        {"request_uri",           "/index.php"},
-        {"request_query",         "query=x"},
-        {"response_code",         "404"},
-        {"bytes_sent",            "1234"},
-        {"bytes_received",        "123"},
-        {"time_taken_s",          "1"},
-        {"time_taken_ms",         "1000"},
-        {"time_taken_us",         "1000000"},
-        {"referer",               "http://www.referrer.site"},
-        {"cookie",                "aCookie=abc123"},
-        {"user_agent",            "UserAgent/3.0 (Details stuff) Info/123"},
-        {"client",                "192.168.1.123"} };
+        {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
+        {"date_time_epoch_s",     "<b><span style=\"color:#00cc6f\">946771199</span></b>"},
+        {"date_time_epoch_ms",    "<b><span style=\"color:#00cc6f\">946771199000</span></b>"},
+        {"date_time_epoch_us",    "<b><span style=\"color:#00cc6f\">946771199000000</span></b>"},
+        {"date_time_ncsa",        "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
+        {"date_time_mcs",         "<b><span style=\"color:#00cc6f\">Sat Jan 01 23:59:59 2000</span></b>"},
+        {"date_time_YYYYMMDD",    "<b><span style=\"color:#00cc6f\">2000-01-01</span></b>"},
+        {"date_time_MMDDYY",      "<b><span style=\"color:#00cc6f\">01/01/00</span></b>"},
+        {"date_time_year",        "<b><span style=\"color:#00cc6f\">2000</span></b>"},
+        {"date_time_year_short",  "<b><span style=\"color:#00cc6f\">00</span></b>"},
+        {"date_time_month_str",   "<b><span style=\"color:#00cc6f\">January</span></b>"},
+        {"date_time_month",       "<b><span style=\"color:#00cc6f\">01</span></b>"},
+        {"date_time_day",         "<b><span style=\"color:#00cc6f\">01</span></b>"},
+        {"date_time_clock_12",    "<b><span style=\"color:#00cc6f\">11:59:59 pm</span></b>"},
+        {"date_time_clock_24",    "<b><span style=\"color:#00cc6f\">23:59:59</span></b>"},
+        {"date_time_clock_short", "<b><span style=\"color:#00cc6f\">23:59</span></b>"},
+        {"date_time_hour",        "<b><span style=\"color:#00cc6f\">23</span></b>"},
+        {"date_time_minute",      "<b><span style=\"color:#00cc6f\">59</span></b>"},
+        {"date_time_second",      "<b><span style=\"color:#00cc6f\">59</span></b>"},
+        {"request_full",          "<b><span style=\"color:#00cc6f\">GET /index.php?query=x HTTP/1.1</span></b>"},
+        {"request_protocol",      "<b><span style=\"color:#00cc6f\">HTTP/1.1</span></b>"},
+        {"request_method",        "<b><span style=\"color:#00cc6f\">GET</span></b>"},
+        {"request_uri",           "<b><span style=\"color:#00cc6f\">/index.php</span></b>"},
+        {"request_query",         "<b><span style=\"color:#00cc6f\">query=x</span></b>"},
+        {"response_code",         "<b><span style=\"color:#00cc6f\">404</span></b>"},
+        {"bytes_sent",            "<b><span style=\"color:#00cc6f\">1234</span></b>"},
+        {"bytes_received",        "<b><span style=\"color:#00cc6f\">123</span></b>"},
+        {"time_taken_s",          "<b><span style=\"color:#00cc6f\">1</span></b>"},
+        {"time_taken_ms",         "<b><span style=\"color:#00cc6f\">1000</span></b>"},
+        {"time_taken_us",         "<b><span style=\"color:#00cc6f\">1000000</span></b>"},
+        {"referer",               "<b><span style=\"color:#00cc6f\">http://www.referrer.site</span></b>"},
+        {"cookie",                "<b><span style=\"color:#00cc6f\">aCookie=abc123</span></b>"},
+        {"user_agent",            "<b><span style=\"color:#00cc6f\">UserAgent/3.0 (Details stuff) Info/123</span></b>"},
+        {"client",                "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
     // error logs fields formats
     const std::unordered_map<std::string, std::string> APACHE_ELF = {
@@ -235,14 +236,14 @@ private:
 
     // error logs fields formats samples
     const std::unordered_map<std::string, QString> APACHE_ELF_SAMPLES = {
-        {"NONE",              "DISCARDED"},
-        {"date_time_mcs",     "Sat Jan 01 23:59:59.123456 0000"},
-        {"date_time_iso_mcs", "2000-01-01 23:59:59.123456"},
-        {"client",            "192.168.1.123"},
-        {"port",              "54321"},
-        {"error_level",       "group:level"},
-        {"error_message",     "AH00123: some infoes: some details"},
-        {"source_file",       "file.c"} };
+        {"NONE",              "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
+        {"date_time_mcs",     "<b><span style=\"color:#00cc6f\">Sat Jan 01 23:59:59.123456 0000</span></b>"},
+        {"date_time_iso_mcs", "<b><span style=\"color:#00cc6f\">2000-01-01 23:59:59.123456</span></b>"},
+        {"client",            "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"},
+        {"port",              "<b><span style=\"color:#00cc6f\">54321</span></b>"},
+        {"error_level",       "<b><span style=\"color:#00cc6f\">group:level</span></b>"},
+        {"error_message",     "<b><span style=\"color:#00cc6f\">AH00123: some infoes: some details</span></b>"},
+        {"source_file",       "<b><span style=\"color:#00cc6f\">file.c</span></b>"} };
 
 
     ///////////////
@@ -250,7 +251,7 @@ private:
     // access logs fields formats (only the ones considered)
     const std::unordered_map<std::string, std::string> NGINX_ALF = {
         {"$remote_addr",       "client"},
-        {"$time_local",        "date_time_ncsa"},
+        {"$time_local",        "date_time_mcs"},
         {"$time_iso8601",      "date_time_iso"},
         {"msec",               "date_time_epoch_s.ms"},
         {"$request",           "request_full"},
@@ -265,22 +266,23 @@ private:
         {"$gzip_ratio",            "NONE"},
         {"$connection",            "NONE"},
         {"$connection_requests",   "NONE"},
+        {"$http_x_forwardef_for",  "NONE"},
         {"pipe",                   "NONE"} };
 
     // nginx logs fields formats samples
     const std::unordered_map<std::string, QString> NGINX_ALF_SAMPLES = {
-        {"NONE",                  "DISCARDED"},
-        {"date_time_epoch_s.ms",  "946771199.000"},
-        {"date_time_iso",         "2000-01-01T23:59:59+00:00]"},
-        {"date_time_mcs",         "Sat Jan 01 23:59:59 2000"},
-        {"request_full",          "GET /index.php?query=x HTTP/1.1"},
-        {"response_code",         "404"},
-        {"bytes_sent",            "1234"},
-        {"bytes_received",        "123"},
-        {"time_taken_s.ms",       "1.000"},
-        {"referer",               "http://www.referrer.site"},
-        {"user_agent",            "UserAgent/3.0 (Details stuff) Info/123"},
-        {"client",                "192.168.1.123"} };
+        {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
+        {"date_time_epoch_s.ms",  "<b><span style=\"color:#00cc6f\">946771199.000</span></b>"},
+        {"date_time_iso",         "<b><span style=\"color:#00cc6f\">2000-01-01T23:59:59+00:00]</span></b>"},
+        {"date_time_mcs",         "<b><span style=\"color:#00cc6f\">Sat Jan 01 23:59:59 2000</span></b>"},
+        {"request_full",          "<b><span style=\"color:#00cc6f\">GET /index.php?query=x HTTP/1.1</span></b>"},
+        {"response_code",         "<b><span style=\"color:#00cc6f\">404</span></b>"},
+        {"bytes_sent",            "<b><span style=\"color:#00cc6f\">1234</span></b>"},
+        {"bytes_received",        "<b><span style=\"color:#00cc6f\">123</span></b>"},
+        {"time_taken_s.ms",       "<b><span style=\"color:#00cc6f\">1.000</span></b>"},
+        {"referer",               "<b><span style=\"color:#00cc6f\">http://www.referrer.site</span></b>"},
+        {"user_agent",            "<b><span style=\"color:#00cc6f\">UserAgent/3.0 (Details stuff) Info/123</span></b>"},
+        {"client",                "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
     // error logs fields formats (only the ones considered)
     const std::unordered_map<std::string, std::string> NGINX_ELF = {
@@ -293,10 +295,10 @@ private:
 
     // error logs fields formats samples
     const std::unordered_map<std::string, QString> NGINX_ELF_SAMPLES = {
-        {"NONE",             "DISCARDED"},
-        {"date_time_iso",    "2000-01-01T23:59:59+00:00]"},
-        {"error_level",      "[level]"},
-        {"error_message",    "123#456: some infoes"} };
+        {"NONE",             "<span style=\"color:#7f7f7f\">DISCARDED"},
+        {"date_time_iso",    "<b><span style=\"color:#00cc6f\">2000-01-01T23:59:59+00:00]</span></b>"},
+        {"error_level",      "<b><span style=\"color:#00cc6f\">level</span></b>"},
+        {"error_message",    "<b><span style=\"color:#00cc6f\">123#456: some infoes</span></b>"} };
 
 
     /////////////
@@ -313,7 +315,7 @@ private:
         {"sc-bytes",         "bytes_sent"},
         {"cs-bytes",         "bytes_received"},
         {"time-taken",       "time_taken_ms"},
-        {"cs(Referrer)",     "referer"},
+        {"cs(Referer)",      "referer"},
         {"cs(Cookie)",       "cookie"},
         {"cs(User-Agent)",   "user_agent"},
         {"c-ip",             "client"},
@@ -330,21 +332,24 @@ private:
 
     // access logs fields formats samples
     const std::unordered_map<std::string, QString> IIS_ALF_SAMPLES = {
-        {"NONE",               "DISCARDED"},
-        {"date_time_utc_d",    "2000-01-01"},
-        {"date_time_utc_t",    "23:59:59"},
-        {"request_protocol",   "HTTP/1.1"},
-        {"request_method",     "GET"},
-        {"request_uri",        "/index.php"},
-        {"request_query",      "query=x"},
-        {"response_code",      "404"},
-        {"bytes_sent",         "1234"},
-        {"bytes_received",     "123"},
-        {"time_taken_ms",      "1000"},
-        {"referer",            "http://www.referrer.site"},
-        {"cookie",             "aCookie=abc123"},
-        {"user_agent",         "UserAgent/3.0+(Details+stuff)+Info/123"},
-        {"client",             "192.168.1.123"} };
+        {"NONE",               "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
+        {"date_time_ncsa",     "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
+        {"date_time_MDYY",     "<b><span style=\"color:#00cc6f\">1/1/00</span></b>"},
+        {"date_time_utc_d",    "<b><span style=\"color:#00cc6f\">2000-01-01</span></b>"},
+        {"date_time_utc_t",    "<b><span style=\"color:#00cc6f\">23:59:59</span></b>"},
+        {"request_full",       "<b><span style=\"color:#00cc6f\">GET /index.php?query=x HTTP/1.1</span></b>"},
+        {"request_protocol",   "<b><span style=\"color:#00cc6f\">HTTP/1.1</span></b>"},
+        {"request_method",     "<b><span style=\"color:#00cc6f\">GET</span></b>"},
+        {"request_uri",        "<b><span style=\"color:#00cc6f\">/index.php</span></b>"},
+        {"request_query",      "<b><span style=\"color:#00cc6f\">query=x</span></b>"},
+        {"response_code",      "<b><span style=\"color:#00cc6f\">404</span></b>"},
+        {"bytes_sent",         "<b><span style=\"color:#00cc6f\">1234</span></b>"},
+        {"bytes_received",     "<b><span style=\"color:#00cc6f\">123</span></b>"},
+        {"time_taken_ms",      "<b><span style=\"color:#00cc6f\">1000</span></b>"},
+        {"referer",            "<b><span style=\"color:#00cc6f\">http://www.referrer.site</span></b>"},
+        {"cookie",             "<b><span style=\"color:#00cc6f\">aCookie=abc123</span></b>"},
+        {"user_agent",         "<b><span style=\"color:#00cc6f\">UserAgent/3.0+(Details+stuff)+Info/123</span></b>"},
+        {"client",             "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
     // error logs fields formats
     const std::unordered_map<std::string, std::string> IIS_ELF = {
