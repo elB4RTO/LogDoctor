@@ -39,20 +39,68 @@ bool StringOps::isNumeric( const std::string& str )
         for ( const char& chr : str ) {
             if ( StringOps::isNumeric( chr ) == false ) {
                 result = false;
-
+                break;
             }
         }
     }
     return result;
 }
-
-
 bool StringOps::isNumeric( char chr )
 {
     if ( chr > 47 && chr < 58 ) {
         return true;
     } else {
         return false;
+    }
+}
+
+
+bool StringOps::isAlphabetic( const std::string& str )
+{
+    bool result = false;
+    if ( str.size() > 0 ) {
+        result = true;
+        for ( const char& chr : str ) {
+            if ( StringOps::isAlphabetic( chr ) == false ) {
+                result = false;
+                break;
+            }
+        }
+    }
+    return result;
+}
+bool StringOps::isAlphabetic( const char chr )
+{
+    if ( (chr > 64 && chr < 91)
+      || (chr > 96 && chr < 123) ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+bool StringOps::isAlnum( const std::string& str )
+{
+    bool result = false;
+    if ( str.size() > 0 ) {
+        result = true;
+        for ( const char& chr : str ) {
+            if ( StringOps::isAlnum( chr ) == false ) {
+                result = false;
+                break;
+            }
+        }
+    }
+    return result;
+}
+bool StringOps::isAlnum( const char chr )
+{
+    if ( StringOps::isNumeric( chr ) == false
+      || StringOps::isAlphabetic( chr ) == false ) {
+        return false;
+    } else {
+        return true;
     }
 }
 
