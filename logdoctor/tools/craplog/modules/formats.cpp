@@ -1,7 +1,8 @@
 
 #include "formats.h"
 
-#include "modules/dialogs.h"
+#include "modules/exceptions.h"
+#include "utilities/strings.h"
 
 
 FormatOps::FormatOps()
@@ -10,7 +11,7 @@ FormatOps::FormatOps()
 }
 
 // process escapes like apache
-const std::string FormatOps::parseApacheEscapes( const std::string& string )
+const std::string FormatOps::parseApacheEscapes(const std::string& string , const bool strftime )
 {
     int i = 0,
         max = string.size()-1;
@@ -28,8 +29,8 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string )
         }
         c = string.at( i );
         cc = string.at( i+1 );
-        if ( c == '\\' && cc == '\\' ) {
-            str1.push_back( c );
+        if ( c == '\\' && (cc == '\\' || cc == '"') ) {
+            str1.push_back( cc );
             i++;
         } else if ( c == '%' && cc == '%' ) {
             str1.push_back( c );
@@ -53,27 +54,50 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string )
         c = str1.at( i );
         cc = str1.at( i+1 );
         if ( c == '\\' ) {
-            // just the ones supported by apache
-            if ( cc == '\\' ) {
-                str2.push_back( c );
+            // just the ones supported
+            if ( cc == '\\' || cc == '"' ) {
+                str2.push_back( cc );
                 i++;
-            } else if ( cc == 'n' ) {
+            } else {
+                if ( strftime == true ) {
+                    // when parsing for strftime, any other backslashed characters result in a backslash+character
+                    str2.push_back( c );
+                    str2.push_back( cc );
+                    i++;
+
+                } else {
+                    if ( cc == 'n' ) {
+                        str2.push_back( '\n' );
+                        i++;
+                    } else if ( cc == 'r' ) {
+                        str2.push_back( '\r' );
+                        i++;
+                    } else if ( cc == 't' ) {
+                        str2.push_back( '\t' );
+                        i++;
+                    } else {
+                        // any other backslashed characters result in a backslash+character
+                        str2.push_back( c );
+                        str2.push_back( cc );
+                        i++;
+                    }
+                }
+            }
+        } else if ( c == '%' && strftime == true ) {
+            // strftime control-characters
+            if ( cc == 'n' ) {
                 str2.push_back( '\n' );
-                i++;
-            } else if ( cc == 'r' ) {
-                str2.push_back( '\r' );
                 i++;
             } else if ( cc == 't' ) {
                 str2.push_back( '\t' );
                 i++;
             } else {
-                if ( cc != '"' ) {
-                    // any other backslashed characters result in a backslash+character, except for double-quotes
-                    str2.push_back( c );
-                }
+                // any other characters result in a percent+character
+                str2.push_back( c );
                 str2.push_back( cc );
                 i++;
             }
+
         } else {
             str2.push_back( c );
         }
@@ -175,13 +199,25 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                 // hunt the next field
                 aux = f_str.find_first_of( '%', stop );
                 // check if false positive
-                if ( aux >= 0 && aux <= max ) {
+                if ( aux == max ) {
+                    // invalid, can't end with a single '%'
+                    throw LogFormatException( "Invalid format string: ending with a single '%'." );
+
+                } else if ( aux >= 0 && aux < max ) {
                     // apache only escapes a format field using the double percent sign
-                    // backslashes are valid for control-characters only, or get reduced to 1 escape only
-                    if ( f_str.at(aux+1) == '%' ) {
-                        // the percent sign character
+                    // backslashes are valid for control-characters only, or get reduced
+                    // single percent-signs are considered invalid
+                    char c = f_str.at(aux+1);
+                    if ( c == ',' ) {
+                        // status code(s) may follow, or may not, in any case is considered valid
+                        ;
+                    } else if ( c == '%' ) {
+                        // the percent sign character, will be used as separator, skip
                         stop = aux + 2;
                         continue;
+                    } else if ( StringOps::isAlnum( c ) == false ) {
+                        // invalid, there must be a field code, a status code or a percent sign after a '%'
+                        throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%'.\nFound: '%"+std::to_string(c)+"'." );
                     }
                 }
                 break;
@@ -190,23 +226,51 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
             if ( aux < 0 || aux > max ) {
                 // no more fields, append the last section as final separator
                 cur_sep += f_str.substr( start );
-                /*final = cur_sep + f_str.substr( start );
-                final = this->parseApacheEscapes( final );*/
                 n_fld = -1;
                 break;
             }
 
             // append the current separator
             cur_sep += f_str.substr( start, aux-start );
-            stop = aux;
+            aux ++;
 
+            char c = f_str.at( aux );
+            // remove the per-status directives (if any)
+            if ( StringOps::isNumeric( c ) == true
+              || c == ',' ) {
+                // per-status, not important for LogDoctor
+                int aux_aux = aux+1;
+                while (true) {
+                    if ( aux_aux > max ) {
+                        break;
+                    }
+                    c = f_str.at( aux_aux );
+                    if ( StringOps::isNumeric( c ) == true
+                      || c == ',' ) {
+                        // skip these chars
+                        aux_aux ++;
+                        continue;
+                    } else {
+                        // stop
+                        aux = aux_aux;
+                        aux_fld = std::to_string( c );
+                        break;
+                    }
+                }
+            }
+
+            c = f_str.at( aux );
             // define if normal or composed
-            if ( f_str.at( aux+1 ) == '{' ) {
+            if ( c == '{' ) {
                 // composed
-                aux_start = aux + 2;
+                aux_start = aux + 1;
                 aux = f_str.find_first_of( '}', aux_start );
+                if ( aux < 0 || aux > max ) {
+                    // closer bracket not found, resulting in an invalid field
+                    throw LogFormatException( "Invalid format code, no closing bracket found: '%{'." );
+                }
                 aux_stop = aux + 2;
-                // get the varname
+                // get the varname(s)
                 aux_fld = f_str.substr(
                     aux_start,
                     aux - aux_start );
@@ -217,100 +281,142 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     aux_fld_v = f_str.substr( aux+1, 3 );
                 }
                 if ( f_map_v->find( aux_fld_v ) == f_map_v->end() ) {
-                    // invalid, append all as separator and restart hunting
-                    cur_sep += f_str.substr( stop, aux_stop-stop );
-                    start = stop = aux_stop;
-                    continue;
+                    // invalid module, abort
+                    throw LogFormatException( "Invalid format code found: '%{...}"+aux_fld_v+"'." );
                 } else {
                     // module is valud
                     const auto &aux_map = f_map_v->at( aux_fld_v );
-                    bool skip;
-                    int aux_aux_start,
-                        aux_aux_stop = 0,
-                        aux_aux;
-                    std::string aux_aux_fld;
-                    while (true) {
-                        // loop inside the composed field
-                        skip = true;
-                        aux_aux_start = aux_aux_stop;
-                        for ( const std::string& fld : this->A_ALFs_v.at( aux_fld_v ) ) {
-                            aux_aux = aux_fld.find( fld, aux_aux_start );
-                            // check if has been found
-                            if ( aux_aux >= 0 && aux_aux <= aux_fld.size() ) {
-                                // check if false positive
-                                if ( aux_fld.at(aux_aux) == '%' ) {
-                                    if ( aux_fld.at(aux_aux-1) == '%' || aux_fld.at(aux_aux-1) == '\\' ) {
-                                        // the percent sign character
-                                        aux_aux_start = aux_aux + 1;
-                                        continue;
-                                    } else if ( f_str.at(aux+1) == '%' ) {
-                                        // the percent sign character
-                                        aux_aux_start = aux_aux + 2;
-                                        continue;
-                                    }
-                                }
-                                skip = false;
-                                aux_aux_stop = aux_aux + fld.size();
-                                break;
-                            } else {
-                                continue;
-                            }
-                        }
-                        if ( skip == true ) {
-                            break;
-                        }
-                        // append the current separator
-                        cur_sep += aux_fld.substr( aux_aux_start, aux_aux-aux_aux_start );
-                        aux_aux_fld = aux_fld.substr( aux_aux, aux_aux_stop-aux_aux );
-                        // check if the module is valid
-                        if ( aux_map.size() == 0 ) {
-                            // not considered
-                            fields.push_back( "NONE" );
-                            // append to separators list
-                            separators.push_back( cur_sep );
-                            cur_sep = "";
+                    if ( aux_map.size() == 0 ) {
+                        // module not considered and always giving out something, even if invalid varname is passed
+                        fields.push_back( "NONE" );
+                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
+                        cur_sep = "";
 
-                        } else if ( aux_map.find( aux_aux_fld ) != aux_map.end() ) {
-                            // valid, append
-                            cur_fld = aux_map.at( aux_aux_fld );
-                            fields.push_back( cur_fld );
-                            // append to separators list
-                            separators.push_back( cur_sep );
-                            cur_sep = "";
+                    } else if ( aux_fld_v == "p" || aux_fld_v == "P" || aux_fld_v == "T" ) {
+                        // still not considered (except 'T'), but invalid fields get used as text
+                        // field concatenation not allowed, whole content used as varname
+                        if ( aux_map.find( aux_fld ) != aux_map.end() ) {
+                            // valid varname
+                            fields.push_back( aux_map.at( aux_fld ) );
+                        } else {
+                            // invalid varname, use as text
+                            fields.push_back( "NONE" );
+                            cur_sep += aux_fld;
+                        }
+                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
+                        cur_sep = "";
+
+                    } else if ( aux_fld_v == "a" || aux_fld_v == "h" ) {
+                        // client, in any case
+                        fields.push_back( "client" );
+                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
+                        cur_sep = "";
+
+                    } else if ( aux_fld_v == "i" ) {
+                        // always giving a result, may the varname be valid or not ('-' if invalid)
+                        // field concatenation not allowed, the entire content is used as varname
+                        if ( aux_map.find( aux_fld ) != aux_map.end() ) {
+                            fields.push_back( aux_map.at( aux_fld ) );
+                        } else {
+                            fields.push_back( "NONE" );
+                        }
+                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
+                        cur_sep = "";
+
+                    } else /*if ( aux_fld_v == "t" )*/ {
+                        // only 't' remaining
+                        int aux_aux = aux_fld.find( '%' );
+                        if ( aux_aux < 0 || aux_aux >= aux_fld.size() ) {
+                            // no concatenation, only valid fields used, anything else used as text
+                            // whole content used as varname
+                            if ( aux_map.find( aux_fld ) != aux_map.end() ) {
+                                // valid
+                                fields.push_back( aux_map.at( aux_fld ) );
+                                separators.push_back( this->parseApacheEscapes( cur_sep, true ) );
+                                cur_sep = "";
+                            } else {
+                                // invalid, append to current separator and restart hunting
+                                cur_sep += aux_fld;
+                            }
 
                         } else {
-                            // invalid, append as separator and keep hunting
-                            cur_sep += aux_fld.substr( aux_aux, aux_aux_stop-aux_aux );
+                            // concatenation allowed, only strftime() value used as fields, everything else treated as text
+                            int aux_aux_start,
+                                aux_aux_stop = 0,
+                                aux_max = aux_fld.size()-1;
+                            std::string aux_aux_fld;
+                            while (true) {
+                                // loop inside the composed field
+                                aux_aux_start = aux_aux_stop;
+                                while (true) {
+                                    // hunt the next field
+                                    aux_aux = aux_fld.find_first_of( '%', aux_aux_stop );
+                                    // check if false positive
+                                    if ( aux_aux >= 0 && aux_aux <= aux_max ) {
+                                        // same escape rules as before, but single percent-signs are considered valid and treated as text
+                                        char c = aux_fld.at( aux_aux+1 );
+                                        if ( c == '%' || c == 'n' || c == 't' ) {
+                                            // control characters, will be used as separator, skip
+                                            aux_aux_stop = aux_aux + 2;
+                                            continue;
+                                        }
+                                    }
+                                    break;
+                                }
+
+                                if ( aux_aux < 0 || aux_aux > aux_max ) {
+                                    // no more fields, append the last section as separator
+                                    cur_sep += aux_fld.substr( aux_aux_start );
+                                    break;
+                                }
+
+                                // append the current separator
+                                cur_sep += aux_fld.substr( aux_aux_start, aux_aux-aux_aux_start );
+                                // and get the possible field
+                                aux_aux_fld = aux_fld.substr( aux_aux, 2 );
+                                aux_aux_stop = aux_aux+2;
+                                // check if the field is valid
+                                if ( aux_map.find( aux_aux_fld ) != aux_map.end() ) {
+                                    // valid, append
+                                    cur_fld = aux_map.at( aux_aux_fld );
+                                    fields.push_back( cur_fld );
+                                    // append to separators list
+                                    separators.push_back( this->parseApacheEscapes( cur_sep, true ) );
+                                    cur_sep = "";
+
+                                } else {
+                                    // invalid, append as separator and keep hunting
+                                    cur_sep += aux_aux_fld;
+                                }
+                            }
                         }
                     }
                     // items already appended as needed, next main hunting loop round
-                    start = stop = aux_stop;
+                    start = stop = aux_stop; // re-starting after the previously found module
                     continue;
                 }
 
             } else {
                 // normal
-                aux_fld = f_str.substr( aux, 2 );
-                aux_stop = aux+2;
-                if ( aux_fld == "%>" ) {
-                    aux_fld = f_str.substr( aux, 3 );
-                    aux_stop = aux+3;
+                aux_fld = std::to_string( c );
+                aux_stop = aux+1;
+                if ( aux_fld == ">" || aux_fld == "<" ) {
+                    aux_fld += f_str.at( aux+1 );
+                    aux_stop ++;
                 }
                 // check if the module is valid
                 if ( f_map->find( aux_fld ) != f_map->end() ) {
                     // valid
                     cur_fld = f_map->at( aux_fld );
                     if ( cur_fld == "date_time_ncsa" ) {
-                        // NCAS time format is always enclosed inside brackets
+                        // apache's NCSA time format is always enclosed inside brackets
                         cur_sep += "[";
                     }
                     stop = aux_stop;
                     break;
                 } else {
-                    // invalid, append all as separator and restart hunting
-                    cur_sep += aux_fld;
-                    start = stop = aux_stop;
-                    continue;
+                    // invalid format field, abort
+                    throw LogFormatException( "Invalid format code found: '%"+aux_fld+"'." );
                 }
             }
         }
