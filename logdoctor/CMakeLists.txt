@@ -46,6 +46,8 @@ set(PROJECT_SOURCES
         modules/checks.cpp
         modules/dialogs.h
         modules/dialogs.cpp
+        modules/exceptions.h
+        modules/exceptions.cpp
         modules/tb.h
         modules/tb.cpp
 
