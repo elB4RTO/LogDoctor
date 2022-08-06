@@ -17,6 +17,12 @@ public:
     static bool isNumeric( const std::string& str );
     static bool isNumeric( const char chr );
 
+    static bool isAlphabetic( const std::string& str );
+    static bool isAlphabetic( const char chr );
+
+    static bool isAlnum( const std::string& str );
+    static bool isAlnum( const char chr );
+
     static bool startsWith( const std::string& str, const std::string& flag );
     static bool endsWith(   const std::string& str, const std::string& flag );
 
