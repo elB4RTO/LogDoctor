@@ -15,10 +15,10 @@ class Crapview
 public:
     Crapview();
 
-    const int getDialogsLevel();
-    void setDialogLevel( const int new_level );
+    const int& getDialogsLevel();
+    void setDialogLevel( const int& new_level );
 
-    void setChartsTheme( const int new_theme_id );
+    void setChartsTheme( const int& new_theme_id );
 
     void setDbPath( const std::string& path );
 
@@ -26,26 +26,26 @@ public:
     const QString parseNumericFilter( const QString& filter_str );
     const QString parseTextualFilter( const QString& filter_str );
 
-    int getLogFieldID ( const QString& field_str ),
-        getMonthNumber( const QString& month_str );
+    const int getLogFieldID ( const QString& field_str ),
+              getMonthNumber( const QString& month_str );
 
     void refreshDates();
 
-    const QStringList getYears(  const QString& web_server, const QString& logs_type );
-    const QStringList getMonths( const QString& web_server, const QString& logs_type, const QString& year );
-    const QStringList getDays(   const QString& web_server, const QString& logs_type, const QString& year, const QString& month );
+    const QStringList getYears(  const QString& web_server );
+    const QStringList getMonths( const QString& web_server, const QString& year );
+    const QStringList getDays(   const QString& web_server, const QString& year, const QString& month );
     const QStringList getHours();
 
-    const QStringList getFields( const QString& tab, const QString& logs_type );
+    const QStringList getFields( const QString& tab );
 
     void updateWarn(
         QTableWidget* table,
-        const QString& web_server, const QString& log_type );
+        const QString& web_server );
     void drawWarn(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
-        const QString& web_server, const QString& log_type,
+        const QString& web_server,
         const QString& year, const QString& month, const QString& day, const QString& hour );
 
     void drawSpeed(
@@ -60,7 +60,7 @@ public:
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
-        const QString& web_server, const QString& log_type,
+        const QString& web_server,
         const QString& year, const QString& month, const QString& day,
         const QString& field );
 
@@ -68,7 +68,7 @@ public:
         QtCharts::QChartView* chart,
             const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
-        const QString& web_server, const QString& log_type,
+        const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
         const QString& field, const QString& filter );
@@ -77,7 +77,7 @@ public:
         QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
-        const QString& web_server, const QString& log_type,
+        const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
         const QString& field_1, const QString& filter_1,
@@ -85,7 +85,7 @@ public:
 
     void calcGlobals(
         const std::unordered_map<std::string, QFont>& fonts,
-        const QString& web_server, const QString& log_type );
+        const QString& web_server );
 
 
 private:
@@ -109,33 +109,29 @@ private:
             TIME = QMessageBox::tr("Time");
 
     // collection of available dates
-    // { web_server : { log_type : { year : { month_str : [ days ] } } } }
-    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> dates;
+    // { web_server : { year : { month_str : [ days ] } } }
+    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates;
 
     // collection of available fields for tabs which needs them
-    // { tab : { log_type_str : [ fields ] } }
-    const QHash<QString, QHash<QString, QStringList>> fields = {
+    // { tab : [ fields ] }
+    const QHash<QString, QStringList> fields = {
         {"Daytime", {
-            {TYPES.value(1),  {FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)}},
-            {TYPES.value(2),  {FIELDS.value(0),FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }},
+            FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)} },
         {"Relational", {
-            {TYPES.value(1),  {FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(15),FIELDS.value(16),FIELDS.value(17),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)}},
-            {TYPES.value(2),  {FIELDS.value(0),FIELDS.value(31),FIELDS.value(32),FIELDS.value(33),FIELDS.value(20),FIELDS.value(30)}} }}
+            FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(15),FIELDS.value(16),FIELDS.value(17),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)} }
     };
 
-    const QString printableDate( const QString& year, const int month,  const QString& day );
-    const QString printableDate( const int year,      const int month,  const int day );
-    const QString printableTime( const int hour, const int minute, const int second );
-    const QString printableWarn( const int value );
+    const QString printableDate( const QString& year, const int& month, const QString& day );
+    const QString printableDate( const int& year, const int& month, const int& day );
+    const QString printableTime( const int& hour, const int& minute, const int& second );
+    const QString printableWarn( const int& value );
 
-    const QStringList getWarnHeader( const QString& log_type );
+    const QStringList getWarnHeader();
 
     // conversion between text and IDs
     const QHash<QString, int>
         WebServer_s2i = {
             {"Apache2",11}, {"Nginx",12}, {"IIS",13} },
-        LogsType_s2i  = {
-            {TYPES.value(1),1}, {TYPES.value(2),2} },
         LogFields_s2i = {
             {FIELDS.value(0), 0},
             {FIELDS.value(10),10},
@@ -149,11 +145,7 @@ private:
             {FIELDS.value(18),18},
             {FIELDS.value(20),20},
             {FIELDS.value(21),21},
-            {FIELDS.value(22),22},
-            {FIELDS.value(30),30},
-            {FIELDS.value(31),31},
-            {FIELDS.value(32),32},
-            {FIELDS.value(33),33}
+            {FIELDS.value(22),22}
         },
         Months_s2i = {
             {MONTHS.value(1),1},   {MONTHS.value(2),2},   {MONTHS.value(3),3},
