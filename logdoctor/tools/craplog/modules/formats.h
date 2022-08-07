@@ -1,5 +1,5 @@
-#ifndef FORMAT_H
-#define FORMAT_H
+#ifndef FORMATS_H
+#define FORMATS_H
 
 #include <QString>
 
@@ -22,38 +22,21 @@ public:
         std::vector<std::string> fields;
     };
 
-    const LogsFormat processApacheFormatString( const std::string& formatted_string, const int log_type );
-    const LogsFormat processNginxFormatString( const std::string& formatted_string, const int log_type );
-    const LogsFormat processIisFormatString( const std::string& formatted_string, const int log_module );
+    const LogsFormat processApacheFormatString( const std::string& formatted_string );
+    const LogsFormat processNginxFormatString( const std::string& formatted_string );
+    const LogsFormat processIisFormatString( const std::string& formatted_string, const int& log_module );
 
-    const QString getApacheLogSample( const LogsFormat& log_format, const int log_type );
-    const QString getNginxLogSample( const LogsFormat& log_format, const int log_type );
-    const QString getIisLogSample( const LogsFormat& log_format/*, const int log_type*/ );
+    const QString getApacheLogSample( const LogsFormat& log_format );
+    const QString getNginxLogSample( const LogsFormat& log_format );
+    const QString getIisLogSample( const LogsFormat& log_format );
 
 private:
 
-    const std::string parseApacheEscapes( const std::string& string, const bool strftime=false );
+    const std::string parseApacheEscapes( const std::string& string, const bool& strftime=false );
     const std::string parseNginxEscapes( const std::string& string );
 
-    /*std::unordered_map<std::string, std::string>
-        APACHE_ALF,   APACHE_ELF,
-        NGINX_ALF,    NGINX_ELF,
-        IIS_ALF,      IIS_ELF;
-
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>>
-        APACHE_ALF_V,  APACHE_ELF_V;*/
-
-    /*
-    const std::vector<std::string> A_ALFs = {"%h", "%t", "%t_u", "%t_ctime", "%r", "%>s", "%O", "%I", "%T", "%D", "%T/%D", "%{Referer}i", "%{User-agent}i",
-                             /*NOT IN USE->* /"%l", "%u", "%b", "%B", "%S", "%a", "h_p", "%{x-forwarded-for}", "%radd", "%v", "%V", "%rh"};
-
-    const std::vector<std::string> A_ELFs = {"%a", "%l", "%M", "%F", "%t", "%{u}t", "%{cu}t",
-                             /*NOT IN USE->* /"%{c}a", "%A", "%{name}e", "%E", "%F", "%{name}i", "%k", "%L", "%{c}L", "%{C}L", "%m", "%{name}n", "%P", "%T", "%{g}T", "%v", "%V"};
-
-    */
-
     // list of access logs fields formats
-    const std::unordered_map<std::string, std::vector<std::string>> A_ALFs_v = {
+    /*const std::unordered_map<std::string, std::vector<std::string>> A_ALFs_v = {
         {"h", {"c"} },
         {"t", {"sec","msec","usec","\%b","\%B","\%c","\%d","\%D","\%e","\%F","\%h","\%H","\%m","\%M","\%r","\%R","\%S","\%T","\%x","\%X","\%y","\%Y"} },
         {"i", {"Cookie","User-agent","Referer"} },
@@ -68,21 +51,13 @@ private:
         {"P",   {}},
         {"^ti", {}},
         {"^to", {}}
-        };
+        };*/
 
     const std::vector<std::string> N_ALFs = {"$remote_addr", "$time_local", "$time_iso8601", "$msec", "$request", "$status", "$bytes_sent", "$request_length", "$request_time", "$http_referer", "$http_user_agent",
                              /*NOT IN USE->*/"$remote_user", "$gzip_ratio", "$connection", "$connection_requests", "$pipe"};
 
     const std::vector<std::string> I_ALFs = {"c-ip", "date", "time", "cs-version", "cs-method", "cs-uri-stem", "cs-uri-query", "sc-status", "sc-bytes", "cs-bytes", "time-taken", "cs(Referrer)", "cs(Cookie)", "cs(User-Agent)",
                              /*NOT IN USE->*/"s-sitename", "s-computername", "s-ip", "s-port", "cs-username", "cs-host", "sc-substatus", "sc-win32-status", "streamid"};
-
-    // list error logs fields formats
-    const std::vector<std::string> N_ELFs = {"$time_iso8601", "$error_level", "$error_message",
-                             /*NOT IN USE->*/"$pid", "$cid"};
-
-    const std::vector<std::string> I_ELFs = {"",
-                             /*NOT IN USE->*/};
-
 
 
 
@@ -229,48 +204,6 @@ private:
         {"user_agent",            "<b><span style=\"color:#00cc6f\">UserAgent/3.0 (Details stuff) Info/123</span></b>"},
         {"client",                "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
-    // error logs fields formats
-    const std::unordered_map<std::string, std::string> APACHE_ELF = {
-        {"\%a", "client:port"},
-        {"\%l", "error_level"},
-        {"\%M", "error_message"},
-        {"\%F", "source_file"},
-        {"\%t", "date_time_mcs"},
-        // not in use, will be discarded
-        {"\%A", "NONE"},
-        {"\%E", "NONE"},
-        {"\%F", "NONE"},
-        {"\%k", "NONE"},
-        {"\%L", "NONE"},
-        {"\%m", "NONE"},
-        {"\%P", "NONE"},
-        {"\%T", "NONE"},
-        {"\%v", "NONE"},
-        {"\%V", "NONE"} };
-
-    // composed
-    const std::unordered_map<std::string, std::unordered_map<std::string, std::string>> APACHE_ELF_V = {
-        {"t", { {"u", "date_time_mcs"},
-                {"cu","date_time_iso_mcs"} } },
-        // composed not in use
-        {"a", {}},
-        {"e", {}},
-        {"i", {}},
-        {"L", {}},
-        {"n", {}},
-        {"T", {}} };
-
-    // error logs fields formats samples
-    const std::unordered_map<std::string, QString> APACHE_ELF_SAMPLES = {
-        {"NONE",              "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
-        {"date_time_mcs",     "<b><span style=\"color:#00cc6f\">Sat Jan 01 23:59:59.123456 0000</span></b>"},
-        {"date_time_iso_mcs", "<b><span style=\"color:#00cc6f\">2000-01-01 23:59:59.123456</span></b>"},
-        {"client",            "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"},
-        {"port",              "<b><span style=\"color:#00cc6f\">54321</span></b>"},
-        {"error_level",       "<b><span style=\"color:#00cc6f\">group:level</span></b>"},
-        {"error_message",     "<b><span style=\"color:#00cc6f\">AH00123: some infoes: some details</span></b>"},
-        {"source_file",       "<b><span style=\"color:#00cc6f\">file.c</span></b>"} };
-
 
     ///////////////
     //// NGINX ////
@@ -310,21 +243,6 @@ private:
         {"user_agent",            "<b><span style=\"color:#00cc6f\">UserAgent/3.0 (Details stuff) Info/123</span></b>"},
         {"client",                "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
-    // error logs fields formats (only the ones considered)
-    const std::unordered_map<std::string, std::string> NGINX_ELF = {
-        {"$time_iso8601",    "date_time_iso"},
-        {"$error_level",     "error_level"},
-        {"$error_message",   "error_message"},
-        // not in use, will be discarded
-        {"$pid",             "NONE"},
-        {"$cid",             "NONE"} };
-
-    // error logs fields formats samples
-    const std::unordered_map<std::string, QString> NGINX_ELF_SAMPLES = {
-        {"NONE",             "<span style=\"color:#7f7f7f\">DISCARDED"},
-        {"date_time_iso",    "<b><span style=\"color:#00cc6f\">2000-01-01T23:59:59+00:00]</span></b>"},
-        {"error_level",      "<b><span style=\"color:#00cc6f\">level</span></b>"},
-        {"error_message",    "<b><span style=\"color:#00cc6f\">123#456: some infoes</span></b>"} };
 
 
     /////////////
@@ -377,16 +295,6 @@ private:
         {"user_agent",         "<b><span style=\"color:#00cc6f\">UserAgent/3.0+(Details+stuff)+Info/123</span></b>"},
         {"client",             "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
-    // error logs fields formats
-    const std::unordered_map<std::string, std::string> IIS_ELF = {
-        {"",   ""},
-        // not in use, will be discarded
-        {"",   "NONE"} };
-
-    // error logs fields formats samples
-    const std::unordered_map<std::string, QString> IIS_ELF_SAMPLES = {
-        {"NONE", "DISCARDED"} };
-
 };
 
-#endif // FORMAT_H
+#endif // FORMATS_H
