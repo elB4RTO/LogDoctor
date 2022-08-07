@@ -2,6 +2,7 @@
 #include "query.h"
 
 #include "modules/dialogs.h"
+#include "modules/exceptions.h"
 #include "utilities/strings.h"
 
 #include <QSqlDatabase>
@@ -17,7 +18,7 @@ DbQuery::DbQuery()
 }
 
 
-void DbQuery::setDialogLevel( const int new_level )
+void DbQuery::setDialogLevel(const int& new_level )
 {
     this->dialog_level = new_level;
 }
@@ -29,7 +30,7 @@ void DbQuery::setDbPath( const std::string& path )
 }
 
 
-const int DbQuery::getMinuteGap(const int minute , const int gap )
+const int DbQuery::getMinuteGap( const int& minute , const int& gap )
 {
     int m = -1;
     if ( minute < 0 || minute >= 60 ) {
@@ -47,7 +48,7 @@ const int DbQuery::getMinuteGap(const int minute , const int gap )
     return m;
 }
 
-const int DbQuery::getMonthDays( const int year, const int month )
+const int DbQuery::getMonthDays( const int& year, const int& month )
 {
     int n_days;
     switch (month) {
@@ -65,7 +66,7 @@ const int DbQuery::getMonthDays( const int year, const int month )
         case 12: n_days = 31; break;
         default:
             // unexpected month
-            throw ( "Unexpected Month: "[month] );
+            throw DateTimeException( "Unexpected Month: "+std::to_string( month ) );
     }
     return n_days;
 }
@@ -80,12 +81,12 @@ const int DbQuery::getMonthsCount( const QString& from_year, const QString& from
         to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->Months_s2i.value( to_month ) ;
     } catch (...) {
         // failed to convert to integers
-        throw std::exception();
+        throw GenericException( "Failed to convert from string to int" );
     }
     return this->getMonthsCount( from_year_, from_month_, to_year_, to_month_ );
 }
 
-const int DbQuery::getMonthsCount( const int from_year, const int from_month, const int to_year, const int to_month )
+const int DbQuery::getMonthsCount( const int& from_year, const int& from_month, const int& to_year, const int& to_month )
 {
     int n_months = 0;
     if ( from_year == to_year ) {
@@ -108,11 +109,11 @@ const int DbQuery::getMonthsCount( const int from_year, const int from_month, co
 
 
 // get a fresh map of available dates
-void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int> > > > > > &result)
+void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> &result)
 {
     bool successful = true;
-    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> dates = {
-        {11,{ {1,{}},{2,{}} }}, {12,{ {1,{}},{2,{}} }}, {13,{ {1,{}},{2,{}} }} };
+    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates = {
+        {11, {}}, {12, {}}, {13, {}} };
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
@@ -128,13 +129,10 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
 
     } else {
         // recursively query years, months and days for every WebServer
-        std::vector<std::tuple<int, int, QString>> tables;
-        tables.push_back( std::make_tuple(11,1,"apache_access") );
-        tables.push_back( std::make_tuple(11,2,"apache_error") );
-        tables.push_back( std::make_tuple(12,1,"nginx_access") );
-        tables.push_back( std::make_tuple(12,2,"nginx_error") );
-        tables.push_back( std::make_tuple(13,1,"iis_access") );
-        tables.push_back( std::make_tuple(13,2,"iis_error") );
+        std::vector<std::tuple<int, QString>> tables;
+        tables.push_back( std::make_tuple(11,"apache") );
+        tables.push_back( std::make_tuple(12,"nginx") );
+        tables.push_back( std::make_tuple(13,"iis") );
 
         QSqlQuery Y_query = QSqlQuery( db ),
                   M_query = QSqlQuery( db ),
@@ -144,8 +142,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
             if ( successful == false ) { break; }
 
             int ws = std::get<0>(table);
-            int lt = std::get<1>(table);
-            QString tbl = std::get<2>(table);
+            QString tbl = std::get<1>(table);
 
             if ( Y_query.exec( QString("SELECT DISTINCT \"year\" FROM \"%1\" ORDER BY \"year\" ASC;").arg(tbl) ) == false ) {
                 // error querying database
@@ -172,7 +169,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                         break;
                     }
                     // successfully get the year
-                    dates.at( ws ).at( lt ).emplace( year, std::unordered_map<int, std::vector<int>>() );
+                    dates.at( ws ).emplace( year, std::unordered_map<int, std::vector<int>>() );
                     // query any available month
                     if ( M_query.exec( QString("SELECT DISTINCT \"month\" FROM \"%1\" WHERE \"year\"=%2 ORDER BY \"month\" ASC;").arg(tbl).arg(year) ) == false ) {
                         // error querying database
@@ -198,7 +195,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                 break;
                             }
                             // successfully get the month
-                            dates.at( ws ).at( lt ).at( year ).emplace( month, std::vector<int>() );
+                            dates.at( ws ).at( year ).emplace( month, std::vector<int>() );
                             // query any available day
                             if ( D_query.exec( QString("SELECT DISTINCT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\" ASC;").arg(tbl).arg(year).arg(month) ) == false ) {
                                 // error querying database
@@ -224,7 +221,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                         break;
                                     }
                                     // successfully get the day
-                                    dates.at( ws ).at( lt ).at( year ).at( month ).push_back( day );
+                                    dates.at( ws ).at( year ).at( month ).push_back( day );
                                 }
                                 D_query.finish();
                                 // break if something went wrong
@@ -254,7 +251,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
 
 
 // update the values for the warnings
-void DbQuery::updateWarnings( const QString& web_server, const QString& log_type, const std::vector<std::tuple<int, int>>& updates )
+void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::tuple<int, int>>& updates )
 {
     bool successful = true;
 
@@ -272,26 +269,15 @@ void DbQuery::updateWarnings( const QString& web_server, const QString& log_type
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_";
+            table = "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_";
+            table = "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_";
+            table = "iis";
         } else {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
-        }
-        if ( successful == true ) {
-            if ( log_type == TYPES.value(1) ) {
-                table += "access";
-            } else if ( log_type == TYPES.value(2) ) {
-                table += "error";
-            } else {
-                // unexpected LogType
-                successful = false;
-                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
-            }
         }
 
         if ( successful == true ) {
@@ -320,7 +306,7 @@ void DbQuery::updateWarnings( const QString& web_server, const QString& log_type
 
 
 // get daytime values for the warnings
-void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> &result, const QString& web_server, const QString& log_type, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ )
+void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> &result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ )
 {
     bool successful = true;
     std::vector<std::vector<std::vector<std::vector<QString>>>> items;
@@ -340,28 +326,15 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_";
+            table = "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_";
+            table = "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_";
+            table = "iis";
         } else {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
-        }
-        bool acc_type = false;
-        if ( successful == true ) {
-            if ( log_type == TYPES.value(1) ) {
-                table += "access";
-                acc_type = true;
-            } else if ( log_type == TYPES.value(2) ) {
-                table += "error";
-            } else {
-                // unexpected LogType
-                successful = false;
-                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
-            }
         }
         int year, month, day, hour;
         if ( successful == true ) {
@@ -412,10 +385,8 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                             for ( int i=1; i<13; i++ ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
-                            if ( acc_type == true ) {
-                                for ( int i=19; i>12; i-- ) {
-                                    aux.push_back( query.value( i ).toString() );
-                                }
+                            for ( int i=19; i>12; i-- ) {
+                                aux.push_back( query.value( i ).toString() );
                             }
                             aux.push_back( query.value( 0 ).toString() );
                             // append the line
@@ -454,10 +425,8 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                             for ( int i=1; i<13; i++ ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
-                            if ( acc_type == true ) {
-                                for ( int i=19; i>12; i-- ) {
-                                    aux.push_back( query.value( i ).toString() );
-                                }
+                            for ( int i=19; i>12; i-- ) {
+                                aux.push_back( query.value( i ).toString() );
                             }
                             aux.push_back( query.value( 0 ).toString() );
                             // append the line
@@ -505,11 +474,11 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_access";
+            table += "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_access";
+            table += "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_access";
+            table += "iis";
         } else {
             // unexpected WebServer
             successful = false;
@@ -843,7 +812,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, int>>>& result, const QString& web_server, const QString& log_type, const QString& year, const QString& month, const QString& day, const QString& log_field )
+void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, int>>>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field )
 {
     bool successful = true;
     QHash<QString, int> aux_items;
@@ -864,26 +833,15 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_";
+            table = "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_";
+            table = "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_";
+            table = "iis";
         } else {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
-        }
-        if ( successful == true ) {
-            if ( log_type == TYPES.value(1) ) {
-                table += "access";
-            } else if ( log_type == TYPES.value(2) ) {
-                table += "error";
-            } else {
-                // unexpected LogType
-                successful = false;
-                DialogSec::errGeneric( nullptr, QString("Unexpected LogType:\n%1").arg( web_server ), true );
-            }
         }
         if ( successful == true ) {
             // build the query statement
@@ -958,7 +916,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>>& result, const QString& web_server, const QString& log_type, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter )
+void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter )
 {
     bool successful = true;
     std::unordered_map<int, std::unordered_map<int, int>> data = {
@@ -991,26 +949,15 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_";
+            table = "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_";
+            table = "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_";
+            table = "iis";
         } else {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
-        }
-        if ( successful == true ) {
-            if ( log_type == TYPES.value(1) ) {
-                table += "access";
-            } else if ( log_type == TYPES.value(2) ) {
-                table += "error";
-            } else {
-                // unexpected LogType
-                successful = false;
-                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
-            }
         }
         int from_year, from_month, from_day,
             to_year, to_month, to_day;
@@ -1228,7 +1175,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& log_type, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
 {
     bool successful = true;
     std::vector<std::tuple<long long, int>> data;
@@ -1248,26 +1195,15 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_";
+            table = "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_";
+            table = "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_";
+            table = "iis";
         } else {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
-        }
-        if ( successful == true ) {
-            if ( log_type == TYPES.value(1) ) {
-                table += "access";
-            } else if ( log_type == TYPES.value(2) ) {
-                table += "error";
-            } else {
-                // unexpected LogType
-                successful = false;
-                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
-            }
         }
 
         int year, month, day;
@@ -1490,7 +1426,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
 
 
 
-void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& log_type, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
 {
     bool successful = true;
     std::vector<std::tuple<long long, int>> data;
@@ -1510,26 +1446,15 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
     } else {
         QString table;
         if ( web_server == "Apache2" ) {
-            table += "apache_";
+            table = "apache";
         } else if ( web_server == "Nginx" ) {
-            table += "nginx_";
+            table = "nginx";
         } else if ( web_server == "IIS" ) {
-            table += "iis_";
+            table = "iis";
         } else {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
-        }
-        if ( successful == true ) {
-            if ( log_type == TYPES.value(1) ) {
-                table += "access";
-            } else if ( log_type == TYPES.value(2) ) {
-                table += "error";
-            } else {
-                // unexpected LogType
-                successful = false;
-                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_LT).arg( log_type ), true );
-            }
         }
         int from_year, from_month, from_day,
             to_year, to_month, to_day;
