@@ -1,6 +1,7 @@
 
 #include "datetime.h"
 
+#include "modules/exceptions.h"
 #include "utilities/strings.h"
 
 #include "time.h"
@@ -40,7 +41,8 @@ const std::string DateTimeOps::convertMonth( const std::string& month )
     } else if ( month == "Dec" ) {
         m = "12";
     } else {
-        throw ("Unexpected month format: "+month);
+        // nope
+        throw DateTimeException("Unexpected month format: "+month);
     }
     return m;
 }
@@ -200,8 +202,8 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
 
         } else {
             // wronthing went some ...
+            throw DateTimeException("Unexpected DateTime format: "+datetime_);
         }
-
     }
 
     return std::vector<std::string>({ year, month, day, hour, minute, second });
