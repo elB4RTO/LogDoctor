@@ -12,17 +12,10 @@
 
 HashOps::HashOps()
 {
-    this->hashes[this->APACHE_ID] = std::unordered_map<int, std::vector<std::string>>();
-    this->hashes[this->NGINX_ID] = std::unordered_map<int, std::vector<std::string>>();
-    this->hashes[this->IIS_ID] = std::unordered_map<int, std::vector<std::string>>();
-    for ( int i=1; i<3; i++ ) {
-        this->hashes[this->APACHE_ID].emplace( i, std::vector<std::string>() );
-        this->hashes[this->NGINX_ID].emplace( i, std::vector<std::string>() );
-        this->hashes[this->IIS_ID].emplace( i, std::vector<std::string>() );
-    }
+
 }
 
-void HashOps::setDialogLevel( const int new_level )
+void HashOps::setDialogLevel( const int& new_level )
 {
     this->dialog_level = new_level;
 }
@@ -49,22 +42,20 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
     } else {
         QSqlQuery query = QSqlQuery( db );
         for ( const auto& [wid,name] : this->ws_names ) {
-            for ( const auto& [tid,type] : this->log_types ) {
-                if ( query.exec("SELECT hash FROM "+name+"_"+type+";") == false ) {
-                    // error querying database
-                    successful = false;
-                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
-                    break;
-                } else {
-                    // iterate over results
-                    while ( query.next() ) {
-                        std::string hash = query.value(0).toString().toStdString();
-                        if ( hash.size() != 64 ) {
-                            // not a valid sha256 hash
-                            continue;
-                        }
-                        this->hashes.at( wid ).at( tid ).push_back( hash );
+            if ( query.exec("SELECT hash FROM "+name+";") == false ) {
+                // error querying database
+                successful = false;
+                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
+                break;
+            } else {
+                // iterate over results
+                while ( query.next() ) {
+                    std::string hash = query.value(0).toString().toStdString();
+                    if ( hash.size() != 64 ) {
+                        // not a valid sha256 hash
+                        continue;
                     }
+                    this->hashes.at( wid ).push_back( hash );
                 }
             }
             if ( successful == false ) { break; }
@@ -88,10 +79,10 @@ std::string HashOps::digestFile( const std::string& file_path )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed(const std::string &file_hash, const int web_server_id, const int log_type )
+bool HashOps::hasBeenUsed( const std::string &file_hash, const int& web_server_id)
 {
     bool found = false;
-    for ( const std::string &hash : this->hashes.at( web_server_id ).at( log_type ) ) {
+    for ( const std::string &hash : this->hashes.at( web_server_id ) ) {
         if ( file_hash == hash ) {
             found = true;
             break;
@@ -102,15 +93,15 @@ bool HashOps::hasBeenUsed(const std::string &file_hash, const int web_server_id,
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertUsedHash(QSqlDatabase& db, QSqlQuery& query, const QString& db_name, const std::string& hash, const int web_server_id, const int log_type )
+bool HashOps::insertUsedHash( QSqlDatabase& db, QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id )
 {
     bool successful = true;
     try {
-        if( VecOps::contains( this->hashes.at( web_server_id ).at( log_type ), hash ) == false ) {
-            this->hashes.at( web_server_id ).at( log_type ).push_back( hash );
+        if( VecOps::contains( this->hashes.at( web_server_id ), hash ) == false ) {
+            this->hashes.at( web_server_id ).push_back( hash );
             // insert tnto the database
-            QString stmt = QString("INSERT INTO %1_%2 ( hash ) VALUES ( '%3' );")
-                .arg( this->ws_names.at(web_server_id), this->log_types.at(log_type), QString::fromStdString(hash).replace("'","''") );
+            QString stmt = QString("INSERT INTO %1 ( hash ) VALUES ( '%2' );")
+                .arg( this->ws_names.at(web_server_id), QString::fromStdString(hash).replace("'","''") );
             if ( query.exec( stmt ) == false ) {
                 // error opening database
                 successful = false;
@@ -135,7 +126,7 @@ bool HashOps::insertUsedHash(QSqlDatabase& db, QSqlQuery& query, const QString& 
 }
 
 
-bool HashOps::insertUsedHashes(const std::string& db_path, const std::unordered_map<int, std::vector<std::string>>& hashes, const int web_server_id )
+bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string> &hashes, const int& web_server_id )
 {
     bool proceed = true;
 
@@ -169,12 +160,10 @@ bool HashOps::insertUsedHashes(const std::string& db_path, const std::unordered_
         } else {
 
             try {
-                for ( const auto& [ log_type, data ] : hashes ) {
-                    for ( const std::string& hash : data ) {
-                        proceed = this->insertUsedHash( db, query, db_name, hash, web_server_id, log_type );
-                        if ( proceed == false ) {
-                            break;
-                        }
+                for ( const std::string& hash : hashes ) {
+                    proceed = this->insertUsedHash( db, query, db_name, hash, web_server_id );
+                    if ( proceed == false ) {
+                        break;
                     }
                 }
                 query.finish();
