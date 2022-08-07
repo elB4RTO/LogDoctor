@@ -11,7 +11,7 @@ FormatOps::FormatOps()
 }
 
 // process escapes like apache
-const std::string FormatOps::parseApacheEscapes(const std::string& string , const bool strftime )
+const std::string FormatOps::parseApacheEscapes( const std::string& string , const bool& strftime )
 {
     int i = 0,
         max = string.size()-1;
@@ -159,23 +159,10 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string )
 
 
 
-const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str, const int l_type )
+const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str )
 {
-    const std::unordered_map<std::string, std::string> *f_map;
-    const std::unordered_map<std::string ,std::unordered_map<std::string, std::string>> *f_map_v;
-    switch ( l_type ) {
-        case 1:
-            f_map   = &this->APACHE_ALF;
-            f_map_v = &this->APACHE_ALF_V;
-            break;
-        case 2:
-            f_map   = &this->APACHE_ELF;
-            f_map_v = &this->APACHE_ELF_V;
-            break;
-        default:
-            // shouldn't be here
-            throw (&"Unexpected LogType for Apache: "[l_type]);
-    }
+    const auto &f_map   = this->APACHE_ALF;
+    const auto &f_map_v = this->APACHE_ALF_V;
 
     std::string initial="", final="";
     std::vector<std::string> separators, fields;
@@ -208,8 +195,10 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     // backslashes are valid for control-characters only, or get reduced
                     // single percent-signs are considered invalid
                     char c = f_str.at(aux+1);
-                    if ( c == ',' ) {
-                        // status code(s) may follow, or may not, in any case is considered valid
+                    if ( c == ',' || c == '{' ) {
+                        // in the first case: status code(s) may follow, or may not
+                        // in the second case: a composed format code may follow
+                        // in any case is considered valid
                         ;
                     } else if ( c == '%' ) {
                         // the percent sign character, will be used as separator, skip
@@ -280,12 +269,12 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     aux_stop += 2;
                     aux_fld_v = f_str.substr( aux+1, 3 );
                 }
-                if ( f_map_v->find( aux_fld_v ) == f_map_v->end() ) {
+                if ( f_map_v.find( aux_fld_v ) == f_map_v.end() ) {
                     // invalid module, abort
                     throw LogFormatException( "Invalid format code found: '%{...}"+aux_fld_v+"'." );
                 } else {
                     // module is valud
-                    const auto &aux_map = f_map_v->at( aux_fld_v );
+                    const auto &aux_map = f_map_v.at( aux_fld_v );
                     if ( aux_map.size() == 0 ) {
                         // module not considered and always giving out something, even if invalid varname is passed
                         fields.push_back( "NONE" );
@@ -405,9 +394,9 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     aux_stop ++;
                 }
                 // check if the module is valid
-                if ( f_map->find( aux_fld ) != f_map->end() ) {
+                if ( f_map.find( aux_fld ) != f_map.end() ) {
                     // valid
-                    cur_fld = f_map->at( aux_fld );
+                    cur_fld = f_map.at( aux_fld );
                     if ( cur_fld == "date_time_ncsa" ) {
                         // apache's NCSA time format is always enclosed inside brackets
                         cur_sep += "[";
@@ -437,54 +426,35 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
         }
 
         // append the field
-        if ( cur_fld == "client:port" ) {
-            fields.push_back( "client" );
-            separators.push_back( ":" );
-            fields.push_back( "port" );
-        } else {
-            fields.push_back( cur_fld );
-        }
+        fields.push_back( cur_fld );
         n_fld++;
-
     }
-    //delete f_map;
-    //delete f_map_v;
 
     return FormatOps::LogsFormat{
-            .string  = f_str,
-            .initial = initial,
-            .final   = final,
+            .string     = f_str,
+            .initial    = initial,
+            .final      = final,
             .separators = separators,
             .fields     = fields
         };
 
 }
 // sample
-const QString FormatOps::getApacheLogSample( const LogsFormat& log_format, const int log_type )
+const QString FormatOps::getApacheLogSample( const LogsFormat& log_format )
 {
     QString sample = "";
-    const std::unordered_map<std::string, QString>* map;
-    switch ( log_type ) {
-        case 1:
-            map  = &this->APACHE_ALF_SAMPLES;
-            break;
-        case 2:
-            map  = &this->APACHE_ELF_SAMPLES;
-            break;
-        default:
-            // shouldn't be here
-            throw (&"Unexpected LogType for Apache: "[log_type]);
-    }
+    const std::unordered_map<std::string, QString>& map = this->APACHE_ALF_SAMPLES;
+
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
     for ( int i=0; i<log_format.separators.size(); i++ ) {
         // append fields and separators
-        sample += map->at( log_format.fields.at( i ) );
+        sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
     }
     // add the last field
     if ( log_format.fields.size() > 0 ) {
-        sample += map->at( log_format.fields.back() );
+        sample += map.at( log_format.fields.back() );
     }
     // and the final characters
     sample += QString::fromStdString( log_format.final );
@@ -493,24 +463,10 @@ const QString FormatOps::getApacheLogSample( const LogsFormat& log_format, const
 
 
 
-const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::string& f_str, const int l_type )
+const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::string& f_str )
 {
-    const std::unordered_map<std::string, std::string> *f_map;
-    const std::vector<std::string> *f_flds;
-
-    switch ( l_type ) {
-        case 1:
-            f_map  = &this->NGINX_ALF;
-            f_flds = &this->N_ALFs;
-            break;
-        case 2:
-            f_map  = &this->NGINX_ELF;
-            f_flds = &this->N_ELFs;
-            break;
-        default:
-            // shouldn't be here
-            throw (&"Unexpected LogType for Nginx: "[l_type]);
-    }
+    const auto& f_map  = this->NGINX_ALF;
+    const auto& f_flds = this->N_ALFs;
 
     std::string initial="", final="";
     std::vector<std::string> separators, fields;
@@ -526,7 +482,7 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         cur_fld = "";
         min_dist = max_dist;
         // find the next field
-        for ( const std::string& fld : *f_flds ) {
+        for ( const std::string& fld : f_flds ) {
             // run untill a valid field is found
             aux = f_str.find( fld, start );
             if ( aux < 0 || aux > min_dist ) {
@@ -563,53 +519,35 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
 
         n_fld++;
         // append the current field, converted
-        /*if ( f_map->at( cur_fld ) == "client:port" ) {
-            fields.push_back( "client" );
-            separators.push_back( ":" );
-            fields.push_back( "port" );
-        } else {*/
-            fields.push_back( f_map->at( cur_fld ) );
-        /*}*/
+        fields.push_back( f_map.at( cur_fld ) );
         // step at the end of the current field for the next start
         stop = min_dist + cur_fld.size();
     }
-    //delete f_map;
-    //delete f_flds;
 
     return FormatOps::LogsFormat{
-            .string  = f_str,
-            .initial = initial,
-            .final   = final,
+            .string     = f_str,
+            .initial    = initial,
+            .final      = final,
             .separators = separators,
             .fields     = fields
         };
 }
 // sample
-const QString FormatOps::getNginxLogSample( const LogsFormat& log_format, const int log_type )
+const QString FormatOps::getNginxLogSample( const LogsFormat& log_format )
 {
     QString sample = "";
-    const std::unordered_map<std::string, QString>* map;
-    switch ( log_type ) {
-        case 1:
-            map  = &this->NGINX_ALF_SAMPLES;
-            break;
-        case 2:
-            map  = &this->NGINX_ELF_SAMPLES;
-            break;
-        default:
-            // shouldn't be here
-            throw (&"Unexpected LogType for Apache: "[log_type]);
-    }
+    const std::unordered_map<std::string, QString>& map = this->NGINX_ALF_SAMPLES;
+
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
     for ( int i=0; i<log_format.separators.size(); i++ ) {
         // append fields and separators
-        sample += map->at( log_format.fields.at( i ) );
+        sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
     }
     // add the last field
     if ( log_format.fields.size() > 0 ) {
-        sample += map->at( log_format.fields.back() );
+        sample += map.at( log_format.fields.back() );
     }
     // and the final characters
     sample += QString::fromStdString( log_format.final );
@@ -618,7 +556,7 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format, const 
 
 
 
-const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int l_mod )
+const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod )
 {
     std::string initial="", final="";
     std::vector<std::string> separators, fields;
@@ -641,8 +579,8 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                 int start, stop=0,
                     max=f_str.size()-1;
                 std::string aux_fld, cur_sep;
-                const std::unordered_map<std::string, std::string> &f_map = this->IIS_ALF;
-                const std::vector<std::string> &f_flds = this->I_ALFs;
+                const auto &f_map  = this->IIS_ALF;
+                const auto &f_flds = this->I_ALFs;
                 // parse the string to convert keyargs in craplog's fields format
                 while (true) {
                     // start after the last found separator
@@ -691,34 +629,24 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
 
         default:
             // shouldn't be here
-            throw (&"Unexpected LogModule for IIS: "[l_mod]);
+            throw LogFormatException( "Unexpected LogModule for IIS: "+std::to_string( l_mod ) );
     }
 
 
     return FormatOps::LogsFormat{
-            .string  = f_str,
-            .initial = initial,
-            .final   = final,
+            .string     = f_str,
+            .initial    = initial,
+            .final      = final,
             .separators = separators,
             .fields     = fields
         };
 }
 // sample
-const QString FormatOps::getIisLogSample( const LogsFormat& log_format/*, const int log_type*/ )
+const QString FormatOps::getIisLogSample( const LogsFormat& log_format )
 {
     QString sample = "";
     const std::unordered_map<std::string, QString>& map = this->IIS_ALF_SAMPLES;
-    /*switch ( log_type ) {
-        case 1:
-            map  = &this->IIS_ALF_SAMPLES;
-            break;
-        case 2:
-            map  = &this->IIS_ELF_SAMPLES;
-            break;
-        default:
-            // shouldn't be here
-            throw (&"Unexpected LogType for Apache: "[log_type]);
-    }*/
+
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
     for ( int i=0; i<log_format.separators.size(); i++ ) {
