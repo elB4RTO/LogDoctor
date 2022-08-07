@@ -3,102 +3,54 @@
 
 #include "datetime.h"
 
+#include "modules/exceptions.h"
+
 
 LogOps::LogOps()
 {
-    // from fields to ids
-    this->field2id["date_time_year"]    = 1;
-    this->field2id["date_time_month"]   = 2;
-    this->field2id["date_time_day"]     = 3;
-    this->field2id["date_time_hour"]    = 4;
-    this->field2id["date_time_minute"]  = 5;
-    this->field2id["date_time_second"]  = 6;
-        this->field2id["date_time_ncsa"]    = 0;
-        this->field2id["date_time_utc"]     = 0;
-        this->field2id["date_time_iso"]     = 0;
-        this->field2id["date_time_mcs"]     = 0;
-        this->field2id["date_time_iso_mcs"] = 0;
 
-    this->field2id["request_protocol"]  = 10;
-    this->field2id["request_method"]    = 11;
-    this->field2id["request_uri"]       = 12;
-    this->field2id["request_query"]     = 13;
-    this->field2id["response_code"]     = 14;
-        this->field2id["request_full"]      = 0;
-
-    this->field2id["time_taken_ms"]     = 15;
-        this->field2id["time_taken_s"]      = 0;
-        this->field2id["time_taken_s.ms"]   = 0;
-    this->field2id["bytes_sent"]        = 16;
-    this->field2id["bytes_received"]    = 17;
-
-    this->field2id["referer"]           = 18;
-
-    this->field2id["client"]            = 20;
-        this->field2id["client:port"]       = 0;
-    this->field2id["user_agent"]        = 21;
-    this->field2id["cookie"]            = 22;
-
-    this->field2id["port"]          = 30;
-    this->field2id["error_level"]   = 31;
-    this->field2id["error_message"] = 32;
-    this->field2id["source_file"]   = 33;
 }
 
 
-LogOps::LogType LogOps::defineFileType( const std::string& name, const std::vector<std::string>& lines, std::unordered_map<int, FormatOps::LogsFormat>& formats )
+LogOps::LogType LogOps::defineFileType( const std::string& name, const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
 {
     if ( lines.size() == 0 ) {
         // empty content
         return this->LogType::Failed;
     }
 
-    int n_acc=0, n_err=0;
-    bool maybe_acc, maybe_err;
-    LogOps::LogType aux_type, real_type;
-    const FormatOps::LogsFormat& current_ALF = formats.at( 1 ),
-                                 current_ELF = formats.at( 2 );
+    int n_access=0, n_other=0;
+    LogOps::LogType log_type;
 
     // real type assignment
-    real_type = this->LogType::Failed;
+    log_type = this->LogType::Failed;
     for ( const std::string& line : lines ) {
-        // scan deeper
-        maybe_acc = this->deepTypeCheck( line, current_ALF );
-        maybe_err = this->deepTypeCheck( line, current_ELF );
-        if ( maybe_acc == true && maybe_err == false ) {
-            n_acc++; continue; }
-        else if ( maybe_err == true && maybe_acc == false ) {
-            n_err++; continue; }
-        // if here, both was found, or none
-        aux_type = this->comparativeTypeCheck( line, current_ALF, current_ELF );
-        if ( aux_type == this->LogType::Access ) {
-            n_acc ++;
-        } else if ( aux_type == this->LogType::Error ) {
-            n_err ++;
+        // scan
+        if ( this->deepTypeCheck( line, format ) == true ) {
+            n_access++;
         } else {
-
+            n_other++;
         }
-        // if here, it's probably not a valid file
     }
 
     // final decision
-    if ( n_acc > 0 && n_err == 0 ) {
+    if ( n_access > 0 && n_other == 0 ) {
         // access logs
-        real_type = LogOps::LogType::Access;
-    } else if ( n_err > 0 && n_acc == 0 ) {
-        // error logs
-        real_type = LogOps::LogType::Error;
+        log_type = LogOps::LogType::Access;
+    } else if ( n_other > 0 && n_access == 0 ) {
+        // other format, maybe error logs
+        log_type = LogOps::LogType::Discarded;
     } else {
-        // something is wrong with these logs
+        // something is wrong with this file, keep the Failed type
     }
-    return real_type;
+    return log_type;
 }
 
 
 bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat& format )
 {
-    int n_sep_found = 0, n_blank_sep=0,
-        found_at = 0, aux_found_at1 = 0, aux_found_at2 = 0,
+    int n_sep_found=0, n_blank_sep=0,
+        found_at, aux_found_at1=0, aux_found_at2,
         n_sep = format.separators.size(),
         line_size = line.size()-1;
     std::string sep, aux_sep1, aux_sep2;
@@ -120,21 +72,7 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
             continue;
         }
         aux_found_at2 = aux_found_at1;
-        while (true) {
-            found_at = line.find( sep, aux_found_at2 );
-            if ( found_at < 0 || found_at > line_size ) {
-                // not found
-                break;
-            }
-            if (found_at > 0 ) {
-                if ( line.at( found_at-1 ) == '\\' ) {
-                    // backslashed sep, probably not a sep
-                    aux_found_at2 = found_at + sep.size();
-                    continue;
-                }
-            }
-            break;
-        }
+        found_at = line.find( sep, aux_found_at2 );
         if ( found_at < 0 || found_at > line_size ) {
             // not found
             continue;
@@ -200,171 +138,6 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
 }
 
 
-LogOps::LogType LogOps::comparativeTypeCheck( const std::string& line, const FormatOps::LogsFormat& acc_f, const FormatOps::LogsFormat& err_f )
-{
-    LogOps::LogType type = this->LogType::Failed;
-
-    int line_size = line.size(),
-        n_acc_sep = acc_f.separators.size()-1,
-        n_err_sep = err_f.separators.size()-1;
-
-    std::string acc_sep, err_sep;
-
-    struct Score {
-        int score = 0;
-        int n_sep_found = 0;
-        int n_sep_blank = 0;
-        bool sep_found = false;
-        int start = 0;
-        int stop = 0;
-        void calc ( const std::string& line, const std::string& sep, const int posix )
-        {
-            this->start = this->stop;
-
-            if ( sep == "" ) {
-                this->sep_found = true;
-                this->n_sep_blank ++;
-                this->n_sep_found ++;
-                this->score += 20;
-            } else {
-                int aux;
-                switch (posix) {
-                    // initial
-                    case 0:
-                        if ( StringOps::startsWith( line, sep ) == true ) {
-                            this->sep_found = true;
-                            this->n_sep_found ++;
-                            this->score += 50;
-                        }
-                        break;
-                    // separator
-                    case 1:
-                        aux = line.find( sep, this->start );
-                        if ( aux >= 0 && aux <= line.size() ) {
-                            // found
-                            this->sep_found = true;
-                            this->n_sep_found ++;
-                            this->start = aux;
-                            this->stop  = aux + sep.size();
-                            this->score += 50;
-                        }
-                        break;
-                    // final
-                    case 2:
-                        if ( StringOps::endsWith( line, sep ) == true ) {
-                            this->sep_found = true;
-                            this->n_sep_found ++;
-                            this->score += 50;
-                        }
-                        break;
-                }
-            }
-        }
-    } acc, err;
-
-
-    acc_sep = acc_f.initial;
-    err_sep = err_f.initial;
-
-    acc.sep_found = false;
-    err.sep_found = false;
-
-    acc.calc( line, acc_sep, 0 );
-    err.calc( line, err_sep, 0 );
-
-    if ( acc_sep == err_sep ) {
-        // separators are identical
-        if ( acc.sep_found == true && err.sep_found == false ) {
-            acc.score += 80;
-        } else if ( err.sep_found == true && acc.sep_found == false ) {
-            err.score += 80;
-        }
-    }
-
-
-    int i = 0;
-    bool skip_acc, skip_err;
-    while (true) {
-        if ( i > n_acc_sep && i > n_err_sep ) {
-            // no more separators to try
-            break;
-        }
-        acc.sep_found = false;
-        err.sep_found = false;
-
-        if ( i <= n_acc_sep
-          && acc.start < line_size ) {
-            skip_acc = false;
-            acc_sep = acc_f.separators.at( i );
-            acc.calc( line, acc_sep, 1 );
-        } else {
-            skip_acc = true;
-            acc_sep.clear();
-        }
-
-        if ( i <= n_err_sep
-          && err.start < line_size ) {
-            skip_err = false;
-            err_sep = err_f.separators.at( i );
-            err.calc( line, err_sep, 1 );
-        } else {
-            skip_err = true;
-            err_sep.clear();
-        }
-
-        if ( skip_acc == false && skip_err == false && acc_sep == err_sep ) {
-            // separators are identical
-            if ( acc.sep_found == true && err.sep_found == false ) {
-                acc.score += 80;
-            } else if ( err.sep_found == true && acc.sep_found == false ) {
-                err.score += 80;
-            }
-        }
-        i++;
-    }
-
-
-    acc_sep = acc_f.final;
-    err_sep = err_f.final;
-
-    acc.sep_found = false;
-    err.sep_found = false;
-
-    acc.calc( line, acc_sep, 2 );
-    err.calc( line, err_sep, 2 );
-
-    if ( acc_sep == err_sep ) {
-        // separators are identical
-        if ( acc.sep_found == true && err.sep_found == false ) {
-            acc.score += 80;
-        } else if ( err.sep_found == true && acc.sep_found == false ) {
-            err.score += 80;
-        }
-    }
-
-
-    // final points, remove points for every missing sep
-    acc.score -= 35 * ( n_acc_sep + 2 - acc.n_sep_found );
-    acc.score -= 5 * ( acc.n_sep_found - acc.n_sep_blank );
-    err.score -= 35 * ( n_err_sep + 2 - err.n_sep_found );
-    err.score -= 5 * ( err.n_sep_found - err.n_sep_blank );
-
-
-    if ( acc.score > err.score ) {
-        type = this->LogType::Access;
-
-    } else if ( err.score > acc.score ) {
-        type = this->LogType::Error;
-
-    } else {
-        // something is wrong with these logs
-    }
-
-    return type;
-}
-
-
-
 
 const std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
 {
@@ -381,7 +154,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
     while (true) {
         // split fields
-        start = stop; // stop updated at the end of this loop
+        start = stop; // stop updated at the end of the loop
         if ( i <= n_sep ) {
             sep = format.separators.at( i );
             stop = line.find( sep, start );
@@ -408,91 +181,35 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
         }
 
         if ( i+1 <= n_sep ) {
-
-            // tricky error messages from apache
-            aux_fld_str = StringOps::strip( line.substr(start, stop-start), " " );
-            if ( StringOps::startsWith( aux_fld_str, "AH0"  )
-              || StringOps::startsWith( aux_fld_str, "PHP " ) ) {
-                if ( format.fields.at( i ) != "error_message" ) {
-                    // this field is missing, step to the right field
-                    for ( int j=i+1; j<format.fields.size(); j++ ) {
-                        if ( format.fields.at( j ) == "error_message" ) {
-                            i = j;
-                            break;
-                        }
-                    }
+            // not the last separator, check the possibility of missing
+            aux_sep1 = sep;
+            aux_start1 = aux_sep1.find(' ');
+            if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
+                aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
+            }
+            // iterate over following separators
+            for ( int j=i+1; j<n_sep; j++ ) {
+                aux_sep2 = format.separators.at( j );
+                aux_start2 = aux_sep2.find(' ');
+                if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
+                    aux_start2 = stop;
+                } else {
+                    aux_start2 = stop + aux_start2 + 1;
+                    aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
                 }
-                // correct field, check if the next separators has columns. in case, update the stop position
-                int c_count = StringOps::count( aux_fld_str, ": " ),
-                    c_max = 2;
-                if ( StringOps::startsWith( aux_fld_str, "AH00171" )
-                  || StringOps::startsWith( aux_fld_str, "AH00163" ) ) {
-                    c_max = 1;
+                // if the 2 seps are identical, skip (for uncertainty)
+                if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
+                    continue;
                 }
-                if ( c_count < c_max ) {
-                    // supposed to contain at least 2 columns
-                    aux_stop = stop;
-                    int j;
-                    for ( j=0; j<c_count; j++ ) {
-                        aux_stop = line.find( ": ", aux_stop );
-                        if ( aux_stop != 0 || aux_stop >= line_size ) {
-                            // column not not found
-                            break;
-                        } else {
-                            // one_setp_further
-                            aux_stop ++;
-                        }
-                    }
-                    // finally update the stop to the next sep
-                    if ( i <= n_sep ) {
-                        sep = format.separators.at( i );
-                        stop = line.find( sep, aux_stop );
-                    } else if ( i == n_sep+1 ) {
-                        // final separator
-                        sep = format.final;
-                        if ( sep == "" ) {
-                            stop = line_size+1;
-                        } else {
-                            stop = line.find( sep, aux_stop );
-                            if ( stop > line_size+1 || stop < 0 ) {
-                                stop = line_size +1;
-                            }
-                        }
-                    }
-                }
-
-            } else {
-
-                // not the last separator, check the possibility of missing
-                aux_sep1 = sep;
-                aux_start1 = aux_sep1.find(' ');
-                if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
-                    aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
-                }
-                // iterate over following separators
-                for ( int j=i+1; j<n_sep; j++ ) {
+                // check if the next sep is found in the same position of the current one
+                if ( line.find( aux_sep2, stop ) == aux_start2 ) {
+                    // probably the current field is missing, skip to this one
+                    i = j;
+                    aux_stop = aux_start2 + aux_sep2.size();
                     aux_sep2 = format.separators.at( j );
-                    aux_start2 = aux_sep2.find(' ');
-                    if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
-                        aux_start2 = stop;
-                    } else {
-                        aux_start2 = stop + aux_start2 + 1;
-                        aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
-                    }
-                    // if the 2 seps are identical, skip (for uncertainty)
-                    if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
-                        continue;
-                    }
-                    // check if the next sep is found in the same position of the current one
-                    if ( line.find( aux_sep2, stop ) == aux_start2 ) {
-                        // probably the current field is missing, skip to this one
-                        i = j;
-                        aux_stop = aux_start2 + aux_sep2.size();
-                        aux_sep2 = format.separators.at( j );
-                        missing = true;
-                    }
-                    break;
+                    missing = true;
                 }
+                break;
             }
         }
 
@@ -515,33 +232,33 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                     // process the date to get year, month, day, hour and minute
                     if ( StringOps::startsWith( fld, "date_time" ) ) {
                         std::vector<std::string> dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part which is useless from now on
-                        if ( dt[0] != "" ) {
+                        if ( dt.at( 0 ) != "" ) {
                             // year
-                            data.emplace( this->field2id.at("date_time_year"), dt[0] );
+                            data.emplace( this->field2id.at("date_time_year"), dt.at( 0 ) );
                         }
-                        if ( dt[1] != "" ) {
+                        if ( dt.at( 1 ) != "" ) {
                             // month
-                            data.emplace( this->field2id.at("date_time_month"), dt[1] );
+                            data.emplace( this->field2id.at("date_time_month"), dt.at( 1 ) );
                         }
-                        if ( dt[2] != "" ) {
+                        if ( dt.at( 2 ) != "" ) {
                             // day
-                            data.emplace( this->field2id.at("date_time_day"), dt[2] );
+                            data.emplace( this->field2id.at("date_time_day"), dt.at( 2 ) );
                         }
-                        if ( dt[3] != "" ) {
+                        if ( dt.at( 3 ) != "" ) {
                             // hour
-                            if ( dt[3] == "PM" ) {
+                            if ( dt.at( 3 ) == "PM" ) {
                                 add_pm = true;
                             } else {
-                                data.emplace( this->field2id.at("date_time_hour"), dt[3] );
+                                data.emplace( this->field2id.at("date_time_hour"), dt.at( 3 ) );
                             }
                         }
-                        if ( dt[4] != "" ) {
+                        if ( dt.at( 4 ) != "" ) {
                             // minute
-                            data.emplace( this->field2id.at("date_time_minute"), dt[4] );
+                            data.emplace( this->field2id.at("date_time_minute"), dt.at( 4 ) );
                         }
-                        if ( dt[5] != "" ) {
+                        if ( dt.at( 5 ) != "" ) {
                             // second
-                            data.emplace( this->field2id.at("date_time_second"), dt[5] );
+                            data.emplace( this->field2id.at("date_time_second"), dt.at( 5 ) );
                         }
 
 
@@ -604,18 +321,10 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                         data.emplace( this->field2id.at("time_taken"), std::to_string( (int)t ) );
 
 
-                    // split client:port
-                    } else if ( fld == "client:port" ) {
-                        int aux = fld_str.find( ':' );
-                        if ( aux >= 0 && aux < fld_str.size() ) {
-                            data.emplace( this->field2id.at("client"), fld_str.substr( 0, aux ) );
-                            data.emplace( this->field2id.at("port"), fld_str.substr( aux+1 ) );
-                        }
-
-
                     // something went wrong
                     } else {
                         // hmmm.. no...
+                        throw LogParserException( "Unexpected LogField: "+ fld );
                     }
                 }
             }
@@ -639,13 +348,13 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
     if ( add_pm == true ) {
         try {
             // add +12 hours for PM
-            data[4] = std::to_string( 12 + std::stoi(data[4]) );
+            data.at( 4 ) = std::to_string( 12 + std::stoi(data.at( 4 )) );
         } catch (...) {
             // no hour data
         }
     }
 
-    // set the default warning mark ( 0=false )
+    // set the default warning mark ( 0=false ) to default status
     data.emplace( 99, "0" );
 
     this->lines ++;
@@ -668,11 +377,11 @@ void LogOps::resetPerfData()
     this->size  = 0;
     this->lines = 0;
 }
-int LogOps::getSize()
+const int LogOps::getSize()
 {
     return this->size;
 }
-int LogOps::getLines()
+const int LogOps::getLines()
 {
     return this->lines;
 }
