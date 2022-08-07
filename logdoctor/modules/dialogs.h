@@ -32,7 +32,6 @@ static QString
     t_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("Unexpected data-type"),
 
     t_LOGTYPE_FAILED    = QMessageBox::tr("Failed defining type"),
-    t_LOGTYPE_UNDEFINED = QMessageBox::tr("Undefined type"),
 
     t_FILE_ALREADY_USED = QMessageBox::tr("File already used"),
     t_FILE_SIZE_WARNING = QMessageBox::tr("File exceeds warning size"),
@@ -78,8 +77,7 @@ static QString
     m_DB_WRONG_COLUMN_NAME = QMessageBox::tr("The database contains an unexpected column"),
     m_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("A column has an unexpected data-type"),
 
-    m_LOGTYPE_FAILED    = QMessageBox::tr("Failed to determine if Access or Error type file"),
-    m_LOGTYPE_UNDEFINED = QMessageBox::tr("This file's LogType is not Access nor Error"),
+    m_LOGTYPE_FAILED    = QMessageBox::tr("Failed to determine the log type"),
 
     // requests
     r_REPORT_ISSUE    = QMessageBox::tr("Please report this issue"),
@@ -97,9 +95,9 @@ class DialogSec
 public:
     DialogSec();
 
-    static void warnGeneric( QWidget *parent, const QString& message, const bool report_msg=false );
+    static void warnGeneric( QWidget *parent, const QString& message, const bool& report_msg=false );
         //static void warnGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
-    static void errGeneric( QWidget *parent, const QString& message, const bool report_msg=false );
+    static void errGeneric( QWidget *parent, const QString& message, const bool& report_msg=false );
         //static void errGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
 
     static void errRenaming( QWidget *parent, const QString& path );
@@ -132,10 +130,6 @@ public:
     // log files type
     static void errFailedDefiningLogType( QWidget *parent, const QString& file );
         //static void errFailedDefiningLogType( QWidget *parent, const std::string& file );
-    static void errUndefinedLogType( QWidget *parent, const QString& file );
-        //static void errUndefinedLogType( QWidget *parent, const std::string& file );
-    static bool choiceUndefinedLogType( QWidget *parent, const QString& file );
-        //static bool choiceUndefinedLogType( QWidget *parent, const std::string& file );
     // log files hash
     static int choiceFileAlreadyUsed( QWidget *parent, const QString& msg );
         //static int choiceFileAlreadyUsed( QWidget *parent, const std::string& msg );
@@ -154,7 +148,7 @@ public:
     // files actions
     static void warnEmptyFile( QWidget *parent, const QString& file );
         //static void warnEmptyFile( QWidget *parent, const std::string& file );
-    static void errFailedReadFile( QWidget *parent, const QString& file, const bool skipping=false );
+    static void errFailedReadFile( QWidget *parent, const QString& file, const bool& skipping=false );
         //static void errFailedReadFile( QWidget *parent, const std::string& file, const bool skipping=false );
 
     // folders permissions
