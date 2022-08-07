@@ -9,7 +9,7 @@ VecOps::VecOps()
 
 
 
-bool VecOps::contains( const std::vector<int>& list, const int flag )
+const bool VecOps::contains( const std::vector<int>& list, const int& flag )
 {
     bool result = false;
     for ( const int& item : list ) {
@@ -22,7 +22,7 @@ bool VecOps::contains( const std::vector<int>& list, const int flag )
 }
 
 
-bool VecOps::contains( const std::vector<std::string>& list, const std::string& flag )
+const bool VecOps::contains( const std::vector<std::string>& list, const std::string& flag )
 {
     bool result = false;
     for ( const std::string& item : list ) {

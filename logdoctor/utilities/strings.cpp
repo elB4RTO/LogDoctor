@@ -8,7 +8,7 @@ StringOps::StringOps()
 }
 
 
-int StringOps::count(const std::string& str, const std::string& flag, bool consecutives )
+const int StringOps::count(const std::string& str, const std::string& flag, const bool& consecutives )
 {
     int start=0, aux_start=0, max=str.size()-1, count=0;
     while (true) {
@@ -31,7 +31,7 @@ int StringOps::count(const std::string& str, const std::string& flag, bool conse
 }
 
 
-bool StringOps::isNumeric( const std::string& str )
+const bool StringOps::isNumeric( const std::string& str )
 {
     bool result = false;
     if ( str.size() > 0 ) {
@@ -45,7 +45,7 @@ bool StringOps::isNumeric( const std::string& str )
     }
     return result;
 }
-bool StringOps::isNumeric( char chr )
+const bool StringOps::isNumeric( const char& chr )
 {
     if ( chr > 47 && chr < 58 ) {
         return true;
@@ -55,7 +55,7 @@ bool StringOps::isNumeric( char chr )
 }
 
 
-bool StringOps::isAlphabetic( const std::string& str )
+const bool StringOps::isAlphabetic( const std::string& str )
 {
     bool result = false;
     if ( str.size() > 0 ) {
@@ -69,7 +69,7 @@ bool StringOps::isAlphabetic( const std::string& str )
     }
     return result;
 }
-bool StringOps::isAlphabetic( const char chr )
+const bool StringOps::isAlphabetic( const char& chr )
 {
     if ( (chr > 64 && chr < 91)
       || (chr > 96 && chr < 123) ) {
@@ -80,7 +80,7 @@ bool StringOps::isAlphabetic( const char chr )
 }
 
 
-bool StringOps::isAlnum( const std::string& str )
+const bool StringOps::isAlnum( const std::string& str )
 {
     bool result = false;
     if ( str.size() > 0 ) {
@@ -94,7 +94,7 @@ bool StringOps::isAlnum( const std::string& str )
     }
     return result;
 }
-bool StringOps::isAlnum( const char chr )
+const bool StringOps::isAlnum( const char& chr )
 {
     if ( StringOps::isNumeric( chr ) == false
       || StringOps::isAlphabetic( chr ) == false ) {
@@ -105,7 +105,7 @@ bool StringOps::isAlnum( const char chr )
 }
 
 
-bool StringOps::startsWith( const std::string& str, const std::string& flag )
+const bool StringOps::startsWith( const std::string& str, const std::string& flag )
 {
     bool result = false;
     if ( flag.size() == 0 ) {
@@ -123,7 +123,7 @@ bool StringOps::startsWith( const std::string& str, const std::string& flag )
 }
 
 
-bool StringOps::endsWith( const std::string& str, const std::string& flag )
+const bool StringOps::endsWith( const std::string& str, const std::string& flag )
 {
     bool result = true;
     int str_size = str.size()-1,
@@ -138,7 +138,7 @@ bool StringOps::endsWith( const std::string& str, const std::string& flag )
 }
 
 
-bool StringOps::contains( const std::string& str, const std::string& flag )
+const bool StringOps::contains( const std::string& str, const std::string& flag )
 {
     bool result = true;
     int i = str.find( flag );
@@ -210,7 +210,7 @@ std::string StringOps::rstrip( const std::string& str, const std::string& chars 
 }
 
 
-std::string StringOps::lstripUntil( const std::string& str, const std::string& chr, bool inclusive, bool consecutives )
+std::string StringOps::lstripUntil( const std::string& str, const std::string& chr, const bool& inclusive, const bool& consecutives )
 {
     int start, aux_start, aux;
     int max_size = str.size()-1;

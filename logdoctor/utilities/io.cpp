@@ -29,7 +29,7 @@ bool IOutils::isFile( const std::string& path )
     return result;
 }
 // returns whether a file is readable/writable
-bool IOutils::checkFile( const std::string& path, const bool readable, const bool writable )
+bool IOutils::checkFile( const std::string& path, const bool& readable, const bool& writable )
 {
     bool result = false;
     if ( IOutils::isFile( path ) == true ) {
@@ -60,7 +60,7 @@ bool IOutils::isDir( const std::string& path )
     return result;
 }
 // returns whether a folder is readable/writable
-bool IOutils::checkDir( const std::string& path, const bool readable, const bool writable )
+bool IOutils::checkDir( const std::string& path, const bool& readable, const bool& writable )
 {
     bool result = false;
     if ( IOutils::isDir( path ) == true ) {
@@ -105,7 +105,7 @@ bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
 
 
 
-const std::vector<std::string> IOutils::readLines(const std::string& path, const int n_lines, const bool random, const bool strip_lines )
+const std::vector<std::string> IOutils::readLines(const std::string& path, const int& n_lines, const bool& random, const bool& strip_lines )
 {
     // read rhe first N lines only
     std::ifstream file;
