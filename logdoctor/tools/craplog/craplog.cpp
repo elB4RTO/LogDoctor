@@ -2,11 +2,13 @@
 #include "craplog.h"
 
 #include "modules/checks.h"
+#include "modules/exceptions.h"
 #include "qpainter.h"
 #include "tools/craplog/modules/store.h"
 
 #include <filesystem>
 #include <thread>
+#include <exception>
 
 #include <iostream> // !!! REMOVE !!!
 
@@ -18,104 +20,55 @@ Craplog::Craplog()
     ////////////////////////
     // blacklists / whitelists
     for ( int i=this->APACHE_ID; i<=this->IIS_ID; i++ ) {
-        this->warnlists.emplace( i , std::unordered_map<int, std::unordered_map<int, BWlist>>() );
-        this->warnlists.at( i ).emplace( this->ACCESS_LOGS, std::unordered_map<int, BWlist>() ); // access
-        this->warnlists.at( i ).emplace( this->ERROR_LOGS, std::unordered_map<int, BWlist>() ); // error
-        this->blacklists.emplace( i , std::unordered_map<int, std::unordered_map<int, BWlist>>() );
-        this->blacklists.at( i ).emplace( this->ACCESS_LOGS, std::unordered_map<int, BWlist>() ); // access
-        this->blacklists.at( i ).emplace( this->ERROR_LOGS, std::unordered_map<int, BWlist>() ); // error
-        // access
-        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
-        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 20, BWlist{ .used=false, .list={} } );
-        this->warnlists.at( i ).at( this->ACCESS_LOGS ).emplace( 21, BWlist{ .used=false, .list={} } );
-        this->blacklists.at( i ).at( this->ACCESS_LOGS ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
-        // error
-        this->warnlists.at( i ).at( this->ERROR_LOGS ).emplace( 20, BWlist{ .used=false, .list={} } );
-        this->warnlists.at( i ).at( this->ERROR_LOGS ).emplace( 31, BWlist{ .used=false, .list={} } );
-        this->blacklists.at( i ).at( this->ERROR_LOGS ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
-        this->blacklists.at( i ).at( this->ERROR_LOGS ).emplace( 31, BWlist{ .used=false, .list={} } );
+        this->warnlists.emplace(  i, std::unordered_map<int, BWlist>() );
+        this->blacklists.emplace( i, std::unordered_map<int, BWlist>() );
+        // default data
+        this->warnlists.at( i ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
+        this->warnlists.at( i ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
+        this->warnlists.at( i ).emplace( 20, BWlist{ .used=false, .list={} } );
+        this->warnlists.at( i ).emplace( 21, BWlist{ .used=false, .list={} } );
+        this->blacklists.at( i ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
     }
 
     // default format strings
-    this->logs_format_strings.emplace( this->APACHE_ID, std::unordered_map<int, std::string>() );
-    this->logs_format_strings.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
-    this->logs_format_strings.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  "[%t] [%l] [pid %P] %F: %E: [client %a] %M" );
-    this->logs_format_strings.emplace( this->NGINX_ID, std::unordered_map<int, std::string>() );
-    this->logs_format_strings.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
-    this->logs_format_strings.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  "$time_iso8601 [$error_level] $pid: *$cid $error_message" );
-    this->logs_format_strings.emplace( this->IIS_ID, std::unordered_map<int, std::string>() );
-    this->logs_format_strings.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken" );
-    this->logs_format_strings.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  "" );
+    this->logs_format_strings.emplace(
+        this->APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
+    this->logs_format_strings.emplace(
+        this->NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
+    this->logs_format_strings.emplace(
+        this->IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken" );
 
     // initialize formats
-    this->logs_formats.emplace( this->APACHE_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
-    this->logs_formats.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID).at(this->ACCESS_LOGS), this->ACCESS_LOGS ) );
-    this->logs_formats.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID).at(this->ERROR_LOGS),  this->ERROR_LOGS ) );
-    this->logs_formats.emplace( this->NGINX_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
-    this->logs_formats.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID).at(this->ACCESS_LOGS), this->ACCESS_LOGS ) );
-    this->logs_formats.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID).at(this->ERROR_LOGS),  this->ERROR_LOGS ) );
-    this->logs_formats.emplace( this->IIS_ID, std::unordered_map<int, FormatOps::LogsFormat>() );
-    this->logs_formats.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, this->formatOps.processIisFormatString( this->logs_format_strings.at(this->IIS_ID).at(this->ACCESS_LOGS), 0 ) );
-    this->logs_formats.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  FormatOps::LogsFormat {} );
+    this->logs_formats.emplace(
+        this->APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID) ) );
+    this->logs_formats.emplace(
+        this->NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID) ) );
+    this->logs_formats.emplace(
+        this->IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(this->IIS_ID), 0 ) );
 
-    this->current_ALF = this->logs_formats.at( this->APACHE_ID ).at( this->ACCESS_LOGS );
-    this->current_ELF = this->logs_formats.at( this->APACHE_ID ).at( this->ERROR_LOGS );
+    this->current_LF = this->logs_formats.at( this->APACHE_ID );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( this->APACHE_ID, std::unordered_map<int, std::string>() );
-    this->logs_paths.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, "/var/log/apache2" );
-    this->logs_paths.at( this->APACHE_ID ).emplace( this->ERROR_LOGS,  "/var/log/apache2" );
+    this->logs_paths.emplace( this->APACHE_ID, "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( this->NGINX_ID, std::unordered_map<int, std::string>() );
-    this->logs_paths.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, "/var/log/nginx" );
-    this->logs_paths.at( this->NGINX_ID ).emplace( this->ERROR_LOGS,  "/var/log/nginx" );
+    this->logs_paths.emplace( this->NGINX_ID, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( this->IIS_ID, std::unordered_map<int, std::string>() );
-    //this->logs_paths.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "C:\\inetpub\\logs\\LogFiles\\" );
-    this->logs_paths.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, "/var/log/iis/LogFiles/SiteName" );
-    this->logs_paths.at( this->IIS_ID ).emplace( this->ERROR_LOGS,  "C:\\inetpub\\logs\\FailedReqLogFiles\\" );
+    this->logs_paths.emplace( this->IIS_ID, "/var/log/iis/LogFiles/SiteName" );
+    //this->logs_paths.emplace( this->IIS_ID, "C:\\inetpub\\logs\\LogFiles\\" ); !!! RESTORE !!!
 
     // apache2 access/error log files' names
-    this->logs_base_names.emplace( this->APACHE_ID, std::unordered_map<int, LogName>() );
-    this->logs_base_names.at( this->APACHE_ID ).emplace( this->ACCESS_LOGS, LogName {
-                                                    .starts   = "access.log.",
-                                                    .contains = "",
-                                                    .ends     = "" });
-    this->logs_base_names.at( this->APACHE_ID ).emplace( this->ERROR_LOGS, LogName {
-                                                    .starts   = "error.log.",
-                                                    .contains = "",
-                                                    .ends     = "" });
+    this->logs_base_names.emplace( this->APACHE_ID, LogName{ .starts   = "access.log.",
+                                                             .contains = "",
+                                                             .ends     = "" } );
     // nginx access/error log files' names
-    this->logs_base_names.emplace( this->NGINX_ID, std::unordered_map<int, LogName>() );
-    this->logs_base_names.at( this->NGINX_ID ).emplace( this->ACCESS_LOGS, LogName {
-                                                    .starts   = "access.log.",
-                                                    .contains = "",
-                                                    .ends     = "" });
-    this->logs_base_names.at( this->NGINX_ID ).emplace( this->ERROR_LOGS, LogName {
-                                                    .starts   = "error.log.",
-                                                    .contains = "",
-                                                    .ends     = "" });
+    this->logs_base_names.emplace( this->NGINX_ID, LogName{ .starts   = "access.log.",
+                                                            .contains = "",
+                                                            .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( this->IIS_ID, std::unordered_map<int, LogName>() );
-    this->logs_base_names.at( this->IIS_ID ).emplace( this->ACCESS_LOGS, LogName {
-                                                    .starts   = "u_",
-                                                    .contains = "",
-                                                    .ends     = ".log" });
-    this->logs_base_names.at( this->IIS_ID ).emplace( this->ERROR_LOGS, LogName {
-                                                    .starts   = "fr",
-                                                    .contains = "",
-                                                    .ends     = ".xml" });
+    this->logs_base_names.emplace( this->IIS_ID, LogName{ .starts   = "u_",
+                                                          .contains = "",
+                                                          .ends     = ".log" });
 
-
-    // access logs data
-    this->data_collection.emplace( this->ACCESS_LOGS, std::vector<std::unordered_map<int, std::string>>() );
-    // error logs data
-    this->data_collection.emplace( this->ERROR_LOGS,  std::vector<std::unordered_map<int, std::string>>() );
-
-    // hashes of newly parsed files
-    this->used_files_hashes.emplace( this->ACCESS_LOGS, std::vector<std::string>() );
-    this->used_files_hashes.emplace( this->ERROR_LOGS,  std::vector<std::string>() );
 
     ///////////////////////
     //// CONFIGURATION ////
@@ -129,11 +82,11 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-const int Craplog::getDialogsLevel()
+const int& Craplog::getDialogsLevel()
 {
     return this->dialog_level;
 }
-void Craplog::setDialogLevel( const int new_level )
+void Craplog::setDialogLevel( const int& new_level )
 {
     this->dialog_level = new_level;
     this->hashOps.setDialogLevel( new_level );
@@ -157,12 +110,12 @@ void Craplog::setHashesDatabasePath( const std::string& path )
     this->db_hashes_path = path;
 }
 
-const int Craplog::getWarningSize()
+const long& Craplog::getWarningSize()
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize( const int new_size )
+void Craplog::setWarningSize(const long& new_size )
 {
     this->warning_size = new_size;
 }
@@ -171,45 +124,45 @@ void Craplog::setWarningSize( const int new_size )
 ////////////////////
 //// WARN/BLACK ////
 
-const bool Craplog::isBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id )
+const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id )
 {
-    return this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).used;
+    return this->blacklists.at( this->current_WS ).at( log_field_id ).used;
 }
-const bool Craplog::isWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id )
+const bool& Craplog::isWarnlistUsed( const int& web_server_id, const int& log_field_id )
 {
-    return this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).used;
-}
-
-void Craplog::setBlacklistUsed( const int web_server_id, const int log_type, const int log_field_id, const bool used )
-{
-    this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).used = used;
-}
-void Craplog::setWarnlistUsed( const int web_server_id, const int log_type, const int log_field_id, const bool used )
-{
-    this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).used = used;
+    return this->warnlists.at( this->current_WS ).at( log_field_id ).used;
 }
 
-const std::vector<std::string>& Craplog::getBlacklist( const int web_server_id, const int log_type, const int log_field_id )
+void Craplog::setBlacklistUsed( const int& web_server_id, const int& log_field_id, const bool& used )
 {
-    return this->blacklists.at( this->current_WS ).at( log_type ).at( log_field_id ).list;
+    this->blacklists.at( this->current_WS ).at( log_field_id ).used = used;
 }
-const std::vector<std::string>& Craplog::getWarnlist( const int web_server_id, const int log_type, const int log_field_id )
+void Craplog::setWarnlistUsed( const int& web_server_id, const int& log_field_id, const bool& used )
 {
-    return this->warnlists.at( this->current_WS ).at( log_type ).at( log_field_id ).list;
-}
-
-void Craplog::blacklistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
-{
-    this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list.push_back( new_item );
-}
-void Craplog::warnlistAdd( const int web_server_id, const int log_type, const int log_field_id, const std::string& new_item )
-{
-    this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list.push_back( new_item );
+    this->warnlists.at( this->current_WS ).at( log_field_id ).used = used;
 }
 
-void Craplog::blacklistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
+const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id, const int& log_field_id )
 {
-    auto& list = this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    return this->blacklists.at( this->current_WS ).at( log_field_id ).list;
+}
+const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id )
+{
+    return this->warnlists.at( this->current_WS ).at( log_field_id ).list;
+}
+
+void Craplog::blacklistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item )
+{
+    this->blacklists.at( web_server_id ).at( log_field_id ).list.push_back( new_item );
+}
+void Craplog::warnlistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item )
+{
+    this->warnlists.at( web_server_id ).at( log_field_id ).list.push_back( new_item );
+}
+
+void Craplog::blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& item )
+{
+    auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     // move the item to the end, then pop it
     for ( int i=0; i<list.size()-1; i++ ) {
         if ( list.at( i ) == item ) {
@@ -219,9 +172,9 @@ void Craplog::blacklistRemove( const int web_server_id, const int log_type, cons
     }
     list.pop_back();
 }
-void Craplog::warnlistRemove( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
+void Craplog::warnlistRemove( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
-    auto& list = this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     // move the item to the end, then pop it
     for ( int i=0; i<list.size()-1; i++ ) {
         if ( list.at( i ) == item ) {
@@ -232,10 +185,10 @@ void Craplog::warnlistRemove( const int web_server_id, const int log_type, const
     list.pop_back();
 }
 
-int Craplog::blacklistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
+int Craplog::blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
-    auto& list = this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     for ( i=1; i<list.size(); i++ ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i-1 );
@@ -246,10 +199,10 @@ int Craplog::blacklistMoveUp( const int web_server_id, const int log_type, const
     }
     return i;
 }
-int Craplog::warnlistMoveUp( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
+int Craplog::warnlistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
-    auto& list = this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     for ( i=1; i<list.size(); i++ ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i-1 );
@@ -261,10 +214,10 @@ int Craplog::warnlistMoveUp( const int web_server_id, const int log_type, const 
     return i;
 }
 
-int Craplog::blacklistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
+int Craplog::blacklistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
-    auto& list = this->blacklists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     for ( i=0; i<list.size()-1; i++ ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i+1 );
@@ -275,10 +228,10 @@ int Craplog::blacklistMoveDown( const int web_server_id, const int log_type, con
     }
     return i;
 }
-int Craplog::warnlistMoveDown( const int web_server_id, const int log_type, const int log_field_id, const std::string& item )
+int Craplog::warnlistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
-    auto& list = this->warnlists.at( web_server_id ).at( log_type ).at( log_field_id ).list;
+    auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     for ( i=0; i<list.size()-1; i++ ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i+1 );
@@ -294,126 +247,95 @@ int Craplog::warnlistMoveDown( const int web_server_id, const int log_type, cons
 /////////////////
 //// FORMATS ////
 // get the logs format string
-const std::string& Craplog::getAccessLogsFormatString( const int web_server_id )
+const std::string& Craplog::getLogsFormatString( const int& web_server_id )
 {
-    return this->logs_format_strings.at( web_server_id ).at( this->ACCESS_LOGS );
-}
-const std::string& Craplog::getErrorLogsFormatString( const int web_server_id )
-{
-    return this->logs_format_strings.at( web_server_id ).at( this->ERROR_LOGS );
+    return this->logs_format_strings.at( web_server_id );
 }
 
 // get the logs format
-const FormatOps::LogsFormat& Craplog::getAccessLogsFormat( const int web_server_id )
+const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id )
 {
-    return this->logs_formats.at( web_server_id ).at( this->ACCESS_LOGS );
-}
-const FormatOps::LogsFormat& Craplog::getErrorLogsFormat( const int web_server_id )
-{
-    return this->logs_formats.at( web_server_id ).at( this->ERROR_LOGS );
+    return this->logs_formats.at( web_server_id );
 }
 
 // set the logs format
-void Craplog::setApacheALF( const std::string& format_string )
+void Craplog::setApacheLogFormat( const std::string& format_string )
 {
     // apache
-    this->logs_format_strings.at( this->APACHE_ID ).at( this->ACCESS_LOGS ) = format_string;
-    this->logs_formats.at( this->APACHE_ID ).at( this->ACCESS_LOGS ) =
-        this->formatOps.processApacheFormatString( format_string, this->ACCESS_LOGS );
+    try {
+        this->logs_format_strings.at( this->APACHE_ID ) = format_string;
+        this->logs_formats.at( this->APACHE_ID ) =
+            this->formatOps.processApacheFormatString( format_string );
+    } catch ( LogFormatException& e ) {
+        dialog
+    }
 }
-void Craplog::setNginxALF( const std::string& format_string )
+void Craplog::setNginxLogFormat( const std::string& format_string )
 {
     // nginx
-    this->logs_format_strings.at( this->NGINX_ID ).at( this->ACCESS_LOGS ) = format_string;
-    this->logs_formats.at( this->NGINX_ID ).at( this->ACCESS_LOGS ) =
-        this->formatOps.processNginxFormatString( format_string, this->ACCESS_LOGS );
+    this->logs_format_strings.at( this->NGINX_ID ) = format_string;
+    this->logs_formats.at( this->NGINX_ID ) =
+        this->formatOps.processNginxFormatString( format_string );
 }
-void Craplog::setIisALF( const std::string& format_string, const int log_module )
+void Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
 {
     // iis
-    this->logs_format_strings.at( this->IIS_ID ).at( this->ACCESS_LOGS ) = format_string;
-    this->logs_formats.at( this->IIS_ID ).at( this->ACCESS_LOGS ) =
+    this->logs_format_strings.at( this->IIS_ID ) = format_string;
+    this->logs_formats.at( this->IIS_ID ) =
         this->formatOps.processIisFormatString( format_string, log_module );
 }
-void Craplog::setApacheELF( const std::string& format_string )
-{
-    // apache
-    this->logs_format_strings.at( this->APACHE_ID ).at( this->ERROR_LOGS ) = format_string;
-    this->logs_formats.at( this->APACHE_ID ).at( this->ERROR_LOGS ) =
-        this->formatOps.processApacheFormatString( format_string, this->ERROR_LOGS );
-}
-void Craplog::setNginxELF( const std::string& format_string )
-{
-    // nginx
-    this->logs_format_strings.at( this->NGINX_ID ).at( this->ERROR_LOGS ) = format_string;
-    this->logs_formats.at( this->NGINX_ID ).at( this->ERROR_LOGS ) =
-        this->formatOps.processNginxFormatString( format_string, this->ERROR_LOGS );
-}
 
-const QString Craplog::getLogsFormatSample( const int web_server_id, const int log_type )
+const QString Craplog::getLogsFormatSample( const int& web_server_id )
 {
     QString sample;
     if ( web_server_id == this->APACHE_ID ) {
-        sample = this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ).at( log_type ), log_type );
+        sample = this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ) );
     } else if ( web_server_id == this->NGINX_ID ) {
-        sample = this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ).at( log_type ), log_type );
+        sample = this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ) );
     } else if ( web_server_id == this->IIS_ID ) {
-        if ( log_type == this->ACCESS_LOGS ) {
-            sample = this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ).at( log_type )/*, log_type*/ );
-        }
+        sample = this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ) );
     } else {
         // unexpected WebServer
-        throw (&"Unexpected WebServer: "[web_server_id]);
+        throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
     }
     return sample;
 }
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( const int web_server_id )
+void Craplog::setCurrentWSID( const int& web_server_id )
 {
     this->current_WS = web_server_id;
-    this->setCurrentALF();
-    this->setCurrentELF();
+    this->setCurrentLogFormat();
 }
 
-const int Craplog::getCurrentWSID()
+const int& Craplog::getCurrentWSID()
 {
     return this->current_WS;
 }
 
 // set the current access logs format
-void Craplog::setCurrentALF()
+void Craplog::setCurrentLogFormat()
 {
-    this->current_ALF = this->logs_formats.at( this->current_WS ).at( 1 );
-}
-// set the current error logs format
-void Craplog::setCurrentELF()
-{
-    this->current_ELF = this->logs_formats.at( this->current_WS ).at( 2 );
+    this->current_LF = this->logs_formats.at( this->current_WS );
 }
 
 // get the current access logs format
-const FormatOps::LogsFormat& Craplog::getCurrentALF()
+const FormatOps::LogsFormat& Craplog::getCurrentLogFormat()
 {
-    return this->current_ALF;
-}
-// get the current error logs format
-const FormatOps::LogsFormat& Craplog::getCurrentELF()
-{
-    return this->current_ELF;
+    return this->current_LF;
 }
 
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const int web_server, const int log_type )
+const std::string& Craplog::getLogsPath( const int& web_server )
 {
-    return this->logs_paths.at( web_server ).at( log_type );
+    return this->logs_paths.at( web_server );
 }
-void Craplog::setLogsPath( const int web_server, const int log_type, const std::string& new_path )
+void Craplog::setLogsPath( const int& web_server, const std::string& new_path )
 {
-    this->logs_paths.at( web_server ).at( log_type ) = new_path;
+    this->logs_paths.at( web_server ) = new_path;
 }
 
 
@@ -425,7 +347,7 @@ const int Craplog::getLogsListSize() {
 }
 
 // return the list. rescan if fresh is true
-const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
+const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool& fresh )
 {
     if ( fresh == true ) {
         this->scanLogsDir();
@@ -443,7 +365,7 @@ const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
         }
     }
     // should be unreachable
-    throw("File item not found");
+    throw GenericException("File item not found");
 }
 
 
@@ -456,7 +378,7 @@ const std::string& Craplog::getLogFilePath( const QString& file_name )
         }
     }
     // should be unreachable
-    throw("File item not found");
+    throw GenericException("File item not found");
 }
 
 // set a file as selected
@@ -477,22 +399,17 @@ const bool Craplog::setLogFileSelected( const QString& file_name )
 // scan the logs path to update the log files list
 void Craplog::scanLogsDir()
 {
+    bool successful = true;
     this->logs_list.clear();
-    int n=2;
-    auto &logs_paths_ = this->logs_paths.at( this->current_WS );
-    if ( logs_paths_.at(1) == logs_paths_.at(2) ) {
-        // same dir for both access and error logs, loop only once
-        n=1;
-    }
-    for ( int i=0; i<n; i++ ) {
-        std::string &logs_path = logs_paths_.at( i+1 );
-        if ( IOutils::isDir( logs_path ) == false ) {
-            // this directory doesn't exists
-            if ( IOutils::exists( logs_path ) ) {
-                DialogSec::errDirNotExists( nullptr, QString::fromStdString( logs_path ) );
-            }
-            continue;
+    std::string &logs_path = this->logs_paths.at( this->current_WS );
+    if ( IOutils::isDir( logs_path ) == false ) {
+        // this directory doesn't exists
+        if ( IOutils::exists( logs_path ) ) {
+            DialogSec::errDirNotExists( nullptr, QString::fromStdString( logs_path ) );
         }
+        successful = false;
+    }
+    if ( successful == true ) {
         int size;
         QString name;
         std::string path;
@@ -517,7 +434,6 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            bool successful = true;
             std::vector<std::string> content;
             try {
                 // read 32 random lines
@@ -542,16 +458,20 @@ void Craplog::scanLogsDir()
             }
 
             if ( successful == true ) {
-                LogOps::LogType log_type = this->logOps.defineFileType( name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
+                LogOps::LogType log_type = this->logOps.defineFileType(
+                    name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
                 content.clear();
                 if ( log_type == LogOps::LogType::Failed ) {
                     // failed to get the log type, do not append
                     DialogSec::errFailedDefiningLogType( nullptr, name );
                     continue;
+                } else if ( log_type == LogOps::LogType::Discarded ) {
+                    // skip
+                    continue;
                 }
 
                 // match only valid files names
-                if ( this->isFileNameValid( name.toStdString(), log_type ) == false ) {
+                if ( this->isFileNameValid( name.toStdString() ) == false ) {
                     continue;
                 }
 
@@ -559,12 +479,11 @@ void Craplog::scanLogsDir()
 
                 LogFile logfile = {
                     .selected = false,
-                    .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS, log_type ),
+                    .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS ),
                     .size = size,
                     .name = name,
                     .hash = hash,
-                    .path = path,
-                    .type = log_type
+                    .path = path
                 };
                 // push in the list
                 this->logs_list.push_back( logfile );
@@ -575,23 +494,23 @@ void Craplog::scanLogsDir()
 
 
 
-const bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogType& log_type )
+const bool Craplog::isFileNameValid( const std::string& name )
 {
     bool valid = true;
-    if ( this->logs_base_names.at( this->current_WS ).at( log_type ).starts != "" ) {
-        if ( ! StringOps::startsWith( name, this->logs_base_names.at( this->current_WS ).at( log_type ).starts ) ) {
+    if ( this->logs_base_names.at( this->current_WS ).starts != "" ) {
+        if ( ! StringOps::startsWith( name, this->logs_base_names.at( this->current_WS ).starts ) ) {
             return false;
         }
     }
-    if ( this->logs_base_names.at( this->current_WS ).at( log_type ).contains != "" ) {
+    if ( this->logs_base_names.at( this->current_WS ).contains != "" ) {
         if ( ! StringOps::contains(
-                    name.substr( this->logs_base_names.at( this->current_WS ).at( log_type ).starts.size() ),
-                    this->logs_base_names.at( this->current_WS ).at( log_type ).contains ) ) {
+                    name.substr( this->logs_base_names.at( this->current_WS ).starts.size() ),
+                    this->logs_base_names.at( this->current_WS ).contains ) ) {
             return false;
         }
     }
-    if ( this->logs_base_names.at( this->current_WS ).at( log_type ).ends != "" ) {
-        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_WS ).at( log_type ).ends ) ) {
+    if ( this->logs_base_names.at( this->current_WS ).ends != "" ) {
+        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_WS ).ends ) ) {
             return false;
         }
     }
@@ -616,8 +535,8 @@ const bool Craplog::isFileNameValid( const std::string& name, const LogOps::LogT
 
         case 13:
             // further checks for iis
-            start = this->logs_base_names.at( 13 ).at( log_type ).starts.size();
-            stop = name.size() - this->logs_base_names.at( 13 ).at( log_type ).ends.size();
+            start = this->logs_base_names.at( 13 ).starts.size();
+            stop = name.size() - this->logs_base_names.at( 13 ).ends.size();
             // search for incremental number / date
             for ( int i=start; i<=stop; i++ ) {
                 if ( StringOps::isNumeric( name.at( i ) ) == false ) {
@@ -644,76 +563,53 @@ void Craplog::startWorking()
     this->parsed_size = 0;
     this->total_lines = 0;
     this->parsed_lines = 0;
-    this->total_access_size = 0;
-    this->total_error_size = 0;
-    this->parsed_access_size = 0;
-    this->parsed_error_size = 0;
-    this->blacklisted_access_size = 0;
-    this->blacklisted_error_size = 0;
+    this->blacklisted_size = 0;
 
-    this->data_collection[1].clear();
-    this->data_collection[2].clear();
-    this->access_logs_lines.clear();
-    this->error_logs_lines.clear();
-    this->used_files_hashes[1].clear();
-    this->used_files_hashes[2].clear();
+    this->data_collection.clear();
+    this->logs_lines.clear();
+    this->used_files_hashes.clear();
 }
 void Craplog::stopWorking()
 {
     this->working = false;
     this->parsing = false;
-    this->used_files_hashes[1].clear();
-    this->used_files_hashes[2].clear();
+    this->used_files_hashes.clear();
 }
-const bool Craplog::isWorking()
+const bool& Craplog::isWorking()
 {
     return this->working;
 }
-const bool Craplog::isParsing()
+const bool& Craplog::isParsing()
 {
     return this->parsing;
 }
 
 // performances
-const int Craplog::getPerfSize()
+const int& Craplog::getPerfSize()
 {
     return this->perf_size;
 }
-void Craplog::sumPerfSize( const int size, const int log_type )
+void Craplog::sumPerfSize( const int& size )
 {
-    this->perf_size += size;
-    if ( log_type == 1 ) {
-        this->parsed_access_size += size;
-    } else if ( log_type == 2 ) {
-        this->parsed_error_size += size;
-    } else {
-        // wrong log_type
-        throw( "Unexpected LogType: " + std::to_string(log_type) );
-    }
+    this->perf_size   += size;
+    this->parsed_size += size;
 }
-const int Craplog::getTotalSize()
+const int& Craplog::getTotalSize()
 {
     return this->total_size;
 }
-const int Craplog::getParsedSize()
+const int& Craplog::getParsedSize()
 {
     return this->parsed_size;
 }
-const int Craplog::getParsedLines()
+const int& Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
 
-void Craplog::sumBlacklistededSize( const int size, const int log_type )
+void Craplog::sumBlacklistededSize( const int& size )
 {
-    if ( log_type == 1 ) {
-        this->blacklisted_access_size += size;
-    } else if ( log_type == 2 ) {
-        this->blacklisted_error_size += size;
-    } else {
-        // wrong log_type
-        throw( "Unexpected LogType: " + std::to_string(log_type) );
-    }
+    this->blacklisted_size += size;
 }
 
 void Craplog::collectPerfData()
@@ -725,8 +621,7 @@ void Craplog::collectPerfData()
 
 void Craplog::clearDataCollection()
 {
-    this->data_collection[1].clear();
-    this->data_collection[2].clear();
+    this->data_collection.clear();
 }
 
 
@@ -748,8 +643,7 @@ void Craplog::run()
         this->perf_size    = this->parsed_size;
     }
     // clear log lines data
-    this->access_logs_lines.clear();
-    this->error_logs_lines.clear();
+    this->logs_lines.clear();
 
     if ( this->proceed == true ) {
         // store the new data
@@ -777,19 +671,6 @@ const bool Craplog::checkStuff()
         if ( file.selected == false ) {
             // not selected, skip
             continue;
-        }
-
-        // check again the type
-        if ( file.type == LogOps::LogType::Failed ) {
-            bool choice = DialogSec::choiceUndefinedLogType( nullptr, file.name );
-            if ( choice == false ) {
-                // choosed to abort all
-                this->proceed = false;
-                break;
-            } else {
-                // choosed to discard and continue
-                continue;
-            }
         }
 
         // check if the file has been used already
@@ -897,20 +778,9 @@ void Craplog::joinLogLines()
         }
 
         // append to the relative list
-        if ( file.type == LogOps::LogType::Access ) {
-            this->access_logs_lines.insert( this->access_logs_lines.end(), content.begin(), content.end() );
-            this->used_files_hashes.at( 1 ).push_back( file.hash );
-            this->total_access_size += file.size;
-        } else if ( file.type == LogOps::LogType::Error ) {
-            this->error_logs_lines.insert( this->error_logs_lines.end(), content.begin(), content.end() );
-            this->used_files_hashes.at( 2 ).push_back( file.hash );
-            this->total_error_size += file.size;
-        } else {
-            // unexpected log type
-            throw ("Unexpected LogTpye: "[file.type]);
-        }
-
-        this->total_size += file.size;
+        this->logs_lines.insert( this->logs_lines.end(), content.begin(), content.end() );
+        this->used_files_hashes.push_back( file.hash );
+        this->total_size  += file.size;
         this->total_lines += content.size();
     }
     content.clear();
@@ -920,18 +790,11 @@ void Craplog::joinLogLines()
 
 void Craplog::parseLogLines()
 {
-    if ( this-> proceed == true && this->access_logs_lines.size() > 0 ) {
+    if ( this-> proceed == true && this->logs_lines.size() > 0 ) {
         this->logOps.parseLines(
-            this->data_collection[1],
-            this->access_logs_lines,
-            this->logs_formats.at( this->current_WS ).at( 1 ) );
-    }
-
-    if ( this-> proceed == true && this->error_logs_lines.size() > 0 ) {
-        this->logOps.parseLines(
-            this->data_collection[2],
-            this->error_logs_lines,
-            this->logs_formats.at( this->current_WS ).at( 2 ) );
+            this->data_collection,
+            this->logs_lines,
+            this->logs_formats.at( this->current_WS ) );
     }
 }
 
@@ -972,13 +835,8 @@ void Craplog::storeLogLines()
                 DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
             }
 
-            if ( this->proceed == true && this->data_collection.at( 1 ).size() > 0 ) {
-                successful = StoreOps::storeData( db, *this, this->data_collection.at( 1 ), 1 );
-                this->proceed = successful;
-            }
-
-            if ( this->proceed == true && this->data_collection.at( 2 ).size() > 0 ) {
-                successful = StoreOps::storeData( db, *this, this->data_collection.at( 2 ), 2 );
+            if ( this->proceed == true && this->data_collection.size() > 0 ) {
+                successful = StoreOps::storeData( db, *this, this->data_collection );
                 this->proceed = successful;
             }
 
@@ -1032,7 +890,7 @@ void Craplog::storeLogLines()
 }
 
 
-const QString Craplog::printableSize( const int bytes )
+const QString Craplog::printableSize( const int& bytes )
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -1071,11 +929,11 @@ const QString Craplog::printableSize( const int bytes )
 }
 
 
-const std::vector<int> Craplog::calcDayTraffic( const int log_type )
+const std::vector<int> Craplog::calcDayTraffic()
 {
     std::vector<int> traffic = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    if ( this->data_collection.at( log_type ).size() > 0 ) {
-        for ( const auto& data : this->data_collection.at( log_type ) ) {
+    if ( this->data_collection.size() > 0 ) {
+        for ( const auto& data : this->data_collection ) {
             if ( data.find( 4 ) != data.end() ) {
                 try {
                     traffic.at( std::stoi(data.at(4)) ) ++;
@@ -1088,75 +946,43 @@ const std::vector<int> Craplog::calcDayTraffic( const int log_type )
     return traffic;
 }
 
-void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* acc_chart, QChartView* err_chart, QChartView* traf_chart )
+void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart, QChartView* traf_chart )
 {
     QString access_chart_name      = QMessageBox::tr("Access Logs Breakdown"),
-            error_chart_name       = QMessageBox::tr("Error Logs Breakdown"),
             parsed_slice_name      = QMessageBox::tr("Parsed"),
             blacklisted_slice_name = QMessageBox::tr("Blacklisted"),
             ignored_slice_name     = QMessageBox::tr("Ignored"),
             traffic_chart_name     = QMessageBox::tr("Time of Day Logs Traffic Ensemble"),
-            access_bar_name        = QMessageBox::tr("Access Logs"),
-            error_bar_name         = QMessageBox::tr("Error Logs");
+            access_bar_name        = QMessageBox::tr("Access Logs");
 
     // access logs donut chart
-    QPieSeries *access_donut = new QPieSeries();
-    access_donut->setName( this->printableSize( this->total_access_size ) );
-    access_donut->append(
-        parsed_slice_name + "@" + this->printableSize( this->parsed_access_size ),
-        this->parsed_access_size );
-    access_donut->append(
-        blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_access_size ),
-        this->blacklisted_access_size);
-    access_donut->append(
-        ignored_slice_name + "@" + this->printableSize( this->total_access_size-this->parsed_access_size-this->blacklisted_access_size ),
-        this->total_access_size-this->parsed_access_size-this->blacklisted_access_size );
+    QPieSeries *size_donut = new QPieSeries();
+    size_donut->setName( this->printableSize( this->total_size ) );
+    size_donut->append(
+        parsed_slice_name + "@" + this->printableSize( this->parsed_size ),
+        this->parsed_size );
+    size_donut->append(
+        blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_size ),
+        this->blacklisted_size);
+    size_donut->append(
+        ignored_slice_name + "@" + this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ),
+        this->total_size-this->parsed_size-this->blacklisted_size );
 
-    DonutBreakdown *accessBreakdown = new DonutBreakdown();
-    accessBreakdown->setTheme( theme );
-    accessBreakdown->setAnimationOptions( QChart::AllAnimations );
-    accessBreakdown->setTitle( access_chart_name );
-    accessBreakdown->setTitleFont( fonts.at("main") );
-    if ( this->total_access_size > 0 ) {
-        accessBreakdown->legend()->setAlignment( Qt::AlignRight );
-        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
+    DonutBreakdown *sizeBreakdown = new DonutBreakdown();
+    sizeBreakdown->setTheme( theme );
+    sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
+    sizeBreakdown->setTitle( access_chart_name );
+    sizeBreakdown->setTitleFont( fonts.at("main") );
+    if ( this->total_size > 0 ) {
+        sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
+        sizeBreakdown->addBreakdownSeries( size_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
     } else {
-        accessBreakdown->addBreakdownSeries( access_donut, Qt::GlobalColor::white, fonts.at("main_small") );
-        access_donut->setVisible( false );
+        sizeBreakdown->addBreakdownSeries( size_donut, Qt::GlobalColor::white, fonts.at("main_small") );
+        size_donut->setVisible( false );
     }
 
-    acc_chart->setChart( accessBreakdown );
-    acc_chart->setRenderHint( QPainter::Antialiasing );
-
-
-    // error logs donut chart
-    QPieSeries *error_donut = new QPieSeries();
-    error_donut->setName( this->printableSize( this->total_error_size ) );
-    error_donut->append(
-        parsed_slice_name + "@" + this->printableSize( this->parsed_error_size ),
-        this->parsed_error_size );
-    error_donut->append(
-        blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_error_size ),
-        this->blacklisted_error_size );
-    error_donut->append(
-        ignored_slice_name + "@" + this->printableSize( this->total_error_size-this->parsed_error_size-this->blacklisted_error_size ),
-        this->total_error_size-this->parsed_error_size-this->blacklisted_error_size );
-
-    DonutBreakdown *errorBreakdown = new DonutBreakdown();
-    errorBreakdown->setTheme( theme );
-    errorBreakdown->setAnimationOptions( QChart::AllAnimations );
-    errorBreakdown->setTitle( error_chart_name );
-    errorBreakdown->setTitleFont( fonts.at("main") );
-    if ( this->total_error_size > 0 ) {
-        errorBreakdown->legend()->setAlignment( Qt::AlignLeft );
-        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::darkRed, fonts.at("main_small") );
-    } else {
-        errorBreakdown->addBreakdownSeries( error_donut, Qt::GlobalColor::white, fonts.at("main_small") );
-        error_donut->setVisible( false );
-    }
-
-    err_chart->setChart( errorBreakdown );
-    err_chart->setRenderHint( QPainter::Antialiasing );
+    size_chart->setChart( sizeBreakdown );
+    size_chart->setRenderHint( QPainter::Antialiasing );
 
 
     // logs traffic bars chart
@@ -1164,19 +990,10 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
     QBarSet *access_bars = new QBarSet( access_bar_name );
     col = Qt::GlobalColor::darkCyan;
     access_bars->setColor( col.lighter( 130 ) );
-    QBarSet *error_bars  = new QBarSet( error_bar_name );
-    col = Qt::GlobalColor::darkRed;
-    error_bars->setColor( col.lighter( 130 ) );
 
     int max_traf = 0;
-    for ( const int& tfc : this->calcDayTraffic( 1 ) ) {
+    for ( const int& tfc : this->calcDayTraffic() ) {
         *access_bars << tfc;
-        if ( tfc > max_traf ) {
-            max_traf = tfc;
-        }
-    }
-    for ( const int& tfc : this->calcDayTraffic( 2 ) ) {
-        *error_bars << tfc;
         if ( tfc > max_traf ) {
             max_traf = tfc;
         }
@@ -1184,7 +1001,6 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
 
     QBarSeries *bars = new QBarSeries();
     bars->append( access_bars );
-    bars->append( error_bars );
 
     QChart *t_chart = new QChart();
     t_chart->setTheme( theme );
