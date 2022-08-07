@@ -193,41 +193,6 @@ void DialogSec::errFailedDefiningLogType( QWidget *parent, const QString& file )
 }
 
 
-/*void DialogSec::errUndefinedLogType( QWidget *parent, const std::string& file )
-{
-    errUndefinedLogType( parent, QString::fromStdString(file) );
-}*/
-void DialogSec::errUndefinedLogType( QWidget *parent, const QString& file )
-{
-    std::ignore=
-    QMessageBox::critical(parent,
-        t_ERROR_OCCURED,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_LOGTYPE_UNDEFINED, file, f_SKIPPING ),
-        QMessageBox::Ok );
-}
-
-/*bool DialogSec::choiceUndefinedLogType( QWidget *parent, const std::string& file )
-{
-    return choiceUndefinedLogType( parent, QString::fromStdString(file) );
-}*/
-bool DialogSec::choiceUndefinedLogType( QWidget *parent, const QString& file )
-{
-    bool choice;
-    auto response = QMessageBox::critical(parent,
-        t_ERROR_OCCURED,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_LOGTYPE_UNDEFINED, file, q_DA ),
-        QMessageBox::Discard | QMessageBox::Abort );
-    if ( response == QMessageBox::Discard ) {
-        choice = true;
-    } else {
-        choice = false;
-    }
-    return choice;
-}
-
-
 /*int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const std::string& msg )
 {
     return choiceFileAlreadyUsed( parent, QString::fromStdString(msg) );
@@ -278,7 +243,7 @@ int DialogSec::choiceFileSizeWarning( QWidget *parent, const QString& msg )
 {
     errFailedReadFile( parent, QString::fromStdString( file ), skipping );
 }*/
-void DialogSec::errFailedReadFile(QWidget *parent, const QString& file , const bool skipping )
+void DialogSec::errFailedReadFile(QWidget *parent, const QString& file , const bool& skipping )
 {
     std::ignore=
     QMessageBox::critical(parent,
@@ -380,7 +345,7 @@ bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 {
     warnGeneric( parent, QString::fromStdString( msg ), report_msg );
 }*/
-void DialogSec::warnGeneric(QWidget *parent, const QString& msg, const bool report_msg )
+void DialogSec::warnGeneric( QWidget *parent, const QString& msg, const bool& report_msg )
 {
     QString footer = "";
     if ( report_msg == true ) {
@@ -400,7 +365,7 @@ void DialogSec::warnGeneric(QWidget *parent, const QString& msg, const bool repo
 {
     errGeneric( parent, QString::fromStdString( msg ), report_msg );
 }*/
-void DialogSec::errGeneric(QWidget *parent, const QString& msg, const bool report_msg )
+void DialogSec::errGeneric( QWidget *parent, const QString& msg, const bool& report_msg )
 {
     QString footer = "";
     if ( report_msg == true ) {
