@@ -1,6 +1,7 @@
 
 #include "store.h"
 
+#include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
 #include <QVariant>
@@ -80,7 +81,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         if ( check_bl_cli == true ) {
             if ( row.find( 20 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                std::string target = row.at( 20 );
+                const std::string& target = row.at( 20 );
                 for ( const auto& item : bl_cli_list ) {
                     if ( StringOps::startsWith( target, item ) ) {
                         // match found! skip this line
@@ -97,7 +98,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 blacklisted_size += str.size();
             }
             craplog.sumBlacklistededSize( blacklisted_size );
-            skip=false;
+            skip = false;
             continue;
         }
 
@@ -105,11 +106,12 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         if ( check_wl_cli == true ) {
             if ( row.find( 20 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                std::string target = row.at( 20 );
+                const std::string& target = row.at( 20 );
                 for ( const auto& item : wl_cli_list ) {
                     if ( StringOps::startsWith( target, item ) ) {
                         // match found! put a warning on this line
                         warning = true;
+                        craplog.sumWarningsSize( item.size() );
                         break;
                     }
                 }
@@ -119,11 +121,12 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         if ( check_wl_ua == true && warning == false ) {
             if ( row.find( 21 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                std::string target = row.at( 21 );
+                const std::string& target = row.at( 21 );
                 for ( const auto& item : wl_ua_list ) {
                     if ( StringOps::startsWith( target, item ) ) {
                         // match found! skip this line
                         warning = true;
+                        craplog.sumWarningsSize( item.size() );
                         break;
                     }
                 }
@@ -133,11 +136,12 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         if ( check_wl_met == true && warning == false ) {
             if ( row.find( 11 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                std::string target = row.at( 11 );
+                const std::string& target = row.at( 11 );
                 for ( const auto& item : wl_met_list ) {
                     if ( item == target ) {
                         // match found! skip this line
                         warning = true;
+                        craplog.sumWarningsSize( item.size() );
                         break;
                     }
                 }
@@ -147,11 +151,12 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         if ( check_wl_req == true && warning == false ) {
             if ( row.find( 12 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                std::string target = row.at( 12 );
+                const std::string& target = row.at( 12 );
                 for ( const auto& item : wl_req_list ) {
                     if ( StringOps::startsWith( target, item ) ) {
                         // match found! skip this line
                         warning = true;
+                        craplog.sumWarningsSize( item.size() );
                         break;
                     }
                 }
@@ -174,8 +179,13 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             query_stmt += "0";
         } else {
             // value found, bind it
-            perf_size += row.at( 99 ).size();
-            query_stmt += QString::fromStdString( row.at( 99 ) ).replace("'","''");
+            perf_size ++;
+            if ( warning == false ) {
+                query_stmt += "0";
+            } else {
+                query_stmt += "1";
+                warning = false;
+            }
         }
 
         // date and time
@@ -253,7 +263,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         }
 
         // sum stored data size for the perfs
-        craplog.sumPerfSize( perf_size );
+        //craplog.sumPerfSize( perf_size );
 
         // finalize this statement
         if ( query.exec() == false ) {
