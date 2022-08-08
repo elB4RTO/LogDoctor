@@ -11,7 +11,7 @@ MainSlice::MainSlice(QPieSeries *breakdownSeries, QObject *parent)
     : QPieSlice(parent),
       m_breakdownSeries(breakdownSeries)
 {
-    connect(this, &MainSlice::percentageChanged, this, &MainSlice::updateLabel);
+    connect( this, &MainSlice::percentageChanged, this, &MainSlice::updateLabel );
 }
 
 
@@ -44,13 +44,13 @@ DonutBreakdown::DonutBreakdown( QGraphicsItem *parent, Qt::WindowFlags wFlags )
 {
     // create the series for main center pie
     this->m_mainSeries = new QPieSeries();
-    this->m_mainSeries->setPieSize(0.7);
-    QChart::addSeries(this->m_mainSeries);
+    this->m_mainSeries->setPieSize( 0.7 );
+    QChart::addSeries( this->m_mainSeries );
 }
 
 
 
-void DonutBreakdown::addBreakdownSeries(QPieSeries *breakdownSeries, const QColor& color, const QFont& font )
+void DonutBreakdown::addBreakdownSeries( QPieSeries *breakdownSeries, const QColor& color, const QFont& font )
 {
     // add breakdown series as a slice to center pie
     MainSlice *mainSlice = new MainSlice(breakdownSeries);
@@ -73,8 +73,14 @@ void DonutBreakdown::addBreakdownSeries(QPieSeries *breakdownSeries, const QColo
     for (QPieSlice *slice : slices) {
         if ( StringOps::startsWith( slice->label().toStdString(), "Blacklisted" ) ) {
             slice->setBrush( Qt::GlobalColor::black );
+            if ( slice->value() == 0 ) {
+                slice->setLabelVisible( false );
+            }
+        } else if ( StringOps::startsWith( slice->label().toStdString(), "Warnings" ) ) {
+            slice->setBrush( QColor( 255, 140, 0, 255 ) );
         } else if ( StringOps::startsWith( slice->label().toStdString(), "Ignored" ) ) {
-            slice->setBrush( Qt::GlobalColor::gray );
+            slice->setBrush( Qt::GlobalColor::transparent );
+            breakdownSeries->setPieSize( 0.0 );
         } else {
             slice->setBrush( color.lighter( 150 ) );
         }
@@ -120,11 +126,16 @@ void DonutBreakdown::updateLegendMarkers()
             } else {
                 // modify markers from breakdown series
                 std::string aux = pieMarker->slice()->label().toStdString();
-                pieMarker->setLabel(QString("%1 %2%")
-                                    .arg( QString::fromStdString( aux.substr( 0, aux.find('@') ) ) )
-                                    .arg(pieMarker->slice()->percentage() * 100, 0, 'f', 2));
-                pieMarker->setFont(QFont("Arial", 8));
-                pieMarker->slice()->setLabel( QString::fromStdString( aux.substr( aux.find('@')+1 ) ) );
+                if ( aux.at( aux.find('@')+1 ) != '#' ) {
+                    pieMarker->setLabel( QString("%1 %2%")
+                                            .arg( QString::fromStdString( aux.substr( 0, aux.find('@') ) ) )
+                                            .arg( pieMarker->slice()->percentage() * 100, 0, 'f', 2) );
+                    pieMarker->setFont( QFont("Arial", 8) );
+                    pieMarker->slice()->setLabel( QString::fromStdString( aux.substr( aux.find('@')+1 ) ) );
+                } else {
+                    pieMarker->setLabel( "" );
+                    pieMarker->slice()->setLabel( "" );
+                }
             }
         }
     }
