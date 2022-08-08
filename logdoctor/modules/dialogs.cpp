@@ -175,6 +175,31 @@ void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db_na
 
 
 
+/////////////////////
+//// LOGS FORMAT ////
+/////////////////////
+void DialogSec::errInvalidLogFormatString( QWidget *parent, const QString& msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_LOGFORMAT_INVALID,
+        QString("%1\n\n%2")
+            .arg( msg, r_CHECK_FORMAT ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errLogFormatNotSet( QWidget *parent )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_LOGFORMAT_NOT_SET,
+        QString("%1")
+            .arg( m_LOGFORMAT_NOT_SET ),
+        QMessageBox::Ok );
+}
+
+
+
 ///////////////////
 //// LOG FILES ////
 ///////////////////
