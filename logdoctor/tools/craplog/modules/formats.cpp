@@ -195,9 +195,10 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     // backslashes are valid for control-characters only, or get reduced
                     // single percent-signs are considered invalid
                     char c = f_str.at(aux+1);
-                    if ( c == ',' || c == '{' ) {
+                    if ( c == ',' || c == '{' || c == '<' || c == '>' ) {
                         // in the first case: status code(s) may follow, or may not
                         // in the second case: a composed format code may follow
+                        // in the third and fourth cases: expressing a status code field
                         // in any case is considered valid
                         ;
                     } else if ( c == '%' ) {
@@ -242,7 +243,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     } else {
                         // stop
                         aux = aux_aux;
-                        aux_fld = std::to_string( c );
+                        aux_fld = c;
                         break;
                     }
                 }
@@ -387,7 +388,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
             } else {
                 // normal
-                aux_fld = std::to_string( c );
+                aux_fld = c;
                 aux_stop = aux+1;
                 if ( aux_fld == ">" || aux_fld == "<" ) {
                     aux_fld += f_str.at( aux+1 );
