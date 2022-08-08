@@ -66,8 +66,6 @@ private slots:
 
     void on_box_StatsWarn_WebServer_currentIndexChanged(int index);
 
-    void on_box_StatsWarn_LogsType_currentIndexChanged(int index);
-
     void on_box_StatsWarn_Year_currentIndexChanged(int index);
 
     void on_box_StatsWarn_Month_currentIndexChanged(int index);
@@ -98,8 +96,6 @@ private slots:
 
     void on_box_StatsCount_WebServer_currentIndexChanged(int index);
 
-    void on_tabs_StatsCount_AccErr_currentChanged(int index);
-
     void on_box_StatsCount_Year_currentIndexChanged(int index);
 
     void on_box_StatsCount_Month_currentIndexChanged(int index);
@@ -122,23 +118,11 @@ private slots:
 
     void on_button_StatsCount_UserAgent_clicked();
 
-    void on_button_StatsCount_AccClient_clicked();
-
-    void on_button_StatsCount_Level_clicked();
-
-    void on_button_StatsCount_Message_clicked();
-
-    void on_button_StatsCount_Source_clicked();
-
-    void on_button_StatsCount_Port_clicked();
-
-    void on_button_StatsCount_ErrClient_clicked();
+    void on_button_StatsCount_Client_clicked();
 
     //// DAY-TIME ////
 
     void on_box_StatsDay_WebServer_currentIndexChanged(int index);
-
-    void on_box_StatsDay_LogsType_currentIndexChanged(int index);
 
     void on_box_StatsDay_LogsField_currentIndexChanged(int index);
 
@@ -161,8 +145,6 @@ private slots:
     //// RELATIONSL ////
 
     void on_box_StatsRelat_WebServer_currentIndexChanged(int index);
-
-    void on_box_StatsRelat_LogsType_currentIndexChanged(int index);
 
     void on_box_StatsRelat_LogsField_1_currentIndexChanged(int index);
 
@@ -227,303 +209,171 @@ private slots:
 
     //// APACHE ////
 
-    void on_checkBox_ConfApache_Paths_Different_clicked(bool checked);
+    void on_inLine_ConfApache_Path_String_textChanged(const QString &arg1);
 
-    void on_inLine_ConfApache_Paths_AccPath_textChanged(const QString &arg1);
+    void on_inLine_ConfApache_Path_String_returnPressed();
 
-    void on_inLine_ConfApache_Paths_ErrPath_textChanged(const QString &arg1);
+    void on_button_ConfApache_Path_Save_clicked();
 
-    void on_button_ConfApache_Paths_SavePaths_clicked();
+    void on_inLine_ConfApache_Format_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_inLine_ConfApache_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
+    void on_inLine_ConfApache_Format_String_returnPressed();
 
-    void on_button_ConfApache_Formats_AccSave_clicked();
+    void on_button_ConfApache_Format_Save_clicked();
 
-    void on_button_ConfApache_Formats_AccSample_clicked();
+    void on_button_ConfApache_Format_Sample_clicked();
 
-    void on_button_ConfApache_Formats_AccHelp_clicked();
+    void on_button_ConfApache_Format_Help_clicked();
 
-    void on_inLine_ConfApache_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
+    void on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString &arg1);
 
-    void on_button_ConfApache_Formats_ErrSave_clicked();
+    void on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked);
 
-    void on_button_ConfApache_Formats_ErrSample_clicked();
+    void on_inLine_ConfApache_Warnlist_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfApache_Formats_ErrHelp_clicked();
+    void on_inLine_ConfApache_Warnlist_String_returnPressed();
 
-    void on_box_ConfApache_Warnlist_Acc_currentTextChanged(const QString &arg1);
+    void on_button_ConfApache_Warnlist_Add_clicked();
 
-    void on_checkBox_ConfApache_Warnlist_AccUsed_clicked(bool checked);
+    void on_list_ConfApache_Warnlist_List_itemSelectionChanged();
 
-    void on_inLine_ConfApache_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2);
+    void on_button_ConfApache_Warnlist_Remove_clicked();
 
-    void on_inLine_ConfApache_Warnlist_Acc_returnPressed();
+    void on_button_ConfApache_Warnlist_Up_clicked();
 
-    void on_button_ConfApache_Warnlist_AccAdd_clicked();
+    void on_button_ConfApache_Warnlist_Down_clicked();
 
-    void on_list_ConfApache_Warnlist_Acc_itemSelectionChanged();
+    void on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString &arg1);
 
-    void on_button_ConfApache_Warnlist_AccRemove_clicked();
+    void on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked);
 
-    void on_button_ConfApache_Warnlist_AccUp_clicked();
+    void on_inLine_ConfApache_Blacklist_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfApache_Warnlist_AccDown_clicked();
+    void on_inLine_ConfApache_Blacklist_String_returnPressed();
 
-    void on_box_ConfApache_Warnlist_Err_currentTextChanged(const QString &arg1);
+    void on_button_ConfApache_Blacklist_Add_clicked();
 
-    void on_checkBox_ConfApache_Warnlist_ErrUsed_clicked(bool checked);
+    void on_list_ConfApache_Blacklist_List_itemSelectionChanged();
 
-    void on_inLine_ConfApache_Warnlist_Err_cursorPositionChanged(int arg1, int arg2);
+    void on_button_ConfApache_Blacklist_Remove_clicked();
 
-    void on_inLine_ConfApache_Warnlist_Err_returnPressed();
+    void on_button_ConfApache_Blacklist_Up_clicked();
 
-    void on_button_ConfApache_Warnlist_ErrAdd_clicked();
-
-    void on_list_ConfApache_Warnlist_Err_itemSelectionChanged();
-
-    void on_button_ConfApache_Warnlist_ErrRemove_clicked();
-
-    void on_button_ConfApache_Warnlist_ErrUp_clicked();
-
-    void on_button_ConfApache_Warnlist_ErrDown_clicked();
-
-    void on_box_ConfApache_Blacklist_Acc_currentTextChanged(const QString &arg1);
-
-    void on_checkBox_ConfApache_Blacklist_AccUsed_clicked(bool checked);
-
-    void on_inLine_ConfApache_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2);
-
-    void on_inLine_ConfApache_Blacklist_Acc_returnPressed();
-
-    void on_button_ConfApache_Blacklist_AccAdd_clicked();
-
-    void on_list_ConfApache_Blacklist_Acc_itemSelectionChanged();
-
-    void on_button_ConfApache_Blacklist_AccRemove_clicked();
-
-    void on_button_ConfApache_Blacklist_AccUp_clicked();
-
-    void on_button_ConfApache_Blacklist_AccDown_clicked();
-
-    void on_box_ConfApache_Blacklist_Err_currentTextChanged(const QString &arg1);
-
-    void on_checkBox_ConfApache_Blacklist_ErrUsed_clicked(bool checked);
-
-    void on_inLine_ConfApache_Blacklist_Err_cursorPositionChanged(int arg1, int arg2);
-
-    void on_inLine_ConfApache_Blacklist_Err_returnPressed();
-
-    void on_button_ConfApache_Blacklist_ErrAdd_clicked();
-
-    void on_list_ConfApache_Blacklist_Err_itemSelectionChanged();
-
-    void on_button_ConfApache_Blacklist_ErrRemove_clicked();
-
-    void on_button_ConfApache_Blacklist_ErrUp_clicked();
-
-    void on_button_ConfApache_Blacklist_ErrDown_clicked();
+    void on_button_ConfApache_Blacklist_Down_clicked();
 
     //// NGINX ////
 
-    void on_checkBox_ConfNginx_Paths_Different_clicked(bool checked);
+    void on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1);
 
-    void on_inLine_ConfNginx_Paths_AccPath_textChanged(const QString &arg1);
+    void on_inLine_ConfNginx_Path_String_returnPressed();
 
-    void on_inLine_ConfNginx_Paths_ErrPath_textChanged(const QString &arg1);
+    void on_button_ConfNginx_Path_Save_clicked();
 
-    void on_button_ConfNginx_Paths_SavePaths_clicked();
+    void on_inLine_ConfNginx_Format_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_inLine_ConfNginx_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
+    void on_inLine_ConfNginx_Format_String_returnPressed();
 
-    void on_button_ConfNginx_Formats_AccSave_clicked();
+    void on_button_ConfNginx_Format_Save_clicked();
 
-    void on_button_ConfNginx_Formats_AccSample_clicked();
+    void on_button_ConfNginx_Format_Sample_clicked();
 
-    void on_button_ConfNginx_Formats_AccHelp_clicked();
+    void on_button_ConfNginx_Format_Help_clicked();
 
-    void on_inLine_ConfNginx_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
+    void on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString &arg1);
 
-    void on_button_ConfNginx_Formats_ErrSave_clicked();
+    void on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked);
 
-    void on_button_ConfNginx_Formats_ErrSample_clicked();
+    void on_inLine_ConfNginx_Warnlist_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfNginx_Formats_ErrHelp_clicked();
+    void on_inLine_ConfNginx_Warnlist_String_returnPressed();
 
-    void on_box_ConfNginx_Warnlist_Acc_currentTextChanged(const QString &arg1);
+    void on_button_ConfNginx_Warnlist_Add_clicked();
 
-    void on_checkBox_ConfNginx_Warnlist_AccUsed_clicked(bool checked);
+    void on_list_ConfNginx_Warnlist_List_itemSelectionChanged();
 
-    void on_inLine_ConfNginx_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2);
+    void on_button_ConfNginx_Warnlist_Remove_clicked();
 
-    void on_inLine_ConfNginx_Warnlist_Acc_returnPressed();
+    void on_button_ConfNginx_Warnlist_Up_clicked();
 
-    void on_button_ConfNginx_Warnlist_AccAdd_clicked();
+    void on_button_ConfNginx_Warnlist_Down_clicked();
 
-    void on_list_ConfNginx_Warnlist_Acc_itemSelectionChanged();
+    void on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString &arg1);
 
-    void on_button_ConfNginx_Warnlist_AccRemove_clicked();
+    void on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked);
 
-    void on_button_ConfNginx_Warnlist_AccUp_clicked();
+    void on_inLine_ConfNginx_Blacklist_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfNginx_Warnlist_AccDown_clicked();
+    void on_inLine_ConfNginx_Blacklist_String_returnPressed();
 
-    void on_box_ConfNginx_Warnlist_Err_currentTextChanged(const QString &arg1);
+    void on_button_ConfNginx_Blacklist_Add_clicked();
 
-    void on_checkBox_ConfNginx_Warnlist_ErrUsed_clicked(bool checked);
+    void on_list_ConfNginx_Blacklist_List_itemSelectionChanged();
 
-    void on_inLine_ConfNginx_Warnlist_Err_cursorPositionChanged(int arg1, int arg2);
+    void on_button_ConfNginx_Blacklist_Remove_clicked();
 
-    void on_inLine_ConfNginx_Warnlist_Err_returnPressed();
+    void on_button_ConfNginx_Blacklist_Up_clicked();
 
-    void on_button_ConfNginx_Warnlist_ErrAdd_clicked();
-
-    void on_list_ConfNginx_Warnlist_Err_itemSelectionChanged();
-
-    void on_button_ConfNginx_Warnlist_ErrRemove_clicked();
-
-    void on_button_ConfNginx_Warnlist_ErrUp_clicked();
-
-    void on_button_ConfNginx_Warnlist_ErrDown_clicked();
-
-    void on_box_ConfNginx_Blacklist_Acc_currentTextChanged(const QString &arg1);
-
-    void on_checkBox_ConfNginx_Blacklist_AccUsed_clicked(bool checked);
-
-    void on_inLine_ConfNginx_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2);
-
-    void on_inLine_ConfNginx_Blacklist_Acc_returnPressed();
-
-    void on_button_ConfNginx_Blacklist_AccAdd_clicked();
-
-    void on_list_ConfNginx_Blacklist_Acc_itemSelectionChanged();
-
-    void on_button_ConfNginx_Blacklist_AccRemove_clicked();
-
-    void on_button_ConfNginx_Blacklist_AccUp_clicked();
-
-    void on_button_ConfNginx_Blacklist_AccDown_clicked();
-
-    void on_box_ConfNginx_Blacklist_Err_currentTextChanged(const QString &arg1);
-
-    void on_checkBox_ConfNginx_Blacklist_ErrUsed_clicked(bool checked);
-
-    void on_inLine_ConfNginx_Blacklist_Err_cursorPositionChanged(int arg1, int arg2);
-
-    void on_inLine_ConfNginx_Blacklist_Err_returnPressed();
-
-    void on_button_ConfNginx_Blacklist_ErrAdd_clicked();
-
-    void on_list_ConfNginx_Blacklist_Err_itemSelectionChanged();
-
-    void on_button_ConfNginx_Blacklist_ErrRemove_clicked();
-
-    void on_button_ConfNginx_Blacklist_ErrUp_clicked();
-
-    void on_button_ConfNginx_Blacklist_ErrDown_clicked();
+    void on_button_ConfNginx_Blacklist_Down_clicked();
 
     //// IIS ////
 
-    void on_checkBox_ConfIis_Paths_Different_clicked(bool checked);
+    void on_inLine_ConfIis_Path_String_textChanged(const QString &arg1);
 
-    void on_inLine_ConfIis_Paths_AccPath_textChanged(const QString &arg1);
+    void on_inLine_ConfIis_Path_String_returnPressed();
 
-    void on_inLine_ConfIis_Paths_ErrPath_textChanged(const QString &arg1);
+    void on_button_ConfIis_Path_Save_clicked();
 
-    void on_button_ConfIis_Paths_SavePaths_clicked();
+    void on_radio_ConfIis_Format_W3C_toggled(bool checked);
 
-    void on_radio_ConfIis_Formats_W3C_toggled(bool checked);
+    void on_radio_ConfIis_Format_NCSA_toggled(bool checked);
 
-    void on_radio_ConfIis_Formats_NCSA_toggled(bool checked);
+    void on_radio_ConfIis_Format_IIS_toggled(bool checked);
 
-    void on_radio_ConfIis_Formats_IIS_toggled(bool checked);
+    void on_inLine_ConfIis_Format_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_inLine_ConfIis_Formats_AccString_cursorPositionChanged(int arg1, int arg2);
+    void on_inLine_ConfIis_Format_String_returnPressed();
 
-    void on_button_ConfIis_Formats_AccSave_clicked();
+    void on_button_ConfIis_Format_Save_clicked();
 
-    void on_button_ConfIis_Formats_AccSample_clicked();
+    void on_button_ConfIis_Format_Sample_clicked();
 
-    void on_button_ConfIis_Formats_AccHelp_clicked();
+    void on_button_ConfIis_Format_Help_clicked();
 
-    void on_inLine_ConfIis_Formats_ErrString_cursorPositionChanged(int arg1, int arg2);
+    void on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString &arg1);
 
-    void on_button_ConfIis_Formats_ErrSave_clicked();
+    void on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked);
 
-    void on_button_ConfIis_Formats_ErrSample_clicked();
+    void on_inLine_ConfIis_Warnlist_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfIis_Formats_ErrHelp_clicked();
+    void on_inLine_ConfIis_Warnlist_String_returnPressed();
 
-    void on_box_ConfIis_Warnlist_Acc_currentTextChanged(const QString &arg1);
+    void on_button_ConfIis_Warnlist_Add_clicked();
 
-    void on_checkBox_ConfIis_Warnlist_AccUsed_clicked(bool checked);
+    void on_list_ConfIis_Warnlist_List_itemSelectionChanged();
 
-    void on_inLine_ConfIis_Warnlist_Acc_cursorPositionChanged(int arg1, int arg2);
+    void on_button_ConfIis_Warnlist_Remove_clicked();
 
-    void on_inLine_ConfIis_Warnlist_Acc_returnPressed();
+    void on_button_ConfIis_Warnlist_Up_clicked();
 
-    void on_button_ConfIis_Warnlist_AccAdd_clicked();
+    void on_button_ConfIis_Warnlist_Down_clicked();
 
-    void on_list_ConfIis_Warnlist_Acc_itemSelectionChanged();
+    void on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString &arg1);
 
-    void on_button_ConfIis_Warnlist_AccRemove_clicked();
+    void on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked);
 
-    void on_button_ConfIis_Warnlist_AccUp_clicked();
+    void on_inLine_ConfIis_Blacklist_String_cursorPositionChanged(int arg1, int arg2);
 
-    void on_button_ConfIis_Warnlist_AccDown_clicked();
+    void on_inLine_ConfIis_Blacklist_String_returnPressed();
 
-    void on_box_ConfIis_Warnlist_Err_currentTextChanged(const QString &arg1);
+    void on_button_ConfIis_Blacklist_Add_clicked();
 
-    void on_checkBox_ConfIis_Warnlist_ErrUsed_clicked(bool checked);
+    void on_list_ConfIis_Blacklist_List_itemSelectionChanged();
 
-    void on_inLine_ConfIis_Warnlist_Err_cursorPositionChanged(int arg1, int arg2);
+    void on_button_ConfIis_Blacklist_Remove_clicked();
 
-    void on_inLine_ConfIis_Warnlist_Err_returnPressed();
+    void on_button_ConfIis_Blacklist_Up_clicked();
 
-    void on_button_ConfIis_Warnlist_ErrAdd_clicked();
-
-    void on_list_ConfIis_Warnlist_Err_itemSelectionChanged();
-
-    void on_button_ConfIis_Warnlist_ErrRemove_clicked();
-
-    void on_button_ConfIis_Warnlist_ErrUp_clicked();
-
-    void on_button_ConfIis_Warnlist_ErrDown_clicked();
-
-    void on_box_ConfIis_Blacklist_Acc_currentTextChanged(const QString &arg1);
-
-    void on_checkBox_ConfIis_Blacklist_AccUsed_clicked(bool checked);
-
-    void on_inLine_ConfIis_Blacklist_Acc_cursorPositionChanged(int arg1, int arg2);
-
-    void on_inLine_ConfIis_Blacklist_Acc_returnPressed();
-
-    void on_button_ConfIis_Blacklist_AccAdd_clicked();
-
-    void on_list_ConfIis_Blacklist_Acc_itemSelectionChanged();
-
-    void on_button_ConfIis_Blacklist_AccRemove_clicked();
-
-    void on_button_ConfIis_Blacklist_AccUp_clicked();
-
-    void on_button_ConfIis_Blacklist_AccDown_clicked();
-
-    void on_box_ConfIis_Blacklist_Err_currentTextChanged(const QString &arg1);
-
-    void on_checkBox_ConfIis_Blacklist_ErrUsed_clicked(bool checked);
-
-    void on_inLine_ConfIis_Blacklist_Err_cursorPositionChanged(int arg1, int arg2);
-
-    void on_inLine_ConfIis_Blacklist_Err_returnPressed();
-
-    void on_button_ConfIis_Blacklist_ErrAdd_clicked();
-
-    void on_list_ConfIis_Blacklist_Err_itemSelectionChanged();
-
-    void on_button_ConfIis_Blacklist_ErrRemove_clicked();
-
-    void on_button_ConfIis_Blacklist_ErrUp_clicked();
-
-    void on_button_ConfIis_Blacklist_ErrDown_clicked();
+    void on_button_ConfIis_Blacklist_Down_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -533,8 +383,6 @@ private:
 
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
-    // log type constants
-    const unsigned int FAILED=0, ACCESS_LOGS=1, ERROR_LOGS=2;
 
     void makeInitialChecks();
 
@@ -570,9 +418,9 @@ private:
     //// GENERAL USE ////
     /////////////////////
     // get a printable size, from Bytes to the best fit
-    QString printableSize( const int bytes ),
-            printableSpeed( const int bytes, const int secs ),
-            printableTime( const int seconds );
+    const QString printableSize(  const int& bytes ),
+                  printableSpeed( const int& bytes, const int& secs ),
+                  printableTime(  const int& seconds );
 
     //////////////////
     //// DATABASE ////
@@ -599,10 +447,7 @@ private:
     void disableAllButtons_LogFiles_WS(),
          enableAllButtons_LogFiles_WS();
     // logs list related
-    bool display_access_logs = true,
-         display_error_logs = true,
-         display_used_files = true,
-         display_warnsize_files = true;
+    bool hide_used_files = false;
     // text browser related
     TextBrowser TB;
 
@@ -627,8 +472,7 @@ private:
     void checkStatsDayDrawable();
     void checkStatsRelatDrawable();
     // polishing
-    void resetStatsCountAccButtons();
-    void resetStatsCountErrButtons();
+    void resetStatsCountButtons();
     // draw
     void drawStatsCount( const QString& field );
 
