@@ -2,9 +2,15 @@
 #include "craplog.h"
 
 #include "modules/checks.h"
+#include "modules/charts/donuts.h"
 #include "modules/exceptions.h"
-#include "qpainter.h"
+#include "modules/dialogs.h"
+
+#include "utilities/io.h"
+
 #include "tools/craplog/modules/store.h"
+
+#include <QPainter>
 
 #include <filesystem>
 #include <thread>
@@ -267,7 +273,7 @@ void Craplog::setApacheLogFormat( const std::string& format_string )
         this->logs_formats.at( this->APACHE_ID ) =
             this->formatOps.processApacheFormatString( format_string );
     } catch ( LogFormatException& e ) {
-        dialog
+        DialogSec::errInvalidLogFormatString( nullptr, e.what() );
     }
 }
 void Craplog::setNginxLogFormat( const std::string& format_string )
@@ -561,9 +567,10 @@ void Craplog::startWorking()
     this->perf_size = 0;
     this->total_size = 0;
     this->parsed_size = 0;
+    this->warnlisted_size = 0;
+    this->blacklisted_size = 0;
     this->total_lines = 0;
     this->parsed_lines = 0;
-    this->blacklisted_size = 0;
 
     this->data_collection.clear();
     this->logs_lines.clear();
@@ -607,6 +614,10 @@ const int& Craplog::getParsedLines()
     return this->parsed_lines;
 }
 
+void Craplog::sumWarningsSize( const int& size )
+{
+    this->warnlisted_size += size;
+}
 void Craplog::sumBlacklistededSize( const int& size )
 {
     this->blacklisted_size += size;
@@ -929,7 +940,7 @@ const QString Craplog::printableSize( const int& bytes )
 }
 
 
-const std::vector<int> Craplog::calcDayTraffic()
+/*const std::vector<int> Craplog::calcDayTraffic()
 {
     std::vector<int> traffic = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     if ( this->data_collection.size() > 0 ) {
@@ -944,49 +955,63 @@ const std::vector<int> Craplog::calcDayTraffic()
         }
     }
     return traffic;
-}
+}*/
 
-void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart, QChartView* traf_chart )
+void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
 {
-    QString access_chart_name      = QMessageBox::tr("Access Logs Breakdown"),
-            parsed_slice_name      = QMessageBox::tr("Parsed"),
-            blacklisted_slice_name = QMessageBox::tr("Blacklisted"),
-            ignored_slice_name     = QMessageBox::tr("Ignored"),
-            traffic_chart_name     = QMessageBox::tr("Time of Day Logs Traffic Ensemble"),
-            access_bar_name        = QMessageBox::tr("Access Logs");
+    const QString
+        size_chart_name        = QMessageBox::tr("Logs Size Breakdown"),
+        ignored_slice_name     = QMessageBox::tr("Ignored"),
+        parsed_slice_name      = QMessageBox::tr("Parsed"),
+        warning_slice_name     = QMessageBox::tr("Warnings"),
+        blacklisted_slice_name = QMessageBox::tr("Blacklisted");/*,
+        traffic_chart_name     = QMessageBox::tr("Time of Day Logs Traffic Ensemble"),
+        access_bar_name        = QMessageBox::tr("Access Logs");*/
 
-    // access logs donut chart
-    QPieSeries *size_donut = new QPieSeries();
-    size_donut->setName( this->printableSize( this->total_size ) );
-    size_donut->append(
-        parsed_slice_name + "@" + this->printableSize( this->parsed_size ),
-        this->parsed_size );
-    size_donut->append(
-        blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_size ),
-        this->blacklisted_size);
-    size_donut->append(
-        ignored_slice_name + "@" + this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ),
+    // logs size donut chart
+    QPieSeries *parsedSize_donut = new QPieSeries();
+    parsedSize_donut->setName( this->printableSize( this->parsed_size ) );
+    parsedSize_donut->append(
+        parsed_slice_name + "@" + parsed_slice_name + "@" + this->printableSize( this->parsed_size-this->warnlisted_size ),
+        this->parsed_size-this->warnlisted_size );
+    parsedSize_donut->append(
+        warning_slice_name + "@" + warning_slice_name + "@" + this->printableSize( this->warnlisted_size ),
+        this->warnlisted_size );
+    parsedSize_donut->append(
+        blacklisted_slice_name + "@" + blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_size ),
+        this->blacklisted_size );
+
+    // logs size donut chart
+    QPieSeries *ignoredSize_donut = new QPieSeries();
+    ignoredSize_donut->setName( this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ) );
+    ignoredSize_donut->append(
+        ignored_slice_name + "@#" + ignored_slice_name + "@#" + this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ),
         this->total_size-this->parsed_size-this->blacklisted_size );
+    ignoredSize_donut->setLabelsVisible( false );
 
     DonutBreakdown *sizeBreakdown = new DonutBreakdown();
     sizeBreakdown->setTheme( theme );
     sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
-    sizeBreakdown->setTitle( access_chart_name );
+    sizeBreakdown->setTitle( size_chart_name );
     sizeBreakdown->setTitleFont( fonts.at("main") );
-    if ( this->total_size > 0 ) {
+    //if ( this->total_size > 0 ) {
         sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
-        sizeBreakdown->addBreakdownSeries( size_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
-    } else {
-        sizeBreakdown->addBreakdownSeries( size_donut, Qt::GlobalColor::white, fonts.at("main_small") );
-        size_donut->setVisible( false );
-    }
+        sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
+        sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::gray, fonts.at("main_small") );
+    /*} else {
+        sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
+        parsedSize_donut->setVisible( false );
+        sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
+        ignoredSize_donut->setVisible( false );
+    }*/
+    sizeBreakdown->legend()->setFont( fonts.at("main") );
 
     size_chart->setChart( sizeBreakdown );
     size_chart->setRenderHint( QPainter::Antialiasing );
 
 
     // logs traffic bars chart
-    QColor col;
+    /*QColor col;
     QBarSet *access_bars = new QBarSet( access_bar_name );
     col = Qt::GlobalColor::darkCyan;
     access_bars->setColor( col.lighter( 130 ) );
@@ -1032,7 +1057,7 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
     t_chart->legend()->setAlignment( Qt::AlignBottom );
 
     traf_chart->setChart( t_chart );
-    traf_chart->setRenderHint( QPainter::Antialiasing );
+    traf_chart->setRenderHint( QPainter::Antialiasing );*/
 
 }
 
