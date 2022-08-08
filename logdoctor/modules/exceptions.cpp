@@ -6,9 +6,9 @@
 //// GENERIC ////
 GenericException::GenericException(const std::string& msg )
 {
-    this->msg = msg;
+    this->msg = QString::fromStdString( msg );
 }
-const std::string& GenericException::what()
+const QString& GenericException::what()
 {
     return msg;
 }
@@ -18,9 +18,9 @@ const std::string& GenericException::what()
 //// WEB SERVER ////
 WebServerException::WebServerException(const std::string& msg )
 {
-    this->msg = msg;
+    this->msg = QString::fromStdString( msg );
 }
-const std::string& WebServerException::what()
+const QString& WebServerException::what()
 {
     return msg;
 }
@@ -30,9 +30,9 @@ const std::string& WebServerException::what()
 //// LOG FORMAT ////
 LogFormatException::LogFormatException(const std::string& msg )
 {
-    this->msg = msg;
+    this->msg = QString::fromStdString( msg );
 }
-const std::string& LogFormatException::what()
+const QString& LogFormatException::what()
 {
     return msg;
 }
@@ -42,9 +42,9 @@ const std::string& LogFormatException::what()
 //// LOG PARSER ////
 LogParserException::LogParserException(const std::string& msg )
 {
-    this->msg = msg;
+    this->msg = QString::fromStdString( msg );
 }
-const std::string& LogParserException::what()
+const QString& LogParserException::what()
 {
     return msg;
 }
@@ -54,9 +54,9 @@ const std::string& LogParserException::what()
 //// DATE-TIME ////
 DateTimeException::DateTimeException(const std::string& msg )
 {
-    this->msg = msg;
+    this->msg = QString::fromStdString( msg );
 }
-const std::string& DateTimeException::what()
+const QString& DateTimeException::what()
 {
     return msg;
 }
