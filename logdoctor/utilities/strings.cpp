@@ -97,7 +97,7 @@ const bool StringOps::isAlnum( const std::string& str )
 const bool StringOps::isAlnum( const char& chr )
 {
     if ( StringOps::isNumeric( chr ) == false
-      || StringOps::isAlphabetic( chr ) == false ) {
+      && StringOps::isAlphabetic( chr ) == false ) {
         return false;
     } else {
         return true;
