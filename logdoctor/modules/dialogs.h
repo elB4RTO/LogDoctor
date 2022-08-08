@@ -1,9 +1,9 @@
 #ifndef DIALOGS_H
 #define DIALOGS_H
 
-#include "qwidget.h"
-#include "qstring.h"
-#include "qmessagebox.h"
+#include <QWidget>
+#include <QString>
+#include <QMessageBox>
 
 
 static QString
@@ -32,6 +32,9 @@ static QString
     t_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("Unexpected data-type"),
 
     t_LOGTYPE_FAILED    = QMessageBox::tr("Failed defining type"),
+
+    t_LOGFORMAT_INVALID = QMessageBox::tr("Invalid log format string"),
+    t_LOGFORMAT_NOT_SET = QMessageBox::tr("Log format error"),
 
     t_FILE_ALREADY_USED = QMessageBox::tr("File already used"),
     t_FILE_SIZE_WARNING = QMessageBox::tr("File exceeds warning size"),
@@ -79,10 +82,14 @@ static QString
 
     m_LOGTYPE_FAILED    = QMessageBox::tr("Failed to determine the log type"),
 
+    m_LOGFORMAT_NOT_SET = QMessageBox::tr("The log format has not been set, or is invalid\nPlease add a valid one in the configurations"),
+
     // requests
     r_REPORT_ISSUE    = QMessageBox::tr("Please report this issue"),
     r_SET_PERMISSIONS = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue"),
     r_DB_DONT_EDIT    = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue"),
+
+    r_CHECK_FORMAT    = QMessageBox::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue"),
 
     // footers
     f_SKIPPING = QMessageBox::tr("Skipping"),
@@ -136,6 +143,11 @@ public:
     // log files size
     static int choiceFileSizeWarning( QWidget *parent, const QString& msg );
         //static int choiceFileSizeWarning( QWidget *parent, const std::string& msg );
+
+    // log format string
+    static void errInvalidLogFormatString( QWidget *parent, const QString& msg );
+    // log format string
+    static void errLogFormatNotSet( QWidget *parent );
 
     // files permissions
     static void errFileNotExists( QWidget *parent );
