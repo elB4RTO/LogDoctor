@@ -277,7 +277,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
 
         if ( successful == true ) {
@@ -334,7 +334,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
         int year, month, day, hour;
         if ( successful == true ) {
@@ -357,9 +357,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                     .arg( table )
-                    .arg( year )
-                    .arg( month )
-                    .arg( day );
+                    .arg( year ).arg( month ).arg( day );
 
             if ( hour_.size() == 0 ) {
                 // entire day
@@ -482,7 +480,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
         int year, month, day;
         if ( successful == true ) {
@@ -507,8 +505,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
             // prepare the statement
             stmt = QString("SELECT \"hour\",\"minute\",\"second\",\"time_taken\",\"uri\",\"query\",\"method\",\"protocol\",\"response\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 AND \"time_taken\" IS NOT NULL")
                 .arg( table.replace("'","''") )
-                .arg( year ).arg( month )
-                .arg( day );
+                .arg( year ).arg( month ).arg( day );
 
             // apply a filter if present
             if ( protocol_f.size() > 0 ) {
@@ -841,18 +838,18 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
         if ( successful == true ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
-                .arg( this->LogFields_to_DbFields.value( log_field ))
-                .arg( table )
-                .arg( this->LogFields_to_DbFields.value( log_field ))
-                .arg( year )
-                .arg( this->Months_s2i.value( month ) )
-                .arg( day );
+                .arg( this->LogFields_to_DbFields.value( log_field ),
+                      table,
+                      this->LogFields_to_DbFields.value( log_field ),
+                      year,
+                      QString::fromStdString( std::to_string( this->Months_s2i.value( month ) )),
+                      day );
             // quary the database
             if ( query.exec( stmt.replace("'","''") ) == false ) {
                 // error querying database
@@ -886,7 +883,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
             // sort the list
             std::tuple<QString, int> item;
             // morph tha HashMap into a Vector of Tuples
-            for ( const QString& v : aux_items.keys() ) {
+            foreach ( const QString& v, aux_items.keys() ) {
                 item = std::make_tuple( v, aux_items.value( v ) );
                 items.push_back( item );
             }
@@ -957,7 +954,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
         int from_year, from_month, from_day,
             to_year, to_month, to_day;
@@ -994,8 +991,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                 // 1 month, no need to loop
                 stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\">=%4 AND \"day\"<=%5")
                     .arg( table.replace("'","''") )
-                    .arg( year )
-                    .arg( month )
+                    .arg( year ).arg( month )
                     .arg( from_day ).arg( to_day );
 
                 // apply a filter if present
@@ -1021,13 +1017,13 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                                 filter = QString("=%1").arg( field_filter );
                             }
                             stmt += QString(" AND \"%1\"%2")
-                                .arg( log_field.replace("'","''") )
-                                .arg( filter.replace("'","''") );
+                                .arg( log_field.replace("'","''"),
+                                      filter.replace("'","''") );
 
                         } else {
                             stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                                .arg( log_field.replace("'","''") )
-                                .arg( filter.replace("'","''") );
+                                .arg( log_field.replace("'","''"),
+                                      filter.replace("'","''") );
                         }
                     }
                 }
@@ -1067,8 +1063,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                 for ( int m=1; m<=n_months; m++ ) {
                     stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
                         .arg( table )
-                        .arg( year )
-                        .arg( month );
+                        .arg( year ).arg( month );
                     if ( m == 1 ) {
                         // first month, only get the day from the beginning day
                         stmt += QString(" AND \"day\">=%1").arg( from_day );
@@ -1101,14 +1096,14 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                                     filter = QString("=%1").arg( field_filter );
                                 }
                                 stmt += QString(" AND \"%1\"%2")
-                                    .arg( log_field.replace("'","''") )
-                                    .arg( filter.replace("'","''") );
+                                    .arg( log_field.replace("'","''"),
+                                          filter.replace("'","''") );
 
                             } else {
                                 // only values starting-with
                                 stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                                    .arg( log_field.replace("'","''") )
-                                    .arg( filter.replace("'","''") );
+                                    .arg( log_field.replace("'","''"),
+                                          filter.replace("'","''") );
                             }
                         }
                     }
@@ -1203,7 +1198,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
 
         int year, month, day;
@@ -1231,8 +1226,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             // 1 month, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                 .arg( table.replace("'","''") )
-                .arg( year ).arg( month )
-                .arg( day );
+                .arg( year ).arg( month ).arg( day );
 
             // apply a filter if present
             if ( field_filter_1.size() > 0 ) {
@@ -1258,14 +1252,14 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                             filter = QString("=%1").arg( field_filter_1 );
                         }
                         stmt += QString(" AND \"%1\"%2")
-                            .arg( log_field_1.replace("'","''") )
-                            .arg( filter.replace("'","''") );
+                            .arg( log_field_1.replace("'","''"),
+                                  filter.replace("'","''") );
 
                     } else {
                         // only values starting-with
                         stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                            .arg( log_field_1.replace("'","''") )
-                            .arg( filter.replace("'","''") );
+                            .arg( log_field_1.replace("'","''"),
+                                  filter.replace("'","''") );
                     }
                 }
             }
@@ -1293,14 +1287,14 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                             filter = QString("=%1").arg( field_filter_2 );
                         }
                         stmt += QString(" AND \"%1\"%2")
-                            .arg( log_field_2.replace("'","''") )
-                            .arg( filter.replace("'","''") );
+                            .arg( log_field_2.replace("'","''"),
+                                  filter.replace("'","''") );
 
                     } else {
                         // only values starting-with
                         stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                            .arg( log_field_2.replace("'","''") )
-                            .arg( QString(field_filter_2).replace("'","''") );
+                            .arg( log_field_2.replace("'","''"),
+                                  QString(field_filter_2).replace("'","''") );
                     }
                 }
             }
@@ -1454,10 +1448,10 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(this->MSG_ERR_UNX_WS).arg( web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
         }
         int from_year, from_month, from_day,
-            to_year, to_month, to_day;
+            to_year,   to_month,   to_day;
         if ( successful == true ) {
             // setup period limits
             try {
@@ -1510,13 +1504,13 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                         filter = QString("=%1").arg( field_filter_1 );
                     }
                     stmt += QString(" AND \"%1\"%2")
-                        .arg( log_field_1.replace("'","''") )
-                        .arg( filter.replace("'","''") );
+                        .arg( log_field_1.replace("'","''"),
+                              filter.replace("'","''") );
 
                     } else {
                         stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                            .arg( log_field_1.replace("'","''") )
-                            .arg( filter.replace("'","''") );
+                            .arg( log_field_1.replace("'","''"),
+                                  filter.replace("'","''") );
                     }
                 }
                 // only select non-NULL values
@@ -1535,13 +1529,13 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                         filter = QString("=%1").arg( field_filter_2 );
                     }
                     stmt += QString(" AND \"%1\"%2")
-                        .arg( log_field_2.replace("'","''") )
-                        .arg( filter.replace("'","''") );
+                        .arg( log_field_2.replace("'","''"),
+                              filter.replace("'","''") );
 
                     } else {
                         stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                            .arg( log_field_2.replace("'","''") )
-                            .arg( QString(field_filter_2).replace("'","''") );
+                            .arg( log_field_2.replace("'","''"),
+                                  QString(field_filter_2).replace("'","''") );
                     }
                 }
 
@@ -1654,8 +1648,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                 for ( int m=1; m<=n_months; m++ ) {
                     stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
                         .arg( table.replace("'","''") )
-                        .arg( year )
-                        .arg( month );
+                        .arg( year ).arg( month );
 
                     if ( m == 1 ) {
                         // first month, only get the day from the beginning day
@@ -1681,13 +1674,13 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                                 filter = QString("=%1").arg( field_filter_1 );
                             }
                             stmt += QString(" AND \"%1\"%2")
-                                .arg( log_field_1.replace("'","''") )
-                                .arg( filter.replace("'","''") );
+                                .arg( log_field_1.replace("'","''"),
+                                      filter.replace("'","''") );
 
                         } else {
                             stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                                .arg( log_field_1.replace("'","''") )
-                                .arg( filter.replace("'","''") );
+                                .arg( log_field_1.replace("'","''"),
+                                      filter.replace("'","''") );
                         }
                     }
                     // only select non-NULL values
@@ -1706,13 +1699,13 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                                 filter = QString("=%1").arg( field_filter_2 );
                             }
                             stmt += QString(" AND \"%1\"%2")
-                                .arg( log_field_2.replace("'","''") )
-                                .arg( filter.replace("'","''") );
+                                .arg( log_field_2.replace("'","''"),
+                                      filter.replace("'","''") );
 
                         } else {
                             stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
-                                .arg( log_field_2.replace("'","''") )
-                                .arg( QString(field_filter_2).replace("'","''") );
+                                .arg( log_field_2.replace("'","''"),
+                                      QString(field_filter_2).replace("'","''") );
                         }
                     }
 

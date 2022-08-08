@@ -658,10 +658,10 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
             b_30->setLabel( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ) );
         } else {
             b_30->setLabel( QString("%1 %2 %3 %4")
-                .arg( this->LEGEND_FROM )
-                .arg( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ))
-                .arg( this->LEGEND_TO )
-                .arg( this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )) );
+                .arg( this->LEGEND_FROM,
+                      this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ),
+                      this->LEGEND_TO,
+                      this->printableDate( to_year, this->Months_s2i.value(to_month), to_day ) ));
         }
         b_30->setColor( col );
         QBarSet *b_40 = new QBarSet( "" );
