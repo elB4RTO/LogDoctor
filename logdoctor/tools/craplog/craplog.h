@@ -5,10 +5,8 @@
 #include <vector>
 
 #include <QMainWindow>
+#include <QtCharts>
 
-#include "utilities.h"
-#include "modules/charts/donuts.h"
-#include "modules/dialogs.h"
 #include "tools/craplog/modules/formats.h"
 #include "tools/craplog/modules/hash.h"
 #include "tools/craplog/modules/logs.h"
@@ -68,7 +66,7 @@ public:
 
     // warning file size (in Bytes)
     const long& getWarningSize();
-    void setWarningSize( const long int& new_size );
+    void setWarningSize( const long& new_size );
     // logs usage control
     HashOps hashOps;
 
@@ -100,12 +98,13 @@ public:
     const bool checkStuff();
     void startWorking(),
          stopWorking(),
-         makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart, QChartView* traf_chart ),
+         makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart ),
          clearDataCollection();
     const bool& isWorking(),
               & isParsing();
     // job performancea
     void collectPerfData(),
+         sumWarningsSize( const int& size ),
          sumBlacklistededSize( const int& size ),
          sumPerfSize( const int& size );
     const int& getPerfSize(),
@@ -137,10 +136,10 @@ private:
         perf_size        = 0,
         total_size       = 0,
         parsed_size      = 0,
+        warnlisted_size    = 0,
         blacklisted_size = 0;
     // chart related
     const QString printableSize( const int& bytes );
-    const std::vector<int> calcDayTraffic();
 
     // data collection, each item results from a log line
     /* structure
