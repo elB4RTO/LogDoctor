@@ -1,6 +1,8 @@
 
 #include "checks.h"
 
+#include "modules/dialogs.h"
+
 #include "utilities/io.h"
 
 
