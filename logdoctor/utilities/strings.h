@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "qstring.h"
 
 class StringOps
 {
@@ -36,6 +35,8 @@ public:
     static void split( std::vector<std::string>& list, const std::string& target_str, const std::string& separator="\n" );
 
     static void splitrip( std::vector<std::string>& list, const std::string& target_str, const std::string& separator="\n", const std::string& strip=" \n\t\b\r\v" );
+
+    static std::string replace( const std::string& str, const std::string& target, const std::string& replace );
 };
 
 #endif // STRINGS_H

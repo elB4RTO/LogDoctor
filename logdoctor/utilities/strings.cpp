@@ -10,7 +10,8 @@ StringOps::StringOps()
 
 const int StringOps::count(const std::string& str, const std::string& flag, const bool& consecutives )
 {
-    int start=0, aux_start=0, max=str.size()-1, count=0;
+    int start=0, aux_start=0, count=0;
+    const int max = str.size()-1;
     while (true) {
         start = str.find( flag, start );
         if ( start >= 0 && start < max ) {
@@ -126,8 +127,8 @@ const bool StringOps::startsWith( const std::string& str, const std::string& fla
 const bool StringOps::endsWith( const std::string& str, const std::string& flag )
 {
     bool result = true;
-    int str_size = str.size()-1,
-        flg_size = flag.size()-1;
+    const int str_size = str.size()-1,
+              flg_size = flag.size()-1;
     for ( int i=0; i<flg_size; i++ ) {
         if ( str.at( str_size-i ) != flag.at( flg_size-i ) ) {
             result = false;
@@ -162,7 +163,8 @@ std::string StringOps::lstrip( const std::string& str, const std::string& chars 
 {
     bool found;
     int i = 0;
-    while ( i < str.size() ) {
+    const int max = str.size();
+    while ( i < max ) {
         found = false;
         char str_index = str.at( i );
         for ( const char& chr : chars ) {
@@ -213,9 +215,9 @@ std::string StringOps::rstrip( const std::string& str, const std::string& chars 
 std::string StringOps::lstripUntil( const std::string& str, const std::string& chr, const bool& inclusive, const bool& consecutives )
 {
     int start, aux_start, aux;
-    int max_size = str.size()-1;
+    const int max_size = str.size()-1;
     std::string stripped = "";
-    if ( str != "" ) {
+    if ( max_size >= 0 ) {
         start = str.find( chr );
         if ( inclusive == true ) {
             start += chr.size();
@@ -259,20 +261,23 @@ void StringOps::split( std::vector<std::string>& list, const std::string& target
 {
     std::string slice;
     int start=0, stop;
-    while (true) {
-        stop = target_str.find( separator, start );
-        if ( stop >= target_str.size() ) {
-            slice = target_str.substr( start );
-            if ( slice.size() > 0 ) {
-                list.push_back( slice );
+    const int max = target_str.size()-1;
+    if ( max >= 0 ) {
+        while (true) {
+            stop = target_str.find( separator, start );
+            if ( stop < 0 || stop > max ) {
+                slice = target_str.substr( start );
+                if ( slice.size() > 0 ) {
+                    list.push_back( slice );
+                }
+                break;
+            } else {
+                slice = target_str.substr( start, stop-start );
+                if ( slice.size() > 0 ) {
+                    list.push_back( slice );
+                }
+                start = stop+separator.size();
             }
-            break;
-        } else {
-            slice = target_str.substr( start, stop-start );
-            if ( slice.size() > 0 ) {
-                list.push_back( slice );
-            }
-            start = stop+separator.size();
         }
     }
 }
@@ -290,4 +295,26 @@ void StringOps::splitrip( std::vector<std::string>& list, const std::string& tar
         list.push_back( StringOps::strip( str, strip ) );
     }
     aux.clear();
+}
+
+
+std::string StringOps::replace( const std::string& str, const std::string& target, const std::string& replace )
+{
+    int start=0, stop;
+    const int max = str.size()-1;
+    std::string string = "";
+    if ( max >= 0 ) {
+        while ( true ) {
+            stop = str.find_first_of( target, start );
+            if ( stop < 0 || stop > max ) {
+                string += str.substr( start );
+                break;
+            } else {
+                string += str.substr( start, stop-start );
+                string += replace;
+                start = stop+1;
+            }
+        }
+    }
+    return string;
 }
