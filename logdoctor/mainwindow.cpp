@@ -90,9 +90,9 @@ MainWindow::MainWindow( QWidget *parent )
     ////////////////////////
     //// INITIALIZATION ////
     // sqlite databases paths
-    this->db_stats_path  = "collection.db";//"~/.craplog/collection.db"; !!! RESTORE
-    this->db_hashes_path = "hashes.db";//"~/.craplog/hashes.db"; !!! RESTORE
-    this->crapview.setDbPath( this->db_stats_path );
+    this->db_data_path   = "collection.db";//"~/.craplog/collection.db"; !!! RESTORE !!!
+    this->db_hashes_path = "hashes.db";//"~/.craplog/hashes.db"; !!! RESTORE !!!
+    this->crapview.setDbPath( this->db_data_path );
     // WebServers for the LogsList
     this->allowed_web_servers.emplace( this->APACHE_ID, true );
     this->allowed_web_servers.emplace( this->NGINX_ID,  true );
@@ -101,9 +101,10 @@ MainWindow::MainWindow( QWidget *parent )
 
     /////////////////
     //// CONFIGS ////
-    this->craplog.setDialogLevel( 1 ); // !!! REPLACE WITH CONFIGURATION VALUE !!!
-
-    // set user-definet tabs indexes => this->ui->StatsTabs->widget( 0 );
+    this->readConfigs():
+    if ( this->language != "en" ) {
+        this->updateUiLanguage();
+    }
 
 
     ///////////////////
@@ -296,6 +297,7 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent (QCloseEvent *event)
 {
     // save actual configurations
+    this->writeConfigs();
 
     // save tabs positions => this->ui->CrapTabs->tabText( 0 );
     //                     => this->ui->CrapTabs->tabText( 0 );
@@ -304,8 +306,202 @@ void MainWindow::closeEvent (QCloseEvent *event)
 }
 
 
+
+////////////////////////
+//// CONFIGURATIONS ////
+////////////////////////
+void MainWindow::readConfigs()
+{
+
+}
+
+void MainWindow::writeConfigs()
+{
+    bool proceed = true;
+    // check the file first
+    if ( IOutils::exists( this->configs_path ) == true ) {
+        if ( IOutils::checkFile( this->configs_path ) == true ) {
+            if ( IOutils::checkFile( this->configs_path, false, true ) == false ) {
+                // file not writable
+                proceed = false;
+                // !!! PUT A DIALOG MESSAGE HERE !!!
+            }
+        } else {
+            // the given path desn't point to a file
+            proceed = false;
+            // !!! PUT A DIALOG MESSAGE HERE !!!
+        }
+    } else {
+        // file does not exists, check if at least the folder exists
+        int index;
+        if ( this->OS == 1 ) {
+            index = this->configs_path.find_last_of( '/' );
+        } else {
+            index = this->configs_path.find_last_of( '\\' );
+        }
+        if ( index < 0 || index >= this->configs_path.size() ) {
+            // not a valid path
+            proceed = false;
+            // !!! PUT A DIALOG MESSAGE HERE !!!
+        }
+        std::string base_path = this->configs_path.substr( 0, index );
+        if ( IOutils::exists( this->configs_path ) == true ) {
+            if ( IOutils::checkDir( base_path ) == true ) {
+                if ( IOutils::checkDir( base_path, false, true ) == false ) {
+                    // directory not writable
+                    proceed = false;
+                    // !!! PUT A DIALOG MESSAGE HERE !!!
+                }
+            } else {
+                // not a directory
+                proceed = false;
+                // !!! PUT A DIALOG MESSAGE HERE !!!
+            }
+        } else {
+            // the given path does not exist
+            proceed = false;
+            // !!! PUT A DIALOG MESSAGE HERE !!!
+        }
+    }
+
+    if ( proceed == true ) {
+        //// USER INTERFACE ////
+        std::string configs = "[UI]";
+        configs += "\nLanguage=" + this->language;
+        configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
+        configs += "\nGeometry=" + this->geometryToString();
+        configs += "\nWindowTheme=" + std::to_string( this->window_theme_id );
+        configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
+        configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_Level );
+        configs += "\nDatabaseDataPath=" + this->db_data_path;
+        configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
+        //// TEXT BROWSER ////
+        configs += "\n\n[TextBrowser]";
+        configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
+        configs += "\nWideLines=" + this->b2s.at( this->TB.getWideLinesUsage() );
+        configs += "\nColorScheme=" + std::to_string( this->TB.getColorSchemeID() );
+        //// CRAPLOG ////
+        configs += "\n\n[Craplog]";
+        configs += "\nCraplogDialogLevel=" + std::to_string( this->craplog.getDialogsLevel() );
+        configs += "\nHideUsedFiles=" + this->b2s.at( this->hide_used_files );
+        configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
+        //// APACHE2 ////
+        configs += "\n\n[Apache2]";
+        configs += "\nApacheLogsPath=" + this->craplog.getLogsPath( this->APACHE_ID );
+        configs += "\nApacheLogsFormat=" + this->craplog.getLogsFormatString( this->APACHE_ID );
+        configs += "\nApacheWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 11 ) );
+        configs += "\nApacheWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 12 ) );
+        configs += "\nApacheWarnlistClient=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 20 ) );
+        configs += "\nApacheWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 21 ), true );
+        configs += "\nApacheBlacklistClient=" + this->list2string( this->craplog.getBlacklist( this->APACHE_ID, 20 ) );
+        //// NGINX ////
+        configs += "\n\n[Nginx]";
+        configs += "\nNginxLogsPath=" + this->craplog.getLogsPath( this->NGINX_ID );
+        configs += "\nNginxLogsFormat=" + this->craplog.getLogsFormatString( this->NGINX_ID );
+        configs += "\nNginxWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 11 ) );
+        configs += "\nNginxWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 12 ) );
+        configs += "\nNginxWarnlistClient=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 20 ) );
+        configs += "\nNginxWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 21 ), true );
+        configs += "\nNginxBlacklistClient=" + this->list2string( this->craplog.getBlacklist( this->NGINX_ID, 20 ) );
+        //// IIS ////
+        configs += "\n\n[IIS]";
+        configs += "\nIisLogsPath=" + this->craplog.getLogsPath( this->IIS_ID );
+        configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( this->IIS_ID );
+        configs += "\nIisWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 11 ) );
+        configs += "\nIisWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 12 ) );
+        configs += "\nIisWarnlistClient=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 20 ) );
+        configs += "\nIisWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 21 ), true );
+        configs += "\nIisBlacklistClient=" + this->list2string( this->craplog.getBlacklist( this->IIS_ID, 20 ) );
+        //// CRAPVIEW ////
+        configs += "\n\n[Crapview]";
+        configs += "\nCrapviewDialogLevel=" + std::to_string( this->crapview.getDialogsLevel() );
+
+        // write on file
+        try {
+            IOutils::writeOnFile( this->configs_path, configs );
+
+        } catch (const std::ios_base::failure& err) {
+            // failed writing
+            // !!! PUT A DIALOG MESSAGE HERE !!!
+        } catch (...) {
+            // something failed
+            // !!! PUT A DIALOG MESSAGE HERE !!!
+        }
+    }
+}
+
+
+const std::string MainWindow::geometryToString()
+{
+    QRect geometry = this->geometry();
+    std::string string = "";
+    string += std::to_string( geometry.x() );
+    string += ",";
+    string += std::to_string( geometry.y() );
+    string += ",";
+    string += std::to_string( geometry.width() );
+    string += ",";
+    string += std::to_string( geometry.height() );
+    string += ",";
+    string += this->b2s.at( this->isMaximized() );
+    return string;
+}
+void MainWindow::geometryFromString( const std::string& geometry )
+{
+    std::vector<std::string> aux;
+    StringOps::splitrip( aux, geometry, "," );
+    QRect new_geometry;
+    new_geometry.setRect( std::stoi(aux.at(0)), std::stoi(aux.at(1)), std::stoi(aux.at(2)), std::stoi(aux.at(3)) );
+    this->setGeometry( new_geometry );
+    if ( aux.at(4) == "true" ) {
+        this->showMaximized();
+    }
+}
+
+
+const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool& user_agent )
+{
+    int i, max=list.size()-1;
+    std::string string;
+    if ( user_agent == true ) {
+        for ( const std::string& str : list ) {
+            string += StringOps::replace( str, " ", "%@#" );
+            if ( i < max ) {
+                string.push_back( ' ' );
+                i++;
+            }
+        }
+    } else {
+        for ( const std::string& str : list ) {
+            string += str;
+            if ( i < max ) {
+                string.push_back( ' ' );
+                i++;
+            }
+        }
+    }
+    return string;
+}
+const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool& user_agent )
+{
+    std::vector<std::string> list, aux;
+    StringOps::splitrip( aux, string, " " );
+    if ( user_agent == true ) {
+        for ( const std::string& str : list ) {
+            list.push_back( StringOps::replace( str, " ", "%@#" ) );
+        }
+    } else {
+        for ( const std::string& str : list ) {
+            list.push_back( str );
+        }
+    }
+    return list;
+}
+
+
 //////////////////////////
 //// INTEGRITY CHECKS ////
+//////////////////////////
 void MainWindow::wait_ActiveWindow()
 {
     if ( this->isActiveWindow() == false ) {
@@ -327,11 +523,11 @@ void MainWindow::makeInitialChecks()
 
     if ( ok == true ) {
         // statistics' database
-        if ( CheckSec::checkStatsDatabase( this->db_stats_path ) == false ) {
+        if ( CheckSec::checkStatsDatabase( this->db_data_path ) == false ) {
             // checks failed, abort
             ok = false;
         } else {
-            this->craplog.setStatsDatabasePath( this->db_stats_path );
+            this->craplog.setStatsDatabasePath( this->db_data_path );
             // used-files' hashes' database
             if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
                 // checks failed, abort
@@ -460,6 +656,15 @@ const QString MainWindow::printableTime( const int& secs_ )
     std::string mins_str = (mins<10) ? "0"+std::to_string(mins) : std::to_string(mins);
     std::string secs_str = (secs<10) ? "0"+std::to_string(secs) : std::to_string(secs);
     return QString::fromStdString( mins_str +":"+ secs_str );
+}
+
+
+//////////////////
+//// LANGUAGE ////
+//////////////////
+void updateUiLanguage()
+{
+
 }
 
 
@@ -1640,7 +1845,7 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
             font = this->FONTS.at( "script" );
             break;
         default:
-            throw ("Unexpected Font index: "[index]);
+            throw GenericException( "Unexpected Font index: "+std::to_string(index) );
     }
     this->TB.setFont( font );
     this->TB.setFontFamily( this->ui->box_ConfTextBrowser_Font->currentText() );
@@ -1741,6 +1946,71 @@ void MainWindow::refreshChartsPreview()
 
     this->ui->chart_ConfCharts_Preview->setChart( t_chart );
     this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
+}
+
+
+///////////////////
+//// DATABASES ////
+// data collection
+void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1)
+{
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
+        this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
+        this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
+    } else {
+        this->ui->icon_ConfDatabases_Data_Wrong->setVisible( true );
+        this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
+    }
+    this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( path ) );
+}
+void MainWindow::on_inLine_ConfDatabases_Data_Path_returnPressed()
+{
+    this->on_button_ConfDatabases_Data_Save_clicked();
+}
+void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
+{
+    if ( this->ui->icon_ConfDatabases_Data_Wrong->isVisible() == false ) {
+        // set the paths
+        std::string path = StringOps::strip( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() );
+        if ( StringOps::endsWith( path, "/" ) ) {
+            path = StringOps::rstrip( path, "/" );
+        }
+        this->db_data_path = path;
+        this->craplog.setStatsDatabasePath( this->db_data_path );
+    }
+    this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
+}
+
+// usef files hashes
+void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1)
+{
+    std::string path = StringOps::strip( arg1.toStdString() );
+    if ( IOutils::checkDir( path ) == true ) {
+        this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
+        this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
+    } else {
+        this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( true );
+        this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
+    }
+    this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( path ) );
+}
+void MainWindow::on_inLine_ConfDatabases_Hashes_Path_returnPressed()
+{
+    this->on_button_ConfDatabases_Hashes_Save_clicked();
+}
+void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
+{
+    if ( this->ui->icon_ConfDatabases_Hashes_Wrong->isVisible() == false ) {
+        // set the paths
+        std::string path = StringOps::strip( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() );
+        if ( StringOps::endsWith( path, "/" ) ) {
+            path = StringOps::rstrip( path, "/" );
+        }
+        this->db_hashes_path = path;
+        this->craplog.setHashesDatabasePath( this->db_hashes_path );
+    }
+    this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
 }
 
 
@@ -2783,6 +3053,5 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
-
 
 
