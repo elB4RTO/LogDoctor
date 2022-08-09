@@ -73,9 +73,6 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries *breakdownSeries, const QCol
     for (QPieSlice *slice : slices) {
         if ( StringOps::startsWith( slice->label().toStdString(), "Blacklisted" ) ) {
             slice->setBrush( Qt::GlobalColor::black );
-            if ( slice->value() == 0 ) {
-                slice->setLabelVisible( false );
-            }
         } else if ( StringOps::startsWith( slice->label().toStdString(), "Warnings" ) ) {
             slice->setBrush( QColor( 255, 140, 0, 255 ) );
         } else if ( StringOps::startsWith( slice->label().toStdString(), "Ignored" ) ) {
@@ -85,6 +82,9 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries *breakdownSeries, const QCol
             slice->setBrush( color.lighter( 150 ) );
         }
         slice->setLabelFont( font );
+        if ( slice->value() == 0 ) {
+            slice->setLabelVisible( false );
+        }
     }
 
     // add the series to the chart
