@@ -33,4 +33,10 @@
         <file>icons/up.png</file>
         <file>icons/down.png</file>
     </qresource>
+    <qresource prefix="/flags">
+        <file>flags/en.png</file>
+        <file>flags/es.png</file>
+        <file>flags/fr.png</file>
+        <file>flags/it.png</file>
+    </qresource>
 </RCC>
