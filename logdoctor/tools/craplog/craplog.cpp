@@ -42,7 +42,7 @@ Craplog::Craplog()
     this->logs_format_strings.emplace(
         this->NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
     this->logs_format_strings.emplace(
-        this->IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken" );
+        this->IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
 
     // initialize formats
     this->logs_formats.emplace(
@@ -60,7 +60,7 @@ Craplog::Craplog()
     this->logs_paths.emplace( this->NGINX_ID, "/var/log/nginx" );
     // iis access/error logs location
     this->logs_paths.emplace( this->IIS_ID, "/var/log/iis/LogFiles/SiteName" );
-    //this->logs_paths.emplace( this->IIS_ID, "C:\\inetpub\\logs\\LogFiles\\" ); !!! RESTORE !!!
+    //this->logs_paths.emplace( this->IIS_ID, "C:\\inetpub\\logs\\LogFiles" ); !!! RESTORE !!!
 
     // apache2 access/error log files' names
     this->logs_base_names.emplace( this->APACHE_ID, LogName{ .starts   = "access.log.",
