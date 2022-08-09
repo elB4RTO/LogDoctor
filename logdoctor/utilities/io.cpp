@@ -14,13 +14,13 @@ IOutils::IOutils()
 }
 
 // test the existence of a file/folder
-bool IOutils::exists( const std::string& path )
+const bool IOutils::exists( const std::string& path )
 {
     return std::filesystem::exists( path );
 }
 
 // tests if a path exists and points to a file
-bool IOutils::isFile( const std::string& path )
+const bool IOutils::isFile( const std::string& path )
 {
     bool result = false;
     if ( std::filesystem::exists( path )) {
@@ -29,7 +29,7 @@ bool IOutils::isFile( const std::string& path )
     return result;
 }
 // returns whether a file is readable/writable
-bool IOutils::checkFile( const std::string& path, const bool& readable, const bool& writable )
+const bool IOutils::checkFile( const std::string& path, const bool& readable, const bool& writable )
 {
     bool result = false;
     if ( IOutils::isFile( path ) == true ) {
@@ -51,7 +51,7 @@ bool IOutils::checkFile( const std::string& path, const bool& readable, const bo
 }
 
 // test if a path exists and points to a folder
-bool IOutils::isDir( const std::string& path )
+const bool IOutils::isDir( const std::string& path )
 {
     bool result = false;
     if ( std::filesystem::exists( path )) {
@@ -60,7 +60,7 @@ bool IOutils::isDir( const std::string& path )
     return result;
 }
 // returns whether a folder is readable/writable
-bool IOutils::checkDir( const std::string& path, const bool& readable, const bool& writable )
+const bool IOutils::checkDir( const std::string& path, const bool& readable, const bool& writable )
 {
     bool result = false;
     if ( IOutils::isDir( path ) == true ) {
@@ -83,7 +83,7 @@ bool IOutils::checkDir( const std::string& path, const bool& readable, const boo
 
 
 // rename an entry with a trailing '.copy'
-bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
+const bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
 {
     bool result = true;
     std::string new_path = path;
@@ -215,6 +215,7 @@ const std::string IOutils::readFile( const std::string& path )
         content = std::string(
             (std::istreambuf_iterator<char>( file )),
             std::istreambuf_iterator<char>() );
+
     } catch (const std::ios_base::failure& err) {
         // failed reading
         if ( file.is_open() == true ) {
@@ -227,8 +228,45 @@ const std::string IOutils::readFile( const std::string& path )
         }
         throw std::exception();
     }
+
     if ( file.is_open() == true ) {
         file.close();
     }
     return content;
+}
+
+
+void writeOnFile( const std::string& path, const std::string& content )
+{
+    std::ofstream file;
+    try {
+        file.open( path );
+        if ( file.is_open() == false ) {
+            throw std::ios_base::failure( "file is not open" );
+        }
+        if ( file.good() == false ) {
+            throw std::ios_base::failure( "file is not good" );
+        }
+        // add bit exceptions
+        file.exceptions(std::ifstream::failbit);
+        file.exceptions(std::ios_base::badbit);
+        // write the content
+        file << content << std::endl;
+
+    } catch (const std::ios_base::failure& err) {
+        // failed writing
+        if ( file.is_open() == true ) {
+            file.close();
+        }
+        throw err;
+    } catch (...) {
+        if ( file.is_open() == true ) {
+            file.close();
+        }
+        throw std::exception();
+    }
+
+    if ( file.is_open() == true ) {
+        file.close();
+    }
 }
