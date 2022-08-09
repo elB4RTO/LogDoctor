@@ -142,7 +142,7 @@ private slots:
 
     void on_button_StatsDay_Draw_clicked();
 
-    //// RELATIONSL ////
+    //// RELATIONAL ////
 
     void on_box_StatsRelat_WebServer_currentIndexChanged(int index);
 
@@ -375,15 +375,52 @@ private slots:
 
     void on_button_ConfIis_Blacklist_Down_clicked();
 
+    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1);
+
+    void on_inLine_ConfDatabases_Data_Path_returnPressed();
+
+    void on_button_ConfDatabases_Data_Save_clicked();
+
+    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1);
+
+    void on_inLine_ConfDatabases_Hashes_Path_returnPressed();
+
+    void on_button_ConfDatabases_Hashes_Save_clicked();
+
 private:
     Ui::MainWindow *ui;
-
-    // quantoty of informational dialogs to display
-    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
 
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
+    // operating system
+    // 1: unix, 2:windows
+    unsigned int OS;
+
+
+    ////////////////////////
+    //// CONFIGURATIONS ////
+    ////////////////////////
+    std::string configs_path;
+    void readConfigs();
+    void writeConfigs();
+    // string to bool and vice versa
+    const std::unordered_map<std::string, bool> s2b = { {"true",true}, {"false",false} };
+    const std::unordered_map<bool, std::string> b2s = { {true,"true"}, {false,"false"} };
+    // language
+    std::string language = "en";
+    void updateUiLanguage();
+    // window geometry
+    const std::string geometryToString();
+    void geometryFromString( const std::string& geometry );
+    // quantoty of informational dialogs to display
+    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
+    // list to string and vice versa
+    const std::string list2string( const std::vector<std::string>& list, const bool& user_agent=false );
+    const std::vector<std::string> string2list( const std::string& string, const bool& user_agent=false );
+
+    ////////////////
+    //// CHECKS ////
     void makeInitialChecks();
 
     //////////////////
@@ -422,9 +459,10 @@ private:
                   printableSpeed( const int& bytes, const int& secs ),
                   printableTime(  const int& seconds );
 
-    //////////////////
-    //// DATABASE ////
-    std::string db_stats_path,
+    ///////////////////
+    //// DATABASES ////
+    ///////////////////
+    std::string db_data_path,
                 db_hashes_path;
 
 
