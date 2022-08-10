@@ -157,6 +157,37 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string )
     return str;
 }
 
+// find where the field ends
+const int FormatOps::findNginxFieldEnd( const std::string& string, const int& start )
+{
+    int stop=start, max=string.size();
+    if ( start == max-1 ) {
+        stop = start;
+    } else {
+        for ( int i=start; i<max; i++ ) {
+            const char& c = string.at( i );
+            if ( StringOps::isAlphabetic( c ) == true || c == '_' ) {
+                stop = i;
+            } else {
+                break;
+            }
+        }
+    }
+    return stop;
+}
+
+// check the given format string for unwanted characters
+void FormatOps::checkIisString( const std::string& string )
+{
+    for ( const char& chr : string ) {
+        if ( !(StringOps::isAlnum( chr ) == true || chr == ' ' || chr == '-' || chr == '(' || chr == ')') ) {
+            // unwanted character
+            const std::string c( 1, chr );
+            throw LogFormatException( "Unexpected character found: "+c );
+        }
+    }
+}
+
 
 
 const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str )
@@ -194,7 +225,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     // apache only escapes a format field using the double percent sign
                     // backslashes are valid for control-characters only, or get reduced
                     // single percent-signs are considered invalid
-                    char c = f_str.at(aux+1);
+                    const char c = f_str.at(aux+1);
                     if ( c == ',' || c == '{' || c == '<' || c == '>' ) {
                         // in the first case: status code(s) may follow, or may not
                         // in the second case: a composed format code may follow
@@ -207,7 +238,8 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                         continue;
                     } else if ( StringOps::isAlnum( c ) == false ) {
                         // invalid, there must be a field code, a status code or a percent sign after a '%'
-                        throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%'.\nFound: '%"+std::to_string(c)+"'." );
+                        const std::string chr( 1, c );
+                        throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%'.\nFound: '%"+chr+"'." );
                     }
                 }
                 break;
@@ -344,7 +376,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                                     // check if false positive
                                     if ( aux_aux >= 0 && aux_aux <= aux_max ) {
                                         // same escape rules as before, but single percent-signs are considered valid and treated as text
-                                        char c = aux_fld.at( aux_aux+1 );
+                                        const char c = aux_fld.at( aux_aux+1 );
                                         if ( c == '%' || c == 'n' || c == 't' ) {
                                             // control characters, will be used as separator, skip
                                             aux_aux_stop = aux_aux + 2;
@@ -467,62 +499,49 @@ const QString FormatOps::getApacheLogSample( const LogsFormat& log_format )
 const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::string& f_str )
 {
     const auto& f_map  = this->NGINX_ALF;
-    const auto& f_flds = this->N_ALFs;
 
     std::string initial="", final="";
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
-    int n_fld=0,
-        start, aux, stop=0,
-        min_dist, max_dist=f_str.size()-1;
+    bool finished = false;
+    int start, aux, stop=0,
+        max=f_str.size()-1;
     std::string cur_fld, cur_sep;
     // find and convert any field
     while (true) {
         // start after the last found field
         start = stop;
-        cur_fld = "";
-        min_dist = max_dist;
         // find the next field
-        for ( const std::string& fld : f_flds ) {
-            // run untill a valid field is found
-            aux = f_str.find( fld, start );
-            if ( aux < 0 || aux > min_dist ) {
-                // not found, skip to the next
-                continue;
-            }
-            if ( aux < min_dist ) {
-                // a nearer field has been found
-                min_dist = aux;
-                cur_fld  = fld;
-            }
-            if ( min_dist == start ) {
-                // starter position, closest field found
-                break;
-            }
-        }
-
-        // break if no more fields was found
-        if ( cur_fld == "" ) {
-            // append the last section as final separator
-            final = this->parseNginxEscapes( f_str.substr( start ) );
+        aux = f_str.find( '$', start );
+        if ( aux < 0 || aux > max ) {
+            // not found, append as final and stop searching
+            final = f_str.substr( start );
             break;
         }
-
-        // get the current separator
-        cur_sep = this->parseNginxEscapes( f_str.substr( start, min_dist-start ) );
-        if ( n_fld == 0 ) {
-            // first field found, assign the separator as the initial one
-            initial = cur_sep;
-        } else {
-            // append to separators list
-            separators.push_back( cur_sep );
+        aux ++;
+        // find the end of the current field
+        stop = this->findNginxFieldEnd( f_str, aux );
+        if ( stop == max ) {
+            // this is the last field
+            finished = true;
         }
 
-        n_fld++;
-        // append the current field, converted
-        fields.push_back( f_map.at( cur_fld ) );
-        // step at the end of the current field for the next start
-        stop = min_dist + cur_fld.size();
+        cur_sep = f_str.substr( start, aux-start-1 );
+        cur_fld = f_str.substr( aux, stop-aux+1 );
+
+        // check if the field is valid
+        if ( f_map.find( cur_fld ) != f_map.end() ) {
+            // valid, append
+            separators.push_back( cur_sep );
+            fields.push_back( f_map.at( cur_fld ) );
+            if ( finished == true ) {
+                // this was the last field
+                break;
+            }
+        } else {
+            // invalid, abort
+            throw LogFormatException( "Invalid format code found: '$"+cur_fld+"'." );
+        }
     }
 
     return FormatOps::LogsFormat{
@@ -559,6 +578,7 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format )
 
 const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod )
 {
+    this->checkIisString( f_str );
     std::string initial="", final="";
     std::vector<std::string> separators, fields;
     switch ( l_mod ) {
@@ -579,9 +599,8 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                 bool finished = false;
                 int start, stop=0,
                     max=f_str.size()-1;
-                std::string aux_fld, cur_sep;
-                const auto &f_map  = this->IIS_ALF;
-                const auto &f_flds = this->I_ALFs;
+                std::string cur_fld, cur_sep;
+                const auto &f_map = this->IIS_ALF;
                 // parse the string to convert keyargs in craplog's fields format
                 while (true) {
                     // start after the last found separator
@@ -596,14 +615,14 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                     }
 
                     // set the current field
-                    aux_fld = f_str.substr( start, stop-start );
+                    cur_fld = f_str.substr( start, stop-start );
                     // step over the separator
                     stop++;
 
                     // check if the module is valid
-                    if ( f_map.find( aux_fld ) != f_map.end() ) {
+                    if ( f_map.find( cur_fld ) != f_map.end() ) {
                         // valid, append
-                        fields.push_back( f_map.at( aux_fld ) );
+                        fields.push_back( f_map.at( cur_fld ) );
                         if ( finished == false ) {
                             separators.push_back( cur_sep );
                         } else {
@@ -611,17 +630,8 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                             break;
                         }
                     } else {
-                        // shouldn't be here, but...
-                        // invalid, append all as separator and restart searching
-                        if ( finished == false ) {
-                            // not the last one, append to the last separator
-                            separators.at( separators.size()-1 ) += aux_fld + " ";
-                        } else {
-                            // no more separators, set the last one as final
-                            final = separators.at( separators.size()-1 ) + aux_fld;
-                            separators.pop_back();
-                            break;
-                        }
+                        // invalid, abort
+                        throw LogFormatException( "Invalid format code found: '"+cur_fld+"'." );
                     }
                 }
             }

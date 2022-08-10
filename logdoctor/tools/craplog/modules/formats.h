@@ -35,31 +35,8 @@ private:
     const std::string parseApacheEscapes( const std::string& string, const bool& strftime=false );
     const std::string parseNginxEscapes( const std::string& string );
 
-    // list of access logs fields formats
-    /*const std::unordered_map<std::string, std::vector<std::string>> A_ALFs_v = {
-        {"h", {"c"} },
-        {"t", {"sec","msec","usec","\%b","\%B","\%c","\%d","\%D","\%e","\%F","\%h","\%H","\%m","\%M","\%r","\%R","\%S","\%T","\%x","\%X","\%y","\%Y"} },
-        {"i", {"Cookie","User-agent","Referer"} },
-        {"T", {"s","ms","us"} },
-        // composed not in use
-        {"a",   {}},
-        {"c",   {}},
-        {"e",   {}},
-        {"n",   {}},
-        {"o",   {}},
-        {"p",   {}},
-        {"P",   {}},
-        {"^ti", {}},
-        {"^to", {}}
-        };*/
-
-    const std::vector<std::string> N_ALFs = {"$remote_addr", "$time_local", "$time_iso8601", "$msec", "$request", "$status", "$bytes_sent", "$request_length", "$request_time", "$http_referer", "$http_user_agent",
-                             /*NOT IN USE->*/"$remote_user", "$gzip_ratio", "$connection", "$connection_requests", "$pipe"};
-
-    const std::vector<std::string> I_ALFs = {"c-ip", "date", "time", "cs-version", "cs-method", "cs-uri-stem", "cs-uri-query", "sc-status", "sc-bytes", "cs-bytes", "time-taken", "cs(Referrer)", "cs(Cookie)", "cs(User-Agent)",
-                             /*NOT IN USE->*/"s-sitename", "s-computername", "s-ip", "s-port", "cs-username", "cs-host", "sc-substatus", "sc-win32-status", "streamid"};
-
-
+    const int findNginxFieldEnd( const std::string& string, const int& start );
+    void checkIisString( const std::string& string );
 
 
     /////////////////
@@ -209,24 +186,24 @@ private:
     //// NGINX ////
     // access logs fields formats (only the ones considered)
     const std::unordered_map<std::string, std::string> NGINX_ALF = {
-        {"$remote_addr",       "client"},
-        {"$time_local",        "date_time_mcs"},
-        {"$time_iso8601",      "date_time_iso"},
-        {"msec",               "date_time_epoch_s.ms"},
-        {"$request",           "request_full"},
-        {"$status",            "response_code"},
-        {"$bytes_sent",        "bytes_sent"},
-        {"$request_length",    "bytes_received"},
-        {"$request_time",      "time_taken_s.ms"},
-        {"$http_referer",      "referer"},
-        {"$http_user_agent",   "user_agent"},
+        {"remote_addr",       "client"},
+        {"time_local",        "date_time_mcs"},
+        {"time_iso8601",      "date_time_iso"},
+        {"msec",              "date_time_epoch_s.ms"},
+        {"request",           "request_full"},
+        {"status",            "response_code"},
+        {"bytes_sent",        "bytes_sent"},
+        {"request_length",    "bytes_received"},
+        {"request_time",      "time_taken_s.ms"},
+        {"http_referer",      "referer"},
+        {"http_user_agent",   "user_agent"},
         // not in use, will be discarded
-        {"$remote_user",           "NONE"},
-        {"$gzip_ratio",            "NONE"},
-        {"$connection",            "NONE"},
-        {"$connection_requests",   "NONE"},
-        {"$http_x_forwardef_for",  "NONE"},
-        {"pipe",                   "NONE"} };
+        {"remote_user",           "NONE"},
+        {"gzip_ratio",            "NONE"},
+        {"connection",            "NONE"},
+        {"connection_requests",   "NONE"},
+        {"http_x_forwardef_for",  "NONE"},
+        {"pipe",                  "NONE"} };
 
     // nginx logs fields formats samples
     const std::unordered_map<std::string, QString> NGINX_ALF_SAMPLES = {
