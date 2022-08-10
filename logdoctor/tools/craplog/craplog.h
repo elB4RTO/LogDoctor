@@ -20,7 +20,7 @@ public:
     void run();
 
     const int& getDialogsLevel();
-    void setDialogLevel( const int& new_level );
+    void setDialogsLevel( const int& new_level );
 
     const std::string
         & getStatsDatabasePath(),
@@ -85,6 +85,8 @@ public:
     const std::vector<std::string>
         &getBlacklist( const int& web_server_id, const int& log_field_id ),
         &getWarnlist( const int& web_server_id, const int& log_field_id );
+    void setBlacklist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list ),
+         setWarnlist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
     void blacklistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
          warnlistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
          blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
@@ -117,7 +119,7 @@ public:
 
 private:
     // quantity of informational dialogs to display
-    int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
 
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;

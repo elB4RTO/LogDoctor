@@ -90,11 +90,11 @@ Craplog::Craplog()
 //// SETTINGS ////
 const int& Craplog::getDialogsLevel()
 {
-    return this->dialog_level;
+    return this->dialogs_level;
 }
-void Craplog::setDialogLevel( const int& new_level )
+void Craplog::setDialogsLevel( const int& new_level )
 {
-    this->dialog_level = new_level;
+    this->dialogs_level = new_level;
     this->hashOps.setDialogLevel( new_level );
 }
 
@@ -129,7 +129,6 @@ void Craplog::setWarningSize(const long& new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-
 const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id )
 {
     return this->blacklists.at( this->current_WS ).at( log_field_id ).used;
@@ -155,6 +154,21 @@ const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id,
 const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id )
 {
     return this->warnlists.at( this->current_WS ).at( log_field_id ).list;
+}
+
+void Craplog::setBlacklist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list )
+{
+    this->blacklists.at( web_server_id ).at( log_field_id ).list.clear();
+    for ( const std::string& item : new_list ) {
+        this->blacklists.at( web_server_id ).at( log_field_id ).list.push_back( item );
+    }
+}
+void Craplog::setWarnlist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list )
+{
+    this->warnlists.at( web_server_id ).at( log_field_id ).list.clear();
+    for ( const std::string& item : new_list ) {
+        this->warnlists.at( web_server_id ).at( log_field_id ).list.push_back( item );
+    }
 }
 
 void Craplog::blacklistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item )
@@ -269,26 +283,40 @@ void Craplog::setApacheLogFormat( const std::string& format_string )
 {
     // apache
     try {
-        this->logs_format_strings.at( this->APACHE_ID ) = format_string;
         this->logs_formats.at( this->APACHE_ID ) =
             this->formatOps.processApacheFormatString( format_string );
+        this->logs_format_strings.at( this->APACHE_ID ) = format_string;
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( nullptr, e.what() );
+    } catch (...) {
+        DialogSec::errGeneric( nullptr, "An error occured while parsing the format string", true );
     }
 }
 void Craplog::setNginxLogFormat( const std::string& format_string )
 {
     // nginx
-    this->logs_format_strings.at( this->NGINX_ID ) = format_string;
-    this->logs_formats.at( this->NGINX_ID ) =
-        this->formatOps.processNginxFormatString( format_string );
+    try {
+        this->logs_formats.at( this->NGINX_ID ) =
+            this->formatOps.processNginxFormatString( format_string );
+        this->logs_format_strings.at( this->NGINX_ID ) = format_string;
+    } catch ( LogFormatException& e ) {
+        DialogSec::errInvalidLogFormatString( nullptr, e.what() );
+    } catch (...) {
+        DialogSec::errGeneric( nullptr, "An error occured while parsing the format string", true );
+    }
 }
 void Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
 {
     // iis
-    this->logs_format_strings.at( this->IIS_ID ) = format_string;
-    this->logs_formats.at( this->IIS_ID ) =
-        this->formatOps.processIisFormatString( format_string, log_module );
+    try {
+        this->logs_formats.at( this->IIS_ID ) =
+            this->formatOps.processIisFormatString( format_string, log_module );
+        this->logs_format_strings.at( this->IIS_ID ) = format_string;
+    } catch ( LogFormatException& e ) {
+        DialogSec::errInvalidLogFormatString( nullptr, e.what() );
+    } catch (...) {
+        DialogSec::errGeneric( nullptr, "An error occured while parsing the format string", true );
+    }
 }
 
 const QString Craplog::getLogsFormatSample( const int& web_server_id )
@@ -429,7 +457,7 @@ void Craplog::scanLogsDir()
                 // it's a file, check the readability
                 if ( IOutils::checkFile( path, true ) == false ) {
                     // not readable, skip
-                    if ( this->dialog_level == 2 ) {
+                    if ( this->dialogs_level == 2 ) {
                         DialogSec::warnFileNotReadable( nullptr, name );
                     }
                     continue;
@@ -457,7 +485,7 @@ void Craplog::scanLogsDir()
             }
 
             if ( content.size() == 0 ) {
-                if ( this->dialog_level == 2 ) {
+                if ( this->dialogs_level == 2 ) {
                     DialogSec::warnEmptyFile( nullptr, name );
                 }
                 continue;
@@ -688,7 +716,7 @@ const bool Craplog::checkStuff()
         if ( file.used_already == true ) {
             // already used
             QString msg = file.name;
-            if ( this->dialog_level == 2 ) {
+            if ( this->dialogs_level == 2 ) {
                 msg += "\n" + QString::fromStdString( file.hash );
             }
             int choice = DialogSec::choiceFileAlreadyUsed( nullptr, msg );
@@ -709,7 +737,7 @@ const bool Craplog::checkStuff()
             if ( file.size > this->warning_size ) {
                 // exceeds the warning size
                 QString size_str, msg = file.name;
-                if ( this->dialog_level >= 1 ) {
+                if ( this->dialogs_level >= 1 ) {
                     std::string size_sfx=" B";
                     float size = (float)file.size;
                     if (size > 1024) {
@@ -720,7 +748,7 @@ const bool Craplog::checkStuff()
                     }
                     size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
                     msg += QString("\n\nSize of the file:\n%1%2").arg( size_str, size_sfx.c_str() );
-                    if ( this->dialog_level == 2 ) {
+                    if ( this->dialogs_level == 2 ) {
                         size = (float)this->warning_size;
                         if (size > 1024) {
                             size /= 1024; size_sfx = " KiB";
@@ -823,7 +851,7 @@ void Craplog::storeLogLines()
         // error opening database
         this->proceed = false;
         QString err_msg = "";
-        if ( this->dialog_level == 2 ) {
+        if ( this->dialogs_level == 2 ) {
             err_msg = db.lastError().text();
         }
         DialogSec::errDatabaseFailedOpening( nullptr, db_name, err_msg );
@@ -837,9 +865,9 @@ void Craplog::storeLogLines()
                 // error opening database
                 this->proceed = false;
                 QString stmt_msg="", err_msg = "";
-                if ( this->dialog_level > 0 ) {
+                if ( this->dialogs_level > 0 ) {
                     stmt_msg = "db.transaction()";
-                    if ( this->dialog_level == 2 ) {
+                    if ( this->dialogs_level == 2 ) {
                         err_msg = db.lastError().text();
                     }
                 }
@@ -857,9 +885,9 @@ void Craplog::storeLogLines()
                     // error opening database
                     this->proceed = false;
                     QString stmt_msg="", err_msg = "";
-                    if ( this->dialog_level > 0 ) {
+                    if ( this->dialogs_level > 0 ) {
                         stmt_msg = "db.commit()";
-                        if ( this->dialog_level == 2 ) {
+                        if ( this->dialogs_level == 2 ) {
                             err_msg= db.lastError().text();
                         }
                     }
@@ -879,9 +907,9 @@ void Craplog::storeLogLines()
             if ( db.rollback() == false ) {
                 // error rolling back commits
                 QString stmt_msg="", err_msg = "";
-                if ( this->dialog_level > 0 ) {
+                if ( this->dialogs_level > 0 ) {
                     stmt_msg = "db.rollback()";
-                    if ( this->dialog_level == 2 ) {
+                    if ( this->dialogs_level == 2 ) {
                         err_msg = db.lastError().text();
                     }
                 }
