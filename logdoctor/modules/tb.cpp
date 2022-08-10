@@ -96,7 +96,7 @@ void TextBrowser::makePreview( QString& content )
 
         content += " <b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("req_err") );
+            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("req") );
         }
         content += "HTTP/1.1 GET /index.php query=x";
         if ( this->color_scheme_id > 0 ) {
@@ -106,7 +106,7 @@ void TextBrowser::makePreview( QString& content )
 
         content += " <b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("res_lev") );
+            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("res") );
         }
         content += "404</b>";
         if ( this->color_scheme_id > 0 ) {
@@ -146,7 +146,7 @@ void TextBrowser::makePreview( QString& content )
 
         content += " \"<b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("ua_src") );
+            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("ua") );
         }
         content += "UserAgent/3.0 (Details stuff) Info/123";
         if ( this->color_scheme_id > 0 ) {

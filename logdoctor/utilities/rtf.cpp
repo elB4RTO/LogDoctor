@@ -179,12 +179,12 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                     class_name += colors.at("pt");
                 } else if ( StringOps::startsWith( fld, "date_time" ) ) {
                     class_name += colors.at("time");
-                } else if ( fld == "user_agent" || fld == "source_file" ) {
-                    class_name += colors.at("ua_src");
-                } else if ( StringOps::startsWith( fld, "request" ) || fld == "error_message" ) {
-                    class_name += colors.at("req_err");
-                } else if ( fld == "response_code" || fld == "error_level" ) {
-                    class_name += colors.at("res_lev");
+                } else if ( fld == "user_agent" ) {
+                    class_name += colors.at("ua");
+                } else if ( StringOps::startsWith( fld, "request" ) ) {
+                    class_name += colors.at("req");
+                } else if ( fld == "response_code" ) {
+                    class_name += colors.at("res");
                 } else {
                     class_name += colors.at("x");
                 }
