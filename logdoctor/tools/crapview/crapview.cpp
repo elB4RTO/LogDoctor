@@ -14,11 +14,11 @@ Crapview::Crapview()
 
 const int& Crapview::getDialogsLevel()
 {
-    return this->dialog_level;
+    return this->dialogs_level;
 }
-void Crapview::setDialogLevel( const int& new_level )
+void Crapview::setDialogsLevel( const int& new_level )
 {
-    this->dialog_level = new_level;
+    this->dialogs_level = new_level;
 }
 
 

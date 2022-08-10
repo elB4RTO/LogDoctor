@@ -16,7 +16,7 @@ public:
     Crapview();
 
     const int& getDialogsLevel();
-    void setDialogLevel( const int& new_level );
+    void setDialogsLevel( const int& new_level );
 
     void setChartsTheme( const int& new_theme_id );
 
@@ -90,7 +90,7 @@ public:
 
 private:
     // quantity of informational dialogs to display
-    int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
 
     // charts theme
     int charts_theme = 0;
