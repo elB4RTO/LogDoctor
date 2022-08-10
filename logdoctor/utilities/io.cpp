@@ -236,7 +236,7 @@ const std::string IOutils::readFile( const std::string& path )
 }
 
 
-void writeOnFile( const std::string& path, const std::string& content )
+void IOutils::writeOnFile( const std::string& path, const std::string& content )
 {
     std::ofstream file;
     try {
