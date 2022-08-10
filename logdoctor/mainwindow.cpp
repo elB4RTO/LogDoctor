@@ -90,18 +90,15 @@ MainWindow::MainWindow( QWidget *parent )
     ////////////////////////
     //// INITIALIZATION ////
     // sqlite databases paths
-    this->db_data_path   = "collection.db";//"~/.craplog/collection.db"; !!! RESTORE !!!
-    this->db_hashes_path = "hashes.db";//"~/.craplog/hashes.db"; !!! RESTORE !!!
+    this->db_data_path   = "collection.db";
+    this->db_hashes_path = "hashes.db";
     this->crapview.setDbPath( this->db_data_path );
-    // WebServers for the LogsList
-    this->allowed_web_servers.emplace( this->APACHE_ID, true );
-    this->allowed_web_servers.emplace( this->NGINX_ID,  true );
-    this->allowed_web_servers.emplace( this->IIS_ID,    true );
 
 
     /////////////////
     //// CONFIGS ////
-    this->readConfigs():
+    this->defineOSspec();
+    this->readConfigs();
     if ( this->language != "en" ) {
         this->updateUiLanguage();
     }
@@ -109,82 +106,12 @@ MainWindow::MainWindow( QWidget *parent )
 
     ///////////////////
     //// POLISHING ////
-    // disable the unallowed WebServers
-    int ws = 14;
-    for ( int id=13; id>10; id-- ) {
-        if ( this->allowed_web_servers.at( id ) == true ) {
-            ws = ( id < ws ) ? id : ws; // to be used later on
-        } else {
-            switch (id) {
-                case 11:
-                    this->ui->button_LogFiles_Apache->setEnabled( false );
-                    this->ui->box_StatsWarn_WebServer->removeItem(  0 );
-                    this->ui->box_StatsCount_WebServer->removeItem( 0 );
-                    this->ui->box_StatsSpeed_WebServer->removeItem( 0 );
-                    this->ui->box_StatsDay_WebServer->removeItem(   0 );
-                    this->ui->box_StatsRelat_WebServer->removeItem( 0 );
-                    this->ui->button_StatsGlob_Apache->setEnabled( false );
-                    break;
-                case 12:
-                    this->ui->button_LogFiles_Nginx->setEnabled( false );
-                    this->ui->box_StatsWarn_WebServer->removeItem(  1 );
-                    this->ui->box_StatsCount_WebServer->removeItem( 1 );
-                    this->ui->box_StatsSpeed_WebServer->removeItem( 1 );
-                    this->ui->box_StatsDay_WebServer->removeItem(   1 );
-                    this->ui->box_StatsRelat_WebServer->removeItem( 1 );
-                    this->ui->button_StatsGlob_Nginx->setEnabled( false );
-                    break;
-                case 13:
-                    this->ui->button_LogFiles_Iis->setEnabled( false );
-                    this->ui->box_StatsWarn_WebServer->removeItem(  2 );
-                    this->ui->box_StatsCount_WebServer->removeItem( 2 );
-                    this->ui->box_StatsSpeed_WebServer->removeItem( 2 );
-                    this->ui->box_StatsDay_WebServer->removeItem(   2 );
-                    this->ui->box_StatsRelat_WebServer->removeItem( 2 );
-                    this->ui->button_StatsGlob_Iis->setEnabled( false );
-                    break;
-            }
-        }
-    }
-    if ( ws == 14 ) {
-        // no WS is allowed (???), fallback to the default one
-        ws = 11;
-        this->craplog.setCurrentWSID( ws );
-        this->allowed_web_servers.at( ws ) = true;
-        this->on_button_LogFiles_Apache_clicked();
-        this->ui->button_LogFiles_Apache->setEnabled( true );
-        this->ui->box_StatsWarn_WebServer->addItem(  "Apache2" );
-        this->ui->box_StatsCount_WebServer->addItem( "Apache2" );
-        this->ui->box_StatsSpeed_WebServer->addItem( "Apache2" );
-        this->ui->box_StatsDay_WebServer->addItem(   "Apache2" );
-        this->ui->box_StatsRelat_WebServer->addItem( "Apache2" );
-        this->ui->button_StatsGlob_Apache->setEnabled( true );
-    }
-    // set the LogList to the current WebServer
-    if ( this->allowed_web_servers.at( this->craplog.getCurrentWSID() ) == false ) {
-        // the current craplog's WS is not allowed, fallback to the default one
-        this->craplog.setCurrentWSID( ws );
-    }
-    // set the current WS for the LogList
-    switch ( this->craplog.getCurrentWSID() ) {
-        case 11:
-            this->ui->button_LogFiles_Apache->setFlat( false );
-            break;
-        case 12:
-            this->ui->button_LogFiles_Nginx->setFlat( false );
-            break;
-        case 13:
-            this->ui->button_LogFiles_Iis->setFlat( false );
-            break;
-        default:
-            // shouldn't be here
-            throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->craplog.getCurrentWSID() ) );
-    }
-
-    // set the current WS for the ViewStats and make them initialize
-    switch ( ws ) {
+    // set the default WS as the current one
+    switch ( this->default_ws ) {
         case 11:
             // already set to index 0 by default
+            this->ui->button_LogFiles_Apache->setFlat( false );
+            this->ui->radio_ConfDefaults_Apache->setChecked( true );
             this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
             this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
             this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
@@ -192,33 +119,28 @@ MainWindow::MainWindow( QWidget *parent )
             this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
             break;
         case 12:
-            for ( int i=0; i<this->ui->box_StatsCount_WebServer->count(); i++ ) {
-                if ( this->ui->box_StatsCount_WebServer->itemText( i ) == "Nginx" ) {
-                    this->ui->box_StatsWarn_WebServer->setCurrentIndex(  i );
-                    this->ui->box_StatsCount_WebServer->setCurrentIndex( i );
-                    this->ui->box_StatsSpeed_WebServer->setCurrentIndex( i );
-                    this->ui->box_StatsDay_WebServer->setCurrentIndex(   i );
-                    this->ui->box_StatsRelat_WebServer->setCurrentIndex( i );
-                    break;
-                }
-            }
+            this->ui->button_LogFiles_Nginx->setFlat( false );
+            this->ui->radio_ConfDefaults_Nginx->setChecked( true );
+            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
+            this->ui->box_StatsCount_WebServer->setCurrentIndex( 1 );
+            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 1 );
+            this->ui->box_StatsDay_WebServer->setCurrentIndex(   1 );
+            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 1 );
             break;
         case 13:
-            for ( int i=0; i<this->ui->box_StatsCount_WebServer->count(); i++ ) {
-                if ( this->ui->box_StatsCount_WebServer->itemText( i ) == "IIS" ) {
-                    this->ui->box_StatsWarn_WebServer->setCurrentIndex(  i );
-                    this->ui->box_StatsCount_WebServer->setCurrentIndex( i );
-                    this->ui->box_StatsSpeed_WebServer->setCurrentIndex( i );
-                    this->ui->box_StatsDay_WebServer->setCurrentIndex(   i );
-                    this->ui->box_StatsRelat_WebServer->setCurrentIndex( i );
-                    break;
-                }
-            }
+            this->ui->button_LogFiles_Iis->setFlat( false );
+            this->ui->radio_ConfDefaults_Iis->setChecked( true );
+            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  2 );
+            this->ui->box_StatsCount_WebServer->setCurrentIndex( 2 );
+            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 2 );
+            this->ui->box_StatsDay_WebServer->setCurrentIndex(   2 );
+            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 2 );
             break;
         default:
             // shouldn't be here
-            throw WebServerException( "Unexpected WebServer ID: "+std::to_string( ws ) );
+            throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
     }
+    this->craplog.setCurrentWSID( this->default_ws );
 
 
     // make the Configs initialize
@@ -226,7 +148,7 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
     this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme_id );
     // dialogs
-    this->ui->slider_ConfDialogs_General->setValue( this->dialogs_Level );
+    this->ui->slider_ConfDialogs_General->setValue( this->dialogs_level );
     this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
     this->ui->slider_ConfDialogs_Stats->setValue( this->crapview.getDialogsLevel() );
     // text browser
@@ -310,9 +232,237 @@ void MainWindow::closeEvent (QCloseEvent *event)
 ////////////////////////
 //// CONFIGURATIONS ////
 ////////////////////////
+// os definition
+void MainWindow::defineOSspec()
+{
+    const std::string home_path = QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString();
+    switch ( this->OS ) {
+        case 1:
+            // unix-like
+            /*this->configs_path   = home_path + "/.configs/LogDoctor/logdoctor.conf";
+            this->db_data_path   = home_path + "/.local/share/LogDoctor/collection.db";
+            this->db_hashes_path = home_path + "/.local/share/LogDoctor/hashes.db";*/ // !!! RESTORE !!!
+            this->configs_path   = "logdoctor.conf";
+            this->db_data_path   = "collection.db";
+            this->db_hashes_path = "hashes.db";
+            break;
+
+        case 2:
+            // windows
+            this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
+            this->db_data_path   = home_path + "/AppData/Local/LogDoctor/collection.db";
+            this->db_hashes_path = home_path + "/AppData/Local/LogDoctor/hashes.db";
+            break;
+
+        case 3:
+            // darwin-based
+            this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
+            this->db_data_path   = home_path + "/Lybrary/Application Support/LogDoctor/collection.db";
+            this->db_hashes_path = home_path + "/Lybrary/Application Support/LogDoctor/hashes.db";
+            break;
+
+        default:
+            // shouldn't be here
+            throw GenericException( "Unexpected OS ID: "+std::to_string( this->OS ) );
+    }
+}
+
 void MainWindow::readConfigs()
 {
+    bool proceed = true;
+    // check the file first
+    if ( IOutils::exists( this->configs_path ) == true ) {
+        if ( IOutils::checkFile( this->configs_path ) == true ) {
+            if ( IOutils::checkFile( this->configs_path, true ) == false ) {
+                // file not readable
+                proceed = false;
+                QString file = "";
+                if ( this->dialogs_level == 2 ) {
+                    file = QString::fromStdString( this->configs_path );
+                }
+                DialogSec::errConfFileNotReadable( nullptr, file );
+            }
+        } else {
+            // the given path doesn't point to a file
+            proceed = false;
+            QString path = "";
+            if ( this->dialogs_level == 2 ) {
+                path = QString::fromStdString( this->configs_path );
+            }
+            DialogSec::errConfFileNotFile( nullptr, path );
+        }
+    } else {
+        // configuration file not found
+        proceed = false;
+        QString file = "";
+        if ( this->dialogs_level == 2 ) {
+            file = QString::fromStdString( this->configs_path );
+        }
+        DialogSec::warnConfFileNotFound( nullptr, file );
+    }
 
+    if ( proceed == true ) {
+        std::vector<std::string> aux, list, configs;
+        try {
+            StringOps::splitrip( configs, IOutils::readFile( this->configs_path ) );
+            for ( const std::string& line : configs ) {
+                if ( StringOps::startsWith( line, "[") == true ) {
+                    // section descriptor
+                    continue;
+                }
+                aux.clear();
+                StringOps::splitrip( aux, line, "=" );
+                if ( aux.size() < 2 ) {
+                    // nothing to do
+                    continue;
+                }
+                // if here, a value is present
+                const std::string& var = aux.at( 0 ),
+                                   val = aux.at( 1 );
+
+                if ( var == "Language" ) {
+                    if ( val.size() > 2 ) {
+                        // not a valid locale, keep the default
+                        // !!! PUT A DIALOG MESSAGE HERE !!!
+                    } else {
+                        this->language = val;
+                    }
+
+                } else if ( var == "RememberGeometry" ) {
+                    this->remember_window = this->s2b.at( val );
+
+                } else if ( var == "Geometry" ) {
+                    this->geometryFromString( val );
+
+                } else if ( var == "WindowTheme" ) {
+                    this->window_theme_id = std::stoi( val );
+
+                } else if ( var == "ChartsTheme" ) {
+                    this->charts_theme_id = std::stoi( val );
+
+                } else if ( var == "MainDialogLevel" ) {
+                    this->dialogs_level = std::stoi( val );
+
+                } else if ( var == "DefaultWebServer" ) {
+                    this->default_ws = std::stoi( val );
+
+                } else if ( var == "DatabaseDataPath" ) {
+                    this->db_data_path = val;
+
+                } else if ( var == "DatabaseHashesPath" ) {
+                    this->db_hashes_path = val;
+
+                } else if ( var == "Font" ) {
+                    this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
+
+                } else if ( var == "WideLines" ) {
+                    this->TB.setWideLinesUsage( this->s2b.at( val ) );
+
+                } else if ( var == "ColorScheme" ) {
+                    this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
+
+                } else if ( var == "CraplogDialogLevel" ) {
+                    this->craplog.setDialogsLevel( std::stoi( val ) );
+
+                } else if ( var == "HideUsedFiles" ) {
+                    hide_used_files = this->s2b.at( val );
+
+                } else if ( var == "WarningSize" ) {
+                    this->craplog.setWarningSize( std::stoi( val ) );
+
+                } else if ( var == "ApacheLogsPath" ) {
+                    this->craplog.setLogsPath( this->APACHE_ID, val );
+
+                } else if ( var == "ApacheLogsFormat" ) {
+                    this->craplog.setApacheLogFormat( val );
+
+                } else if ( var == "ApacheWarnlistMethod" ) {
+                    this->craplog.setWarnlist( this->APACHE_ID, 11, this->string2list( val ) );
+
+                } else if ( var == "ApacheWarnlistURI" ) {
+                    this->craplog.setWarnlist( this->APACHE_ID, 12, this->string2list( val ) );
+
+                } else if ( var == "ApacheWarnlistClient" ) {
+                    this->craplog.setWarnlist( this->APACHE_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "ApacheWarnlistUserAgent" ) {
+                    this->craplog.setWarnlist( this->APACHE_ID, 21, this->string2list( val ) );
+
+                } else if ( var == "ApacheBlacklistClient" ) {
+                    this->craplog.setBlacklist( this->APACHE_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "NginxLogsPath" ) {
+                    this->craplog.setLogsPath( this->NGINX_ID, val );
+
+                } else if ( var == "NginxLogsFormat" ) {
+                    this->craplog.setNginxLogFormat( val );
+
+                } else if ( var == "NginxWarnlistMethod" ) {
+                    this->craplog.setWarnlist( this->NGINX_ID, 11, this->string2list( val ) );
+
+                } else if ( var == "NginxWarnlistURI" ) {
+                    this->craplog.setWarnlist( this->NGINX_ID, 12, this->string2list( val ) );
+
+                } else if ( var == "NginxWarnlistClient" ) {
+                    this->craplog.setWarnlist( this->NGINX_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "NginxWarnlistUserAgent" ) {
+                    this->craplog.setWarnlist( this->NGINX_ID, 21, this->string2list( val ) );
+
+                } else if ( var == "NginxBlacklistClient" ) {
+                    this->craplog.setBlacklist( this->NGINX_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "IisLogsPath" ) {
+                    this->craplog.setLogsPath( this->IIS_ID, val );
+
+                } else if ( var == "IisLogsModule" ) {
+                    if ( val == "1" ) {
+                        this->ui->radio_ConfIis_Format_NCSA->setChecked( true );
+                    } else if ( val == "2" ) {
+                        this->ui->radio_ConfIis_Format_IIS->setChecked( true );
+                    }
+
+                } else if ( var == "IisLogsFormat" ) {
+                    int module = 0;
+                    if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() == true ) {
+                        module = 1;
+                    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() == true ) {
+                        module = 2;
+                    }
+                    this->craplog.setIisLogFormat( val, module );
+
+                } else if ( var == "IisWarnlistMethod" ) {
+                    this->craplog.setWarnlist( this->IIS_ID, 11, this->string2list( val ) );
+
+                } else if ( var == "IisWarnlistURI" ) {
+                    this->craplog.setWarnlist( this->IIS_ID, 12, this->string2list( val ) );
+
+                } else if ( var == "IisWarnlistClient" ) {
+                    this->craplog.setWarnlist( this->IIS_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "IisWarnlistUserAgent" ) {
+                    this->craplog.setWarnlist( this->IIS_ID, 21, this->string2list( val ) );
+
+                } else if ( var == "IisBlacklistClient" ) {
+                    this->craplog.setBlacklist( this->IIS_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "CrapviewDialogLevel" ) {
+                    this->crapview.setDialogsLevel( std::stoi( val ) );
+
+                }/* else {
+                    // not valid
+                }*/
+            }
+        } catch (const std::ios_base::failure& err) {
+            // failed reading
+            QString msg = QMessageBox::tr("An error occured while reading the configurations file");
+            DialogSec::errGeneric( nullptr, msg );
+        } catch (...) {
+            // something failed
+            QString msg = QMessageBox::tr("An error occured while parsing configuration data");
+            DialogSec::errGeneric( nullptr, msg );
+        }
+    }
 }
 
 void MainWindow::writeConfigs()
@@ -324,43 +474,54 @@ void MainWindow::writeConfigs()
             if ( IOutils::checkFile( this->configs_path, false, true ) == false ) {
                 // file not writable
                 proceed = false;
-                // !!! PUT A DIALOG MESSAGE HERE !!!
+                QString file = "";
+                if ( this->dialogs_level == 2 ) {
+                    file = QString::fromStdString( this->configs_path );
+                }
+                DialogSec::errConfFileNotWritable( nullptr, file );
             }
         } else {
-            // the given path desn't point to a file
+            // the given path doesn't point to a file
             proceed = false;
-            // !!! PUT A DIALOG MESSAGE HERE !!!
+            QString path = "";
+            if ( this->dialogs_level == 2 ) {
+                path = QString::fromStdString( this->configs_path );
+            }
+            DialogSec::errConfFileNotFile( nullptr, path );
         }
     } else {
         // file does not exists, check if at least the folder exists
-        int index;
-        if ( this->OS == 1 ) {
-            index = this->configs_path.find_last_of( '/' );
-        } else {
-            index = this->configs_path.find_last_of( '\\' );
-        }
+        const int index = this->configs_path.find_last_of( '/' );
         if ( index < 0 || index >= this->configs_path.size() ) {
             // not a valid path
             proceed = false;
-            // !!! PUT A DIALOG MESSAGE HERE !!!
+            QString path = QMessageBox::tr("The given configurations path is not a valid path");
+            if ( this->dialogs_level == 2 ) {
+                path += ":\n" + QString::fromStdString( this->configs_path );
+            }
+            DialogSec::errGeneric( nullptr, path, true );
         }
         std::string base_path = this->configs_path.substr( 0, index );
         if ( IOutils::exists( this->configs_path ) == true ) {
-            if ( IOutils::checkDir( base_path ) == true ) {
+            if ( IOutils::isDir( base_path ) == true ) {
                 if ( IOutils::checkDir( base_path, false, true ) == false ) {
                     // directory not writable
                     proceed = false;
-                    // !!! PUT A DIALOG MESSAGE HERE !!!
+                    DialogSec::errDirNotWritable( nullptr, QString::fromStdString( this->configs_path ) );
                 }
             } else {
                 // not a directory
                 proceed = false;
-                // !!! PUT A DIALOG MESSAGE HERE !!!
+                QString path = "";
+                if ( this->dialogs_level == 2 ) {
+                    path = QString::fromStdString( this->configs_path );
+                }
+                DialogSec::errConfDirNotDir( nullptr, path );
             }
         } else {
             // the given path does not exist
             proceed = false;
-            // !!! PUT A DIALOG MESSAGE HERE !!!
+            DialogSec::errDirNotExists( nullptr, QString::fromStdString( this->configs_path ) );
         }
     }
 
@@ -372,7 +533,8 @@ void MainWindow::writeConfigs()
         configs += "\nGeometry=" + this->geometryToString();
         configs += "\nWindowTheme=" + std::to_string( this->window_theme_id );
         configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
-        configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_Level );
+        configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
+        configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
         configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
         //// TEXT BROWSER ////
@@ -406,6 +568,13 @@ void MainWindow::writeConfigs()
         //// IIS ////
         configs += "\n\n[IIS]";
         configs += "\nIisLogsPath=" + this->craplog.getLogsPath( this->IIS_ID );
+        std::string module = "0";
+        if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() == true ) {
+            module = "1";
+        } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() == true ) {
+            module = "2";
+        }
+        configs += "\nIisLogsModule=" + module;
         configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( this->IIS_ID );
         configs += "\nIisWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 11 ) );
         configs += "\nIisWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 12 ) );
@@ -422,10 +591,12 @@ void MainWindow::writeConfigs()
 
         } catch (const std::ios_base::failure& err) {
             // failed writing
-            // !!! PUT A DIALOG MESSAGE HERE !!!
+            QString msg = QMessageBox::tr("An error occured while writing the configurations file");
+            DialogSec::errGeneric( nullptr, msg );
         } catch (...) {
             // something failed
-            // !!! PUT A DIALOG MESSAGE HERE !!!
+            QString msg = QMessageBox::tr("An error occured while preparing configurations data");
+            DialogSec::errGeneric( nullptr, msg );
         }
     }
 }
@@ -487,15 +658,24 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, " " );
     if ( user_agent == true ) {
-        for ( const std::string& str : list ) {
+        for ( const std::string& str : aux ) {
             list.push_back( StringOps::replace( str, " ", "%@#" ) );
         }
     } else {
-        for ( const std::string& str : list ) {
+        for ( const std::string& str : aux ) {
             list.push_back( str );
         }
     }
     return list;
+}
+
+
+//////////////////
+//// LANGUAGE ////
+//////////////////
+void updateUiLanguage()
+{
+
 }
 
 
@@ -662,7 +842,7 @@ const QString MainWindow::printableTime( const int& secs_ )
 //////////////////
 //// LANGUAGE ////
 //////////////////
-void updateUiLanguage()
+void MainWindow::updateUiLanguage()
 {
 
 }
@@ -674,8 +854,7 @@ void updateUiLanguage()
 // switch to apache web server
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 11
-      && this->allowed_web_servers.at( 11 ) == true ) {
+    if ( this->craplog.getCurrentWSID() != 11 ) {
         // enable the enables
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
@@ -693,8 +872,7 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
 // switch to nginx web server
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 12
-      && this->allowed_web_servers.at( 12 ) == true) {
+    if ( this->craplog.getCurrentWSID() != 12 ) {
         // enable the enables
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
@@ -712,8 +890,7 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
 // switch to iis web server
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 13
-      && this->allowed_web_servers.at( 13 ) == true ) {
+    if ( this->craplog.getCurrentWSID() != 13 ) {
         // load the list
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
@@ -891,9 +1068,11 @@ void MainWindow::on_button_MakeStats_Start_clicked()
     } else if ( lf.fields.size() == 0 ) {
         // no field, useless to parse
         proceed = false;
-    } else if ( lf.separators.size() == 0 && lf.fields.size() > 1 ) {
-        // no separator, but more than one field
+        DialogSec::errLogFormatNoFields( nullptr );
+    } else if ( lf.separators.size() < lf.fields.size()-2 ) {
+        // missing at least a separator between two (or more) fields
         proceed = false;
+        DialogSec::errLogFormatNoSeparators( nullptr );
     }
 
     if ( proceed == true ) {
@@ -1817,15 +1996,15 @@ void MainWindow::on_box_ConfWindow_Theme_currentIndexChanged(int index)
 //// DIALOGS ////
 void MainWindow::on_slider_ConfDialogs_General_sliderReleased()
 {
-    this->dialogs_Level = this->ui->slider_ConfDialogs_General->value();
+    this->dialogs_level = this->ui->slider_ConfDialogs_General->value();
 }
 void MainWindow::on_slider_ConfDialogs_Logs_sliderReleased()
 {
-    this->craplog.setDialogLevel( this->ui->slider_ConfDialogs_Logs->value() );
+    this->craplog.setDialogsLevel( this->ui->slider_ConfDialogs_Logs->value() );
 }
 void MainWindow::on_slider_ConfDialogs_Stats_sliderReleased()
 {
-    this->crapview.setDialogLevel( this->ui->slider_ConfDialogs_Stats->value() );
+    this->crapview.setDialogsLevel( this->ui->slider_ConfDialogs_Stats->value() );
 }
 
 
@@ -2017,6 +2196,21 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
 //////////////
 //// LOGS ////
 //////////////
+
+//////////////////
+//// DEFAULTS ////
+void MainWindow::on_radio_ConfDefaults_Apache_toggled(bool checked)
+{
+    this->default_ws = this->APACHE_ID;
+}
+void MainWindow::on_radio_ConfDefaults_Nginx_toggled(bool checked)
+{
+    this->default_ws = this->NGINX_ID;
+}
+void MainWindow::on_radio_ConfDefaults_Iis_toggled(bool checked)
+{
+    this->default_ws = this->IIS_ID;
+}
 
 /////////////////
 //// CONTROL ////
@@ -3053,5 +3247,6 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
+
 
 

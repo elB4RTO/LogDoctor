@@ -16,6 +16,7 @@
 #include "tools/craplog/craplog.h"
 #include "tools/crapview/crapview.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -198,6 +199,14 @@ private slots:
     //// CHARTS ////
 
     void on_box_ConfCharts_Theme_currentIndexChanged(int index);
+
+    //// LOGS DEFAULTS ////
+
+    void on_radio_ConfDefaults_Apache_toggled(bool checked);
+
+    void on_radio_ConfDefaults_Nginx_toggled(bool checked);
+
+    void on_radio_ConfDefaults_Iis_toggled(bool checked);
 
     //// LOGS CONTROL ////
 
@@ -394,13 +403,26 @@ private:
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // operating system
-    // 1: unix, 2:windows
-    unsigned int OS;
+    // 1: linux, 2:windows, 3:mac
+    //unsigned int OS;
+    #if defined( Q_OS_UNIX )
+        // Unix-like systems: Linux, BSD and SysV
+        const unsigned int OS = 1;
+    #elif defined( Q_OS_WIN )
+        // Microsoft Windows systems
+        const unsigned int this->OS = 2;
+    #elif defined( Q_OS_DARWIN )
+        // Darwin-based systems: macOS, macOS, iOS, watchOS and tvOS.
+        const unsigned int this->OS = 3;
+    #else
+        #error "System not supported"
+    #endif
 
 
     ////////////////////////
     //// CONFIGURATIONS ////
     ////////////////////////
+    void defineOSspec();
     std::string configs_path;
     void readConfigs();
     void writeConfigs();
@@ -414,7 +436,9 @@ private:
     const std::string geometryToString();
     void geometryFromString( const std::string& geometry );
     // quantoty of informational dialogs to display
-    int dialogs_Level = 1; // 0: essential, 1: usefull, 2: explanatory
+    int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    // default web server
+    int default_ws = 11;
     // list to string and vice versa
     const std::string list2string( const std::vector<std::string>& list, const bool& user_agent=false );
     const std::vector<std::string> string2list( const std::string& string, const bool& user_agent=false );
@@ -481,7 +505,6 @@ private:
     //// LOGS ////
     // web servers related
     bool loading_LogsList = false;
-    std::unordered_map<int, bool> allowed_web_servers;
     void disableAllButtons_LogFiles_WS(),
          enableAllButtons_LogFiles_WS();
     // logs list related
