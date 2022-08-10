@@ -435,8 +435,8 @@ hr { height: 1px; border-width: 0; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>858</width>
-             <height>475</height>
+             <width>608</width>
+             <height>280</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -6517,6 +6517,150 @@ hr { height: 1px; border-width: 0; }
               <property name="currentIndex">
                <number>0</number>
               </property>
+              <widget class="QWidget" name="tab_ConfDefaults">
+               <attribute name="title">
+                <string>Defaults</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_19">
+                <item>
+                 <widget class="QFrame" name="frame_ConfIis_Format_3">
+                  <layout class="QGridLayout" name="gridLayout_64">
+                   <item row="0" column="0" colspan="2">
+                    <widget class="QLabel" name="label_ConfDefaults_WebServer">
+                     <property name="minimumSize">
+                      <size>
+                       <width>128</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>16</pointsize>
+                      </font>
+                     </property>
+                     <property name="toolTip">
+                      <string>Remember window's position and size</string>
+                     </property>
+                     <property name="text">
+                      <string>Default WebServer</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <spacer name="spacer_ConfDefaults_2">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>16</width>
+                       <height>98</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QFrame" name="frame_ConfIis_Format_Modules_2">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_18">
+                      <item>
+                       <widget class="QRadioButton" name="radio_ConfDefaults_Apache">
+                        <property name="minimumSize">
+                         <size>
+                          <width>88</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>88</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string notr="true">Apache2</string>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QRadioButton" name="radio_ConfDefaults_Nginx">
+                        <property name="minimumSize">
+                         <size>
+                          <width>88</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>88</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string notr="true">Nginx</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QRadioButton" name="radio_ConfDefaults_Iis">
+                        <property name="minimumSize">
+                         <size>
+                          <width>88</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>88</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string notr="true">IIS</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="spacer_ConfDefaults_1">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Expanding</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>568</width>
+                    <height>303</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
               <widget class="QWidget" name="tab_ConfLogs_Control">
                <attribute name="title">
                 <string>Control</string>
@@ -6599,8 +6743,8 @@ hr { height: 1px; border-width: 0; }
                      </property>
                      <property name="sizeHint" stdset="0">
                       <size>
-                       <width>24</width>
-                       <height>18</height>
+                       <width>16</width>
+                       <height>32</height>
                       </size>
                      </property>
                     </spacer>
@@ -6728,8 +6872,8 @@ hr { height: 1px; border-width: 0; }
                      </property>
                      <property name="sizeHint" stdset="0">
                       <size>
-                       <width>24</width>
-                       <height>18</height>
+                       <width>16</width>
+                       <height>32</height>
                       </size>
                      </property>
                     </spacer>
@@ -9265,7 +9409,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>740</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
