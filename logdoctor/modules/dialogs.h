@@ -20,6 +20,11 @@ static QString
 
     t_ERROR_RENAMING = QMessageBox::tr("Failed renaming"),
 
+    t_FILE_NOT_FILE = QMessageBox::tr("Not a file"),
+    t_DIR_NOT_DIR   = QMessageBox::tr("Not a folder"),
+
+    t_CONF_FILE_NOT_FOUND = QMessageBox::tr("Configuration file not found"),
+
     t_DB_DRIVER_NOT_FOUND = QMessageBox::tr("QSql driver not found"),
     t_DB_CREATED          = QMessageBox::tr("Database created"),
     t_DB_FAILED_CREATING   = QMessageBox::tr("Failed creating database"),
@@ -33,8 +38,9 @@ static QString
 
     t_LOGTYPE_FAILED    = QMessageBox::tr("Failed defining type"),
 
+    t_LOGFORMAT_ERROR   = QMessageBox::tr("Log format error"),
+    t_LOGFORMAT_MISCONFIGURED = QMessageBox::tr("Misconfigured log format"),
     t_LOGFORMAT_INVALID = QMessageBox::tr("Invalid log format string"),
-    t_LOGFORMAT_NOT_SET = QMessageBox::tr("Log format error"),
 
     t_FILE_ALREADY_USED = QMessageBox::tr("File already used"),
     t_FILE_SIZE_WARNING = QMessageBox::tr("File exceeds warning size"),
@@ -44,11 +50,20 @@ static QString
     t_FILE_NOT_WRITABLE = QMessageBox::tr("File not writable"),
     t_FILE_EMPTY        = QMessageBox::tr("File is empty"),
     t_FILE_FAILED_READ  = QMessageBox::tr("Failed reading"),
+    t_FILE_FAILED_WRITE = QMessageBox::tr("Failed writing"),
 
-    t_DIR_NOT_FOUND = QMessageBox::tr("Directory not found"),
+    t_DIR_NOT_FOUND    = QMessageBox::tr("Directory not found"),
+    t_DIR_NOT_READABLE = QMessageBox::tr("Directory not readable"),
+    t_DIR_NOT_WRITABLE = QMessageBox::tr("Directory not writable"),
 
     // messages
     m_ERROR_RENAMING = QMessageBox::tr("An error occured while renaming"),
+
+    m_FILE_NOT_FILE = QMessageBox::tr("The path was supposed to point to a file, but it doesn't"),
+    m_DIR_NOT_DIR   = QMessageBox::tr("The path was supposed to point to a folder, but it doesn't"),
+
+    m_CONF_FILE_ERROR     = QMessageBox::tr("An error occured while handling the configuration file"),
+    m_CONF_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the configuration file"),
 
     m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file"),
     m_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the file"),
@@ -57,9 +72,15 @@ static QString
     m_FILE_NOT_EXISTS = QMessageBox::tr("The file does not exists"),
     m_DIR_NOT_EXISTS  = QMessageBox::tr("The directory does not exists"),
 
-    m_FILE_EMPTY        = QMessageBox::tr("The file is blank"),
     m_FILE_NOT_READABLE = QMessageBox::tr("The file is not readable"),
+    m_DIR_NOT_READABLE  = QMessageBox::tr("The directory is not readable"),
+
+    m_FILE_NOT_WRITABLE = QMessageBox::tr("The file is not writable"),
+    m_DIR_NOT_WRITABLE  = QMessageBox::tr("The directory is not writable"),
+
+    m_FILE_EMPTY        = QMessageBox::tr("The file is blank"),
     m_FILE_FAILED_READ  = QMessageBox::tr("An error accured while reading the file"),
+    m_FILE_FAILED_WRITE = QMessageBox::tr("An error accured while writing the file"),
 
     m_FILE_ALREADY_USED = QMessageBox::tr("The file has probably been used already"),
     m_FILE_SIZE_WARNING = QMessageBox::tr("The file's size exceeds the warning size"),
@@ -82,14 +103,19 @@ static QString
 
     m_LOGTYPE_FAILED    = QMessageBox::tr("Failed to determine the log type"),
 
-    m_LOGFORMAT_NOT_SET = QMessageBox::tr("The log format has not been set, or is invalid\nPlease add a valid one in the configurations"),
+    m_LOGFORMAT_NOT_SET   = QMessageBox::tr("The log format has not been set, or is invalid\nPlease add a valid one in the configurations"),
+    m_LOGFORMAT_NO_FIELDS = QMessageBox::tr("No log field has been set in the current logs format,\nmaking it useless to parse logs"),
+    m_LOGFORMAT_NO_SEPS   = QMessageBox::tr("A separator is missing between one or more fields,\nmaking it hard to establish net bounds,\nand possibly leading to store incorrect data"),
 
     // requests
     r_REPORT_ISSUE    = QMessageBox::tr("Please report this issue"),
+    r_REMOVE_ENTRY    = QMessageBox::tr("Please remove the conflict and retry"),
     r_SET_PERMISSIONS = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue"),
     r_DB_DONT_EDIT    = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue"),
 
-    r_CHECK_FORMAT    = QMessageBox::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue"),
+    r_CHECK_FORMAT      = QMessageBox::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue"),
+    r_SET_FORMAT_FIELDS = QMessageBox::tr("Please set up a format which contains at least one field"),
+    r_SET_FORMAT_SEPS   = QMessageBox::tr("Please set up a format which contains separators between fields"),
 
     // footers
     f_SKIPPING = QMessageBox::tr("Skipping"),
@@ -103,84 +129,79 @@ public:
     DialogSec();
 
     static void warnGeneric( QWidget *parent, const QString& message, const bool& report_msg=false );
-        //static void warnGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
     static void errGeneric( QWidget *parent, const QString& message, const bool& report_msg=false );
-        //static void errGeneric( QWidget *parent, const std::string& message, const bool report_msg=false );
 
     static void errRenaming( QWidget *parent, const QString& path );
 
+    // configurations
+    static void warnConfFileNotFound( QWidget *parent, const QString& file );
+    static void errConfFileNotReadable( QWidget *parent, const QString& file );
+    static void errConfFileNotWritable( QWidget *parent, const QString& file );
+    static void errConfFileNotFile( QWidget *parent, const QString& path );
+    static void errConfDirNotDir( QWidget *parent, const QString& path );
+
     // database
     static void errSqlDriverNotFound( QWidget *parent, const QString& driver );
-    static bool choiceDatabaseNotFound( QWidget *parent, const QString& db_name );
-        //static bool choiceDatabaseNotFound( QWidget *parent, const std::string& db_name );
-    static bool choiceDatabaseWrongTable( QWidget *parent, const QString& db_name, const QString& table_name );
-    static bool choiceDatabaseMissingTable( QWidget *parent, const QString& db_name, const QString& table_name );
-    static bool choiceDatabaseWrongColumn( QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name );
-    static bool choiceDatabaseMissingColumn( QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name );
-    static bool choiceDatabaseWrongDataType( QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type );
+    static const bool choiceDatabaseNotFound( QWidget *parent, const QString& db_name );
+    static const bool choiceDatabaseWrongTable( QWidget *parent, const QString& db_name, const QString& table_name );
+    static const bool choiceDatabaseMissingTable( QWidget *parent, const QString& db_name, const QString& table_name );
+    static const bool choiceDatabaseWrongColumn( QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name );
+    static const bool choiceDatabaseMissingColumn( QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name );
+    static const bool choiceDatabaseWrongDataType( QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type );
+    static void errDatabaseNotFile( QWidget *parent, const QString& db_name );
     static void errDatabaseNotReadable( QWidget *parent, const QString& db_name );
-        //static void errDatabaseNotReadable( QWidget *parent, const std::string& db_name );
     static void errDatabaseNotWritable( QWidget *parent, const QString& db_name );
-        //static void errDatabaseNotWritable( QWidget *parent, const std::string& db_name );
     static void msgDatabaseCreated( QWidget *parent, const QString& db_name );
     static void errDatabaseFailedCreating( QWidget *parent, const QString& db_name, const QString& err_msg );
-        //static void errDatabaseFailedCreating( QWidget *parent, const std::string& db_name, const std::string& err_msg );
     static void errDatabaseFailedOpening( QWidget *parent, const QString& db_name, const QString& err_msg );
-        //static void errDatabaseFailedOpening( QWidget *parent, const std::string& db_name, const std::string& err_msg );
     static void errDatabaseFailedExecuting( QWidget *parent, const QString& db_name, const QString& statement="", const QString& err_msg="" );
-        //static void errDatabaseFailedExecuting( QWidget *parent, const std::string& db_name, const std::string& statement="", const std::string& err_msg="" );
 
     // LogsList
-    static bool choiceSelectedFileNotFound( QWidget *parent, const QString& file );
-        //static bool choiceSelectedFileNotFound( QWidget *parent, const std::string& file );
+    static const bool choiceSelectedFileNotFound( QWidget *parent, const QString& file );
 
     // log files type
     static void errFailedDefiningLogType( QWidget *parent, const QString& file );
-        //static void errFailedDefiningLogType( QWidget *parent, const std::string& file );
     // log files hash
-    static int choiceFileAlreadyUsed( QWidget *parent, const QString& msg );
-        //static int choiceFileAlreadyUsed( QWidget *parent, const std::string& msg );
+    static const int choiceFileAlreadyUsed( QWidget *parent, const QString& msg );
     // log files size
-    static int choiceFileSizeWarning( QWidget *parent, const QString& msg );
-        //static int choiceFileSizeWarning( QWidget *parent, const std::string& msg );
+    static const int choiceFileSizeWarning( QWidget *parent, const QString& msg );
 
-    // log format string
+    // log format string invalid
     static void errInvalidLogFormatString( QWidget *parent, const QString& msg );
-    // log format string
+    // log format not set
     static void errLogFormatNotSet( QWidget *parent );
+    static void errLogFormatNoFields( QWidget *parent );
+    static void errLogFormatNoSeparators( QWidget *parent );
 
     // files permissions
-    static void errFileNotExists( QWidget *parent );
+    /*static void errFileNotExists( QWidget *parent );
     static void errFileNotReadable( QWidget *parent );
-    static void errFileNotWritable( QWidget *parent );
+    static void errFileNotWritable( QWidget *parent );*/
     static void warnFileNotReadable( QWidget *parent, const QString& file );
-    static bool choiceFileNotExists( QWidget *parent );
-    static bool choiceFileNotReadable( QWidget *parent );
-    static bool choiceFileNotWritable( QWidget *parent );
+    /*static const bool choiceFileNotExists( QWidget *parent );
+    static const bool choiceFileNotReadable( QWidget *parent );
+    static const bool choiceFileNotWritable( QWidget *parent );*/
     // files actions
     static void warnEmptyFile( QWidget *parent, const QString& file );
-        //static void warnEmptyFile( QWidget *parent, const std::string& file );
     static void errFailedReadFile( QWidget *parent, const QString& file, const bool& skipping=false );
-        //static void errFailedReadFile( QWidget *parent, const std::string& file, const bool skipping=false );
+    static void errFailedWriteFile( QWidget *parent, const QString& file, const bool& skipping=false );
 
     // folders permissions
     static void errDirNotExists( QWidget *parent, const QString& dir );
-        //static void errDirNotExists( QWidget *parent, const std::string& dir );
-    static void warnDirNotReadable( QWidget *parent );
-    static void warnDirNotWritable( QWidget *parent );
-    static bool choiceDirNotExists( QWidget *parent, const QString& dir );
-        //static bool choiceDirNotExists( QWidget *parent, const std::string& dir );
-    static void choiceDirNotReadable( QWidget *parent );
-    static void choiceDirNotWritable( QWidget *parent );
+    static void errDirNotReadable( QWidget *parent, const QString& dir );
+    static void errDirNotWritable( QWidget *parent, const QString& dir );
+    static const bool choiceDirNotExists( QWidget *parent, const QString& dir );
+    /*static void choiceDirNotReadable( QWidget *parent );
+    static void choiceDirNotWritable( QWidget *parent );*/
 
     // generic choices
-    static void choiceYesNo( QWidget *parent );
-    static bool choiceIgnoreAbort( QWidget *parent );
+    /*static void choiceYesNo( QWidget *parent );
+    static const bool choiceIgnoreAbort( QWidget *parent );*/
 
 
 
 private:
-    static bool choiceDatabaseRenew( QWidget *parent, const QString& title, const QString& msg );
+    static const bool choiceDatabaseRenew( QWidget *parent, const QString& title, const QString& msg );
 
 };
 
