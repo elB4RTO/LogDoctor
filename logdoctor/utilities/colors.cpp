@@ -35,9 +35,9 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
             {"ip",""},
             {"pt",""},
             {"time",""},
-            {"ua_src",""},
-            {"req_err",""},
-            {"res_lev",""} }},
+            {"ua",""},
+            {"req",""},
+            {"res",""} }},
         // breeze
         {1,{{"background","#ffffff"},
             {"text","#9c9c9b"},
@@ -45,9 +45,9 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
             {"ip","#644a9b"},
             {"pt","#d5bc79"},
             {"time","#d685d6"},
-            {"ua_src","#006e28"},
-            {"req_err","#54b8ff"},
-            {"res_lev","#d24f4f"} }},
+            {"ua","#006e28"},
+            {"req","#54b8ff"},
+            {"res","#d24f4f"} }},
         // monokai
         {2,{{"background","#272822"},
             {"text","#706c5a"},
@@ -55,9 +55,9 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
             {"ip","#57adbc"},
             {"pt","#c1b864"},
             {"time","#9773db"},
-            {"ua_src","#a6e22e"},
-            {"req_err","#d1d1cb"},
-            {"res_lev","#f92672"} }},
+            {"ua","#a6e22e"},
+            {"req","#d1d1cb"},
+            {"res","#f92672"} }},
         // radical
         {3,{{"background","#141322"},
             {"text","#749295"},
@@ -65,9 +65,9 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
             {"ip","#fda8bc"},
             {"pt","#ff85a1"},
             {"time","#a8c0c2"},
-            {"ua_src","#42a784"},
-            {"req_err","#d5358f"},
-            {"res_lev","#56e8e4"} }}
+            {"ua","#42a784"},
+            {"req","#d5358f"},
+            {"res","#56e8e4"} }}
     };
     return scheme;
 }
