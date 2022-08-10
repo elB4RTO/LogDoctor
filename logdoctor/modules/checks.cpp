@@ -140,7 +140,11 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
     // check the existence
     if ( IOutils::exists( db_path ) ) {
         // database file exists
-        if ( IOutils::checkFile( db_path, true ) == false ) {
+        if ( IOutils::isFile( db_path ) == false ) {
+            // path doesn't point to a file
+            DialogSec::errDatabaseNotFile( nullptr, QString(db_name) );
+            ok = false;
+        } else if ( IOutils::checkFile( db_path, true ) == false ) {
             // database not readable, abort
             DialogSec::errDatabaseNotReadable( nullptr, QString(db_name) );
             ok = false;
@@ -173,7 +177,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                         if ( ok == false || make_new == true ) { break; }
                         // column's name:type associations
                         std::unordered_map<QString, std::tuple<QString, bool>>
-                            acc_types = {
+                            data_types = {
                                        {"warning", { "BOOLEAN",  false} },
                                           {"year", { "SMALLINT", false} },
                                          {"month", { "TINYINT",  false} },
@@ -205,7 +209,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                         while ( query.next() ) {
                             QString col_name = query.value(0).toString(),
                                     col_type = query.value(1).toString();
-                            if ( acc_types.find( col_name ) == acc_types.end() ) {
+                            if ( data_types.find( col_name ) == data_types.end() ) {
                                 // unexpected column
                                 if ( DialogSec::choiceDatabaseWrongColumn( nullptr, db_name, table, col_name ) == true ) {
                                     // agreed to renew
@@ -218,10 +222,10 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
 
                             } else {
                                 // column found, check the data-type
-                                QString data_type = std::get<0>(acc_types.at( col_name ) );
+                                QString data_type = std::get<0>(data_types.at( col_name ) );
                                 if ( col_type == data_type ) {
                                     // same data-type
-                                    acc_types.at( col_name ) = std::tuple( data_type, true );
+                                    data_types.at( col_name ) = std::tuple( data_type, true );
                                 } else {
                                     // different data-type, ask to renew
                                     if ( DialogSec::choiceDatabaseWrongDataType( nullptr, db_name, table, col_name, col_type ) == true ) {
@@ -236,7 +240,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
                             }
                         }
                         if ( ok == true && make_new == false ) {
-                            for ( const auto& [ col, tup ] : acc_types ) {
+                            for ( const auto& [ col, tup ] : data_types ) {
                                 if ( std::get<1>( tup ) == false ) {
                                     // a table has not been found
                                     if ( DialogSec::choiceDatabaseMissingColumn( nullptr, db_name, table, col ) == true ) {
@@ -344,7 +348,11 @@ bool CheckSec::checkHashesDatabase( const std::string& db_path )
     // check the existence
     if ( IOutils::exists( db_path ) ) {
         // database file exists
-        if ( IOutils::checkFile( db_path, true ) == false ) {
+        if ( IOutils::isFile( db_path ) == false ) {
+            // path doesn't point to a file
+            DialogSec::errDatabaseNotFile( nullptr, QString(db_name) );
+            ok = false;
+        } else if ( IOutils::checkFile( db_path, true ) == false ) {
             // database not readable, abort
             DialogSec::errDatabaseNotReadable( nullptr, QString(db_name) );
             ok = false;
