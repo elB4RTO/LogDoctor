@@ -129,10 +129,10 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
 
     } else {
         // recursively query years, months and days for every WebServer
-        std::vector<std::tuple<int, QString>> tables;
-        tables.push_back( std::make_tuple(11,"apache") );
-        tables.push_back( std::make_tuple(12,"nginx") );
-        tables.push_back( std::make_tuple(13,"iis") );
+        std::vector<std::tuple<int, QString>> tables = {
+            std::make_tuple(11,"apache"),
+            std::make_tuple(12,"nginx"),
+            std::make_tuple(13,"iis") };
 
         QSqlQuery Y_query = QSqlQuery( db ),
                   M_query = QSqlQuery( db ),
