@@ -71,6 +71,20 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
         second = datetime.substr( 17, 2 );
         year   = datetime.substr( datetime.size()-5 );
 
+    } else if ( format == "gmt" ) {
+        int start = datetime.find( ", " ) + 2;
+        day    = datetime.substr( start, 2 );
+        start += 3;
+        month  = DateTimeOps::convertMonth( datetime.substr( start, 3 ) );
+        start += 4;
+        year   = datetime.substr( start, 4 );
+        start += 5;
+        hour   = datetime.substr( start, 2 );
+        start += 3;
+        minute = datetime.substr( start, 2 );
+        start += 3;
+        second = datetime.substr( start, 2 );
+
     } else if ( StringOps::startsWith( format, "iso" ) ) {
         year   = datetime.substr( 0, 4 );
         month  = datetime.substr( 5, 2 );

@@ -270,7 +270,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                         // method
                         aux = aux_fld.find( ' ' );
                         if ( aux >= 0 && aux <= fld_size ) {
-                            method = aux_fld.substr( 0, aux );
+                            method  = aux_fld.substr( 0, aux );
                             aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
 
                             // page & query
@@ -280,7 +280,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                                 // search for the query
                                 int aux_ = aux_str.find( '?' );
                                 if ( aux_ >= 0 && aux_ <= aux_str.size() ) {
-                                    page = aux_str.substr( 0, aux_ );
+                                    page  = aux_str.substr( 0, aux_ );
                                     query = aux_str.substr( aux_+1 );
                                 } else {
                                     // query not found
@@ -305,6 +305,28 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                         if ( query != "" ) {
                             data.emplace( this->field2id.at("request_query"), query );
                         }
+
+
+
+                    // process the request to get uri and query
+                    } else if ( fld == "request_uri_query" ) {
+                        // search for the query
+                        std::string page, query;
+                        int aux_ = fld_str.find( '?' );
+                        if ( aux_ >= 0 && aux_ <= fld_str.size() ) {
+                            page  = fld_str.substr( 0, aux_ );
+                            query = fld_str.substr( aux_+1 );
+                        } else {
+                            // query not found
+                            page = fld_str;
+                        }
+                        if ( page != "" ) {
+                            data.emplace( this->field2id.at("request_uri"), page );
+                        }
+                        if ( query != "" ) {
+                            data.emplace( this->field2id.at("request_query"), query );
+                        }
+
 
 
                     // process the time taken to convert to milliseconds
