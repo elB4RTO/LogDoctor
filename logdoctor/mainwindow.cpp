@@ -90,6 +90,7 @@ MainWindow::MainWindow( QWidget *parent )
     ////////////////////////
     //// INITIALIZATION ////
     // sqlite databases paths
+    this->logdoc_path    = "";
     this->db_data_path   = "collection.db";
     this->db_hashes_path = "hashes.db";
     this->crapview.setDbPath( this->db_data_path );
@@ -109,32 +110,16 @@ MainWindow::MainWindow( QWidget *parent )
     // set the default WS as the current one
     switch ( this->default_ws ) {
         case 11:
-            // already set to index 0 by default
             this->ui->button_LogFiles_Apache->setFlat( false );
             this->ui->radio_ConfDefaults_Apache->setChecked( true );
-            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
-            this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
-            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
-            this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
-            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
             break;
         case 12:
             this->ui->button_LogFiles_Nginx->setFlat( false );
             this->ui->radio_ConfDefaults_Nginx->setChecked( true );
-            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
-            this->ui->box_StatsCount_WebServer->setCurrentIndex( 1 );
-            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 1 );
-            this->ui->box_StatsDay_WebServer->setCurrentIndex(   1 );
-            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 1 );
             break;
         case 13:
             this->ui->button_LogFiles_Iis->setFlat( false );
             this->ui->radio_ConfDefaults_Iis->setChecked( true );
-            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  2 );
-            this->ui->box_StatsCount_WebServer->setCurrentIndex( 2 );
-            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 2 );
-            this->ui->box_StatsDay_WebServer->setCurrentIndex(   2 );
-            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 2 );
             break;
         default:
             // shouldn't be here
@@ -213,7 +198,8 @@ MainWindow::MainWindow( QWidget *parent )
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete this->ui;
+    delete this->craphelp;
 }
 
 void MainWindow::closeEvent (QCloseEvent *event)
@@ -221,9 +207,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
     // save actual configurations
     this->writeConfigs();
 
-    // save tabs positions => this->ui->CrapTabs->tabText( 0 );
-    //                     => this->ui->CrapTabs->tabText( 0 );
-    this->ui->StatsTabs->move( 0,1 );
     // save splitters sizes => this->ui->splitter_StatsCount->sizes();
 }
 
@@ -240,9 +223,11 @@ void MainWindow::defineOSspec()
         case 1:
             // unix-like
             /*this->configs_path   = home_path + "/.configs/LogDoctor/logdoctor.conf";
-            this->db_data_path   = home_path + "/.local/share/LogDoctor/collection.db";
-            this->db_hashes_path = home_path + "/.local/share/LogDoctor/hashes.db";*/ // !!! RESTORE !!!
+            this->logdoc_path    = home_path + "/.local/share/LogDoctor";
+            this->db_data_path   = logdoc_path + "/collection.db";
+            this->db_hashes_path = logdoc_path + "/hashes.db";*/ // !!! RESTORE !!!
             this->configs_path   = "logdoctor.conf";
+            this->logdoc_path    = "";
             this->db_data_path   = "collection.db";
             this->db_hashes_path = "hashes.db";
             break;
@@ -250,15 +235,17 @@ void MainWindow::defineOSspec()
         case 2:
             // windows
             this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
-            this->db_data_path   = home_path + "/AppData/Local/LogDoctor/collection.db";
-            this->db_hashes_path = home_path + "/AppData/Local/LogDoctor/hashes.db";
+            this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";
+            this->db_data_path   = logdoc_path + "/collection.db";
+            this->db_hashes_path = logdoc_path + "/hashes.db";
             break;
 
         case 3:
             // darwin-based
             this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
-            this->db_data_path   = home_path + "/Lybrary/Application Support/LogDoctor/collection.db";
-            this->db_hashes_path = home_path + "/Lybrary/Application Support/LogDoctor/hashes.db";
+            this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";
+            this->db_data_path   = logdoc_path + "/collection.db";
+            this->db_hashes_path = logdoc_path + "/hashes.db";
             break;
 
         default:
@@ -734,11 +721,35 @@ void MainWindow::makeInitialChecks()
     } else {
         // get available stats dates
         this->refreshStatsDates();
-        // initialize logs fields boxes
-        this->on_box_StatsDay_WebServer_currentIndexChanged(0);
-        this->on_box_StatsRelat_WebServer_currentIndexChanged(0);
         // get a fresh list of log files
         this->on_button_LogFiles_RefreshList_clicked();
+        // set the default WS as the current one
+        switch ( this->craplog.getCurrentWSID() ) {
+            case 11:
+                this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
+                this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
+                this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
+                this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
+                this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
+                break;
+            case 12:
+                this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
+                this->ui->box_StatsCount_WebServer->setCurrentIndex( 1 );
+                this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 1 );
+                this->ui->box_StatsDay_WebServer->setCurrentIndex(   1 );
+                this->ui->box_StatsRelat_WebServer->setCurrentIndex( 1 );
+                break;
+            case 13:
+                this->ui->box_StatsWarn_WebServer->setCurrentIndex(  2 );
+                this->ui->box_StatsCount_WebServer->setCurrentIndex( 2 );
+                this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 2 );
+                this->ui->box_StatsDay_WebServer->setCurrentIndex(   2 );
+                this->ui->box_StatsRelat_WebServer->setCurrentIndex( 2 );
+                break;
+            default:
+                // shouldn't be here
+                throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
+        }
     }
 }
 
@@ -1352,10 +1363,12 @@ void MainWindow::checkStatsSpeedDrawable()
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Year->clear();
-    this->ui->box_StatsSpeed_Year->addItems(
-        this->crapview.getYears(
-            this->ui->box_StatsSpeed_WebServer->currentText() ) );
-    this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+    if ( index != -1 ) {
+        this->ui->box_StatsSpeed_Year->addItems(
+            this->crapview.getYears(
+                this->ui->box_StatsSpeed_WebServer->currentText() ) );
+        this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+    }
     this->checkStatsSpeedDrawable();
 }
 
@@ -1429,11 +1442,13 @@ void MainWindow::checkStatsCountDrawable()
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Year->clear();
-    this->ui->box_StatsCount_Year->addItems(
-        this->crapview.getYears(
-            this->ui->box_StatsCount_WebServer->currentText() ));
-    this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
-    this->resetStatsCountButtons();
+    if ( index != -1 ) {
+        this->ui->box_StatsCount_Year->addItems(
+            this->crapview.getYears(
+                this->ui->box_StatsCount_WebServer->currentText() ));
+        this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
+        this->resetStatsCountButtons();
+    }
     this->checkStatsCountDrawable();
 }
 
@@ -2295,7 +2310,19 @@ void MainWindow::on_button_ConfApache_Format_Sample_clicked()
 }
 void MainWindow::on_button_ConfApache_Format_Help_clicked()
 {
-    // !!! 2 COMPLETE !!!
+    delete this->craphelp;
+    this->craphelp = new Craphelp();
+    this->craphelp->helpLogsFormat(
+        this->logdoc_path,
+        "apache",
+        this->language,
+        this->TB.getFont(),
+        this->TB.getColorSchemeID() );
+    if ( this->isMaximized() == true ) {
+        this->craphelp->showMaximized();
+    } else {
+        this->craphelp->show();
+    }
 }
 
 // warnlists
@@ -2619,7 +2646,19 @@ void MainWindow::on_button_ConfNginx_Format_Sample_clicked()
 }
 void MainWindow::on_button_ConfNginx_Format_Help_clicked()
 {
-    // !!! 2 COMPLETE !!!
+    delete this->craphelp;
+    this->craphelp = new Craphelp();
+    this->craphelp->helpLogsFormat(
+        this->logdoc_path,
+        "nginx",
+        this->language,
+        this->TB.getFont(),
+        this->TB.getColorSchemeID() );
+    if ( this->isMaximized() == true ) {
+        this->craphelp->showMaximized();
+    } else {
+        this->craphelp->show();
+    }
 }
 
 // warnlists
@@ -2984,7 +3023,19 @@ void MainWindow::on_button_ConfIis_Format_Sample_clicked()
 }
 void MainWindow::on_button_ConfIis_Format_Help_clicked()
 {
-    // !!! 2 COMPLETE !!!
+    delete this->craphelp;
+    this->craphelp = new Craphelp();
+    this->craphelp->helpLogsFormat(
+        this->logdoc_path,
+        "iis",
+        this->language,
+        this->TB.getFont(),
+        this->TB.getColorSchemeID() );
+    if ( this->isMaximized() == true ) {
+        this->craphelp->showMaximized();
+    } else {
+        this->craphelp->show();
+    }
 }
 
 // warnlists
