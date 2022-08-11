@@ -15,6 +15,7 @@
 #include "modules.h"
 #include "tools/craplog/craplog.h"
 #include "tools/crapview/crapview.h"
+#include "tools/craphelp/craphelp.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -404,7 +405,6 @@ private:
 
     // operating system
     // 1: linux, 2:windows, 3:mac
-    //unsigned int OS;
     #if defined( Q_OS_UNIX )
         // Unix-like systems: Linux, BSD and SysV
         const unsigned int OS = 1;
@@ -418,11 +418,13 @@ private:
         #error "System not supported"
     #endif
 
+    void defineOSspec();
+    std::string logdoc_path;
+
 
     ////////////////////////
     //// CONFIGURATIONS ////
     ////////////////////////
-    void defineOSspec();
     std::string configs_path;
     void readConfigs();
     void writeConfigs();
@@ -544,6 +546,12 @@ private:
     void refreshTextBrowserPreview();
     void refreshChartsPreview();
     const int getIisLogsModule();
+
+
+    //////////////////
+    //// CRAPHELP ////
+    //////////////////
+    Craphelp* craphelp = new Craphelp();
 
 };
 #endif // MAINWINDOW_H
