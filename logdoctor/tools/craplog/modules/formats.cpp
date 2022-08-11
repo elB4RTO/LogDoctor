@@ -166,7 +166,7 @@ const int FormatOps::findNginxFieldEnd( const std::string& string, const int& st
     } else {
         for ( int i=start; i<max; i++ ) {
             const char& c = string.at( i );
-            if ( StringOps::isAlphabetic( c ) == true || c == '_' ) {
+            if ( StringOps::isAlnum( c ) == true || c == '_' ) {
                 stop = i;
             } else {
                 break;
@@ -530,10 +530,15 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         cur_fld = f_str.substr( aux, stop-aux+1 );
 
         // check if the field is valid
-        if ( f_map.find( cur_fld ) != f_map.end() ) {
+        if ( f_map.find( cur_fld ) != f_map.end()
+          || StringOps::startsWith( cur_fld, "cookie_" ) ) {
             // valid, append
             separators.push_back( cur_sep );
-            fields.push_back( f_map.at( cur_fld ) );
+            if ( StringOps::startsWith( cur_fld, "cookie_" ) ) {
+                fields.push_back( "cookie" );
+            } else {
+                fields.push_back( f_map.at( cur_fld ) );
+            }
             if ( finished == true ) {
                 // this was the last field
                 break;
