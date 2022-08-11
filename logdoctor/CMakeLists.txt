@@ -23,9 +23,9 @@ set(TS_FILES
 
 set(PROJECT_SOURCES
         main.cpp
+        mainwindow.ui
         mainwindow.h
         mainwindow.cpp
-        mainwindow.ui
 
         utilities.h
         utilities/colors.h
@@ -70,6 +70,10 @@ set(PROJECT_SOURCES
         tools/crapview/crapview.cpp
         tools/crapview/modules/query.h
         tools/crapview/modules/query.cpp
+
+        tools/craphelp/craphelp.ui
+        tools/craphelp/craphelp.h
+        tools/craphelp/craphelp.cpp
 
         resources/resources.qrc
         ${TS_FILES}
