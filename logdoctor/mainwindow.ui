@@ -435,8 +435,8 @@ hr { height: 1px; border-width: 0; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>608</width>
-             <height>280</height>
+             <width>858</width>
+             <height>475</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -6581,13 +6581,13 @@ hr { height: 1px; border-width: 0; }
                        <widget class="QRadioButton" name="radio_ConfDefaults_Apache">
                         <property name="minimumSize">
                          <size>
-                          <width>88</width>
+                          <width>128</width>
                           <height>32</height>
                          </size>
                         </property>
                         <property name="maximumSize">
                          <size>
-                          <width>88</width>
+                          <width>16777215</width>
                           <height>32</height>
                          </size>
                         </property>
@@ -6603,13 +6603,13 @@ hr { height: 1px; border-width: 0; }
                        <widget class="QRadioButton" name="radio_ConfDefaults_Nginx">
                         <property name="minimumSize">
                          <size>
-                          <width>88</width>
+                          <width>128</width>
                           <height>32</height>
                          </size>
                         </property>
                         <property name="maximumSize">
                          <size>
-                          <width>88</width>
+                          <width>16777215</width>
                           <height>32</height>
                          </size>
                         </property>
@@ -6622,13 +6622,13 @@ hr { height: 1px; border-width: 0; }
                        <widget class="QRadioButton" name="radio_ConfDefaults_Iis">
                         <property name="minimumSize">
                          <size>
-                          <width>88</width>
+                          <width>128</width>
                           <height>32</height>
                          </size>
                         </property>
                         <property name="maximumSize">
                          <size>
-                          <width>88</width>
+                          <width>16777215</width>
                           <height>32</height>
                          </size>
                         </property>
@@ -9409,7 +9409,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>740</width>
                             <height>54</height>
                            </rect>
                           </property>
