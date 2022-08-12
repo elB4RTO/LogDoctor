@@ -4,11 +4,15 @@
 
 #include "modules/exceptions.h"
 
+#include "utilities/gzip.h"
+
 #include <QTimer>
 
 #include <chrono>
+#include <filesystem>
 
 #include <iostream> // !!! REMOVE !!!
+#include <ctime>
 
 
 MainWindow::MainWindow( QWidget *parent )
@@ -144,6 +148,11 @@ MainWindow::MainWindow( QWidget *parent )
     // charts
     this->ui->box_ConfCharts_Theme->setCurrentIndex( this->CHARTS_THEMES.at( this->charts_theme_id ) );
     this->refreshChartsPreview();
+    // databases
+    this->ui->inLine_ConfDatabases_Data_Path->setText( this->basePath( this->db_data_path ) );
+    this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
+    this->ui->inLine_ConfDatabases_Hashes_Path->setText( this->basePath( this->db_hashes_path ) );
+    this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
     this->ui->spinBox_ConfControl_Size->setValue( this->craplog.getWarningSize() / 1'048'576 );
@@ -154,6 +163,7 @@ MainWindow::MainWindow( QWidget *parent )
     }
     // apache paths
     this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( this->APACHE_ID )) );
+    this->ui->button_ConfApache_Path_Save->setEnabled( false );
     // apache formats
     this->ui->inLine_ConfApache_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->APACHE_ID ) ) );
     this->ui->button_ConfApache_Format_Save->setEnabled( false );
@@ -163,6 +173,7 @@ MainWindow::MainWindow( QWidget *parent )
     this->on_box_ConfApache_Blacklist_Field_currentTextChanged( this->ui->box_ConfApache_Blacklist_Field->currentText() );
     // nginx paths
     this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( this->NGINX_ID )) );
+    this->ui->button_ConfNginx_Path_Save->setEnabled( false );
     // nginx formats
     this->ui->inLine_ConfNginx_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->NGINX_ID ) ) );
     this->ui->button_ConfNginx_Format_Save->setEnabled( false );
@@ -172,6 +183,7 @@ MainWindow::MainWindow( QWidget *parent )
     this->on_box_ConfNginx_Blacklist_Field_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Field->currentText() );
     // iis paths
     this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( this->IIS_ID )) );
+    this->ui->button_ConfIis_Path_Save->setEnabled( false );
     // iis formats
     this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
     this->ui->button_ConfIis_Format_Save->setEnabled( false );
@@ -186,8 +198,7 @@ MainWindow::MainWindow( QWidget *parent )
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        this->ui->textLogFiles->setAlignment( Qt::AlignVCenter );
+        rich_text.clear();
     }
 
     // get a fresh list of LogFiles
@@ -291,7 +302,9 @@ void MainWindow::readConfigs()
     if ( proceed == true ) {
         std::vector<std::string> aux, list, configs;
         try {
-            StringOps::splitrip( configs, IOutils::readFile( this->configs_path ) );
+            std::string content;
+            IOutils::readFile( this->configs_path, content );
+            StringOps::splitrip( configs, content );
             for ( const std::string& line : configs ) {
                 if ( StringOps::startsWith( line, "[") == true ) {
                     // section descriptor
@@ -306,6 +319,11 @@ void MainWindow::readConfigs()
                 // if here, a value is present
                 const std::string& var = aux.at( 0 ),
                                    val = aux.at( 1 );
+
+                if ( val.size() == 0 ) {
+                    // nothing to do, no value stored
+                    continue;
+                }
 
                 if ( var == "Language" ) {
                     if ( val.size() > 2 ) {
@@ -334,10 +352,10 @@ void MainWindow::readConfigs()
                     this->default_ws = std::stoi( val );
 
                 } else if ( var == "DatabaseDataPath" ) {
-                    this->db_data_path = val;
+                    this->db_data_path = this->resolvePath( val ) + "/collection.db";
 
                 } else if ( var == "DatabaseHashesPath" ) {
-                    this->db_hashes_path = val;
+                    this->db_hashes_path = this->resolvePath( val ) + "/hashes.db";
 
                 } else if ( var == "Font" ) {
                     this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
@@ -358,7 +376,7 @@ void MainWindow::readConfigs()
                     this->craplog.setWarningSize( std::stoi( val ) );
 
                 } else if ( var == "ApacheLogsPath" ) {
-                    this->craplog.setLogsPath( this->APACHE_ID, val );
+                    this->craplog.setLogsPath( this->APACHE_ID, this->resolvePath( val ) );
 
                 } else if ( var == "ApacheLogsFormat" ) {
                     this->craplog.setApacheLogFormat( val );
@@ -379,7 +397,7 @@ void MainWindow::readConfigs()
                     this->craplog.setBlacklist( this->APACHE_ID, 20, this->string2list( val ) );
 
                 } else if ( var == "NginxLogsPath" ) {
-                    this->craplog.setLogsPath( this->NGINX_ID, val );
+                    this->craplog.setLogsPath( this->NGINX_ID, this->resolvePath( val ) );
 
                 } else if ( var == "NginxLogsFormat" ) {
                     this->craplog.setNginxLogFormat( val );
@@ -400,7 +418,7 @@ void MainWindow::readConfigs()
                     this->craplog.setBlacklist( this->NGINX_ID, 20, this->string2list( val ) );
 
                 } else if ( var == "IisLogsPath" ) {
-                    this->craplog.setLogsPath( this->IIS_ID, val );
+                    this->craplog.setLogsPath( this->IIS_ID, this->resolvePath( val ) );
 
                 } else if ( var == "IisLogsModule" ) {
                     if ( val == "1" ) {
@@ -522,8 +540,8 @@ void MainWindow::writeConfigs()
         configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
         configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
-        configs += "\nDatabaseDataPath=" + this->db_data_path;
-        configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
+        configs += "\nDatabaseDataPath=" + this->basePath( this->db_data_path ).toStdString();
+        configs += "\nDatabaseHashesPath=" + this->basePath( this->db_hashes_path ).toStdString();
         //// TEXT BROWSER ////
         configs += "\n\n[TextBrowser]";
         configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
@@ -694,6 +712,7 @@ void MainWindow::makeInitialChecks()
             // checks failed, abort
             ok = false;
         } else {
+            this->crapview.setDbPath( this->db_data_path );
             this->craplog.setStatsDatabasePath( this->db_data_path );
             // used-files' hashes' database
             if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
@@ -757,6 +776,32 @@ void MainWindow::makeInitialChecks()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
+//
+const std::string MainWindow::resolvePathQ( const QString& path )
+{
+    return this->resolvePath( path.toStdString() );
+}
+const std::string MainWindow::resolvePath( const std::string& path )
+{
+    std::string p;
+    try {
+        p = std::filesystem::canonical( StringOps::strip( path ) ).string();
+    } catch (...) {
+        ;
+    }
+    return p;
+}
+const QString MainWindow::basePath( const std::string& path )
+{
+    QString p;
+    try {
+        p = QString::fromStdString( std::filesystem::canonical( path ).parent_path().string() );
+    } catch (...) {
+        ;
+    }
+    return p;
+}
+
 // printable size with suffix and limited decimals
 const QString MainWindow::printableSize( const int& bytes )
 {
@@ -876,7 +921,6 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
     }
 }
@@ -894,7 +938,6 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
     }
 }
@@ -912,7 +955,6 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
     }
 }
@@ -1004,7 +1046,28 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
         if ( proceed == true ) {
             std::string content;
             try {
-                content = IOutils::readFile( item.path );
+                try {
+                    // try reading as gzip compressed file
+                    GzipOps::readFile( item.path, content );
+
+                } catch (GenericException& e) {
+                    // failed closing file pointer
+                    throw e;
+
+                } catch (...) {
+                    // failed as gzip, try as text file
+                    if ( content.size() > 0 ) {
+                        content.clear();
+                    }
+                    IOutils::readFile( item.path, content );
+                }
+
+            } catch (GenericException& e) {
+                // failed closing
+                proceed = false;
+                // >> err.what() << //
+                DialogSec::errGeneric( nullptr, QMessageBox::tr("Failed closing file pointer for:\n") + item.name );
+
             } catch (const std::ios_base::failure& err) {
                 // failed reading
                 proceed = false;
@@ -1033,8 +1096,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             QString rich_text;
             RichText::richLogsFailure( rich_text );
             this->ui->textLogFiles->setText( rich_text );
-            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-            this->ui->textLogFiles->setAlignment( Qt::AlignVCenter );
+            rich_text.clear();
         }
     }
 }
@@ -2148,15 +2210,19 @@ void MainWindow::refreshChartsPreview()
 // data collection
 void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1)
 {
-    std::string path = StringOps::strip( arg1.toStdString() );
-    if ( IOutils::checkDir( path ) == true ) {
-        this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
-        this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
+    if ( arg1.size() > 0 ) {
+        std::string path = this->resolvePathQ( arg1 );
+        if ( IOutils::checkDir( path ) == true ) {
+            this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
+            this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
+        } else {
+            this->ui->icon_ConfDatabases_Data_Wrong->setVisible( true );
+            this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
+        }
     } else {
         this->ui->icon_ConfDatabases_Data_Wrong->setVisible( true );
         this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
     }
-    this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( path ) );
 }
 void MainWindow::on_inLine_ConfDatabases_Data_Path_returnPressed()
 {
@@ -2170,8 +2236,16 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        this->db_data_path = path;
+        if ( IOutils::checkDir( path, true ) == false ) {
+            DialogSec::warnDirNotReadable( nullptr );
+        }
+        if ( IOutils::checkDir( path, false, true ) == false ) {
+            DialogSec::warnDirNotWritable( nullptr );
+        }
+        this->db_data_path = path + "/collection.db";
         this->craplog.setStatsDatabasePath( this->db_data_path );
+        this->crapview.setDbPath( this->db_data_path );
+        this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
 }
@@ -2179,15 +2253,19 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 // usef files hashes
 void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1)
 {
-    std::string path = StringOps::strip( arg1.toStdString() );
-    if ( IOutils::checkDir( path ) == true ) {
-        this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
-        this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
+    if ( arg1.size() > 0 ) {
+        std::string path = this->resolvePathQ( arg1 );
+        if ( IOutils::checkDir( path ) == true ) {
+            this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
+            this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
+        } else {
+            this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( true );
+            this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
+        }
     } else {
         this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( true );
         this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
     }
-    this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( path ) );
 }
 void MainWindow::on_inLine_ConfDatabases_Hashes_Path_returnPressed()
 {
@@ -2201,8 +2279,15 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        this->db_hashes_path = path;
+        if ( IOutils::checkDir( path, true ) == false ) {
+            DialogSec::warnDirNotReadable( nullptr );
+        }
+        if ( IOutils::checkDir( path, false, true ) == false ) {
+            DialogSec::warnDirNotWritable( nullptr );
+        }
+        this->db_hashes_path = path + "/hashes.db";
         this->craplog.setHashesDatabasePath( this->db_hashes_path );
+        this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
 }
@@ -2256,15 +2341,19 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 // paths
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString &arg1)
 {
-    std::string path = StringOps::strip( arg1.toStdString() );
-    if ( IOutils::checkDir( path ) == true ) {
-        this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
-        this->ui->button_ConfApache_Path_Save->setEnabled( true );
+    if ( arg1.size() > 0 ) {
+        std::string path = this->resolvePathQ( arg1 );
+        if ( IOutils::checkDir( path ) == true ) {
+            this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
+            this->ui->button_ConfApache_Path_Save->setEnabled( true );
+        } else {
+            this->ui->icon_ConfApache_Path_Wrong->setVisible( true );
+            this->ui->button_ConfApache_Path_Save->setEnabled( false );
+        }
     } else {
         this->ui->icon_ConfApache_Path_Wrong->setVisible( true );
         this->ui->button_ConfApache_Path_Save->setEnabled( false );
     }
-    this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString( path ) );
 }
 void MainWindow::on_inLine_ConfApache_Path_String_returnPressed()
 {
@@ -2278,7 +2367,11 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
+        if ( IOutils::checkDir( path, true ) == false ) {
+            DialogSec::warnDirNotReadable( nullptr );
+        }
         this->craplog.setLogsPath( this->APACHE_ID, path );
+        this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfApache_Path_Save->setEnabled( false );
 }
@@ -2592,15 +2685,19 @@ void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 // paths
 void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1)
 {
-    std::string path = StringOps::strip( arg1.toStdString() );
-    if ( IOutils::checkDir( path ) == true ) {
-        this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
-        this->ui->button_ConfNginx_Path_Save->setEnabled( true );
+    if ( arg1.size() > 0 ) {
+        std::string path = this->resolvePathQ( arg1 );
+        if ( IOutils::checkDir( path ) == true ) {
+            this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
+            this->ui->button_ConfNginx_Path_Save->setEnabled( true );
+        } else {
+            this->ui->icon_ConfNginx_Path_Wrong->setVisible( true );
+            this->ui->button_ConfNginx_Path_Save->setEnabled( false );
+        }
     } else {
         this->ui->icon_ConfNginx_Path_Wrong->setVisible( true );
         this->ui->button_ConfNginx_Path_Save->setEnabled( false );
     }
-    this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString( path ) );
 }
 void MainWindow::on_inLine_ConfNginx_Path_String_returnPressed()
 {
@@ -2614,7 +2711,11 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
+        if ( IOutils::checkDir( path, true ) == false ) {
+            DialogSec::warnDirNotReadable( nullptr );
+        }
         this->craplog.setLogsPath( this->NGINX_ID, path );
+        this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfNginx_Path_Save->setEnabled( false );
 }
@@ -2928,15 +3029,19 @@ void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 // paths
 void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString &arg1)
 {
-    std::string path = StringOps::strip( arg1.toStdString() );
-    if ( IOutils::checkDir( path ) == true ) {
-        this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
-        this->ui->button_ConfIis_Path_Save->setEnabled( true );
+    if ( arg1.size() > 0 ) {
+        std::string path = this->resolvePathQ( arg1 );
+        if ( IOutils::checkDir( path ) == true ) {
+            this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
+            this->ui->button_ConfIis_Path_Save->setEnabled( true );
+        } else {
+            this->ui->icon_ConfIis_Path_Wrong->setVisible( true );
+            this->ui->button_ConfIis_Path_Save->setEnabled( false );
+        }
     } else {
         this->ui->icon_ConfIis_Path_Wrong->setVisible( true );
         this->ui->button_ConfIis_Path_Save->setEnabled( false );
     }
-    this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString( path ) );
 }
 void MainWindow::on_inLine_ConfIis_Path_String_returnPressed()
 {
@@ -2950,7 +3055,11 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
+        if ( IOutils::checkDir( path, true ) == false ) {
+            DialogSec::warnDirNotReadable( nullptr );
+        }
         this->craplog.setLogsPath( this->IIS_ID, path );
+        this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfIis_Path_Save->setEnabled( false );
 }

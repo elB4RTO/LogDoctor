@@ -484,6 +484,10 @@ private:
     const QString printableSize(  const int& bytes ),
                   printableSpeed( const int& bytes, const int& secs ),
                   printableTime(  const int& seconds );
+    // resolve a path
+    const std::string resolvePath( const std::string& path );
+    const std::string resolvePathQ( const QString& path );
+    const QString basePath( const std::string& path );
 
     ///////////////////
     //// DATABASES ////
