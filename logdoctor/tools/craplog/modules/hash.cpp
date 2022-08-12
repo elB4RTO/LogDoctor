@@ -2,7 +2,9 @@
 #include "hash.h"
 
 #include "modules/dialogs.h"
+#include "modules/exceptions.h"
 
+#include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/vectors.h"
 
@@ -69,9 +71,40 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
 // returns the hash
 std::string HashOps::digestFile( const std::string& file_path )
 {
-    std::string content = IOutils::readFile( file_path );
+    std::string content;
+    try {
+        try {
+            // try reading as gzip compressed file
+            GzipOps::readFile( file_path, content );
+
+        } catch (GenericException& e) {
+            // failed closing file pointer
+            throw e;
+
+        } catch (...) {
+            // failed as gzip, try as text file
+            if ( content.size() > 0 ) {
+                content.clear();
+            }
+            IOutils::readFile( file_path, content );
+        }
+
+    } catch (GenericException& err) {
+        // failed closing
+        throw err;
+
+    } catch (const std::ios_base::failure& err) {
+        // failed reading
+        throw err;
+
+    } catch (...) {
+        // failed somehow
+        throw GenericException( "Something failed while handling file" );
+    }
+
     SHA256 sha;
     sha.update( content );
+    content.clear();
     uint8_t * digest = sha.digest();
     // return the hex digest
     return SHA256::toString(digest);
