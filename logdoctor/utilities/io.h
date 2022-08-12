@@ -25,9 +25,9 @@ public:
     static const bool renameAsCopy( const std::string& path ) noexcept(true);
 
     // read a defined amount of lines (from the start)
-    static const std::vector<std::string> readLines( const std::string& path, const int& n_lines=16, const bool& random=false, const bool& strip_lines=true );
+    static void randomLines( const std::string& path, std::vector<std::string>& lines, const int& n_lines=16, const bool& strip_lines=true );
     // read the entire content
-    static const std::string readFile( const std::string& path );
+    static void readFile( const std::string& path, std::string& content );
 
     // write a string on file
     static void writeOnFile( const std::string& path, const std::string& content );
