@@ -407,6 +407,15 @@ void DialogSec::errDirNotReadable( QWidget *parent, const QString& dir )
             .arg( m_DIR_NOT_READABLE, dir, r_SET_PERMISSIONS ),
         QMessageBox::Ok );
 }
+void DialogSec::warnDirNotReadable( QWidget *parent )
+{
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_DIR_NOT_READABLE,
+        QString("%1\n\n%2")
+            .arg( m_DIR_NOT_READABLE, r_SET_PERMS_BEFORE ),
+        QMessageBox::Ok );
+}
 
 void DialogSec::errDirNotWritable( QWidget *parent, const QString& dir )
 {
@@ -415,6 +424,15 @@ void DialogSec::errDirNotWritable( QWidget *parent, const QString& dir )
         t_DIR_NOT_WRITABLE,
         QString("%1:\n%2\n\n%3")
             .arg( m_DIR_NOT_WRITABLE, dir, r_SET_PERMISSIONS ),
+        QMessageBox::Ok );
+}
+void DialogSec::warnDirNotWritable( QWidget *parent )
+{
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_DIR_NOT_WRITABLE,
+        QString("%1\n\n%2")
+            .arg( m_DIR_NOT_WRITABLE, r_SET_PERMS_BEFORE ),
         QMessageBox::Ok );
 }
 
