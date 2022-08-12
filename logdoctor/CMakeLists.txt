@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
         utilities.h
         utilities/colors.h
         utilities/colors.cpp
+        utilities/gzip.h
+        utilities/gzip.cpp
         utilities/io.h
         utilities/io.cpp
         utilities/rtf.h
@@ -107,6 +109,11 @@ else()
 endif()
 
 target_link_libraries(LogDoctor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::Sql)
+
+# Include zlib
+find_package( ZLIB REQUIRED )
+include_directories(${ZLIB_INCLUDE_DIRS})
+target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 
 set_target_properties(LogDoctor PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
