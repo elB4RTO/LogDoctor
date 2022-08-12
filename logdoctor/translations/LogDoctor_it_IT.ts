@@ -1204,27 +1204,27 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
 <context>
     <name>QMessageBox</name>
     <message>
-        <location filename="../mainwindow.cpp" line="445"/>
+        <location filename="../mainwindow.cpp" line="448"/>
         <source>An error occured while reading the configurations file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="449"/>
+        <location filename="../mainwindow.cpp" line="452"/>
         <source>An error occured while parsing configuration data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="485"/>
+        <location filename="../mainwindow.cpp" line="488"/>
         <source>The given configurations path is not a valid path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="581"/>
+        <location filename="../mainwindow.cpp" line="584"/>
         <source>An error occured while writing the configurations file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="585"/>
+        <location filename="../mainwindow.cpp" line="588"/>
         <source>An error occured while preparing configurations data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1652,40 +1652,40 @@ If everything is fine, please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="483"/>
+        <location filename="../tools/craplog/craplog.cpp" line="485"/>
         <source>An error occured while handling the file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="921"/>
-        <location filename="../tools/craplog/modules/hash.cpp" line="210"/>
+        <location filename="../tools/craplog/craplog.cpp" line="937"/>
+        <location filename="../tools/craplog/modules/hash.cpp" line="211"/>
         <source>An error occured while working on the database
 
 Aborting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="991"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1007"/>
         <source>Logs Size Breakdown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="992"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1008"/>
         <source>Ignored</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="993"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1009"/>
         <source>Parsed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="994"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1010"/>
         <source>Warnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="995"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1011"/>
         <source>Blacklisted</source>
         <translation type="unfinished"></translation>
     </message>
