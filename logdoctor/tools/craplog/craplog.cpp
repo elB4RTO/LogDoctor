@@ -6,6 +6,7 @@
 #include "modules/exceptions.h"
 #include "modules/dialogs.h"
 
+#include "utilities/gzip.h"
 #include "utilities/io.h"
 
 #include "tools/craplog/modules/store.h"
@@ -15,6 +16,7 @@
 #include <filesystem>
 #include <thread>
 #include <exception>
+#include <ctime>
 
 #include <iostream> // !!! REMOVE !!!
 
@@ -71,8 +73,8 @@ Craplog::Craplog()
                                                             .contains = "",
                                                             .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( this->IIS_ID, LogName{ .starts   = "u_",
-                                                          .contains = "",
+    this->logs_base_names.emplace( this->IIS_ID, LogName{ .starts   = "",
+                                                          .contains = "_ex",
                                                           .ends     = ".log" });
 
 
@@ -312,6 +314,7 @@ void Craplog::setIisLogFormat( const std::string& format_string, const int& log_
         this->logs_formats.at( this->IIS_ID ) =
             this->formatOps.processIisFormatString( format_string, log_module );
         this->logs_format_strings.at( this->IIS_ID ) = format_string;
+        this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( nullptr, e.what() );
     } catch (...) {
@@ -471,7 +474,7 @@ void Craplog::scanLogsDir()
             std::vector<std::string> content;
             try {
                 // read 32 random lines
-                content = IOutils::readLines( path, 32, true );
+                IOutils::randomLines( path, content, 32 );
             } catch (const std::ios_base::failure& err) {
                 // failed reading
                 successful = false;
@@ -527,7 +530,20 @@ void Craplog::scanLogsDir()
 }
 
 
+void Craplog::changeIisLogsBaseNames( const int& module_id )
+{
+    switch ( module_id ) {
+        case 0: // W3C
+            this->logs_base_names.at( 13 ).contains = "_ex"; break;
+        case 1: // NCSA
+            this->logs_base_names.at( 13 ).contains = "_nc"; break;
+        case 2: // IIS
+            this->logs_base_names.at( 13 ).contains = "_in"; break;
 
+        default: // shouldn't be reachable
+            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ) );
+    }
+}
 const bool Craplog::isFileNameValid( const std::string& name )
 {
     bool valid = true;
@@ -538,13 +554,14 @@ const bool Craplog::isFileNameValid( const std::string& name )
     }
     if ( this->logs_base_names.at( this->current_WS ).contains != "" ) {
         if ( ! StringOps::contains(
-                    name.substr( this->logs_base_names.at( this->current_WS ).starts.size() ),
-                    this->logs_base_names.at( this->current_WS ).contains ) ) {
+                                    name.substr( this->logs_base_names.at( this->current_WS ).starts.size() ),
+                                    this->logs_base_names.at( this->current_WS ).contains ) ) {
             return false;
         }
     }
     if ( this->logs_base_names.at( this->current_WS ).ends != "" ) {
-        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_WS ).ends ) ) {
+        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_WS ).ends )
+          && ! StringOps::endsWith( name, ".gz" ) ) {
             return false;
         }
     }
@@ -554,9 +571,9 @@ const bool Craplog::isFileNameValid( const std::string& name )
         case 11 | 12:
             // further checks for apache / nginx
             start = name.find_last_of( ".log." )+1;
-            stop = name.find( ".gz", start);
-            if ( stop < 0 || stop >= name.size() ) {
-                stop = name.size()-1;
+            stop = name.size()-1;
+            if ( StringOps::endsWith( name, ".gz" ) ) {
+                stop -= 3;
             }
             // serach for incremental numbers
             for ( int i=start; i<=stop; i++ ) {
@@ -569,13 +586,36 @@ const bool Craplog::isFileNameValid( const std::string& name )
 
         case 13:
             // further checks for iis
-            start = this->logs_base_names.at( 13 ).starts.size();
-            stop = name.size() - this->logs_base_names.at( 13 ).ends.size();
-            // search for incremental number / date
+            start =  name.find( this->logs_base_names.at( 13 ).contains ) + 3;
+            stop = name.size()-5; // removing the finel '.log' extension
+            if ( StringOps::endsWith( name, ".gz" ) ) {
+                stop -= 3;
+            }
+            // search for date
+            std::string date;
             for ( int i=start; i<=stop; i++ ) {
                 if ( StringOps::isNumeric( name.at( i ) ) == false ) {
                     valid = false;
                     break;
+                }
+                date.push_back( name.at( i ) );
+            }
+            if ( valid == true ) {
+                // check if the file has today's date
+                time_t t;
+                struct tm *tmp;
+                char aux_date[7];
+                time( &t );
+                tmp = localtime( &t );
+                // using strftime to display time
+                strftime( aux_date, 7, "%y%m%d", tmp );
+                valid = false;
+                for ( int i=0; i<6; i++ ) {
+                    if ( date.at(i) != aux_date[i] ) {
+                        // different date, valid
+                        valid = true;
+                        break;
+                    }
                 }
             }
             break;
@@ -795,6 +835,7 @@ const bool Craplog::checkStuff()
 
 void Craplog::joinLogLines()
 {
+    std::string aux;
     std::vector<std::string> content;
     for ( const LogFile& file : this->log_files_to_use ) {
 
@@ -804,7 +845,23 @@ void Craplog::joinLogLines()
         try {
             // try reading
             content.clear();
-            StringOps::splitrip( content, IOutils::readFile( file.path ) );
+            aux = "";
+            try {
+                // try as gzip compressed archive first
+                GzipOps::readFile( file.path, aux );
+
+            } catch (GenericException& e) {
+                // failed closing file pointer
+                throw e;
+
+            } catch (...) {
+                // fallback on reading as normal file
+                if ( aux.size() > 0 ) {
+                    aux = "";
+                }
+                IOutils::readFile( file.path, aux );
+            }
+            StringOps::splitrip( content, aux );
         } catch (const std::ios_base::failure& err) {
             // failed reading
             // >> err.what() << //
@@ -822,6 +879,7 @@ void Craplog::joinLogLines()
         this->total_size  += file.size;
         this->total_lines += content.size();
     }
+    aux.clear();
     content.clear();
     this->log_files_to_use.clear();
 }
