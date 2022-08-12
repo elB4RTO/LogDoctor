@@ -185,6 +185,8 @@ private:
         std::string ends;
     };
     std::unordered_map<int, LogName> logs_base_names;
+    // change base name contained string, only needed for IIS format modules
+    void changeIisLogsBaseNames( const int& module_id );
 
     // logs list related
     std::vector<LogFile> logs_list;
