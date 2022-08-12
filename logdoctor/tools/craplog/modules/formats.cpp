@@ -127,8 +127,8 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string )
         cc = string.at( i+1 );
         if ( c == '\\' ) {
             // just the ones supported by nginx
-            if ( cc == '\\' ) {
-                str.push_back( c );
+            if ( cc == '\\' || cc == '\'' || cc == '"' ) {
+                str.push_back( cc );
                 i++;
             } else if ( cc == 'n' ) {
                 str.push_back( '\n' );
@@ -138,9 +138,6 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string )
                 i++;
             } else if ( cc == 't' ) {
                 str.push_back( '\t' );
-                i++;
-            } else if ( cc == '\'' || cc == '"' ) {
-                str.push_back( cc );
                 i++;
             } else {
                 // not a control-character, resulting in a backslash+character
@@ -515,30 +512,45 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         aux = f_str.find( '$', start );
         if ( aux < 0 || aux > max ) {
             // not found, append as final and stop searching
-            final = f_str.substr( start );
+            final = this->parseNginxEscapes( f_str.substr( start ) );
             break;
         }
         aux ++;
         // find the end of the current field
-        stop = this->findNginxFieldEnd( f_str, aux );
-        if ( stop == max ) {
-            // this is the last field
+        stop = this->findNginxFieldEnd( f_str, aux ) + 1;
+        if ( stop > max ) {
+            // this is the last field, and ther's no final separator
             finished = true;
         }
 
         cur_sep = f_str.substr( start, aux-start-1 );
-        cur_fld = f_str.substr( aux, stop-aux+1 );
+        cur_fld = f_str.substr( aux, stop-aux );
+
+        // fixes for varnames
+        if ( StringOps::startsWith( cur_fld, "cookie_" ) ) {
+            cur_fld = "cookie_";
+        } else if ( StringOps::startsWith( cur_fld, "http_" )
+                 && cur_fld != "http_user_agent" && cur_fld != "http_referer" ) {
+            cur_fld = "http_";
+        } else if ( StringOps::startsWith( cur_fld, "arg_" ) ) {
+            cur_fld = "arg_";
+        } else if ( StringOps::startsWith( cur_fld, "sent_http_" ) ) {
+            cur_fld = "sent_http_";
+        } else if ( StringOps::startsWith( cur_fld, "upstream_cookie_" ) ) {
+            cur_fld = "upstream_cookie_";
+        } else if ( StringOps::startsWith( cur_fld, "upstream_http_" ) ) {
+            cur_fld = "upstream_http_";
+        }
 
         // check if the field is valid
-        if ( f_map.find( cur_fld ) != f_map.end()
-          || StringOps::startsWith( cur_fld, "cookie_" ) ) {
+        if ( f_map.find( cur_fld ) != f_map.end() ) {
             // valid, append
-            separators.push_back( cur_sep );
-            if ( StringOps::startsWith( cur_fld, "cookie_" ) ) {
-                fields.push_back( "cookie" );
+            if ( start == 0 ) {
+                initial = this->parseNginxEscapes( cur_sep );
             } else {
-                fields.push_back( f_map.at( cur_fld ) );
+                separators.push_back( this->parseNginxEscapes( cur_sep ) );
             }
+            fields.push_back( f_map.at( cur_fld ) );
             if ( finished == true ) {
                 // this was the last field
                 break;
