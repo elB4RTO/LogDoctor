@@ -203,7 +203,7 @@ private:
         {"request_length",     "bytes_received"},
         {"request_time",       "time_taken_s.ms"},
         {"http_referer",       "referer"},
-        /*{"cookie_",            "cookie"},*/
+        {"cookie_",            "cookie"},
         {"http_user_agent",    "user_agent"},
         // not in use, will be discarded
         {"ancient_browser",           "NONE"},
