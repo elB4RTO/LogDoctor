@@ -108,10 +108,11 @@ static QString
     m_LOGFORMAT_NO_SEPS   = QMessageBox::tr("A separator is missing between one or more fields,\nmaking it hard to establish net bounds,\nand possibly leading to store incorrect data"),
 
     // requests
-    r_REPORT_ISSUE    = QMessageBox::tr("Please report this issue"),
-    r_REMOVE_ENTRY    = QMessageBox::tr("Please remove the conflict and retry"),
-    r_SET_PERMISSIONS = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue"),
-    r_DB_DONT_EDIT    = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue"),
+    r_REPORT_ISSUE     = QMessageBox::tr("Please report this issue"),
+    r_REMOVE_ENTRY     = QMessageBox::tr("Please remove the conflict and retry"),
+    r_SET_PERMS_BEFORE = QMessageBox::tr("Please set the proper permissions before to start"),
+    r_SET_PERMISSIONS  = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue"),
+    r_DB_DONT_EDIT     = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue"),
 
     r_CHECK_FORMAT      = QMessageBox::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue"),
     r_SET_FORMAT_FIELDS = QMessageBox::tr("Please set up a format which contains at least one field"),
@@ -190,6 +191,8 @@ public:
     static void errDirNotExists( QWidget *parent, const QString& dir );
     static void errDirNotReadable( QWidget *parent, const QString& dir );
     static void errDirNotWritable( QWidget *parent, const QString& dir );
+    static void warnDirNotReadable( QWidget *parent );
+    static void warnDirNotWritable( QWidget *parent );
     static const bool choiceDirNotExists( QWidget *parent, const QString& dir );
     /*static void choiceDirNotReadable( QWidget *parent );
     static void choiceDirNotWritable( QWidget *parent );*/
