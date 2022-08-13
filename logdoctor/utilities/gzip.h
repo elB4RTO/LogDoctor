@@ -4,10 +4,10 @@
 #include <string>
 
 
-class GzipOps
+class GZutils
 {
 public:
-    GzipOps();
+    GZutils();
 
     static void readFile( const std::string& path, std::string& content );
 };

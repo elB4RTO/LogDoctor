@@ -23,13 +23,13 @@
 #define CHUNK 16384
 
 
-GzipOps::GzipOps()
+GZutils::GZutils()
 {
 
 }
 
 
-void GzipOps::readFile( const std::string& path, std::string& content )
+void GZutils::readFile( const std::string& path, std::string& content )
 {
     bool successful = true;
 
