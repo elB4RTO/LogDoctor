@@ -13,7 +13,8 @@ static QString
     q_DA          = QMessageBox::tr("Discard it and continue, or Abort all and exit?"),
     q_DIA         = QMessageBox::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?"),
     q_DB_CREATE   = QMessageBox::tr("Create a new database?"),
-    q_DB_RENEW    = QMessageBox::tr("This database will renamed with a trailing '.copy' and a new one will be created. Continue?"),
+    q_DB_RENEW    = QMessageBox::tr("This database will renamed with a trailing '.copy' and a new one will be created.\nContinue?"),
+    q_ENTRY_RENEW = QMessageBox::tr("The entry will renamed with a trailing '.copy' and a new one will be created.\nContinue?"),
 
     // titles
     t_ERROR_OCCURED = QMessageBox::tr("An error occured"),
@@ -24,6 +25,7 @@ static QString
     t_DIR_NOT_DIR   = QMessageBox::tr("Not a folder"),
 
     t_CONF_FILE_NOT_FOUND = QMessageBox::tr("Configuration file not found"),
+    t_CONF_FILE_FAILED_W  = QMessageBox::tr("Failed to write configuration file"),
 
     t_DB_DRIVER_NOT_FOUND = QMessageBox::tr("QSql driver not found"),
     t_DB_CREATED          = QMessageBox::tr("Database created"),
@@ -64,6 +66,7 @@ static QString
 
     m_CONF_FILE_ERROR     = QMessageBox::tr("An error occured while handling the configuration file"),
     m_CONF_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the configuration file"),
+    m_CONF_FILE_FAILED_W  = QMessageBox::tr("Current configuration not saved"),
 
     m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file"),
     m_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the file"),
@@ -135,11 +138,11 @@ public:
     static void errRenaming( QWidget *parent, const QString& path );
 
     // configurations
+    static void errConfFailedWriting( QWidget *parent, const QString& msg="" );
     static void warnConfFileNotFound( QWidget *parent, const QString& file );
     static void errConfFileNotReadable( QWidget *parent, const QString& file );
     static void errConfFileNotWritable( QWidget *parent, const QString& file );
-    static void errConfFileNotFile( QWidget *parent, const QString& path );
-    static void errConfDirNotDir( QWidget *parent, const QString& path );
+    static void errConfDirNotWritable( QWidget *parent, const QString& dir );
 
     // database
     static void errSqlDriverNotFound( QWidget *parent, const QString& driver );
@@ -198,6 +201,8 @@ public:
     static void choiceDirNotWritable( QWidget *parent );*/
 
     // generic choices
+    static const bool choiceDirNotDir( QWidget *parent, const QString& path );
+    static const bool choiceFileNotFile( QWidget *parent, const QString& path );
     /*static void choiceYesNo( QWidget *parent );
     static const bool choiceIgnoreAbort( QWidget *parent );*/
 
