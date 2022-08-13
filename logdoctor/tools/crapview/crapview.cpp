@@ -24,7 +24,7 @@ void Crapview::setDialogsLevel( const int& new_level )
 
 void Crapview::setDbPath( const std::string& path )
 {
-    this->dbQuery.setDbPath( path );
+    this->dbQuery.setDbPath( path + "/collection.db" );
 }
 
 

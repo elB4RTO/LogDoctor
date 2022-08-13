@@ -111,11 +111,11 @@ const std::string& Craplog::getHashesDatabasePath()
 
 void Craplog::setStatsDatabasePath( const std::string& path )
 {
-    this->db_stats_path = path;
+    this->db_stats_path = path + "/collection.db";
 }
 void Craplog::setHashesDatabasePath( const std::string& path )
 {
-    this->db_hashes_path = path;
+    this->db_hashes_path = path + "/hashes.db";
 }
 
 const long& Craplog::getWarningSize()
@@ -848,7 +848,7 @@ void Craplog::joinLogLines()
             aux = "";
             try {
                 // try as gzip compressed archive first
-                GzipOps::readFile( file.path, aux );
+                GZutils::readFile( file.path, aux );
 
             } catch (GenericException& e) {
                 // failed closing file pointer
