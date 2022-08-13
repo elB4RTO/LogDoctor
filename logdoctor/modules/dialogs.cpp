@@ -23,6 +23,16 @@ void DialogSec::warnConfFileNotFound( QWidget *parent, const QString& file )
         QMessageBox::Ok );
 }
 
+void DialogSec::errConfFailedWriting( QWidget *parent, const QString& msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_CONF_FILE_FAILED_W,
+        QString("%1%2\n\n%3")
+            .arg( m_CONF_FILE_ERROR, (msg=="") ? msg : ":\n"+msg, m_CONF_FILE_FAILED_W ),
+        QMessageBox::Ok );
+}
+
 void DialogSec::errConfFileNotReadable( QWidget *parent, const QString& file )
 {
     std::ignore=
@@ -42,24 +52,18 @@ void DialogSec::errConfFileNotWritable( QWidget *parent, const QString& file )
         QMessageBox::Ok );
 }
 
-void DialogSec::errConfFileNotFile( QWidget *parent, const QString& path )
+
+void DialogSec::errConfDirNotWritable( QWidget *parent, const QString& dir )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_NOT_FILE,
+        t_DIR_NOT_WRITABLE,
         QString("%1\n\n%2%3")
-            .arg( m_CONF_FILE_ERROR, m_FILE_NOT_FILE, (path=="") ? path : ":\n"+path ),
+            .arg( m_CONF_FILE_ERROR, m_DIR_NOT_WRITABLE, (dir=="") ? dir : ":\n"+dir ),
         QMessageBox::Ok );
 }
-void DialogSec::errConfDirNotDir( QWidget *parent, const QString& path )
-{
-    std::ignore=
-    QMessageBox::critical(parent,
-        t_DIR_NOT_DIR,
-        QString("%1\n\n%2%3")
-            .arg( m_CONF_FILE_ERROR, m_DIR_NOT_DIR, (path=="") ? path : ":\n"+path ),
-        QMessageBox::Ok );
-}
+
+
 
 
 //////////////////
@@ -440,6 +444,35 @@ void DialogSec::warnDirNotWritable( QWidget *parent )
 //////////////////
 //// GENERICS ////
 //////////////////
+const bool DialogSec::choiceDirNotDir( QWidget *parent, const QString& path )
+{
+    bool choice = false;
+    auto response = QMessageBox::question(parent,
+        t_DIR_NOT_DIR,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_DIR_NOT_DIR, path, q_ENTRY_RENEW ),
+        QMessageBox::Yes | QMessageBox::No );
+    if ( response == QMessageBox::Yes ) {
+        choice = true;
+    }
+    return choice;
+}
+const bool DialogSec::choiceFileNotFile( QWidget *parent, const QString& path )
+{
+    bool choice = false;
+    auto response = QMessageBox::question(parent,
+        t_FILE_NOT_FILE,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_FILE_NOT_FILE, path, q_ENTRY_RENEW ),
+        QMessageBox::Yes | QMessageBox::No );
+    if ( response == QMessageBox::Yes ) {
+        choice = true;
+    }
+    return choice;
+}
+
+
+
 void DialogSec::warnGeneric( QWidget *parent, const QString& msg, const bool& report_msg )
 {
     QString footer = "";
