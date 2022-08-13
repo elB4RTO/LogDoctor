@@ -89,20 +89,33 @@ const bool IOutils::checkDir( const std::string& path, const bool& readable, con
 }
 
 
+// create a directory
+const bool IOutils::makeDir( const std::string& path ) noexcept(true)
+{
+    bool result = true;
+    try {
+        result = std::filesystem::create_directory( path );
+    } catch (...) {
+        result = false;
+    }
+    return result;
+}
+
+
 // rename an entry with a trailing '.copy'
 const bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
 {
     bool result = true;
-    std::string new_path = path;
-    // loop until a valid name is found
-    while (true) {
-        new_path += ".copy";
-        if ( IOutils::exists( new_path ) == false ) {
-            // available name found
-            break;
-        }
-    }
     try {
+        std::string new_path = path;
+        // loop until a valid name is found
+        while (true) {
+            new_path += ".copy";
+            if ( IOutils::exists( new_path ) == false ) {
+                // available name found
+                break;
+            }
+        }
         std::filesystem::rename( path, new_path );
     } catch (...) {
         result = false;
@@ -123,7 +136,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
         std::string aux;
         try {
             // try reading a gzipped file
-            GzipOps::readFile( path, aux );
+            GZutils::readFile( path, aux );
 
         } catch (GenericException& e) {
             // failed closing file pointer
