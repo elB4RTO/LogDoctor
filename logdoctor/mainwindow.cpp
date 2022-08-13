@@ -12,7 +12,6 @@
 #include <filesystem>
 
 #include <iostream> // !!! REMOVE !!!
-#include <ctime>
 
 
 MainWindow::MainWindow( QWidget *parent )
@@ -91,15 +90,6 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->listLogFiles->header()->resizeSection(1,100);
 
 
-    ////////////////////////
-    //// INITIALIZATION ////
-    // sqlite databases paths
-    this->logdoc_path    = "";
-    this->db_data_path   = "collection.db";
-    this->db_hashes_path = "hashes.db";
-    this->crapview.setDbPath( this->db_data_path );
-
-
     /////////////////
     //// CONFIGS ////
     this->defineOSspec();
@@ -149,9 +139,9 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->box_ConfCharts_Theme->setCurrentIndex( this->CHARTS_THEMES.at( this->charts_theme_id ) );
     this->refreshChartsPreview();
     // databases
-    this->ui->inLine_ConfDatabases_Data_Path->setText( this->basePath( this->db_data_path ) );
+    this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
-    this->ui->inLine_ConfDatabases_Hashes_Path->setText( this->basePath( this->db_hashes_path ) );
+    this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( this->db_hashes_path ) );
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
@@ -229,34 +219,30 @@ void MainWindow::closeEvent (QCloseEvent *event)
 // os definition
 void MainWindow::defineOSspec()
 {
-    const std::string home_path = QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString();
+    const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );
     switch ( this->OS ) {
         case 1:
             // unix-like
-            /*this->configs_path   = home_path + "/.configs/LogDoctor/logdoctor.conf";
+            this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/.local/share/LogDoctor";
-            this->db_data_path   = logdoc_path + "/collection.db";
-            this->db_hashes_path = logdoc_path + "/hashes.db";*/ // !!! RESTORE !!!
-            this->configs_path   = "logdoctor.conf";
-            this->logdoc_path    = "";
-            this->db_data_path   = "collection.db";
-            this->db_hashes_path = "hashes.db";
+            this->db_data_path   = logdoc_path;
+            this->db_hashes_path = logdoc_path;
             break;
 
         case 2:
             // windows
             this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";
-            this->db_data_path   = logdoc_path + "/collection.db";
-            this->db_hashes_path = logdoc_path + "/hashes.db";
+            this->db_data_path   = logdoc_path;
+            this->db_hashes_path = logdoc_path;
             break;
 
         case 3:
             // darwin-based
             this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";
-            this->db_data_path   = logdoc_path + "/collection.db";
-            this->db_hashes_path = logdoc_path + "/hashes.db";
+            this->db_data_path   = logdoc_path;
+            this->db_hashes_path = logdoc_path;
             break;
 
         default:
@@ -268,26 +254,37 @@ void MainWindow::defineOSspec()
 void MainWindow::readConfigs()
 {
     bool proceed = true;
-    // check the file first
+    // check the file
     if ( IOutils::exists( this->configs_path ) == true ) {
         if ( IOutils::checkFile( this->configs_path ) == true ) {
             if ( IOutils::checkFile( this->configs_path, true ) == false ) {
                 // file not readable
-                proceed = false;
-                QString file = "";
-                if ( this->dialogs_level == 2 ) {
-                    file = QString::fromStdString( this->configs_path );
+                try {
+                    std::filesystem::permissions( this->configs_path,
+                                                  std::filesystem::perms::owner_read,
+                                                  std::filesystem::perm_options::add );
+                } catch (...) {
+                    proceed = false;
+                    QString file = "";
+                    if ( this->dialogs_level > 0 ) {
+                        file = QString::fromStdString( this->configs_path );
+                    }
+                    DialogSec::errConfFileNotReadable( nullptr, file );
                 }
-                DialogSec::errConfFileNotReadable( nullptr, file );
             }
         } else {
             // the given path doesn't point to a file
-            proceed = false;
-            QString path = "";
-            if ( this->dialogs_level == 2 ) {
-                path = QString::fromStdString( this->configs_path );
+            proceed = DialogSec::choiceFileNotFile( nullptr, QString::fromStdString( this->configs_path ) );
+            if ( proceed == true ) {
+                proceed = IOutils::renameAsCopy( this->configs_path );
+                if ( proceed == false ) {
+                    QString path = "";
+                    if ( this->dialogs_level > 0 ) {
+                        path = QString::fromStdString( this->configs_path );
+                    }
+                    DialogSec::errRenaming( nullptr, QString::fromStdString( this->configs_path ) );
+                }
             }
-            DialogSec::errConfFileNotFile( nullptr, path );
         }
     } else {
         // configuration file not found
@@ -352,10 +349,10 @@ void MainWindow::readConfigs()
                     this->default_ws = std::stoi( val );
 
                 } else if ( var == "DatabaseDataPath" ) {
-                    this->db_data_path = this->resolvePath( val ) + "/collection.db";
+                    this->db_data_path = this->resolvePath( val );
 
                 } else if ( var == "DatabaseHashesPath" ) {
-                    this->db_hashes_path = this->resolvePath( val ) + "/hashes.db";
+                    this->db_hashes_path = this->resolvePath( val );
 
                 } else if ( var == "Font" ) {
                     this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
@@ -472,62 +469,91 @@ void MainWindow::readConfigs()
 
 void MainWindow::writeConfigs()
 {
-    bool proceed = true;
+    bool proceed=true, msg_shown=false;
+    QString msg;
     // check the file first
     if ( IOutils::exists( this->configs_path ) == true ) {
         if ( IOutils::checkFile( this->configs_path ) == true ) {
             if ( IOutils::checkFile( this->configs_path, false, true ) == false ) {
                 // file not writable
-                proceed = false;
-                QString file = "";
-                if ( this->dialogs_level == 2 ) {
-                    file = QString::fromStdString( this->configs_path );
+                try {
+                    std::filesystem::permissions( this->configs_path,
+                                                  std::filesystem::perms::owner_write,
+                                                  std::filesystem::perm_options::add );
+                } catch (...) {
+                    proceed = false;
+                    QString file = "";
+                    if ( this->dialogs_level > 0 ) {
+                        file = QString::fromStdString( this->configs_path );
+                    }
+                    DialogSec::errConfFileNotWritable( nullptr, file );
+                    msg_shown = true;
                 }
-                DialogSec::errConfFileNotWritable( nullptr, file );
             }
         } else {
             // the given path doesn't point to a file
-            proceed = false;
-            QString path = "";
-            if ( this->dialogs_level == 2 ) {
-                path = QString::fromStdString( this->configs_path );
+            proceed = DialogSec::choiceFileNotFile( nullptr, QString::fromStdString( this->configs_path ) );
+            if ( proceed == true ) {
+                proceed = IOutils::renameAsCopy( this->configs_path );
+                if ( proceed == false ) {
+                    QString path = "";
+                    if ( this->dialogs_level > 0 ) {
+                        path = QString::fromStdString( this->configs_path );
+                    }
+                    DialogSec::errRenaming( nullptr, path );
+                    msg_shown = true;
+                }
             }
-            DialogSec::errConfFileNotFile( nullptr, path );
         }
     } else {
         // file does not exists, check if at least the folder exists
-        const int index = this->configs_path.find_last_of( '/' );
-        if ( index < 0 || index >= this->configs_path.size() ) {
-            // not a valid path
-            proceed = false;
-            QString path = QMessageBox::tr("The given configurations path is not a valid path");
-            if ( this->dialogs_level == 2 ) {
-                path += ":\n" + QString::fromStdString( this->configs_path );
-            }
-            DialogSec::errGeneric( nullptr, path, true );
-        }
-        std::string base_path = this->configs_path.substr( 0, index );
-        if ( IOutils::exists( this->configs_path ) == true ) {
+        const std::string base_path = this->basePath( this->configs_path );
+        if ( IOutils::exists( base_path ) == true ) {
             if ( IOutils::isDir( base_path ) == true ) {
                 if ( IOutils::checkDir( base_path, false, true ) == false ) {
                     // directory not writable
-                    proceed = false;
-                    DialogSec::errDirNotWritable( nullptr, QString::fromStdString( this->configs_path ) );
+                    try {
+                        std::filesystem::permissions( base_path,
+                                                      std::filesystem::perms::owner_write,
+                                                      std::filesystem::perm_options::add );
+                    } catch (...) {
+                        proceed = false;
+                        QString file = "";
+                        if ( this->dialogs_level > 0 ) {
+                            file = QString::fromStdString( base_path );
+                        }
+                        DialogSec::errConfDirNotWritable( nullptr, file );
+                        msg_shown = true;
+                    }
                 }
             } else {
                 // not a directory
-                proceed = false;
-                QString path = "";
-                if ( this->dialogs_level == 2 ) {
-                    path = QString::fromStdString( this->configs_path );
+                proceed = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( base_path ) );
+                if ( proceed == true ) {
+                    proceed = IOutils::renameAsCopy( base_path );
+                    if ( proceed == false ) {
+                        QString path = "";
+                        if ( this->dialogs_level > 0 ) {
+                            path = QString::fromStdString( base_path );
+                        }
+                        DialogSec::errRenaming( nullptr, path );
+                        msg_shown = true;
+                    }
                 }
-                DialogSec::errConfDirNotDir( nullptr, path );
             }
         } else {
-            // the given path does not exist
-            proceed = false;
-            DialogSec::errDirNotExists( nullptr, QString::fromStdString( this->configs_path ) );
+            // the folder does not exist too
+            proceed = IOutils::makeDir( base_path );
+            if ( proceed == false ) {
+                msg = QMessageBox::tr("Unable to create the directory");
+                if ( this->dialogs_level > 0 ) {
+                    msg += ":\n"+QString::fromStdString( base_path );
+                }
+            }
         }
+    }
+    if ( proceed == false && msg_shown == false ) {
+        DialogSec::errConfFailedWriting( nullptr, msg );
     }
 
     if ( proceed == true ) {
@@ -540,8 +566,8 @@ void MainWindow::writeConfigs()
         configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
         configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
-        configs += "\nDatabaseDataPath=" + this->basePath( this->db_data_path ).toStdString();
-        configs += "\nDatabaseHashesPath=" + this->basePath( this->db_hashes_path ).toStdString();
+        configs += "\nDatabaseDataPath=" + this->db_data_path;
+        configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
         //// TEXT BROWSER ////
         configs += "\n\n[TextBrowser]";
         configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
@@ -676,6 +702,15 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 
 
 //////////////////
+//// GRAPHICS ////
+//////////////////
+void updateUiTheme()
+{
+
+}
+
+
+//////////////////
 //// LANGUAGE ////
 //////////////////
 void updateUiLanguage()
@@ -707,20 +742,72 @@ void MainWindow::makeInitialChecks()
     }
 
     if ( ok == true ) {
+        // check LogDoctor's folders paths
+        for ( const std::string& path : std::vector<std::string>({this->basePath(this->configs_path), this->logdoc_path}) ) {
+            if ( IOutils::exists( path ) == true ) {
+                if ( IOutils::isDir( path ) == true ) {
+                    if ( IOutils::checkDir( path, true ) == false ) {
+                        try {
+                            std::filesystem::permissions( path,
+                                                          std::filesystem::perms::owner_read,
+                                                          std::filesystem::perm_options::add );
+                        } catch (...) {
+                            ok = false;
+                            DialogSec::errDirNotReadable( nullptr, QString::fromStdString( path ) );
+                        }
+                    }
+                    if ( ok == true ) {
+                        if ( IOutils::checkDir( path, false, true ) == false ) {
+                            try {
+                                std::filesystem::permissions( path,
+                                                              std::filesystem::perms::owner_write,
+                                                              std::filesystem::perm_options::add );
+                            } catch (...) {
+                                ok = false;
+                                DialogSec::errDirNotWritable( nullptr, QString::fromStdString( path ) );
+                            }
+                        }
+                    }
+
+                } else {
+                    // not a directory, rename as copy a make a new one
+                    ok = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( path ) );
+                    if ( ok == true ) {
+                        ok = IOutils::renameAsCopy( path );
+                        if ( ok == false ) {
+                            QString p = "";
+                            if ( this->dialogs_level > 0 ) {
+                                p = QString::fromStdString( path );
+                            }
+                            DialogSec::errRenaming( nullptr, p );
+                        }
+                    }
+                }
+
+            } else {
+                ok = IOutils::makeDir( path );
+            }
+            if ( ok == false ) {
+                break;
+            }
+        }
+    }
+
+    if ( ok == true ) {
         // statistics' database
-        if ( CheckSec::checkStatsDatabase( this->db_data_path ) == false ) {
+        if ( CheckSec::checkStatsDatabase( this->db_data_path + "/collection.db" ) == false ) {
             // checks failed, abort
             ok = false;
         } else {
             this->crapview.setDbPath( this->db_data_path );
             this->craplog.setStatsDatabasePath( this->db_data_path );
             // used-files' hashes' database
-            if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
+            if ( CheckSec::checkHashesDatabase( this->db_hashes_path + "/hashes.db" ) == false ) {
                 // checks failed, abort
                 ok = false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                if ( this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path ) == false ) {
+                if ( this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" ) == false ) {
                     // failed to load the list, abort
                     ok = false;
                 } else {
@@ -750,6 +837,12 @@ void MainWindow::makeInitialChecks()
                 this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
                 this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
                 this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
+                /*// already to index 0
+                this->on_box_StatsWarn_WebServer_currentIndexChanged(  0 );
+                this->on_box_StatsCount_WebServer_currentIndexChanged( 0 );
+                this->on_box_StatsSpeed_WebServer_currentIndexChanged( 0 );
+                this->on_box_StatsDay_WebServer_currentIndexChanged(   0 );
+                this->on_box_StatsRelat_WebServer_currentIndexChanged( 0 );*/
                 break;
             case 12:
                 this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
@@ -776,11 +869,6 @@ void MainWindow::makeInitialChecks()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
-//
-const std::string MainWindow::resolvePathQ( const QString& path )
-{
-    return this->resolvePath( path.toStdString() );
-}
 const std::string MainWindow::resolvePath( const std::string& path )
 {
     std::string p;
@@ -791,15 +879,10 @@ const std::string MainWindow::resolvePath( const std::string& path )
     }
     return p;
 }
-const QString MainWindow::basePath( const std::string& path )
+const std::string MainWindow::basePath( const std::string& path )
 {
-    QString p;
-    try {
-        p = QString::fromStdString( std::filesystem::canonical( path ).parent_path().string() );
-    } catch (...) {
-        ;
-    }
-    return p;
+    const int stop = path.rfind( '/' );
+    return path.substr( 0, stop );
 }
 
 // printable size with suffix and limited decimals
@@ -1048,7 +1131,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             try {
                 try {
                     // try reading as gzip compressed file
-                    GzipOps::readFile( item.path, content );
+                    GZutils::readFile( item.path, content );
 
                 } catch (GenericException& e) {
                     // failed closing file pointer
@@ -1292,11 +1375,11 @@ void MainWindow::craplogFinished()
 void MainWindow::refreshStatsDates()
 {
     this->crapview.refreshDates();
-    this->on_box_StatsWarn_WebServer_currentIndexChanged(0);
-    this->on_box_StatsSpeed_WebServer_currentIndexChanged(0);
-    this->on_box_StatsCount_WebServer_currentIndexChanged(0);
-    this->on_box_StatsDay_WebServer_currentIndexChanged(0);
-    this->on_box_StatsRelat_WebServer_currentIndexChanged(0);
+    this->on_box_StatsWarn_WebServer_currentIndexChanged(  this->ui->box_StatsWarn_WebServer->currentIndex()  );
+    this->on_box_StatsSpeed_WebServer_currentIndexChanged( this->ui->box_StatsSpeed_WebServer->currentIndex() );
+    this->on_box_StatsCount_WebServer_currentIndexChanged( this->ui->box_StatsCount_WebServer->currentIndex() );
+    this->on_box_StatsDay_WebServer_currentIndexChanged(   this->ui->box_StatsDay_WebServer->currentIndex()   );
+    this->on_box_StatsRelat_WebServer_currentIndexChanged( this->ui->box_StatsRelat_WebServer->currentIndex() );
 }
 
 
@@ -2024,8 +2107,7 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
     this->crapview.calcGlobals(
-        this->FONTS,
-        this->ui->button_StatsGlob_Apache->text() );
+        this->FONTS, "Apache2" );
     if ( this->ui->button_StatsGlob_Apache->isFlat() == true ) {
         // un-flat
         this->ui->button_StatsGlob_Apache->setFlat( false );
@@ -2037,13 +2119,27 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-
+    this->crapview.calcGlobals(
+        this->FONTS, "Nginx" );
+    if ( this->ui->button_StatsGlob_Nginx->isFlat() == true ) {
+        // un-flat
+        this->ui->button_StatsGlob_Nginx->setFlat( false );
+        this->ui->button_StatsGlob_Apache->setFlat( true );
+        this->ui->button_StatsGlob_Iis->setFlat( true );
+    }
 }
 
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-
+    this->crapview.calcGlobals(
+        this->FONTS, "IIS" );
+    if ( this->ui->button_StatsGlob_Iis->isFlat() == true ) {
+        // un-flat
+        this->ui->button_StatsGlob_Iis->setFlat( false );
+        this->ui->button_StatsGlob_Apache->setFlat( true );
+        this->ui->button_StatsGlob_Nginx->setFlat( true );
+    }
 }
 
 
@@ -2211,7 +2307,7 @@ void MainWindow::refreshChartsPreview()
 void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePathQ( arg1 );
+        std::string path = this->resolvePath( arg1.toStdString() );
         if ( IOutils::checkDir( path ) == true ) {
             this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
             this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
@@ -2232,7 +2328,7 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 {
     if ( this->ui->icon_ConfDatabases_Data_Wrong->isVisible() == false ) {
         // set the paths
-        std::string path = StringOps::strip( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() );
+        std::string path = this->resolvePath( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
@@ -2242,9 +2338,9 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
         if ( IOutils::checkDir( path, false, true ) == false ) {
             DialogSec::warnDirNotWritable( nullptr );
         }
-        this->db_data_path = path + "/collection.db";
-        this->craplog.setStatsDatabasePath( this->db_data_path );
-        this->crapview.setDbPath( this->db_data_path );
+        this->db_data_path = path;
+        this->craplog.setStatsDatabasePath( path );
+        this->crapview.setDbPath( path );
         this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
@@ -2254,7 +2350,7 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePathQ( arg1 );
+        std::string path = this->resolvePath( arg1.toStdString() );
         if ( IOutils::checkDir( path ) == true ) {
             this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
             this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
@@ -2275,7 +2371,7 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
 {
     if ( this->ui->icon_ConfDatabases_Hashes_Wrong->isVisible() == false ) {
         // set the paths
-        std::string path = StringOps::strip( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() );
+        std::string path = this->resolvePath( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
@@ -2285,8 +2381,8 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
         if ( IOutils::checkDir( path, false, true ) == false ) {
             DialogSec::warnDirNotWritable( nullptr );
         }
-        this->db_hashes_path = path + "/hashes.db";
-        this->craplog.setHashesDatabasePath( this->db_hashes_path );
+        this->db_hashes_path = path;
+        this->craplog.setHashesDatabasePath( path );
         this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
@@ -2342,7 +2438,7 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePathQ( arg1 );
+        std::string path = this->resolvePath( arg1.toStdString() );
         if ( IOutils::checkDir( path ) == true ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
             this->ui->button_ConfApache_Path_Save->setEnabled( true );
@@ -2363,7 +2459,7 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
 {
     if ( this->ui->icon_ConfApache_Path_Wrong->isVisible() == false ) {
         // set the paths
-        std::string path = StringOps::strip( this->ui->inLine_ConfApache_Path_String->text().toStdString() );
+        std::string path = this->resolvePath( this->ui->inLine_ConfApache_Path_String->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
@@ -2686,7 +2782,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePathQ( arg1 );
+        std::string path = this->resolvePath( arg1.toStdString() );
         if ( IOutils::checkDir( path ) == true ) {
             this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
             this->ui->button_ConfNginx_Path_Save->setEnabled( true );
@@ -2707,7 +2803,7 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
 {
     if ( this->ui->icon_ConfNginx_Path_Wrong->isVisible() == false ) {
         // set the paths
-        std::string path = StringOps::strip( this->ui->inLine_ConfNginx_Path_String->text().toStdString() );
+        std::string path = this->resolvePath( this->ui->inLine_ConfNginx_Path_String->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
@@ -3030,7 +3126,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePathQ( arg1 );
+        std::string path = this->resolvePath( arg1.toStdString() );
         if ( IOutils::checkDir( path ) == true ) {
             this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
             this->ui->button_ConfIis_Path_Save->setEnabled( true );
@@ -3051,7 +3147,7 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 {
     if ( this->ui->icon_ConfIis_Path_Wrong->isVisible() == false ) {
         // set the paths
-        std::string path = StringOps::strip( this->ui->inLine_ConfIis_Path_String->text().toStdString() );
+        std::string path = this->resolvePath( this->ui->inLine_ConfIis_Path_String->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }

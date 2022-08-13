@@ -457,6 +457,7 @@ private:
     // themes
     int window_theme_id = 0,
         charts_theme_id = 0;
+    void updateUiTheme();
     const std::vector<QChart::ChartTheme> CHARTS_THEMES = {
         QChart::ChartTheme::ChartThemeLight,
         QChart::ChartTheme::ChartThemeDark,
@@ -486,8 +487,7 @@ private:
                   printableTime(  const int& seconds );
     // resolve a path
     const std::string resolvePath( const std::string& path );
-    const std::string resolvePathQ( const QString& path );
-    const QString basePath( const std::string& path );
+    const std::string basePath( const std::string& path );
 
     ///////////////////
     //// DATABASES ////
