@@ -21,6 +21,9 @@ public:
     // checks if a path exists and it points to a folder and the folder is readable/writable
     static const bool checkDir( const std::string& path, const bool& readable=false, const bool& writable=false );
 
+    // create a directory
+    static const bool makeDir( const std::string& path ) noexcept(true);
+
     // rename an entry with a trailing '.copy'
     static const bool renameAsCopy( const std::string& path ) noexcept(true);
 
