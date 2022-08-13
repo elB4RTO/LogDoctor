@@ -75,7 +75,7 @@ std::string HashOps::digestFile( const std::string& file_path )
     try {
         try {
             // try reading as gzip compressed file
-            GzipOps::readFile( file_path, content );
+            GZutils::readFile( file_path, content );
 
         } catch (GenericException& e) {
             // failed closing file pointer
