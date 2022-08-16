@@ -83,8 +83,11 @@ public:
         const QString& field_1, const QString& filter_1,
         const QString& field_2, const QString& filter_2 );
 
-    void calcGlobals(
-        const std::unordered_map<std::string, QFont>& fonts,
+    const bool calcGlobals(
+        std::vector<std::tuple<QString,QString>>& recur_list,
+        std::vector<std::tuple<QString,QString>>& traffic_list,
+        std::vector<std::tuple<QString,QString>>& perf_list,
+        std::vector<QString>& work_list,
         const QString& web_server );
 
 
@@ -109,7 +112,7 @@ private:
             TIME = QMessageBox::tr("Time");
 
     // collection of available dates
-    // { web_server : { year : { month_str : [ days ] } } }
+    // { web_server_id : { year : { month_str : [ days ] } } }
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates;
 
     // collection of available fields for tabs which needs them
@@ -152,13 +155,6 @@ private:
             {MONTHS.value(4),4},   {MONTHS.value(5),5},   {MONTHS.value(6),6},
             {MONTHS.value(7),7},   {MONTHS.value(8),8},   {MONTHS.value(9),9},
             {MONTHS.value(10),10}, {MONTHS.value(11),11}, {MONTHS.value(12),12} };
-
-    const QHash<int, QString>
-        Months_i2s = {
-            {1,MONTHS.value(1)},   {2,MONTHS.value(2)},   {3,MONTHS.value(3)},
-            {4,MONTHS.value(4)},   {5,MONTHS.value(5)},   {6,MONTHS.value(6)},
-            {7,MONTHS.value(7)},   {8,MONTHS.value(8)},   {9,MONTHS.value(9)},
-            {10,MONTHS.value(10)}, {11,MONTHS.value(11)}, {12,MONTHS.value(12)} };
 };
 
 #endif // CRAPVIEW_H
