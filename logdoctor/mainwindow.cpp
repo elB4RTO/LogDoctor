@@ -704,7 +704,7 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 //////////////////
 //// GRAPHICS ////
 //////////////////
-void updateUiTheme()
+void MainWindow::updateUiTheme()
 {
 
 }
@@ -713,7 +713,7 @@ void updateUiTheme()
 //////////////////
 //// LANGUAGE ////
 //////////////////
-void updateUiLanguage()
+void MainWindow::updateUiLanguage()
 {
 
 }
@@ -978,13 +978,59 @@ const QString MainWindow::printableTime( const int& secs_ )
 }
 
 
-//////////////////
-//// LANGUAGE ////
-//////////////////
-void MainWindow::updateUiLanguage()
+//////////////
+//// HELP ////
+//////////////
+void MainWindow::showHelp( const std::string& filename )
 {
-
+    std::string link = "";
+    if ( IOutils::checkFile( this->logdoc_path+"repo_link.txt", true ) == true ) {
+        IOutils::readFile( this->logdoc_path+"repo_link.txt", link );
+        std::vector<std::string> aux;
+        StringOps::splitrip( aux, link );
+        link = aux.at( 0 );
+        // very basic checks
+        if ( StringOps::startsWith( link, "https://" ) == false
+          || StringOps::contains( link, "/elB4RTO/LogDoctor/" ) == false ) {
+            // not valid as link
+            link = "";
+        }
+    }
+    const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+filename+".html";
+    if ( IOutils::exists( path ) == true ) {
+        if ( IOutils::isFile( path ) == true ) {
+            if ( IOutils::checkFile( path, true ) == true ) {
+                // everything ok, delete the old help window and open a new one
+                delete this->craphelp;
+                this->craphelp = new Craphelp();
+                this->craphelp->helpLogsFormat(
+                    path,
+                    this->TB.getFont(),
+                    this->TB.getColorSchemeID() );
+                if ( this->isMaximized() == true ) {
+                    this->craphelp->showMaximized();
+                } else {
+                    this->craphelp->show();
+                }
+            } else {
+                // resource not readable
+                DialogSec::errHelpNotReadable( nullptr, QString::fromStdString( link ) );
+            }
+        } else {
+            // resource is not a file
+            DialogSec::errHelpFailed( nullptr, QString::fromStdString( link ), QMessageBox::tr("unrecognized entry") );
+        }
+    } else {
+        // resource not found
+        DialogSec::errHelpNotFound( nullptr, QString::fromStdString( link ) );
+    }
 }
+
+
+
+/***************************************************************
+ * MainWindow'S OPERATIONS START FROM HERE
+ ***************************************************************/
 
 
 //////////////
@@ -2104,10 +2150,84 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 
 ////////////////
 //// GLOBAL ////
+//
+void MainWindow::makeStatsGlobals( const QString& web_server )
+{
+    std::vector<std::tuple<QString,QString>> recur_list;
+    std::vector<std::tuple<QString,QString>> traffic_list;
+    std::vector<std::tuple<QString,QString>> perf_list;
+    std::vector<QString> work_list;
+
+    const bool result = this->crapview.calcGlobals(
+        recur_list, traffic_list, perf_list, work_list,
+        web_server );
+
+    if ( result == true ) {
+        this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
+        this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
+        this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
+        this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
+        this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
+        this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
+        this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
+        this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
+
+        this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
+        this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
+        this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
+        this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
+        this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
+        this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
+
+        this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
+        this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
+        this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
+        this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
+        this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
+        this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
+
+        this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
+        this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
+        this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
+
+    } else {
+        this->ui->label_StatsGlob_Recur_Protocol_String->setText( "-" );
+        this->ui->label_StatsGlob_Recur_Protocol_Count->setText( "0" );
+        this->ui->label_StatsGlob_Recur_Method_String->setText( "-" );
+        this->ui->label_StatsGlob_Recur_Method_Count->setText( "0" );
+        this->ui->label_StatsGlob_Recur_URI_String->setText( "-" );
+        this->ui->label_StatsGlob_Recur_URI_Count->setText( "0" );
+        this->ui->label_StatsGlob_Recur_UserAgent_String->setText( "-" );
+        this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( "0" );
+
+        this->ui->label_StatsGlob_Traffic_Date_String->setText( "-" );
+        this->ui->label_StatsGlob_Traffic_Date_Count->setText( "0" );
+        this->ui->label_StatsGlob_Traffic_Day_String->setText( "-" );
+        this->ui->label_StatsGlob_Traffic_Day_Count->setText( "0" );
+        this->ui->label_StatsGlob_Traffic_Hour_String->setText( "-" );
+        this->ui->label_StatsGlob_Traffic_Hour_Count->setText( "0" );
+
+        this->ui->label_StatsGlob_Perf_Time_Mean->setText( "-" );
+        this->ui->label_StatsGlob_Perf_Time_Max->setText( "-" );
+        this->ui->label_StatsGlob_Perf_Sent_Mean->setText( "-" );
+        this->ui->label_StatsGlob_Perf_Sent_Max->setText( "-" );
+        this->ui->label_StatsGlob_Perf_Received_Mean->setText( "-" );
+        this->ui->label_StatsGlob_Perf_Received_Max->setText( "-" );
+
+        this->ui->label_StatsGlob_Work_Req_Count->setText( "-" );
+        this->ui->label_StatsGlob_Work_Time_Count->setText( "-" );
+        this->ui->label_StatsGlob_Work_Sent_Count->setText( "-" );
+    }
+
+    recur_list.clear(); traffic_list.clear();
+    perf_list.clear();  work_list.clear();
+}
+
+
+
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
-    this->crapview.calcGlobals(
-        this->FONTS, "Apache2" );
+    this->makeStatsGlobals( "Apache2" );
     if ( this->ui->button_StatsGlob_Apache->isFlat() == true ) {
         // un-flat
         this->ui->button_StatsGlob_Apache->setFlat( false );
@@ -2119,8 +2239,7 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-    this->crapview.calcGlobals(
-        this->FONTS, "Nginx" );
+    this->makeStatsGlobals( "Nginx" );
     if ( this->ui->button_StatsGlob_Nginx->isFlat() == true ) {
         // un-flat
         this->ui->button_StatsGlob_Nginx->setFlat( false );
@@ -2132,8 +2251,7 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-    this->crapview.calcGlobals(
-        this->FONTS, "IIS" );
+    this->makeStatsGlobals( "IIS" );
     if ( this->ui->button_StatsGlob_Iis->isFlat() == true ) {
         // un-flat
         this->ui->button_StatsGlob_Iis->setFlat( false );
@@ -2499,19 +2617,7 @@ void MainWindow::on_button_ConfApache_Format_Sample_clicked()
 }
 void MainWindow::on_button_ConfApache_Format_Help_clicked()
 {
-    delete this->craphelp;
-    this->craphelp = new Craphelp();
-    this->craphelp->helpLogsFormat(
-        this->logdoc_path,
-        "apache",
-        this->language,
-        this->TB.getFont(),
-        this->TB.getColorSchemeID() );
-    if ( this->isMaximized() == true ) {
-        this->craphelp->showMaximized();
-    } else {
-        this->craphelp->show();
-    }
+    this->showHelp( "apache_format" );
 }
 
 // warnlists
@@ -2843,19 +2949,7 @@ void MainWindow::on_button_ConfNginx_Format_Sample_clicked()
 }
 void MainWindow::on_button_ConfNginx_Format_Help_clicked()
 {
-    delete this->craphelp;
-    this->craphelp = new Craphelp();
-    this->craphelp->helpLogsFormat(
-        this->logdoc_path,
-        "nginx",
-        this->language,
-        this->TB.getFont(),
-        this->TB.getColorSchemeID() );
-    if ( this->isMaximized() == true ) {
-        this->craphelp->showMaximized();
-    } else {
-        this->craphelp->show();
-    }
+    this->showHelp( "nginx_format" );
 }
 
 // warnlists
@@ -3228,19 +3322,7 @@ void MainWindow::on_button_ConfIis_Format_Sample_clicked()
 }
 void MainWindow::on_button_ConfIis_Format_Help_clicked()
 {
-    delete this->craphelp;
-    this->craphelp = new Craphelp();
-    this->craphelp->helpLogsFormat(
-        this->logdoc_path,
-        "iis",
-        this->language,
-        this->TB.getFont(),
-        this->TB.getColorSchemeID() );
-    if ( this->isMaximized() == true ) {
-        this->craphelp->showMaximized();
-    } else {
-        this->craphelp->show();
-    }
+    this->showHelp( "iis_format" );
 }
 
 // warnlists

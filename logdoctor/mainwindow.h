@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "ui_mainwindow.h"
+
 #include <QMainWindow>
 #include <QCloseEvent>
 
@@ -542,6 +544,8 @@ private:
     void resetStatsCountButtons();
     // draw
     void drawStatsCount( const QString& field );
+    // globals
+    void makeStatsGlobals( const QString& web_server );
 
 
     /////////////////
@@ -556,6 +560,7 @@ private:
     //// CRAPHELP ////
     //////////////////
     Craphelp* craphelp = new Craphelp();
+    void showHelp( const std::string& file_name );
 
 };
 #endif // MAINWINDOW_H
