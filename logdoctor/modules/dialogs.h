@@ -27,6 +27,8 @@ static QString
     t_CONF_FILE_NOT_FOUND = QMessageBox::tr("Configuration file not found"),
     t_CONF_FILE_FAILED_W  = QMessageBox::tr("Failed to write configuration file"),
 
+    t_HELP_FAILED_LOADING = QMessageBox::tr("Failed to retrieve the help file"),
+
     t_DB_DRIVER_NOT_FOUND = QMessageBox::tr("QSql driver not found"),
     t_DB_CREATED          = QMessageBox::tr("Database created"),
     t_DB_FAILED_CREATING   = QMessageBox::tr("Failed creating database"),
@@ -67,6 +69,8 @@ static QString
     m_CONF_FILE_ERROR     = QMessageBox::tr("An error occured while handling the configuration file"),
     m_CONF_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the configuration file"),
     m_CONF_FILE_FAILED_W  = QMessageBox::tr("Current configuration not saved"),
+
+    m_HELP_FAILED_LOADING = QMessageBox::tr("An error occured while getting the help file"),
 
     m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file"),
     m_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the file"),
@@ -123,7 +127,8 @@ static QString
 
     // footers
     f_SKIPPING = QMessageBox::tr("Skipping"),
-    f_ABORTING = QMessageBox::tr("Aborting")
+    f_ABORTING = QMessageBox::tr("Aborting"),
+    f_GET_HELP = QMessageBox::tr("Additional resources can be downloaded from the git repo")
 ;
 
 
@@ -143,6 +148,11 @@ public:
     static void errConfFileNotReadable( QWidget *parent, const QString& file );
     static void errConfFileNotWritable( QWidget *parent, const QString& file );
     static void errConfDirNotWritable( QWidget *parent, const QString& dir );
+
+    // help
+    static void errHelpFailed( QWidget *parent, const QString& link, const QString& msg="" );
+    static void errHelpNotFound( QWidget *parent, const QString& link );
+    static void errHelpNotReadable( QWidget *parent, const QString& link );
 
     // database
     static void errSqlDriverNotFound( QWidget *parent, const QString& driver );
