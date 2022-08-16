@@ -14,7 +14,7 @@ const int StringOps::count(const std::string& str, const std::string& flag, cons
     const int max = str.size()-1;
     while (true) {
         start = str.find( flag, start );
-        if ( start >= 0 && start < max ) {
+        if ( start >= 0 && start <= max ) {
             if ( consecutives == true
               && start == aux_start ) {
                 start += flag.size();
