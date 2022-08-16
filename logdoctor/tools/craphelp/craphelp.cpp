@@ -72,11 +72,11 @@ const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const i
 }
 
 
-void Craphelp::helpLogsFormat( const std::string& base_path, const std::string& web_server, const std::string& language, const QFont& font, const int &color_scheme_id )
+void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int &color_scheme_id )
 {
     std::unordered_map<std::string, QString> color_scheme = this->getColorScheme( color_scheme_id );
     std::string aux;
-    IOutils::readFile( base_path+""/*/*/+"translations/"+language+"/"+web_server+"_format.html", aux ); // !!! RESTORE !!!
+    IOutils::readFile( path, aux );
     QString content;
     if ( color_scheme_id == 0 ) {
         // remove the style for the colors
