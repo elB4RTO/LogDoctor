@@ -10,6 +10,20 @@ FormatOps::FormatOps()
 
 }
 
+
+// count the new lines
+const int FormatOps::countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators )
+{
+    int nl = 0;
+    nl += StringOps::count( initial, "\n" );
+    nl += StringOps::count( final, "\n" );
+    for ( const std::string& sep : separators ) {
+        nl += StringOps::count( sep, "\n" );
+    }
+    return nl;
+}
+
+
 // process escapes like apache
 const std::string FormatOps::parseApacheEscapes( const std::string& string , const bool& strftime )
 {
@@ -70,8 +84,8 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
                         str2.push_back( '\n' );
                         i++;
                     } else if ( cc == 'r' ) {
-                        str2.push_back( '\r' );
-                        i++;
+                        // not supported
+                        throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'." );
                     } else if ( cc == 't' ) {
                         str2.push_back( '\t' );
                         i++;
@@ -134,8 +148,8 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string )
                 str.push_back( '\n' );
                 i++;
             } else if ( cc == 'r' ) {
-                str.push_back( '\r' );
-                i++;
+                // not supported
+                throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'." );
             } else if ( cc == 't' ) {
                 str.push_back( '\t' );
                 i++;
@@ -465,7 +479,8 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
             .initial    = initial,
             .final      = final,
             .separators = separators,
-            .fields     = fields
+            .fields     = fields,
+            .new_lines  = this->countNewLines( initial, final, separators )
         };
 
 }
@@ -566,7 +581,8 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
             .initial    = initial,
             .final      = final,
             .separators = separators,
-            .fields     = fields
+            .fields     = fields,
+            .new_lines  = this->countNewLines( initial, final, separators )
         };
 }
 // sample
@@ -666,7 +682,8 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
             .initial    = initial,
             .final      = final,
             .separators = separators,
-            .fields     = fields
+            .fields     = fields,
+            .new_lines  = 0
         };
 }
 // sample
