@@ -21,7 +21,11 @@ const QHash<int, QString>
         {1, QMessageBox::tr("January")},  {2, QMessageBox::tr("February")},  {3, QMessageBox::tr("March")},
         {4, QMessageBox::tr("April")},    {5, QMessageBox::tr("May")},       {6, QMessageBox::tr("June")},
         {7, QMessageBox::tr("July")},     {8, QMessageBox::tr("August")},    {9, QMessageBox::tr("September")},
-        {10,QMessageBox::tr("October")},  {11,QMessageBox::tr("November")},  {12,QMessageBox::tr("December")} };
+        {10,QMessageBox::tr("October")},  {11,QMessageBox::tr("November")},  {12,QMessageBox::tr("December")} },
+    DAYS = {
+        {1, QMessageBox::tr("Sunday")},    {2, QMessageBox::tr("Monday")},   {3, QMessageBox::tr("Tuesday")},
+        {4, QMessageBox::tr("Wednesday")}, {5, QMessageBox::tr("Thursday")}, {6, QMessageBox::tr("Friday")},
+        {7, QMessageBox::tr("Saturday")} };
 
 
 class DbQuery
@@ -80,6 +84,18 @@ public:
         const QString& to_year_,     const QString& to_month_,      const QString& to_day_,
         const QString& log_field_1_, const QString& field_filter_1,
         const QString& log_field_2_, const QString& field_filter_2 );
+
+    const bool getGlobalCounts(
+        const QString& web_server,
+        const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates,
+        std::vector<std::unordered_map<QString, int>>& recurs,
+        std::tuple<QString, int>& traf_date,
+        std::unordered_map<int, long>& traf_day,
+        std::unordered_map<int, long>& traf_hour,
+        std::vector<long long>& perf_time,
+        std::vector<long long>& perf_sent,
+        std::vector<long long>& perf_receiv,
+        long& req_count );
 
 private:
     QString MSG_ERR_PROCESSING = QMessageBox::tr("An error occured while processing"),
