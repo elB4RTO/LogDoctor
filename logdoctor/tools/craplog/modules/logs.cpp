@@ -142,9 +142,9 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
 const std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
 {
     std::unordered_map<int, std::string> data;
-    std::string sep, fld, fld_str, aux_fld_str, aux_sep1, aux_sep2;
+    std::string sep, fld, fld_str;
     bool missing=false, add_pm=false;
-    int start, stop=0, i=0, aux_start1, aux_start2, aux_stop;
+    int start, stop=0, i=0, aux_start, aux_stop;
     int line_size;
     int n_sep = format.separators.size()-1;
     line_size = line.size()-1;
@@ -165,7 +165,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                 stop = line_size+1;
             } else {
                 stop = line.find( sep, start );
-                if ( stop > line_size+1 || stop < 0 ) {
+                if ( stop < 0 || stop > line_size ) {
                     stop = line_size +1;
                 }
             }
@@ -173,44 +173,9 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
             // no more separators
             break;
         }
-        if ( stop > line_size+1 || stop < 0 ) {
-            // separator not found, skip to the next one
-            i++;
-            stop = start;
-            continue;
-        }
-
-        if ( i+1 <= n_sep ) {
-            // not the last separator, check the possibility of missing
-            aux_sep1 = sep;
-            aux_start1 = aux_sep1.find(' ');
-            if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
-                aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
-            }
-            // iterate over following separators
-            for ( int j=i+1; j<n_sep; j++ ) {
-                aux_sep2 = format.separators.at( j );
-                aux_start2 = aux_sep2.find(' ');
-                if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
-                    aux_start2 = stop;
-                } else {
-                    aux_start2 = stop + aux_start2 + 1;
-                    aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
-                }
-                // if the 2 seps are identical, skip (for uncertainty)
-                if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
-                    continue;
-                }
-                // check if the next sep is found in the same position of the current one
-                if ( line.find( aux_sep2, stop ) == aux_start2 ) {
-                    // probably the current field is missing, skip to this one
-                    i = j;
-                    aux_stop = aux_start2 + aux_sep2.size();
-                    aux_sep2 = format.separators.at( j );
-                    missing = true;
-                }
-                break;
-            }
+        if ( stop < 0 || stop > line_size ) {
+            // separator not found, abort
+            throw GenericException( "Separator not found: '"+sep+"'" );
         }
 
         // get the field
@@ -218,6 +183,66 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
         if ( fld != "NONE" ) {
             // only parse the considered fields
             fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+
+            if ( i+1 <= n_sep ) {
+                // not the last separator, check for mistakes
+                bool ok = true;
+                aux_stop = stop;
+
+                if ( sep == " " ) {
+                    // whitespace-separated-values fields
+                    int c = StringOps::count( fld_str, sep ),
+                        n = 0;
+                    if ( fld == "request_full" ) {
+                        n = 2;
+                    } else if ( fld == "date_time_mcs" ) {
+                        n = 4;
+                    } else if ( fld == "date_time_ncsa" ) {
+                        n = 1;
+                    } else if ( fld == "date_time_gmt" ) {
+                        n = 3;
+                    }
+                    if ( n > 0 && c < n ) {
+                        // loop until the correct number of whitespaces is reached
+                        aux_start = stop + 1;
+                        while ( c < n ) {
+                            aux_stop = line.find( sep, aux_start );
+                            if ( aux_stop < 0 || aux_stop > line_size ) {
+                                // not found
+                                ok = false;
+                                break;
+                            }
+                            aux_start = aux_stop + 1;
+                            c++;
+                        }
+                    }
+
+                } else if ( fld == "user_agent" && StringOps::startsWith( sep, "\"" ) ) {
+                    // atm the only support is for escaped quotes
+                    if ( fld_str.back() == '\\' ) {
+                        aux_start = stop + sep.size();
+                        while (true) {
+                            aux_stop = line.find( sep, aux_start );
+                            if ( aux_stop < 0 || aux_stop > line_size ) {
+                                // not found
+                                break;
+                            } else if ( line.at( aux_stop-1 ) != '\\' ) {
+                                // non-backslashed quotes
+                                break;
+                            }
+                            aux_start = aux_stop + sep.size();
+                        }
+                    }
+                }
+
+                // finally update if needed
+                if ( ok == true && aux_stop >= stop ) {
+                    stop = aux_stop;
+                    fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+                }
+            }
+
+            // process the field
             this->size += fld_str.size();
 
             if ( fld_str != "" ) {
@@ -387,9 +412,27 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 void LogOps::parseLines( std::vector<std::unordered_map<int, std::string>>& data, const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
 {
     data.clear();
-    data.reserve( lines.size() );
-    for ( const std::string& line : lines ) {
-        data.push_back( this->parseLine( line, format ) );
+    data.shrink_to_fit();
+    int nl = format.new_lines;
+    if ( nl == 0 ) {
+        data.reserve( lines.size() );
+        for ( const std::string& line : lines ) {
+            data.push_back( this->parseLine( line, format ) );
+        }
+    } else {
+        data.reserve( size / (nl+1) );
+        size --;
+        for ( int i=0; i<size; i++ ) {
+            std::string line = lines.at( i );
+            for ( int n=0; n<nl; n++ ) {
+                i++;
+                line += "\n" + lines.at( i );
+            }
+            data.push_back( this->parseLine( line, format ) );
+        }
+    }
+    if ( data.size() < data.capacity() ) {
+        data.shrink_to_fit();
     }
 }
 
