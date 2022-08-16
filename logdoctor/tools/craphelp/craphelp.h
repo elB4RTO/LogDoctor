@@ -15,7 +15,7 @@ public:
     explicit Craphelp(QWidget *parent = nullptr);
     ~Craphelp();
 
-    void helpLogsFormat( const std::string& base_path, const std::string& web_server, const std::string& language, const QFont& font, const int& color_scheme_id );
+    void helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id );
 
 private:
     Ui::Craphelp *ui;
