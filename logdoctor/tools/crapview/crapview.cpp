@@ -878,7 +878,108 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
 
 
 // calculate global informations
-void Crapview::calcGlobals( const std::unordered_map<std::string, QFont>& fonts, const QString& web_server )
+const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server )
 {
+    // { { item, count } } // 0:protocol, 1:method, 1:uri, 3:user-agent
+    std::vector<std::unordered_map<QString, int>> recurs = { {}, {}, {}, {} };
+    // ( date_str, count )
+    std::tuple<QString, int> traf_date;
+    // { day_name : total_count }
+    std::unordered_map<int, long> traf_day = { {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
+    // { hour : total_count }
+    std::unordered_map<int, long> traf_hour = {
+        {0,0},  {1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},  {9,0},  {10,0}, {11,0},
+        {12,0}, {13,0}, {14,0}, {15,0}, {16,0}, {17,0}, {18,0}, {19,0}, {20,0}, {21,0}, {22,0}, {23,0} };
+    // [ max, total, num ]
+    std::vector<long long> perf_time;
+    // [ max, total, num ]
+    std::vector<long long> perf_sent;
+    // [ max, total, num ]
+    std::vector<long long> perf_receiv;
+    // count
+    long req_count = 0;
 
+    bool result = this->dbQuery.getGlobalCounts(
+        web_server, this->dates.at( this->WebServer_s2i.value( web_server ) ),
+        recurs,
+        traf_date, traf_day, traf_hour,
+        perf_time, perf_sent, perf_receiv,
+        req_count );
+
+    if ( result == true ) {
+        // compose the results
+
+        // max request elements
+        for ( int i=0; i<4; i++ ) {
+            int max=0;
+            QString max_str="";
+            std::unordered_map<QString, int>& aux = recurs.at( i );
+            for ( const auto& [s,c] : aux ) {
+                if ( c > max ) {
+                    max = c;
+                    max_str = s;
+                }
+            }
+            recur_list.push_back( std::make_tuple( max_str, QString("%1").arg(max) ) );
+        }
+
+        // max date ever
+        traffic_list.push_back( traf_date );
+
+        // max day of the week
+        for ( int i=1; i<8; i++ ) {
+            int max=0, max_d=0;
+            for ( const auto& [d,c] : traf_day ) {
+                if ( c > max ) {
+                    max = c;
+                    max_d = d;
+                }
+            }
+            if ( max_d == 0 ) {
+                recur_list.push_back( std::make_tuple( "", 0 ) );
+            } else {
+                recur_list.push_back( std::make_tuple( DAYS.value(max_d), QString("%1").arg(max) ) );
+            }
+        }
+
+        // max hour of the day
+        for ( int i=0; i<24; i++ ) {
+            int max=0, max_h=-1;
+            for ( const auto& [h,c] : traf_day ) {
+                if ( c > max ) {
+                    max = c;
+                    max_h = h;
+                }
+            }
+            if ( max_h < 0 ) {
+                recur_list.push_back( std::make_tuple( "", 0 ) );
+            } else {
+                QString h = (max_h<10) ? QString("0%1").arg(max_h) : QString("%1").arg(max_h) ;
+                recur_list.push_back( std::make_tuple( h, QString("%1").arg(max) ) );
+            }
+        }
+
+        // mean/max time-taken
+        perf_list.push_back( std::make_tuple(
+            QString("%1").arg( perf_time.at(1)/perf_time.at(2) ),
+            QString("%1").arg( perf_time.at(0) ) ));
+        perf_list.push_back( std::make_tuple(
+            QString("%1").arg( perf_sent.at(1)/perf_sent.at(2) ),
+            QString("%1").arg( perf_sent.at(0) ) ));
+        perf_list.push_back( std::make_tuple(
+            QString("%1").arg( perf_receiv.at(1)/perf_receiv.at(2) ),
+            QString("%1").arg( perf_receiv.at(0) ) ));
+
+        // overall work list
+        work_list.push_back( QString("%1").arg( req_count ) );
+        work_list.push_back( QString("%1").arg( perf_time.at(1) ) );
+        work_list.push_back( QString("%1").arg( perf_sent.at(1) ) );
+
+    }
+
+    recurs.clear();
+    traf_day.clear(); traf_hour.clear();
+    perf_time.clear(); perf_sent.clear(); perf_receiv.clear();
+
+    return result;
 }
