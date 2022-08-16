@@ -65,6 +65,34 @@ void DialogSec::errConfDirNotWritable( QWidget *parent, const QString& dir )
 
 
 
+//////////////
+//// HELP ////
+//////////////
+void DialogSec::errHelpFailed( QWidget *parent, const QString& link, const QString& msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_HELP_FAILED_LOADING,
+        QString("%1%2\n\n%3%4")
+            .arg( m_HELP_FAILED_LOADING,
+                  (msg=="") ? msg : ":\n"+msg,
+                  f_GET_HELP,
+                  (link=="") ? link : ":\n"+link ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errHelpNotFound( QWidget *parent, const QString& link )
+{
+    DialogSec::errHelpFailed( parent, link, m_FILE_NOT_FOUND.toLower() );
+}
+
+void DialogSec::errHelpNotReadable( QWidget *parent, const QString& link )
+{
+    DialogSec::errHelpFailed( parent, link, m_FILE_NOT_READABLE.toLower() );
+}
+
+
+
 
 //////////////////
 //// DATABASE ////
