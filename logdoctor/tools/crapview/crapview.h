@@ -30,6 +30,7 @@ public:
               getMonthNumber( const QString& month_str );
 
     void refreshDates();
+    void clearDates();
 
     const QStringList getYears(  const QString& web_server );
     const QStringList getMonths( const QString& web_server, const QString& year );

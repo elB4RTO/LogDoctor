@@ -191,6 +191,10 @@ void Crapview::refreshDates()
         this->dates = std::get<1>(result);
     }
 }
+void Crapview::clearDates()
+{
+    this->dates.clear();
+}
 
 
 const int Crapview::getLogFieldID ( const QString& field_str )
@@ -209,24 +213,48 @@ const int Crapview::getMonthNumber( const QString& month_str )
 const QStringList Crapview::getYears( const QString& web_server )
 {
     QStringList years;
-    for ( const auto& [year, data] : this->dates.at( this->WebServer_s2i.value( web_server ) ) ) {
-        years.push_back( QString::fromStdString( std::to_string( year ) ) );
+    if ( this->dates.size() > 0 ) {
+        const int ws = this->WebServer_s2i.value( web_server );
+        if ( this->dates.at( ws ).size() > 0 ) {
+            for ( const auto& [year, data] : this->dates.at( ws ) ) {
+                years.push_back( QString::fromStdString( std::to_string( year ) ) );
+            }
+        }
     }
     return years;
 }
 const QStringList Crapview::getMonths( const QString& web_server, const QString& year )
 {
     QStringList months;
-    for ( const auto& [month, data] : this->dates.at( this->WebServer_s2i.value( web_server ) ).at( year.toInt() ) ) {
-        months.push_back( Months_i2s.value( month ) );
+    if ( this->dates.size() > 0 ) {
+        const int ws = this->WebServer_s2i.value( web_server );
+        if ( this->dates.at( ws ).size() > 0 ) {
+            const int y = year.toInt();
+            if ( this->dates.at( ws ).at( y ).size() ) {
+                for ( const auto& [month, data] : this->dates.at( ws ).at( y ) ) {
+                    months.push_back( MONTHS.value( month ) );
+                }
+            }
+        }
     }
     return months;
 }
 const QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month )
 {
     QStringList days;
-    for ( const int day : this->dates.at( this->WebServer_s2i.value( web_server ) ).at( year.toInt() ).at( this->Months_s2i.value( month ) ) ) {
-        days.push_back( QString::fromStdString( std::to_string( day ) ) );
+    if ( this->dates.size() > 0 ) {
+        const int ws = this->WebServer_s2i.value( web_server );
+        if ( this->dates.at( ws ).size() > 0 ) {
+            const int y = year.toInt();
+            if ( this->dates.at( ws ).at( y ).size() ) {
+                const int m = this->Months_s2i.value( month );
+                if ( this->dates.at( ws ).at( y ).at( m ).size() > 0 ) {
+                    for ( const int day : this->dates.at( ws ).at( y ).at( m ) ) {
+                        days.push_back( QString::fromStdString( std::to_string( day ) ) );
+                    }
+                }
+            }
+        }
     }
     return days;
 }
@@ -717,7 +745,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         QChart *b_chart = new QChart();
         b_chart->setTheme( theme );
         b_chart->addSeries( bars );
-        b_chart->setTitle( QString("%1: %2").arg( this->TITLE_DAY ).arg( field ) );
+        b_chart->setTitle( QString("%1: %2").arg( this->TITLE_DAY, field ) );
         b_chart->setTitleFont( fonts.at("main") );
         b_chart->legend()->setFont( fonts.at("main_small") );
         //b_chart->legend()->setVisible( true );
@@ -806,10 +834,10 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
             area->setName( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ));
         } else {
             area->setName(QString("%1 %2 %3 %4")
-                .arg( this->LEGEND_FROM )
-                .arg( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ))
-                .arg( this->LEGEND_TO )
-                .arg( this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )));
+                .arg( this->LEGEND_FROM,
+                      this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ),
+                      this->LEGEND_TO,
+                      this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )) );
         }
 
         // color the area
@@ -835,7 +863,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         a_chart->setTheme( theme );
         a_chart->addSeries( area );
         a_chart->addSeries( area_ );
-        a_chart->setTitle( QString("%1: %2 -> %3").arg(this->TITLE_RELAT).arg(field_1).arg(field_2) );
+        a_chart->setTitle( QString("%1: %2 -> %3").arg(this->TITLE_RELAT, field_1, field_2) );
         a_chart->setTitleFont( fonts.at("main") );
         a_chart->legend()->setFont( fonts.at( "main_small" ) );
         a_chart->legend()->setAlignment( Qt::AlignBottom );
@@ -880,106 +908,151 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
 // calculate global informations
 const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server )
 {
-    // { { item, count } } // 0:protocol, 1:method, 1:uri, 3:user-agent
-    std::vector<std::unordered_map<QString, int>> recurs = { {}, {}, {}, {} };
-    // ( date_str, count )
-    std::tuple<QString, int> traf_date;
-    // { day_name : total_count }
-    std::unordered_map<int, long> traf_day = { {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
-    // { hour : total_count }
-    std::unordered_map<int, long> traf_hour = {
-        {0,0},  {1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},  {9,0},  {10,0}, {11,0},
-        {12,0}, {13,0}, {14,0}, {15,0}, {16,0}, {17,0}, {18,0}, {19,0}, {20,0}, {21,0}, {22,0}, {23,0} };
-    // [ max, total, num ]
-    std::vector<long long> perf_time;
-    // [ max, total, num ]
-    std::vector<long long> perf_sent;
-    // [ max, total, num ]
-    std::vector<long long> perf_receiv;
-    // count
-    long req_count = 0;
+    bool result = false;
 
-    bool result = this->dbQuery.getGlobalCounts(
-        web_server, this->dates.at( this->WebServer_s2i.value( web_server ) ),
-        recurs,
-        traf_date, traf_day, traf_hour,
-        perf_time, perf_sent, perf_receiv,
-        req_count );
+    if ( this->dates.at( this->WebServer_s2i.value( web_server ) ).size() > 0 ) {
 
-    if ( result == true ) {
-        // compose the results
+        // { { item, count } } // 0:protocol, 1:method, 1:uri, 3:user-agent
+        std::vector<std::unordered_map<QString, int>> recurs = { {}, {}, {}, {} };
+        // ( date_str, count )
+        std::tuple<QString, int> traf_date;
+        // { day_name : total_count }
+        std::unordered_map<int, long> traf_day = { {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
+        // { hour : total_count }
+        std::unordered_map<int, long> traf_hour = {
+            {0,0},  {1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},  {9,0},  {10,0}, {11,0},
+            {12,0}, {13,0}, {14,0}, {15,0}, {16,0}, {17,0}, {18,0}, {19,0}, {20,0}, {21,0}, {22,0}, {23,0} };
+        // [ max, total, num ]
+        std::vector<long long> perf_time;
+        // [ max, total, num ]
+        std::vector<long long> perf_sent;
+        // [ max, total, num ]
+        std::vector<long long> perf_receiv;
+        // count
+        long req_count = 0;
 
-        // max request elements
-        for ( int i=0; i<4; i++ ) {
-            int max=0;
-            QString max_str="";
-            std::unordered_map<QString, int>& aux = recurs.at( i );
-            for ( const auto& [s,c] : aux ) {
-                if ( c > max ) {
-                    max = c;
-                    max_str = s;
+        result = this->dbQuery.getGlobalCounts(
+            web_server, this->dates.at( this->WebServer_s2i.value( web_server ) ),
+            recurs,
+            traf_date, traf_day, traf_hour,
+            perf_time, perf_sent, perf_receiv,
+            req_count );
+
+        if ( result == true ) {
+            // compose the results
+
+            // max request elements
+            for ( int i=0; i<4; i++ ) {
+                int max=0;
+                QString max_str="";
+                std::unordered_map<QString, int>& aux = recurs.at( i );
+                for ( const auto& [s,c] : aux ) {
+                    if ( c > max ) {
+                        max = c;
+                        max_str = s;
+                    }
                 }
+                recur_list.push_back( std::make_tuple( max_str, QString("%1").arg(max) ) );
             }
-            recur_list.push_back( std::make_tuple( max_str, QString("%1").arg(max) ) );
-        }
 
-        // max date ever
-        traffic_list.push_back( traf_date );
+            // max date ever
+            traffic_list.push_back( std::make_tuple( std::get<0>(traf_date), QString("%1").arg( std::get<1>(traf_date) ) ) );
 
-        // max day of the week
-        for ( int i=1; i<8; i++ ) {
-            int max=0, max_d=0;
+            // max day of the week
+            int max=0, max_=0;
             for ( const auto& [d,c] : traf_day ) {
                 if ( c > max ) {
                     max = c;
-                    max_d = d;
+                    max_ = d;
                 }
             }
-            if ( max_d == 0 ) {
-                recur_list.push_back( std::make_tuple( "", 0 ) );
+            if ( max_ == 0 ) {
+                traffic_list.push_back( std::make_tuple( "", "0" ) );
             } else {
-                recur_list.push_back( std::make_tuple( DAYS.value(max_d), QString("%1").arg(max) ) );
+                traffic_list.push_back( std::make_tuple( DAYS.value(max_), QString("%1").arg(max) ) );
             }
-        }
 
-        // max hour of the day
-        for ( int i=0; i<24; i++ ) {
-            int max=0, max_h=-1;
-            for ( const auto& [h,c] : traf_day ) {
+            // max hour of the day
+            max=0, max_=-1;
+            for ( const auto& [h,c] : traf_hour ) {
                 if ( c > max ) {
                     max = c;
-                    max_h = h;
+                    max_ = h;
                 }
             }
-            if ( max_h < 0 ) {
-                recur_list.push_back( std::make_tuple( "", 0 ) );
+            if ( max_ < 0 ) {
+                traffic_list.push_back( std::make_tuple( "", "0" ) );
             } else {
-                QString h = (max_h<10) ? QString("0%1").arg(max_h) : QString("%1").arg(max_h) ;
-                recur_list.push_back( std::make_tuple( h, QString("%1").arg(max) ) );
+                QString h = (max_<10) ? QString("0%1").arg(max_) : QString("%1").arg(max_) ;
+                traffic_list.push_back( std::make_tuple( h, QString("%1").arg(max) ) );
+            }
+
+            // mean/max time-taken
+            perf_list.push_back( std::make_tuple(
+                QString("%1 ms").arg( perf_time.at(1)/perf_time.at(2) ),
+                QString("%1 ms").arg( perf_time.at(0) ) ));
+            perf_list.push_back( std::make_tuple(
+                QString("%1 B").arg( perf_sent.at(1)/perf_sent.at(2) ),
+                QString("%1 B").arg( perf_sent.at(0) ) ));
+            perf_list.push_back( std::make_tuple(
+                QString("%1 B").arg( perf_receiv.at(1)/perf_receiv.at(2) ),
+                QString("%1 B").arg( perf_receiv.at(0) ) ));
+
+            // overall work list
+            work_list.push_back( QString("%1").arg( req_count ) );
+
+            float t = (float)perf_time.at(1);
+            if ( t < 0 ) {
+                work_list.push_back( "0" );
+            } else {
+                int h=0, m=0, s=0, ms=0;
+                if ( t > 1000 ) {
+                    ms = (int)t % 1000;
+                    t /= 1000;
+                }
+                if ( t > 60 ) {
+                    s = (int)t;
+                    s /= 60;
+                    if ( s > 60 ) {
+                        m = s/60;
+                        s = s%60;
+                        if ( m > 60 ) {
+                            h = m/60;
+                            m = m%60;
+                        }
+                    }
+                }
+                work_list.push_back( QString("%1 h %2 m %3.%4 s").arg(h).arg(m).arg(s).arg(ms) );
+            }
+
+            float b = (float)perf_sent.at(1);
+            if ( b < 0 ) {
+                work_list.push_back( "0" );
+            } else {
+                int f=0, d=0;
+                QString sfx = "B";
+                if ( b > 1024 ) {
+                    b /= 1024;
+                    sfx = "KiB";
+                    if ( b > 1024 ) {
+                        b /= 1024;
+                        sfx = "MiB";
+                        if ( b > 1024 ) {
+                            b /= 1024;
+                            sfx = "GiB";
+                        }
+                    }
+                }
+                f = b;
+                d = (int)( b*1000 ) %1000;
+                work_list.push_back( QString("%1.%2 %3").arg(f).arg(d).arg(sfx) );
             }
         }
 
-        // mean/max time-taken
-        perf_list.push_back( std::make_tuple(
-            QString("%1").arg( perf_time.at(1)/perf_time.at(2) ),
-            QString("%1").arg( perf_time.at(0) ) ));
-        perf_list.push_back( std::make_tuple(
-            QString("%1").arg( perf_sent.at(1)/perf_sent.at(2) ),
-            QString("%1").arg( perf_sent.at(0) ) ));
-        perf_list.push_back( std::make_tuple(
-            QString("%1").arg( perf_receiv.at(1)/perf_receiv.at(2) ),
-            QString("%1").arg( perf_receiv.at(0) ) ));
-
-        // overall work list
-        work_list.push_back( QString("%1").arg( req_count ) );
-        work_list.push_back( QString("%1").arg( perf_time.at(1) ) );
-        work_list.push_back( QString("%1").arg( perf_sent.at(1) ) );
-
+        recurs.clear();
+        traf_day.clear(); traf_hour.clear();
+        perf_time.clear(); perf_sent.clear(); perf_receiv.clear();
     }
-
-    recurs.clear();
-    traf_day.clear(); traf_hour.clear();
-    perf_time.clear(); perf_sent.clear(); perf_receiv.clear();
 
     return result;
 }
