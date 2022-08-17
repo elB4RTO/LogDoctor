@@ -77,6 +77,9 @@ set(PROJECT_SOURCES
         tools/craphelp/craphelp.h
         tools/craphelp/craphelp.cpp
 
+        tools/crapup/crapup.h
+        tools/crapup/crapup.cpp
+
         resources/resources.qrc
         ${TS_FILES}
 )
@@ -114,6 +117,11 @@ target_link_libraries(LogDoctor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VE
 find_package( ZLIB REQUIRED )
 include_directories(${ZLIB_INCLUDE_DIRS})
 target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
+
+# Include curl
+find_package( CURL REQUIRED )
+include_directories(${CURL_INCLUDE_DIRS})
+target_link_libraries(LogDoctor PRIVATE ${CURL_LIBRARIES})
 
 set_target_properties(LogDoctor PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
