@@ -1143,6 +1143,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                             DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
                             break;
                         }
+                        query.finish();
                     }
                 }
             }
@@ -1787,6 +1788,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                             break;
                         }
                     }
+                    query.finish();
                 }
                 // append the first day of 1 month after the last one as the last one day
                 day = 1;
@@ -1815,6 +1817,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
 const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, int>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, long>& traf_day, std::unordered_map<int, long>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count )
 {
     bool successful = true;
+    QString table;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
@@ -1829,7 +1832,6 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
         if ( web_server == "Apache2" ) {
             table = "apache";
         } else if ( web_server == "Nginx" ) {
@@ -1851,13 +1853,11 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
             max_date_count=0,
             max_tt=0, tot_tt=0, num_tt=0,
             max_bs=0, tot_bs=0, num_bs=0,
-            max_br=0, tot_br=0, num_br=0;
+            max_br=0, tot_br=0, num_br=0,
+            n_days=0;
         QString protocol, method, uri, user_agent, max_date_str="";
         std::unordered_map<int, int> num_day_count = {
             {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
-        std::unordered_map<int, int> num_hour_count = {
-            {0,0},  {1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},  {9,0},  {10,0}, {11,0},
-            {12,0}, {13,0}, {14,0}, {15,0}, {16,0}, {17,0}, {18,0}, {19,0}, {20,0}, {21,0}, {22,0}, {23,0} };
         // get years
         for ( const auto& [year, dates_] : dates ) {
             // get months of the year
@@ -1865,13 +1865,14 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                 // get days of the month of the year
                 for ( const auto& day : dates__ ) {
 
+                    n_days ++;
                     hour=-1; hour_count=0;
                     day_count=0;
 
-                    if ( query.exec( QString("SELECT \"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 ORDER BY \"hour\" ASC;").arg( table ).arg( year ).arg( month ).arg( day ) ) == false ) {
+                    if ( query.exec( QString("SELECT \"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 ORDER BY \"hour\" ASC;").arg( table ).arg( year ).arg( month ).arg( day ).replace("'","''") ) == false ) {
                         // error querying database
                         successful = false;
-                        DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), Y_query.lastError().text() );
+                        DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
                         break;
 
                     } else {
@@ -1979,7 +1980,6 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                                         hour = h;
                                         hour_count = 1;
                                     }
-                                    num_hour_count.at( hour ) ++;
                                 }
 
                                 // process the protocol
@@ -2049,6 +2049,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                             }
                         }
                     }
+                    query.finish();
                     if ( successful == false ) { break; }
                 }
                 if ( successful == false ) { break; }
@@ -2061,9 +2062,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
 
             // process the hours of the day
             for ( int i=0; i<24; i++ ) {
-                int &x = num_hour_count.at( i );
-                if ( x > 0 ) {
-                    traf_hour.at( i ) /= x;
+                if ( n_days > 0 ) {
+                    traf_hour.at( i ) /= n_days;
                 }
             }
 
