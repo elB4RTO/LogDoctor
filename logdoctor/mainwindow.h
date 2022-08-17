@@ -18,6 +18,7 @@
 #include "tools/craplog/craplog.h"
 #include "tools/crapview/crapview.h"
 #include "tools/craphelp/craphelp.h"
+#include "tools/crapup/crapup.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -402,6 +403,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    // current version of LogDoctor
+    const float version = 1.0;
+
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
@@ -449,7 +453,10 @@ private:
 
     ////////////////
     //// CHECKS ////
+    bool initiating = true,
+         db_ok = true;
     void makeInitialChecks();
+    const bool& checkDataDB();
 
     //////////////////
     //// GRAPHICS ////
@@ -546,6 +553,7 @@ private:
     void drawStatsCount( const QString& field );
     // globals
     void makeStatsGlobals( const QString& web_server );
+    void resetStatsGlobals();
 
 
     /////////////////
@@ -561,6 +569,12 @@ private:
     //////////////////
     Craphelp* craphelp = new Craphelp();
     void showHelp( const std::string& file_name );
+
+
+    ////////////////
+    //// CRAPUP ////
+    ////////////////
+    Crapup crapup;
 
 };
 #endif // MAINWINDOW_H

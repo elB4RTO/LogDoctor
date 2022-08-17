@@ -837,12 +837,6 @@ void MainWindow::makeInitialChecks()
                 this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
                 this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
                 this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
-                /*// already to index 0
-                this->on_box_StatsWarn_WebServer_currentIndexChanged(  0 );
-                this->on_box_StatsCount_WebServer_currentIndexChanged( 0 );
-                this->on_box_StatsSpeed_WebServer_currentIndexChanged( 0 );
-                this->on_box_StatsDay_WebServer_currentIndexChanged(   0 );
-                this->on_box_StatsRelat_WebServer_currentIndexChanged( 0 );*/
                 break;
             case 12:
                 this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
@@ -862,7 +856,44 @@ void MainWindow::makeInitialChecks()
                 // shouldn't be here
                 throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
         }
+        this->initiating = false;
     }
+}
+
+
+const bool& MainWindow::checkDataDB()
+{
+    if ( this->initiating == false ) { // avoid recursions
+        // check the db
+        const std::string path = this->db_data_path + "/collection.db";
+        bool ok = IOutils::checkFile( path, true );
+        if ( ok == false ) {
+            ok = CheckSec::checkStatsDatabase( path );
+            // update ui stuff
+            if ( ok == false ) {
+                // checks failed
+                this->crapview.clearDates();
+                this->ui->box_StatsWarn_Year->clear();
+                this->ui->box_StatsSpeed_Year->clear();
+                this->ui->box_StatsCount_Year->clear();
+                this->ui->box_StatsDay_FromYear->clear();
+                if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+                    this->ui->box_StatsDay_ToYear->clear();
+                }
+                this->ui->box_StatsRelat_FromYear->clear();
+                this->ui->box_StatsRelat_ToYear->clear();
+            }
+        }
+        if ( ok == true && this->db_ok == false ) {
+            this->db_ok = ok;
+            this->initiating = true;
+            this->refreshStatsDates();
+            this->initiating = false;
+        } else {
+            this->db_ok = ok;
+        }
+    }
+    return this->db_ok;
 }
 
 
@@ -991,9 +1022,11 @@ void MainWindow::showHelp( const std::string& filename )
         link = aux.at( 0 );
         // very basic checks
         if ( StringOps::startsWith( link, "https://" ) == false
-          || StringOps::contains( link, "/elB4RTO/LogDoctor/" ) == false ) {
+          || StringOps::endsWith(   link, "/elB4RTO/LogDoctor/" ) == false ) {
             // not valid as link
             link = "";
+        } else {
+            link += "installation_stuff/logdocdata/help";
         }
     }
     const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+filename+".html";
@@ -1436,7 +1469,7 @@ void MainWindow::checkStatsWarnDrawable()
     if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
       && this->ui->box_StatsWarn_Month->currentIndex() >= 0
       && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
-        // enable the draw buttpn
+        // enable the draw button
         this->ui->button_StatsWarn_Draw->setEnabled( true );
     } else {
         // disable the draw button
@@ -1446,12 +1479,14 @@ void MainWindow::checkStatsWarnDrawable()
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsWarn_Year->clear();
-    if ( index != -1 ) {
-        this->ui->box_StatsWarn_Year->addItems(
-            this->crapview.getYears(
-                this->ui->box_StatsWarn_WebServer->currentText() ));
-        this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
+    if ( this->checkDataDB() == true ) {
+        this->ui->box_StatsWarn_Year->clear();
+        if ( index != -1 ) {
+            this->ui->box_StatsWarn_Year->addItems(
+                this->crapview.getYears(
+                    this->ui->box_StatsWarn_WebServer->currentText() ));
+            this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
+        }
     }
     this->checkStatsWarnDrawable();
 }
@@ -1514,16 +1549,18 @@ void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
-    this->ui->table_StatsWarn->setRowCount(0);
-    this->crapview.drawWarn(
-        this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsWarn_WebServer->currentText(),
-        this->ui->box_StatsWarn_Year->currentText(),
-        this->ui->box_StatsWarn_Month->currentText(),
-        this->ui->box_StatsWarn_Day->currentText(),
-        (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
-    this->ui->button_StatsWarn_Update->setEnabled( true );
+    if ( this->checkDataDB() == true ) {
+        this->ui->table_StatsWarn->setRowCount(0);
+        this->crapview.drawWarn(
+            this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
+            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->box_StatsWarn_WebServer->currentText(),
+            this->ui->box_StatsWarn_Year->currentText(),
+            this->ui->box_StatsWarn_Month->currentText(),
+            this->ui->box_StatsWarn_Day->currentText(),
+            (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
+        this->ui->button_StatsWarn_Update->setEnabled( true );
+    }
 }
 
 
@@ -1532,7 +1569,6 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
     this->crapview.updateWarn(
         this->ui->table_StatsWarn,
         this->ui->box_StatsWarn_WebServer->currentText() );
-    this->on_button_StatsWarn_Draw_clicked();
 }
 
 
@@ -1543,7 +1579,7 @@ void MainWindow::checkStatsSpeedDrawable()
     if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
       && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
       && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
-        // enable the draw buttpn
+        // enable the draw button
         this->ui->button_StatsSpeed_Draw->setEnabled( true );
     } else {
         // disable the draw button
@@ -1553,12 +1589,14 @@ void MainWindow::checkStatsSpeedDrawable()
 
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsSpeed_Year->clear();
-    if ( index != -1 ) {
-        this->ui->box_StatsSpeed_Year->addItems(
-            this->crapview.getYears(
-                this->ui->box_StatsSpeed_WebServer->currentText() ) );
-        this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+    if ( this->checkDataDB() == true ) {
+        this->ui->box_StatsSpeed_Year->clear();
+        if ( index != -1 ) {
+            this->ui->box_StatsSpeed_Year->addItems(
+                this->crapview.getYears(
+                    this->ui->box_StatsSpeed_WebServer->currentText() ) );
+            this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+        }
     }
     this->checkStatsSpeedDrawable();
 }
@@ -1597,21 +1635,22 @@ void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
-    //this->ui->table_StatsSpeed->clear();
-    this->ui->table_StatsSpeed->setRowCount(0);
-    this->crapview.drawSpeed(
-        this->ui->table_StatsSpeed,
-        this->ui->chart_SatsSpeed,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsSpeed_WebServer->currentText(),
-        this->ui->box_StatsSpeed_Year->currentText(),
-        this->ui->box_StatsSpeed_Month->currentText(),
-        this->ui->box_StatsSpeed_Day->currentText(),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ),
-        this->crapview.parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ) );
+    if ( this->checkDataDB() == true ) {
+        this->ui->table_StatsSpeed->setRowCount(0);
+        this->crapview.drawSpeed(
+            this->ui->table_StatsSpeed,
+            this->ui->chart_SatsSpeed,
+            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->box_StatsSpeed_WebServer->currentText(),
+            this->ui->box_StatsSpeed_Year->currentText(),
+            this->ui->box_StatsSpeed_Month->currentText(),
+            this->ui->box_StatsSpeed_Day->currentText(),
+            this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ),
+            this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ),
+            this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ),
+            this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ),
+            this->crapview.parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ) );
+    }
 }
 
 
@@ -1632,13 +1671,15 @@ void MainWindow::checkStatsCountDrawable()
 
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsCount_Year->clear();
-    if ( index != -1 ) {
-        this->ui->box_StatsCount_Year->addItems(
-            this->crapview.getYears(
-                this->ui->box_StatsCount_WebServer->currentText() ));
-        this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
-        this->resetStatsCountButtons();
+    if ( this->checkDataDB() == true ) {
+        this->ui->box_StatsCount_Year->clear();
+        if ( index != -1 ) {
+            this->ui->box_StatsCount_Year->addItems(
+                this->crapview.getYears(
+                    this->ui->box_StatsCount_WebServer->currentText() ));
+            this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
+            this->resetStatsCountButtons();
+        }
     }
     this->checkStatsCountDrawable();
 }
@@ -1823,24 +1864,26 @@ void MainWindow::checkStatsDayDrawable()
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsDay_LogsField->clear();
-    if ( index != -1 ) {
-        // refresh fields
-        this->ui->box_StatsDay_LogsField->addItems(
-            this->crapview.getFields( "Daytime" ));
-        this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
-        // refresh dates
-        QStringList years = this->crapview.getYears(
-            this->ui->box_StatsDay_WebServer->currentText() );
+    if ( this->checkDataDB() == true ) {
+        this->ui->box_StatsDay_LogsField->clear();
         this->ui->box_StatsDay_FromYear->clear();
-        this->ui->box_StatsDay_FromYear->addItems( years );
-        this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
-        if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
-            this->ui->box_StatsDay_ToYear->clear();
-            this->ui->box_StatsDay_ToYear->addItems( years );
-            this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+        this->ui->box_StatsDay_ToYear->clear();
+        if ( index != -1 ) {
+            // refresh fields
+            this->ui->box_StatsDay_LogsField->addItems(
+                this->crapview.getFields( "Daytime" ));
+            this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
+            // refresh dates
+            QStringList years = this->crapview.getYears(
+                this->ui->box_StatsDay_WebServer->currentText() );
+            this->ui->box_StatsDay_FromYear->addItems( years );
+            this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
+            if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+                this->ui->box_StatsDay_ToYear->addItems( years );
+                this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+            }
+            years.clear();
         }
-        years.clear();
     }
     this->checkStatsDayDrawable();
 }
@@ -1939,26 +1982,28 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
-    QString filter;
-    if ( this->ui->box_StatsDay_LogsField->currentIndex() == 0 ) {
-        filter = this->crapview.parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() );
-    } else if ( this->ui->box_StatsDay_LogsField->currentIndex() == 5 ) {
-        filter = this->crapview.parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
-    } else {
-        filter = this->crapview.parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
+    if ( this->checkDataDB() == true ) {
+        QString filter;
+        if ( this->ui->box_StatsDay_LogsField->currentIndex() == 0 ) {
+            filter = this->crapview.parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() );
+        } else if ( this->ui->box_StatsDay_LogsField->currentIndex() == 5 ) {
+            filter = this->crapview.parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
+        } else {
+            filter = this->crapview.parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
+        }
+        this->crapview.drawDay(
+            this->ui->chart_StatsDay,
+            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->box_StatsDay_WebServer->currentText(),
+            this->ui->box_StatsDay_FromYear->currentText(),
+            this->ui->box_StatsDay_FromMonth->currentText(),
+            this->ui->box_StatsDay_FromDay->currentText(),
+            ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToYear->currentText() : "",
+            ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
+            ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
+            this->ui->box_StatsDay_LogsField->currentText(),
+            filter );
     }
-    this->crapview.drawDay(
-        this->ui->chart_StatsDay,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsDay_WebServer->currentText(),
-        this->ui->box_StatsDay_FromYear->currentText(),
-        this->ui->box_StatsDay_FromMonth->currentText(),
-        this->ui->box_StatsDay_FromDay->currentText(),
-        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToYear->currentText() : "",
-        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
-        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
-        this->ui->box_StatsDay_LogsField->currentText(),
-        filter );
 }
 
 
@@ -2010,27 +2055,29 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsRelat_LogsField_1->clear();
-    this->ui->box_StatsRelat_LogsField_2->clear();
-    if ( index != -1 ) {
-        // refresh fields
-        QStringList fields = this->crapview.getFields( "Relational" );
-        this->ui->box_StatsRelat_LogsField_1->addItems( fields );
-        this->ui->box_StatsRelat_LogsField_2->addItems( fields );
-        this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
-        this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
-        // refresh dates
-        QStringList years = this->crapview.getYears(
-            this->ui->box_StatsRelat_WebServer->currentText() );
-        // from
-        this->ui->box_StatsRelat_FromYear->clear();
-        this->ui->box_StatsRelat_FromYear->addItems( years );
-        this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
-        // to
-        this->ui->box_StatsRelat_ToYear->clear();
-        this->ui->box_StatsRelat_ToYear->addItems( years );
-        this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
-        years.clear();
+    if ( this->checkDataDB() == true ) {
+        this->ui->box_StatsRelat_LogsField_1->clear();
+        this->ui->box_StatsRelat_LogsField_2->clear();
+        if ( index != -1 ) {
+            // refresh fields
+            QStringList fields = this->crapview.getFields( "Relational" );
+            this->ui->box_StatsRelat_LogsField_1->addItems( fields );
+            this->ui->box_StatsRelat_LogsField_2->addItems( fields );
+            this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
+            this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
+            // refresh dates
+            QStringList years = this->crapview.getYears(
+                this->ui->box_StatsRelat_WebServer->currentText() );
+            // from
+            this->ui->box_StatsRelat_FromYear->clear();
+            this->ui->box_StatsRelat_FromYear->addItems( years );
+            this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
+            // to
+            this->ui->box_StatsRelat_ToYear->clear();
+            this->ui->box_StatsRelat_ToYear->addItems( years );
+            this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
+            years.clear();
+        }
     }
     this->checkStatsRelatDrawable();
 }
@@ -2114,36 +2161,38 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
-    int aux;
-    QString filter1, filter2;
-    aux = this->ui->box_StatsRelat_LogsField_1->currentIndex();
-    if ( aux == 0 ) {
-        filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
-    } else if ( aux >= 5 && aux <= 8 ) {
-        filter1 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
-    } else {
-        filter1 = this->ui->inLine_StatsRelat_Filter_1->text();
+    if ( this->checkDataDB() == true ) {
+        int aux;
+        QString filter1, filter2;
+        aux = this->ui->box_StatsRelat_LogsField_1->currentIndex();
+        if ( aux == 0 ) {
+            filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
+        } else if ( aux >= 5 && aux <= 8 ) {
+            filter1 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
+        } else {
+            filter1 = this->ui->inLine_StatsRelat_Filter_1->text();
+        }
+        aux = this->ui->box_StatsRelat_LogsField_2->currentIndex();
+        if ( aux == 0 ) {
+            filter2 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        } else if ( aux >= 5 && aux <= 8 ) {
+            filter2 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        } else {
+            filter2 = this->crapview.parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        }
+        this->crapview.drawRelat(
+            this->ui->chart_StatsRelat,
+            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->box_StatsRelat_WebServer->currentText(),
+            this->ui->box_StatsRelat_FromYear->currentText(),
+            this->ui->box_StatsRelat_FromMonth->currentText(),
+            this->ui->box_StatsRelat_FromDay->currentText(),
+            this->ui->box_StatsRelat_ToYear->currentText(),
+            this->ui->box_StatsRelat_ToMonth->currentText(),
+            this->ui->box_StatsRelat_ToDay->currentText(),
+            this->ui->box_StatsRelat_LogsField_1->currentText(), filter1,
+            this->ui->box_StatsRelat_LogsField_2->currentText(), filter2 );
     }
-    aux = this->ui->box_StatsRelat_LogsField_2->currentIndex();
-    if ( aux == 0 ) {
-        filter2 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
-    } else if ( aux >= 5 && aux <= 8 ) {
-        filter2 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
-    } else {
-        filter2 = this->crapview.parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
-    }
-    this->crapview.drawRelat(
-        this->ui->chart_StatsRelat,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsRelat_WebServer->currentText(),
-        this->ui->box_StatsRelat_FromYear->currentText(),
-        this->ui->box_StatsRelat_FromMonth->currentText(),
-        this->ui->box_StatsRelat_FromDay->currentText(),
-        this->ui->box_StatsRelat_ToYear->currentText(),
-        this->ui->box_StatsRelat_ToMonth->currentText(),
-        this->ui->box_StatsRelat_ToDay->currentText(),
-        this->ui->box_StatsRelat_LogsField_1->currentText(), filter1,
-        this->ui->box_StatsRelat_LogsField_2->currentText(), filter2 );
 }
 
 
@@ -2153,74 +2202,91 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 //
 void MainWindow::makeStatsGlobals( const QString& web_server )
 {
-    std::vector<std::tuple<QString,QString>> recur_list;
-    std::vector<std::tuple<QString,QString>> traffic_list;
-    std::vector<std::tuple<QString,QString>> perf_list;
-    std::vector<QString> work_list;
+    if ( this->checkDataDB() == true ) {
+        std::vector<std::tuple<QString,QString>> recur_list;
+        std::vector<std::tuple<QString,QString>> traffic_list;
+        std::vector<std::tuple<QString,QString>> perf_list;
+        std::vector<QString> work_list;
 
-    const bool result = this->crapview.calcGlobals(
-        recur_list, traffic_list, perf_list, work_list,
-        web_server );
+        const bool result = this->crapview.calcGlobals(
+            recur_list, traffic_list, perf_list, work_list,
+            web_server );
 
-    if ( result == true ) {
-        this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
-        this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
-        this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
-        this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
-        this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
-        this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
-        this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
-        this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
+        if ( result == true ) {
+            this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
+            this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
+            this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
+            this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
+            this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
+            this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
+            this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
+            this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
 
-        this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
-        this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
-        this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
-        this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
-        this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
-        this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
+            this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
+            this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
+            this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
+            this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
+            this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
+            this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
 
-        this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
-        this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
-        this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
-        this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
-        this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
-        this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
+            this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
+            this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
+            this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
+            this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
+            this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
+            this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
 
-        this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
-        this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
-        this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
+            this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
+            this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
+            this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
+
+        } else {
+            this->resetStatsGlobals();
+        }
+        recur_list.clear(); traffic_list.clear();
+        perf_list.clear();  work_list.clear();
 
     } else {
-        this->ui->label_StatsGlob_Recur_Protocol_String->setText( "-" );
-        this->ui->label_StatsGlob_Recur_Protocol_Count->setText( "0" );
-        this->ui->label_StatsGlob_Recur_Method_String->setText( "-" );
-        this->ui->label_StatsGlob_Recur_Method_Count->setText( "0" );
-        this->ui->label_StatsGlob_Recur_URI_String->setText( "-" );
-        this->ui->label_StatsGlob_Recur_URI_Count->setText( "0" );
-        this->ui->label_StatsGlob_Recur_UserAgent_String->setText( "-" );
-        this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( "0" );
-
-        this->ui->label_StatsGlob_Traffic_Date_String->setText( "-" );
-        this->ui->label_StatsGlob_Traffic_Date_Count->setText( "0" );
-        this->ui->label_StatsGlob_Traffic_Day_String->setText( "-" );
-        this->ui->label_StatsGlob_Traffic_Day_Count->setText( "0" );
-        this->ui->label_StatsGlob_Traffic_Hour_String->setText( "-" );
-        this->ui->label_StatsGlob_Traffic_Hour_Count->setText( "0" );
-
-        this->ui->label_StatsGlob_Perf_Time_Mean->setText( "-" );
-        this->ui->label_StatsGlob_Perf_Time_Max->setText( "-" );
-        this->ui->label_StatsGlob_Perf_Sent_Mean->setText( "-" );
-        this->ui->label_StatsGlob_Perf_Sent_Max->setText( "-" );
-        this->ui->label_StatsGlob_Perf_Received_Mean->setText( "-" );
-        this->ui->label_StatsGlob_Perf_Received_Max->setText( "-" );
-
-        this->ui->label_StatsGlob_Work_Req_Count->setText( "-" );
-        this->ui->label_StatsGlob_Work_Time_Count->setText( "-" );
-        this->ui->label_StatsGlob_Work_Sent_Count->setText( "-" );
+        this->resetStatsGlobals();
     }
+}
 
-    recur_list.clear(); traffic_list.clear();
-    perf_list.clear();  work_list.clear();
+void MainWindow::resetStatsGlobals()
+{
+    this->ui->label_StatsGlob_Recur_Protocol_String->setText( "-" );
+    this->ui->label_StatsGlob_Recur_Protocol_Count->setText( "0" );
+    this->ui->label_StatsGlob_Recur_Method_String->setText( "-" );
+    this->ui->label_StatsGlob_Recur_Method_Count->setText( "0" );
+    this->ui->label_StatsGlob_Recur_URI_String->setText( "-" );
+    this->ui->label_StatsGlob_Recur_URI_Count->setText( "0" );
+    this->ui->label_StatsGlob_Recur_UserAgent_String->setText( "-" );
+    this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( "0" );
+
+    this->ui->label_StatsGlob_Traffic_Date_String->setText( "-" );
+    this->ui->label_StatsGlob_Traffic_Date_Count->setText( "0" );
+    this->ui->label_StatsGlob_Traffic_Day_String->setText( "-" );
+    this->ui->label_StatsGlob_Traffic_Day_Count->setText( "0" );
+    this->ui->label_StatsGlob_Traffic_Hour_String->setText( "-" );
+    this->ui->label_StatsGlob_Traffic_Hour_Count->setText( "0" );
+
+    this->ui->label_StatsGlob_Perf_Time_Mean->setText( "-" );
+    this->ui->label_StatsGlob_Perf_Time_Max->setText( "-" );
+    this->ui->label_StatsGlob_Perf_Sent_Mean->setText( "-" );
+    this->ui->label_StatsGlob_Perf_Sent_Max->setText( "-" );
+    this->ui->label_StatsGlob_Perf_Received_Mean->setText( "-" );
+    this->ui->label_StatsGlob_Perf_Received_Max->setText( "-" );
+
+    this->ui->label_StatsGlob_Work_Req_Count->setText( "-" );
+    this->ui->label_StatsGlob_Work_Time_Count->setText( "-" );
+    this->ui->label_StatsGlob_Work_Sent_Count->setText( "-" );
+
+    if ( this->ui->button_StatsGlob_Apache->isChecked() == true ) {
+        this->ui->button_StatsGlob_Apache->setChecked( false );
+    } else if ( this->ui->button_StatsGlob_Nginx->isChecked() == true ) {
+        this->ui->button_StatsGlob_Nginx->setChecked( false );
+    } else if ( this->ui->button_StatsGlob_Iis->isChecked() == true ) {
+        this->ui->button_StatsGlob_Iis->setChecked( false );
+    }
 }
 
 
