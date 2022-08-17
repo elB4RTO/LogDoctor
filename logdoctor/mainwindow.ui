@@ -101,7 +101,7 @@
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>475</height>
+             <height>473</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -436,7 +436,7 @@ hr { height: 1px; border-width: 0; }
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>475</height>
+             <height>473</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -2325,7 +2325,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>13</x>
+                    <x>0</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -3873,28 +3873,28 @@ Time of day counts for a single date, entire days counts in a period.</string>
                <property name="childrenCollapsible">
                 <bool>false</bool>
                </property>
-               <widget class="QFrame" name="frame_4">
+               <widget class="QFrame" name="frame_StatsGlob_Recur">
                 <layout class="QGridLayout" name="gridLayout_28">
                  <item row="1" column="0" colspan="2">
-                  <widget class="QScrollArea" name="scrollArea">
+                  <widget class="QScrollArea" name="scrollArea_StatsGlob_Recur">
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scrollAreaWidgetContents">
+                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Recur">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>325</width>
+                      <width>173</width>
                       <height>348</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_31">
                      <item row="0" column="0">
-                      <widget class="QFrame" name="frame">
+                      <widget class="QFrame" name="frame_StatsGlob_Recur_1">
                        <layout class="QGridLayout" name="gridLayout_30">
                         <item row="2" column="0">
-                         <widget class="QLabel" name="label_10">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_Protocol_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -3915,7 +3915,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_5">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_Protocol">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -3936,7 +3936,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="2" column="2">
-                         <widget class="QLabel" name="label_9">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_Method_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -3957,7 +3957,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_8">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_Protocol_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -3978,7 +3978,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="0" column="2">
-                         <widget class="QLabel" name="label_6">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_Method">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -3999,7 +3999,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="2">
-                         <widget class="QLabel" name="label_7">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_Method_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4020,7 +4020,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="0" column="1" rowspan="3">
-                         <widget class="Line" name="line_10">
+                         <widget class="Line" name="gline_StatsGlob_Recur_1">
                           <property name="orientation">
                            <enum>Qt::Vertical</enum>
                           </property>
@@ -4030,10 +4030,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="2" column="0">
-                      <widget class="QFrame" name="frame_2">
+                      <widget class="QFrame" name="frame_StatsGlob__Recur_2">
                        <layout class="QGridLayout" name="gridLayout_32">
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_13">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_URI_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4054,7 +4054,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_12">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_URI">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4075,7 +4075,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="2" column="0">
-                         <widget class="QLabel" name="label_11">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_URI_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4099,17 +4099,17 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="1" column="0">
-                      <widget class="Line" name="line_2">
+                      <widget class="Line" name="gline_StatsGlob_Recur_2">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
                       </widget>
                      </item>
                      <item row="4" column="0">
-                      <widget class="QFrame" name="frame_8">
+                      <widget class="QFrame" name="frame_StatsGlob_Recur_3">
                        <layout class="QGridLayout" name="gridLayout_33">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_16">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_UserAgent">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4122,7 +4122,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>URI</string>
+                           <string>User-agent</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4130,7 +4130,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="2" column="0">
-                         <widget class="QLabel" name="label_14">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_UserAgent_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4151,7 +4151,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_15">
+                         <widget class="QLabel" name="label_StatsGlob_Recur_UserAgent_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4175,7 +4175,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="3" column="0">
-                      <widget class="Line" name="line_3">
+                      <widget class="Line" name="gline_StatsGlob_Recur_3">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -4186,7 +4186,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                   </widget>
                  </item>
                  <item row="0" column="0" colspan="2">
-                  <widget class="QLabel" name="label">
+                  <widget class="QLabel" name="label_StatsGlob_Recur">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -4208,28 +4208,28 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  </item>
                 </layout>
                </widget>
-               <widget class="QFrame" name="frame_6">
+               <widget class="QFrame" name="frame_StatsGlob_Traffic">
                 <layout class="QGridLayout" name="gridLayout_29">
                  <item row="1" column="0" colspan="2">
-                  <widget class="QScrollArea" name="scrollArea_2">
+                  <widget class="QScrollArea" name="scrollArea_StatsGlob_Traffic">
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Traffic">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>325</width>
+                      <width>157</width>
                       <height>348</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_36">
                      <item row="0" column="0">
-                      <widget class="QFrame" name="frame_9">
+                      <widget class="QFrame" name="frame_StatsGlob_Traffic_1">
                        <layout class="QGridLayout" name="gridLayout_34">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_17">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Date">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4250,7 +4250,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_18">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Date_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4271,7 +4271,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="2" column="0">
-                         <widget class="QLabel" name="label_19">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Date_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4295,10 +4295,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="2" column="0">
-                      <widget class="QFrame" name="frame_10">
+                      <widget class="QFrame" name="frame_StatsGlob_Traffic_2">
                        <layout class="QGridLayout" name="gridLayout_35">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_20">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Day">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4319,7 +4319,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_21">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Day_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4340,7 +4340,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="2" column="0">
-                         <widget class="QLabel" name="label_22">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Day_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4364,10 +4364,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="4" column="0">
-                      <widget class="QFrame" name="frame_11">
+                      <widget class="QFrame" name="frame_StatsGlob_Traffic_3">
                        <layout class="QGridLayout" name="gridLayout_38">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_26">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Hour">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4388,7 +4388,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_27">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Hour_String">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4409,7 +4409,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="2" column="0">
-                         <widget class="QLabel" name="label_28">
+                         <widget class="QLabel" name="label_StatsGlob_Traffic_Hour_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4433,14 +4433,14 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="1" column="0">
-                      <widget class="Line" name="line_6">
+                      <widget class="Line" name="gline_StatsGlob_Traffic_1">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
                       </widget>
                      </item>
                      <item row="3" column="0">
-                      <widget class="Line" name="line_7">
+                      <widget class="Line" name="gline_StatsGlob_Traffic_2">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -4451,7 +4451,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                   </widget>
                  </item>
                  <item row="0" column="0" colspan="2">
-                  <widget class="QLabel" name="label_2">
+                  <widget class="QLabel" name="label_StatsGlob_Traffic">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -4484,35 +4484,35 @@ Time of day counts for a single date, entire days counts in a period.</string>
                <property name="childrenCollapsible">
                 <bool>false</bool>
                </property>
-               <widget class="QFrame" name="frame_5">
+               <widget class="QFrame" name="frame_StatsGlob_Perf">
                 <layout class="QGridLayout" name="gridLayout_26">
                  <item row="1" column="0" colspan="2">
-                  <widget class="QScrollArea" name="scrollArea_3">
+                  <widget class="QScrollArea" name="scrollArea_StatsGlob_Perf">
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Perf_">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>439</width>
+                      <width>145</width>
                       <height>276</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_46">
                      <item row="1" column="0">
-                      <widget class="Line" name="line_4">
+                      <widget class="Line" name="gline_StatsGlob_Perf_1">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
                       </widget>
                      </item>
                      <item row="0" column="0">
-                      <widget class="QFrame" name="frame_15">
+                      <widget class="QFrame" name="frame_StatsGlob_Perf_1">
                        <layout class="QGridLayout" name="gridLayout_43">
                         <item row="0" column="0" colspan="2">
-                         <widget class="QLabel" name="label_31">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Time">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4533,7 +4533,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_37">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Time_Mean">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4554,7 +4554,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="1">
-                         <widget class="QLabel" name="label_38">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Time_Max">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4578,10 +4578,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="2" column="0">
-                      <widget class="QFrame" name="frame_17">
+                      <widget class="QFrame" name="frame_StatsGlob_Perf_2">
                        <layout class="QGridLayout" name="gridLayout_45">
                         <item row="0" column="0" colspan="2">
-                         <widget class="QLabel" name="label_41">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Sent">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4602,7 +4602,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_42">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Sent_Mean">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4623,7 +4623,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="1">
-                         <widget class="QLabel" name="label_43">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Sent_Max">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4647,10 +4647,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="4" column="0">
-                      <widget class="QFrame" name="frame_16">
+                      <widget class="QFrame" name="frame_StatsGlob_Perf_3">
                        <layout class="QGridLayout" name="gridLayout_44">
                         <item row="0" column="0" colspan="2">
-                         <widget class="QLabel" name="label_34">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Received">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4671,7 +4671,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_39">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Received_Mean">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4692,7 +4692,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="1">
-                         <widget class="QLabel" name="label_40">
+                         <widget class="QLabel" name="label_StatsGlob_Perf_Received_Max">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4716,7 +4716,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="3" column="0">
-                      <widget class="Line" name="line_5">
+                      <widget class="Line" name="gline_StatsGlob_Perf_2">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -4727,7 +4727,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                   </widget>
                  </item>
                  <item row="0" column="0" colspan="2">
-                  <widget class="QLabel" name="label_3">
+                  <widget class="QLabel" name="label_StatsGlob_Perf">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -4749,28 +4749,28 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  </item>
                 </layout>
                </widget>
-               <widget class="QFrame" name="frame_7">
+               <widget class="QFrame" name="frame_StatsGlob_Work">
                 <layout class="QGridLayout" name="gridLayout_27">
                  <item row="1" column="0" colspan="2">
-                  <widget class="QScrollArea" name="scrollArea_4">
+                  <widget class="QScrollArea" name="scrollArea_StatsGlob_Work">
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Work_">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>439</width>
+                      <width>173</width>
                       <height>276</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_42">
                      <item row="4" column="0">
-                      <widget class="QFrame" name="frame_13">
+                      <widget class="QFrame" name="frame_StatsGlob_Work_3">
                        <layout class="QGridLayout" name="gridLayout_40">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_32">
+                         <widget class="QLabel" name="label_StatsGlob_Work_Sent">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4791,7 +4791,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_33">
+                         <widget class="QLabel" name="label_StatsGlob_Work_Sent_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4815,17 +4815,17 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="1" column="0">
-                      <widget class="Line" name="line_8">
+                      <widget class="Line" name="gline_StatsGlob_Work_1">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
                       </widget>
                      </item>
                      <item row="0" column="0">
-                      <widget class="QFrame" name="frame_12">
+                      <widget class="QFrame" name="frame_StatsGlob_Work_1">
                        <layout class="QGridLayout" name="gridLayout_39">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_29">
+                         <widget class="QLabel" name="label_StatsGlob_Work_Req">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4846,7 +4846,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_30">
+                         <widget class="QLabel" name="label_StatsGlob_Work_Req_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4870,10 +4870,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="2" column="0">
-                      <widget class="QFrame" name="frame_14">
+                      <widget class="QFrame" name="frame_StatsGlob_Work_2">
                        <layout class="QGridLayout" name="gridLayout_41">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_35">
+                         <widget class="QLabel" name="label_StatsGlob_Work_Time">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4894,7 +4894,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </widget>
                         </item>
                         <item row="1" column="0">
-                         <widget class="QLabel" name="label_36">
+                         <widget class="QLabel" name="label_StatsGlob_Work_Time_Count">
                           <property name="maximumSize">
                            <size>
                             <width>16777215</width>
@@ -4918,7 +4918,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </widget>
                      </item>
                      <item row="3" column="0">
-                      <widget class="Line" name="line_9">
+                      <widget class="Line" name="gline_StatsGlob_Work_2">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -4929,7 +4929,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                   </widget>
                  </item>
                  <item row="0" column="0" colspan="2">
-                  <widget class="QLabel" name="label_4">
+                  <widget class="QLabel" name="label_StatsGlob_Work">
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
@@ -7279,7 +7279,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -8305,7 +8305,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9409,7 +9409,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -10158,8 +10158,13 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
      <x>0</x>
      <y>0</y>
      <width>952</width>
-     <height>27</height>
+     <height>29</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>13</pointsize>
+    </font>
    </property>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
@@ -10171,10 +10176,16 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <addaction name="actionItaliano"/>
    </widget>
    <widget class="QMenu" name="menuTools">
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>Tools</string>
     </property>
     <addaction name="actionBlockNote"/>
+    <addaction name="separator"/>
     <addaction name="actionCheck_updates"/>
    </widget>
    <addaction name="menuLanguage"/>
@@ -10186,6 +10197,12 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
   </action>
   <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resources/resources.qrc">
      <normaloff>:/flags/flags/en.png</normaloff>:/flags/flags/en.png</iconset>
@@ -10198,6 +10215,9 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
   </action>
   <action name="actionEspanol">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resources/resources.qrc">
      <normaloff>:/flags/flags/es.png</normaloff>:/flags/flags/es.png</iconset>
@@ -10210,6 +10230,9 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
   </action>
   <action name="actionFrancais">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resources/resources.qrc">
      <normaloff>:/flags/flags/fr.png</normaloff>:/flags/flags/fr.png</iconset>
@@ -10222,6 +10245,9 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
   </action>
   <action name="actionItaliano">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resources/resources.qrc">
      <normaloff>:/flags/flags/it.png</normaloff>:/flags/flags/it.png</iconset>
