@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 
+#include <QTranslator>
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QTreeWidget>
@@ -19,6 +20,7 @@
 #include "tools/crapview/crapview.h"
 #include "tools/craphelp/craphelp.h"
 #include "tools/crapup/crapup.h"
+#include "tools/crapnote/crapnote.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -30,7 +32,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow( QWidget *parent=nullptr );
+    MainWindow( QTranslator *translator, QWidget *parent=nullptr );
     ~MainWindow();
     void closeEvent( QCloseEvent *event );
 
@@ -400,6 +402,25 @@ private slots:
 
     void on_button_ConfDatabases_Hashes_Save_clicked();
 
+    ///////////////
+    //// MENU ////
+
+    //// LANGUAGE ////
+
+    void menu_actionEnglish_triggered();
+
+    void menu_actionEspanol_triggered();
+
+    void menu_actionFrancais_triggered();
+
+    void menu_actionItaliano_triggered();
+
+    //// TOOLS ////
+
+    void menu_actionBlockNote_triggered();
+
+    void menu_actionCheckUpdates_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -438,6 +459,7 @@ private:
     const std::unordered_map<std::string, bool> s2b = { {"true",true}, {"false",false} };
     const std::unordered_map<bool, std::string> b2s = { {true,"true"}, {false,"false"} };
     // language
+    QTranslator *translator;
     std::string language = "en";
     void updateUiLanguage();
     // window geometry
@@ -575,6 +597,12 @@ private:
     //// CRAPUP ////
     ////////////////
     Crapup crapup;
+
+
+    //////////////////
+    //// CRAPNOTE ////
+    //////////////////
+    Crapnote* crapnote = new Crapnote();
 
 };
 #endif // MAINWINDOW_H
