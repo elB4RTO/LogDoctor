@@ -16,9 +16,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTo
 
 
 set(TS_FILES
-        translations/LogDoctor_es_ES.ts
-        translations/LogDoctor_fr_FR.ts
-        translations/LogDoctor_it_IT.ts
+        translations/LogDoctor_en.ts
+        translations/LogDoctor_es.ts
+        translations/LogDoctor_fr.ts
+        translations/LogDoctor_it.ts
 )
 
 set(PROJECT_SOURCES
@@ -80,6 +81,10 @@ set(PROJECT_SOURCES
         tools/crapup/crapup.h
         tools/crapup/crapup.cpp
 
+        tools/crapnote/crapnote.ui
+        tools/crapnote/crapnote.h
+        tools/crapnote/crapnote.cpp
+
         resources/resources.qrc
         ${TS_FILES}
 )
@@ -118,7 +123,7 @@ find_package( ZLIB REQUIRED )
 include_directories(${ZLIB_INCLUDE_DIRS})
 target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 
-# Include curl
+# Include libcurl
 find_package( CURL REQUIRED )
 include_directories(${CURL_INCLUDE_DIRS})
 target_link_libraries(LogDoctor PRIVATE ${CURL_LIBRARIES})
