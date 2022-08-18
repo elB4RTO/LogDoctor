@@ -2,6 +2,12 @@
     <qresource prefix="/logo">
         <file>logo/logdoctor.svg</file>
     </qresource>
+    <qresource prefix="/translations">
+        <file alias="en">translations/LogDoctor_en.qm</file>
+        <file alias="es">translations/LogDoctor_es.qm</file>
+        <file alias="fr">translations/LogDoctor_fr.qm</file>
+        <file alias="it">translations/LogDoctor_it.qm</file>
+    </qresource>
     <qresource prefix="/fonts">
         <file alias="3270">fonts/3270.ttf</file>
         <file alias="Hack">fonts/Hack.ttf</file>
