@@ -10,6 +10,30 @@ DialogSec::DialogSec()
 
 
 
+//////////////////
+//// LANGUAGE ////
+//////////////////
+void DialogSec::errLangLocaleInvalid( QWidget *parent, const QString& locale )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_LANG_INVALID,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_LANG_LOCALE_INVALID, locale, r_CONF_DONT_EDIT ),
+        QMessageBox::Ok );
+}
+void DialogSec::errLangNotAccepted( QWidget *parent, const QString& locale )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_LANG_INVALID,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_LANG_NOT_ACCEPTED, locale, r_LANG_NOT_ACCEPTED ),
+        QMessageBox::Ok );
+}
+
+
+
 ///////////////////////
 //// CONFIGURATION ////
 ///////////////////////
@@ -65,6 +89,69 @@ void DialogSec::errConfDirNotWritable( QWidget *parent, const QString& dir )
 
 
 
+//////////////////
+//// LANGUAGE ////
+//////////////////
+void DialogSec::errVersionCheckFailed( QWidget *parent, const int& err_code )
+{
+    QString msg;
+    switch (err_code) {
+        case 1:
+            msg = QString("%1\n\n%2").arg( m_CONNECTIONS_FAILED, r_UPSTREAM_FAILURE );
+            break;
+        case 10:
+            msg = m_VERSION_NOT_FOUND;
+            break;
+        case 11:
+            msg = m_VERSION_MALFORMED;
+            break;
+    }
+
+    std::ignore=
+    QMessageBox::critical(parent,
+        t_VERSION_CHECK_FAILED,
+        QString("%1\n\n%2")
+            .arg( m_VERSION_CHECK_FAILED, msg ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::warnConnectionFailed( QWidget *parent, const QString& link, const QString& err_msg )
+{
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_CONNECTION_FAILED,
+        QString("%1:\n%2\n\n%3")
+            .arg( m_CONNECTION_FAILED, link, err_msg ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::msgNewVersion( QWidget *parent )
+{
+    std::ignore=
+    QMessageBox::information(parent,
+        t_VERSION_CHECK,
+        m_NEW_VERSION_AVAILABLE,
+        QMessageBox::Ok );
+}
+void DialogSec::msgSameVersion( QWidget *parent )
+{
+    std::ignore=
+    QMessageBox::information(parent,
+        t_VERSION_CHECK,
+        m_SAME_VERSION,
+        QMessageBox::Ok );
+}
+void DialogSec::warnFutureVersion( QWidget *parent )
+{
+    std::ignore=
+    QMessageBox::warning(parent,
+        t_VERSION_CHECK,
+        m_FUTURE_VERSION_RUNNING,
+        QMessageBox::Ok );
+}
+
+
+
 //////////////
 //// HELP ////
 //////////////
@@ -76,7 +163,7 @@ void DialogSec::errHelpFailed( QWidget *parent, const QString& link, const QStri
         QString("%1%2\n\n%3%4")
             .arg( m_HELP_FAILED_LOADING,
                   (msg=="") ? msg : ":\n"+msg,
-                  f_GET_HELP,
+                  f_ADD_RESOURCES,
                   (link=="") ? link : ":\n"+link ),
         QMessageBox::Ok );
 }
