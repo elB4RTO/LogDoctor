@@ -14,7 +14,7 @@
 #include <iostream> // !!! REMOVE !!!
 
 
-MainWindow::MainWindow( QTranslator *translator, QWidget *parent )
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -103,11 +103,6 @@ MainWindow::MainWindow( QTranslator *translator, QWidget *parent )
     // tools
     connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
     connect( this->ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::menu_actionCheckUpdates_triggered );
-
-
-    ////////////////////
-    //// TRANSLATOR ////
-    this->translator = translator;
 
 
     /////////////////
@@ -752,10 +747,10 @@ void MainWindow::updateUiTheme()
 void MainWindow::updateUiLanguage()
 {
     // remove the old translator
-    QCoreApplication::removeTranslator( this->translator );
-    if ( this->translator->load( QString(":/translations/%1").arg(QString::fromStdString( this->language )) ) ) {
+    QCoreApplication::removeTranslator( &this->translator );
+    if ( this->translator.load( QString(":/translations/%1").arg(QString::fromStdString( this->language )) ) ) {
         // apply the new translator
-        QCoreApplication::installTranslator( this->translator );
+        QCoreApplication::installTranslator( &this->translator );
         this->ui->retranslateUi( this );
     }
 }
