@@ -71,3 +71,43 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
     };
     return scheme;
 }
+
+
+
+const QPalette ColorSec::getPalette( const int&theme )
+{
+    QPalette p;
+    switch ( theme ) {
+        case 0:
+            p = QPalette();
+            break;
+        case 1:
+            // light
+            p = QPalette( QBrush(QColor(  14,  20,   0 )), /* window text */
+                          QBrush(QColor( 193, 175, 129 )), /* button */
+                          QBrush(QColor( 164, 178, 140 )), /* light */
+                          QBrush(QColor(  24,  38,   0 )), /* dark */
+                          QBrush(QColor(  94, 108,  70 )), /* mid */
+                          QBrush(QColor(  14,  20,   0 )), /* text */
+                          QBrush(QColor(  54,  60,  40 )), /* bright text */
+                          QBrush(QColor( 220, 211, 187 )), /* base */
+                          QBrush(QColor( 220, 211, 187 ))  /* window */ );
+            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(94,108,70)) );
+            break;
+        case 2:
+            // dark
+            p = QPalette( QBrush(QColor( 220, 211, 187 )), /* window text */
+                          QBrush(QColor(  44,  58,  20 )), /* button */
+                          QBrush(QColor(  24,  38,   0 )), /* light */
+                          QBrush(QColor( 164, 178, 140 )), /* dark */
+                          QBrush(QColor(  94, 108,  70 )), /* mid */
+                          QBrush(QColor( 220, 211, 187 )), /* text */
+                          QBrush(QColor( 193, 175, 129 )), /* bright text */
+                          QBrush(QColor(  14,  20,   0 )), /* base */
+                          QBrush(QColor(  14,  20,   0 ))  /* window */ );
+            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(94,108,70)) );
+            break;
+    }
+
+    return p;
+}
