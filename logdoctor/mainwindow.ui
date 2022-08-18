@@ -2325,7 +2325,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>0</x>
+                    <x>13</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -7279,7 +7279,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -8305,7 +8305,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9409,7 +9409,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -10186,7 +10186,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     </property>
     <addaction name="actionBlockNote"/>
     <addaction name="separator"/>
-    <addaction name="actionCheck_updates"/>
+    <addaction name="actionCheckUpdates"/>
    </widget>
    <addaction name="menuLanguage"/>
    <addaction name="menuTools"/>
@@ -10263,10 +10263,16 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    <property name="text">
     <string>BlockNote</string>
    </property>
+   <property name="toolTip">
+    <string>Open a block-note like window to write temporary text</string>
+   </property>
   </action>
-  <action name="actionCheck_updates">
+  <action name="actionCheckUpdates">
    <property name="text">
     <string>Check updates</string>
+   </property>
+   <property name="toolTip">
+    <string>Perform a version-check</string>
    </property>
   </action>
  </widget>
