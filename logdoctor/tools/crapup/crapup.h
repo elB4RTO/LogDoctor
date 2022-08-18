@@ -11,7 +11,7 @@ public:
     Crapup();
 
     // perform a GET request for a version-check
-    const std::tuple<bool, float> versionCheck( const std::string& link );
+    void versionCheck( const float& current_version, const int& dialog_level );
 
 
 private:
