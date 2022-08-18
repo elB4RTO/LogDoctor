@@ -14,7 +14,7 @@
 #include <iostream> // !!! REMOVE !!!
 
 
-MainWindow::MainWindow( QWidget *parent )
+MainWindow::MainWindow( QTranslator *translator, QWidget *parent )
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -77,9 +77,9 @@ MainWindow::MainWindow( QWidget *parent )
     this->TB.setFont( this->FONTS.at( "main" ) );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
     // MakeStats labels
-    this->ui->label_MakeStats_Size->setFont( this->FONTS.at(  "main"  ) );
+    this->ui->label_MakeStats_Size->setFont(  this->FONTS.at( "main" ) );
     this->ui->label_MakeStats_Lines->setFont( this->FONTS.at( "main" ) );
-    this->ui->label_MakeStats_Time->setFont( this->FONTS.at(  "main" ) );
+    this->ui->label_MakeStats_Time->setFont(  this->FONTS.at( "main" ) );
     this->ui->label_MakeStats_Speed->setFont( this->FONTS.at( "main" ) );
 
     // StatsSpeed table
@@ -89,6 +89,26 @@ MainWindow::MainWindow( QWidget *parent )
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
 
+    // blocknote
+    this->crapnote->setFont( this->FONTS.at( "main" ) );
+
+
+    //////////////
+    //// MENU ////
+    // languages
+    connect( this->ui->actionEnglish,  &QAction::triggered, this, &MainWindow::menu_actionEnglish_triggered  );
+    connect( this->ui->actionEspanol,  &QAction::triggered, this, &MainWindow::menu_actionEspanol_triggered  );
+    connect( this->ui->actionFrancais, &QAction::triggered, this, &MainWindow::menu_actionFrancais_triggered );
+    connect( this->ui->actionItaliano, &QAction::triggered, this, &MainWindow::menu_actionItaliano_triggered );
+    // tools
+    connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
+    connect( this->ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::menu_actionCheckUpdates_triggered );
+
+
+    ////////////////////
+    //// TRANSLATOR ////
+    this->translator = translator;
+
 
     /////////////////
     //// CONFIGS ////
@@ -96,6 +116,9 @@ MainWindow::MainWindow( QWidget *parent )
     this->readConfigs();
     if ( this->language != "en" ) {
         this->updateUiLanguage();
+    }
+    if ( this->window_theme_id != 0 ) {
+        this->updateUiTheme();
     }
 
 
@@ -183,7 +206,11 @@ MainWindow::MainWindow( QWidget *parent )
     this->on_box_ConfIis_Blacklist_Field_currentTextChanged( this->ui->box_ConfIis_Blacklist_Field->currentText() );
 
 
-    // default message
+    // blocknote's font and colors
+    this->crapnote->setTextFont( this->TB.getFont() );
+    this->crapnote->setColorScheme( this->TB.getColorSchemeID() );
+
+    // text browser's default message
     {
         QString rich_text;
         RichText::richLogsDefault( rich_text );
@@ -201,6 +228,7 @@ MainWindow::~MainWindow()
 {
     delete this->ui;
     delete this->craphelp;
+    //delete this->translator;
 }
 
 void MainWindow::closeEvent (QCloseEvent *event)
@@ -325,9 +353,13 @@ void MainWindow::readConfigs()
                 if ( var == "Language" ) {
                     if ( val.size() > 2 ) {
                         // not a valid locale, keep the default
-                        // !!! PUT A DIALOG MESSAGE HERE !!!
+                        DialogSec::errLangLocaleInvalid( nullptr, QString::fromStdString( val ) );
                     } else {
-                        this->language = val;
+                        if ( val == "en" || val == "es" || val == "fr" || val == "it" ) {
+                            this->language = val;
+                        } else {
+                            DialogSec::errLangNotAccepted( nullptr, QString::fromStdString( val ) );
+                        }
                     }
 
                 } else if ( var == "RememberGeometry" ) {
@@ -706,7 +738,11 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 //////////////////
 void MainWindow::updateUiTheme()
 {
-
+    if ( this->window_theme_id < 0 || this->window_theme_id > 2 ) {
+        // wrong
+        throw GenericException( "Unexpected WindowTheme ID: "+std::to_string( this->window_theme_id ) );
+    }
+    this->setPalette( ColorSec::getPalette( this->window_theme_id ) );
 }
 
 
@@ -715,7 +751,13 @@ void MainWindow::updateUiTheme()
 //////////////////
 void MainWindow::updateUiLanguage()
 {
-
+    // remove the old translator
+    QCoreApplication::removeTranslator( this->translator );
+    if ( this->translator->load( QString(":/translations/%1").arg(QString::fromStdString( this->language )) ) ) {
+        // apply the new translator
+        QCoreApplication::installTranslator( this->translator );
+        this->ui->retranslateUi( this );
+    }
 }
 
 
@@ -1014,21 +1056,7 @@ const QString MainWindow::printableTime( const int& secs_ )
 //////////////
 void MainWindow::showHelp( const std::string& filename )
 {
-    std::string link = "";
-    if ( IOutils::checkFile( this->logdoc_path+"repo_link.txt", true ) == true ) {
-        IOutils::readFile( this->logdoc_path+"repo_link.txt", link );
-        std::vector<std::string> aux;
-        StringOps::splitrip( aux, link );
-        link = aux.at( 0 );
-        // very basic checks
-        if ( StringOps::startsWith( link, "https://" ) == false
-          || StringOps::endsWith(   link, "/elB4RTO/LogDoctor/" ) == false ) {
-            // not valid as link
-            link = "";
-        } else {
-            link += "installation_stuff/logdocdata/help";
-        }
-    }
+    const std::string link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
     const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+filename+".html";
     if ( IOutils::exists( path ) == true ) {
         if ( IOutils::isFile( path ) == true ) {
@@ -1064,6 +1092,69 @@ void MainWindow::showHelp( const std::string& filename )
 /***************************************************************
  * MainWindow'S OPERATIONS START FROM HERE
  ***************************************************************/
+
+
+//////////////
+//// MENU ////
+/// //////////
+// switch language
+void MainWindow::menu_actionEnglish_triggered()
+{
+    this->ui->actionEnglish->setChecked( true );
+    this->ui->actionEspanol->setChecked( false );
+    this->ui->actionFrancais->setChecked( false );
+    this->ui->actionItaliano->setChecked( false );
+    this->language = "en";
+    this->updateUiLanguage();
+}
+void MainWindow::menu_actionEspanol_triggered()
+{
+    this->ui->actionEnglish->setChecked( false );
+    this->ui->actionEspanol->setChecked( true );
+    this->ui->actionFrancais->setChecked( false );
+    this->ui->actionItaliano->setChecked( false );
+    this->language = "es";
+    this->updateUiLanguage();
+}
+void MainWindow::menu_actionFrancais_triggered()
+{
+    this->ui->actionEnglish->setChecked( false );
+    this->ui->actionEspanol->setChecked( false );
+    this->ui->actionFrancais->setChecked( true );
+    this->ui->actionItaliano->setChecked( false );
+    this->language = "fr";
+    this->updateUiLanguage();
+}
+void MainWindow::menu_actionItaliano_triggered()
+{
+
+    this->ui->actionEnglish->setChecked( false );
+    this->ui->actionEspanol->setChecked( false );
+    this->ui->actionFrancais->setChecked( false );
+    this->ui->actionItaliano->setChecked( true );
+    this->language = "it";
+    this->updateUiLanguage();
+}
+
+// use a tool
+void MainWindow::menu_actionBlockNote_triggered()
+{
+    if ( this->crapnote->isVisible() == true ) {
+        this->crapnote->activateWindow();
+
+    } else {
+        delete this->crapnote;
+        this->crapnote = new Crapnote();
+        this->crapnote->setTextFont( this->TB.getFont() );
+        this->crapnote->setColorScheme( this->TB.getColorSchemeID() );
+        this->crapnote->show();
+    }
+}
+
+void MainWindow::menu_actionCheckUpdates_triggered()
+{
+    this->crapup.versionCheck( this->version, this->dialogs_level );
+}
 
 
 //////////////
@@ -2345,7 +2436,8 @@ void MainWindow::on_checkBox_ConfWindow_Geometry_clicked(bool checked)
 
 void MainWindow::on_box_ConfWindow_Theme_currentIndexChanged(int index)
 {
-
+    this->window_theme_id = index;
+    this->updateUiTheme();
 }
 
 
@@ -2385,6 +2477,7 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
     }
     this->TB.setFont( font );
     this->TB.setFontFamily( this->ui->box_ConfTextBrowser_Font->currentText() );
+    this->crapnote->setTextFont( font );
     this->ui->textBrowser_ConfTextBrowser_Preview->setFont( font );
 }
 void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
@@ -2395,6 +2488,7 @@ void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 void MainWindow::on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int index)
 {
     this->TB.setColorScheme( index, this->TB_COLOR_SCHEMES.at( index ) );
+    this->crapnote->setColorScheme( index );
     this->refreshTextBrowserPreview();
 }
 void MainWindow::refreshTextBrowserPreview()
