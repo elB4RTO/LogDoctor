@@ -32,7 +32,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow( QTranslator *translator, QWidget *parent=nullptr );
+    MainWindow(QWidget *parent=nullptr);
     ~MainWindow();
     void closeEvent( QCloseEvent *event );
 
@@ -459,7 +459,7 @@ private:
     const std::unordered_map<std::string, bool> s2b = { {"true",true}, {"false",false} };
     const std::unordered_map<bool, std::string> b2s = { {true,"true"}, {false,"false"} };
     // language
-    QTranslator *translator;
+    QTranslator translator;
     std::string language = "en";
     void updateUiLanguage();
     // window geometry
