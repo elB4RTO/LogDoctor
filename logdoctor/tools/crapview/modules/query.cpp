@@ -158,11 +158,11 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                     } catch (...) {
                         // failed to convert to integer
                         successful = false;
-                        QString err_msg = QString("An error occured while parsing Years from the database");
+                        QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_YEARS );
                         if ( this->dialog_level > 0 ) {
-                            err_msg += QString("\n\nValue responsible for the error:\n%1").arg(Y_query.value(0).toString());
+                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE ).arg( Y_query.value(0).toString() );
                             if ( this->dialog_level == 2 ) {
-                                err_msg += QString("\n\nDatabase table name:\n%1").arg(tbl);
+                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME ).arg( tbl );
                             }
                         }
                         DialogSec::errGeneric( nullptr, err_msg );
@@ -184,11 +184,11 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                             } catch (...) {
                                 // failed to convert to integer
                                 successful = false;
-                                QString err_msg = QString("An error occured while parsing Months from the database");
+                                QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_MONTHS );
                                 if ( this->dialog_level > 0 ) {
-                                    err_msg += QString("\n\nValue responsible for the error:\n%1").arg(M_query.value(0).toString());
+                                    err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE ).arg( M_query.value(0).toString() );
                                     if ( this->dialog_level == 2 ) {
-                                        err_msg += QString("\n\nDatabase table name:\n%1").arg(tbl);
+                                        err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME ).arg( tbl );
                                     }
                                 }
                                 DialogSec::errGeneric( nullptr, err_msg );
@@ -210,11 +210,11 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                     } catch (...) {
                                         // failed to convert to integer
                                         successful = false;
-                                        QString err_msg = QString("An error occured while parsing Days from the database");
+                                        QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_DAYS );
                                         if ( this->dialog_level > 0 ) {
-                                            err_msg += QString("\n\nValue responsible for the error:\n%1").arg(D_query.value(0).toString());
+                                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE ).arg( D_query.value(0).toString() );
                                             if ( this->dialog_level == 2 ) {
-                                                err_msg += QString("\n\nDatabase table name:\n%1").arg(tbl);
+                                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME ).arg( tbl );
                                             }
                                         }
                                         DialogSec::errGeneric( nullptr, err_msg );
@@ -1931,7 +1931,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                                 successful = false;
                                 QString err_msg = "";
                                 if ( this->dialog_level == 2 ) {
-                                    err_msg = "An error occured while processing";
+                                    err_msg = this->MSG_ERR_PROCESSING;
                                 }
                                 DialogSec::errGeneric( nullptr, err_msg );
                                 break;
