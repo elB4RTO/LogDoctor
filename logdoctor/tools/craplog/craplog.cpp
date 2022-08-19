@@ -77,14 +77,6 @@ Craplog::Craplog()
                                                           .contains = "_ex",
                                                           .ends     = ".log" });
 
-
-    ///////////////////////
-    //// CONFIGURATION ////
-    ///////////////////////
-    /*this->readConfigs();
-
-    this->hashOps.readLists( this->configs_path );*/
-
 }
 
 
@@ -567,10 +559,14 @@ const bool Craplog::isFileNameValid( const std::string& name )
     }
 
     switch ( this->current_WS ) {
-        int start, stop;
+        size_t start, stop;
         case 11 | 12:
             // further checks for apache / nginx
-            start = name.find_last_of( ".log." )+1;
+            start = StringOps::findLast( name, ".log." )+5;
+            if ( start == std::string::npos ) {
+                valid = false;
+                break;
+            }
             stop = name.size()-1;
             if ( StringOps::endsWith( name, ".gz" ) ) {
                 stop -= 3;
@@ -587,6 +583,10 @@ const bool Craplog::isFileNameValid( const std::string& name )
         case 13:
             // further checks for iis
             start =  name.find( this->logs_base_names.at( 13 ).contains ) + 3;
+            if ( start == std::string::npos ) {
+                valid = false;
+                break;
+            }
             stop = name.size()-5; // removing the finel '.log' extension
             if ( StringOps::endsWith( name, ".gz" ) ) {
                 stop -= 3;
@@ -862,6 +862,9 @@ void Craplog::joinLogLines()
                 IOutils::readFile( file.path, aux );
             }
             StringOps::splitrip( content, aux );
+            if ( this->current_WS == this->IIS_ID ) {
+                this->logOps.cleanLines( content );
+            }
         } catch (const std::ios_base::failure& err) {
             // failed reading
             // >> err.what() << //
@@ -1001,9 +1004,15 @@ const QString Craplog::printableSize( const int& bytes )
     }
     // cut decimals depending on how big the floor is
     size_str = std::to_string( size );
-    int cut_index = size_str.find('.')+1;
-    if ( cut_index == 0 ) {
-            cut_index = size_str.find(',')+1;
+    size_t cut_index = size_str.find('.');
+    if ( cut_index == std::string::npos ) {
+        cut_index = size_str.find(',');
+        if ( cut_index == std::string::npos ) {
+            cut_index = 0;
+        }
+    }
+    if ( cut_index != 0 ) {
+        cut_index ++;
     }
     int n_decimals = 3;
     if ( size >= 100 ) {
@@ -1016,7 +1025,7 @@ const QString Craplog::printableSize( const int& bytes )
             }
         }
     }
-    if ( cut_index >= 1 ) {
+    if ( cut_index > 0 ) {
         cut_index += n_decimals;
         if ( cut_index > size_str.size()-1 ) {
             cut_index = size_str.size()-1;
@@ -1080,16 +1089,18 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
     sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
     sizeBreakdown->setTitle( size_chart_name );
     sizeBreakdown->setTitleFont( fonts.at("main") );
-    //if ( this->total_size > 0 ) {
+    if ( this->total_size > 0 ) {
         sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
         sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
         sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::gray, fonts.at("main_small") );
-    /*} else {
-        sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
+    } else {
+        /*sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
         parsedSize_donut->setVisible( false );
         sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
-        ignoredSize_donut->setVisible( false );
-    }*/
+        ignoredSize_donut->setVisible( false );*/
+        sizeBreakdown->legend()->setVisible( false );
+        sizeBreakdown->setTitle("");
+    }
     sizeBreakdown->legend()->setFont( fonts.at("main") );
 
     size_chart->setChart( sizeBreakdown );
