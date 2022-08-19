@@ -82,7 +82,7 @@
     <p>Although Apache2 does support some control-characters (<i>aka</i> escape sequences), it is reccomended to <b>not use them</b> inside format strings.<br>
     In particular, the <i>carriage return</i> will most-likely overwrite previous fields data, making it very difficult to understand where the current field ends (specially for fields like URIs, queries, user-agents, etc) and nearly impossible to retrieve the overwritten data, which will lead in having a wasted database, un-realistic statistics and/or crashes during execution.<br>
     About the <i>new line</i> character, it has no sense to use it, if not for testing purposes. The same is true for the <i>horizontal tab</i>, for which is better to use a simple whitespace instead.<br>
-    The only control-characters supported by Apache2 are <b>\n</b>, <b>\t</b> and <b>\c</b>. Any other character will be ignored and treated as text.</p>
+    The only control-characters supported by Apache2 are <b>\n</b>, <b>\t</b> and <b>\r</b>. Any other character will be ignored and treated as text.</p>
     <br>
     <br>
     <br>
