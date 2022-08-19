@@ -6,186 +6,184 @@
 #include <QMessageBox>
 
 
-static QString
-    ///////////////////
-    //// QUESTIONS ////
-    q_CONTINUE    = QMessageBox::tr("Continue?"),
-    q_YOUR_CHOICE = QMessageBox::tr("Your choice?"),
-    q_DA          = QMessageBox::tr("Discard it and continue, or Abort all and exit?"),
-    q_DIA         = QMessageBox::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?"),
-    q_DB_CREATE   = QMessageBox::tr("Create a new database?"),
-    q_DB_RENEW    = QMessageBox::tr("This database will renamed with a trailing '.copy' and a new one will be created.\nContinue?"),
-    q_ENTRY_RENEW = QMessageBox::tr("The entry will renamed with a trailing '.copy' and a new one will be created.\nContinue?"),
+///////////////////
+//// QUESTIONS ////
+static const QString q_CONTINUE    = QMessageBox::tr("Continue?");
+static const QString q_YOUR_CHOICE = QMessageBox::tr("Your choice?");
+static const QString q_DA          = QMessageBox::tr("Discard it and continue, or Abort all and exit?");
+static const QString q_DIA         = QMessageBox::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?");
+static const QString q_DB_CREATE   = QMessageBox::tr("Create a new database?");
+static const QString q_DB_RENEW    = QMessageBox::tr("This database will renamed with a trailing '.copy' and a new one will be created.\nContinue?");
+static const QString q_ENTRY_RENEW = QMessageBox::tr("The entry will renamed with a trailing '.copy' and a new one will be created.\nContinue?");
 
-    ////////////////
-    //// TITLES ////
-    t_ERROR_OCCURED = QMessageBox::tr("An error occured"),
+////////////////
+//// TITLES ////
+static const QString t_ERROR_OCCURED = QMessageBox::tr("An error occured");
 
-    // IO
-    t_ERROR_RENAMING = QMessageBox::tr("Failed renaming"),
+// IO
+static const QString t_ERROR_RENAMING = QMessageBox::tr("Failed renaming");
 
-    // languages
-    t_LANG_INVALID = QMessageBox::tr("Invalid locale"),
+// languages
+static const QString t_LANG_INVALID = QMessageBox::tr("Invalid locale");
 
-    // configuration
-    t_CONF_FILE_NOT_FOUND = QMessageBox::tr("Configuration file not found"),
-    t_CONF_FILE_FAILED_W  = QMessageBox::tr("Failed to write configuration file"),
+// configuration
+static const QString t_CONF_FILE_NOT_FOUND = QMessageBox::tr("Configuration file not found");
+static const QString t_CONF_FILE_FAILED_W  = QMessageBox::tr("Failed to write configuration file");
 
-    // updates
-    t_VERSION_CHECK        = QMessageBox::tr("Version check"),
-    t_VERSION_CHECK_FAILED = QMessageBox::tr("Version check failed"),
-    t_CONNECTION_FAILED    = QMessageBox::tr("Failed to establish a connection"),
+// updates
+static const QString t_VERSION_CHECK        = QMessageBox::tr("Version check");
+static const QString t_VERSION_CHECK_FAILED = QMessageBox::tr("Version check failed");
+static const QString t_CONNECTION_FAILED    = QMessageBox::tr("Failed to establish a connection");
 
-    // help
-    t_HELP_FAILED_LOADING = QMessageBox::tr("Failed to retrieve the help file"),
+// help
+static const QString t_HELP_FAILED_LOADING = QMessageBox::tr("Failed to retrieve the help file");
 
-    // IO files
-    t_FILE_NOT_FILE     = QMessageBox::tr("Not a file"),
-    t_FILE_NOT_FOUND    = QMessageBox::tr("File not found"),
-    t_FILE_NOT_READABLE = QMessageBox::tr("File not readable"),
-    t_FILE_NOT_WRITABLE = QMessageBox::tr("File not writable"),
-    t_FILE_EMPTY        = QMessageBox::tr("File is empty"),
-    t_FILE_FAILED_READ  = QMessageBox::tr("Failed reading"),
-    t_FILE_FAILED_WRITE = QMessageBox::tr("Failed writing"),
+// IO files
+static const QString t_FILE_NOT_FILE     = QMessageBox::tr("Not a file");
+static const QString t_FILE_NOT_FOUND    = QMessageBox::tr("File not found");
+static const QString t_FILE_NOT_READABLE = QMessageBox::tr("File not readable");
+static const QString t_FILE_NOT_WRITABLE = QMessageBox::tr("File not writable");
+static const QString t_FILE_EMPTY        = QMessageBox::tr("File is empty");
+static const QString t_FILE_FAILED_READ  = QMessageBox::tr("Failed reading");
+static const QString t_FILE_FAILED_WRITE = QMessageBox::tr("Failed writing");
 
-    // IO directories
-    t_DIR_NOT_DIR      = QMessageBox::tr("Not a folder"),
-    t_DIR_NOT_FOUND    = QMessageBox::tr("Directory not found"),
-    t_DIR_NOT_READABLE = QMessageBox::tr("Directory not readable"),
-    t_DIR_NOT_WRITABLE = QMessageBox::tr("Directory not writable"),
+// IO directories
+static const QString t_DIR_NOT_DIR      = QMessageBox::tr("Not a folder");
+static const QString t_DIR_NOT_FOUND    = QMessageBox::tr("Directory not found");
+static const QString t_DIR_NOT_READABLE = QMessageBox::tr("Directory not readable");
+static const QString t_DIR_NOT_WRITABLE = QMessageBox::tr("Directory not writable");
 
-    // database
-    t_DB_DRIVER_NOT_FOUND  = QMessageBox::tr("QSql driver not found"),
-    t_DB_CREATED           = QMessageBox::tr("Database created"),
-    t_DB_FAILED_CREATING   = QMessageBox::tr("Failed creating database"),
-    t_DB_FAILED_OPENING    = QMessageBox::tr("Failed opening database"),
-    t_DB_FAILED_EXECUTING  = QMessageBox::tr("Failed executing on database"),
-    t_DB_WRONG_TABLE_NAME  = QMessageBox::tr("Unexpected table"),
-    t_DB_MISSING_TABLE     = QMessageBox::tr("Table not found"),
-    t_DB_WRONG_COLUMN_NAME = QMessageBox::tr("Unexpected column"),
-    t_DB_MISSING_COLUMN    = QMessageBox::tr("Column not found"),
-    t_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("Unexpected data-type"),
+// database
+static const QString t_DB_DRIVER_NOT_FOUND  = QMessageBox::tr("QSql driver not found");
+static const QString t_DB_CREATED           = QMessageBox::tr("Database created");
+static const QString t_DB_FAILED_CREATING   = QMessageBox::tr("Failed creating database");
+static const QString t_DB_FAILED_OPENING    = QMessageBox::tr("Failed opening database");
+static const QString t_DB_FAILED_EXECUTING  = QMessageBox::tr("Failed executing on database");
+static const QString t_DB_WRONG_TABLE_NAME  = QMessageBox::tr("Unexpected table");
+static const QString t_DB_MISSING_TABLE     = QMessageBox::tr("Table not found");
+static const QString t_DB_WRONG_COLUMN_NAME = QMessageBox::tr("Unexpected column");
+static const QString t_DB_MISSING_COLUMN    = QMessageBox::tr("Column not found");
+static const QString t_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("Unexpected data-type");
 
-    // log type
-    t_LOGTYPE_FAILED = QMessageBox::tr("Failed defining type"),
+// log type
+static const QString t_LOGTYPE_FAILED = QMessageBox::tr("Failed defining type");
 
-    // log format
-    t_LOGFORMAT_ERROR   = QMessageBox::tr("Log format error"),
-    t_LOGFORMAT_MISCONFIGURED = QMessageBox::tr("Misconfigured log format"),
-    t_LOGFORMAT_INVALID = QMessageBox::tr("Invalid log format string"),
+// log format
+static const QString t_LOGFORMAT_ERROR   = QMessageBox::tr("Log format error");
+static const QString t_LOGFORMAT_MISCONFIGURED = QMessageBox::tr("Misconfigured log format");
+static const QString t_LOGFORMAT_INVALID = QMessageBox::tr("Invalid log format string");
 
-    // log files
-    t_FILE_ALREADY_USED = QMessageBox::tr("File already used"),
-    t_FILE_SIZE_WARNING = QMessageBox::tr("File exceeds warning size"),
+// log files
+static const QString t_FILE_ALREADY_USED = QMessageBox::tr("File already used");
+static const QString t_FILE_SIZE_WARNING = QMessageBox::tr("File exceeds warning size");
 
-    //////////////////
-    //// MESSAGES ////
-    // IO
-    m_ERROR_RENAMING = QMessageBox::tr("An error occured while renaming"),
+//////////////////
+//// MESSAGES ////
+// IO
+static const QString m_ERROR_RENAMING = QMessageBox::tr("An error occured while renaming");
 
-    // language
-    m_LANG_LOCALE_INVALID = QMessageBox::tr("Unexpected locale format"),
-    m_LANG_NOT_ACCEPTED   = QMessageBox::tr("The given locale is not an accepted language"),
+// language
+static const QString m_LANG_LOCALE_INVALID = QMessageBox::tr("Unexpected locale format");
+static const QString m_LANG_NOT_ACCEPTED   = QMessageBox::tr("The given locale is not an accepted language");
 
-    // configuration
-    m_CONF_FILE_ERROR     = QMessageBox::tr("An error occured while handling the configuration file"),
-    m_CONF_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the configuration file"),
-    m_CONF_FILE_FAILED_W  = QMessageBox::tr("Current configuration not saved"),
+// configuration
+static const QString m_CONF_FILE_ERROR     = QMessageBox::tr("An error occured while handling the configuration file");
+static const QString m_CONF_FILE_NOT_FOUND = QMessageBox::tr("Unable to retrieve the configuration file");
+static const QString m_CONF_FILE_FAILED_W  = QMessageBox::tr("Current configuration not saved");
 
-    // updates
-    m_VERSION_CHECK_FAILED = QMessageBox::tr("Failed to fetch the upstream version"),
-    m_CONNECTION_FAILED    = QMessageBox::tr("An error occured while trying to establish a connection with"),
-    m_CONNECTIONS_FAILED   = QMessageBox::tr("An error occured while establishing a connection with any of the hosts"),
-    m_VERSION_NOT_FOUND    = QMessageBox::tr("An error occured while parsing:\nversion mark not found"),
-    m_VERSION_MALFORMED    = QMessageBox::tr("An error occured while parsing:\nmalformed version"),
-    m_NEW_VERSION_AVAILABLE  = QMessageBox::tr("A new version available!\n\nPlease visit LogDoctor's git repository\nand follow the instruction about how to update"),
-    m_SAME_VERSION           = QMessageBox::tr("LogDoctor is up-to-date"),
-    m_FUTURE_VERSION_RUNNING = QMessageBox::tr("You're running a version from the future!\n\nYour version is beyond the current upstream version\n\nAre you running the original LogDoctor?\nIf you think so, you may be a victim of a malware\nPlease visit the LogDoctor's repository and get a fresh version of it"),
+// updates
+static const QString  m_VERSION_CHECK_FAILED = QMessageBox::tr("Failed to fetch the upstream version");
+static const QString  m_CONNECTION_FAILED    = QMessageBox::tr("An error occured while trying to establish a connection with");
+static const QString  m_CONNECTIONS_FAILED   = QMessageBox::tr("An error occured while establishing a connection with any of the hosts");
+static const QString  m_VERSION_NOT_FOUND    = QMessageBox::tr("An error occured while parsing:\nversion mark not found");
+static const QString  m_VERSION_MALFORMED    = QMessageBox::tr("An error occured while parsing:\nmalformed version");
+static const QString  m_NEW_VERSION_AVAILABLE  = QMessageBox::tr("A new version available!\n\nPlease visit LogDoctor's git repository\nand follow the instruction about how to update");
+static const QString  m_SAME_VERSION           = QMessageBox::tr("LogDoctor is up-to-date");
+static const QString  m_FUTURE_VERSION_RUNNING = QMessageBox::tr("You're running a version from the future!\n\nYour version is beyond the current upstream version\n\nAre you running the original LogDoctor?\nIf you think so, you may be a victim of a malware\nPlease visit the LogDoctor's repository and get a fresh version of it");
 
-    // help
-    m_HELP_FAILED_LOADING = QMessageBox::tr("An error occured while getting the help file"),
+// help
+static const QString  m_HELP_FAILED_LOADING = QMessageBox::tr("An error occured while getting the help file");
 
-    // IO files
-    m_FILE_NOT_FILE     = QMessageBox::tr("The path was supposed to point to a file, but it doesn't"),
-    m_FILE_NOT_EXISTS   = QMessageBox::tr("The file does not exists"),
-    m_FILE_NOT_FOUND    = QMessageBox::tr("Unable to retrieve the file"),
-    m_FILE_NOT_READABLE = QMessageBox::tr("The file is not readable"),
-    m_FILE_NOT_WRITABLE = QMessageBox::tr("The file is not writable"),
-    m_FILE_EMPTY        = QMessageBox::tr("The file is blank"),
-    m_FILE_FAILED_READ  = QMessageBox::tr("An error accured while reading the file"),
-    m_FILE_FAILED_WRITE = QMessageBox::tr("An error accured while writing the file"),
+// IO files
+static const QString  m_FILE_NOT_FILE     = QMessageBox::tr("The path was supposed to point to a file, but it doesn't");
+static const QString  m_FILE_NOT_EXISTS   = QMessageBox::tr("The file does not exists");
+static const QString  m_FILE_NOT_FOUND    = QMessageBox::tr("Unable to retrieve the file");
+static const QString  m_FILE_NOT_READABLE = QMessageBox::tr("The file is not readable");
+static const QString  m_FILE_NOT_WRITABLE = QMessageBox::tr("The file is not writable");
+static const QString  m_FILE_EMPTY        = QMessageBox::tr("The file is blank");
+static const QString  m_FILE_FAILED_READ  = QMessageBox::tr("An error accured while reading the file");
+static const QString  m_FILE_FAILED_WRITE = QMessageBox::tr("An error accured while writing the file");
 
-    // IO directories
-    m_DIR_NOT_DIR       = QMessageBox::tr("The path was supposed to point to a folder, but it doesn't"),
-    m_DIR_NOT_EXISTS    = QMessageBox::tr("The directory does not exists"),
-    m_DIR_NOT_FOUND     = QMessageBox::tr("Unable to reach the directory"),
-    m_DIR_NOT_READABLE  = QMessageBox::tr("The directory is not readable"),
-    m_DIR_NOT_WRITABLE  = QMessageBox::tr("The directory is not writable"),
+// IO directories
+static const QString  m_DIR_NOT_DIR       = QMessageBox::tr("The path was supposed to point to a folder, but it doesn't");
+static const QString  m_DIR_NOT_EXISTS    = QMessageBox::tr("The directory does not exists");
+static const QString  m_DIR_NOT_FOUND     = QMessageBox::tr("Unable to reach the directory");
+static const QString  m_DIR_NOT_READABLE  = QMessageBox::tr("The directory is not readable");
+static const QString  m_DIR_NOT_WRITABLE  = QMessageBox::tr("The directory is not writable");
 
-    // database
-    m_DB_DRIVER_NOT_FOUND  = QMessageBox::tr("Failed to retrieve the driver neede to handle the database"),
-    m_DB_NOT_FOUND         = QMessageBox::tr("Failed to retrieve the database file"),
-    m_DB_NOT_READABLE      = QMessageBox::tr("The database file is not readable"),
-    m_DB_NOT_WRITABLE      = QMessageBox::tr("The database file is not writable"),
-    m_DB_CREATED           = QMessageBox::tr("Successfully created a new database"),
-    m_DB_FAILED_CREATING   = QMessageBox::tr("An error occured while creating the database"),
-    m_DB_FAILED_OPENING    = QMessageBox::tr("An error occured while opening the database"),
-    m_DB_FAILED_EXECUTING  = QMessageBox::tr("An error occured while executing a statement on the database"),
-    m_DB_FAILED_STATEMENT  = QMessageBox::tr("Failed at statement"),
-    m_DB_FAILED_ERRMSG     = QMessageBox::tr("SQLite error message"),
-    m_DB_WRONG_TABLE_NAME  = QMessageBox::tr("The database contains an unexpected table"),
-    m_DB_MISSING_TABLE     = QMessageBox::tr("It seems that the database is missing a table"),
-    m_DB_MISSING_COLUMN    = QMessageBox::tr("It seems that the table is missing a column"),
-    m_DB_WRONG_COLUMN_NAME = QMessageBox::tr("The database contains an unexpected column"),
-    m_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("A column has an unexpected data-type"),
+// database
+static const QString  m_DB_DRIVER_NOT_FOUND  = QMessageBox::tr("Failed to retrieve the driver neede to handle the database");
+static const QString  m_DB_NOT_FOUND         = QMessageBox::tr("Failed to retrieve the database file");
+static const QString  m_DB_NOT_READABLE      = QMessageBox::tr("The database file is not readable");
+static const QString  m_DB_NOT_WRITABLE      = QMessageBox::tr("The database file is not writable");
+static const QString  m_DB_CREATED           = QMessageBox::tr("Successfully created a new database");
+static const QString  m_DB_FAILED_CREATING   = QMessageBox::tr("An error occured while creating the database");
+static const QString  m_DB_FAILED_OPENING    = QMessageBox::tr("An error occured while opening the database");
+static const QString  m_DB_FAILED_EXECUTING  = QMessageBox::tr("An error occured while executing a statement on the database");
+static const QString  m_DB_FAILED_STATEMENT  = QMessageBox::tr("Failed at statement");
+static const QString  m_DB_FAILED_ERRMSG     = QMessageBox::tr("SQLite error message");
+static const QString  m_DB_WRONG_TABLE_NAME  = QMessageBox::tr("The database contains an unexpected table");
+static const QString  m_DB_MISSING_TABLE     = QMessageBox::tr("It seems that the database is missing a table");
+static const QString  m_DB_MISSING_COLUMN    = QMessageBox::tr("It seems that the table is missing a column");
+static const QString  m_DB_WRONG_COLUMN_NAME = QMessageBox::tr("The database contains an unexpected column");
+static const QString  m_DB_WRONG_COLUMN_TYPE = QMessageBox::tr("A column has an unexpected data-type");
 
-    // log files
-    m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file"),
-    m_FILE_ALREADY_USED = QMessageBox::tr("The file has probably been used already"),
-    m_FILE_SIZE_WARNING = QMessageBox::tr("The file's size exceeds the warning size"),
+// log files
+static const QString  m_SELECTED_FILE_NOT_FOUND = QMessageBox::tr("Failed to retrieve the selected file");
+static const QString  m_FILE_ALREADY_USED = QMessageBox::tr("The file has probably been used already");
+static const QString  m_FILE_SIZE_WARNING = QMessageBox::tr("The file's size exceeds the warning size");
 
-    // log type
-    m_LOGTYPE_FAILED = QMessageBox::tr("Failed to determine the log type"),
+// log type
+static const QString  m_LOGTYPE_FAILED = QMessageBox::tr("Failed to determine the log type");
 
-    // log format
-    m_LOGFORMAT_NOT_SET   = QMessageBox::tr("The log format has not been set, or is invalid\nPlease add a valid one in the configurations"),
-    m_LOGFORMAT_NO_FIELDS = QMessageBox::tr("No log field has been set in the current logs format,\nmaking it useless to parse logs"),
-    m_LOGFORMAT_NO_SEPS   = QMessageBox::tr("A separator is missing between one or more fields,\nmaking it hard to establish net bounds,\nand possibly leading to store incorrect data"),
+// log format
+static const QString  m_LOGFORMAT_NOT_SET   = QMessageBox::tr("The log format has not been set, or is invalid\nPlease add a valid one in the configurations");
+static const QString  m_LOGFORMAT_NO_FIELDS = QMessageBox::tr("No log field has been set in the current logs format,\nmaking it useless to parse logs");
+static const QString  m_LOGFORMAT_NO_SEPS   = QMessageBox::tr("A separator is missing between one or more fields,\nmaking it hard to establish net bounds,\nand possibly leading to store incorrect data");
 
-    //////////////////
-    //// REQUESTS ////
-    r_REPORT_ISSUE     = QMessageBox::tr("Please report this issue"),
+//////////////////
+//// REQUESTS ////
+static const QString  r_REPORT_ISSUE     = QMessageBox::tr("Please report this issue");
 
-    // language
-    r_LANG_NOT_ACCEPTED = QMessageBox::tr("IF you'd like to have this locale in LogDoctor,\nplease follow the instruction on the repository page"),
+// language
+static const QString  r_LANG_NOT_ACCEPTED = QMessageBox::tr("IF you'd like to have this locale in LogDoctor,\nplease follow the instruction on the repository page");
 
-    // version check
-    r_UPSTREAM_FAILURE = QMessageBox::tr("Please check your internet connection and retry\nIf this error persists, please report this issue"),
+// version check
+static const QString  r_UPSTREAM_FAILURE = QMessageBox::tr("Please check your internet connection and retry\nIf this error persists, please report this issue");
 
-    // IO conflict
-    r_REMOVE_ENTRY     = QMessageBox::tr("Please remove the conflict and retry"),
+// IO conflict
+static const QString  r_REMOVE_ENTRY     = QMessageBox::tr("Please remove the conflict and retry");
 
-    // permissions
-    r_SET_PERMS_BEFORE = QMessageBox::tr("Please set the proper permissions before to start"),
-    r_SET_PERMISSIONS  = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue"),
+// permissions
+static const QString  r_SET_PERMS_BEFORE = QMessageBox::tr("Please set the proper permissions before to start");
+static const QString  r_SET_PERMISSIONS  = QMessageBox::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue");
 
-    // don't edit
-    r_CONF_DONT_EDIT   = QMessageBox::tr("If you haven't manually edited the configuration file,\nplease report this issue"),
-    r_DB_DONT_EDIT     = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue"),
+// don't edit
+static const QString  r_CONF_DONT_EDIT   = QMessageBox::tr("If you haven't manually edited the configuration file,\nplease report this issue");
+static const QString  r_DB_DONT_EDIT     = QMessageBox::tr("If you haven't manually edited the database,\nplease report this issue");
 
-    // log format
-    r_CHECK_FORMAT      = QMessageBox::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue"),
-    r_SET_FORMAT_FIELDS = QMessageBox::tr("Please set up a format which contains at least one field"),
-    r_SET_FORMAT_SEPS   = QMessageBox::tr("Please set up a format which contains separators between fields"),
+// log format
+static const QString  r_CHECK_FORMAT      = QMessageBox::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue");
+static const QString  r_SET_FORMAT_FIELDS = QMessageBox::tr("Please set up a format which contains at least one field");
+static const QString  r_SET_FORMAT_SEPS   = QMessageBox::tr("Please set up a format which contains separators between fields");
 
-    /////////////////
-    //// FOOTERS ////
-    f_SKIPPING = QMessageBox::tr("Skipping"),
-    f_ABORTING = QMessageBox::tr("Aborting"),
+/////////////////
+//// FOOTERS ////
+static const QString  f_SKIPPING = QMessageBox::tr("Skipping");
+static const QString  f_ABORTING = QMessageBox::tr("Aborting");
 
-    // additional resources
-    f_ADD_RESOURCES = QMessageBox::tr("Additional resources can be downloaded from the git repo")
-;
+// additional resources
+static const QString  f_ADD_RESOURCES = QMessageBox::tr("Additional resources can be downloaded from the git repo");
 
 
 class DialogSec
