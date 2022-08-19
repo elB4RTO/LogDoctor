@@ -101,16 +101,16 @@ private:
 
     DbQuery dbQuery;
 
-    QString TITLE_WARN = QMessageBox::tr("Log Lines Marked as Warning"),
-            TITLE_SPEED = QMessageBox::tr("Time Taken to Serve Requests"),
-            TEXT_COUNT_OTHERS = QMessageBox::tr("Others"),
-            TITLE_DAY  = QMessageBox::tr("Time of Day Count"),
-            TITLE_RELAT       = QMessageBox::tr("Relational Count"),
-            LEGEND_FROM = QMessageBox::tr("from"),
-            LEGEND_TO   = QMessageBox::tr("to"),
+    const QString TITLE_WARN = QMessageBox::tr("Log Lines Marked as Warning");
+    const QString TITLE_SPEED = QMessageBox::tr("Time Taken to Serve Requests");
+    const QString TEXT_COUNT_OTHERS = QMessageBox::tr("Others");
+    const QString TITLE_DAY  = QMessageBox::tr("Time of Day Count");
+    const QString TITLE_RELAT       = QMessageBox::tr("Relational Count");
+    const QString LEGEND_FROM = QMessageBox::tr("from");
+    const QString LEGEND_TO   = QMessageBox::tr("to");
 
-            DATE = QMessageBox::tr("Date"),
-            TIME = QMessageBox::tr("Time");
+    const QString DATE = QMessageBox::tr("Date");
+    const QString TIME = QMessageBox::tr("Time");
 
     // collection of available dates
     // { web_server_id : { year : { month_str : [ days ] } } }
@@ -120,9 +120,9 @@ private:
     // { tab : [ fields ] }
     const QHash<QString, QStringList> fields = {
         {"Daytime", {
-            FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)} },
+            this->dbQuery.FIELDS.value(0),this->dbQuery.FIELDS.value(10),this->dbQuery.FIELDS.value(11),this->dbQuery.FIELDS.value(12),this->dbQuery.FIELDS.value(13),this->dbQuery.FIELDS.value(14),this->dbQuery.FIELDS.value(18),this->dbQuery.FIELDS.value(22),this->dbQuery.FIELDS.value(21),this->dbQuery.FIELDS.value(20)} },
         {"Relational", {
-            FIELDS.value(0),FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),FIELDS.value(15),FIELDS.value(16),FIELDS.value(17),FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20)} }
+            this->dbQuery.FIELDS.value(0),this->dbQuery.FIELDS.value(10),this->dbQuery.FIELDS.value(11),this->dbQuery.FIELDS.value(12),this->dbQuery.FIELDS.value(13),this->dbQuery.FIELDS.value(14),this->dbQuery.FIELDS.value(15),this->dbQuery.FIELDS.value(16),this->dbQuery.FIELDS.value(17),this->dbQuery.FIELDS.value(18),this->dbQuery.FIELDS.value(22),this->dbQuery.FIELDS.value(21),this->dbQuery.FIELDS.value(20)} }
     };
 
     const QString printableDate( const QString& year, const int& month, const QString& day );
@@ -137,25 +137,25 @@ private:
         WebServer_s2i = {
             {"Apache2",11}, {"Nginx",12}, {"IIS",13} },
         LogFields_s2i = {
-            {FIELDS.value(0), 0},
-            {FIELDS.value(10),10},
-            {FIELDS.value(11),11},
-            {FIELDS.value(12),12},
-            {FIELDS.value(13),13},
-            {FIELDS.value(14),14},
-            {FIELDS.value(15),15},
-            {FIELDS.value(16),16},
-            {FIELDS.value(17),17},
-            {FIELDS.value(18),18},
-            {FIELDS.value(20),20},
-            {FIELDS.value(21),21},
-            {FIELDS.value(22),22}
+            {this->dbQuery.FIELDS.value(0), 0},
+            {this->dbQuery.FIELDS.value(10),10},
+            {this->dbQuery.FIELDS.value(11),11},
+            {this->dbQuery.FIELDS.value(12),12},
+            {this->dbQuery.FIELDS.value(13),13},
+            {this->dbQuery.FIELDS.value(14),14},
+            {this->dbQuery.FIELDS.value(15),15},
+            {this->dbQuery.FIELDS.value(16),16},
+            {this->dbQuery.FIELDS.value(17),17},
+            {this->dbQuery.FIELDS.value(18),18},
+            {this->dbQuery.FIELDS.value(20),20},
+            {this->dbQuery.FIELDS.value(21),21},
+            {this->dbQuery.FIELDS.value(22),22}
         },
         Months_s2i = {
-            {MONTHS.value(1),1},   {MONTHS.value(2),2},   {MONTHS.value(3),3},
-            {MONTHS.value(4),4},   {MONTHS.value(5),5},   {MONTHS.value(6),6},
-            {MONTHS.value(7),7},   {MONTHS.value(8),8},   {MONTHS.value(9),9},
-            {MONTHS.value(10),10}, {MONTHS.value(11),11}, {MONTHS.value(12),12} };
+            {this->dbQuery.MONTHS.value(1),1},   {this->dbQuery.MONTHS.value(2),2},   {this->dbQuery.MONTHS.value(3),3},
+            {this->dbQuery.MONTHS.value(4),4},   {this->dbQuery.MONTHS.value(5),5},   {this->dbQuery.MONTHS.value(6),6},
+            {this->dbQuery.MONTHS.value(7),7},   {this->dbQuery.MONTHS.value(8),8},   {this->dbQuery.MONTHS.value(9),9},
+            {this->dbQuery.MONTHS.value(10),10}, {this->dbQuery.MONTHS.value(11),11}, {this->dbQuery.MONTHS.value(12),12} };
 };
 
 #endif // CRAPVIEW_H
