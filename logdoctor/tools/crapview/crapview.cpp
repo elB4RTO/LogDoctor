@@ -92,11 +92,11 @@ const QString Crapview::printableTime( const int& hour, const int& minute, const
 const QStringList Crapview::getWarnHeader()
 {
     return QStringList({
-        FIELDS.value(0),
+        this->dbQuery.FIELDS.value(0),
         this->DATE,this->TIME,
-        FIELDS.value(10),FIELDS.value(11),FIELDS.value(12),FIELDS.value(13),FIELDS.value(14),
-        FIELDS.value(18),FIELDS.value(22),FIELDS.value(21),FIELDS.value(20),
-        FIELDS.value(17),FIELDS.value(16),FIELDS.value(15),"rowid" });
+        this->dbQuery.FIELDS.value(10),this->dbQuery.FIELDS.value(11),this->dbQuery.FIELDS.value(12),this->dbQuery.FIELDS.value(13),this->dbQuery.FIELDS.value(14),
+        this->dbQuery.FIELDS.value(18),this->dbQuery.FIELDS.value(22),this->dbQuery.FIELDS.value(21),this->dbQuery.FIELDS.value(20),
+        this->dbQuery.FIELDS.value(17),this->dbQuery.FIELDS.value(16),this->dbQuery.FIELDS.value(15),"rowid" });
 }
 
 
@@ -232,7 +232,7 @@ const QStringList Crapview::getMonths( const QString& web_server, const QString&
             const int y = year.toInt();
             if ( this->dates.at( ws ).at( y ).size() ) {
                 for ( const auto& [month, data] : this->dates.at( ws ).at( y ) ) {
-                    months.push_back( MONTHS.value( month ) );
+                    months.push_back( this->dbQuery.MONTHS.value( month ) );
                 }
             }
         }
@@ -428,8 +428,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         //b_chart->legend()->setVisible( false );
         b_chart->legend()->setFont( fonts.at("main_small") );
         b_chart->legend()->setAlignment( Qt::AlignBottom );
-        b_chart->setAnimationOptions( QChart::SeriesAnimations );
-        //b_chart->setBackgroundBrush( Qt::darkGray );
+        //b_chart->setAnimationOptions( QChart::SeriesAnimations );
 
         // craft the X-axis labels
         QStringList categories;
@@ -750,8 +749,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         b_chart->legend()->setFont( fonts.at("main_small") );
         //b_chart->legend()->setVisible( true );
         b_chart->legend()->setAlignment( Qt::AlignBottom );
-        b_chart->setAnimationOptions( QChart::SeriesAnimations );
-        //b_chart->setBackgroundBrush( Qt::darkGray );
+        //b_chart->setAnimationOptions( QChart::SeriesAnimations );
 
         // craft the X-axis labels
         QStringList categories;
@@ -969,7 +967,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             if ( max_ == 0 ) {
                 traffic_list.push_back( std::make_tuple( "", "0" ) );
             } else {
-                traffic_list.push_back( std::make_tuple( DAYS.value(max_), QString("%1").arg(max) ) );
+                traffic_list.push_back( std::make_tuple( this->dbQuery.DAYS.value(max_), QString("%1").arg(max) ) );
             }
 
             // max hour of the day
