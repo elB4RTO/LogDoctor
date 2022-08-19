@@ -10,11 +10,10 @@ StringOps::StringOps()
 
 const int StringOps::count(const std::string& str, const std::string& flag, const bool& consecutives )
 {
-    int start=0, aux_start=0, count=0;
-    const int max = str.size()-1;
+    size_t start=0, aux_start=0, count=0;
     while (true) {
         start = str.find( flag, start );
-        if ( start >= 0 && start <= max ) {
+        if ( start != std::string::npos ) {
             if ( consecutives == true
               && start == aux_start ) {
                 start += flag.size();
@@ -106,6 +105,26 @@ const bool StringOps::isAlnum( const char& chr )
 }
 
 
+const size_t StringOps::findLast( const std::string& str, const std::string& flag )
+{
+    int n=0;
+    size_t index, aux=0;
+    const size_t f_size=flag.size();
+    do {
+        index = (n>0) ? aux : -f_size;
+        aux = str.find( flag, index+f_size );
+        n++;
+
+    } while ( aux != std::string::npos );
+
+    if ( index == -f_size ) {
+        index = std::string::npos;
+    }
+
+    return index;
+}
+
+
 const bool StringOps::startsWith( const std::string& str, const std::string& flag )
 {
     bool result = false;
@@ -142,8 +161,8 @@ const bool StringOps::endsWith( const std::string& str, const std::string& flag 
 const bool StringOps::contains( const std::string& str, const std::string& flag )
 {
     bool result = true;
-    int i = str.find( flag );
-    if ( i < 0 || i > str.size() ) {
+    size_t i = str.find( flag );
+    if ( i == std::string::npos ) {
         result = false;
     }
     return result;
@@ -214,8 +233,8 @@ std::string StringOps::rstrip( const std::string& str, const std::string& chars 
 
 std::string StringOps::lstripUntil( const std::string& str, const std::string& chr, const bool& inclusive, const bool& consecutives )
 {
-    int start, aux_start, aux;
-    const int max_size = str.size()-1;
+    size_t start, aux_start, aux;
+    const size_t max_size = str.size()-1;
     std::string stripped = "";
     if ( max_size >= 0 ) {
         start = str.find( chr );
@@ -223,11 +242,11 @@ std::string StringOps::lstripUntil( const std::string& str, const std::string& c
             start += chr.size();
         }
         if ( consecutives == true
-          && start >= 0 && start <= max_size ) {
+          && start != std::string::npos ) {
             aux_start = start;
             while (true) {
                 aux = str.find( chr, aux_start );
-                if ( aux < 0 || aux > max_size ) {
+                if ( aux == std::string::npos ) {
                     break;
                 } else if ( aux != aux_start ) {
                     break;
@@ -243,7 +262,7 @@ std::string StringOps::lstripUntil( const std::string& str, const std::string& c
                 stripped = str.substr( aux_start );
             }
         } else {
-            if ( start < 0 || start > max_size+1 ) {
+            if ( start == std::string::npos ) {
                 stripped = str;
             } else if ( start == max_size+1 ) {
                 stripped = "";
@@ -260,12 +279,11 @@ std::string StringOps::lstripUntil( const std::string& str, const std::string& c
 void StringOps::split( std::vector<std::string>& list, const std::string& target_str, const std::string& separator )
 {
     std::string slice;
-    int start=0, stop;
-    const int max = target_str.size()-1;
-    if ( max >= 0 ) {
+    size_t start=0, stop;
+    if ( target_str.size()-1 >= 0 ) {
         while (true) {
             stop = target_str.find( separator, start );
-            if ( stop < 0 || stop > max ) {
+            if ( stop == std::string::npos ) {
                 slice = target_str.substr( start );
                 if ( slice.size() > 0 ) {
                     list.push_back( slice );
@@ -300,13 +318,12 @@ void StringOps::splitrip( std::vector<std::string>& list, const std::string& tar
 
 std::string StringOps::replace( const std::string& str, const std::string& target, const std::string& replace )
 {
-    int start=0, stop;
-    const int max = str.size()-1;
+    size_t start=0, stop;
     std::string string = "";
-    if ( max >= 0 ) {
+    if ( str.size()-1 >= 0 ) {
         while ( true ) {
-            stop = str.find_first_of( target, start );
-            if ( stop < 0 || stop > max ) {
+            stop = str.find( target, start );
+            if ( stop == std::string::npos ) {
                 string += str.substr( start );
                 break;
             } else {
