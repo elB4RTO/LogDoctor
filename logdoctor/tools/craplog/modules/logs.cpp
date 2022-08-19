@@ -50,9 +50,8 @@ LogOps::LogType LogOps::defineFileType( const std::string& name, const std::vect
 bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat& format )
 {
     int n_sep_found=0, n_blank_sep=0,
-        found_at, aux_found_at1=0, aux_found_at2,
-        n_sep = format.separators.size(),
-        line_size = line.size()-1;
+        n_sep = format.separators.size();
+    size_t found_at, aux_found_at1=0, aux_found_at2;
     std::string sep, aux_sep1, aux_sep2;
     // check the initial part
     if ( format.initial.size() > 0 ) {
@@ -73,7 +72,7 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
         }
         aux_found_at2 = aux_found_at1;
         found_at = line.find( sep, aux_found_at2 );
-        if ( found_at < 0 || found_at > line_size ) {
+        if ( found_at == std::string::npos ) {
             // not found
             continue;
         }
@@ -82,14 +81,14 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
             // not the last separator, check the possibility of missing
             aux_sep1 = sep;
             aux_found_at1 = aux_sep1.find(' ');
-            if ( aux_found_at1 >= 0 && aux_found_at1 < aux_sep1.size() ) {
+            if ( aux_found_at1 != std::string::npos ) {
                 aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
             }
             // iterate over following separators
             for ( int j=i+1; j<n_sep; j++ ) {
                 aux_sep2 = format.separators.at( j );
                 aux_found_at2 = aux_sep2.find(' ');
-                if ( aux_found_at2 > aux_sep2.size() || aux_found_at2 < 0 ) {
+                if ( aux_found_at2 == std::string::npos ) {
                     aux_found_at2 = found_at;
                 } else {
                     aux_found_at2 = found_at + aux_found_at2 + 1;
@@ -138,16 +137,28 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
 }
 
 
+void LogOps::cleanLines( std::vector<std::string> &lines )
+{
+    std::vector<std::string> aux;
+    for ( const std::string& line : lines ) {
+        if ( !StringOps::startsWith( line, "#" ) ) {
+            // not a commented line
+            aux.push_back( line );
+        }
+    }
+    lines = aux;
+}
+
+
 
 const std::unordered_map<int, std::string> LogOps::parseLine( const std::string& line, const FormatOps::LogsFormat& format )
 {
     std::unordered_map<int, std::string> data;
     std::string sep, fld, fld_str;
     bool missing=false, add_pm=false;
-    int start, stop=0, i=0, aux_start, aux_stop;
-    int line_size;
-    int n_sep = format.separators.size()-1;
-    line_size = line.size()-1;
+    size_t start, stop=0, aux_start, aux_stop,
+           line_size = line.size()-1;
+    int i=0, n_sep=format.separators.size()-1;
 
     // add the initial chars
     stop = format.initial.size();
@@ -165,7 +176,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                 stop = line_size+1;
             } else {
                 stop = line.find( sep, start );
-                if ( stop < 0 || stop > line_size ) {
+                if ( stop == std::string::npos ) {
                     stop = line_size +1;
                 }
             }
@@ -173,7 +184,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
             // no more separators
             break;
         }
-        if ( stop < 0 || stop > line_size ) {
+        if ( stop == std::string::npos ) {
             // separator not found, abort
             throw GenericException( "Separator not found: '"+sep+"'" );
         }
@@ -207,7 +218,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                         aux_start = stop + 1;
                         while ( c < n ) {
                             aux_stop = line.find( sep, aux_start );
-                            if ( aux_stop < 0 || aux_stop > line_size ) {
+                            if ( aux_stop == std::string::npos ) {
                                 // not found
                                 ok = false;
                                 break;
@@ -223,7 +234,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                         aux_start = stop + sep.size();
                         while (true) {
                             aux_stop = line.find( sep, aux_start );
-                            if ( aux_stop < 0 || aux_stop > line_size ) {
+                            if ( aux_stop == std::string::npos ) {
                                 // not found
                                 break;
                             } else if ( line.at( aux_stop-1 ) != '\\' ) {
@@ -289,22 +300,22 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
                     // process the request to get the protocol, method, resource and query
                     } else if ( fld == "request_full" ) {
-                        int aux, fld_size=fld_str.size()-1;
+                        size_t aux, fld_size=fld_str.size()-1;
                         std::string aux_fld, protocol="", method="", page="", query="";
                         aux_fld = fld_str;
                         // method
                         aux = aux_fld.find( ' ' );
-                        if ( aux >= 0 && aux <= fld_size ) {
+                        if ( aux != std::string::npos ) {
                             method  = aux_fld.substr( 0, aux );
                             aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
 
                             // page & query
                             aux = aux_fld.find( ' ' );
-                            if ( aux >= 0 && aux <= fld_size ) {
+                            if ( aux != std::string::npos ) {
                                 std::string aux_str = aux_fld.substr( 0, aux );
                                 // search for the query
                                 int aux_ = aux_str.find( '?' );
-                                if ( aux_ >= 0 && aux_ <= aux_str.size() ) {
+                                if ( aux_ != std::string::npos ) {
                                     page  = aux_str.substr( 0, aux_ );
                                     query = aux_str.substr( aux_+1 );
                                 } else {
@@ -337,8 +348,8 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                     } else if ( fld == "request_uri_query" ) {
                         // search for the query
                         std::string page, query;
-                        int aux_ = fld_str.find( '?' );
-                        if ( aux_ >= 0 && aux_ <= fld_str.size() ) {
+                        size_t aux_ = fld_str.find( '?' );
+                        if ( aux_ != std::string::npos ) {
                             page  = fld_str.substr( 0, aux_ );
                             query = fld_str.substr( aux_+1 );
                         } else {

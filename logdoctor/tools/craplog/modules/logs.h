@@ -25,15 +25,17 @@ public:
     LogType defineFileType(
         const std::string& name,
         const std::vector<std::string>& lines,
-        const FormatOps::LogsFormat& format
-        );
+        const FormatOps::LogsFormat& format );
+
+    // remove commented lines
+    void cleanLines(
+        std::vector<std::string>& lines );
 
     // parse log lines to get data
     void parseLines(
         std::vector<std::unordered_map<int, std::string>>& data,
         const std::vector<std::string>& lines,
-        const FormatOps::LogsFormat& format
-        );
+        const FormatOps::LogsFormat& format );
 
     void resetPerfData();
     // share perf data with craplog
@@ -52,10 +54,11 @@ private:
         {"date_time_minute",   5},
         {"date_time_second",   6},
             {"date_time_ncsa",     0},
-            {"date_time_utc",      0},
             {"date_time_iso",      0},
             {"date_time_mcs",      0},
-            {"date_time_iso_mcs",  0},
+            {"date_time_gmt",      0},
+            {"date_time_utc_d",    0},
+            {"date_time_utc_t",    0},
         // request
         {"request_protocol",   10},
         {"request_method",     11},
@@ -65,6 +68,7 @@ private:
             {"request_full",       0},
         // performance
         {"time_taken_ms",      15},
+            {"time_taken_us",       0},
             {"time_taken_s",       0},
             {"time_taken_s.ms",    0},
         {"bytes_sent",         16},
