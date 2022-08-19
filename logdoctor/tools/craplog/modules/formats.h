@@ -38,7 +38,7 @@ private:
 
     const int countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separatprs );
 
-    const int findNginxFieldEnd( const std::string& string, const int& start );
+    const size_t findNginxFieldEnd( const std::string& string, const int& start );
     void checkIisString( const std::string& string );
 
 
@@ -191,7 +191,7 @@ private:
     const std::unordered_map<std::string, std::string> NGINX_ALF = {
         {"remote_addr",        "client"},
         {"realip_remote_addr", "client"},
-        {"time_local",         "date_time_mcs"},
+        {"time_local",         "date_time_ncsa"},
         {"time_iso8601",       "date_time_iso"},
         {"date_gmt",           "date_time_gmt"},
         {"msec",               "date_time_epoch_s.ms"},
@@ -317,8 +317,8 @@ private:
     const std::unordered_map<std::string, QString> NGINX_ALF_SAMPLES = {
         {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_epoch_s.ms",  "<b><span style=\"color:#00cc6f\">946771199.000</span></b>"},
+        {"date_time_ncsa",        "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
         {"date_time_iso",         "<b><span style=\"color:#00cc6f\">2000-01-01T23:59:59+00:00</span></b>"},
-        {"date_time_mcs",         "<b><span style=\"color:#00cc6f\">Sat Jan 01 23:59:59 2000</span></b>"},
         {"date_time_gmt",         "<b><span style=\"color:#00cc6f\">Saturday, 01-Jan-2000 23:59:59 UTC</span></b>"},
         {"request_full",          "<b><span style=\"color:#00cc6f\">GET /index.php?query=x HTTP/1.1</span></b>"},
         {"request_protocol",      "<b><span style=\"color:#00cc6f\">HTTP/1.1</span></b>"},
