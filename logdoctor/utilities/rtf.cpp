@@ -27,12 +27,21 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     QString rich_line="", class_name="";
     std::string sep, fld, fld_str, aux_sep1, aux_sep2, aux_fld_str;
     bool missing=false;
-    int start, stop, i, aux_start1, aux_start2, aux_stop,
-        line_size, sep_size,
-        n_sep = logs_format.separators.size()-1;
+    size_t start, stop, i, aux_start, aux_stop,
+           line_size, sep_size;
+    const size_t n_sep = logs_format.separators.size()-1;
     std::vector<std::string> lines;
     StringOps::splitrip( lines, content );
     for ( const std::string& line : lines ) {
+        // check if the line is commented, usually from IIS logs
+        if ( StringOps::startsWith( line, "#" ) && !StringOps::startsWith( logs_format.initial, "#" ) ) {
+            rich_line = QString("<p>%1</p>").arg( QString::fromStdString( line ) );
+            if ( wide_lines == true ) {
+                rich_line += "<br/>";
+            }
+            rich_content.push_back( rich_line );
+            continue;
+        }
         i = 0;
         line_size = line.size()-1;
         rich_line = "<p>";
@@ -48,11 +57,11 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             } else if ( i == n_sep+1 ) {
                 // final separator
                 sep = logs_format.final;
-                if ( sep == "" ) {
+                if ( sep.size() == 0 ) {
                     stop = line_size+1;
                 } else {
                     stop = line.find( sep, start );
-                    if ( stop > line_size+1 || stop < 0 ) {
+                    if ( stop == std::string::npos ) {
                         stop = line_size +1;
                     }
                 }
@@ -60,105 +69,77 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                 // no more separators
                 break;
             }
-            if ( stop > line_size+1 || stop < 0 ) {
+            if ( stop == std::string::npos ) {
                 // separator not found, skip to the next one
                 i++;
                 stop = start;
                 continue;
             }
+
+            // get fields
+            fld = logs_format.fields.at( i );
+            fld_str = line.substr(start, stop-start);
+
             if ( i+1 <= n_sep ) {
+                // not the last separator, check for mistakes
+                bool ok = true;
+                aux_stop = stop;
 
-                // tricky error messages from apache
-                aux_fld_str = StringOps::strip( line.substr(start, stop-start), " " );
-                if ( StringOps::startsWith( aux_fld_str, "AH0"  )
-                  || StringOps::startsWith( aux_fld_str, "PHP " ) ) {
-                    if ( logs_format.fields.at( i ) != "error_message" ) {
-                        // this field is missing, step to the right field
-                        for ( int j=i+1; j<logs_format.fields.size(); j++ ) {
-                            if ( logs_format.fields.at( j ) == "error_message" ) {
-                                i = j;
+                if ( sep == " " ) {
+                    // whitespace-separated-values fields
+                    int c = StringOps::count( fld_str, sep ),
+                        n = 0;
+                    if ( fld == "request_full" ) {
+                        n = 2;
+                    } else if ( fld == "date_time_mcs" ) {
+                        n = 4;
+                    } else if ( fld == "date_time_ncsa" ) {
+                        n = 1;
+                    } else if ( fld == "date_time_gmt" ) {
+                        n = 3;
+                    }
+                    if ( n > 0 && c < n ) {
+                        // loop until the correct number of whitespaces is reached
+                        aux_start = stop + 1;
+                        while ( c < n ) {
+                            aux_stop = line.find( sep, aux_start );
+                            if ( aux_stop == std::string::npos ) {
+                                // not found
+                                ok = false;
                                 break;
                             }
+                            aux_start = aux_stop + 1;
+                            c++;
                         }
                     }
-                    // correct field, check if the next separators has columns. in case, update the stop position
-                    int c_count = StringOps::count( aux_fld_str, ": " ),
-                        c_max = 2;
-                    if ( StringOps::startsWith( aux_fld_str, "AH00171" )
-                      || StringOps::startsWith( aux_fld_str, "AH00163" ) ) {
-                        c_max = 1;
-                    }
-                    if ( c_count < c_max ) {
-                        // supposed to contain at least 2 columns
-                        aux_stop = stop;
-                        int j;
-                        for ( j=0; j<c_count; j++ ) {
-                            aux_stop = line.find( ": ", aux_stop );
-                            if ( aux_stop != 0 || aux_stop >= line_size ) {
-                                // column not not found
+
+                } else if ( fld == "user_agent" && StringOps::startsWith( sep, "\"" ) ) {
+                    // atm the only support is for escaped quotes
+                    if ( fld_str.back() == '\\' ) {
+                        aux_start = stop + sep.size();
+                        while (true) {
+                            aux_stop = line.find( sep, aux_start );
+                            if ( aux_stop == std::string::npos ) {
+                                // not found
                                 break;
-                            } else {
-                                // one_setp_further
-                                aux_stop ++;
+                            } else if ( line.at( aux_stop-1 ) != '\\' ) {
+                                // non-backslashed quotes
+                                break;
                             }
-                        }
-                        // finally update the stop to the next sep
-                        if ( i <= n_sep ) {
-                            sep = logs_format.separators.at( i );
-                            stop = line.find( sep, aux_stop );
-                        } else if ( i == n_sep+1 ) {
-                            // final separator
-                            sep = logs_format.final;
-                            if ( sep == "" ) {
-                                stop = line_size+1;
-                            } else {
-                                stop = line.find( sep, aux_stop );
-                                if ( stop > line_size+1 || stop < 0 ) {
-                                    stop = line_size +1;
-                                }
-                            }
+                            aux_start = aux_stop + sep.size();
                         }
                     }
+                }
 
-                } else {
-
-                    // not the last separator, check the possibility of missing
-                    aux_sep1 = sep;
-                    aux_start1 = aux_sep1.find(' ');
-                    if ( aux_start1 >= 0 && aux_start1 < aux_sep1.size() ) {
-                        aux_sep1 = StringOps::lstripUntil( aux_sep1, " " );
-                    }
-                    // iterate over following separators
-                    for ( int j=i+1; j<n_sep; j++ ) {
-                        aux_sep2 = logs_format.separators.at( j );
-                        aux_start2 = aux_sep2.find(' ');
-                        if ( aux_start2 > aux_sep2.size() || aux_start2 < 0 ) {
-                            aux_start2 = stop;
-                        } else {
-                            aux_start2 = stop + aux_start2 + 1;
-                            aux_sep2 = StringOps::lstripUntil( aux_sep2, " " );
-                        }
-                        // if the 2 seps are identical, skip (for uncertainty)
-                        if ( aux_sep1 == aux_sep2 || aux_sep2 == "" ) {
-                            continue;
-                        }
-                        // check if the next sep is found in the same position of the current one
-                        if ( line.find( aux_sep2, aux_start2 ) == aux_start2 ) {
-                            // probably the current field is missing, skip to this one
-                            i = j;
-                            aux_stop = aux_start2 + aux_sep2.size();
-                            aux_sep2 = logs_format.separators.at( j );
-                            missing = true;
-                        }
-                        break;
-                    }
+                // finally update if needed
+                if ( ok == true && aux_stop >= stop ) {
+                    stop = aux_stop;
+                    fld_str = StringOps::strip( line.substr(start, stop-start), " " );
                 }
             }
 
             sep_size = sep.size(); // do not remove, holdss the corretc size to increase stop
             // color the fields
-            fld = logs_format.fields.at( i );
-            fld_str = line.substr(start, stop-start);
             if ( StringOps::startsWith( fld, "date_time" ) ) {
                 if ( StringOps::startsWith( fld_str, "[" ) ) {
                     fld_str = fld_str.substr( 1, fld_str.size()-1 );
@@ -221,7 +202,6 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             rich_line += "<br/>";
         }
         rich_content.push_back( rich_line );
-        rich_line.clear();
     }
     lines.clear();
     rich_content.push_back("</body></html>");
