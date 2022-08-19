@@ -22,6 +22,8 @@ public:
     static const bool isAlnum( const std::string& str );
     static const bool isAlnum( const char& chr );
 
+    static const size_t findLast( const std::string& str, const std::string& flag );
+
     static const bool startsWith( const std::string& str, const std::string& flag );
     static const bool endsWith(   const std::string& str, const std::string& flag );
 
