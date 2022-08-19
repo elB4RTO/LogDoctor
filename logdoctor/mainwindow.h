@@ -44,6 +44,8 @@ private slots:
 
     void update_Craplog_PerfData();
 
+    void check_CraplogLLT_Finished();
+
     // Qt's
     /////////////////
     //// CRAPLOG ////
@@ -68,6 +70,18 @@ private slots:
 
     //////////////////
     //// CRAPVIEW ////
+
+    void drawStatsWarn();
+
+    void drawStatsSpeed();
+
+    void drawStatsCount();
+
+    void drawStatsDay();
+
+    void drawStatsRelat();
+
+    void makeStatsGlobals();
 
     //// WARNINGS ////
 
@@ -525,6 +539,9 @@ private:
     ///////////////////
     std::string db_data_path,
                 db_hashes_path;
+    // actions when working on a db
+    bool db_working = false;
+    void setDbWorkingState( const bool& state );
 
 
     /////////////////
@@ -537,6 +554,7 @@ private:
     std::chrono::system_clock::duration craplog_timer_elapsed;
     void craplogStarted();
     void craplogFinished();
+    void checkMakeStats_Makable();
 
     //////////////
     //// LOGS ////
@@ -546,6 +564,8 @@ private:
          enableAllButtons_LogFiles_WS();
     // logs list related
     bool hide_used_files = false;
+    bool refreshing_list = false;
+    void refreshLogsList();
     // text browser related
     TextBrowser TB;
 
@@ -561,6 +581,8 @@ private:
     //// CRAPVIEW ////
     //////////////////
     Crapview crapview;
+    /*std::thread crapview_thread;*/
+    QTimer *crapview_timer;
     // refresh dates: query a new collection from the db and apply to the tabs
     void refreshStatsDates();
     // check if drawing conditions are met
@@ -569,12 +591,11 @@ private:
     void checkStatsCountDrawable();
     void checkStatsDayDrawable();
     void checkStatsRelatDrawable();
-    // polishing
+    // count
+    QString count_fld;
     void resetStatsCountButtons();
-    // draw
-    void drawStatsCount( const QString& field );
     // globals
-    void makeStatsGlobals( const QString& web_server );
+    QString glob_ws;
     void resetStatsGlobals();
 
 
