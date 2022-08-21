@@ -35,7 +35,7 @@ Craplog::Craplog()
         this->warnlists.at( i ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
         this->warnlists.at( i ).emplace( 20, BWlist{ .used=false, .list={} } );
         this->warnlists.at( i ).emplace( 21, BWlist{ .used=false, .list={} } );
-        this->blacklists.at( i ).emplace( 20, BWlist{ .used=true,  .list={"::1"} } );
+        this->blacklists.at( i ).emplace( 20, BWlist{ .used=true,  .list={} } );
     }
 
     // default format strings
@@ -125,29 +125,29 @@ void Craplog::setWarningSize(const long& new_size )
 //// WARN/BLACK ////
 const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id )
 {
-    return this->blacklists.at( this->current_WS ).at( log_field_id ).used;
+    return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
 const bool& Craplog::isWarnlistUsed( const int& web_server_id, const int& log_field_id )
 {
-    return this->warnlists.at( this->current_WS ).at( log_field_id ).used;
+    return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
 
 void Craplog::setBlacklistUsed( const int& web_server_id, const int& log_field_id, const bool& used )
 {
-    this->blacklists.at( this->current_WS ).at( log_field_id ).used = used;
+    this->blacklists.at( web_server_id ).at( log_field_id ).used = used;
 }
 void Craplog::setWarnlistUsed( const int& web_server_id, const int& log_field_id, const bool& used )
 {
-    this->warnlists.at( this->current_WS ).at( log_field_id ).used = used;
+    this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
 }
 
 const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id, const int& log_field_id )
 {
-    return this->blacklists.at( this->current_WS ).at( log_field_id ).list;
+    return this->blacklists.at( web_server_id ).at( log_field_id ).list;
 }
 const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id )
 {
-    return this->warnlists.at( this->current_WS ).at( log_field_id ).list;
+    return this->warnlists.at( web_server_id ).at( log_field_id ).list;
 }
 
 void Craplog::setBlacklist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list )
