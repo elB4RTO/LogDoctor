@@ -593,9 +593,11 @@ private:
     void checkStatsRelatDrawable();
     // count
     QString count_fld;
+    void startCountDrawing();
     void resetStatsCountButtons();
     // globals
     QString glob_ws;
+    void globalsButtonClicked();
     void resetStatsGlobals();
 
 
