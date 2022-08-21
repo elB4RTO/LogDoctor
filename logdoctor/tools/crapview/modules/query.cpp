@@ -160,9 +160,9 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                         successful = false;
                         QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_YEARS );
                         if ( this->dialog_level > 0 ) {
-                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE ).arg( Y_query.value(0).toString() );
+                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE, Y_query.value(0).toString() );
                             if ( this->dialog_level == 2 ) {
-                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME ).arg( tbl );
+                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME, tbl );
                             }
                         }
                         DialogSec::errGeneric( nullptr, err_msg );
@@ -186,9 +186,9 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                 successful = false;
                                 QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_MONTHS );
                                 if ( this->dialog_level > 0 ) {
-                                    err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE ).arg( M_query.value(0).toString() );
+                                    err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE, M_query.value(0).toString() );
                                     if ( this->dialog_level == 2 ) {
-                                        err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME ).arg( tbl );
+                                        err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME, tbl );
                                     }
                                 }
                                 DialogSec::errGeneric( nullptr, err_msg );
@@ -212,9 +212,9 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                         successful = false;
                                         QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_DAYS );
                                         if ( this->dialog_level > 0 ) {
-                                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE ).arg( D_query.value(0).toString() );
+                                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE, D_query.value(0).toString() );
                                             if ( this->dialog_level == 2 ) {
-                                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME ).arg( tbl );
+                                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME, tbl );
                                             }
                                         }
                                         DialogSec::errGeneric( nullptr, err_msg );
@@ -1814,7 +1814,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
 
 
 
-const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, int>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, long>& traf_day, std::unordered_map<int, long>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count )
+const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, int>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count )
 {
     bool successful = true;
     QString table;
@@ -1847,8 +1847,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
 
     if ( successful == true ) {
         QSqlQuery query = QSqlQuery( db );
-        int h, tt, bs, br,
-            hour, week_day,
+        int d, h, tt, bs, br,
+            day, hour, week_day,
             day_count, hour_count,
             max_date_count=0,
             max_tt=0, tot_tt=0, num_tt=0,
@@ -1862,196 +1862,223 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
         for ( const auto& [year, dates_] : dates ) {
             // get months of the year
             for ( const auto& [month, dates__] : dates_ ) {
-                // get days of the month of the year
-                for ( const auto& day : dates__ ) {
 
-                    n_days ++;
-                    hour=-1; hour_count=0;
-                    day_count=0;
+                hour=-1; hour_count=0;
+                day=-1; day_count=0;
 
-                    if ( query.exec( QString("SELECT \"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 ORDER BY \"hour\" ASC;").arg( table ).arg( year ).arg( month ).arg( day ).replace("'","''") ) == false ) {
-                        // error querying database
-                        successful = false;
-                        DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
-                        break;
+                if ( query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;").arg( table ).arg( year ).arg( month ).replace("'","''") ) == false ) {
+                    // error querying database
+                    successful = false;
+                    DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
+                    break;
 
-                    } else {
-                        while ( query.next() ) {
-                            try {
-                                // hour
-                                if ( query.value(0).isNull() ) {
-                                    h = -1;
-                                } else {
-                                    h = query.value(0).toInt();
-                                }
-                                // protocol
-                                if ( query.value(1).isNull() ) {
-                                    protocol = "";
-                                } else {
-                                    protocol = query.value(1).toString();
-                                }
-                                // method
-                                if ( query.value(2).isNull() ) {
-                                    method = "";
-                                } else {
-                                    method = query.value(2).toString();
-                                }
-                                // uri
-                                if ( query.value(3).isNull() ) {
-                                    uri = "";
-                                } else {
-                                    uri = query.value(3).toString();
-                                }
-                                // user agent
-                                if ( query.value(4).isNull() ) {
-                                    user_agent = "";
-                                } else {
-                                    user_agent = query.value(4).toString();
-                                }
-                                // time taken
-                                if ( query.value(5).isNull() ) {
-                                    tt = -1;
-                                } else {
-                                    tt = query.value(5).toInt();
-                                }
-                                // bytes sent
-                                if ( query.value(6).isNull() ) {
-                                    bs = -1;
-                                } else {
-                                    bs = query.value(6).toInt();
-                                }
-                                // bytes received
-                                if ( query.value(7).isNull() ) {
-                                    br = -1;
-                                } else {
-                                    br = query.value(7).toInt();
-                                }
-                            } catch (...) {
-                                // failed to convert to integer
-                                successful = false;
-                                QString err_msg = "";
-                                if ( this->dialog_level == 2 ) {
-                                    err_msg = this->MSG_ERR_PROCESSING;
-                                }
-                                DialogSec::errGeneric( nullptr, err_msg );
-                                break;
+                } else {
+                    while ( query.next() ) {
+                        try {
+                            // day
+                            if ( query.value(0).isNull() ) {
+                                d = -1;
+                            } else {
+                                d = query.value(0).toInt();
                             }
-                            if ( successful == true ) {
-
-                                // increase the number of requests for this day
-                                day_count ++;
-
-                                // sum the time taken
-                                if ( tt >= 0 ) {
-                                    if ( tt > max_tt ) {
-                                        max_tt = tt;
-                                    }
-                                    tot_tt += tt;
-                                    num_tt ++;
-                                }
-
-                                // sum the bytes sent
-                                if ( bs >= 0 ) {
-                                    if ( bs > max_bs ) {
-                                        max_bs = bs;
-                                    }
-                                    tot_bs += bs;
-                                    num_bs ++;
-                                }
-
-                                // sum the bytes received
-                                if ( br >= 0 ) {
-                                    if ( br > max_br ) {
-                                        max_br = br;
-                                    }
-                                    tot_br += br;
-                                    num_br ++;
-                                }
-
-                                // process the hour count
-                                if ( h >= 0 ) {
-                                    if ( h == hour ) {
-                                        hour_count ++;
-                                    } else {
-                                        if ( hour >= 0 ) {
-                                            // not the first time
-                                            traf_hour.at( hour ) += hour_count;
-                                        }
-                                        hour = h;
-                                        hour_count = 1;
-                                    }
-                                }
-
-                                // process the protocol
-                                if ( protocol.size() > 0 ) {
-                                    if ( recurs.at(0).find( protocol ) != recurs.at(0).end() ) {
-                                        // sum
-                                        recurs.at(0).at( protocol ) ++;
-                                    } else {
-                                        // new
-                                        recurs.at(0).emplace( protocol, 1 );
-                                    }
-                                }
-
-                                // process the method
-                                if ( method.size() > 0 ) {
-                                    if ( recurs.at(1).find( method ) != recurs.at(1).end() ) {
-                                        // sum
-                                        recurs.at(1).at( method ) ++;
-                                    } else {
-                                        // new
-                                        recurs.at(1).emplace( method, 1 );
-                                    }
-                                }
-
-                                // process the uri
-                                if ( uri.size() > 0 ) {
-                                    if ( recurs.at(2).find( uri ) != recurs.at(2).end() ) {
-                                        // sum
-                                        recurs.at(2).at( uri ) ++;
-                                    } else {
-                                        // new
-                                        recurs.at(2).emplace( uri, 1 );
-                                    }
-                                }
-
-                                // process the user-agent
-                                if ( user_agent.size() > 0 ) {
-                                    if ( recurs.at(3).find( user_agent ) != recurs.at(3).end() ) {
-                                        // sum
-                                        recurs.at(3).at( user_agent ) ++;
-                                    } else {
-                                        // new
-                                        recurs.at(3).emplace( user_agent, 1 );
-                                    }
-                                }
+                            // hour
+                            if ( query.value(1).isNull() ) {
+                                h = -1;
+                            } else {
+                                h = query.value(1).toInt();
                             }
+                            // protocol
+                            if ( query.value(2).isNull() ) {
+                                protocol = "";
+                            } else {
+                                protocol = query.value(2).toString();
+                            }
+                            // method
+                            if ( query.value(3).isNull() ) {
+                                method = "";
+                            } else {
+                                method = query.value(3).toString();
+                            }
+                            // uri
+                            if ( query.value(4).isNull() ) {
+                                uri = "";
+                            } else {
+                                uri = query.value(4).toString();
+                            }
+                            // user agent
+                            if ( query.value(5).isNull() ) {
+                                user_agent = "";
+                            } else {
+                                user_agent = query.value(5).toString();
+                            }
+                            // time taken
+                            if ( query.value(6).isNull() ) {
+                                tt = -1;
+                            } else {
+                                tt = query.value(6).toInt();
+                            }
+                            // bytes sent
+                            if ( query.value(7).isNull() ) {
+                                bs = -1;
+                            } else {
+                                bs = query.value(7).toInt();
+                            }
+                            // bytes received
+                            if ( query.value(8).isNull() ) {
+                                br = -1;
+                            } else {
+                                br = query.value(8).toInt();
+                            }
+                        } catch (...) {
+                            // failed to convert to integer
+                            successful = false;
+                            QString err_msg = "";
+                            if ( this->dialog_level == 2 ) {
+                                err_msg = this->MSG_ERR_PROCESSING;
+                            }
+                            DialogSec::errGeneric( nullptr, err_msg );
+                            break;
                         }
-                        // complete the remaining stats
                         if ( successful == true ) {
-                            // append the last hour
-                            if ( hour >= 0 ) {
-                                traf_hour.at( hour ) += hour_count;
+
+                            // process the day count
+                            if ( d > 0 ) {
+                                if ( day == -1 ) {
+                                    day = d;
+                                }
+                                if ( d == day ) {
+                                    day_count ++;
+                                } else {
+                                    n_days ++;
+                                    // sum the day count to the total count
+                                    req_count += day_count;
+                                    // sum the day count to the relative day of the week count
+                                    week_day = QDate(year,month,day).dayOfWeek();
+                                    traf_day.at( week_day ) += day_count;
+                                    num_day_count.at( week_day ) ++;
+                                    // check the max date count
+                                    const QString m_str = (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) ;
+                                    const QString d_str = (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) ;
+                                    if ( day_count > max_date_count ) {
+                                        max_date_count = day_count;
+                                        max_date_str = QString("%1-%2-%3").arg( year ).arg( m_str, d_str );
+                                    }
+                                    day_count = 1;
+                                    day = d;
+                                }
                             }
 
-                            // sum the day count to the total count
-                            req_count += day_count;
+                            // process the hour count
+                            if ( h >= 0 ) {
+                                if ( hour == -1 ) {
+                                    hour = h;
+                                }
+                                if ( h == hour ) {
+                                    hour_count ++;
+                                } else {
+                                    traf_hour.at( hour ) += hour_count;
+                                    hour_count = 1;
+                                    hour = h;
+                                }
+                            }
 
-                            // sum the day count to the relative day of the week count
-                            week_day = QDate(year,month,day).dayOfWeek();
-                            traf_day.at( week_day ) += day_count;
-                            num_day_count.at( week_day ) ++;
+                            // sum the time taken
+                            if ( tt >= 0 ) {
+                                if ( tt > max_tt ) {
+                                    max_tt = tt;
+                                }
+                                tot_tt += tt;
+                                num_tt ++;
+                            }
 
-                            // check the max date count
-                            if ( day_count > max_date_count ) {
-                                max_date_count = day_count;
-                                max_date_str = QString("%1-%2-%3").arg( year ).arg( month ).arg( day );
+                            // sum the bytes sent
+                            if ( bs >= 0 ) {
+                                if ( bs > max_bs ) {
+                                    max_bs = bs;
+                                }
+                                tot_bs += bs;
+                                num_bs ++;
+                            }
+
+                            // sum the bytes received
+                            if ( br >= 0 ) {
+                                if ( br > max_br ) {
+                                    max_br = br;
+                                }
+                                tot_br += br;
+                                num_br ++;
+                            }
+
+                            // process the protocol
+                            if ( protocol.size() > 0 ) {
+                                if ( recurs.at(0).find( protocol ) != recurs.at(0).end() ) {
+                                    // sum
+                                    recurs.at(0).at( protocol ) ++;
+                                } else {
+                                    // new
+                                    recurs.at(0).emplace( protocol, 1 );
+                                }
+                            }
+
+                            // process the method
+                            if ( method.size() > 0 ) {
+                                if ( recurs.at(1).find( method ) != recurs.at(1).end() ) {
+                                    // sum
+                                    recurs.at(1).at( method ) ++;
+                                } else {
+                                    // new
+                                    recurs.at(1).emplace( method, 1 );
+                                }
+                            }
+
+                            // process the uri
+                            if ( uri.size() > 0 ) {
+                                if ( recurs.at(2).find( uri ) != recurs.at(2).end() ) {
+                                    // sum
+                                    recurs.at(2).at( uri ) ++;
+                                } else {
+                                    // new
+                                    recurs.at(2).emplace( uri, 1 );
+                                }
+                            }
+
+                            // process the user-agent
+                            if ( user_agent.size() > 0 ) {
+                                if ( recurs.at(3).find( user_agent ) != recurs.at(3).end() ) {
+                                    // sum
+                                    recurs.at(3).at( user_agent ) ++;
+                                } else {
+                                    // new
+                                    recurs.at(3).emplace( user_agent, 1 );
+                                }
                             }
                         }
                     }
-                    query.finish();
-                    if ( successful == false ) { break; }
+                    // complete the remaining stats
+                    if ( successful == true ) {
+                        // append the last hour
+                        if ( hour >= 0 ) {
+                            traf_hour.at( hour ) += hour_count;
+                        }
+
+                        // sum the day count to the total count
+                        req_count += day_count;
+
+                        // sum the day count to the relative day of the week count
+                        week_day = QDate(year,month,day).dayOfWeek();
+                        traf_day.at( week_day ) += day_count;
+                        num_day_count.at( week_day ) ++;
+
+                        // check the max date count
+                        const QString m_str = (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) ;
+                        const QString d_str = (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) ;
+                        if ( day_count > max_date_count ) {
+                            max_date_count = day_count;
+                            max_date_str = QString("%1-%2-%3").arg( year ).arg( m_str, d_str );
+                        }
+                    }
                 }
+                query.finish();
                 if ( successful == false ) { break; }
             }
             if ( successful == false ) { break; }
