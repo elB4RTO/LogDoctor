@@ -218,6 +218,7 @@ MainWindow::MainWindow(QWidget *parent)
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
     }
 
@@ -330,6 +331,13 @@ void MainWindow::readConfigs()
     if ( proceed == true ) {
         std::vector<std::string> aux, list, configs;
         try {
+            // reset the lists when a config file is found
+            for ( int w=this->APACHE_ID; w<=this->IIS_ID; w++ ) {
+                for ( const int& f : std::vector<int>({11,12,20,21}) ) {
+                    this->craplog.setWarnlist( w, f, {} );
+                }
+                this->craplog.setBlacklist( w, 20, {} );
+            }
             std::string content;
             IOutils::readFile( this->configs_path, content );
             StringOps::splitrip( configs, content );
@@ -416,17 +424,32 @@ void MainWindow::readConfigs()
                 } else if ( var == "ApacheWarnlistMethod" ) {
                     this->craplog.setWarnlist( this->APACHE_ID, 11, this->string2list( val ) );
 
+                } else if ( var == "ApacheWarnlistMethodUsed" ) {
+                    this->craplog.setWarnlistUsed( this->APACHE_ID, 11, this->s2b.at( val ) );
+
                 } else if ( var == "ApacheWarnlistURI" ) {
                     this->craplog.setWarnlist( this->APACHE_ID, 12, this->string2list( val ) );
+
+                } else if ( var == "ApacheWarnlistURIUsed" ) {
+                    this->craplog.setWarnlistUsed( this->APACHE_ID, 12, this->s2b.at( val ) );
 
                 } else if ( var == "ApacheWarnlistClient" ) {
                     this->craplog.setWarnlist( this->APACHE_ID, 20, this->string2list( val ) );
 
+                } else if ( var == "ApacheWarnlistClientUsed" ) {
+                    this->craplog.setWarnlistUsed( this->APACHE_ID, 20, this->s2b.at( val ) );
+
                 } else if ( var == "ApacheWarnlistUserAgent" ) {
-                    this->craplog.setWarnlist( this->APACHE_ID, 21, this->string2list( val ) );
+                    this->craplog.setWarnlist( this->APACHE_ID, 21, this->string2list( val, true ) );
+
+                } else if ( var == "ApacheWarnlistUserAgentUsed" ) {
+                    this->craplog.setWarnlistUsed( this->APACHE_ID, 21, this->s2b.at( val ) );
 
                 } else if ( var == "ApacheBlacklistClient" ) {
                     this->craplog.setBlacklist( this->APACHE_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "ApacheBlacklistClientUsed" ) {
+                    this->craplog.setBlacklistUsed( this->APACHE_ID, 20, this->s2b.at( val ) );
 
                 } else if ( var == "NginxLogsPath" ) {
                     this->craplog.setLogsPath( this->NGINX_ID, this->resolvePath( val ) );
@@ -437,17 +460,32 @@ void MainWindow::readConfigs()
                 } else if ( var == "NginxWarnlistMethod" ) {
                     this->craplog.setWarnlist( this->NGINX_ID, 11, this->string2list( val ) );
 
+                } else if ( var == "NginxWarnlistMethodUsed" ) {
+                    this->craplog.setWarnlistUsed( this->NGINX_ID, 11, this->s2b.at( val ) );
+
                 } else if ( var == "NginxWarnlistURI" ) {
                     this->craplog.setWarnlist( this->NGINX_ID, 12, this->string2list( val ) );
+
+                } else if ( var == "NginxWarnlistURIUsed" ) {
+                    this->craplog.setWarnlistUsed( this->NGINX_ID, 12, this->s2b.at( val ) );
 
                 } else if ( var == "NginxWarnlistClient" ) {
                     this->craplog.setWarnlist( this->NGINX_ID, 20, this->string2list( val ) );
 
+                } else if ( var == "NginxWarnlistClientUsed" ) {
+                    this->craplog.setWarnlistUsed( this->NGINX_ID, 20, this->s2b.at( val ) );
+
                 } else if ( var == "NginxWarnlistUserAgent" ) {
-                    this->craplog.setWarnlist( this->NGINX_ID, 21, this->string2list( val ) );
+                    this->craplog.setWarnlist( this->NGINX_ID, 21, this->string2list( val, true ) );
+
+                } else if ( var == "NginxWarnlistUserAgentUsed" ) {
+                    this->craplog.setWarnlistUsed( this->NGINX_ID, 21, this->s2b.at( val ) );
 
                 } else if ( var == "NginxBlacklistClient" ) {
                     this->craplog.setBlacklist( this->NGINX_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "NginxBlacklistClientUsed" ) {
+                    this->craplog.setBlacklistUsed( this->NGINX_ID, 20, this->s2b.at( val ) );
 
                 } else if ( var == "IisLogsPath" ) {
                     this->craplog.setLogsPath( this->IIS_ID, this->resolvePath( val ) );
@@ -471,17 +509,32 @@ void MainWindow::readConfigs()
                 } else if ( var == "IisWarnlistMethod" ) {
                     this->craplog.setWarnlist( this->IIS_ID, 11, this->string2list( val ) );
 
+                } else if ( var == "IisWarnlistMethodUsed" ) {
+                    this->craplog.setWarnlistUsed( this->IIS_ID, 11, this->s2b.at( val ) );
+
                 } else if ( var == "IisWarnlistURI" ) {
                     this->craplog.setWarnlist( this->IIS_ID, 12, this->string2list( val ) );
+
+                } else if ( var == "IisWarnlistURIUsed" ) {
+                    this->craplog.setWarnlistUsed( this->IIS_ID, 12, this->s2b.at( val ) );
 
                 } else if ( var == "IisWarnlistClient" ) {
                     this->craplog.setWarnlist( this->IIS_ID, 20, this->string2list( val ) );
 
+                } else if ( var == "IisWarnlistClientUsed" ) {
+                    this->craplog.setWarnlistUsed( this->IIS_ID, 20, this->s2b.at( val ) );
+
                 } else if ( var == "IisWarnlistUserAgent" ) {
-                    this->craplog.setWarnlist( this->IIS_ID, 21, this->string2list( val ) );
+                    this->craplog.setWarnlist( this->IIS_ID, 21, this->string2list( val, true ) );
+
+                } else if ( var == "IisWarnlistUserAgentUsed" ) {
+                    this->craplog.setWarnlistUsed( this->IIS_ID, 21, this->s2b.at( val ) );
 
                 } else if ( var == "IisBlacklistClient" ) {
                     this->craplog.setBlacklist( this->IIS_ID, 20, this->string2list( val ) );
+
+                } else if ( var == "IisBlacklistClientUsed" ) {
+                    this->craplog.setBlacklistUsed( this->IIS_ID, 20, this->s2b.at( val ) );
 
                 } else if ( var == "CrapviewDialogLevel" ) {
                     this->crapview.setDialogsLevel( std::stoi( val ) );
@@ -618,19 +671,29 @@ void MainWindow::writeConfigs()
         configs += "\nApacheLogsPath=" + this->craplog.getLogsPath( this->APACHE_ID );
         configs += "\nApacheLogsFormat=" + this->craplog.getLogsFormatString( this->APACHE_ID );
         configs += "\nApacheWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 11 ) );
+        configs += "\nApacheWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->APACHE_ID, 11 ) );
         configs += "\nApacheWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 12 ) );
+        configs += "\nApacheWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->APACHE_ID, 12 ) );
         configs += "\nApacheWarnlistClient=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 20 ) );
+        configs += "\nApacheWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->APACHE_ID, 20 ) );
         configs += "\nApacheWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( this->APACHE_ID, 21 ), true );
+        configs += "\nApacheWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->APACHE_ID, 21 ) );
         configs += "\nApacheBlacklistClient=" + this->list2string( this->craplog.getBlacklist( this->APACHE_ID, 20 ) );
+        configs += "\nApacheBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( this->APACHE_ID, 20 ) );
         //// NGINX ////
         configs += "\n\n[Nginx]";
         configs += "\nNginxLogsPath=" + this->craplog.getLogsPath( this->NGINX_ID );
         configs += "\nNginxLogsFormat=" + this->craplog.getLogsFormatString( this->NGINX_ID );
         configs += "\nNginxWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 11 ) );
+        configs += "\nNginxWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->NGINX_ID, 11 ) );
         configs += "\nNginxWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 12 ) );
+        configs += "\nNginxWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->NGINX_ID, 12 ) );
         configs += "\nNginxWarnlistClient=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 20 ) );
+        configs += "\nNginxWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->NGINX_ID, 20 ) );
         configs += "\nNginxWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( this->NGINX_ID, 21 ), true );
+        configs += "\nNginxWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->NGINX_ID, 21 ) );
         configs += "\nNginxBlacklistClient=" + this->list2string( this->craplog.getBlacklist( this->NGINX_ID, 20 ) );
+        configs += "\nNginxBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( this->NGINX_ID, 20 ) );
         //// IIS ////
         configs += "\n\n[IIS]";
         configs += "\nIisLogsPath=" + this->craplog.getLogsPath( this->IIS_ID );
@@ -643,10 +706,15 @@ void MainWindow::writeConfigs()
         configs += "\nIisLogsModule=" + module;
         configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( this->IIS_ID );
         configs += "\nIisWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 11 ) );
+        configs += "\nIisWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->IIS_ID, 11 ) );
         configs += "\nIisWarnlistURI=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 12 ) );
+        configs += "\nIisWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->IIS_ID, 12 ) );
         configs += "\nIisWarnlistClient=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 20 ) );
+        configs += "\nIisWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->IIS_ID, 20 ) );
         configs += "\nIisWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( this->IIS_ID, 21 ), true );
+        configs += "\nIisWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( this->IIS_ID, 21 ) );
         configs += "\nIisBlacklistClient=" + this->list2string( this->craplog.getBlacklist( this->IIS_ID, 20 ) );
+        configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( this->IIS_ID, 20 ) );
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
         configs += "\nCrapviewDialogLevel=" + std::to_string( this->crapview.getDialogsLevel() );
@@ -698,23 +766,14 @@ void MainWindow::geometryFromString( const std::string& geometry )
 
 const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool& user_agent )
 {
-    int i, max=list.size()-1;
     std::string string;
     if ( user_agent == true ) {
         for ( const std::string& str : list ) {
-            string += StringOps::replace( str, " ", "%@#" );
-            if ( i < max ) {
-                string.push_back( ' ' );
-                i++;
-            }
+            string += StringOps::replace( str, " ", "%@#" ) + " ";
         }
     } else {
         for ( const std::string& str : list ) {
-            string += str;
-            if ( i < max ) {
-                string.push_back( ' ' );
-                i++;
-            }
+            string += str + " ";
         }
     }
     return string;
@@ -725,7 +784,7 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
     StringOps::splitrip( aux, string, " " );
     if ( user_agent == true ) {
         for ( const std::string& str : aux ) {
-            list.push_back( StringOps::replace( str, " ", "%@#" ) );
+            list.push_back( StringOps::replace( str, "%@#", " " ) );
         }
     } else {
         for ( const std::string& str : aux ) {
@@ -1103,8 +1162,8 @@ void MainWindow::showHelp( const std::string& filename )
 // switch language
 void MainWindow::menu_actionEnglish_triggered()
 {
-    this->ui->actionEnglish->setChecked( true );
-    this->ui->actionEspanol->setChecked( false );
+    this->ui->actionEnglish->setChecked(   true );
+    this->ui->actionEspanol->setChecked(  false );
     this->ui->actionFrancais->setChecked( false );
     this->ui->actionItaliano->setChecked( false );
     this->language = "en";
@@ -1112,8 +1171,8 @@ void MainWindow::menu_actionEnglish_triggered()
 }
 void MainWindow::menu_actionEspanol_triggered()
 {
-    this->ui->actionEnglish->setChecked( false );
-    this->ui->actionEspanol->setChecked( true );
+    this->ui->actionEnglish->setChecked(  false );
+    this->ui->actionEspanol->setChecked(   true );
     this->ui->actionFrancais->setChecked( false );
     this->ui->actionItaliano->setChecked( false );
     this->language = "es";
@@ -1121,9 +1180,9 @@ void MainWindow::menu_actionEspanol_triggered()
 }
 void MainWindow::menu_actionFrancais_triggered()
 {
-    this->ui->actionEnglish->setChecked( false );
-    this->ui->actionEspanol->setChecked( false );
-    this->ui->actionFrancais->setChecked( true );
+    this->ui->actionEnglish->setChecked(  false );
+    this->ui->actionEspanol->setChecked(  false );
+    this->ui->actionFrancais->setChecked(  true );
     this->ui->actionItaliano->setChecked( false );
     this->language = "fr";
     this->updateUiLanguage();
@@ -1131,10 +1190,10 @@ void MainWindow::menu_actionFrancais_triggered()
 void MainWindow::menu_actionItaliano_triggered()
 {
 
-    this->ui->actionEnglish->setChecked( false );
-    this->ui->actionEspanol->setChecked( false );
+    this->ui->actionEnglish->setChecked(  false );
+    this->ui->actionEspanol->setChecked(  false );
     this->ui->actionFrancais->setChecked( false );
-    this->ui->actionItaliano->setChecked( true );
+    this->ui->actionItaliano->setChecked(  true );
     this->language = "it";
     this->updateUiLanguage();
 }
@@ -1227,6 +1286,7 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
@@ -1246,6 +1306,7 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
@@ -1265,6 +1326,7 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
         QString rich_text;
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
         rich_text.clear();
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
@@ -1286,6 +1348,7 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
     this->refreshing_list = true;
     this->craplog_thread = std::thread( &MainWindow::refreshLogsList, this );
     // periodically check if thread finished
+    delete this->craplog_timer;
     this->craplog_timer = new QTimer(this);
     connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(check_CraplogLLT_Finished()));
     this->craplog_timer->start(250);
@@ -1434,6 +1497,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             QString rich_text;
             RichText::richLogsFailure( rich_text );
             this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
             rich_text.clear();
         }
     }
@@ -1516,6 +1580,7 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 
             if ( proceed == true ) {
                 // periodically update perfs
+                delete this->craplog_timer;
                 this->craplog_timer = new QTimer(this);
                 connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
                 this->craplog_timer->start(250);
@@ -1729,6 +1794,7 @@ void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
     if ( this->checkDataDB() == true ) {
         this->setDbWorkingState( true );
+        delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
         connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsWarn()));
@@ -1827,6 +1893,7 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
     if ( this->checkDataDB() == true ) {
         this->setDbWorkingState( true );
+        delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
         connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsSpeed()));
@@ -1950,112 +2017,104 @@ void MainWindow::resetStatsCountButtons()
     }
 }
 
-void MainWindow::on_button_StatsCount_Protocol_clicked()
+void MainWindow::startCountDrawing()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Protocol->text();
-    this->ui->button_StatsCount_Protocol->setFlat( false );
     this->setDbWorkingState( true );
+    delete this->crapview_timer;
     this->crapview_timer = new QTimer(this);
     this->crapview_timer->setSingleShot( true );
     connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
     this->crapview_timer->start(250);
+}
+
+void MainWindow::on_button_StatsCount_Protocol_clicked()
+{
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->ui->button_StatsCount_Protocol->setFlat( false );
+        this->count_fld = this->ui->button_StatsCount_Protocol->text();
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Method_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Method->text();
-    this->ui->button_StatsCount_Method->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Method->text();
+        this->ui->button_StatsCount_Method->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Request_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Request->text();
-    this->ui->button_StatsCount_Request->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Request->text();
+        this->ui->button_StatsCount_Request->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Query_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Query->text();
-    this->ui->button_StatsCount_Query->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Query->text();
+        this->ui->button_StatsCount_Query->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Response_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Response->text();
-    this->ui->button_StatsCount_Response->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Response->text();
+        this->ui->button_StatsCount_Response->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Referrer_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Referrer->text();
-    this->ui->button_StatsCount_Referrer->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Referrer->text();
+        this->ui->button_StatsCount_Referrer->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Cookie_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Cookie->text();
-    this->ui->button_StatsCount_Cookie->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Cookie->text();
+        this->ui->button_StatsCount_Cookie->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_UserAgent_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_UserAgent->text();
-    this->ui->button_StatsCount_UserAgent->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_UserAgent->text();
+        this->ui->button_StatsCount_UserAgent->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::on_button_StatsCount_Client_clicked()
 {
-    this->resetStatsCountButtons();
-    this->count_fld = this->ui->button_StatsCount_Client->text();
-    this->ui->button_StatsCount_Client->setFlat( false );
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->resetStatsCountButtons();
+        this->count_fld = this->ui->button_StatsCount_Client->text();
+        this->ui->button_StatsCount_Client->setFlat( false );
+        startCountDrawing();
+    }
 }
 
 void MainWindow::drawStatsCount()
@@ -2065,7 +2124,9 @@ void MainWindow::drawStatsCount()
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->box_StatsCount_WebServer->currentText(),
-        this->ui->box_StatsCount_Year->currentText(), this->ui->box_StatsCount_Month->currentText(), this->ui->box_StatsCount_Day->currentText(),
+        this->ui->box_StatsCount_Year->currentText(),
+        this->ui->box_StatsCount_Month->currentText(),
+        this->ui->box_StatsCount_Day->currentText(),
         this->count_fld );
     this->setDbWorkingState( false );
 }
@@ -2247,6 +2308,7 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 {
     if ( this->checkDataDB() == true ) {
         this->setDbWorkingState( true );
+        delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
         connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsDay()));
@@ -2441,6 +2503,7 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
     if ( this->checkDataDB() == true ) {
         this->setDbWorkingState( true );
+        delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
         connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsRelat()));
@@ -2603,36 +2666,40 @@ void MainWindow::resetStatsGlobals()
 
 
 
-void MainWindow::on_button_StatsGlob_Apache_clicked()
+void MainWindow::globalsButtonClicked()
 {
-    this->glob_ws = "Apache2";
     this->setDbWorkingState( true );
+    delete this->crapview_timer;
     this->crapview_timer = new QTimer(this);
     this->crapview_timer->setSingleShot( true );
     connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(makeStatsGlobals()));
     this->crapview_timer->start(250);
+}
+
+void MainWindow::on_button_StatsGlob_Apache_clicked()
+{
+    if ( this->checkDataDB() == true ) {
+        this->glob_ws = "Apache2";
+        this->globalsButtonClicked();
+    }
 }
 
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-    this->glob_ws = "Nginx";
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(makeStatsGlobals()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->glob_ws = "Nginx";
+        this->globalsButtonClicked();
+    }
 }
 
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-    this->glob_ws = "IIS";
-    this->setDbWorkingState( true );
-    this->crapview_timer = new QTimer(this);
-    this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(makeStatsGlobals()));
-    this->crapview_timer->start(250);
+    if ( this->checkDataDB() == true ) {
+        this->glob_ws = "IIS";
+        this->globalsButtonClicked();
+    }
 }
 
 
@@ -3010,7 +3077,7 @@ void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QStri
         this->ui->list_ConfApache_Warnlist_List->addItem( QString::fromStdString( item ) );
     }
     // check/uncheck the usage option
-    bool used = this->craplog.isWarnlistUsed(
+    const bool used = this->craplog.isWarnlistUsed(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ) );
     this->ui->checkBox_ConfApache_Warnlist_Used->setChecked( used );
@@ -3342,7 +3409,7 @@ void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QStrin
         this->ui->list_ConfNginx_Warnlist_List->addItem( QString::fromStdString( item ) );
     }
     // check/uncheck the usage option
-    bool used = this->craplog.isWarnlistUsed(
+    const bool used = this->craplog.isWarnlistUsed(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ) );
     this->ui->checkBox_ConfNginx_Warnlist_Used->setChecked( used );
@@ -3715,7 +3782,7 @@ void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString 
         this->ui->list_ConfIis_Warnlist_List->addItem( QString::fromStdString( item ) );
     }
     // check/uncheck the usage option
-    bool used = this->craplog.isWarnlistUsed(
+    const bool used = this->craplog.isWarnlistUsed(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ) );
     this->ui->checkBox_ConfIis_Warnlist_Used->setChecked( used );
