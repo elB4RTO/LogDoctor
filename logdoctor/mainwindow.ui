@@ -1364,6 +1364,9 @@ hr { height: 1px; border-width: 0; }
                <property name="dragDropOverwriteMode">
                 <bool>false</bool>
                </property>
+               <property name="horizontalScrollMode">
+                <enum>QAbstractItemView::ScrollPerPixel</enum>
+               </property>
                <property name="sortingEnabled">
                 <bool>true</bool>
                </property>
@@ -1373,6 +1376,9 @@ hr { height: 1px; border-width: 0; }
                <attribute name="horizontalHeaderDefaultSectionSize">
                 <number>128</number>
                </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
                <column>
                 <property name="text">
                  <string>Warning</string>
@@ -1380,10 +1386,16 @@ hr { height: 1px; border-width: 0; }
                 <property name="toolTip">
                  <string>Log line marked as Warning</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
                  <string>Date</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1393,6 +1405,9 @@ hr { height: 1px; border-width: 0; }
                 <property name="toolTip">
                  <string>Time when the request arrived (hh:mm:ss)</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1400,6 +1415,9 @@ hr { height: 1px; border-width: 0; }
                 </property>
                 <property name="toolTip">
                  <string>Protocol of the request</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1409,6 +1427,9 @@ hr { height: 1px; border-width: 0; }
                 <property name="toolTip">
                  <string>Method of the request</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1416,6 +1437,9 @@ hr { height: 1px; border-width: 0; }
                 </property>
                 <property name="toolTip">
                  <string>URI of the requested page</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1425,6 +1449,9 @@ hr { height: 1px; border-width: 0; }
                 <property name="toolTip">
                  <string>Query carried along with the requested URI</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1432,6 +1459,9 @@ hr { height: 1px; border-width: 0; }
                 </property>
                 <property name="toolTip">
                  <string>Response code from the server</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1441,10 +1471,16 @@ hr { height: 1px; border-width: 0; }
                 <property name="toolTip">
                  <string>Where the request was redirected from</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
                  <string>Cookie</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1454,6 +1490,9 @@ hr { height: 1px; border-width: 0; }
                 <property name="toolTip">
                  <string>User-agent of the Client which made the request</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1461,6 +1500,41 @@ hr { height: 1px; border-width: 0; }
                 </property>
                 <property name="toolTip">
                  <string>IP address of the Client which made the request</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>New Column</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Bytes received</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Bytes sent</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string notr="true">rowid</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
               </widget>
@@ -1738,12 +1812,18 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                <attribute name="horizontalHeaderDefaultSectionSize">
                 <number>128</number>
                </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
                <column>
                 <property name="text">
                  <string>Time taken</string>
                 </property>
                 <property name="toolTip">
                  <string>Time taken by the server to serve the content, in milliseconds </string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1753,6 +1833,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 <property name="toolTip">
                  <string>URI of the requested page</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1760,6 +1843,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 </property>
                 <property name="toolTip">
                  <string>Query carried along with the requested URI</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1769,6 +1855,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 <property name="toolTip">
                  <string>Method of the request</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1776,6 +1865,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 </property>
                 <property name="toolTip">
                  <string>Protocol of the request</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
                <column>
@@ -1785,6 +1877,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 <property name="toolTip">
                  <string>Response code from the server</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -1792,6 +1887,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 </property>
                 <property name="toolTip">
                  <string>Time when the request arrived (hh:mm:ss)</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
               </widget>
@@ -2684,6 +2782,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 <property name="toolTip">
                  <string>Number of occurrences</string>
                 </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
                </column>
                <column>
                 <property name="text">
@@ -2691,6 +2792,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 </property>
                 <property name="toolTip">
                  <string>Value of the field</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
                 </property>
                </column>
               </widget>
@@ -3885,7 +3989,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>173</width>
+                      <width>325</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4220,7 +4324,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>157</width>
+                      <width>325</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4496,7 +4600,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>145</width>
+                      <width>439</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -4761,7 +4865,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>173</width>
+                      <width>439</width>
                       <height>276</height>
                      </rect>
                     </property>
