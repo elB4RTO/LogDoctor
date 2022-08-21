@@ -319,6 +319,7 @@ void StringOps::splitrip( std::vector<std::string>& list, const std::string& tar
 std::string StringOps::replace( const std::string& str, const std::string& target, const std::string& replace )
 {
     size_t start=0, stop;
+    const int size = target.size();
     std::string string = "";
     if ( str.size()-1 >= 0 ) {
         while ( true ) {
@@ -329,7 +330,7 @@ std::string StringOps::replace( const std::string& str, const std::string& targe
             } else {
                 string += str.substr( start, stop-start );
                 string += replace;
-                start = stop+1;
+                start = stop+size;
             }
         }
     }
