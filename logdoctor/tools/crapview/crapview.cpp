@@ -49,14 +49,14 @@ const QString Crapview::printableDate( const int& year, const int& month, const 
 {
     QString date;
     if ( year < 10 ) {
-        date += QString("0%1:").arg( year );
+        date += QString("0%1-").arg( year );
     } else {
-        date += QString("%1:").arg( year );
+        date += QString("%1-").arg( year );
     }
     if ( month < 10 ) {
-        date += QString("0%1:").arg( month );
+        date += QString("0%1-").arg( month );
     } else {
-        date += QString("%1:").arg( month );
+        date += QString("%1-").arg( month );
     }
     if ( day < 10 ) {
         date += QString("0%1").arg( day );
@@ -915,9 +915,9 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
         // ( date_str, count )
         std::tuple<QString, int> traf_date;
         // { day_name : total_count }
-        std::unordered_map<int, long> traf_day = { {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
+        std::unordered_map<int, double> traf_day = { {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
         // { hour : total_count }
-        std::unordered_map<int, long> traf_hour = {
+        std::unordered_map<int, double> traf_hour = {
             {0,0},  {1,0},  {2,0},  {3,0},  {4,0},  {5,0},  {6,0},  {7,0},  {8,0},  {9,0},  {10,0}, {11,0},
             {12,0}, {13,0}, {14,0}, {15,0}, {16,0}, {17,0}, {18,0}, {19,0}, {20,0}, {21,0}, {22,0}, {23,0} };
         // [ max, total, num ]
@@ -957,7 +957,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             traffic_list.push_back( std::make_tuple( std::get<0>(traf_date), QString("%1").arg( std::get<1>(traf_date) ) ) );
 
             // max day of the week
-            int max=0, max_=0;
+            double max=0, max_=0;
             for ( const auto& [d,c] : traf_day ) {
                 if ( c > max ) {
                     max = c;
@@ -965,9 +965,15 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
                 }
             }
             if ( max_ == 0 ) {
-                traffic_list.push_back( std::make_tuple( "", "0" ) );
+                traffic_list.push_back( std::make_tuple( "-", "0" ) );
             } else {
-                traffic_list.push_back( std::make_tuple( this->dbQuery.DAYS.value(max_), QString("%1").arg(max) ) );
+                const int f = std::floor(max);
+                const int d = (max<10) ? (int)(max*100) % 100 : (int)(max*10) % 10;
+                QString count = QString("%1").arg( f );
+                if ( d > 0 ) {
+                    count += QString(".%1").arg( d );
+                }
+                traffic_list.push_back( std::make_tuple( this->dbQuery.DAYS.value(max_), count ));
             }
 
             // max hour of the day
@@ -981,8 +987,14 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             if ( max_ < 0 ) {
                 traffic_list.push_back( std::make_tuple( "", "0" ) );
             } else {
+                const int f = std::floor(max);
+                const int d = (max<10) ? (int)(max*100) % 100 : (int)(max*10) % 10;
+                QString count = QString("%1").arg( f );
+                if ( d > 0 ) {
+                    count += QString(".%1").arg( d );
+                }
                 QString h = (max_<10) ? QString("0%1").arg(max_) : QString("%1").arg(max_) ;
-                traffic_list.push_back( std::make_tuple( h, QString("%1").arg(max) ) );
+                traffic_list.push_back( std::make_tuple( h, count ) );
             }
 
             // mean/max time-taken
