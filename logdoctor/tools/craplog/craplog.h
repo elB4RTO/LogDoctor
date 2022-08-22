@@ -150,7 +150,7 @@ private:
      * log_field_ids
      *      99: warning,
      *      1: year, 2: month, 3: day, 4: hour, 5: minute, 6:second,
-     *      10: request_protocol, 11: request_method, 12: request_page, 13: request_query, 14: response_code,
+     *      10: request_protocol, 11: request_method, 12: request_uri, 13: request_query, 14: response_code,
      *      15: time_taken, 16: bytes_sent, 17: bytes_received, 18: referrer,
      *      20: client, 21: user_agent, 22: cookie
     */
