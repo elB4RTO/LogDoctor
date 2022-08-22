@@ -14,14 +14,22 @@
 
 #include <thread>
 
-#include "utilities.h"
-#include "modules.h"
+#include "utilities/colors.h"
+#include "utilities/io.h"
+#include "utilities/rtf.h"
+#include "utilities/strings.h"
+#include "utilities/vectors.h"
+
+#include "modules/checks.h"
+#include "modules/dialogs.h"
+#include "modules/tb.h"
+
+#include "tools/shared.h"
 #include "tools/craplog/craplog.h"
 #include "tools/crapview/crapview.h"
 #include "tools/craphelp/craphelp.h"
 #include "tools/crapup/crapup.h"
 #include "tools/crapnote/crapnote.h"
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -127,7 +135,7 @@ private slots:
 
     void on_button_StatsCount_Method_clicked();
 
-    void on_button_StatsCount_Request_clicked();
+    void on_button_StatsCount_Uri_clicked();
 
     void on_button_StatsCount_Query_clicked();
 
@@ -582,7 +590,7 @@ private:
     //////////////////
     Crapview crapview;
     /*std::thread crapview_thread;*/
-    QTimer *crapview_timer;
+    QTimer *crapview_timer = new QTimer();
     // refresh dates: query a new collection from the db and apply to the tabs
     void refreshStatsDates();
     // check if drawing conditions are met
