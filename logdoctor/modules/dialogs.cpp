@@ -17,18 +17,22 @@ void DialogSec::errLangLocaleInvalid( QWidget *parent, const QString& locale )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LANG_INVALID,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_LANG_LOCALE_INVALID, locale, r_CONF_DONT_EDIT ),
+        DialogSec::tr( t_LANG_INVALID.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_LANG_LOCALE_INVALID.c_str() ),
+            locale,
+            DialogSec::tr( r_CONF_DONT_EDIT.c_str() ) ),
         QMessageBox::Ok );
 }
 void DialogSec::errLangNotAccepted( QWidget *parent, const QString& locale )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LANG_INVALID,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_LANG_NOT_ACCEPTED, locale, r_LANG_NOT_ACCEPTED ),
+        DialogSec::tr( t_LANG_INVALID.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_LANG_NOT_ACCEPTED.c_str() ),
+            locale,
+            DialogSec::tr( r_LANG_NOT_ACCEPTED.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -41,9 +45,10 @@ void DialogSec::warnConfFileNotFound( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_CONF_FILE_NOT_FOUND,
-        QString("%1%2\n\n%3")
-            .arg( m_CONF_FILE_NOT_FOUND, (file=="") ? file : ":\n"+file, f_SKIPPING ),
+        DialogSec::tr( t_CONF_FILE_NOT_FOUND.c_str() ),
+        QString("%1%2\n\n%3").arg(
+            DialogSec::tr( m_CONF_FILE_NOT_FOUND.c_str() ),
+            (file=="") ? file : ":\n"+file,DialogSec::tr( f_SKIPPING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -51,9 +56,11 @@ void DialogSec::errConfFailedWriting( QWidget *parent, const QString& msg )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_CONF_FILE_FAILED_W,
-        QString("%1%2\n\n%3")
-            .arg( m_CONF_FILE_ERROR, (msg=="") ? msg : ":\n"+msg, m_CONF_FILE_FAILED_W ),
+        DialogSec::tr( t_CONF_FILE_FAILED_W.c_str() ),
+        QString("%1%2\n\n%3").arg(
+            DialogSec::tr( m_CONF_FILE_ERROR.c_str() ),
+            (msg=="") ? msg : ":\n"+msg,
+            DialogSec::tr( m_CONF_FILE_FAILED_W.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -61,18 +68,22 @@ void DialogSec::errConfFileNotReadable( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_NOT_READABLE,
-        QString("%1\n\n%2%3")
-            .arg( m_CONF_FILE_ERROR, m_FILE_NOT_READABLE, (file=="") ? file : ":\n"+file ),
+        DialogSec::tr( t_FILE_NOT_READABLE.c_str() ),
+        QString("%1\n\n%2%3").arg(
+            DialogSec::tr( m_CONF_FILE_ERROR.c_str() ),
+            DialogSec::tr( m_FILE_NOT_READABLE.c_str() ),
+            (file=="") ? file : ":\n"+file ),
         QMessageBox::Ok );
 }
 void DialogSec::errConfFileNotWritable( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_NOT_WRITABLE,
-        QString("%1\n\n%2%3")
-            .arg( m_CONF_FILE_ERROR, m_FILE_NOT_WRITABLE, (file=="") ? file : ":\n"+file ),
+        DialogSec::tr( t_FILE_NOT_WRITABLE.c_str() ),
+        QString("%1\n\n%2%3").arg(
+            DialogSec::tr( m_CONF_FILE_ERROR.c_str() ),
+            DialogSec::tr( m_FILE_NOT_WRITABLE.c_str() ),
+            (file=="") ? file : ":\n"+file ),
         QMessageBox::Ok );
 }
 
@@ -81,9 +92,11 @@ void DialogSec::errConfDirNotWritable( QWidget *parent, const QString& dir )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_DIR_NOT_WRITABLE,
-        QString("%1\n\n%2%3")
-            .arg( m_CONF_FILE_ERROR, m_DIR_NOT_WRITABLE, (dir=="") ? dir : ":\n"+dir ),
+        DialogSec::tr( t_DIR_NOT_WRITABLE.c_str() ),
+        QString("%1\n\n%2%3").arg(
+            DialogSec::tr( m_CONF_FILE_ERROR.c_str() ),
+            DialogSec::tr( m_DIR_NOT_WRITABLE.c_str() ),
+            (dir=="") ? dir : ":\n"+dir ),
         QMessageBox::Ok );
 }
 
@@ -97,21 +110,24 @@ void DialogSec::errVersionCheckFailed( QWidget *parent, const int& err_code )
     QString msg;
     switch (err_code) {
         case 1:
-            msg = QString("%1\n\n%2").arg( m_CONNECTIONS_FAILED, r_UPSTREAM_FAILURE );
+            msg = QString("%1\n\n%2").arg(
+                DialogSec::tr( m_CONNECTIONS_FAILED.c_str() ),
+                DialogSec::tr( r_UPSTREAM_FAILURE.c_str() ) );
             break;
         case 10:
-            msg = m_VERSION_NOT_FOUND;
+            msg = DialogSec::tr( m_VERSION_NOT_FOUND.c_str() );
             break;
         case 11:
-            msg = m_VERSION_MALFORMED;
+            msg = DialogSec::tr( m_VERSION_MALFORMED.c_str() );
             break;
     }
 
     std::ignore=
     QMessageBox::critical(parent,
-        t_VERSION_CHECK_FAILED,
-        QString("%1\n\n%2")
-            .arg( m_VERSION_CHECK_FAILED, msg ),
+        DialogSec::tr( t_VERSION_CHECK_FAILED.c_str() ),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr( m_VERSION_CHECK_FAILED.c_str() ),
+            msg ),
         QMessageBox::Ok );
 }
 
@@ -119,9 +135,11 @@ void DialogSec::warnConnectionFailed( QWidget *parent, const QString& link, cons
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_CONNECTION_FAILED,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_CONNECTION_FAILED, link, err_msg ),
+        DialogSec::tr( t_CONNECTION_FAILED.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_CONNECTION_FAILED.c_str() ),
+            link,
+            err_msg ),
         QMessageBox::Ok );
 }
 
@@ -129,24 +147,24 @@ void DialogSec::msgNewVersion( QWidget *parent )
 {
     std::ignore=
     QMessageBox::information(parent,
-        t_VERSION_CHECK,
-        m_NEW_VERSION_AVAILABLE,
+        DialogSec::tr( t_VERSION_CHECK.c_str() ),
+        DialogSec::tr( m_NEW_VERSION_AVAILABLE.c_str() ),
         QMessageBox::Ok );
 }
 void DialogSec::msgSameVersion( QWidget *parent )
 {
     std::ignore=
     QMessageBox::information(parent,
-        t_VERSION_CHECK,
-        m_SAME_VERSION,
+        DialogSec::tr( t_VERSION_CHECK.c_str() ),
+        DialogSec::tr( m_SAME_VERSION.c_str() ),
         QMessageBox::Ok );
 }
 void DialogSec::warnFutureVersion( QWidget *parent )
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_VERSION_CHECK,
-        m_FUTURE_VERSION_RUNNING,
+        DialogSec::tr( t_VERSION_CHECK.c_str() ),
+        DialogSec::tr( m_FUTURE_VERSION_RUNNING.c_str() ),
         QMessageBox::Ok );
 }
 
@@ -159,23 +177,25 @@ void DialogSec::errHelpFailed( QWidget *parent, const QString& link, const QStri
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_HELP_FAILED_LOADING,
-        QString("%1%2\n\n%3%4")
-            .arg( m_HELP_FAILED_LOADING,
-                  (msg=="") ? msg : ":\n"+msg,
-                  f_ADD_RESOURCES,
-                  (link=="") ? link : ":\n"+link ),
+        DialogSec::tr( t_HELP_FAILED_LOADING.c_str() ),
+        QString("%1%2\n\n%3%4").arg(
+            DialogSec::tr( m_HELP_FAILED_LOADING.c_str() ),
+            (msg=="") ? msg : ":\n"+msg,
+            DialogSec::tr( f_ADD_RESOURCES.c_str() ),
+            (link=="") ? link : ":\n"+link ),
         QMessageBox::Ok );
 }
 
 void DialogSec::errHelpNotFound( QWidget *parent, const QString& link )
 {
-    DialogSec::errHelpFailed( parent, link, m_FILE_NOT_FOUND.toLower() );
+    DialogSec::errHelpFailed( parent, link,
+            DialogSec::tr( m_FILE_NOT_FOUND.c_str() ).toLower() );
 }
 
 void DialogSec::errHelpNotReadable( QWidget *parent, const QString& link )
 {
-    DialogSec::errHelpFailed( parent, link, m_FILE_NOT_READABLE.toLower() );
+    DialogSec::errHelpFailed( parent, link,
+            DialogSec::tr( m_FILE_NOT_READABLE.c_str() ).toLower() );
 }
 
 
@@ -188,9 +208,11 @@ void DialogSec::errSqlDriverNotFound( QWidget *parent, const QString& driver )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_DB_DRIVER_NOT_FOUND,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DB_DRIVER_NOT_FOUND, driver, f_ABORTING ),
+        DialogSec::tr( t_DB_DRIVER_NOT_FOUND.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DB_DRIVER_NOT_FOUND.c_str() ),
+            driver,
+            DialogSec::tr( f_ABORTING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -198,9 +220,11 @@ const bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const QString& db
 {
     bool choice = false;
     auto response = QMessageBox::question(parent,
-        t_FILE_NOT_FOUND,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DB_NOT_FOUND, db_name, q_DB_CREATE ),
+        DialogSec::tr( t_FILE_NOT_FOUND.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DB_NOT_FOUND.c_str() ),
+            db_name,
+           DialogSec::tr( q_DB_CREATE.c_str() ) ),
         QMessageBox::Yes | QMessageBox::No );
     if ( response == QMessageBox::Yes ) {
         choice = true;
@@ -210,36 +234,52 @@ const bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const QString& db
 
 const bool DialogSec::choiceDatabaseWrongTable(QWidget *parent, const QString& db_name, const QString& table_name )
 {
-    QString msg = QString("%1:\n%2 -> %3").arg( m_DB_WRONG_TABLE_NAME, db_name, table_name );
-    return choiceDatabaseRenew( parent, t_DB_WRONG_TABLE_NAME, msg );
+    QString msg = QString("%1:\n%2 -> %3").arg(
+        DialogSec::tr( m_DB_WRONG_TABLE_NAME.c_str() ),
+        db_name, table_name );
+    return choiceDatabaseRenew( parent,
+            DialogSec::tr( t_DB_WRONG_TABLE_NAME.c_str() ), msg );
 }
 const bool DialogSec::choiceDatabaseMissingTable(QWidget *parent, const QString& db_name, const QString& table_name )
 {
-    QString msg = QString("%1:\n%2 -> %3").arg( m_DB_MISSING_TABLE, db_name, table_name );
-    return choiceDatabaseRenew( parent, t_DB_MISSING_TABLE, msg );
+    QString msg = QString("%1:\n%2 -> %3").arg(
+        DialogSec::tr( m_DB_MISSING_TABLE.c_str() ),
+        db_name, table_name );
+    return choiceDatabaseRenew( parent,
+            DialogSec::tr( t_DB_MISSING_TABLE.c_str() ), msg );
 }
 const bool DialogSec::choiceDatabaseWrongColumn(QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name )
 {
-    QString msg = QString("%1:\n%2 -> %3 -> %4").arg( m_DB_WRONG_COLUMN_NAME, db_name, table_name, column_name );
-    return choiceDatabaseRenew( parent, t_DB_WRONG_COLUMN_NAME, msg );
+    QString msg = QString("%1:\n%2 -> %3 -> %4").arg(
+        DialogSec::tr( m_DB_WRONG_COLUMN_NAME.c_str() ),
+        db_name, table_name, column_name );
+    return choiceDatabaseRenew( parent,
+            DialogSec::tr( t_DB_WRONG_COLUMN_NAME.c_str() ), msg );
 }
 const bool DialogSec::choiceDatabaseMissingColumn(QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name )
 {
-    QString msg = QString("%1:\n%2 -> %3 -> %4").arg( m_DB_MISSING_COLUMN, db_name, table_name, column_name );
-    return choiceDatabaseRenew( parent, t_DB_MISSING_COLUMN, msg );
+    QString msg = QString("%1:\n%2 -> %3 -> %4").arg(
+        DialogSec::tr( m_DB_MISSING_COLUMN.c_str() ),
+        db_name, table_name, column_name );
+    return choiceDatabaseRenew( parent,
+            DialogSec::tr( t_DB_MISSING_COLUMN.c_str() ), msg );
 }
 const bool DialogSec::choiceDatabaseWrongDataType(QWidget *parent, const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type )
 {
-    QString msg = QString("%1:\n%2 -> %3 -> %4 -> %5").arg( m_DB_WRONG_COLUMN_TYPE, db_name, table_name, column_name, data_type );
-    return choiceDatabaseRenew( parent, t_DB_WRONG_COLUMN_TYPE, msg );
+    QString msg = QString("%1:\n%2 -> %3 -> %4 -> %5").arg(
+        DialogSec::tr( m_DB_WRONG_COLUMN_TYPE.c_str() ),
+        db_name, table_name, column_name, data_type );
+    return choiceDatabaseRenew( parent,
+            DialogSec::tr( t_DB_WRONG_COLUMN_TYPE.c_str() ), msg );
 }
 const bool DialogSec::choiceDatabaseRenew(QWidget *parent, const QString& title, const QString& msg )
 {
     bool choice = false;
     auto response = QMessageBox::warning(parent,
         title,
-        QString("%1\n\n%2")
-            .arg( msg, q_DB_RENEW ),
+        QString("%1\n\n%2").arg(
+            msg,
+            DialogSec::tr( q_DB_RENEW.c_str() ) ),
         QMessageBox::Yes | QMessageBox::No );
     if ( response == QMessageBox::Yes ) {
         choice = true;
@@ -250,9 +290,10 @@ void DialogSec::msgDatabaseCreated( QWidget *parent, const QString& db_name )
 {
     std::ignore=
     QMessageBox::information(parent,
-        t_DB_CREATED,
-        QString("%1:\n%2")
-            .arg( m_DB_CREATED, db_name ),
+        DialogSec::tr( t_DB_CREATED.c_str() ),
+        QString("%1:\n%2").arg(
+            DialogSec::tr( m_DB_CREATED.c_str() ),
+            db_name ),
         QMessageBox::Ok );
 }
 
@@ -260,9 +301,12 @@ void DialogSec::errDatabaseNotFile( QWidget *parent, const QString& db_name )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_NOT_FILE,
-        QString("%1\n\n%2:\n%3\n\n%4")
-            .arg( m_DB_NOT_FOUND, m_FILE_NOT_FILE, db_name, r_REMOVE_ENTRY ),
+        DialogSec::tr( t_FILE_NOT_FILE.c_str() ),
+        QString("%1\n\n%2:\n%3\n\n%4").arg(
+            DialogSec::tr( m_DB_NOT_FOUND.c_str() ),
+            DialogSec::tr( m_FILE_NOT_FILE.c_str() ),
+            db_name,
+            DialogSec::tr( r_REMOVE_ENTRY.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -270,9 +314,11 @@ void DialogSec::errDatabaseNotReadable( QWidget *parent, const QString& db_name 
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_NOT_READABLE,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DB_NOT_READABLE, db_name, r_SET_PERMISSIONS ),
+        DialogSec::tr( t_FILE_NOT_READABLE.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DB_NOT_READABLE.c_str() ),
+            db_name,
+            DialogSec::tr( r_SET_PERMISSIONS.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -280,9 +326,11 @@ void DialogSec::errDatabaseNotWritable( QWidget *parent, const QString& db_name 
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_NOT_WRITABLE,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DB_NOT_WRITABLE, db_name, r_SET_PERMISSIONS ),
+        DialogSec::tr( t_FILE_NOT_WRITABLE.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DB_NOT_WRITABLE.c_str() ),
+            db_name,
+            DialogSec::tr( r_SET_PERMISSIONS.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -290,13 +338,15 @@ void DialogSec::errDatabaseFailedCreating(QWidget *parent, const QString& db_nam
 {
     QString msg = db_name;
     if ( err_msg != "" ) {
-        msg += "\n\n" + m_DB_FAILED_ERRMSG + ":\n" + err_msg;
+        msg += "\n\n" + DialogSec::tr( m_DB_FAILED_ERRMSG.c_str() ) + ":\n" + err_msg;
     }
     std::ignore=
     QMessageBox::critical(parent,
-        t_DB_FAILED_CREATING,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DB_FAILED_CREATING, msg, f_ABORTING ),
+        DialogSec::tr( t_DB_FAILED_CREATING.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DB_FAILED_CREATING.c_str() ),
+            msg,
+            DialogSec::tr( f_ABORTING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -304,13 +354,15 @@ void DialogSec::errDatabaseFailedOpening(QWidget *parent, const QString& db_name
 {
     QString msg = db_name;
     if ( err_msg != "" ) {
-        msg += "\n\n" + m_DB_FAILED_ERRMSG + ":\n" + err_msg;
+        msg += "\n\n" + DialogSec::tr( m_DB_FAILED_ERRMSG.c_str() ) + ":\n" + err_msg;
     }
     std::ignore=
     QMessageBox::critical(parent,
-        t_DB_FAILED_OPENING,
-        QString("%1:\n%2\n\n%e")
-            .arg( m_DB_FAILED_OPENING, msg, f_ABORTING ),
+        DialogSec::tr( t_DB_FAILED_OPENING.c_str() ),
+        QString("%1:\n%2\n\n%e").arg(
+            DialogSec::tr( m_DB_FAILED_OPENING.c_str() ),
+            msg,
+            DialogSec::tr( f_ABORTING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -318,16 +370,18 @@ void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db_na
 {
     QString msg = db_name;
     if ( statement != "" ) {
-        msg += "\n\n" + m_DB_FAILED_STATEMENT + ":\n" + statement;
+        msg += "\n\n" + DialogSec::tr( m_DB_FAILED_STATEMENT.c_str() ) + ":\n" + statement;
     }
     if ( err_msg != "" ) {
-        msg += "\n\n" + m_DB_FAILED_ERRMSG + ":\n" + err_msg;
+        msg += "\n\n" + DialogSec::tr( m_DB_FAILED_ERRMSG.c_str() ) + ":\n" + err_msg;
     }
     std::ignore=
     QMessageBox::critical(parent,
-        t_DB_FAILED_EXECUTING,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DB_FAILED_EXECUTING, msg, f_ABORTING ),
+        DialogSec::tr( t_DB_FAILED_EXECUTING.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DB_FAILED_EXECUTING.c_str() ),
+            msg,
+            DialogSec::tr( f_ABORTING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -340,9 +394,10 @@ void DialogSec::errInvalidLogFormatString( QWidget *parent, const QString& msg )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LOGFORMAT_INVALID,
-        QString("%1\n\n%2")
-            .arg( msg, r_CHECK_FORMAT ),
+        DialogSec::tr( t_LOGFORMAT_INVALID.c_str() ),
+        QString("%1\n\n%2").arg(
+            msg,
+            DialogSec::tr( r_CHECK_FORMAT.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -350,9 +405,9 @@ void DialogSec::errLogFormatNotSet( QWidget *parent )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LOGFORMAT_ERROR,
-        QString("%1")
-            .arg( m_LOGFORMAT_NOT_SET ),
+        DialogSec::tr( t_LOGFORMAT_ERROR.c_str() ),
+        QString("%1").arg(
+            DialogSec::tr( m_LOGFORMAT_NOT_SET.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -360,9 +415,10 @@ void DialogSec::errLogFormatNoFields( QWidget *parent )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LOGFORMAT_MISCONFIGURED,
-        QString("%1\n\n%2")
-            .arg( m_LOGFORMAT_NO_FIELDS, r_SET_FORMAT_FIELDS ),
+        DialogSec::tr( t_LOGFORMAT_MISCONFIGURED.c_str() ),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr( m_LOGFORMAT_NO_FIELDS.c_str() ),
+            DialogSec::tr( r_SET_FORMAT_FIELDS.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -370,9 +426,10 @@ void DialogSec::errLogFormatNoSeparators( QWidget *parent )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LOGFORMAT_MISCONFIGURED,
-        QString("%1\n\n%2")
-            .arg( m_LOGFORMAT_NO_SEPS, r_SET_FORMAT_SEPS ),
+        DialogSec::tr( t_LOGFORMAT_MISCONFIGURED.c_str() ),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr( m_LOGFORMAT_NO_SEPS.c_str() ),
+            DialogSec::tr( r_SET_FORMAT_SEPS.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -385,9 +442,10 @@ void DialogSec::errFailedDefiningLogType( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_LOGTYPE_FAILED,
-        QString("%1:\n%2")
-            .arg( m_LOGTYPE_FAILED, file ),
+        DialogSec::tr( t_LOGTYPE_FAILED.c_str() ),
+        QString("%1:\n%2").arg(
+            DialogSec::tr( m_LOGTYPE_FAILED.c_str() ),
+            file ),
         QMessageBox::Ok );
 }
 
@@ -396,9 +454,11 @@ const int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& msg 
 {
     int choice;
     auto response = QMessageBox::warning(parent,
-        t_FILE_ALREADY_USED,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_FILE_ALREADY_USED, msg, q_DIA ),
+        DialogSec::tr( t_FILE_ALREADY_USED.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_FILE_ALREADY_USED.c_str() ),
+            msg,
+            DialogSec::tr( q_DIA.c_str() ) ),
         QMessageBox::Discard | QMessageBox::Ignore | QMessageBox::Abort );
     if ( response == QMessageBox::Ignore ) {
         choice = 0;
@@ -415,9 +475,11 @@ const int DialogSec::choiceFileSizeWarning( QWidget *parent, const QString& msg 
 {
     int choice;
     auto response = QMessageBox::warning(parent,
-        t_FILE_SIZE_WARNING,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_FILE_SIZE_WARNING, msg, q_DIA ),
+        DialogSec::tr( t_FILE_SIZE_WARNING.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_FILE_SIZE_WARNING.c_str() ),
+            msg,
+            DialogSec::tr( q_DIA.c_str() ) ),
         QMessageBox::Discard | QMessageBox::Ignore | QMessageBox::Abort );
     if ( response == QMessageBox::Ignore ) {
         choice = 0;
@@ -434,9 +496,10 @@ void DialogSec::errFailedReadFile( QWidget *parent, const QString& file , const 
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_FAILED_READ,
-        QString("%1:\n%2")
-            .arg( m_FILE_FAILED_READ, file + ((skipping) ? f_SKIPPING : "") ),
+        DialogSec::tr( t_FILE_FAILED_READ.c_str() ),
+        QString("%1:\n%2").arg(
+            DialogSec::tr( m_FILE_FAILED_READ.c_str() ),
+            file + ((skipping) ? DialogSec::tr( f_SKIPPING.c_str() ) : "") ),
         QMessageBox::Ok );
 }
 
@@ -444,9 +507,10 @@ void DialogSec::errFailedWriteFile( QWidget *parent, const QString& file , const
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_FILE_FAILED_WRITE,
-        QString("%1:\n%2")
-            .arg( m_FILE_FAILED_WRITE, file + ((skipping) ? f_SKIPPING : "") ),
+        DialogSec::tr( t_FILE_FAILED_WRITE.c_str() ),
+        QString("%1:\n%2").arg(
+            DialogSec::tr( m_FILE_FAILED_WRITE.c_str() ),
+            file + ((skipping) ? DialogSec::tr( f_SKIPPING.c_str() ) : "") ),
         QMessageBox::Ok );
 }
 
@@ -455,9 +519,11 @@ void DialogSec::warnEmptyFile( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_FILE_EMPTY,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_FILE_EMPTY, file, f_SKIPPING ),
+        DialogSec::tr( t_FILE_EMPTY.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_FILE_EMPTY.c_str() ),
+            file,
+            DialogSec::tr( f_SKIPPING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -465,9 +531,11 @@ void DialogSec::warnFileNotReadable( QWidget *parent, const QString& file )
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_FILE_NOT_READABLE,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_FILE_NOT_READABLE, file, f_SKIPPING ),
+        DialogSec::tr( t_FILE_NOT_READABLE.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_FILE_NOT_READABLE.c_str() ),
+            file,
+            DialogSec::tr( f_SKIPPING.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -477,9 +545,11 @@ const bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString&
 {
     bool proceed = false;
     auto response = QMessageBox::warning(parent,
-        t_FILE_NOT_FOUND,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_SELECTED_FILE_NOT_FOUND, file, q_DA ),
+        DialogSec::tr( t_FILE_NOT_FOUND.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_SELECTED_FILE_NOT_FOUND.c_str() ),
+            file,
+            DialogSec::tr( q_DA.c_str() ) ),
         QMessageBox::Abort | QMessageBox::Discard );
     if ( response == QMessageBox::Discard ) {
         proceed = true;
@@ -496,9 +566,10 @@ void DialogSec::errDirNotExists(QWidget *parent, const QString& dir )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_DIR_NOT_FOUND,
-        QString("%1:\n%2")
-            .arg( m_DIR_NOT_EXISTS, dir ),
+        DialogSec::tr( t_DIR_NOT_FOUND.c_str() ),
+        QString("%1:\n%2").arg(
+            DialogSec::tr( m_DIR_NOT_EXISTS.c_str() ),
+            dir ),
         QMessageBox::Ok );
 }
 
@@ -506,9 +577,11 @@ const bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 {
     bool proceed = false;
     auto response = QMessageBox::warning(parent,
-        t_DIR_NOT_FOUND,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DIR_NOT_EXISTS, dir, q_CONTINUE ),
+        DialogSec::tr( t_DIR_NOT_FOUND.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DIR_NOT_EXISTS.c_str() ),
+            dir,
+            DialogSec::tr( q_CONTINUE.c_str() ) ),
         QMessageBox::Abort | QMessageBox::Ignore );
     if ( response == QMessageBox::Ignore ) {
         proceed = true;
@@ -521,18 +594,21 @@ void DialogSec::errDirNotReadable( QWidget *parent, const QString& dir )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_DIR_NOT_READABLE,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DIR_NOT_READABLE, dir, r_SET_PERMISSIONS ),
+        DialogSec::tr( t_DIR_NOT_READABLE.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DIR_NOT_READABLE.c_str() ),
+            dir,
+            DialogSec::tr( r_SET_PERMISSIONS.c_str() ) ),
         QMessageBox::Ok );
 }
 void DialogSec::warnDirNotReadable( QWidget *parent )
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_DIR_NOT_READABLE,
-        QString("%1\n\n%2")
-            .arg( m_DIR_NOT_READABLE, r_SET_PERMS_BEFORE ),
+        DialogSec::tr( t_DIR_NOT_READABLE.c_str() ),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr( m_DIR_NOT_READABLE.c_str() ),
+            DialogSec::tr( r_SET_PERMS_BEFORE.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -540,18 +616,21 @@ void DialogSec::errDirNotWritable( QWidget *parent, const QString& dir )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_DIR_NOT_WRITABLE,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DIR_NOT_WRITABLE, dir, r_SET_PERMISSIONS ),
+        DialogSec::tr( t_DIR_NOT_WRITABLE.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DIR_NOT_WRITABLE.c_str() ),
+            dir,
+            DialogSec::tr( r_SET_PERMISSIONS.c_str() ) ),
         QMessageBox::Ok );
 }
 void DialogSec::warnDirNotWritable( QWidget *parent )
 {
     std::ignore=
     QMessageBox::warning(parent,
-        t_DIR_NOT_WRITABLE,
-        QString("%1\n\n%2")
-            .arg( m_DIR_NOT_WRITABLE, r_SET_PERMS_BEFORE ),
+        DialogSec::tr( t_DIR_NOT_WRITABLE.c_str() ),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr( m_DIR_NOT_WRITABLE.c_str() ),
+            DialogSec::tr( r_SET_PERMS_BEFORE.c_str() ) ),
         QMessageBox::Ok );
 }
 
@@ -563,9 +642,11 @@ const bool DialogSec::choiceDirNotDir( QWidget *parent, const QString& path )
 {
     bool choice = false;
     auto response = QMessageBox::question(parent,
-        t_DIR_NOT_DIR,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_DIR_NOT_DIR, path, q_ENTRY_RENEW ),
+        DialogSec::tr( t_DIR_NOT_DIR.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_DIR_NOT_DIR.c_str() ),
+            path,
+            DialogSec::tr( q_ENTRY_RENEW.c_str() ) ),
         QMessageBox::Yes | QMessageBox::No );
     if ( response == QMessageBox::Yes ) {
         choice = true;
@@ -576,9 +657,11 @@ const bool DialogSec::choiceFileNotFile( QWidget *parent, const QString& path )
 {
     bool choice = false;
     auto response = QMessageBox::question(parent,
-        t_FILE_NOT_FILE,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_FILE_NOT_FILE, path, q_ENTRY_RENEW ),
+        DialogSec::tr( t_FILE_NOT_FILE.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_FILE_NOT_FILE.c_str() ),
+            path,
+            DialogSec::tr( q_ENTRY_RENEW.c_str() ) ),
         QMessageBox::Yes | QMessageBox::No );
     if ( response == QMessageBox::Yes ) {
         choice = true;
@@ -592,13 +675,13 @@ void DialogSec::warnGeneric( QWidget *parent, const QString& msg, const bool& re
 {
     QString footer = "";
     if ( report_msg == true ) {
-        footer += "\n\n" + r_REPORT_ISSUE;
+        footer += "\n\n" + DialogSec::tr( r_REPORT_ISSUE.c_str() );
     }
     std::ignore=
     QMessageBox::warning(parent,
-        t_ERROR_OCCURED,
-        QString("%1%2")
-            .arg( msg, footer ),
+        DialogSec::tr( t_ERROR_OCCURED.c_str() ),
+        QString("%1%2").arg(
+            msg, footer ),
         QMessageBox::Ok );
 }
 
@@ -608,13 +691,13 @@ void DialogSec::errGeneric( QWidget *parent, const QString& msg, const bool& rep
 {
     QString footer = "";
     if ( report_msg == true ) {
-        footer += "\n\n" + r_REPORT_ISSUE;
+        footer += "\n\n" + DialogSec::tr( r_REPORT_ISSUE.c_str() );
     }
     std::ignore=
     QMessageBox::critical(parent,
-        t_ERROR_OCCURED,
-        QString("%1%2")
-            .arg( msg, footer ),
+        DialogSec::tr( t_ERROR_OCCURED.c_str() ),
+        QString("%1%2").arg(
+            msg, footer ),
         QMessageBox::Ok );
 }
 
@@ -624,8 +707,10 @@ void DialogSec::errRenaming( QWidget *parent, const QString& path )
 {
     std::ignore=
     QMessageBox::critical(parent,
-        t_ERROR_RENAMING,
-        QString("%1:\n%2\n\n%3")
-            .arg( m_ERROR_RENAMING, path, f_ABORTING ),
+        DialogSec::tr( t_ERROR_RENAMING.c_str() ),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr( m_ERROR_RENAMING.c_str() ),
+            path,
+            DialogSec::tr( f_ABORTING.c_str() ) ),
         QMessageBox::Ok );
 }

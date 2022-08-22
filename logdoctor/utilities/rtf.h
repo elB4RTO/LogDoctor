@@ -11,8 +11,10 @@
 #include "tools/craplog/modules/formats.h"
 
 
-class RichText
+class RichText : public QObject
 {
+    Q_OBJECT
+
 public:
     RichText();
 

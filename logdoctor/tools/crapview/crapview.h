@@ -26,6 +26,7 @@ public:
     const QString parseNumericFilter( const QString& filter_str );
     const QString parseTextualFilter( const QString& filter_str );
 
+    const QString getLogFieldString ( const int& field_id );
     const int getLogFieldID ( const QString& field_str ),
               getMonthNumber( const QString& month_str );
 
@@ -37,7 +38,7 @@ public:
     const QStringList getDays(   const QString& web_server, const QString& year, const QString& month );
     const QStringList getHours();
 
-    const QStringList getFields( const QString& tab );
+    const QStringList getFields( const std::string& tab );
 
     void updateWarn(
         QTableWidget* table,
@@ -101,16 +102,13 @@ private:
 
     DbQuery dbQuery;
 
-    const QString TITLE_WARN = QMessageBox::tr("Log Lines Marked as Warning");
-    const QString TITLE_SPEED = QMessageBox::tr("Time Taken to Serve Requests");
-    const QString TEXT_COUNT_OTHERS = QMessageBox::tr("Others");
-    const QString TITLE_DAY  = QMessageBox::tr("Time of Day Count");
-    const QString TITLE_RELAT       = QMessageBox::tr("Relational Count");
-    const QString LEGEND_FROM = QMessageBox::tr("from");
-    const QString LEGEND_TO   = QMessageBox::tr("to");
-
-    const QString DATE = QMessageBox::tr("Date");
-    const QString TIME = QMessageBox::tr("Time");
+    const std::string TITLE_WARN  = TR::tr("Log Lines Marked as Warning").toStdString();
+    const std::string TITLE_SPEED = TR::tr("Time Taken to Serve Requests").toStdString();
+    const std::string TEXT_COUNT_OTHERS = TR::tr("Others").toStdString();
+    const std::string TITLE_DAY  = TR::tr("Time of Day Count").toStdString();
+    const std::string TITLE_RELAT       = TR::tr("Relational Count").toStdString();
+    const std::string LEGEND_FROM = TR::tr("from").toStdString();
+    const std::string LEGEND_TO   = TR::tr("to").toStdString();
 
     // collection of available dates
     // { web_server_id : { year : { month_str : [ days ] } } }
@@ -118,11 +116,11 @@ private:
 
     // collection of available fields for tabs which needs them
     // { tab : [ fields ] }
-    const QHash<QString, QStringList> fields = {
+    const std::unordered_map<std::string, std::vector<std::string>> fields = {
         {"Daytime", {
-            this->dbQuery.FIELDS.value(0),this->dbQuery.FIELDS.value(10),this->dbQuery.FIELDS.value(11),this->dbQuery.FIELDS.value(12),this->dbQuery.FIELDS.value(13),this->dbQuery.FIELDS.value(14),this->dbQuery.FIELDS.value(18),this->dbQuery.FIELDS.value(22),this->dbQuery.FIELDS.value(21),this->dbQuery.FIELDS.value(20)} },
+            this->dbQuery.FIELDS.at(0),this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} },
         {"Relational", {
-            this->dbQuery.FIELDS.value(0),this->dbQuery.FIELDS.value(10),this->dbQuery.FIELDS.value(11),this->dbQuery.FIELDS.value(12),this->dbQuery.FIELDS.value(13),this->dbQuery.FIELDS.value(14),this->dbQuery.FIELDS.value(15),this->dbQuery.FIELDS.value(16),this->dbQuery.FIELDS.value(17),this->dbQuery.FIELDS.value(18),this->dbQuery.FIELDS.value(22),this->dbQuery.FIELDS.value(21),this->dbQuery.FIELDS.value(20)} }
+            this->dbQuery.FIELDS.at(0),this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(15),this->dbQuery.FIELDS.at(16),this->dbQuery.FIELDS.at(17),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} }
     };
 
     const QString printableDate( const QString& year, const int& month, const QString& day );
@@ -130,32 +128,37 @@ private:
     const QString printableTime( const int& hour, const int& minute, const int& second );
     const QString printableWarn( const int& value );
 
-    const QStringList getWarnHeader();
-
     // conversion between text and IDs
     const QHash<QString, int>
         WebServer_s2i = {
             {"Apache2",11}, {"Nginx",12}, {"IIS",13} },
         LogFields_s2i = {
-            {this->dbQuery.FIELDS.value(0), 0},
-            {this->dbQuery.FIELDS.value(10),10},
-            {this->dbQuery.FIELDS.value(11),11},
-            {this->dbQuery.FIELDS.value(12),12},
-            {this->dbQuery.FIELDS.value(13),13},
-            {this->dbQuery.FIELDS.value(14),14},
-            {this->dbQuery.FIELDS.value(15),15},
-            {this->dbQuery.FIELDS.value(16),16},
-            {this->dbQuery.FIELDS.value(17),17},
-            {this->dbQuery.FIELDS.value(18),18},
-            {this->dbQuery.FIELDS.value(20),20},
-            {this->dbQuery.FIELDS.value(21),21},
-            {this->dbQuery.FIELDS.value(22),22}
-        },
+            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)), 0},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(13)), 13},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(14)), 14},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(15)), 15},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(16)), 16},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(17)), 17},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(18)), 18},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(20)), 20},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(21)), 21},
+            {QString::fromStdString(this->dbQuery.FIELDS.at(22)), 22}},
         Months_s2i = {
-            {this->dbQuery.MONTHS.value(1),1},   {this->dbQuery.MONTHS.value(2),2},   {this->dbQuery.MONTHS.value(3),3},
-            {this->dbQuery.MONTHS.value(4),4},   {this->dbQuery.MONTHS.value(5),5},   {this->dbQuery.MONTHS.value(6),6},
-            {this->dbQuery.MONTHS.value(7),7},   {this->dbQuery.MONTHS.value(8),8},   {this->dbQuery.MONTHS.value(9),9},
-            {this->dbQuery.MONTHS.value(10),10}, {this->dbQuery.MONTHS.value(11),11}, {this->dbQuery.MONTHS.value(12),12} };
+            {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(4)),   4},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(5)),   5},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(6)),   6},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(7)),   7},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(8)),   8},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(9)),   9},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(10)), 10},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(11)), 11},
+            {QString::fromStdString(this->dbQuery.MONTHS.at(12)), 12}};
 };
 
 #endif // CRAPVIEW_H

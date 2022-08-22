@@ -35,7 +35,7 @@ const int DbQuery::getMinuteGap( const int& minute , const int& gap )
     int m = -1;
     if ( minute < 0 || minute >= 60 ) {
         // unexpected value
-        throw ( "Unexpected Minute: "[minute] );
+        throw GenericException( "Unexpected Minute: "+std::to_string( minute ) );
     }
     int n = 0;
     for ( int g=0; g<60; g+=gap ) {
@@ -76,9 +76,9 @@ const int DbQuery::getMonthsCount( const QString& from_year, const QString& from
     int from_year_, from_month_, to_year_, to_month_;
     try {
         from_year_  = from_year.toInt();
-        from_month_ = this->Months_s2i.value( from_month );
+        from_month_ = this->getMonthNumber( from_month );
         to_year_  = ( to_year.size() == 0 )  ? from_year_  : to_year.toInt() ;
-        to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->Months_s2i.value( to_month ) ;
+        to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->getMonthNumber( to_month ) ;
     } catch (...) {
         // failed to convert to integers
         throw GenericException( "Failed to convert from string to int" );
@@ -106,6 +106,45 @@ const int DbQuery::getMonthsCount( const int& from_year, const int& from_month, 
     }
     return n_months;
 }
+
+
+const int DbQuery::getMonthNumber( const QString& month_str )
+{
+    int m=0;
+    for ( const auto& [num,str] : this->MONTHS ) {
+        if ( TR::tr(str.c_str()) == month_str ) {
+            m = num;
+            break;
+        }
+    }
+    return m;
+}
+
+
+const int DbQuery::getLogFieldID ( const QString& field_str )
+{
+    int f=0;
+    for ( const auto& [id,str] : this->MONTHS ) {
+        if ( TR::tr(str.c_str()) == field_str ) {
+            f = id;
+            break;
+        }
+    }
+    return f;
+}
+
+const QString DbQuery::getDbField( const QString& tr_fld )
+{
+    QString f;
+    for ( const auto& [id,str] : this->FIELDS ) {
+        if ( TR::tr(str.c_str()) == tr_fld ) {
+            f = this->LogFields_to_DbFields.at( str );
+            break;
+        }
+    }
+    return f;
+}
+
 
 
 // get a fresh map of available dates
@@ -158,11 +197,11 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                     } catch (...) {
                         // failed to convert to integer
                         successful = false;
-                        QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_YEARS );
+                        QString err_msg = TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_YEARS.c_str()) );
                         if ( this->dialog_level > 0 ) {
-                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE, Y_query.value(0).toString() );
+                            err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), Y_query.value(0).toString() );
                             if ( this->dialog_level == 2 ) {
-                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME, tbl );
+                                err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_TABLE_NAME.c_str()), tbl );
                             }
                         }
                         DialogSec::errGeneric( nullptr, err_msg );
@@ -184,11 +223,11 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                             } catch (...) {
                                 // failed to convert to integer
                                 successful = false;
-                                QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_MONTHS );
+                                QString err_msg = TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_MONTHS.c_str()) );
                                 if ( this->dialog_level > 0 ) {
-                                    err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE, M_query.value(0).toString() );
+                                    err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), M_query.value(0).toString() );
                                     if ( this->dialog_level == 2 ) {
-                                        err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME, tbl );
+                                        err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_TABLE_NAME.c_str()), tbl );
                                     }
                                 }
                                 DialogSec::errGeneric( nullptr, err_msg );
@@ -210,11 +249,11 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                     } catch (...) {
                                         // failed to convert to integer
                                         successful = false;
-                                        QString err_msg = this->MSG_ERR_PARSING_YMD.arg( this->WORD_DAYS );
+                                        QString err_msg = TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_DAYS.c_str()) );
                                         if ( this->dialog_level > 0 ) {
-                                            err_msg += QString("\n\n%1:\n%2").arg( this->MSG_RESPONSIBLE_VALUE, D_query.value(0).toString() );
+                                            err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), D_query.value(0).toString() );
                                             if ( this->dialog_level == 2 ) {
-                                                err_msg += QString("\n\n%1:\n%2").arg( this->MSG_TABLE_NAME, tbl );
+                                                err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_TABLE_NAME.c_str()), tbl );
                                             }
                                         }
                                         DialogSec::errGeneric( nullptr, err_msg );
@@ -277,7 +316,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
 
         if ( successful == true ) {
@@ -334,14 +373,14 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int year, month, day, hour;
         if ( successful == true ) {
             // setup period limits
             try {
                 year  = year_.toInt();
-                month = this->Months_s2i.value( month_ );
+                month = this->getMonthNumber( month_ );
                 day   = day_.toInt();
                 if ( hour_.size() > 0 ) {
                     hour = hour_.toInt();
@@ -349,7 +388,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+                DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful == true ) {
@@ -395,7 +434,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                     } catch (...) {
                         // something failed
                         successful = false;
-                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                        DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
 
@@ -435,7 +474,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                     } catch (...) {
                         // something failed
                         successful = false;
-                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                        DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
             }
@@ -480,19 +519,19 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int year, month, day;
         if ( successful == true ) {
             // setup period limits
             try {
                 year  = year_.toInt();
-                month = this->Months_s2i.value( month_ );
+                month = this->getMonthNumber( month_ );
                 day   = day_.toInt();
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+                DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful == true ) {
@@ -791,7 +830,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                 } catch (...) {
                     // something failed
                     successful = false;
-                    DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                    DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                 }
             }
         }
@@ -838,17 +877,17 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         if ( successful == true ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
-                .arg( this->LogFields_to_DbFields.value( log_field ),
+                .arg( this->getDbField( log_field ),
                       table,
-                      this->LogFields_to_DbFields.value( log_field ),
+                      this->getDbField( log_field ),
                       year,
-                      QString::fromStdString( std::to_string( this->Months_s2i.value( month ) )),
+                      QString::fromStdString( std::to_string( this->getMonthNumber( month ) )),
                       day );
             // quary the database
             if ( query.exec( stmt.replace("'","''") ) == false ) {
@@ -875,7 +914,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
                 } catch (...) {
                     // something failed
                     successful = false;
-                    DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                    DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                 }
             }
         }
@@ -954,7 +993,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int from_year, from_month, from_day,
             to_year, to_month, to_day;
@@ -962,22 +1001,22 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             // setup period limits
             try {
                 from_year  = from_year_.toInt();
-                from_month = this->Months_s2i.value( from_month_ );
+                from_month = this->getMonthNumber( from_month_ );
                 from_day   = from_day_.toInt();
                 to_year  = ( to_year_.size() == 0 )  ? from_year  : to_year_.toInt() ;
-                to_month = ( to_month_.size() == 0 ) ? from_month : this->Months_s2i.value( to_month_ ) ;
+                to_month = ( to_month_.size() == 0 ) ? from_month : this->getMonthNumber( to_month_ ) ;
                 to_day   = ( to_day_.size() == 0 )   ? from_day   : to_day_.toInt() ;
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+                DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful == true ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
-            QString log_field = this->LogFields_to_DbFields.value( log_field_ );
+            QString log_field = this->getDbField( log_field_ );
 
             int n_days   = 0,
                 n_months = this->getMonthsCount( from_year, from_month, to_year, to_month );
@@ -1054,7 +1093,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                     } catch (...) {
                         // something failed
                         successful = false;
-                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                        DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
 
@@ -1140,7 +1179,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                         } catch (...) {
                             // something failed
                             successful = false;
-                            DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                            DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                             break;
                         }
                         query.finish();
@@ -1199,7 +1238,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
 
         int year, month, day;
@@ -1207,12 +1246,12 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             // setup period limits
             try {
                 year  = year_.toInt();
-                month = this->Months_s2i.value( month_ );
+                month = this->getMonthNumber( month_ );
                 day   = day_.toInt();
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+                DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful == true ) {
@@ -1221,8 +1260,8 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
-            QString log_field_1 = this->LogFields_to_DbFields.value( log_field_1_ ),
-                    log_field_2 = this->LogFields_to_DbFields.value( log_field_2_ );
+            QString log_field_1 = this->getDbField( log_field_1_ ),
+                    log_field_2 = this->getDbField( log_field_2_ );
 
             // 1 month, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
@@ -1404,7 +1443,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                 } catch (...) {
                     // something failed
                     successful = false;
-                    DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                    DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                 }
             }
         }
@@ -1449,7 +1488,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int from_year, from_month, from_day,
             to_year,   to_month,   to_day;
@@ -1457,23 +1496,23 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
             // setup period limits
             try {
                 from_year  = from_year_.toInt();
-                from_month = this->Months_s2i.value( from_month_ );
+                from_month = this->getMonthNumber( from_month_ );
                 from_day   = from_day_.toInt();
                 to_year  = ( to_year_.size() == 0 )  ? from_year  : to_year_.toInt() ;
-                to_month = ( to_month_.size() == 0 ) ? from_month : this->Months_s2i.value( to_month_ ) ;
+                to_month = ( to_month_.size() == 0 ) ? from_month : this->getMonthNumber( to_month_ ) ;
                 to_day   = ( to_day_.size() == 0 )   ? from_day   : to_day_.toInt() ;
             } catch (...) {
                 // failed to convert to integers
                 successful = false;
-                DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING_DATES, true );
+                DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful == true ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
-            QString log_field_1 = this->LogFields_to_DbFields.value( log_field_1_ ),
-                    log_field_2 = this->LogFields_to_DbFields.value( log_field_2_ );
+            QString log_field_1 = this->getDbField( log_field_1_ ),
+                    log_field_2 = this->getDbField( log_field_2_ );
 
             int n_months = this->getMonthsCount( from_year, from_month, to_year, to_month );
 
@@ -1641,7 +1680,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                     } catch (...) {
                         // something failed
                         successful = false;
-                        DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                        DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
 
@@ -1784,7 +1823,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                         } catch (...) {
                             // something failed
                             successful = false;
-                            DialogSec::errGeneric( nullptr, this->MSG_ERR_PROCESSING, true );
+                            DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                             break;
                         }
                     }
@@ -1841,7 +1880,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
         } else {
             // unexpected WebServer
             successful = false;
-            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( this->MSG_ERR_UNX_WS, web_server ), true );
+            DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
     }
 
@@ -1934,7 +1973,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                             successful = false;
                             QString err_msg = "";
                             if ( this->dialog_level == 2 ) {
-                                err_msg = this->MSG_ERR_PROCESSING;
+                                err_msg = TR::tr(this->MSG_ERR_PROCESSING.c_str());
                             }
                             DialogSec::errGeneric( nullptr, err_msg );
                             break;

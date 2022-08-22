@@ -9,6 +9,7 @@
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 
+#include "tools/shared.h"
 #include "tools/craplog/modules/store.h"
 
 #include <QPainter>
@@ -61,8 +62,7 @@ Craplog::Craplog()
     // nginx access/error logs location
     this->logs_paths.emplace( this->NGINX_ID, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( this->IIS_ID, "/var/log/iis/LogFiles/SiteName" );
-    //this->logs_paths.emplace( this->IIS_ID, "C:\\inetpub\\logs\\LogFiles" ); !!! RESTORE !!!
+    this->logs_paths.emplace( this->IIS_ID, "C:/inetpub/logs/LogFiles" );
 
     // apache2 access/error log files' names
     this->logs_base_names.emplace( this->APACHE_ID, LogName{ .starts   = "access.log.",
@@ -283,7 +283,7 @@ void Craplog::setApacheLogFormat( const std::string& format_string )
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( nullptr, e.what() );
     } catch (...) {
-        DialogSec::errGeneric( nullptr, "An error occured while parsing the format string", true );
+        DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while parsing the format string"), true );
     }
 }
 void Craplog::setNginxLogFormat( const std::string& format_string )
@@ -296,7 +296,7 @@ void Craplog::setNginxLogFormat( const std::string& format_string )
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( nullptr, e.what() );
     } catch (...) {
-        DialogSec::errGeneric( nullptr, "An error occured while parsing the format string", true );
+        DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while parsing the format string"), true );
     }
 }
 void Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
@@ -310,7 +310,7 @@ void Craplog::setIisLogFormat( const std::string& format_string, const int& log_
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( nullptr, e.what() );
     } catch (...) {
-        DialogSec::errGeneric( nullptr, "An error occured while parsing the format string", true );
+        DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while parsing the format string"), true );
     }
 }
 
@@ -475,7 +475,7 @@ void Craplog::scanLogsDir()
             } catch (...) {
                 // failed somehow
                 successful = false;
-                QString err_msg = QMessageBox::tr("An error occured while handling the file");
+                QString err_msg = DialogSec::tr("An error occured while handling the file");
                 DialogSec::errGeneric( nullptr, err_msg +":\n"+ name );
             }
 
@@ -787,7 +787,7 @@ const bool Craplog::checkStuff()
                         }
                     }
                     size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                    msg += QString("\n\nSize of the file:\n%1%2").arg( size_str, size_sfx.c_str() );
+                    msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Size of the file"), size_str, size_sfx.c_str() );
                     if ( this->dialogs_level == 2 ) {
                         size = (float)this->warning_size;
                         if (size > 1024) {
@@ -797,7 +797,7 @@ const bool Craplog::checkStuff()
                             }
                         }
                         size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                        msg += QString("\n\nWarning size parameter:\n%1%2").arg( size_str, size_sfx.c_str() );
+                        msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Warning size parameter"), size_str, size_sfx.c_str() );
                     }
                 }
                 int choice = DialogSec::choiceFileSizeWarning( nullptr, msg );
@@ -979,7 +979,7 @@ void Craplog::storeLogLines()
             }
             if ( err_shown == false ) {
                 // show a message
-                QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
+                QString msg = DialogSec::tr("An error occured while working on the database\n\nAborting");
                 DialogSec::errGeneric( nullptr, msg );
             }
         }
@@ -1055,11 +1055,11 @@ const QString Craplog::printableSize( const int& bytes )
 void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
 {
     const QString
-        size_chart_name        = QMessageBox::tr("Logs Size Breakdown"),
-        ignored_slice_name     = QMessageBox::tr("Ignored"),
-        parsed_slice_name      = QMessageBox::tr("Parsed"),
-        warning_slice_name     = QMessageBox::tr("Warnings"),
-        blacklisted_slice_name = QMessageBox::tr("Blacklisted");/*,
+        size_chart_name        = TR::tr("Logs Size Breakdown"),
+        ignored_slice_name     = TR::tr("Ignored"),
+        parsed_slice_name      = TR::tr("Parsed"),
+        warning_slice_name     = TR::tr("Warnings"),
+        blacklisted_slice_name = TR::tr("Blacklisted");/*,
         traffic_chart_name     = QMessageBox::tr("Time of Day Logs Traffic Ensemble"),
         access_bar_name        = QMessageBox::tr("Access Logs");*/
 
