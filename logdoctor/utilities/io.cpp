@@ -42,7 +42,7 @@ const bool IOutils::checkFile( const std::string& path, const bool& readable, co
     if ( IOutils::isFile( path ) == true ) {
         result = true;
         // check the needed permissions
-        auto perms = std::filesystem::status( path ).permissions();
+        const auto perms = std::filesystem::status( path ).permissions();
         if ( readable == true ) {
             if ( (perms & std::filesystem::perms::owner_read) == std::filesystem::perms::none ) {
                 result = false;
@@ -73,7 +73,7 @@ const bool IOutils::checkDir( const std::string& path, const bool& readable, con
     if ( IOutils::isDir( path ) == true ) {
         result = true;
         // check the needed permissions
-        auto perms = std::filesystem::status( path ).permissions();
+        const auto perms = std::filesystem::status( path ).permissions();
         if ( readable == true ) {
             if ( (perms & std::filesystem::perms::owner_read) == std::filesystem::perms::none ) {
                 result = false;
