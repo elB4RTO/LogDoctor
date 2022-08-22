@@ -385,6 +385,17 @@ void DialogSec::errDatabaseFailedExecuting(QWidget *parent, const QString& db_na
         QMessageBox::Ok );
 }
 
+void DialogSec::errDatabaseFailedBackup(QWidget *parent, const QString& msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        DialogSec::tr( t_DB_FAILED_BACKUP.c_str() ),
+        QString("%1\n\n%2").arg(
+            msg,
+            DialogSec::tr( r_REPORT_ISSUE.c_str() ) ),
+        QMessageBox::Ok );
+}
+
 
 
 /////////////////////
@@ -631,6 +642,17 @@ void DialogSec::warnDirNotWritable( QWidget *parent )
         QString("%1\n\n%2").arg(
             DialogSec::tr( m_DIR_NOT_WRITABLE.c_str() ),
             DialogSec::tr( r_SET_PERMS_BEFORE.c_str() ) ),
+        QMessageBox::Ok );
+}
+
+void DialogSec::errFailedMakeDir( QWidget *parent, const QString& msg )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        DialogSec::tr( t_DIR_FAILED_MAKE.c_str() ),
+        QString("%1\n\n%2").arg(
+            msg,
+            DialogSec::tr( r_SET_PERMISSIONS.c_str() ) ),
         QMessageBox::Ok );
 }
 
