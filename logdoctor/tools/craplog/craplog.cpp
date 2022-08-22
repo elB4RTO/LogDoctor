@@ -658,6 +658,10 @@ const bool& Craplog::isParsing()
 {
     return this->parsing;
 }
+const bool& Craplog::editedDatabase()
+{
+    return this->db_edited;
+}
 
 // performances
 const int& Craplog::getPerfSize()
@@ -730,6 +734,10 @@ void Craplog::run()
     }
 
     if ( this->proceed == true ) {
+        // succesfully updated the database
+        if ( this->parsed_size > 0 ) {
+            this->db_edited = true;
+        }
         // insert the hashes of the used files
         this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
     }
@@ -1089,7 +1097,7 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
     sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
     sizeBreakdown->setTitle( size_chart_name );
     sizeBreakdown->setTitleFont( fonts.at("main") );
-    if ( this->total_size > 0 ) {
+    if ( this->proceed && this->total_size > 0 ) {
         sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
         sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
         sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::gray, fonts.at("main_small") );

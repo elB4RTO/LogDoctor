@@ -97,6 +97,7 @@ public:
         warnlistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item );
 
     // job related
+    const bool& editedDatabase();
     const bool checkStuff();
     void startWorking(),
          stopWorking(),
@@ -129,6 +130,7 @@ private:
                 db_hashes_path;
 
     // job related
+    bool db_edited = false;
     bool working = false,
          parsing = false,
          proceed = false;
@@ -138,7 +140,7 @@ private:
         perf_size        = 0,
         total_size       = 0,
         parsed_size      = 0,
-        warnlisted_size    = 0,
+        warnlisted_size  = 0,
         blacklisted_size = 0;
     // chart related
     const QString printableSize( const int& bytes );
