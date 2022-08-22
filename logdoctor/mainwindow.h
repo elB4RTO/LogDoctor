@@ -228,6 +228,24 @@ private slots:
 
     void on_box_ConfCharts_Theme_currentIndexChanged(int index);
 
+    //// DATABASES ////
+
+    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1);
+
+    void on_inLine_ConfDatabases_Data_Path_returnPressed();
+
+    void on_button_ConfDatabases_Data_Save_clicked();
+
+    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1);
+
+    void on_inLine_ConfDatabases_Hashes_Path_returnPressed();
+
+    void on_button_ConfDatabases_Hashes_Save_clicked();
+
+    void on_checkBox_ConfDatabases_DoBackup_clicked(bool checked);
+
+    void on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1);
+
     //// LOGS DEFAULTS ////
 
     void on_radio_ConfDefaults_Apache_toggled(bool checked);
@@ -412,18 +430,6 @@ private slots:
 
     void on_button_ConfIis_Blacklist_Down_clicked();
 
-    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1);
-
-    void on_inLine_ConfDatabases_Data_Path_returnPressed();
-
-    void on_button_ConfDatabases_Data_Save_clicked();
-
-    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1);
-
-    void on_inLine_ConfDatabases_Hashes_Path_returnPressed();
-
-    void on_button_ConfDatabases_Hashes_Save_clicked();
-
     ///////////////
     //// MENU ////
 
@@ -545,6 +551,10 @@ private:
     ///////////////////
     //// DATABASES ////
     ///////////////////
+    bool db_edited = false;
+    bool db_do_backup = true;
+    unsigned db_backup_copies = 3;
+    void backupDatabase();
     std::string db_data_path,
                 db_hashes_path;
     // actions when working on a db
@@ -581,8 +591,7 @@ private:
     //// LOGS PERFORMANCE ////
     void update_MakeStats_labels(),
          update_MakeStats_graphs(),
-         reset_MakeStats_labels(),
-         reset_MakeStats_graphs();
+         reset_MakeStats_labels();
 
 
     //////////////////
