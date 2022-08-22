@@ -75,7 +75,7 @@
          <normalon>:/icons/icons/make_on.png</normalon>:/icons/icons/make_off.png</iconset>
        </attribute>
        <attribute name="title">
-        <string/>
+        <string notr="true"/>
        </attribute>
        <attribute name="toolTip">
         <string>Parse and store logs</string>
@@ -224,21 +224,16 @@
               <property name="lineWrapMode">
                <enum>QTextEdit::NoWrap</enum>
               </property>
+              <property name="markdown">
+               <string notr="true"/>
+              </property>
               <property name="html">
                <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#6d6d6d;&quot;&gt;Select a file from the list&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#6d6d6d;&quot;&gt;to inspect its content&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="openLinks">
                <bool>true</bool>
@@ -515,7 +510,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string></string>
+                     <string notr="true"></string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -551,7 +546,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string>0 KiB</string>
+                     <string notr="true">0 KiB</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -609,7 +604,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string></string>
+                     <string notr="true"></string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -645,7 +640,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string>0</string>
+                     <string notr="true">0</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -753,7 +748,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string></string>
+                     <string notr="true"></string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -789,7 +784,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string>00:00</string>
+                     <string notr="true">00:00</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -850,7 +845,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string></string>
+                     <string notr="true"></string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -886,7 +881,7 @@ hr { height: 1px; border-width: 0; }
                      </font>
                     </property>
                     <property name="text">
-                     <string>0 Kib/s</string>
+                     <string notr="true">0 Kib/s</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -1015,7 +1010,7 @@ hr { height: 1px; border-width: 0; }
                   <string>Draw the chart</string>
                  </property>
                  <property name="text">
-                  <string></string>
+                  <string notr="true"></string>
                  </property>
                 </widget>
                </item>
@@ -1337,7 +1332,7 @@ hr { height: 1px; border-width: 0; }
                   <string>Update the database with current Warning States</string>
                  </property>
                  <property name="text">
-                  <string></string>
+                  <string notr="true"></string>
                  </property>
                 </widget>
                </item>
@@ -1381,7 +1376,7 @@ hr { height: 1px; border-width: 0; }
                </attribute>
                <column>
                 <property name="text">
-                 <string>Warning</string>
+                 <string notr="true">Warning</string>
                 </property>
                 <property name="toolTip">
                  <string>Log line marked as Warning</string>
@@ -1392,7 +1387,10 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Date</string>
+                 <string notr="true">Date</string>
+                </property>
+                <property name="toolTip">
+                 <string>Date when the request arrived (YYYY-MM-DD)</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1400,7 +1398,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Time</string>
+                 <string notr="true">Time</string>
                 </property>
                 <property name="toolTip">
                  <string>Time when the request arrived (hh:mm:ss)</string>
@@ -1411,7 +1409,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Protocol</string>
+                 <string notr="true">Protocol</string>
                 </property>
                 <property name="toolTip">
                  <string>Protocol of the request</string>
@@ -1422,7 +1420,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Method</string>
+                 <string notr="true">Method</string>
                 </property>
                 <property name="toolTip">
                  <string>Method of the request</string>
@@ -1433,7 +1431,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>URI</string>
+                 <string notr="true">URI</string>
                 </property>
                 <property name="toolTip">
                  <string>URI of the requested page</string>
@@ -1444,7 +1442,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Query</string>
+                 <string notr="true">Query</string>
                 </property>
                 <property name="toolTip">
                  <string>Query carried along with the requested URI</string>
@@ -1455,7 +1453,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Response code</string>
+                 <string notr="true">Response code</string>
                 </property>
                 <property name="toolTip">
                  <string>Response code from the server</string>
@@ -1466,10 +1464,10 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Referrer</string>
+                 <string notr="true">Referrer</string>
                 </property>
                 <property name="toolTip">
-                 <string>Where the request was redirected from</string>
+                 <string>The URL which redirected the Client to the request URI</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1477,7 +1475,10 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Cookie</string>
+                 <string notr="true">Cookie</string>
+                </property>
+                <property name="toolTip">
+                 <string>Cookie carried with the request</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1485,7 +1486,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>User-agent</string>
+                 <string notr="true">User-agent</string>
                 </property>
                 <property name="toolTip">
                  <string>User-agent of the Client which made the request</string>
@@ -1496,7 +1497,7 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Client</string>
+                 <string notr="true">Client</string>
                 </property>
                 <property name="toolTip">
                  <string>IP address of the Client which made the request</string>
@@ -1507,7 +1508,10 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>New Column</string>
+                 <string notr="true">Bytes received</string>
+                </property>
+                <property name="toolTip">
+                 <string>Size ib Bytes of the request, usually includes header and data</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1515,7 +1519,10 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Bytes received</string>
+                 <string notr="true">Bytes sent</string>
+                </property>
+                <property name="toolTip">
+                 <string>Size in Bytes of the served content, usually includes header and data</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1523,7 +1530,10 @@ hr { height: 1px; border-width: 0; }
                </column>
                <column>
                 <property name="text">
-                 <string>Bytes sent</string>
+                 <string notr="true">Time taken</string>
+                </property>
+                <property name="toolTip">
+                 <string>Amount of time needed by the server to accomplish to the request, in milliseconds</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1532,6 +1542,9 @@ hr { height: 1px; border-width: 0; }
                <column>
                 <property name="text">
                  <string notr="true">rowid</string>
+                </property>
+                <property name="toolTip">
+                 <string notr="true"/>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1817,7 +1830,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </attribute>
                <column>
                 <property name="text">
-                 <string>Time taken</string>
+                 <string notr="true">Time taken</string>
                 </property>
                 <property name="toolTip">
                  <string>Time taken by the server to serve the content, in milliseconds </string>
@@ -1828,7 +1841,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </column>
                <column>
                 <property name="text">
-                 <string>URI</string>
+                 <string notr="true">URI</string>
                 </property>
                 <property name="toolTip">
                  <string>URI of the requested page</string>
@@ -1839,7 +1852,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </column>
                <column>
                 <property name="text">
-                 <string>Query</string>
+                 <string notr="true">Query</string>
                 </property>
                 <property name="toolTip">
                  <string>Query carried along with the requested URI</string>
@@ -1850,7 +1863,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </column>
                <column>
                 <property name="text">
-                 <string>Method</string>
+                 <string notr="true">Method</string>
                 </property>
                 <property name="toolTip">
                  <string>Method of the request</string>
@@ -1861,7 +1874,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </column>
                <column>
                 <property name="text">
-                 <string>Protocol</string>
+                 <string notr="true">Protocol</string>
                 </property>
                 <property name="toolTip">
                  <string>Protocol of the request</string>
@@ -1872,7 +1885,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </column>
                <column>
                 <property name="text">
-                 <string>Response code</string>
+                 <string notr="true">Response code</string>
                 </property>
                 <property name="toolTip">
                  <string>Response code from the server</string>
@@ -1883,7 +1896,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                </column>
                <column>
                 <property name="text">
-                 <string>Time</string>
+                 <string notr="true">Time</string>
                 </property>
                 <property name="toolTip">
                  <string>Time when the request arrived (hh:mm:ss)</string>
@@ -2123,7 +2136,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="text">
-                  <string></string>
+                  <string notr="true"></string>
                  </property>
                 </widget>
                </item>
@@ -2423,7 +2436,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>13</x>
+                    <x>0</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -2503,7 +2516,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="button_StatsCount_Request">
+                    <widget class="QPushButton" name="button_StatsCount_Uri">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                        <horstretch>0</horstretch>
@@ -3163,7 +3176,7 @@ Counts of the elements for a single date, mean value of the counts for a period.
                   <string>Draw the chart</string>
                  </property>
                  <property name="text">
-                  <string></string>
+                  <string notr="true"></string>
                  </property>
                 </widget>
                </item>
@@ -3585,7 +3598,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                   <string>Draw the chart</string>
                  </property>
                  <property name="text">
-                  <string></string>
+                  <string notr="true"></string>
                  </property>
                 </widget>
                </item>
@@ -3989,7 +4002,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>325</width>
+                      <width>173</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4324,7 +4337,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>325</width>
+                      <width>157</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4600,7 +4613,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>439</width>
+                      <width>145</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -4865,7 +4878,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>439</width>
+                      <width>173</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -5077,7 +5090,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
          <normalon>:/icons/icons/config_on.png</normalon>:/icons/icons/config_off.png</iconset>
        </attribute>
        <attribute name="title">
-        <string/>
+        <string notr="true"/>
        </attribute>
        <attribute name="toolTip">
         <string>Configure LogDoctor</string>
@@ -6453,7 +6466,7 @@ hr { height: 1px; border-width: 0; }
                       <string>Apply the current path</string>
                      </property>
                      <property name="text">
-                      <string></string>
+                      <string notr="true"></string>
                      </property>
                     </widget>
                    </item>
@@ -6521,7 +6534,7 @@ hr { height: 1px; border-width: 0; }
                       <string>Apply the current path</string>
                      </property>
                      <property name="text">
-                      <string></string>
+                      <string notr="true"></string>
                      </property>
                     </widget>
                    </item>
@@ -7044,7 +7057,7 @@ hr { height: 1px; border-width: 0; }
                       <enum>QAbstractSpinBox::PlusMinus</enum>
                      </property>
                      <property name="suffix">
-                      <string> MiB</string>
+                      <string notr="true"> MiB</string>
                      </property>
                      <property name="minimum">
                       <number>1</number>
@@ -7199,7 +7212,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Apply the current paths</string>
                          </property>
                          <property name="text">
-                          <string></string>
+                          <string notr="true"></string>
                          </property>
                         </widget>
                        </item>
@@ -7321,7 +7334,7 @@ hr { height: 1px; border-width: 0; }
                           <string>Apply the current string</string>
                          </property>
                          <property name="text">
-                          <string></string>
+                          <string notr="true"></string>
                          </property>
                         </widget>
                        </item>
@@ -7383,7 +7396,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -7553,26 +7566,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Select a log field</string>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Method</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>URI</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>User-agent</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Client</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item row="0" column="2">
@@ -7630,7 +7623,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -7693,7 +7686,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -7747,7 +7740,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -7794,7 +7787,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -7851,11 +7844,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Select a log field</string>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Client</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item row="0" column="2">
@@ -7913,7 +7901,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -7976,7 +7964,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8030,7 +8018,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8077,7 +8065,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8225,7 +8213,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <string>Apply the current paths</string>
                          </property>
                          <property name="text">
-                          <string></string>
+                          <string notr="true"></string>
                          </property>
                         </widget>
                        </item>
@@ -8347,7 +8335,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <string>Apply the current string</string>
                          </property>
                          <property name="text">
-                          <string></string>
+                          <string notr="true"></string>
                          </property>
                         </widget>
                        </item>
@@ -8409,7 +8397,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -8579,26 +8567,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Select a log field</string>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Method</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>URI</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>User-agent</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Client</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item row="0" column="2">
@@ -8656,7 +8624,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8719,7 +8687,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8773,7 +8741,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8820,7 +8788,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -8877,11 +8845,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Select a log field</string>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Client</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item row="0" column="2">
@@ -8939,7 +8902,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9002,7 +8965,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9056,7 +9019,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9103,7 +9066,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9270,7 +9233,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <string>Apply the current paths</string>
                          </property>
                          <property name="text">
-                          <string></string>
+                          <string notr="true"></string>
                          </property>
                         </widget>
                        </item>
@@ -9451,7 +9414,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <string>Apply the current string</string>
                          </property>
                          <property name="text">
-                          <string></string>
+                          <string notr="true"></string>
                          </property>
                         </widget>
                        </item>
@@ -9513,7 +9476,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9683,26 +9646,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Select a log field</string>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Method</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>URI</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>User-agent</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Client</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item row="0" column="2">
@@ -9760,7 +9703,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9823,7 +9766,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9877,7 +9820,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9924,7 +9867,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -9981,11 +9924,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Select a log field</string>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Client</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item row="0" column="2">
@@ -10043,7 +9981,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -10106,7 +10044,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -10160,7 +10098,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -10207,7 +10145,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <enum>Qt::RightToLeft</enum>
                          </property>
                          <property name="text">
-                          <string/>
+                          <string notr="true"/>
                          </property>
                          <property name="icon">
                           <iconset>
@@ -10279,21 +10217,27 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <addaction name="actionFrancais"/>
     <addaction name="actionItaliano"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
+   <widget class="QMenu" name="menuUtilities">
     <property name="font">
      <font>
       <pointsize>13</pointsize>
      </font>
     </property>
     <property name="title">
+     <string>Utilities</string>
+    </property>
+    <addaction name="actionInfo"/>
+    <addaction name="actionCheckUpdates"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
      <string>Tools</string>
     </property>
     <addaction name="actionBlockNote"/>
-    <addaction name="separator"/>
-    <addaction name="actionCheckUpdates"/>
    </widget>
    <addaction name="menuLanguage"/>
    <addaction name="menuTools"/>
+   <addaction name="menuUtilities"/>
   </widget>
   <action name="actionCrapnote">
    <property name="text">
@@ -10363,20 +10307,25 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <string notr="true">Italiano</string>
    </property>
   </action>
-  <action name="actionBlockNote">
-   <property name="text">
-    <string>BlockNote</string>
-   </property>
-   <property name="toolTip">
-    <string>Open a block-note like window to write temporary text</string>
-   </property>
-  </action>
   <action name="actionCheckUpdates">
    <property name="text">
     <string>Check updates</string>
    </property>
    <property name="toolTip">
     <string>Perform a version-check</string>
+   </property>
+  </action>
+  <action name="actionInfo">
+   <property name="text">
+    <string>Info</string>
+   </property>
+  </action>
+  <action name="actionBlockNote">
+   <property name="text">
+    <string>BlockNote</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a block-note like window to write temporary text</string>
    </property>
   </action>
  </widget>
