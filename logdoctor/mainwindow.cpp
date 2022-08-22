@@ -169,7 +169,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
     this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( this->db_hashes_path ) );
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
-    this->ui->spinBox_ConfDatabases_NumBackups->setValue( this->db_backup_copies );
+    this->ui->spinBox_ConfDatabases_NumBackups->setValue( this->db_backups_number );
     this->ui->checkBox_ConfDatabases_DoBackup->setChecked( this->db_do_backup );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
@@ -406,6 +406,12 @@ void MainWindow::readConfigs()
 
                 } else if ( var == "DatabaseHashesPath" ) {
                     this->db_hashes_path = this->resolvePath( val );
+
+                } else if ( var == "DatabaseDoBackup" ) {
+                    this->db_do_backup = this->s2b.at( val );
+
+                } else if ( var == "DatabaseBackupsNumber" ) {
+                    this->db_backups_number = std::stoi( val );
 
                 } else if ( var == "Font" ) {
                     this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
@@ -678,6 +684,8 @@ void MainWindow::writeConfigs()
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
         configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
+        configs += "\nDatabaseDoBackup=" + this->b2s.at( this->db_do_backup );
+        configs += "\nDatabaseBackupsNumber=" + std::to_string( this->db_backups_number );
         //// TEXT BROWSER ////
         configs += "\n\n[TextBrowser]";
         configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
@@ -817,7 +825,7 @@ void MainWindow::backupDatabase()
         } else {
             // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
             std::string path, new_path;
-            path = this->logdoc_path+"/backups/collection.db."+std::to_string(this->db_backup_copies);
+            path = this->logdoc_path+"/backups/collection.db."+std::to_string(this->db_backups_number);
             if ( std::filesystem::exists( path ) ) {
                 std::ignore = std::filesystem::remove_all( path, err );
                 proceed = ! std::filesystem::exists( path );
@@ -827,7 +835,7 @@ void MainWindow::backupDatabase()
             }
             if ( proceed ) {
                 // cascade rename
-                for ( int n=this->db_backup_copies-1; n>=0; n-- ) {
+                for ( int n=this->db_backups_number-1; n>=0; n-- ) {
                     path = this->logdoc_path+"/backups/collection.db."+std::to_string( n );
                     if ( std::filesystem::exists( path ) ) {
                         new_path = this->logdoc_path+"/backups/collection.db."+std::to_string( n+1 );
@@ -3152,7 +3160,7 @@ void MainWindow::on_checkBox_ConfDatabases_DoBackup_clicked(bool checked)
 }
 void MainWindow::on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1)
 {
-    this->db_backup_copies = arg1;
+    this->db_backups_number = arg1;
     if ( arg1 == 1 ) {
         this->ui->spinBox_ConfDatabases_NumBackups->setSuffix( " " + MainWindow::tr( "copy" ) );
     } else {

@@ -553,7 +553,7 @@ private:
     ///////////////////
     bool db_edited = false;
     bool db_do_backup = true;
-    unsigned db_backup_copies = 3;
+    unsigned db_backups_number = 3;
     void backupDatabase();
     std::string db_data_path,
                 db_hashes_path;
