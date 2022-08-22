@@ -89,23 +89,12 @@ const QString Crapview::printableTime( const int& hour, const int& minute, const
 }
 
 
-const QStringList Crapview::getWarnHeader()
-{
-    return QStringList({
-        this->dbQuery.FIELDS.value(0),
-        this->DATE,this->TIME,
-        this->dbQuery.FIELDS.value(10),this->dbQuery.FIELDS.value(11),this->dbQuery.FIELDS.value(12),this->dbQuery.FIELDS.value(13),this->dbQuery.FIELDS.value(14),
-        this->dbQuery.FIELDS.value(18),this->dbQuery.FIELDS.value(22),this->dbQuery.FIELDS.value(21),this->dbQuery.FIELDS.value(20),
-        this->dbQuery.FIELDS.value(17),this->dbQuery.FIELDS.value(16),this->dbQuery.FIELDS.value(15),"rowid" });
-}
-
-
 const QString Crapview::printableWarn( const int& value )
 {
     if ( value == 0 ) {
-        return "FALSE";
+        return TR::tr("FALSE");
     } else {
-        return "TRUE";
+        return TR::tr("TRUE");
     }
 }
 
@@ -113,8 +102,8 @@ const QString Crapview::printableWarn( const int& value )
 const QString Crapview::parseBooleanFilter( const QString& filter_str )
 {
     QString aux = filter_str;
-    aux = aux.replace( "TRUE", "1", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( "FALSE","0", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( TR::tr("TRUE"), "1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( TR::tr("FALSE"),"0", Qt::CaseSensitivity::CaseInsensitive );
     return this->parseNumericFilter( aux );
 }
 
@@ -136,10 +125,10 @@ const QString Crapview::parseNumericFilter( const QString& filter_str )
                     final_str += "=";
                     final_str += QString::fromStdString( aux );
                 } else {
-                    if ( StringOps::isNumeric( StringOps::lstrip( aux, "<=>" ) ) == true ) {
+                    if ( StringOps::isNumeric( StringOps::lstrip( aux, "!<=>" ) ) == true ) {
                         // symbol/value
                         final_str += QString::fromStdString( aux ).replace("==","=");
-                    } else if ( StringOps::lstrip( aux, "<=>" ).size() == 0 ) {
+                    } else if ( StringOps::lstrip( aux, "!<=>" ).size() == 0 ) {
                         // symbol at first, maybe a value follows
                         if ( f_list.size() > 1 ) {
                             final_str += QString::fromStdString( aux ).replace("==","=");
@@ -196,16 +185,34 @@ void Crapview::clearDates()
     this->dates.clear();
 }
 
+const QString Crapview::getLogFieldString ( const int& field_id )
+{
+    return TR::tr( this->dbQuery.FIELDS.at( field_id ).c_str() );
+}
 
 const int Crapview::getLogFieldID ( const QString& field_str )
 {
-    return this->LogFields_s2i.value( field_str );
+    int f=0;
+    for ( const auto& [id,str] : this->dbQuery.FIELDS ) {
+        if ( TR::tr(str.c_str()) == field_str ) {
+            f = id;
+            break;
+        }
+    }
+    return f;
 }
 
 
 const int Crapview::getMonthNumber( const QString& month_str )
 {
-    return this->Months_s2i.value( month_str );
+    int m=0;
+    for ( const auto& [num,str] : this->dbQuery.MONTHS ) {
+        if ( TR::tr(str.c_str()) == month_str ) {
+            m = num;
+            break;
+        }
+    }
+    return m;
 }
 
 
@@ -232,7 +239,7 @@ const QStringList Crapview::getMonths( const QString& web_server, const QString&
             const int y = year.toInt();
             if ( this->dates.at( ws ).at( y ).size() ) {
                 for ( const auto& [month, data] : this->dates.at( ws ).at( y ) ) {
-                    months.push_back( this->dbQuery.MONTHS.value( month ) );
+                    months.push_back( TR::tr(this->dbQuery.MONTHS.at( month ).c_str()) );
                 }
             }
         }
@@ -247,7 +254,7 @@ const QStringList Crapview::getDays( const QString& web_server, const QString& y
         if ( this->dates.at( ws ).size() > 0 ) {
             const int y = year.toInt();
             if ( this->dates.at( ws ).at( y ).size() ) {
-                const int m = this->Months_s2i.value( month );
+                const int m = this->getMonthNumber( month );
                 if ( this->dates.at( ws ).at( y ).at( m ).size() > 0 ) {
                     for ( const int day : this->dates.at( ws ).at( y ).at( m ) ) {
                         days.push_back( QString::fromStdString( std::to_string( day ) ) );
@@ -263,9 +270,13 @@ const QStringList Crapview::getHours()
     return QStringList({"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 }
 
-const QStringList Crapview::getFields( const QString& tab )
+const QStringList Crapview::getFields( const std::string& tab )
 {
-    return this->fields.value( tab );
+    QStringList list;
+    for ( const auto& field : this->fields.at( tab ) ) {
+        list.append( TR::tr( field.c_str() ) );
+    }
+    return list;
 }
 
 
@@ -277,10 +288,10 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server )
     std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
     for ( int i=0; i<table->rowCount(); i++ ) {
         QTableWidgetItem* item = table->item( i, 0 );
-        if ( item->checkState() == Qt::CheckState::Checked && item->text() == "FALSE" ) {
+        if ( item->checkState() == Qt::CheckState::Checked && item->text() == TR::tr("FALSE") ) {
             // remove warning
             updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 1 ) );
-        } else if (item->checkState() == Qt::CheckState::Unchecked && item->text() == "TRUE" ) {
+        } else if (item->checkState() == Qt::CheckState::Unchecked && item->text() == TR::tr("TRUE") ) {
             // add warning
             updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 0 ) );
         }
@@ -303,11 +314,6 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
 
         // bars
         std::vector<std::vector<QBarSet*>> sets;
-
-        // table
-        QStringList header_labels = this->getWarnHeader();
-        table->setColumnCount( header_labels.size() );
-        table->setHorizontalHeaderLabels( header_labels );
 
         // build the bars and the table upon data
         QColor warn_col = QColor( 255, 140, 0, 255 );
@@ -423,7 +429,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
             b_chart->addSeries( bars );
         }
         //b_chart->setTitle( QString("%1: %2").arg( this->TITLE_WARN ) );
-        b_chart->setTitle( this->TITLE_WARN );
+        b_chart->setTitle( TR::tr( this->TITLE_WARN.c_str() ) );
         b_chart->setTitleFont( fonts.at("main") );
         //b_chart->legend()->setVisible( false );
         b_chart->legend()->setFont( fonts.at("main_small") );
@@ -484,7 +490,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
 
         // draw the relational chart
         QLineSeries *line = new QLineSeries();
-        line->setName( this->printableDate( year, this->Months_s2i.value(month), day ));
+        line->setName( this->printableDate( year, this->getMonthNumber(month), day ));
 
         // build the line upon data
         int i=0, max_i=items.size(), max_t=0, aux;
@@ -572,7 +578,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         l_chart->setTheme( theme );
         l_chart->addSeries( line );
         l_chart->addSeries( line_ );
-        l_chart->setTitle( this->TITLE_SPEED );
+        l_chart->setTitle( TR::tr( this->TITLE_SPEED.c_str() ) );
         l_chart->setTitleFont( fonts.at("main") );
         l_chart->legend()->setFont( fonts.at( "main_small" ) );
         l_chart->legend()->setAlignment( Qt::AlignBottom );
@@ -640,7 +646,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
         aux_items.clear();
 
         if ( oth_count > 0 ) {
-            pie->append( this->TEXT_COUNT_OTHERS, oth_count );
+            pie->append( TR::tr( this->TEXT_COUNT_OTHERS.c_str() ), oth_count );
             QPieSlice *slice = pie->slices().at( pie->count()-1 );
             slice->setBrush( Qt::gray );
         }
@@ -682,13 +688,13 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         b_20->setColor( col );
         QBarSet *b_30 = new QBarSet( "" );
         if ( to_year.size() == 0 || to_month.size() == 0 || to_day.size() == 0 ) {
-            b_30->setLabel( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ) );
+            b_30->setLabel( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ) );
         } else {
             b_30->setLabel( QString("%1 %2 %3 %4")
-                .arg( this->LEGEND_FROM,
-                      this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ),
-                      this->LEGEND_TO,
-                      this->printableDate( to_year, this->Months_s2i.value(to_month), to_day ) ));
+                .arg( TR::tr( this->LEGEND_FROM.c_str() ),
+                      this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+                      TR::tr( this->LEGEND_TO.c_str() ),
+                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day ) ));
         }
         b_30->setColor( col );
         QBarSet *b_40 = new QBarSet( "" );
@@ -744,7 +750,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         QChart *b_chart = new QChart();
         b_chart->setTheme( theme );
         b_chart->addSeries( bars );
-        b_chart->setTitle( QString("%1: %2").arg( this->TITLE_DAY, field ) );
+        b_chart->setTitle( QString("%1: %2").arg( TR::tr( this->TITLE_DAY.c_str() ), field ) );
         b_chart->setTitleFont( fonts.at("main") );
         b_chart->legend()->setFont( fonts.at("main_small") );
         //b_chart->legend()->setVisible( true );
@@ -829,13 +835,13 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         // build the area
         QAreaSeries *area  = new QAreaSeries( line );
         if ( period == false ) {
-            area->setName( this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ));
+            area->setName( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ));
         } else {
             area->setName(QString("%1 %2 %3 %4")
-                .arg( this->LEGEND_FROM,
-                      this->printableDate( from_year, this->Months_s2i.value(from_month), from_day ),
-                      this->LEGEND_TO,
-                      this->printableDate( to_year, this->Months_s2i.value(to_month), to_day )) );
+                .arg( TR::tr( this->LEGEND_FROM.c_str() ),
+                      this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+                      TR::tr( this->LEGEND_TO.c_str() ),
+                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day )) );
         }
 
         // color the area
@@ -861,7 +867,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         a_chart->setTheme( theme );
         a_chart->addSeries( area );
         a_chart->addSeries( area_ );
-        a_chart->setTitle( QString("%1: %2 -> %3").arg(this->TITLE_RELAT, field_1, field_2) );
+        a_chart->setTitle( QString("%1: %2 -> %3").arg( TR::tr( this->TITLE_RELAT.c_str() ), field_1, field_2) );
         a_chart->setTitleFont( fonts.at("main") );
         a_chart->legend()->setFont( fonts.at( "main_small" ) );
         a_chart->legend()->setAlignment( Qt::AlignBottom );
@@ -973,7 +979,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
                 if ( d > 0 ) {
                     count += QString(".%1").arg( d );
                 }
-                traffic_list.push_back( std::make_tuple( this->dbQuery.DAYS.value(max_), count ));
+                traffic_list.push_back( std::make_tuple( TR::tr(this->dbQuery.DAYS.at(max_).c_str()), count ));
             }
 
             // max hour of the day
