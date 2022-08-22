@@ -195,7 +195,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
         if ( file.is_open() ) {
             file.close();
         }
-        throw std::exception();
+        throw std::exception(); // exception catched in Craplog
     }
     if ( file.is_open() ) {
         file.close();
@@ -235,7 +235,7 @@ void IOutils::readFile( const std::string& path , std::string& content )
         if ( file.is_open() == true ) {
             file.close();
         }
-        throw std::exception();
+        throw std::exception(); // already catched
     }
 
     if ( file.is_open() == true ) {
@@ -271,7 +271,7 @@ void IOutils::writeOnFile( const std::string& path, const std::string& content )
         if ( file.is_open() == true ) {
             file.close();
         }
-        throw std::exception();
+        throw std::exception(); // already catched
     }
 
     if ( file.is_open() == true ) {
