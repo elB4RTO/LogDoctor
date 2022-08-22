@@ -169,6 +169,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
     this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( this->db_hashes_path ) );
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
+    this->ui->spinBox_ConfDatabases_NumBackups->setValue( this->db_backup_copies );
+    this->ui->checkBox_ConfDatabases_DoBackup->setChecked( this->db_do_backup );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
     this->ui->spinBox_ConfControl_Size->setValue( this->craplog.getWarningSize() / 1'048'576 );
@@ -241,6 +243,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
 {
     // save actual configurations
     this->writeConfigs();
+    // backup the database
+    if ( this->db_do_backup && this->db_edited ) {
+        this->backupDatabase();
+    }
 
     // save splitters sizes => this->ui->splitter_StatsCount->sizes();
 }
@@ -287,6 +293,7 @@ void MainWindow::defineOSspec()
 
 void MainWindow::readConfigs()
 {
+    std::error_code err;
     bool proceed = true;
     // check the file
     if ( IOutils::exists( this->configs_path ) == true ) {
@@ -296,7 +303,8 @@ void MainWindow::readConfigs()
                 try {
                     std::filesystem::permissions( this->configs_path,
                                                   std::filesystem::perms::owner_read,
-                                                  std::filesystem::perm_options::add );
+                                                  std::filesystem::perm_options::add,
+                                                  err );
                 } catch (...) {
                     proceed = false;
                     QString file = "";
@@ -547,11 +555,11 @@ void MainWindow::readConfigs()
             }
         } catch (const std::ios_base::failure& err) {
             // failed reading
-            QString msg = QMessageBox::tr("An error occured while reading the configurations file");
+            QString msg = DialogSec::tr("An error occured while reading the configuration file");
             DialogSec::errGeneric( nullptr, msg );
         } catch (...) {
             // something failed
-            QString msg = QMessageBox::tr("An error occured while parsing configuration data");
+            QString msg = DialogSec::tr("An error occured while parsing configuration file's data");
             DialogSec::errGeneric( nullptr, msg );
         }
     }
@@ -559,6 +567,7 @@ void MainWindow::readConfigs()
 
 void MainWindow::writeConfigs()
 {
+    std::error_code err;
     bool proceed=true, msg_shown=false;
     QString msg;
     // check the file first
@@ -569,7 +578,8 @@ void MainWindow::writeConfigs()
                 try {
                     std::filesystem::permissions( this->configs_path,
                                                   std::filesystem::perms::owner_write,
-                                                  std::filesystem::perm_options::add );
+                                                  std::filesystem::perm_options::add,
+                                                  err );
                 } catch (...) {
                     proceed = false;
                     QString file = "";
@@ -605,7 +615,8 @@ void MainWindow::writeConfigs()
                     try {
                         std::filesystem::permissions( base_path,
                                                       std::filesystem::perms::owner_write,
-                                                      std::filesystem::perm_options::add );
+                                                      std::filesystem::perm_options::add,
+                                                      err );
                     } catch (...) {
                         proceed = false;
                         QString file = "";
@@ -628,6 +639,15 @@ void MainWindow::writeConfigs()
                         }
                         DialogSec::errRenaming( nullptr, path );
                         msg_shown = true;
+                    } else {
+                        // make the new folder
+                        proceed = IOutils::makeDir( base_path );
+                        if ( proceed == false ) {
+                            msg = DialogSec::tr("Failed to create the configuration file's directory");
+                            if ( this->dialogs_level > 0 ) {
+                                msg += ":\n"+QString::fromStdString( base_path );
+                            }
+                        }
                     }
                 }
             }
@@ -635,7 +655,7 @@ void MainWindow::writeConfigs()
             // the folder does not exist too
             proceed = IOutils::makeDir( base_path );
             if ( proceed == false ) {
-                msg = QMessageBox::tr("Unable to create the directory");
+                msg = DialogSec::tr("Failed to create the configuration file's directory");
                 if ( this->dialogs_level > 0 ) {
                     msg += ":\n"+QString::fromStdString( base_path );
                 }
@@ -727,12 +747,100 @@ void MainWindow::writeConfigs()
 
         } catch (const std::ios_base::failure& err) {
             // failed writing
-            QString msg = QMessageBox::tr("An error occured while writing the configurations file");
-            DialogSec::errGeneric( nullptr, msg );
+            DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while writing the configuration file") );
         } catch (...) {
             // something failed
-            QString msg = QMessageBox::tr("An error occured while preparing configurations data");
-            DialogSec::errGeneric( nullptr, msg );
+            DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while preparing the configuration file's data") );
+        }
+    }
+}
+
+
+void MainWindow::backupDatabase()
+{
+    std::error_code err;
+    bool proceed = true;
+    if ( IOutils::checkFile( this->db_data_path+"/collection.db" ) ) {
+        // db exists and is a file
+        const std::string path = this->logdoc_path+"/backups";
+        if ( std::filesystem::exists( path ) ) {
+            if ( !std::filesystem::is_directory( path, err ) ) {
+                // exists but it's not a directory, rename as copy and make a new one
+                proceed = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( path ) );
+                if ( proceed ) {
+                    proceed = IOutils::renameAsCopy( path );
+                    if ( proceed == false ) {
+                        QString p = "";
+                        if ( this->dialogs_level > 0 ) {
+                            p = QString::fromStdString( path );
+                        }
+                        DialogSec::errRenaming( nullptr, p );
+                    } else {
+                        // sucesfully renamed, make the new one
+                        proceed = IOutils::makeDir( path );
+                        if ( proceed == false ) {
+                            QString msg = DialogSec::tr("Failed to create the database backups' directory");
+                            if ( this->dialogs_level > 0 ) {
+                                msg += ":\n"+QString::fromStdString( path );
+                            }
+                            DialogSec::errFailedMakeDir( nullptr, msg );
+                        }
+                    }
+                }
+            }
+        } else {
+            // backups directory doesn't exists, make it
+            proceed = IOutils::makeDir( path );
+            if ( proceed == false ) {
+                QString msg = DialogSec::tr("Failed to create the database backups' directory");
+                if ( this->dialogs_level > 0 ) {
+                    msg += ":\n"+QString::fromStdString( path );
+                }
+                DialogSec::errFailedMakeDir( nullptr, msg );
+            }
+        }
+
+    }/* else {
+        // db doesn't exists or is not a file
+    }*/
+
+    if ( proceed ) {
+        // copy the database to a new file
+        proceed = std::filesystem::copy_file(
+            this->db_data_path+"/collection.db",
+            this->logdoc_path+"/backups/collection.db.0",
+            std::filesystem::copy_options::update_existing,
+            err );
+        if ( proceed == false ) {
+            // failed to copy
+            DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to copy the database file" ) );
+        } else {
+            // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
+            std::string path, new_path;
+            path = this->logdoc_path+"/backups/collection.db."+std::to_string(this->db_backup_copies);
+            if ( std::filesystem::exists( path ) ) {
+                std::ignore = std::filesystem::remove_all( path, err );
+                proceed = ! std::filesystem::exists( path );
+                if ( proceed == false ) {
+                    DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to update the backups" ) );
+                }
+            }
+            if ( proceed ) {
+                // cascade rename
+                for ( int n=this->db_backup_copies-1; n>=0; n-- ) {
+                    path = this->logdoc_path+"/backups/collection.db."+std::to_string( n );
+                    if ( std::filesystem::exists( path ) ) {
+                        new_path = this->logdoc_path+"/backups/collection.db."+std::to_string( n+1 );
+                        std::filesystem::rename( path, new_path, err );
+                        proceed = ! std::filesystem::exists( path );
+                    }
+                    if ( proceed == false ) {
+                        // seems it failed to rename
+                        DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to update the backups" ) );
+                        break;
+                    }
+                }
+            }
         }
     }
 }
@@ -913,6 +1021,7 @@ void MainWindow::wait_ActiveWindow()
 }
 void MainWindow::makeInitialChecks()
 {
+    std::error_code err;
     bool ok = true;
     // check that the sqlite plugin is available
     if ( QSqlDatabase::drivers().contains("QSQLITE") == false ) {
@@ -930,7 +1039,8 @@ void MainWindow::makeInitialChecks()
                         try {
                             std::filesystem::permissions( path,
                                                           std::filesystem::perms::owner_read,
-                                                          std::filesystem::perm_options::add );
+                                                          std::filesystem::perm_options::add,
+                                                          err );
                         } catch (...) {
                             ok = false;
                             DialogSec::errDirNotReadable( nullptr, QString::fromStdString( path ) );
@@ -941,7 +1051,8 @@ void MainWindow::makeInitialChecks()
                             try {
                                 std::filesystem::permissions( path,
                                                               std::filesystem::perms::owner_write,
-                                                              std::filesystem::perm_options::add );
+                                                              std::filesystem::perm_options::add,
+                                                              err );
                             } catch (...) {
                                 ok = false;
                                 DialogSec::errDirNotWritable( nullptr, QString::fromStdString( path ) );
@@ -1211,7 +1322,7 @@ void MainWindow::showHelp( const std::string& filename )
             }
         } else {
             // resource is not a file
-            DialogSec::errHelpFailed( nullptr, QString::fromStdString( link ), QMessageBox::tr("unrecognized entry") );
+            DialogSec::errHelpFailed( nullptr, QString::fromStdString( link ), DialogSec::tr("unrecognized entry") );
         }
     } else {
         // resource not found
@@ -1537,7 +1648,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 // failed closing
                 proceed = false;
                 // >> err.what() << //
-                DialogSec::errGeneric( nullptr, QMessageBox::tr("Failed closing file pointer for:\n") + item.name );
+                DialogSec::errGeneric( nullptr, DialogSec::tr("Failed closing file pointer for:\n") + item.name );
 
             } catch (const std::ios_base::failure& err) {
                 // failed reading
@@ -1735,6 +1846,14 @@ void MainWindow::craplogFinished()
     this->craplog.makeCharts(
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->chart_MakeStats_Size );
+    if ( this->craplog.editedDatabase() ) {
+        // craplog succeeded
+        this->db_edited = true;
+    }
+    if ( this->craplog.getTotalSize() == 0 ) {
+        // no data
+        this->reset_MakeStats_labels();
+    }
     // clean up temp vars
     this->craplog.clearDataCollection();
     this->craplog.logOps.resetPerfData();
@@ -1891,6 +2010,7 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
     this->crapview.updateWarn(
         this->ui->table_StatsWarn,
         this->ui->box_StatsWarn_WebServer->currentText() );
+    this->db_edited = true;
 }
 
 
@@ -3021,6 +3141,29 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
 }
 
+// backups
+void MainWindow::on_checkBox_ConfDatabases_DoBackup_clicked(bool checked)
+{
+    this->db_do_backup = checked;
+    this->ui->spinBox_ConfDatabases_NumBackups->setEnabled( checked );
+    if ( checked && this->ui->spinBox_ConfDatabases_NumBackups->value() == 0 ) {
+        this->ui->spinBox_ConfDatabases_NumBackups->setValue( 1 );
+    }
+}
+void MainWindow::on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1)
+{
+    this->db_backup_copies = arg1;
+    if ( arg1 == 1 ) {
+        this->ui->spinBox_ConfDatabases_NumBackups->setSuffix( " " + MainWindow::tr( "copy" ) );
+    } else {
+        this->ui->spinBox_ConfDatabases_NumBackups->setSuffix( " " + MainWindow::tr( "copies" ) );
+        if ( arg1 == 0 ) {
+            this->ui->checkBox_ConfDatabases_DoBackup->setChecked( false );
+            this->on_checkBox_ConfDatabases_DoBackup_clicked( false );
+        }
+    }
+}
+
 
 //////////////
 //// LOGS ////
@@ -4112,6 +4255,5 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
-
 
 
