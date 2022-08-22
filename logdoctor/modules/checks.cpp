@@ -470,12 +470,3 @@ bool CheckSec::checkHashesDatabase( const std::string& db_path )
     db.close();
     return ok;
 }
-
-
-bool CheckSec::checkCraplog( const Craplog& craplog )
-{
-    bool ok = true;
-    // !!! CONTINUE !!!
-
-    return ok;
-}
