@@ -118,8 +118,8 @@ MainWindow::MainWindow(QWidget *parent)
         } else if ( language == "it" ) {
             this->ui->actionItaliano->setChecked( true );
         }
-        this->updateUiLanguage();
     }
+    this->updateUiLanguage();
     if ( this->window_theme_id != 0 ) {
         this->updateUiTheme();
     }
@@ -231,6 +231,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete this->ui;
+    delete this->craplog_timer;
+    delete this->crapview_timer;
     delete this->craphelp;
     //delete this->translator;
 }
@@ -819,6 +821,80 @@ void MainWindow::updateUiLanguage()
         // apply the new translator
         QCoreApplication::installTranslator( &this->translator );
         this->ui->retranslateUi( this );
+        // stats warn table header
+        {
+            const QStringList h = {
+                this->crapview.getLogFieldString(0),
+                TR::tr( WORDS__DATE.c_str() ),
+                TR::tr( WORDS__TIME.c_str() ),
+                this->crapview.getLogFieldString(10),
+                this->crapview.getLogFieldString(11),
+                this->crapview.getLogFieldString(12),
+                this->crapview.getLogFieldString(13),
+                this->crapview.getLogFieldString(14),
+                this->crapview.getLogFieldString(18),
+                this->crapview.getLogFieldString(22),
+                this->crapview.getLogFieldString(21),
+                this->crapview.getLogFieldString(20),
+                this->crapview.getLogFieldString(17),
+                this->crapview.getLogFieldString(16),
+                this->crapview.getLogFieldString(15),
+                "rowid" };
+            this->ui->table_StatsWarn->setColumnCount( h.size() );
+            this->ui->table_StatsWarn->setHorizontalHeaderLabels( h );
+        }
+        // stats speed table header
+        {
+            const QStringList h = {
+                this->crapview.getLogFieldString(15),
+                this->crapview.getLogFieldString(12),
+                this->crapview.getLogFieldString(13),
+                this->crapview.getLogFieldString(11),
+                this->crapview.getLogFieldString(10),
+                this->crapview.getLogFieldString(14),
+                TR::tr( WORDS__TIME.c_str() ) };
+            this->ui->table_StatsSpeed->setColumnCount( h.size() );
+            this->ui->table_StatsSpeed->setHorizontalHeaderLabels( h );
+        }
+        // stats count buttons
+        this->ui->button_StatsCount_Protocol->setText(  this->crapview.getLogFieldString( 10 ) );
+        this->ui->button_StatsCount_Method->setText(    this->crapview.getLogFieldString( 11 ) );
+        this->ui->button_StatsCount_Uri->setText(       this->crapview.getLogFieldString( 12 ) );
+        this->ui->button_StatsCount_Query->setText(     this->crapview.getLogFieldString( 13 ) );
+        this->ui->button_StatsCount_Response->setText(  this->crapview.getLogFieldString( 14 ) );
+        this->ui->button_StatsCount_Referrer->setText(  this->crapview.getLogFieldString( 18 ) );
+        this->ui->button_StatsCount_Cookie->setText(    this->crapview.getLogFieldString( 22 ) );
+        this->ui->button_StatsCount_UserAgent->setText( this->crapview.getLogFieldString( 21 ) );
+        this->ui->button_StatsCount_Client->setText(    this->crapview.getLogFieldString( 20 ) );
+        // configs warn/black-lists
+        {
+            const QStringList wl = {
+                this->crapview.getLogFieldString( 11 ),
+                this->crapview.getLogFieldString( 12 ),
+                this->crapview.getLogFieldString( 21 ),
+                this->crapview.getLogFieldString( 20 ) };
+            const QStringList bl = {
+                this->crapview.getLogFieldString( 20 ) };
+            // set
+            this->ui->box_ConfApache_Warnlist_Field->clear();
+            this->ui->box_ConfApache_Warnlist_Field->addItems( wl );
+            this->ui->box_ConfNginx_Warnlist_Field->clear();
+            this->ui->box_ConfNginx_Warnlist_Field->addItems( wl );
+            this->ui->box_ConfIis_Warnlist_Field->clear();
+            this->ui->box_ConfIis_Warnlist_Field->addItems( wl );
+            this->ui->box_ConfApache_Blacklist_Field->clear();
+            this->ui->box_ConfApache_Blacklist_Field->addItems( bl );
+            this->ui->box_ConfNginx_Blacklist_Field->clear();
+            this->ui->box_ConfNginx_Blacklist_Field->addItems( bl );
+            this->ui->box_ConfIis_Blacklist_Field->clear();
+            this->ui->box_ConfIis_Blacklist_Field->addItems( bl );
+        }
+        // renew the dates
+        this->on_box_StatsWarn_WebServer_currentIndexChanged(  this->ui->box_StatsWarn_WebServer->currentIndex()  );
+        this->on_box_StatsSpeed_WebServer_currentIndexChanged( this->ui->box_StatsSpeed_WebServer->currentIndex() );
+        this->on_box_StatsCount_WebServer_currentIndexChanged( this->ui->box_StatsCount_WebServer->currentIndex() );
+        this->on_box_StatsDay_WebServer_currentIndexChanged(   this->ui->box_StatsDay_WebServer->currentIndex()   );
+        this->on_box_StatsRelat_WebServer_currentIndexChanged( this->ui->box_StatsRelat_WebServer->currentIndex() );
     }
 }
 
@@ -914,12 +990,6 @@ void MainWindow::makeInitialChecks()
                 if ( this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" ) == false ) {
                     // failed to load the list, abort
                     ok = false;
-                } else {
-                    // craplog variables
-                    if ( CheckSec::checkCraplog( this->craplog ) == false ) {
-                        // checks failed, abort
-                        ok = false;
-                    }
                 }
             }
         }
@@ -1994,8 +2064,8 @@ void MainWindow::resetStatsCountButtons()
     if ( this->ui->button_StatsCount_Method->isFlat() == false ) {
         this->ui->button_StatsCount_Method->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Request->isFlat() == false ) {
-        this->ui->button_StatsCount_Request->setFlat( true );
+    if ( this->ui->button_StatsCount_Uri->isFlat() == false ) {
+        this->ui->button_StatsCount_Uri->setFlat( true );
     }
     if ( this->ui->button_StatsCount_Query->isFlat() == false ) {
         this->ui->button_StatsCount_Query->setFlat( true );
@@ -2047,12 +2117,12 @@ void MainWindow::on_button_StatsCount_Method_clicked()
     }
 }
 
-void MainWindow::on_button_StatsCount_Request_clicked()
+void MainWindow::on_button_StatsCount_Uri_clicked()
 {
     if ( this->checkDataDB() == true ) {
         this->resetStatsCountButtons();
-        this->count_fld = this->ui->button_StatsCount_Request->text();
-        this->ui->button_StatsCount_Request->setFlat( false );
+        this->count_fld = this->ui->button_StatsCount_Uri->text();
+        this->ui->button_StatsCount_Uri->setFlat( false );
         startCountDrawing();
     }
 }
@@ -3068,20 +3138,22 @@ void MainWindow::on_button_ConfApache_Format_Help_clicked()
 // warnlists
 void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString &arg1)
 {
-    this->ui->inLine_ConfApache_Warnlist_String->clear();
-    this->ui->list_ConfApache_Warnlist_List->clear();
-    // update the list
-    const std::vector<std::string>& list = this->craplog.getWarnlist(
-        this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) );
-    for ( const std::string& item : list ) {
-        this->ui->list_ConfApache_Warnlist_List->addItem( QString::fromStdString( item ) );
+    if ( arg1.size() > 0 ) {
+        this->ui->inLine_ConfApache_Warnlist_String->clear();
+        this->ui->list_ConfApache_Warnlist_List->clear();
+        // update the list
+        const std::vector<std::string>& list = this->craplog.getWarnlist(
+            this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) );
+        for ( const std::string& item : list ) {
+            this->ui->list_ConfApache_Warnlist_List->addItem( QString::fromStdString( item ) );
+        }
+        // check/uncheck the usage option
+        const bool used = this->craplog.isWarnlistUsed(
+            this->APACHE_ID,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ) );
+        this->ui->checkBox_ConfApache_Warnlist_Used->setChecked( used );
+        this->on_checkBox_ConfApache_Warnlist_Used_clicked( used );
     }
-    // check/uncheck the usage option
-    const bool used = this->craplog.isWarnlistUsed(
-        this->APACHE_ID,
-        this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ) );
-    this->ui->checkBox_ConfApache_Warnlist_Used->setChecked( used );
-    this->on_checkBox_ConfApache_Warnlist_Used_clicked( used );
 }
 void MainWindow::on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked)
 {
@@ -3199,20 +3271,22 @@ void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 // blacklist
 void MainWindow::on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString &arg1)
 {
-    this->ui->inLine_ConfApache_Blacklist_String->clear();
-    this->ui->list_ConfApache_Blacklist_List->clear();
-    // update the list
-    const std::vector<std::string>& list = this->craplog.getBlacklist(
-        this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) );
-    for ( const std::string& item : list ) {
-        this->ui->list_ConfApache_Blacklist_List->addItem( QString::fromStdString( item ) );
+    if ( arg1.size() > 0 ) {
+        this->ui->inLine_ConfApache_Blacklist_String->clear();
+        this->ui->list_ConfApache_Blacklist_List->clear();
+        // update the list
+        const std::vector<std::string>& list = this->craplog.getBlacklist(
+            this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) );
+        for ( const std::string& item : list ) {
+            this->ui->list_ConfApache_Blacklist_List->addItem( QString::fromStdString( item ) );
+        }
+        // check/uncheck the usage option
+        bool used = this->craplog.isBlacklistUsed(
+            this->APACHE_ID,
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ) );
+        this->ui->checkBox_ConfApache_Blacklist_Used->setChecked( used );
+        this->on_checkBox_ConfApache_Blacklist_Used_clicked( used );
     }
-    // check/uncheck the usage option
-    bool used = this->craplog.isBlacklistUsed(
-        this->APACHE_ID,
-        this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ) );
-    this->ui->checkBox_ConfApache_Blacklist_Used->setChecked( used );
-    this->on_checkBox_ConfApache_Blacklist_Used_clicked( used );
 }
 void MainWindow::on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked)
 {
@@ -3400,20 +3474,22 @@ void MainWindow::on_button_ConfNginx_Format_Help_clicked()
 // warnlists
 void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString &arg1)
 {
-    this->ui->inLine_ConfNginx_Warnlist_String->clear();
-    this->ui->list_ConfNginx_Warnlist_List->clear();
-    // update the list
-    const std::vector<std::string>& list = this->craplog.getWarnlist(
-        this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) );
-    for ( const std::string& item : list ) {
-        this->ui->list_ConfNginx_Warnlist_List->addItem( QString::fromStdString( item ) );
+    if ( arg1.size() > 0 ) {
+        this->ui->inLine_ConfNginx_Warnlist_String->clear();
+        this->ui->list_ConfNginx_Warnlist_List->clear();
+        // update the list
+        const std::vector<std::string>& list = this->craplog.getWarnlist(
+            this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) );
+        for ( const std::string& item : list ) {
+            this->ui->list_ConfNginx_Warnlist_List->addItem( QString::fromStdString( item ) );
+        }
+        // check/uncheck the usage option
+        const bool used = this->craplog.isWarnlistUsed(
+            this->NGINX_ID,
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ) );
+        this->ui->checkBox_ConfNginx_Warnlist_Used->setChecked( used );
+        this->on_checkBox_ConfNginx_Warnlist_Used_clicked( used );
     }
-    // check/uncheck the usage option
-    const bool used = this->craplog.isWarnlistUsed(
-        this->NGINX_ID,
-        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ) );
-    this->ui->checkBox_ConfNginx_Warnlist_Used->setChecked( used );
-    this->on_checkBox_ConfNginx_Warnlist_Used_clicked( used );
 }
 void MainWindow::on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked)
 {
@@ -3531,20 +3607,22 @@ void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 // blacklist
 void MainWindow::on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString &arg1)
 {
-    this->ui->inLine_ConfNginx_Blacklist_String->clear();
-    this->ui->list_ConfNginx_Blacklist_List->clear();
-    // update the list
-    const std::vector<std::string>& list = this->craplog.getBlacklist(
-        this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) );
-    for ( const std::string& item : list ) {
-        this->ui->list_ConfNginx_Blacklist_List->addItem( QString::fromStdString( item ) );
+    if ( arg1.size() > 0 ) {
+        this->ui->inLine_ConfNginx_Blacklist_String->clear();
+        this->ui->list_ConfNginx_Blacklist_List->clear();
+        // update the list
+        const std::vector<std::string>& list = this->craplog.getBlacklist(
+            this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) );
+        for ( const std::string& item : list ) {
+            this->ui->list_ConfNginx_Blacklist_List->addItem( QString::fromStdString( item ) );
+        }
+        // check/uncheck the usage option
+        bool used = this->craplog.isBlacklistUsed(
+            this->NGINX_ID,
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ) );
+        this->ui->checkBox_ConfNginx_Blacklist_Used->setChecked( used );
+        this->on_checkBox_ConfNginx_Blacklist_Used_clicked( used );
     }
-    // check/uncheck the usage option
-    bool used = this->craplog.isBlacklistUsed(
-        this->NGINX_ID,
-        this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ) );
-    this->ui->checkBox_ConfNginx_Blacklist_Used->setChecked( used );
-    this->on_checkBox_ConfNginx_Blacklist_Used_clicked( used );
 }
 void MainWindow::on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked)
 {
@@ -3773,20 +3851,22 @@ void MainWindow::on_button_ConfIis_Format_Help_clicked()
 // warnlists
 void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString &arg1)
 {
-    this->ui->inLine_ConfIis_Warnlist_String->clear();
-    this->ui->list_ConfIis_Warnlist_List->clear();
-    // update the list
-    const std::vector<std::string>& list = this->craplog.getWarnlist(
-        this->IIS_ID, this->crapview.getLogFieldID( arg1 ) );
-    for ( const std::string& item : list ) {
-        this->ui->list_ConfIis_Warnlist_List->addItem( QString::fromStdString( item ) );
+    if ( arg1.size() > 0 ) {
+        this->ui->inLine_ConfIis_Warnlist_String->clear();
+        this->ui->list_ConfIis_Warnlist_List->clear();
+        // update the list
+        const std::vector<std::string>& list = this->craplog.getWarnlist(
+            this->IIS_ID, this->crapview.getLogFieldID( arg1 ) );
+        for ( const std::string& item : list ) {
+            this->ui->list_ConfIis_Warnlist_List->addItem( QString::fromStdString( item ) );
+        }
+        // check/uncheck the usage option
+        const bool used = this->craplog.isWarnlistUsed(
+            this->IIS_ID,
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ) );
+        this->ui->checkBox_ConfIis_Warnlist_Used->setChecked( used );
+        this->on_checkBox_ConfIis_Warnlist_Used_clicked( used );
     }
-    // check/uncheck the usage option
-    const bool used = this->craplog.isWarnlistUsed(
-        this->IIS_ID,
-        this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ) );
-    this->ui->checkBox_ConfIis_Warnlist_Used->setChecked( used );
-    this->on_checkBox_ConfIis_Warnlist_Used_clicked( used );
 }
 void MainWindow::on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked)
 {
@@ -3904,20 +3984,22 @@ void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 // blacklist
 void MainWindow::on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString &arg1)
 {
-    this->ui->inLine_ConfIis_Blacklist_String->clear();
-    this->ui->list_ConfIis_Blacklist_List->clear();
-    // update the list
-    const std::vector<std::string>& list = this->craplog.getBlacklist(
-        this->IIS_ID, this->crapview.getLogFieldID( arg1 ) );
-    for ( const std::string& item : list ) {
-        this->ui->list_ConfIis_Blacklist_List->addItem( QString::fromStdString( item ) );
+    if ( arg1.size() > 0 ) {
+        this->ui->inLine_ConfIis_Blacklist_String->clear();
+        this->ui->list_ConfIis_Blacklist_List->clear();
+        // update the list
+        const std::vector<std::string>& list = this->craplog.getBlacklist(
+            this->IIS_ID, this->crapview.getLogFieldID( arg1 ) );
+        for ( const std::string& item : list ) {
+            this->ui->list_ConfIis_Blacklist_List->addItem( QString::fromStdString( item ) );
+        }
+        // check/uncheck the usage option
+        bool used = this->craplog.isBlacklistUsed(
+            this->IIS_ID,
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ) );
+        this->ui->checkBox_ConfIis_Blacklist_Used->setChecked( used );
+        this->on_checkBox_ConfIis_Blacklist_Used_clicked( used );
     }
-    // check/uncheck the usage option
-    bool used = this->craplog.isBlacklistUsed(
-        this->IIS_ID,
-        this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ) );
-    this->ui->checkBox_ConfIis_Blacklist_Used->setChecked( used );
-    this->on_checkBox_ConfIis_Blacklist_Used_clicked( used );
 }
 void MainWindow::on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked)
 {
