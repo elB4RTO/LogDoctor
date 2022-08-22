@@ -28,7 +28,6 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.cpp
 
-        utilities.h
         utilities/colors.h
         utilities/colors.cpp
         utilities/gzip.h
@@ -42,7 +41,6 @@ set(PROJECT_SOURCES
         utilities/vectors.h
         utilities/vectors.cpp
 
-        modules.h
         modules/charts/donuts.h
         modules/charts/donuts.cpp
         modules/checks.h
@@ -53,6 +51,9 @@ set(PROJECT_SOURCES
         modules/exceptions.cpp
         modules/tb.h
         modules/tb.cpp
+
+        tools/shared.h
+        tools/shared.cpp
 
         tools/craplog/craplog.h
         tools/craplog/craplog.cpp
