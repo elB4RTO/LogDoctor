@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=LogDoctor
+GenericName=LogDoctor
+Comment=Parse Apache2/Nginx/IIS access log files and make statistics
+Icon=logdoctor.svg
+Exec=logdoctor
+Actions=
+Categories=Utility;
+Keywords=logdoctor;apache2;nginx;iis;webserverlogs;statistics;
