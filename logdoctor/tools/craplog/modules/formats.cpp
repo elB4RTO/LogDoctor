@@ -73,7 +73,7 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
                 str2.push_back( cc );
                 i++;
             } else {
-                if ( strftime == true ) {
+                if ( strftime ) {
                     // when parsing for strftime, any other backslashed characters result in a backslash+character
                     str2.push_back( c );
                     str2.push_back( cc );
@@ -97,7 +97,7 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
                     }
                 }
             }
-        } else if ( c == '%' && strftime == true ) {
+        } else if ( c == '%' && strftime ) {
             // strftime control-characters
             if ( cc == 'n' ) {
                 str2.push_back( '\n' );
@@ -176,7 +176,7 @@ const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int&
     if ( start < max ) { // if start equals max there's no need to loop
         for ( int i=start; i<=max; i++ ) {
             const char& c = string.at( i );
-            if ( StringOps::isAlnum( c ) == true || c == '_' ) {
+            if ( StringOps::isAlnum( c ) || c == '_' ) {
                 stop = i;
             } else {
                 break;
@@ -190,7 +190,7 @@ const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int&
 void FormatOps::checkIisString( const std::string& string )
 {
     for ( const char& chr : string ) {
-        if ( !(StringOps::isAlnum( chr ) == true || chr == ' ' || chr == '-' || chr == '(' || chr == ')') ) {
+        if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == '(' || chr == ')') ) {
             // unwanted character
             const std::string c( 1, chr );
             throw LogFormatException( "Unexpected character found: "+c );
@@ -246,7 +246,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                         // the percent sign character, will be used as separator, skip
                         stop = aux + 2;
                         continue;
-                    } else if ( StringOps::isAlnum( c ) == false ) {
+                    } else if ( ! StringOps::isAlnum( c ) ) {
                         // invalid, there must be a field code, a status code or a percent sign after a '%'
                         const std::string chr( 1, c );
                         throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%'.\nFound: '%"+chr+"'." );
@@ -268,7 +268,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
             char c = f_str.at( aux );
             // remove the per-status directives (if any)
-            if ( StringOps::isNumeric( c ) == true
+            if ( StringOps::isNumeric( c )
               || c == ',' ) {
                 // per-status, not important for LogDoctor
                 size_t aux_aux = aux+1;
@@ -277,7 +277,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                         break;
                     }
                     c = f_str.at( aux_aux );
-                    if ( StringOps::isNumeric( c ) == true
+                    if ( StringOps::isNumeric( c )
                       || c == ',' ) {
                         // skip these chars
                         aux_aux ++;
@@ -564,7 +564,7 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
                 separators.push_back( this->parseNginxEscapes( cur_sep ) );
             }
             fields.push_back( f_map.at( cur_fld ) );
-            if ( finished == true ) {
+            if ( finished ) {
                 // this was the last field
                 break;
             }
@@ -654,7 +654,7 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                     if ( f_map.find( cur_fld ) != f_map.end() ) {
                         // valid, append
                         fields.push_back( f_map.at( cur_fld ) );
-                        if ( finished == false ) {
+                        if ( ! finished ) {
                             separators.push_back( cur_sep );
                         } else {
                             // this was the last field

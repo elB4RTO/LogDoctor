@@ -696,7 +696,7 @@ const bool DialogSec::choiceFileNotFile( QWidget *parent, const QString& path )
 void DialogSec::warnGeneric( QWidget *parent, const QString& msg, const bool& report_msg )
 {
     QString footer = "";
-    if ( report_msg == true ) {
+    if ( report_msg ) {
         footer += "\n\n" + DialogSec::tr( r_REPORT_ISSUE.c_str() );
     }
     std::ignore=
@@ -712,7 +712,7 @@ void DialogSec::warnGeneric( QWidget *parent, const QString& msg, const bool& re
 void DialogSec::errGeneric( QWidget *parent, const QString& msg, const bool& report_msg )
 {
     QString footer = "";
-    if ( report_msg == true ) {
+    if ( report_msg ) {
         footer += "\n\n" + DialogSec::tr( r_REPORT_ISSUE.c_str() );
     }
     std::ignore=

@@ -3,7 +3,6 @@
 #include "utilities/strings.h"
 
 #include <QGraphicsItem>
-#include <iostream> // !!! REMOVE !!!
 
 
 Crapview::Crapview()
@@ -120,12 +119,12 @@ const QString Crapview::parseNumericFilter( const QString& filter_str )
             StringOps::splitrip( f_list, filter_str.toStdString(), " " );
             if ( f_list.size() > 0 ) {
                 std::string& aux = f_list.at(0);
-                if ( StringOps::isNumeric( aux ) == true ) {
+                if ( StringOps::isNumeric( aux ) ) {
                     // no symbol specified, set '=' as default
                     final_str += "=";
                     final_str += QString::fromStdString( aux );
                 } else {
-                    if ( StringOps::isNumeric( StringOps::lstrip( aux, "!<=>" ) ) == true ) {
+                    if ( StringOps::isNumeric( StringOps::lstrip( aux, "!<=>" ) ) ) {
                         // symbol/value
                         final_str += QString::fromStdString( aux ).replace("==","=");
                     } else if ( StringOps::lstrip( aux, "!<=>" ).size() == 0 ) {
@@ -176,7 +175,7 @@ void Crapview::refreshDates()
 {
     std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> result;
     this->dbQuery.refreshDates( result );
-    if ( std::get<0>(result) == true ) {
+    if ( std::get<0>(result) ) {
         this->dates = std::get<1>(result);
     }
 }
@@ -307,7 +306,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         result,
         web_server,
         year, month, day, hour );
-    if ( std::get<0>(result) == true ) {
+    if ( std::get<0>(result) ) {
         // get data
         // { hour : { 10th_minutes : count } }
         std::vector<std::vector<std::vector<std::vector<QString>>>> &items = std::get<1>(result);
@@ -483,7 +482,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         web_server,
         year, month, day,
         protocol, method, uri, query, response );
-    if ( std::get<0>(result) == true ) {
+    if ( std::get<0>(result) ) {
         // get data
         // { hour : { 10th_minutes : count } }
         std::vector<std::tuple<long long, std::vector<QString>>> &items = std::get<1>(result);
@@ -618,7 +617,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
         web_server,
         year, month, day,
         field );
-    if ( std::get<0>(result) == true ) {
+    if ( std::get<0>(result) ) {
         // get data
         std::vector<std::tuple<QString, int>> &aux_items = std::get<1>(result);
 
@@ -675,7 +674,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         from_year, from_month, from_day,
         to_year, to_month, to_day,
         field, filter );
-    if ( std::get<0>(result) == true ) {
+    if ( std::get<0>(result) ) {
         // get data
         // { hour : { 10th_minutes : count } }
         std::unordered_map<int, std::unordered_map<int, int>> &items = std::get<1>(result);
@@ -812,7 +811,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
             field_2, filter_2 );
     }
 
-    if ( std::get<0>(result) == true ) {
+    if ( std::get<0>(result) ) {
         // get data
         // { hour : { 10th_minutes : count } }
         std::vector<std::tuple<long long, int>> &items = std::get<1>(result);
@@ -834,7 +833,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
 
         // build the area
         QAreaSeries *area  = new QAreaSeries( line );
-        if ( period == false ) {
+        if ( ! period ) {
             area->setName( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ));
         } else {
             area->setName(QString("%1 %2 %3 %4")
@@ -875,7 +874,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         // set-up the date-time axis (X)
         QDateTimeAxis *axisX = new QDateTimeAxis();
         axisX->setLabelsFont( fonts.at( "main_small" ) );
-        if ( period == true ) {
+        if ( period ) {
             //axisX->setLabelsVisible( false );
             axisX->setFormat( "yyyy-MM" );
             int ticks = this->dbQuery.getMonthsCount( from_year, from_month, to_year, to_month );
@@ -942,7 +941,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             perf_time, perf_sent, perf_receiv,
             req_count );
 
-        if ( result == true ) {
+        if ( result ) {
             // compose the results
 
             // max request elements

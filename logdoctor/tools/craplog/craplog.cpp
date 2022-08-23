@@ -19,8 +19,6 @@
 #include <exception>
 #include <ctime>
 
-#include <iostream> // !!! REMOVE !!!
-
 
 Craplog::Craplog()
 {
@@ -378,7 +376,7 @@ const int Craplog::getLogsListSize() {
 // return the list. rescan if fresh is true
 const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool& fresh )
 {
-    if ( fresh == true ) {
+    if ( fresh ) {
         this->scanLogsDir();
     }
     return this->logs_list;
@@ -431,14 +429,14 @@ void Craplog::scanLogsDir()
     bool successful = true;
     this->logs_list.clear();
     std::string &logs_path = this->logs_paths.at( this->current_WS );
-    if ( IOutils::isDir( logs_path ) == false ) {
+    if ( ! IOutils::isDir( logs_path ) ) {
         // this directory doesn't exists
         if ( IOutils::exists( logs_path ) ) {
             DialogSec::errDirNotExists( nullptr, QString::fromStdString( logs_path ) );
         }
         successful = false;
     }
-    if ( successful == true ) {
+    if ( successful ) {
         int size;
         QString name;
         std::string path;
@@ -448,9 +446,9 @@ void Craplog::scanLogsDir()
             path = dir_entry.path().string();
             name = QString::fromStdString( dir_entry.path().filename().string() );
             // check if it is actually a file
-            if ( IOutils::checkFile( path ) == true ) {
+            if ( IOutils::checkFile( path ) ) {
                 // it's a file, check the readability
-                if ( IOutils::checkFile( path, true ) == false ) {
+                if ( ! IOutils::checkFile( path, true ) ) {
                     // not readable, skip
                     if ( this->dialogs_level == 2 ) {
                         DialogSec::warnFileNotReadable( nullptr, name );
@@ -486,7 +484,7 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            if ( successful == true ) {
+            if ( successful ) {
                 LogOps::LogType log_type = this->logOps.defineFileType(
                     name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
                 content.clear();
@@ -500,7 +498,7 @@ void Craplog::scanLogsDir()
                 }
 
                 // match only valid files names
-                if ( this->isFileNameValid( name.toStdString() ) == false ) {
+                if ( ! this->isFileNameValid( name.toStdString() ) ) {
                     continue;
                 }
 
@@ -573,7 +571,7 @@ const bool Craplog::isFileNameValid( const std::string& name )
             }
             // serach for incremental numbers
             for ( int i=start; i<=stop; i++ ) {
-                if ( StringOps::isNumeric( name.at( i ) ) == false ) {
+                if ( ! StringOps::isNumeric( name.at( i ) ) ) {
                     valid = false;
                     break;
                 }
@@ -594,13 +592,13 @@ const bool Craplog::isFileNameValid( const std::string& name )
             // search for date
             std::string date;
             for ( int i=start; i<=stop; i++ ) {
-                if ( StringOps::isNumeric( name.at( i ) ) == false ) {
+                if ( ! StringOps::isNumeric( name.at( i ) ) ) {
                     valid = false;
                     break;
                 }
                 date.push_back( name.at( i ) );
             }
-            if ( valid == true ) {
+            if ( valid ) {
                 // check if the file has today's date
                 time_t t;
                 struct tm *tmp;
@@ -712,11 +710,11 @@ void Craplog::run()
 {
     this->startWorking();
 
-    if ( this->proceed == true ) {
+    if ( this->proceed ) {
         // collect log lines
         this->joinLogLines();
     }
-    if ( this->proceed == true ) {
+    if ( this->proceed ) {
         // parse the log lines to fill the collection
         this->parseLogLines();
         // finished parsing logs
@@ -728,12 +726,12 @@ void Craplog::run()
     // clear log lines data
     this->logs_lines.clear();
 
-    if ( this->proceed == true ) {
+    if ( this->proceed ) {
         // store the new data
         this->storeLogLines();
     }
 
-    if ( this->proceed == true ) {
+    if ( this->proceed ) {
         // succesfully updated the database
         if ( this->parsed_size > 0 ) {
             this->db_edited = true;
@@ -753,15 +751,15 @@ const bool Craplog::checkStuff()
     this->log_files_to_use.clear();
     for ( const LogFile& file : this->logs_list ) {
 
-        if ( this->proceed == false ) { break; }
+        if ( ! this->proceed ) { break; }
 
-        if ( file.selected == false ) {
+        if ( ! file.selected ) {
             // not selected, skip
             continue;
         }
 
         // check if the file has been used already
-        if ( file.used_already == true ) {
+        if ( file.used_already ) {
             // already used
             QString msg = file.name;
             if ( this->dialogs_level == 2 ) {
@@ -823,12 +821,12 @@ const bool Craplog::checkStuff()
         }
 
         // check if the statistics' database is fune
-        if ( CheckSec::checkStatsDatabase( this->db_stats_path ) == false ) {
+        if ( ! CheckSec::checkStatsDatabase( this->db_stats_path ) ) {
             // checks failed, abort
             this->proceed = false;
             break;
         }
-        if ( CheckSec::checkHashesDatabase( this->db_hashes_path ) == false ) {
+        if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path ) ) {
             // checks failed, abort
             this->proceed = false;
             break;
@@ -847,7 +845,7 @@ void Craplog::joinLogLines()
     std::vector<std::string> content;
     for ( const LogFile& file : this->log_files_to_use ) {
 
-        if ( this->proceed == false ) { break; }
+        if ( ! this->proceed ) { break; }
 
         // collect lines
         try {
@@ -898,7 +896,7 @@ void Craplog::joinLogLines()
 
 void Craplog::parseLogLines()
 {
-    if ( this-> proceed == true && this->logs_lines.size() > 0 ) {
+    if ( this-> proceed && this->logs_lines.size() > 0 ) {
         this->logOps.parseLines(
             this->data_collection,
             this->logs_lines,
@@ -916,7 +914,7 @@ void Craplog::storeLogLines()
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( db_path );
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         this->proceed = false;
         QString err_msg = "";
@@ -930,7 +928,7 @@ void Craplog::storeLogLines()
         bool successful;
         try {
             // ACID transaction
-            if ( db.transaction() == false ) {
+            if ( ! db.transaction() ) {
                 // error opening database
                 this->proceed = false;
                 QString stmt_msg="", err_msg = "";
@@ -943,14 +941,14 @@ void Craplog::storeLogLines()
                 DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
             }
 
-            if ( this->proceed == true && this->data_collection.size() > 0 ) {
+            if ( this->proceed && this->data_collection.size() > 0 ) {
                 successful = StoreOps::storeData( db, *this, this->data_collection );
                 this->proceed = successful;
             }
 
-            if ( this->proceed == true ) {
+            if ( this->proceed ) {
                 // commit the transaction
-                if ( db.commit() == false ) {
+                if ( ! db.commit() ) {
                     // error opening database
                     this->proceed = false;
                     QString stmt_msg="", err_msg = "";
@@ -963,7 +961,7 @@ void Craplog::storeLogLines()
                     DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
                 }
             }
-            if ( proceed == false ) {
+            if ( ! proceed ) {
                 // rollback
                 throw (std::exception());
             }
@@ -973,7 +971,7 @@ void Craplog::storeLogLines()
             this->proceed = false;
             bool err_shown = false;
             // rollback the transaction
-            if ( db.rollback() == false ) {
+            if ( ! db.rollback() ) {
                 // error rolling back commits
                 QString stmt_msg="", err_msg = "";
                 if ( this->dialogs_level > 0 ) {
@@ -985,7 +983,7 @@ void Craplog::storeLogLines()
                 DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
                 err_shown = true;
             }
-            if ( err_shown == false ) {
+            if ( ! err_shown ) {
                 // show a message
                 QString msg = DialogSec::tr("An error occured while working on the database\n\nAborting");
                 DialogSec::errGeneric( nullptr, msg );
