@@ -11,8 +11,6 @@
 #include <chrono>
 #include <filesystem>
 
-#include <iostream> // !!! REMOVE !!!
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -102,6 +100,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect( this->ui->actionItaliano, &QAction::triggered, this, &MainWindow::menu_actionItaliano_triggered );
     // tools
     connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
+    // utilities
+    connect( this->ui->actionInfos, &QAction::triggered, this, &MainWindow::menu_actionInfos_triggered );
     connect( this->ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::menu_actionCheckUpdates_triggered );
 
 
@@ -236,6 +236,8 @@ MainWindow::~MainWindow()
     delete this->craplog_timer;
     delete this->crapview_timer;
     delete this->craphelp;
+    delete this->crapnote;
+    delete this->crapinfo;
     //delete this->translator;
 }
 
@@ -296,9 +298,9 @@ void MainWindow::readConfigs()
     std::error_code err;
     bool proceed = true;
     // check the file
-    if ( IOutils::exists( this->configs_path ) == true ) {
-        if ( IOutils::checkFile( this->configs_path ) == true ) {
-            if ( IOutils::checkFile( this->configs_path, true ) == false ) {
+    if ( IOutils::exists( this->configs_path ) ) {
+        if ( IOutils::checkFile( this->configs_path ) ) {
+            if ( ! IOutils::checkFile( this->configs_path, true ) ) {
                 // file not readable
                 try {
                     std::filesystem::permissions( this->configs_path,
@@ -317,9 +319,9 @@ void MainWindow::readConfigs()
         } else {
             // the given path doesn't point to a file
             proceed = DialogSec::choiceFileNotFile( nullptr, QString::fromStdString( this->configs_path ) );
-            if ( proceed == true ) {
+            if ( proceed ) {
                 proceed = IOutils::renameAsCopy( this->configs_path );
-                if ( proceed == false ) {
+                if ( ! proceed ) {
                     QString path = "";
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
@@ -338,8 +340,8 @@ void MainWindow::readConfigs()
         DialogSec::warnConfFileNotFound( nullptr, file );
     }
 
-    if ( proceed == true ) {
-        std::vector<std::string> aux, list, configs;
+    if ( proceed ) {
+        std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
             for ( int w=this->APACHE_ID; w<=this->IIS_ID; w++ ) {
@@ -352,7 +354,7 @@ void MainWindow::readConfigs()
             IOutils::readFile( this->configs_path, content );
             StringOps::splitrip( configs, content );
             for ( const std::string& line : configs ) {
-                if ( StringOps::startsWith( line, "[") == true ) {
+                if ( StringOps::startsWith( line, "[") ) {
                     // section descriptor
                     continue;
                 }
@@ -515,9 +517,9 @@ void MainWindow::readConfigs()
 
                 } else if ( var == "IisLogsFormat" ) {
                     int module = 0;
-                    if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() == true ) {
+                    if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
                         module = 1;
-                    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() == true ) {
+                    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
                         module = 2;
                     }
                     this->craplog.setIisLogFormat( val, module );
@@ -577,9 +579,9 @@ void MainWindow::writeConfigs()
     bool proceed=true, msg_shown=false;
     QString msg;
     // check the file first
-    if ( IOutils::exists( this->configs_path ) == true ) {
-        if ( IOutils::checkFile( this->configs_path ) == true ) {
-            if ( IOutils::checkFile( this->configs_path, false, true ) == false ) {
+    if ( IOutils::exists( this->configs_path ) ) {
+        if ( IOutils::checkFile( this->configs_path ) ) {
+            if ( ! IOutils::checkFile( this->configs_path, false, true ) ) {
                 // file not writable
                 try {
                     std::filesystem::permissions( this->configs_path,
@@ -599,9 +601,9 @@ void MainWindow::writeConfigs()
         } else {
             // the given path doesn't point to a file
             proceed = DialogSec::choiceFileNotFile( nullptr, QString::fromStdString( this->configs_path ) );
-            if ( proceed == true ) {
+            if ( proceed ) {
                 proceed = IOutils::renameAsCopy( this->configs_path );
-                if ( proceed == false ) {
+                if ( ! proceed ) {
                     QString path = "";
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
@@ -614,9 +616,9 @@ void MainWindow::writeConfigs()
     } else {
         // file does not exists, check if at least the folder exists
         const std::string base_path = this->basePath( this->configs_path );
-        if ( IOutils::exists( base_path ) == true ) {
-            if ( IOutils::isDir( base_path ) == true ) {
-                if ( IOutils::checkDir( base_path, false, true ) == false ) {
+        if ( IOutils::exists( base_path ) ) {
+            if ( IOutils::isDir( base_path ) ) {
+                if ( ! IOutils::checkDir( base_path, false, true ) ) {
                     // directory not writable
                     try {
                         std::filesystem::permissions( base_path,
@@ -636,9 +638,9 @@ void MainWindow::writeConfigs()
             } else {
                 // not a directory
                 proceed = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( base_path ) );
-                if ( proceed == true ) {
+                if ( proceed ) {
                     proceed = IOutils::renameAsCopy( base_path );
-                    if ( proceed == false ) {
+                    if ( ! proceed ) {
                         QString path = "";
                         if ( this->dialogs_level > 0 ) {
                             path = QString::fromStdString( base_path );
@@ -648,7 +650,7 @@ void MainWindow::writeConfigs()
                     } else {
                         // make the new folder
                         proceed = IOutils::makeDir( base_path );
-                        if ( proceed == false ) {
+                        if ( ! proceed ) {
                             msg = DialogSec::tr("Failed to create the configuration file's directory");
                             if ( this->dialogs_level > 0 ) {
                                 msg += ":\n"+QString::fromStdString( base_path );
@@ -660,7 +662,7 @@ void MainWindow::writeConfigs()
         } else {
             // the folder does not exist too
             proceed = IOutils::makeDir( base_path );
-            if ( proceed == false ) {
+            if ( ! proceed ) {
                 msg = DialogSec::tr("Failed to create the configuration file's directory");
                 if ( this->dialogs_level > 0 ) {
                     msg += ":\n"+QString::fromStdString( base_path );
@@ -668,11 +670,11 @@ void MainWindow::writeConfigs()
             }
         }
     }
-    if ( proceed == false && msg_shown == false ) {
+    if ( !proceed && !msg_shown ) {
         DialogSec::errConfFailedWriting( nullptr, msg );
     }
 
-    if ( proceed == true ) {
+    if ( proceed ) {
         //// USER INTERFACE ////
         std::string configs = "[UI]";
         configs += "\nLanguage=" + this->language;
@@ -728,9 +730,9 @@ void MainWindow::writeConfigs()
         configs += "\n\n[IIS]";
         configs += "\nIisLogsPath=" + this->craplog.getLogsPath( this->IIS_ID );
         std::string module = "0";
-        if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() == true ) {
+        if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
             module = "1";
-        } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() == true ) {
+        } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
             module = "2";
         }
         configs += "\nIisLogsModule=" + module;
@@ -777,7 +779,7 @@ void MainWindow::backupDatabase()
                 proceed = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( path ) );
                 if ( proceed ) {
                     proceed = IOutils::renameAsCopy( path );
-                    if ( proceed == false ) {
+                    if ( ! proceed ) {
                         QString p = "";
                         if ( this->dialogs_level > 0 ) {
                             p = QString::fromStdString( path );
@@ -786,7 +788,7 @@ void MainWindow::backupDatabase()
                     } else {
                         // sucesfully renamed, make the new one
                         proceed = IOutils::makeDir( path );
-                        if ( proceed == false ) {
+                        if ( ! proceed ) {
                             QString msg = DialogSec::tr("Failed to create the database backups' directory");
                             if ( this->dialogs_level > 0 ) {
                                 msg += ":\n"+QString::fromStdString( path );
@@ -799,7 +801,7 @@ void MainWindow::backupDatabase()
         } else {
             // backups directory doesn't exists, make it
             proceed = IOutils::makeDir( path );
-            if ( proceed == false ) {
+            if ( ! proceed ) {
                 QString msg = DialogSec::tr("Failed to create the database backups' directory");
                 if ( this->dialogs_level > 0 ) {
                     msg += ":\n"+QString::fromStdString( path );
@@ -819,7 +821,7 @@ void MainWindow::backupDatabase()
             this->logdoc_path+"/backups/collection.db.0",
             std::filesystem::copy_options::update_existing,
             err );
-        if ( proceed == false ) {
+        if ( ! proceed ) {
             // failed to copy
             DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to copy the database file" ) );
         } else {
@@ -829,7 +831,7 @@ void MainWindow::backupDatabase()
             if ( std::filesystem::exists( path ) ) {
                 std::ignore = std::filesystem::remove_all( path, err );
                 proceed = ! std::filesystem::exists( path );
-                if ( proceed == false ) {
+                if ( ! proceed ) {
                     DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to update the backups" ) );
                 }
             }
@@ -842,7 +844,7 @@ void MainWindow::backupDatabase()
                         std::filesystem::rename( path, new_path, err );
                         proceed = ! std::filesystem::exists( path );
                     }
-                    if ( proceed == false ) {
+                    if ( ! proceed ) {
                         // seems it failed to rename
                         DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to update the backups" ) );
                         break;
@@ -885,7 +887,7 @@ void MainWindow::geometryFromString( const std::string& geometry )
 const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool& user_agent )
 {
     std::string string;
-    if ( user_agent == true ) {
+    if ( user_agent ) {
         for ( const std::string& str : list ) {
             string += StringOps::replace( str, " ", "%@#" ) + " ";
         }
@@ -900,7 +902,7 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 {
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, " " );
-    if ( user_agent == true ) {
+    if ( user_agent ) {
         for ( const std::string& str : aux ) {
             list.push_back( StringOps::replace( str, "%@#", " " ) );
         }
@@ -1020,7 +1022,7 @@ void MainWindow::updateUiLanguage()
 //////////////////////////
 void MainWindow::wait_ActiveWindow()
 {
-    if ( this->isActiveWindow() == false ) {
+    if ( ! this->isActiveWindow() ) {
         std::this_thread::sleep_for( std::chrono::milliseconds(250) );
     } else {
         this->craplog_timer->stop();
@@ -1032,18 +1034,18 @@ void MainWindow::makeInitialChecks()
     std::error_code err;
     bool ok = true;
     // check that the sqlite plugin is available
-    if ( QSqlDatabase::drivers().contains("QSQLITE") == false ) {
+    if ( ! QSqlDatabase::drivers().contains("QSQLITE") ) {
         // checks failed, abort
         DialogSec::errSqlDriverNotFound( nullptr, "QSQLITE" );
         ok = false;
     }
 
-    if ( ok == true ) {
+    if ( ok ) {
         // check LogDoctor's folders paths
         for ( const std::string& path : std::vector<std::string>({this->basePath(this->configs_path), this->logdoc_path}) ) {
-            if ( IOutils::exists( path ) == true ) {
-                if ( IOutils::isDir( path ) == true ) {
-                    if ( IOutils::checkDir( path, true ) == false ) {
+            if ( IOutils::exists( path ) ) {
+                if ( IOutils::isDir( path ) ) {
+                    if ( ! IOutils::checkDir( path, true ) ) {
                         try {
                             std::filesystem::permissions( path,
                                                           std::filesystem::perms::owner_read,
@@ -1054,8 +1056,8 @@ void MainWindow::makeInitialChecks()
                             DialogSec::errDirNotReadable( nullptr, QString::fromStdString( path ) );
                         }
                     }
-                    if ( ok == true ) {
-                        if ( IOutils::checkDir( path, false, true ) == false ) {
+                    if ( ok ) {
+                        if ( ! IOutils::checkDir( path, false, true ) ) {
                             try {
                                 std::filesystem::permissions( path,
                                                               std::filesystem::perms::owner_write,
@@ -1071,9 +1073,9 @@ void MainWindow::makeInitialChecks()
                 } else {
                     // not a directory, rename as copy a make a new one
                     ok = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( path ) );
-                    if ( ok == true ) {
+                    if ( ok ) {
                         ok = IOutils::renameAsCopy( path );
-                        if ( ok == false ) {
+                        if ( ! ok ) {
                             QString p = "";
                             if ( this->dialogs_level > 0 ) {
                                 p = QString::fromStdString( path );
@@ -1086,34 +1088,34 @@ void MainWindow::makeInitialChecks()
             } else {
                 ok = IOutils::makeDir( path );
             }
-            if ( ok == false ) {
+            if ( ! ok ) {
                 break;
             }
         }
     }
 
-    if ( ok == true ) {
+    if ( ok ) {
         // statistics' database
-        if ( CheckSec::checkStatsDatabase( this->db_data_path + "/collection.db" ) == false ) {
+        if ( ! CheckSec::checkStatsDatabase( this->db_data_path + "/collection.db" ) ) {
             // checks failed, abort
             ok = false;
         } else {
             this->crapview.setDbPath( this->db_data_path );
             this->craplog.setStatsDatabasePath( this->db_data_path );
             // used-files' hashes' database
-            if ( CheckSec::checkHashesDatabase( this->db_hashes_path + "/hashes.db" ) == false ) {
+            if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path + "/hashes.db" ) ) {
                 // checks failed, abort
                 ok = false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                if ( this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" ) == false ) {
+                if ( ! this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" ) ) {
                     // failed to load the list, abort
                     ok = false;
                 }
             }
         }
     }
-    if ( ok == false ) {
+    if ( ! ok ) {
         this->close();
         //QCoreApplication::exit(0);
         //this->destroy();
@@ -1156,28 +1158,28 @@ void MainWindow::makeInitialChecks()
 
 const bool& MainWindow::checkDataDB()
 {
-    if ( this->initiating == false ) { // avoid recursions
+    if ( ! this->initiating ) { // avoid recursions
         // check the db
         const std::string path = this->db_data_path + "/collection.db";
         bool ok = IOutils::checkFile( path, true );
-        if ( ok == false ) {
+        if ( ! ok ) {
             ok = CheckSec::checkStatsDatabase( path );
             // update ui stuff
-            if ( ok == false ) {
+            if ( ! ok ) {
                 // checks failed
                 this->crapview.clearDates();
                 this->ui->box_StatsWarn_Year->clear();
                 this->ui->box_StatsSpeed_Year->clear();
                 this->ui->box_StatsCount_Year->clear();
                 this->ui->box_StatsDay_FromYear->clear();
-                if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+                if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
                     this->ui->box_StatsDay_ToYear->clear();
                 }
                 this->ui->box_StatsRelat_FromYear->clear();
                 this->ui->box_StatsRelat_ToYear->clear();
             }
         }
-        if ( ok == true && this->db_ok == false ) {
+        if ( ok && !this->db_ok ) {
             this->db_ok = ok;
             this->initiating = true;
             this->refreshStatsDates();
@@ -1309,9 +1311,9 @@ void MainWindow::showHelp( const std::string& filename )
 {
     const std::string link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
     const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+filename+".html";
-    if ( IOutils::exists( path ) == true ) {
-        if ( IOutils::isFile( path ) == true ) {
-            if ( IOutils::checkFile( path, true ) == true ) {
+    if ( IOutils::exists( path ) ) {
+        if ( IOutils::isFile( path ) ) {
+            if ( IOutils::checkFile( path, true ) ) {
                 // everything ok, delete the old help window and open a new one
                 delete this->craphelp;
                 this->craphelp = new Craphelp();
@@ -1319,7 +1321,7 @@ void MainWindow::showHelp( const std::string& filename )
                     path,
                     this->TB.getFont(),
                     this->TB.getColorSchemeID() );
-                if ( this->isMaximized() == true ) {
+                if ( this->isMaximized() ) {
                     this->craphelp->showMaximized();
                 } else {
                     this->craphelp->show();
@@ -1390,7 +1392,7 @@ void MainWindow::menu_actionItaliano_triggered()
 // use a tool
 void MainWindow::menu_actionBlockNote_triggered()
 {
-    if ( this->crapnote->isVisible() == true ) {
+    if ( this->crapnote->isVisible() ) {
         this->crapnote->activateWindow();
 
     } else {
@@ -1400,6 +1402,26 @@ void MainWindow::menu_actionBlockNote_triggered()
         this->crapnote->setColorScheme( this->TB.getColorSchemeID() );
         this->crapnote->show();
     }
+}
+
+void MainWindow::menu_actionInfos_triggered()
+{
+    std::string version = std::to_string( this->version );
+    size_t cut = version.find('.');
+    if ( cut == std::string::npos ) {
+        cut = version.find(',');
+        if ( cut == std::string::npos ) {
+            cut = version.size()-3;
+        }
+    }
+    version = version.substr( 0, cut+3 );
+    delete this->crapinfo;
+    this->crapinfo = new Crapinfo(
+        QString::fromStdString( version ),
+        QString::fromStdString( this->resolvePath( "./" ) ),
+        QString::fromStdString( this->logdoc_path ),
+        QString::fromStdString( this->configs_path ) );
+    this->crapinfo->show();
 }
 
 void MainWindow::menu_actionCheckUpdates_triggered()
@@ -1414,7 +1436,7 @@ void MainWindow::menu_actionCheckUpdates_triggered()
 void MainWindow::setDbWorkingState( const bool& state )
 {
     this->db_working = state;
-    if ( state == false ) {
+    if ( ! state ) {
         this->checkMakeStats_Makable();
         if ( this->ui->table_StatsWarn->rowCount() > 0 ) {
             this->ui->button_StatsWarn_Update->setEnabled( true );
@@ -1450,7 +1472,7 @@ void MainWindow::setDbWorkingState( const bool& state )
 // check
 void MainWindow::checkMakeStats_Makable()
 {
-    if ( this->db_working == true
+    if ( this->db_working
       || this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Unchecked ) {
         // none checked or db is busy
         this->ui->button_MakeStats_Start->setEnabled( false );
@@ -1552,8 +1574,8 @@ void MainWindow::refreshLogsList()
         QTreeWidgetItem *item = new QTreeWidgetItem();
 
         // preliminary check for file usage display
-        if ( log_file.used_already == true ) {
-            if ( this->hide_used_files == true ) {
+        if ( log_file.used_already ) {
+            if ( this->hide_used_files ) {
                 // do not display
                 delete item; // possible memory leak
                 continue;
@@ -1590,7 +1612,7 @@ void MainWindow::refreshLogsList()
 }
 void MainWindow::check_CraplogLLT_Finished()
 {
-    if ( this->refreshing_list == false ) {
+    if ( ! this->refreshing_list ) {
         this->craplog_timer->stop();
         this->craplog_thread.join();
         // back to normal state
@@ -1633,7 +1655,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
         FormatOps::LogsFormat format = this->craplog.getCurrentLogFormat();
 
-        if ( proceed == true ) {
+        if ( proceed ) {
             std::string content;
             try {
                 try {
@@ -1669,7 +1691,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 DialogSec::errFailedReadFile( nullptr, item.name );
             }
 
-            if ( proceed == true ) {
+            if ( proceed ) {
                 // succesfully read, now enriched and display
                 QString rich_content;
                 RichText::enrichLogs(
@@ -1681,7 +1703,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             }
             content.clear();
         }
-        if ( proceed == false ) {
+        if ( ! proceed ) {
             // failed
             QString rich_text;
             RichText::richLogsFailure( rich_text );
@@ -1722,7 +1744,7 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 
 void MainWindow::on_button_MakeStats_Start_clicked()
 {
-    if ( this->db_working == false ) {
+    if ( ! this->db_working ) {
         bool proceed = true;
         // check that the format has been set
         const FormatOps::LogsFormat& lf = this->craplog.getLogsFormat( this->craplog.getCurrentWSID() );
@@ -1740,7 +1762,7 @@ void MainWindow::on_button_MakeStats_Start_clicked()
             DialogSec::errLogFormatNoSeparators( nullptr );
         }
 
-        if ( proceed == true ) {
+        if ( proceed ) {
             // take actions on Craplog's start
             this->craplogStarted();
 
@@ -1749,9 +1771,9 @@ void MainWindow::on_button_MakeStats_Start_clicked()
             while ( *i ) {
                 if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
                     // tell Craplog to set this file as selected
-                    if ( this->craplog.setLogFileSelected( (*i)->text(0) ) == false ) {
+                    if ( ! this->craplog.setLogFileSelected( (*i)->text(0) ) ) {
                         // this shouldn't be, but...
-                        if ( DialogSec::choiceSelectedFileNotFound( nullptr, (*i)->text(0) ) == false ) {
+                        if ( ! DialogSec::choiceSelectedFileNotFound( nullptr, (*i)->text(0) ) ) {
                             proceed = false;
                             break;
                         }
@@ -1760,14 +1782,14 @@ void MainWindow::on_button_MakeStats_Start_clicked()
                 ++i;
             }
 
-            if ( proceed == true ) {
+            if ( proceed ) {
                 // check files to be used before to start
                 proceed = this->craplog.checkStuff();
             } else {
                 this->craplogFinished();
             }
 
-            if ( proceed == true ) {
+            if ( proceed ) {
                 // periodically update perfs
                 delete this->craplog_timer;
                 this->craplog_timer = new QTimer(this);
@@ -1798,7 +1820,7 @@ void MainWindow::update_MakeStats_labels()
     // update values
     int size, secs;
     // size and lines
-    if ( this->craplog.isParsing() == true ) {
+    if ( this->craplog.isParsing() ) {
         this->craplog.collectPerfData();
     }
     size = this->craplog.getTotalSize();
@@ -1820,7 +1842,7 @@ void MainWindow::update_Craplog_PerfData()
     // craplog is running as thread, update the values meanwhile
     this->update_MakeStats_labels();
     // check if Craplog has finished working
-    if ( this->craplog.isWorking() == false ) {
+    if ( ! this->craplog.isWorking() ) {
         this->craplog_timer->stop();
         this->craplog_thread.join();
         this->craplogFinished();
@@ -1902,7 +1924,7 @@ void MainWindow::refreshStatsDates()
 //// WARN ////
 void MainWindow::checkStatsWarnDrawable()
 {
-    if ( this->db_working == false ) {
+    if ( ! this->db_working ) {
         if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
           && this->ui->box_StatsWarn_Month->currentIndex() >= 0
           && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
@@ -1919,7 +1941,7 @@ void MainWindow::checkStatsWarnDrawable()
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->ui->box_StatsWarn_Year->clear();
         if ( index != -1 ) {
             this->ui->box_StatsWarn_Year->addItems(
@@ -1960,7 +1982,7 @@ void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsWarn_Day_currentIndexChanged(int index)
 {
-    if ( this->ui->checkBox_StatsWarn_Hour->isChecked() == true ) {
+    if ( this->ui->checkBox_StatsWarn_Hour->isChecked() ) {
         this->ui->box_StatsWarn_Hour->clear();
         if ( index != -1 ) {
             this->ui->box_StatsWarn_Hour->addItems( this->crapview.getHours() );
@@ -1989,7 +2011,7 @@ void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
@@ -2026,7 +2048,7 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
 //// SPEED ////
 void MainWindow::checkStatsSpeedDrawable()
 {
-    if ( this->db_working == false ) {
+    if ( ! this->db_working ) {
         if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
@@ -2043,7 +2065,7 @@ void MainWindow::checkStatsSpeedDrawable()
 
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->ui->box_StatsSpeed_Year->clear();
         if ( index != -1 ) {
             this->ui->box_StatsSpeed_Year->addItems(
@@ -2089,7 +2111,7 @@ void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
@@ -2122,7 +2144,7 @@ void MainWindow::drawStatsSpeed()
 //// COUNT ////
 void MainWindow::checkStatsCountDrawable()
 {
-    if ( this->db_working == false ) {
+    if ( ! this->db_working ) {
         if ( this->ui->box_StatsCount_Year->currentIndex() >= 0
           && this->ui->box_StatsCount_Month->currentIndex() >= 0
           && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
@@ -2139,7 +2161,7 @@ void MainWindow::checkStatsCountDrawable()
 
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->ui->box_StatsCount_Year->clear();
         if ( index != -1 ) {
             this->ui->box_StatsCount_Year->addItems(
@@ -2186,31 +2208,31 @@ void MainWindow::on_box_StatsCount_Day_currentIndexChanged(int index)
 
 void MainWindow::resetStatsCountButtons()
 {
-    if ( this->ui->button_StatsCount_Protocol->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Protocol->isFlat() ) {
         this->ui->button_StatsCount_Protocol->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Method->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Method->isFlat() ) {
         this->ui->button_StatsCount_Method->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Uri->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Uri->isFlat() ) {
         this->ui->button_StatsCount_Uri->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Query->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Query->isFlat() ) {
         this->ui->button_StatsCount_Query->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Response->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Response->isFlat() ) {
         this->ui->button_StatsCount_Response->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Referrer->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Referrer->isFlat() ) {
         this->ui->button_StatsCount_Referrer->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Cookie->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Cookie->isFlat() ) {
         this->ui->button_StatsCount_Cookie->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_UserAgent->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_UserAgent->isFlat() ) {
         this->ui->button_StatsCount_UserAgent->setFlat( true );
     }
-    if ( this->ui->button_StatsCount_Client->isFlat() == false ) {
+    if ( ! this->ui->button_StatsCount_Client->isFlat() ) {
         this->ui->button_StatsCount_Client->setFlat( true );
     }
 }
@@ -2227,7 +2249,7 @@ void MainWindow::startCountDrawing()
 
 void MainWindow::on_button_StatsCount_Protocol_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->ui->button_StatsCount_Protocol->setFlat( false );
         this->count_fld = this->ui->button_StatsCount_Protocol->text();
@@ -2237,7 +2259,7 @@ void MainWindow::on_button_StatsCount_Protocol_clicked()
 
 void MainWindow::on_button_StatsCount_Method_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Method->text();
         this->ui->button_StatsCount_Method->setFlat( false );
@@ -2247,7 +2269,7 @@ void MainWindow::on_button_StatsCount_Method_clicked()
 
 void MainWindow::on_button_StatsCount_Uri_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Uri->text();
         this->ui->button_StatsCount_Uri->setFlat( false );
@@ -2257,7 +2279,7 @@ void MainWindow::on_button_StatsCount_Uri_clicked()
 
 void MainWindow::on_button_StatsCount_Query_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Query->text();
         this->ui->button_StatsCount_Query->setFlat( false );
@@ -2267,7 +2289,7 @@ void MainWindow::on_button_StatsCount_Query_clicked()
 
 void MainWindow::on_button_StatsCount_Response_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Response->text();
         this->ui->button_StatsCount_Response->setFlat( false );
@@ -2277,7 +2299,7 @@ void MainWindow::on_button_StatsCount_Response_clicked()
 
 void MainWindow::on_button_StatsCount_Referrer_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Referrer->text();
         this->ui->button_StatsCount_Referrer->setFlat( false );
@@ -2287,7 +2309,7 @@ void MainWindow::on_button_StatsCount_Referrer_clicked()
 
 void MainWindow::on_button_StatsCount_Cookie_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Cookie->text();
         this->ui->button_StatsCount_Cookie->setFlat( false );
@@ -2297,7 +2319,7 @@ void MainWindow::on_button_StatsCount_Cookie_clicked()
 
 void MainWindow::on_button_StatsCount_UserAgent_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_UserAgent->text();
         this->ui->button_StatsCount_UserAgent->setFlat( false );
@@ -2307,7 +2329,7 @@ void MainWindow::on_button_StatsCount_UserAgent_clicked()
 
 void MainWindow::on_button_StatsCount_Client_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Client->text();
         this->ui->button_StatsCount_Client->setFlat( false );
@@ -2334,10 +2356,10 @@ void MainWindow::drawStatsCount()
 //// DAY ////
 void MainWindow::checkStatsDayDrawable()
 {
-    if ( this->db_working == false ) {
+    if ( ! this->db_working ) {
         bool aux = true;
         // secondary date (period)
-        if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+        if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
             if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
               && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
               && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
@@ -2386,7 +2408,7 @@ void MainWindow::checkStatsDayDrawable()
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->ui->box_StatsDay_LogsField->clear();
         this->ui->box_StatsDay_FromYear->clear();
         this->ui->box_StatsDay_ToYear->clear();
@@ -2400,7 +2422,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
                 this->ui->box_StatsDay_WebServer->currentText() );
             this->ui->box_StatsDay_FromYear->addItems( years );
             this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
-            if ( this->ui->checkBox_StatsDay_Period->isChecked() == true ) {
+            if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
                 this->ui->box_StatsDay_ToYear->addItems( years );
                 this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
             }
@@ -2504,7 +2526,7 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
@@ -2544,7 +2566,7 @@ void MainWindow::drawStatsDay()
 //// RELATIONAL ////
 void MainWindow::checkStatsRelatDrawable()
 {
-    if ( this->db_working == false ) {
+    if ( ! this->db_working ) {
         bool aux = true;
         if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
           && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
@@ -2593,7 +2615,7 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->ui->box_StatsRelat_LogsField_1->clear();
         this->ui->box_StatsRelat_LogsField_2->clear();
         if ( index != -1 ) {
@@ -2699,7 +2721,7 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
@@ -2750,7 +2772,7 @@ void MainWindow::drawStatsRelat()
 //
 void MainWindow::makeStatsGlobals()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         std::vector<std::tuple<QString,QString>> recur_list;
         std::vector<std::tuple<QString,QString>> traffic_list;
         std::vector<std::tuple<QString,QString>> perf_list;
@@ -2760,7 +2782,7 @@ void MainWindow::makeStatsGlobals()
             recur_list, traffic_list, perf_list, work_list,
             this->glob_ws );
 
-        if ( result == true ) {
+        if ( result ) {
             this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
             this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
             this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
@@ -2789,21 +2811,21 @@ void MainWindow::makeStatsGlobals()
             this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
 
             if ( this->glob_ws == "Apache2" ) {
-                if ( this->ui->button_StatsGlob_Apache->isFlat() == true ) {
+                if ( this->ui->button_StatsGlob_Apache->isFlat() ) {
                     // un-flat
                     this->ui->button_StatsGlob_Apache->setFlat( false );
                     this->ui->button_StatsGlob_Nginx->setFlat( true );
                     this->ui->button_StatsGlob_Iis->setFlat( true );
                 }
             } else if ( this->glob_ws == "Nginx" ) {
-                if ( this->ui->button_StatsGlob_Nginx->isFlat() == true ) {
+                if ( this->ui->button_StatsGlob_Nginx->isFlat() ) {
                     // un-flat
                     this->ui->button_StatsGlob_Nginx->setFlat( false );
                     this->ui->button_StatsGlob_Apache->setFlat( true );
                     this->ui->button_StatsGlob_Iis->setFlat( true );
                 }
             } else if ( this->glob_ws == "IIS" ) {
-                if ( this->ui->button_StatsGlob_Iis->isFlat() == true ) {
+                if ( this->ui->button_StatsGlob_Iis->isFlat() ) {
                     // un-flat
                     this->ui->button_StatsGlob_Iis->setFlat( false );
                     this->ui->button_StatsGlob_Apache->setFlat( true );
@@ -2853,11 +2875,11 @@ void MainWindow::resetStatsGlobals()
     this->ui->label_StatsGlob_Work_Time_Count->setText( "-" );
     this->ui->label_StatsGlob_Work_Sent_Count->setText( "-" );
 
-    if ( this->ui->button_StatsGlob_Apache->isChecked() == true ) {
+    if ( this->ui->button_StatsGlob_Apache->isChecked() ) {
         this->ui->button_StatsGlob_Apache->setChecked( false );
-    } else if ( this->ui->button_StatsGlob_Nginx->isChecked() == true ) {
+    } else if ( this->ui->button_StatsGlob_Nginx->isChecked() ) {
         this->ui->button_StatsGlob_Nginx->setChecked( false );
-    } else if ( this->ui->button_StatsGlob_Iis->isChecked() == true ) {
+    } else if ( this->ui->button_StatsGlob_Iis->isChecked() ) {
         this->ui->button_StatsGlob_Iis->setChecked( false );
     }
 }
@@ -2876,7 +2898,7 @@ void MainWindow::globalsButtonClicked()
 
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->glob_ws = "Apache2";
         this->globalsButtonClicked();
     }
@@ -2885,7 +2907,7 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->glob_ws = "Nginx";
         this->globalsButtonClicked();
     }
@@ -2894,7 +2916,7 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-    if ( this->checkDataDB() == true ) {
+    if ( this->checkDataDB() ) {
         this->glob_ws = "IIS";
         this->globalsButtonClicked();
     }
@@ -3069,7 +3091,7 @@ void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString &ar
 {
     if ( arg1.size() > 0 ) {
         std::string path = this->resolvePath( arg1.toStdString() );
-        if ( IOutils::checkDir( path ) == true ) {
+        if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
             this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
         } else {
@@ -3087,16 +3109,16 @@ void MainWindow::on_inLine_ConfDatabases_Data_Path_returnPressed()
 }
 void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 {
-    if ( this->ui->icon_ConfDatabases_Data_Wrong->isVisible() == false ) {
+    if ( ! this->ui->icon_ConfDatabases_Data_Wrong->isVisible() ) {
         // set the paths
         std::string path = this->resolvePath( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        if ( IOutils::checkDir( path, true ) == false ) {
+        if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        if ( IOutils::checkDir( path, false, true ) == false ) {
+        if ( ! IOutils::checkDir( path, false, true ) ) {
             DialogSec::warnDirNotWritable( nullptr );
         }
         this->db_data_path = path;
@@ -3112,7 +3134,7 @@ void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &
 {
     if ( arg1.size() > 0 ) {
         std::string path = this->resolvePath( arg1.toStdString() );
-        if ( IOutils::checkDir( path ) == true ) {
+        if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
             this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
         } else {
@@ -3130,16 +3152,16 @@ void MainWindow::on_inLine_ConfDatabases_Hashes_Path_returnPressed()
 }
 void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
 {
-    if ( this->ui->icon_ConfDatabases_Hashes_Wrong->isVisible() == false ) {
+    if ( ! this->ui->icon_ConfDatabases_Hashes_Wrong->isVisible() ) {
         // set the paths
         std::string path = this->resolvePath( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        if ( IOutils::checkDir( path, true ) == false ) {
+        if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        if ( IOutils::checkDir( path, false, true ) == false ) {
+        if ( ! IOutils::checkDir( path, false, true ) ) {
             DialogSec::warnDirNotWritable( nullptr );
         }
         this->db_hashes_path = path;
@@ -3200,7 +3222,7 @@ void MainWindow::on_checkBox_ConfControl_Usage_clicked(bool checked)
 }
 void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
 {
-    if ( checked == false ) {
+    if ( ! checked ) {
         // disable size warning
         this->ui->spinBox_ConfControl_Size->setEnabled( false );
         this->craplog.setWarningSize( 0 );
@@ -3223,7 +3245,7 @@ void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString &arg
 {
     if ( arg1.size() > 0 ) {
         std::string path = this->resolvePath( arg1.toStdString() );
-        if ( IOutils::checkDir( path ) == true ) {
+        if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
             this->ui->button_ConfApache_Path_Save->setEnabled( true );
         } else {
@@ -3241,13 +3263,13 @@ void MainWindow::on_inLine_ConfApache_Path_String_returnPressed()
 }
 void MainWindow::on_button_ConfApache_Path_Save_clicked()
 {
-    if ( this->ui->icon_ConfApache_Path_Wrong->isVisible() == false ) {
+    if ( ! this->ui->icon_ConfApache_Path_Wrong->isVisible() ) {
         // set the paths
         std::string path = this->resolvePath( this->ui->inLine_ConfApache_Path_String->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        if ( IOutils::checkDir( path, true ) == false ) {
+        if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
         this->craplog.setLogsPath( this->APACHE_ID, path );
@@ -3267,7 +3289,7 @@ void MainWindow::on_inLine_ConfApache_Format_String_cursorPositionChanged(int ar
 }
 void MainWindow::on_inLine_ConfApache_Format_String_returnPressed()
 {
-    if ( this->ui->button_ConfApache_Format_Save->isEnabled() == true ) {
+    if ( this->ui->button_ConfApache_Format_Save->isEnabled() ) {
         this->on_button_ConfApache_Format_Save_clicked();
     }
 }
@@ -3312,7 +3334,7 @@ void MainWindow::on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked)
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
         checked );
-    if ( checked == true ) {
+    if ( checked ) {
         this->ui->inLine_ConfApache_Warnlist_String->setEnabled( true );
         this->ui->list_ConfApache_Warnlist_List->setEnabled( true );
     } else {
@@ -3445,7 +3467,7 @@ void MainWindow::on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked)
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
         checked );
-    if ( checked == true ) {
+    if ( checked ) {
         this->ui->inLine_ConfApache_Blacklist_String->setEnabled( true );
         this->ui->list_ConfApache_Blacklist_List->setEnabled( true );
     } else {
@@ -3559,7 +3581,7 @@ void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1
 {
     if ( arg1.size() > 0 ) {
         std::string path = this->resolvePath( arg1.toStdString() );
-        if ( IOutils::checkDir( path ) == true ) {
+        if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
             this->ui->button_ConfNginx_Path_Save->setEnabled( true );
         } else {
@@ -3577,13 +3599,13 @@ void MainWindow::on_inLine_ConfNginx_Path_String_returnPressed()
 }
 void MainWindow::on_button_ConfNginx_Path_Save_clicked()
 {
-    if ( this->ui->icon_ConfNginx_Path_Wrong->isVisible() == false ) {
+    if ( ! this->ui->icon_ConfNginx_Path_Wrong->isVisible() ) {
         // set the paths
         std::string path = this->resolvePath( this->ui->inLine_ConfNginx_Path_String->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        if ( IOutils::checkDir( path, true ) == false ) {
+        if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
         this->craplog.setLogsPath( this->NGINX_ID, path );
@@ -3603,7 +3625,7 @@ void MainWindow::on_inLine_ConfNginx_Format_String_cursorPositionChanged(int arg
 }
 void MainWindow::on_inLine_ConfNginx_Format_String_returnPressed()
 {
-    if ( this->ui->button_ConfNginx_Format_Save->isEnabled() == true ) {
+    if ( this->ui->button_ConfNginx_Format_Save->isEnabled() ) {
         this->on_button_ConfNginx_Format_Save_clicked();
     }
 }
@@ -3648,7 +3670,7 @@ void MainWindow::on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked)
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
         checked );
-    if ( checked == true ) {
+    if ( checked ) {
         this->ui->inLine_ConfNginx_Warnlist_String->setEnabled( true );
         this->ui->list_ConfNginx_Warnlist_List->setEnabled( true );
     } else {
@@ -3781,7 +3803,7 @@ void MainWindow::on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked)
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
         checked );
-    if ( checked == true ) {
+    if ( checked ) {
         this->ui->inLine_ConfNginx_Blacklist_String->setEnabled( true );
         this->ui->list_ConfNginx_Blacklist_List->setEnabled( true );
     } else {
@@ -3895,7 +3917,7 @@ void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
         std::string path = this->resolvePath( arg1.toStdString() );
-        if ( IOutils::checkDir( path ) == true ) {
+        if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
             this->ui->button_ConfIis_Path_Save->setEnabled( true );
         } else {
@@ -3913,13 +3935,13 @@ void MainWindow::on_inLine_ConfIis_Path_String_returnPressed()
 }
 void MainWindow::on_button_ConfIis_Path_Save_clicked()
 {
-    if ( this->ui->icon_ConfIis_Path_Wrong->isVisible() == false ) {
+    if ( ! this->ui->icon_ConfIis_Path_Wrong->isVisible() ) {
         // set the paths
         std::string path = this->resolvePath( this->ui->inLine_ConfIis_Path_String->text().toStdString() );
         if ( StringOps::endsWith( path, "/" ) ) {
             path = StringOps::rstrip( path, "/" );
         }
-        if ( IOutils::checkDir( path, true ) == false ) {
+        if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
         this->craplog.setLogsPath( this->IIS_ID, path );
@@ -3932,9 +3954,9 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 const int MainWindow::getIisLogsModule()
 {
     int module = 0;
-    if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() == true ) {
+    if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
         module = 1;
-    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() == true ) {
+    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
         module = 2;
     }
     return module;
@@ -3942,7 +3964,7 @@ const int MainWindow::getIisLogsModule()
 
 void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
 {
-    if ( checked == true ) {
+    if ( checked ) {
         this->craplog.setIisLogFormat( "", 0 );
         this->ui->inLine_ConfIis_Format_String->clear();
         this->ui->inLine_ConfIis_Format_String->setEnabled( true );
@@ -3951,7 +3973,7 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
 }
 void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
 {
-    if ( checked == true ) {
+    if ( checked ) {
         this->craplog.setIisLogFormat( "c-ip s-sitename s-computername [date:time] sc-status sc-bytes", 1 );
         this->ui->inLine_ConfIis_Format_String->clear();
         this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
@@ -3961,7 +3983,7 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
 }
 void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
 {
-    if ( checked == true ) {
+    if ( checked ) {
         this->craplog.setIisLogFormat( "c-ip, cs-username, date, time, s-sitename, s-computername, s-ip, time-taken, cs-bytes, sc-bytes, sc-status, sc-win32-status, cs-method, cs-uri-stem, cs-uri-query,", 2 );
         this->ui->inLine_ConfIis_Format_String->clear();
         this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
@@ -3980,7 +4002,7 @@ void MainWindow::on_inLine_ConfIis_Format_String_cursorPositionChanged(int arg1,
 }
 void MainWindow::on_inLine_ConfIis_Format_String_returnPressed()
 {
-    if ( this->ui->button_ConfIis_Format_Save->isEnabled() == true ) {
+    if ( this->ui->button_ConfIis_Format_Save->isEnabled() ) {
         this->on_button_ConfIis_Format_Save_clicked();
     }
 }
@@ -4025,7 +4047,7 @@ void MainWindow::on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked)
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
         checked );
-    if ( checked == true ) {
+    if ( checked ) {
         this->ui->inLine_ConfIis_Warnlist_String->setEnabled( true );
         this->ui->list_ConfIis_Warnlist_List->setEnabled( true );
     } else {
@@ -4158,7 +4180,7 @@ void MainWindow::on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked)
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
         checked );
-    if ( checked == true ) {
+    if ( checked ) {
         this->ui->inLine_ConfIis_Blacklist_String->setEnabled( true );
         this->ui->list_ConfIis_Blacklist_List->setEnabled( true );
     } else {
