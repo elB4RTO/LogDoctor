@@ -86,6 +86,10 @@ set(PROJECT_SOURCES
         tools/crapnote/crapnote.h
         tools/crapnote/crapnote.cpp
 
+        tools/crapinfo/crapinfo.ui
+        tools/crapinfo/crapinfo.h
+        tools/crapinfo/crapinfo.cpp
+
         resources/resources.qrc
         ${TS_FILES}
 )
