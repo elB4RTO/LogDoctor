@@ -47,7 +47,7 @@ mkdir build && cd build
 cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel
 if [[ "$?" != "0" ]]
 	then
-		# an error occured during compilation
+		# an error occured during preparation
 		echo "Error: failed to prepare cmake files"
 		exit
 	fi
@@ -67,6 +67,7 @@ if [[ "$?" == "0" ]]
 
 # Compilation finished
 wait
+echo "Compilation finished"
 
 # Start installing LogDoctor
 echo "Starting installation process"
@@ -105,14 +106,12 @@ if [ -e ~/.config/LogDoctor ]
 		mkdir -p ~/.config/LogDoctor
 		if [[ "$?" != "0" ]]
 			then
-				# an error occured during compilation
 				echo "Error: failed to create directory: ~/.config/LogDoctor"
 				exit
 			fi
 		cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
 		if [[ "$?" != "0" ]]
 			then
-				# an error occured during compilation
 				echo "Error: failed to copy configuration file"
 				exit
 			fi
@@ -124,14 +123,12 @@ if [ ! -e ~/.local/share/LogDoctor ]
 		mkdir -p ~/.local/share/LogDoctor
 		if [[ "$?" != "0" ]]
 			then
-				# an error occured during compilation
 				echo "Error: failed to create directory: ~/.local/share/LogDoctor"
 				exit
 	fi
 cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
 if [[ "$?" != "0" ]]
 	then
-		# an error occured during compilation
 		echo "Error: failed to copy LogDoctor's data"
 		exit
 	fi
@@ -140,7 +137,6 @@ if [[ "$?" != "0" ]]
 cp --no-preserve=all ./LogDoctor.desktop ~/.local/share/applications/
 if [[ "$?" != "0" ]]
 	then
-		# an error occured during compilation
 		echo "Error: failed to create a menu entry"
 		exit
 	fi
@@ -151,7 +147,6 @@ chmod +x ./logdoctor.copy
 sudo mv ./logdoctor.copy /usr/bin/logdoctor
 if [[ "$?" != "0" ]]
 	then
-		# an error occured during compilation
 		echo "Error: failed to copy the executable"
 		exit
 	fi
@@ -160,7 +155,6 @@ if [[ "$?" != "0" ]]
 sudo cp --no-preserve=all ./logdoctor.svg /usr/share/icons
 if [[ "$?" != "0" ]]
 	then
-		# an error occured during compilation
 		echo "Error: failed to copy LogDoctor's icon"
 		exit
 	fi
