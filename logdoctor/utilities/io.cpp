@@ -39,16 +39,16 @@ const bool IOutils::isFile( const std::string& path )
 const bool IOutils::checkFile( const std::string& path, const bool& readable, const bool& writable )
 {
     bool result = false;
-    if ( IOutils::isFile( path ) == true ) {
+    if ( IOutils::isFile( path ) ) {
         result = true;
         // check the needed permissions
         const auto perms = std::filesystem::status( path ).permissions();
-        if ( readable == true ) {
+        if ( readable ) {
             if ( (perms & std::filesystem::perms::owner_read) == std::filesystem::perms::none ) {
                 result = false;
             }
         }
-        if ( writable == true ) {
+        if ( writable ) {
             if ( (perms & std::filesystem::perms::owner_write) == std::filesystem::perms::none ) {
                 result = false;
             }
@@ -70,16 +70,16 @@ const bool IOutils::isDir( const std::string& path )
 const bool IOutils::checkDir( const std::string& path, const bool& readable, const bool& writable )
 {
     bool result = false;
-    if ( IOutils::isDir( path ) == true ) {
+    if ( IOutils::isDir( path ) ) {
         result = true;
         // check the needed permissions
         const auto perms = std::filesystem::status( path ).permissions();
-        if ( readable == true ) {
+        if ( readable ) {
             if ( (perms & std::filesystem::perms::owner_read) == std::filesystem::perms::none ) {
                 result = false;
             }
         }
-        if ( writable == true ) {
+        if ( writable ) {
             if ( (perms & std::filesystem::perms::owner_write) == std::filesystem::perms::none ) {
                 result = false;
             }
@@ -111,7 +111,7 @@ const bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
         // loop until a valid name is found
         while (true) {
             new_path += ".copy";
-            if ( IOutils::exists( new_path ) == false ) {
+            if ( ! IOutils::exists( new_path ) ) {
                 // available name found
                 break;
             }
@@ -163,13 +163,13 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
                 for( int i=0 ; i<n_lines ; i++ ) {
                     while (true) {
                         index = rand() % max;
-                        if ( VecOps::contains( picked_indexes, index ) == true ) {
+                        if ( VecOps::contains( picked_indexes, index ) ) {
                             continue;
                         }
                         break;
                     }
                     line = aux_lines.at( index );
-                    if ( strip_lines == true ) {
+                    if ( strip_lines ) {
                         line = StringOps::strip( line );
                     }
                     if ( line.size() == 0 || StringOps::startsWith( line, "#" ) ) {
@@ -211,10 +211,10 @@ void IOutils::readFile( const std::string& path , std::string& content )
     try {
         constexpr std::size_t read_size = std::size_t(4096);
         file = std::ifstream(path);
-        if ( file.is_open() == false ) {
+        if ( ! file.is_open() ) {
             throw std::ios_base::failure( "file is not open" );
         }
-        if ( file.good() == false ) {
+        if ( ! file.good() ) {
             throw std::ios_base::failure( "file is not good" );
         }
         // add bit exceptions
@@ -227,18 +227,18 @@ void IOutils::readFile( const std::string& path , std::string& content )
 
     } catch (const std::ios_base::failure& err) {
         // failed reading
-        if ( file.is_open() == true ) {
+        if ( file.is_open() ) {
             file.close();
         }
         throw err;
     } catch (...) {
-        if ( file.is_open() == true ) {
+        if ( file.is_open() ) {
             file.close();
         }
         throw std::exception(); // already catched
     }
 
-    if ( file.is_open() == true ) {
+    if ( file.is_open() ) {
         file.close();
     }
 }
@@ -249,10 +249,10 @@ void IOutils::writeOnFile( const std::string& path, const std::string& content )
     std::ofstream file;
     try {
         file.open( path );
-        if ( file.is_open() == false ) {
+        if ( ! file.is_open() ) {
             throw std::ios_base::failure( "file is not open" );
         }
-        if ( file.good() == false ) {
+        if ( ! file.good() ) {
             throw std::ios_base::failure( "file is not good" );
         }
         // add bit exceptions
@@ -263,18 +263,18 @@ void IOutils::writeOnFile( const std::string& path, const std::string& content )
 
     } catch (const std::ios_base::failure& err) {
         // failed writing
-        if ( file.is_open() == true ) {
+        if ( file.is_open() ) {
             file.close();
         }
         throw err;
     } catch (...) {
-        if ( file.is_open() == true ) {
+        if ( file.is_open() ) {
             file.close();
         }
         throw std::exception(); // already catched
     }
 
-    if ( file.is_open() == true ) {
+    if ( file.is_open() ) {
         file.close();
     }
 }

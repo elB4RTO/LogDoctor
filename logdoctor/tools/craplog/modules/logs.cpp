@@ -26,7 +26,7 @@ LogOps::LogType LogOps::defineFileType( const std::string& name, const std::vect
     log_type = this->LogType::Failed;
     for ( const std::string& line : lines ) {
         // scan
-        if ( this->deepTypeCheck( line, format ) == true ) {
+        if ( this->deepTypeCheck( line, format ) ) {
             n_access++;
         } else {
             n_other++;
@@ -55,7 +55,7 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
     std::string sep, aux_sep1, aux_sep2;
     // check the initial part
     if ( format.initial.size() > 0 ) {
-        if ( StringOps::startsWith( line, format.initial ) == true ) {
+        if ( StringOps::startsWith( line, format.initial ) ) {
             n_sep_found ++;
         }
     } else {
@@ -114,7 +114,7 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
 
     // check the final part
     if ( format.final.size() > 0 ) {
-        if ( StringOps::endsWith( line, format.final ) == true ) {
+        if ( StringOps::endsWith( line, format.final ) ) {
             n_sep_found ++;
         }
     } else {
@@ -247,7 +247,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                 }
 
                 // finally update if needed
-                if ( ok == true && aux_stop >= stop ) {
+                if ( ok && aux_stop >= stop ) {
                     stop = aux_stop;
                     fld_str = StringOps::strip( line.substr(start, stop-start), " " );
                 }
@@ -300,7 +300,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
                     // process the request to get the protocol, method, resource and query
                     } else if ( fld == "request_full" ) {
-                        size_t aux, fld_size=fld_str.size()-1;
+                        size_t aux;
                         std::string aux_fld, protocol="", method="", page="", query="";
                         aux_fld = fld_str;
                         // method
@@ -390,7 +390,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
 
         // update the stop for the next start
-        if ( missing == true ) {
+        if ( missing ) {
             missing = false;
             stop = aux_stop;
         } else {
@@ -403,7 +403,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
         }
     }
 
-    if ( add_pm == true ) {
+    if ( add_pm ) {
         try {
             // add +12 hours for PM
             data.at( 4 ) = std::to_string( 12 + std::stoi(data.at( 4 )) );
