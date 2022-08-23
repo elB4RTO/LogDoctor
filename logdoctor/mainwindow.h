@@ -30,6 +30,7 @@
 #include "tools/craphelp/craphelp.h"
 #include "tools/crapup/crapup.h"
 #include "tools/crapnote/crapnote.h"
+#include "tools/crapinfo/crapinfo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -447,6 +448,10 @@ private slots:
 
     void menu_actionBlockNote_triggered();
 
+    //// UTILITIES ////
+
+    void menu_actionInfos_triggered();
+
     void menu_actionCheckUpdates_triggered();
 
 private:
@@ -643,6 +648,12 @@ private:
     //// CRAPNOTE ////
     //////////////////
     Crapnote* crapnote = new Crapnote();
+
+
+    //////////////////
+    //// CRAPINFO ////
+    //////////////////
+    Crapinfo* crapinfo = new Crapinfo("","","","");
 
 };
 #endif // MAINWINDOW_H
