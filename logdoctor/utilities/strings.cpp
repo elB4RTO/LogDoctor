@@ -37,7 +37,7 @@ const bool StringOps::isNumeric( const std::string& str )
     if ( str.size() > 0 ) {
         result = true;
         for ( const char& chr : str ) {
-            if ( StringOps::isNumeric( chr ) == false ) {
+            if ( ! StringOps::isNumeric( chr ) ) {
                 result = false;
                 break;
             }
@@ -61,7 +61,7 @@ const bool StringOps::isAlphabetic( const std::string& str )
     if ( str.size() > 0 ) {
         result = true;
         for ( const char& chr : str ) {
-            if ( StringOps::isAlphabetic( chr ) == false ) {
+            if ( ! StringOps::isAlphabetic( chr ) ) {
                 result = false;
                 break;
             }
@@ -86,7 +86,7 @@ const bool StringOps::isAlnum( const std::string& str )
     if ( str.size() > 0 ) {
         result = true;
         for ( const char& chr : str ) {
-            if ( StringOps::isAlnum( chr ) == false ) {
+            if ( ! StringOps::isAlnum( chr ) ) {
                 result = false;
                 break;
             }
@@ -96,8 +96,8 @@ const bool StringOps::isAlnum( const std::string& str )
 }
 const bool StringOps::isAlnum( const char& chr )
 {
-    if ( StringOps::isNumeric( chr ) == false
-      && StringOps::isAlphabetic( chr ) == false ) {
+    if ( !StringOps::isNumeric( chr )
+      && !StringOps::isAlphabetic( chr ) ) {
         return false;
     } else {
         return true;
@@ -192,7 +192,7 @@ std::string StringOps::lstrip( const std::string& str, const std::string& chars 
                 break;
             }
         }
-        if ( found == false ) {
+        if ( ! found ) {
             break;
         }
         i++;
@@ -218,7 +218,7 @@ std::string StringOps::rstrip( const std::string& str, const std::string& chars 
                 break;
             }
         }
-        if ( found == false ) {
+        if ( ! found ) {
             break;
         }
         i--;

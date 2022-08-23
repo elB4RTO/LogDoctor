@@ -50,7 +50,7 @@ void GZutils::readFile( const std::string& path, std::string& content )
         successful = false;
     }
 
-    if ( successful == true ) {
+    if ( successful ) {
         FILE *file = fopen ( path.c_str(), "rb" );
         /*FILE *dest = fopen ( out_path.c_str(), "wb" );*/
         // decompress until deflate stream ends or end of file is reached
@@ -94,7 +94,7 @@ void GZutils::readFile( const std::string& path, std::string& content )
 
             } while ( strm.avail_out == 0 );
             // done when inflate() says it's done
-            if ( successful == false ) {
+            if ( ! successful ) {
                 break;
             }
         } while ( ret != Z_STREAM_END );
@@ -111,7 +111,7 @@ void GZutils::readFile( const std::string& path, std::string& content )
         // probably not a gzip compressed file
         throw(""); // do not implement
     }
-    if ( successful == false ) {
+    if ( ! successful ) {
         content = "";
     }
 }

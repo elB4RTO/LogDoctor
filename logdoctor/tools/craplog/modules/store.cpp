@@ -75,10 +75,10 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
     // parse every row of data
     for ( const std::unordered_map<int, std::string>& row : data ) {
         // break if failed
-        if ( successful == false ) { break; }
+        if ( ! successful ) { break; }
 
         // check blacklisted clients
-        if ( check_bl_cli == true ) {
+        if ( check_bl_cli ) {
             if ( row.find( 20 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target = row.at( 20 );
@@ -91,7 +91,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                 }
             }
         }
-        if ( skip == true ) {
+        if ( skip ) {
             // append every field to ignored size
             int blacklisted_size = 0;
             for ( const auto& [ id, str ] : row ) {
@@ -103,7 +103,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         }
 
         // check warnlisted clients
-        if ( check_wl_cli == true ) {
+        if ( check_wl_cli ) {
             if ( row.find( 20 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target = row.at( 20 );
@@ -118,7 +118,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             }
         }
         // check warnlisted user-agents
-        if ( check_wl_ua == true && warning == false ) {
+        if ( check_wl_ua && !warning ) {
             if ( row.find( 21 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target = row.at( 21 );
@@ -133,7 +133,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             }
         }
         // check warnlisted methods
-        if ( check_wl_met == true && warning == false ) {
+        if ( check_wl_met && !warning ) {
             if ( row.find( 11 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target = row.at( 11 );
@@ -148,7 +148,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
             }
         }
         // check warnlisted requests urls
-        if ( check_wl_req == true && warning == false ) {
+        if ( check_wl_req && !warning ) {
             if ( row.find( 12 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target = row.at( 12 );
@@ -180,7 +180,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         } else {
             // value found, bind it
             perf_size ++;
-            if ( warning == false ) {
+            if ( ! warning ) {
                 query_stmt += "0";
             } else {
                 query_stmt += "1";
@@ -249,7 +249,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
 
         // encode the statement
         query_stmt += ");";
-        if ( query.prepare( query_stmt ) == false ) {
+        if ( ! query.prepare( query_stmt ) ) {
             // error opening database
             successful = false;
             QString query_msg="", err_msg="";
@@ -266,7 +266,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
         //craplog.sumPerfSize( perf_size );
 
         // finalize this statement
-        if ( query.exec() == false ) {
+        if ( ! query.exec() ) {
             // error finalizing step
             successful = false;
             QString query_msg="", err_msg="";

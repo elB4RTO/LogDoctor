@@ -157,7 +157,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -178,12 +178,12 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                   D_query = QSqlQuery( db );
 
         for ( const auto& table : tables ) {
-            if ( successful == false ) { break; }
+            if ( ! successful ) { break; }
 
             int ws = std::get<0>(table);
             QString tbl = std::get<1>(table);
 
-            if ( Y_query.exec( QString("SELECT DISTINCT \"year\" FROM \"%1\" ORDER BY \"year\" ASC;").arg(tbl) ) == false ) {
+            if ( ! Y_query.exec( QString("SELECT DISTINCT \"year\" FROM \"%1\" ORDER BY \"year\" ASC;").arg(tbl) ) ) {
                 // error querying database
                 successful = false;
                 DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, Y_query.lastQuery(), Y_query.lastError().text() );
@@ -210,7 +210,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                     // successfully get the year
                     dates.at( ws ).emplace( year, std::unordered_map<int, std::vector<int>>() );
                     // query any available month
-                    if ( M_query.exec( QString("SELECT DISTINCT \"month\" FROM \"%1\" WHERE \"year\"=%2 ORDER BY \"month\" ASC;").arg(tbl).arg(year) ) == false ) {
+                    if ( ! M_query.exec( QString("SELECT DISTINCT \"month\" FROM \"%1\" WHERE \"year\"=%2 ORDER BY \"month\" ASC;").arg(tbl).arg(year) ) ) {
                         // error querying database
                         successful = false;
                         DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, M_query.lastQuery(), M_query.lastError().text() );
@@ -236,7 +236,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                             // successfully get the month
                             dates.at( ws ).at( year ).emplace( month, std::vector<int>() );
                             // query any available day
-                            if ( D_query.exec( QString("SELECT DISTINCT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\" ASC;").arg(tbl).arg(year).arg(month) ) == false ) {
+                            if ( ! D_query.exec( QString("SELECT DISTINCT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\" ASC;").arg(tbl).arg(year).arg(month) ) ) {
                                 // error querying database
                                 successful = false;
                                 DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, D_query.lastQuery(), D_query.lastError().text() );
@@ -264,25 +264,25 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
                                 }
                                 D_query.finish();
                                 // break if something went wrong
-                                if ( successful == false ) { break; }
+                                if ( ! successful ) { break; }
                             }
                         }
                         M_query.finish();
                         // break if something went wrong
-                        if ( successful == false ) { break; }
+                        if ( ! successful ) { break; }
                     }
                 }
                 Y_query.finish();
                 // break if something went wrong
-                if ( successful == false ) { break; }
+                if ( ! successful ) { break; }
             }
         }
     }
 
-    if ( successful == false ) {
+    if ( ! successful ) {
         dates.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, dates );
@@ -297,7 +297,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         QString err_msg = "";
         if ( this->dialog_level == 2 ) {
@@ -319,7 +319,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
 
-        if ( successful == true ) {
+        if ( successful ) {
             // update the database
             QSqlQuery query = QSqlQuery( db );
 
@@ -330,7 +330,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
                         .arg( std::get<1>(data) )
                         .arg( std::get<0>(data) );
 
-                if ( query.exec( stmt.replace("'","''") ) == false ) {
+                if ( ! query.exec( stmt.replace("'","''") ) ) {
                     // error querying database
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
                     break;
@@ -338,7 +338,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
             }
         }
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
 }
@@ -353,7 +353,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -376,7 +376,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int year, month, day, hour;
-        if ( successful == true ) {
+        if ( successful ) {
             // setup period limits
             try {
                 year  = year_.toInt();
@@ -391,7 +391,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                 DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
-        if ( successful == true ) {
+        if ( successful ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
@@ -409,7 +409,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                 }
 
                 stmt += " ORDER BY \"hour\",\"minute\",\"second\" ASC;";
-                if ( query.exec( stmt.replace("'","''") ) == false ) {
+                if ( ! query.exec( stmt.replace("'","''") ) ) {
                     // error querying database
                     successful = false;
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -449,7 +449,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
                 }
 
                 stmt += QString(" AND \"hour\"=%5 ORDER BY \"minute\",\"second\" ASC;").arg( hour );
-                if ( query.exec( stmt.replace("'","''") ) == false ) {
+                if ( ! query.exec( stmt.replace("'","''") ) ) {
                     // error querying database
                     successful = false;
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -480,10 +480,10 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
             }
         }
     }
-    if ( successful == false ) {
+    if ( ! successful ) {
         items.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, items );
@@ -499,7 +499,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -522,7 +522,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int year, month, day;
-        if ( successful == true ) {
+        if ( successful ) {
             // setup period limits
             try {
                 year  = year_.toInt();
@@ -534,7 +534,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                 DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
-        if ( successful == true ) {
+        if ( successful ) {
             QDateTime time;
             time.setDate( QDate( year, month , day ) );
             // build the query statement
@@ -605,7 +605,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                     stmt += QString(" AND \"response\" IS NOT NULL");
                 } else {
                     QString filter;
-                    if ( StringOps::isNumeric( response_f.toStdString() ) == true ) {
+                    if ( StringOps::isNumeric( response_f.toStdString() ) ) {
                         // no operator found, set defult to '='
                         filter = QString("=%1").arg( response_f );
                     } else {
@@ -617,7 +617,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
             }
 
             stmt += QString(" ORDER BY \"hour\",\"minute\",\"second\" ASC;");
-            if ( query.exec( stmt ) == false ) {
+            if ( ! query.exec( stmt ) ) {
                 // error querying database
                 successful = false;
                 DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -836,10 +836,10 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
         }
     }
 
-    if ( successful == false ) {
+    if ( ! successful ) {
         data.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, data );
@@ -857,7 +857,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -879,7 +879,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
-        if ( successful == true ) {
+        if ( successful ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
@@ -890,7 +890,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
                       QString::fromStdString( std::to_string( this->getMonthNumber( month ) )),
                       day );
             // quary the database
-            if ( query.exec( stmt.replace("'","''") ) == false ) {
+            if ( ! query.exec( stmt.replace("'","''") ) ) {
                 // error querying database
                 successful = false;
                 DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -918,7 +918,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
                 }
             }
         }
-        if ( successful == true ) {
+        if ( successful ) {
             // sort the list
             std::tuple<QString, int> item;
             // morph tha HashMap into a Vector of Tuples
@@ -940,10 +940,10 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
         aux_items.clear();
     }
 
-    if ( successful == false ) {
+    if ( ! successful ) {
         items.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, items );
@@ -973,7 +973,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -997,7 +997,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
         }
         int from_year, from_month, from_day,
             to_year, to_month, to_day;
-        if ( successful == true ) {
+        if ( successful ) {
             // setup period limits
             try {
                 from_year  = from_year_.toInt();
@@ -1012,7 +1012,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                 DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
-        if ( successful == true ) {
+        if ( successful ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
@@ -1051,7 +1051,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                           || log_field == "bytes_sent"
                           || log_field == "bytes_received" ) {
                             // numbers
-                            if ( StringOps::isNumeric( field_filter.toStdString() ) == true ) {
+                            if ( StringOps::isNumeric( field_filter.toStdString() ) ) {
                                 // no operator found, set defult to '='
                                 filter = QString("=%1").arg( field_filter );
                             }
@@ -1068,7 +1068,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                 }
 
                 stmt += ";";
-                if ( query.exec( stmt ) == false ) {
+                if ( ! query.exec( stmt ) ) {
                     // error querying database
                     successful = false;
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -1130,7 +1130,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                               || log_field == "bytes_sent"
                               || log_field == "bytes_received" ) {
                                 // numbers
-                                if ( StringOps::isNumeric( field_filter.toStdString() ) == true ) {
+                                if ( StringOps::isNumeric( field_filter.toStdString() ) ) {
                                     // no operator found, set defult to '='
                                     filter = QString("=%1").arg( field_filter );
                                 }
@@ -1149,7 +1149,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
 
                     // quary the database
                     stmt += ";";
-                    if ( query.exec( stmt ) == false ) {
+                    if ( ! query.exec( stmt ) ) {
                         // error querying database
                         successful = false;
                         DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -1186,7 +1186,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
                     }
                 }
             }
-            if ( successful == true && n_days > 0 ) {
+            if ( successful && n_days > 0 ) {
                 // divide the count by the number of days to get the mean value
                 for ( const auto& [h,data_] : data ) {
                     for ( const auto& [m,c] : data_ ) {
@@ -1198,10 +1198,10 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
     }
 
 
-    if ( successful == false ) {
+    if ( ! successful ) {
         data.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, data );
@@ -1218,7 +1218,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -1242,7 +1242,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
         }
 
         int year, month, day;
-        if ( successful == true ) {
+        if ( successful ) {
             // setup period limits
             try {
                 year  = year_.toInt();
@@ -1254,7 +1254,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                 DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
-        if ( successful == true ) {
+        if ( successful ) {
             QDateTime time;
             time.setDate( QDate( year, month , day ) );
             // build the query statement
@@ -1287,7 +1287,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                       || log_field_1 == "bytes_sent"
                       || log_field_1 == "bytes_received" ) {
                         // numbers
-                        if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
+                        if ( StringOps::isNumeric( field_filter_1.toStdString() ) ) {
                             // no operator found, set defult to '='
                             filter = QString("=%1").arg( field_filter_1 );
                         }
@@ -1322,7 +1322,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
                       || log_field_2 == "bytes_sent"
                       || log_field_2 == "bytes_received" ) {
                         // numbers
-                        if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
+                        if ( StringOps::isNumeric( field_filter_2.toStdString() ) ) {
                             // no operator found, set defult to '='
                             filter = QString("=%1").arg( field_filter_2 );
                         }
@@ -1340,7 +1340,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
             }
 
             stmt += QString(" ORDER BY \"hour\",\"minute\" ASC;");
-            if ( query.exec( stmt ) == false ) {
+            if ( ! query.exec( stmt ) ) {
                 // error querying database
                 successful = false;
                 DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -1449,10 +1449,10 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
         }
     }
 
-    if ( successful == false ) {
+    if ( ! successful ) {
         data.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, data );
@@ -1468,7 +1468,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -1492,7 +1492,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
         }
         int from_year, from_month, from_day,
             to_year,   to_month,   to_day;
-        if ( successful == true ) {
+        if ( successful ) {
             // setup period limits
             try {
                 from_year  = from_year_.toInt();
@@ -1507,7 +1507,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                 DialogSec::errGeneric( nullptr, TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
-        if ( successful == true ) {
+        if ( successful ) {
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt;
@@ -1539,7 +1539,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                       || log_field_1 == "bytes_sent"
                       || log_field_1 == "bytes_received" ) {
                     // numbers
-                    if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
+                    if ( StringOps::isNumeric( field_filter_1.toStdString() ) ) {
                         // no operator found, set defult to '='
                         filter = QString("=%1").arg( field_filter_1 );
                     }
@@ -1564,7 +1564,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                       || log_field_2 == "bytes_sent"
                       || log_field_2 == "bytes_received" ) {
                     // numbers
-                    if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
+                    if ( StringOps::isNumeric( field_filter_2.toStdString() ) ) {
                         // no operator found, set defult to '='
                         filter = QString("=%1").arg( field_filter_2 );
                     }
@@ -1580,7 +1580,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                 }
 
                 stmt += QString(" ORDER BY \"day\" ASC;");
-                if ( query.exec( stmt ) == false ) {
+                if ( ! query.exec( stmt ) ) {
                     // error querying database
                     successful = false;
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -1709,7 +1709,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                           || log_field_1 == "bytes_sent"
                           || log_field_1 == "bytes_received" ) {
                             // numbers
-                            if ( StringOps::isNumeric( field_filter_1.toStdString() ) == true ) {
+                            if ( StringOps::isNumeric( field_filter_1.toStdString() ) ) {
                                 // no operator found, set defult to '='
                                 filter = QString("=%1").arg( field_filter_1 );
                             }
@@ -1734,7 +1734,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
                           || log_field_2 == "bytes_sent"
                           || log_field_2 == "bytes_received" ) {
                             // numbers
-                            if ( StringOps::isNumeric( field_filter_2.toStdString() ) == true ) {
+                            if ( StringOps::isNumeric( field_filter_2.toStdString() ) ) {
                                 // no operator found, set defult to '='
                                 filter = QString("=%1").arg( field_filter_2 );
                             }
@@ -1751,7 +1751,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
 
                     // quary the database
                     stmt += " ORDER BY \"day\" ASC;";
-                    if ( query.exec( stmt ) == false ) {
+                    if ( ! query.exec( stmt ) ) {
                         // error querying database
                         successful = false;
                         DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -1842,10 +1842,10 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
         }
     }
 
-    if ( successful == false ) {
+    if ( ! successful ) {
         data.clear();
     }
-    if ( db.isOpen() == true ) {
+    if ( db.isOpen() ) {
         db.close();
     }
     result = std::make_tuple( successful, data );
@@ -1861,7 +1861,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -1884,7 +1884,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
         }
     }
 
-    if ( successful == true ) {
+    if ( successful ) {
         QSqlQuery query = QSqlQuery( db );
         int d, h, tt, bs, br,
             day, hour, week_day,
@@ -1905,7 +1905,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                 hour=-1; hour_count=0;
                 day=-1; day_count=0;
 
-                if ( query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;").arg( table ).arg( year ).arg( month ).replace("'","''") ) == false ) {
+                if ( ! query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;").arg( table ).arg( year ).arg( month ).replace("'","''") ) ) {
                     // error querying database
                     successful = false;
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
@@ -1978,7 +1978,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                             DialogSec::errGeneric( nullptr, err_msg );
                             break;
                         }
-                        if ( successful == true ) {
+                        if ( successful ) {
 
                             // process the day count
                             if ( d > 0 ) {
@@ -2094,7 +2094,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                         }
                     }
                     // complete the remaining stats
-                    if ( successful == true ) {
+                    if ( successful ) {
                         // append the last hour
                         if ( hour >= 0 ) {
                             traf_hour.at( hour ) += hour_count;
@@ -2118,13 +2118,13 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                     }
                 }
                 query.finish();
-                if ( successful == false ) { break; }
+                if ( ! successful ) { break; }
             }
-            if ( successful == false ) { break; }
+            if ( ! successful ) { break; }
         }
 
         // final process for some of the values
-        if ( successful == true ) {
+        if ( successful ) {
 
             // process the hours of the day
             for ( int i=0; i<24; i++ ) {

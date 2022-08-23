@@ -32,7 +32,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         successful = false;
         QString err_msg = "";
@@ -44,7 +44,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
     } else {
         QSqlQuery query = QSqlQuery( db );
         for ( const auto& [wid,name] : this->ws_names ) {
-            if ( query.exec("SELECT hash FROM "+name+";") == false ) {
+            if ( ! query.exec("SELECT hash FROM "+name+";") ) {
                 // error querying database
                 successful = false;
                 DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
@@ -60,7 +60,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
                     this->hashes.at( wid ).push_back( hash );
                 }
             }
-            if ( successful == false ) { break; }
+            if ( ! successful ) { break; }
         }
     }
     db.close();
@@ -126,16 +126,16 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const int& web_server_i
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertUsedHash( QSqlDatabase& db, QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id )
+bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id )
 {
     bool successful = true;
     try {
-        if( VecOps::contains( this->hashes.at( web_server_id ), hash ) == false ) {
+        if( ! VecOps::contains( this->hashes.at( web_server_id ), hash ) ) {
             this->hashes.at( web_server_id ).push_back( hash );
             // insert tnto the database
             QString stmt = QString("INSERT INTO %1 ( hash ) VALUES ( '%2' );")
                 .arg( this->ws_names.at(web_server_id), QString::fromStdString(hash).replace("'","''") );
-            if ( query.exec( stmt ) == false ) {
+            if ( ! query.exec( stmt ) ) {
                 // error opening database
                 successful = false;
                 QString query_msg="", err_msg="";
@@ -167,7 +167,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
-    if ( db.open() == false ) {
+    if ( ! db.open() ) {
         // error opening database
         proceed = false;
         QString err_msg = "";
@@ -178,7 +178,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
 
     } else {
         QSqlQuery query = QSqlQuery( db );
-        if ( db.transaction() == false ) {
+        if ( ! db.transaction() ) {
             // error opening database
             proceed = false;
             QString stmt_msg="", err_msg = "";
@@ -194,16 +194,16 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
 
             try {
                 for ( const std::string& hash : hashes ) {
-                    proceed = this->insertUsedHash( db, query, db_name, hash, web_server_id );
-                    if ( proceed == false ) {
+                    proceed = this->insertUsedHash( query, db_name, hash, web_server_id );
+                    if ( ! proceed ) {
                         break;
                     }
                 }
                 query.finish();
 
-                if ( proceed == true ) {
+                if ( proceed ) {
                     // commit the transaction
-                    if ( db.commit() == false ) {
+                    if ( ! db.commit() ) {
                         // error opening database
                         proceed = false;
                         QString stmt_msg="", err_msg = "";
@@ -216,7 +216,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                         DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
                     }
                 }
-                if ( proceed == false ) {
+                if ( ! proceed ) {
                     // rollback
                     throw (std::exception());
                 }
@@ -226,7 +226,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                 proceed = false;
                 bool err_shown = false;
                 // rollback the transaction
-                if ( db.rollback() == false ) {
+                if ( ! db.rollback() ) {
                     // error rolling back commits
                     QString stmt_msg="", err_msg = "";
                     if ( this->dialog_level > 0 ) {
@@ -238,7 +238,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                     DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
                     err_shown = true;
                 }
-                if ( err_shown == false ) {
+                if ( ! err_shown ) {
                     // show a message
                     QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
                     DialogSec::errGeneric( nullptr, msg );

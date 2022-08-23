@@ -13,7 +13,7 @@ public:
     static bool checkHashesDatabase( const std::string& db_path );
 
 private:
-    static int checkDatabaseTablesNames( QSqlDatabase& db, const std::string& db_path, const QString& db_name );
+    static int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name );
     static bool newStatsDatabase( QSqlDatabase& db, const std::string& db_path, const QString& db_name, const std::vector<QString>& ws_names );
     static bool newHashesDatabase( QSqlDatabase& db, const std::string& db_path, const QString& db_name, const std::vector<QString>& ws_names );
 };
