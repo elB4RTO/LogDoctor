@@ -8,16 +8,13 @@ Parse Apache2/Nginx/IIS logs to make statistics
 
 - [Overview](#overview)
 - [Installation and usage](#installation-and-usage)
-  - [Requirements, dependencies and plugins](#requirements--dependencies--plugins)
+  - [Requirements / dependencies](#requirements--dependencies)
   - [Usage without installation](#usage-without-installation)
   - [Usage with installation](#usage-with-installation)
-- [Compilation](#compilation)
   - [How to compile](#how-to-compile)
-  - [Additional steps](#additional-steps)
 - [Updates](#updates)
   - [Version check](#version-check)
-  - [Git pull](#git-pull)
-  - [Self service](#self-service)
+  - [How to update](#how-to-update)
 - [Before to start](#before-to-start)
 - [Logs data](#logs-data)
   - [Storage](#storage)
@@ -28,7 +25,7 @@ Parse Apache2/Nginx/IIS logs to make statistics
     - [Logs format](#logs-format)
       - [Apache2](#apache2)
       - [Nginx](#nginx)
-      - [IIS](#IIS)
+      - [IIS](#iis)
     - [Blacklist](#blacklist)
     - [Warnlist](#warnlist)
 - [Statistics](#statistics)
@@ -67,16 +64,15 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 ## Installation and usage
 
-### Requirements / Dependencies / Plugins
+### Requirements / Dependencies
 
-- If getting a pre-compiled release:
-  - None
-
-- If getting the source code:
+- **From source**:
   - Cmake
-  - Qt5 (+ Linguist, Widgets, Charts, Sql)
+  - Qt5 *(Framework, Linguist, Widgets, Charts, Sql)*
   - zlib
-  - libcurl
+  - libcurl<br/><br/>
+- **From binary**:
+  - None
 
 <br/>
 
@@ -102,14 +98,12 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
   - Run the installation script
     - Linux/BSD: `chmod +x ./build_install.sh && ./build_install.sh`
     - Windows: `chmod +x ./build_install.bat && ./build_install.bat`
-    - Mac OS: `chmod +x ./build_install_d.sh && ./build_install_d.sh`<br/><br/>
+    - Mac OS: `chmod +x ./build_install_MAC.sh && ./build_install_MAC.sh`<br/><br/>
 - **From binary**
   - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
-  - Run the installation executable: `install`<br/><br/>
+  - Run the installation executable, or the installation script if you prefer it<br/><br/>
 
 <br/>
-
-## Compilation
 
 ### How to compile
 
@@ -119,17 +113,44 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
   `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
 - Open a terminal inside "*LogDoctor-main/*"
   <br/>*or*<br/>
-  `cd LogDoctor/`<br/><br/>cmake --build ./ --target all
+  `cd LogDoctor/`<br/><br/>
 - Prepare a build folder:
-  <br/>`mkdir build && cd build`<br/>
+  <br/>`mkdir build && cd build`<br/><br/>
 - Prepare **Cmake**'s build files:
-  <br/>`cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel`<br/>
+  <br/>`cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel`<br/><br/>
 - Use **Cmake** to compile the entire project:
-  <br/>`cmake --build ./ --target all`<br/>
+  <br/>`cmake --build ./ --target all`<br/><br/>
   If compilation fails, use the following command before to rebuild:
   <br/>`cmake --build ./ --target clean`
   <br/><br/>
-- Once done, you can move the executable file wherever you want and execute it from there.<br/><br/>
+- Once done, you can move the executable file wherever you want and execute it from there.<br/>
+
+<br/><br/>
+
+## Updates
+
+### Version check
+
+A version check utility is available while running LogDoctor to check the availability of a new version.<br/>
+To check for updates, open the menu `Utilities`→`Version check`.
+
+<br/>
+
+### How to update
+
+At the moment of writing, the only supported method is the manual update.
+
+- **From source**
+  - Download and unzip this repo
+    <br/>*or*<br/>
+    `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+  - Run the update script
+    - Linux/BSD: `chmod +x ./build_update.sh && ./build_update.sh`
+    - Windows: `chmod +x ./build_update.bat && ./build_update.bat`
+    - Mac OS: `chmod +x ./build_update_MAC.sh && ./build_update_MAC.sh`<br/><br/>
+- **From binary**
+  - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)<br/>
+  - Run the update script
 
 <br/><br/><br/>
 
@@ -148,7 +169,7 @@ Archived (**gzipped**) log files can be used as well as normal files.
 
 ### Storage
 
-Parsed data will be stored in an [SQLite](https://www.sqlite.org/docs.html) database, which makes it easy to transport/view/edit it as you please.<br/>
+Parsed data will be stored in an [SQLite](https://www.sqlite.org/about.html) database, which makes it easy to transport/view/edit it as you please.<br/>
 If LogDoctor's funcionalities aren't enough for your needs, you can always use a *DB manager* or the SQLite *API* to make your own queries and retrieve the data you need.
 
 <br/>
@@ -169,6 +190,8 @@ Further informations can be found in the [wiki !!!LINK!!!]() or while running Lo
 ### Logs options
 
 Various options can be configured about log files.
+
+<br/>
 
 #### Usage control
 
@@ -197,6 +220,8 @@ Once inside the **Format** section, yo can insert the *log format string* you're
 
 For reliability reasons, LogDoctor **does not** support the usage of the **Carriage Return** inside the log format string.
 
+<br/>
+
 ##### Apache2
 
 The log format string must be specified. Any format is supported, if valid.<br/>
@@ -206,12 +231,18 @@ To retrieve your format string:
 - you must not paste the whole line, just the part holding the *format string*.<br/>
   Example:<br/>
   - this is the whole line:<br/>
-    `LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined`<br/>
+    ```
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+    ```
   - this is the *format string*:<br/>
-    `%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"`<br/>
-    please notice that you have to remove the enclosing quotes too<br/>
+    ```
+    %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"
+    ```
+    please notice that you have to remove the enclosing quotes/apostrophes as well<br/>
 
 More informations can be found in the [wiki !!!LINK!!!]() or while setting the format.
+
+<br/>
 
 ##### Nginx
 
@@ -222,19 +253,26 @@ To retrieve your format string:<br/>
 - one **important** thing: don't paste the indentations and new lines! The default line is usualy declared in consecutive lines, and indented. You must reduce it to a one consecutive string (by also removing the *apostrophes* in the middle of it). The best way is to do this job inside the configuration file, then save and restart Nginx to see if any error is thrown.<br/>
   Example:
   - this is the whole line:<br/>
-    ```    log_format compression '$remote_addr - $remote_user [$time_local] '
-                           '"$request" $status $body_bytes_sent '
-                           '"$http_referer" "$http_user_agent" "$gzip_ratio"';```<br/>
+    ```
+    log_format main '$remote_addr - $remote_user [$time_local] '
+                    '"$request" $status $body_bytes_sent '
+                    '"$http_referer" "$http_user_agent" "$gzip_ratio"';
+    ```
   - this is the resulting *format string*:<br/>
-    `$remote_addr - $remote_user [$time_local] "$request" $status $bytes_sent "$http_referer" "$http_user_agent" "$gzip_ratio"`<br/>
-    please notice that you have to remove the enclosing apostrophes too<br/>
+    ```
+    $remote_addr - $remote_user [$time_local] "$request" $status $bytes_sent "$http_referer" "$http_user_agent" "$gzip_ratio"
+    ```
+    please notice that you have to remove the enclosing apostrophes/quotes as well<br/>
 
 More informations can be found in the [wiki !!!LINK!!!]() or while setting the format.
+
+<br/>
 
 ##### IIS
 
 Supported log formats are: **W3C**, **NCSA** and **IIS**.<br/>
-The *NCSA* and *IIS* modules doesn't allow any modification by the user, so nothing more have to be specified.
+
+The *NCSA* and *IIS* modules doesn't allow any modification from the user, so nothing more have to be specified.
 
 The *W3C* module instead allows the user to decide which fields to log, and thus you must declare the *log format string* you're using.
 To retrieve your format string (for the *W3C* module only):
@@ -242,13 +280,17 @@ To retrieve your format string (for the *W3C* module only):
 - the line you're looking for is the one starting with `#Fields:`, usually at the beginning of the file.<br/>
   Example:<br/>
   - this is the whole line:<br/>
-    `#Fields: date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken`<br/>
+    ```
+    #Fields: date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken
+    ```
   - this is the *format string*:<br/>
-    `date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken`<br/>
+    ```
+    date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken
+    ```
 
 More informations can be found in the [wiki !!!LINK!!!]() or while setting the format.
 
-<br/>
+<br/><br/>
 
 #### Blacklist
 
@@ -271,6 +313,8 @@ Each web server has its own lists.
 
 Most of the *statistics sections* allows you to set filters to the log fields, to skim data by only including lines matching those parameters.<br/>
 
+<br/>
+
 ### Warnings
 
 In the *warning* section you can view the lines which triggered a warning, as well as remove any of the warnings and/or add your own.<br/>
@@ -281,7 +325,7 @@ In the *warning* section you can view the lines which triggered a warning, as we
 
 ### Speed
 
-In the *speed* section yuo can view how fast has been your server at serving contents (if you logged the *time taken*, of course).<br/>
+In the *speed* section you can view how fast has been your server at serving contents (if you logged the *time taken*, of course).<br/>
 
 ![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_speed.png)
 
@@ -306,7 +350,7 @@ When viewing a period of time, the mean value (of all the logged days in that pe
 
 ### Relational
 
-In the *relational* section you can view how many times a specific fields brought to another.<br/>
+In the *relational* section you can view how many times a specific field brought to another.<br/>
 This section is more suited for long periods of time.<br/>
 
 ![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_relational.png)
@@ -336,6 +380,14 @@ A block-note utility is available at `Tools`→`BlockNote` which can be used to 
 
 <br/>
 
+### Games
+
+Simple mini-games to pass the time.
+
+COMING SOON.
+
+<br/><br/>
+
 ## Final considerations
 
 ### Backups
@@ -343,14 +395,14 @@ A block-note utility is available at `Tools`→`BlockNote` which can be used to 
 LogDoctor can automatically do a backup of your **logs database** file, so you can recover your data in case something goes wrong.<br/>
 
 Move inside LogDoctor's folder (if you don't know/remember the path, open the `Utilities`→`Infos`>`Paths` menu to view it) and open the folder named "**backups**'.<br/>
-Here you will find the backups with an increasing index, where *1* represents the newest.
+Here you will find the backups with an increasing index, where '.1' represents the newest.
 
 A new backup is made every time you quit LogDoctor after doing a job which affected the database in any way.
 
 #### Note
 
 Only the *logs-data database* will be backed-up, the *hashes database* **won't**.<br/>
-This is because it is unlikely (supposedly impossible) that a hash equals another, and they're supposed to be useful for a short period of time (that is, since you or your web server delete the original log files).
+This is because it is unlikely (supposedly impossible) that a hash equals another, therefore they're supposed to be useful for a short period of time (that is, since you or your web server delete the original log files).
 
 <br/>
 
