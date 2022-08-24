@@ -77,6 +77,8 @@ public:
     static void errLogFormatNoFields( QWidget *parent );
     static void errLogFormatNoSeparators( QWidget *parent );
 
+    // files
+    static void errFileNotFound( QWidget *parent, const QString& file, const bool& report=false );
     // files permissions
     /*static void errFileNotExists( QWidget *parent );
     static void errFileNotReadable( QWidget *parent );
