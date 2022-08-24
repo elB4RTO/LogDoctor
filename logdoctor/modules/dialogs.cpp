@@ -219,7 +219,7 @@ void DialogSec::errSqlDriverNotFound( QWidget *parent, const QString& driver )
 const bool DialogSec::choiceDatabaseNotFound( QWidget *parent, const QString& db_name )
 {
     bool choice = false;
-    auto response = QMessageBox::question(parent,
+    const auto response = QMessageBox::question(parent,
         DialogSec::tr( t_FILE_NOT_FOUND.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_DB_NOT_FOUND.c_str() ),
@@ -275,7 +275,7 @@ const bool DialogSec::choiceDatabaseWrongDataType(QWidget *parent, const QString
 const bool DialogSec::choiceDatabaseRenew(QWidget *parent, const QString& title, const QString& msg )
 {
     bool choice = false;
-    auto response = QMessageBox::warning(parent,
+    const auto response = QMessageBox::warning(parent,
         title,
         QString("%1\n\n%2").arg(
             msg,
@@ -464,7 +464,7 @@ void DialogSec::errFailedDefiningLogType( QWidget *parent, const QString& file )
 const int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& msg )
 {
     int choice;
-    auto response = QMessageBox::warning(parent,
+    const auto response = QMessageBox::warning(parent,
         DialogSec::tr( t_FILE_ALREADY_USED.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_FILE_ALREADY_USED.c_str() ),
@@ -485,7 +485,7 @@ const int DialogSec::choiceFileAlreadyUsed( QWidget *parent, const QString& msg 
 const int DialogSec::choiceFileSizeWarning( QWidget *parent, const QString& msg )
 {
     int choice;
-    auto response = QMessageBox::warning(parent,
+    const auto response = QMessageBox::warning(parent,
         DialogSec::tr( t_FILE_SIZE_WARNING.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_FILE_SIZE_WARNING.c_str() ),
@@ -538,6 +538,18 @@ void DialogSec::warnEmptyFile( QWidget *parent, const QString& file )
         QMessageBox::Ok );
 }
 
+void DialogSec::errFileNotFound( QWidget *parent, const QString& file , const bool& report )
+{
+    std::ignore=
+    QMessageBox::critical(parent,
+        DialogSec::tr( t_FILE_NOT_FOUND.c_str() ),
+        QString("%1:\n%2%3").arg(
+            DialogSec::tr( m_FILE_NOT_FOUND.c_str() ),
+            file,
+            ( report ) ? QString("\n\n%1").arg(DialogSec::tr( r_REPORT_ISSUE.c_str() )) : "" ),
+        QMessageBox::Ok );
+}
+
 void DialogSec::warnFileNotReadable( QWidget *parent, const QString& file )
 {
     std::ignore=
@@ -555,7 +567,7 @@ void DialogSec::warnFileNotReadable( QWidget *parent, const QString& file )
 const bool DialogSec::choiceSelectedFileNotFound(QWidget *parent, const QString& file )
 {
     bool proceed = false;
-    auto response = QMessageBox::warning(parent,
+    const auto response = QMessageBox::warning(parent,
         DialogSec::tr( t_FILE_NOT_FOUND.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_SELECTED_FILE_NOT_FOUND.c_str() ),
@@ -587,7 +599,7 @@ void DialogSec::errDirNotExists(QWidget *parent, const QString& dir )
 const bool DialogSec::choiceDirNotExists(QWidget *parent, const QString& dir )
 {
     bool proceed = false;
-    auto response = QMessageBox::warning(parent,
+    const auto response = QMessageBox::warning(parent,
         DialogSec::tr( t_DIR_NOT_FOUND.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_DIR_NOT_EXISTS.c_str() ),
@@ -663,7 +675,7 @@ void DialogSec::errFailedMakeDir( QWidget *parent, const QString& msg )
 const bool DialogSec::choiceDirNotDir( QWidget *parent, const QString& path )
 {
     bool choice = false;
-    auto response = QMessageBox::question(parent,
+    const auto response = QMessageBox::question(parent,
         DialogSec::tr( t_DIR_NOT_DIR.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_DIR_NOT_DIR.c_str() ),
@@ -678,7 +690,7 @@ const bool DialogSec::choiceDirNotDir( QWidget *parent, const QString& path )
 const bool DialogSec::choiceFileNotFile( QWidget *parent, const QString& path )
 {
     bool choice = false;
-    auto response = QMessageBox::question(parent,
+    const auto response = QMessageBox::question(parent,
         DialogSec::tr( t_FILE_NOT_FILE.c_str() ),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr( m_FILE_NOT_FILE.c_str() ),
