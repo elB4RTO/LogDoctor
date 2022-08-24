@@ -186,7 +186,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
         }
         if ( stop == std::string::npos ) {
             // separator not found, abort
-            throw GenericException( "Separator not found: '"+sep+"'" );
+            throw LogParserException( "Separator not found: '"+sep+"'" );
         }
 
         // get the field
@@ -267,7 +267,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
                     // process the date to get year, month, day, hour and minute
                     if ( StringOps::startsWith( fld, "date_time" ) ) {
-                        std::vector<std::string> dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part which is useless from now on
+                        const std::vector<std::string> dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part which is useless from now on
                         if ( dt.at( 0 ) != "" ) {
                             // year
                             data.emplace( this->field2id.at("date_time_year"), dt.at( 0 ) );
@@ -382,7 +382,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                     // something went wrong
                     } else {
                         // hmmm.. no...
-                        throw LogParserException( "Unexpected LogField: "+ fld );
+                        throw LogParserException( "Unexpected LogField: '"+fld+"'" );
                     }
                 }
             }
@@ -453,11 +453,11 @@ void LogOps::resetPerfData()
     this->size  = 0;
     this->lines = 0;
 }
-const int LogOps::getSize()
+const unsigned LogOps::getSize()
 {
     return this->size;
 }
-const int LogOps::getLines()
+const unsigned LogOps::getLines()
 {
     return this->lines;
 }
