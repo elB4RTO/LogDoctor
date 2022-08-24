@@ -1,12 +1,19 @@
 
 #include "exceptions.h"
 
+#include <iostream>
+
 
 /////////////////
 //// GENERIC ////
-GenericException::GenericException(const std::string& msg )
+GenericException::GenericException( const std::string& msg, const bool& to_sys )
 {
-    this->msg = QString::fromStdString( msg );
+    if ( to_sys ) { // when sys, leave un-catched
+        //std::cout << "LogDoctor: Exception: " << msg << std::endl;
+        std::cerr << "LogDoctor: Exception: " << msg << std::endl;
+    } else {
+        this->msg = QString::fromStdString( msg );
+    }
 }
 const QString& GenericException::what()
 {
@@ -16,14 +23,16 @@ const QString& GenericException::what()
 
 ////////////////////
 //// WEB SERVER ////
-WebServerException::WebServerException(const std::string& msg )
+WebServerException::WebServerException(const std::string& msg ) // leave un-catched
 {
-    this->msg = QString::fromStdString( msg );
+    //std::cout << "LogDoctor: WebServerException: " << msg << std::endl;
+    std::cerr << "LogDoctor: WebServerException: " << msg << std::endl;
+    /*this->msg = QString::fromStdString( msg );*/
 }
-const QString& WebServerException::what()
+/*const QString& WebServerException::what()
 {
     return msg;
-}
+}*/
 
 
 ////////////////////
@@ -42,21 +51,25 @@ const QString& LogFormatException::what()
 //// LOG PARSER ////
 LogParserException::LogParserException(const std::string& msg )
 {
-    this->msg = QString::fromStdString( msg );
+    //std::cout << "LogDoctor: LogParserException: " << msg << std::endl;
+    std::cerr << "LogDoctor: LogParserException: " << msg << std::endl;
+    /*this->msg = QString::fromStdString( msg );*/
 }
-const QString& LogParserException::what()
+/*const QString& LogParserException::what()
 {
     return msg;
-}
+}*/
 
 
 ///////////////////
 //// DATE-TIME ////
-DateTimeException::DateTimeException(const std::string& msg )
+DateTimeException::DateTimeException(const std::string& msg ) // leave un-catched
 {
-    this->msg = QString::fromStdString( msg );
+    //std::cout << "LogDoctor: DateTimeException: " << msg << std::endl;
+    std::cerr << "LogDoctor: DateTimeException: " << msg << std::endl;
+    /*this->msg = QString::fromStdString( msg );*/
 }
-const QString& DateTimeException::what()
+/*const QString& DateTimeException::what()
 {
     return msg;
-}
+}*/
