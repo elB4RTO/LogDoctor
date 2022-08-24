@@ -66,8 +66,8 @@ const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const i
                       {"link", "#ff85a1"} };
 
         default:
-            // wrong
-            throw GenericException( "Unexpected ColorScheme ID: "+std::to_string( scheme_id ) );
+            // wrong, shouldn't be here
+            throw GenericException( "Unexpected ColorScheme ID: "+std::to_string( scheme_id ), true ); // leave un-catched
     }
 }
 

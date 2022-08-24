@@ -77,7 +77,7 @@ std::string HashOps::digestFile( const std::string& file_path )
             // try reading as gzip compressed file
             GZutils::readFile( file_path, content );
 
-        } catch (GenericException& e) {
+        } catch (const GenericException& e) {
             // failed closing file pointer
             throw e;
 
@@ -89,17 +89,27 @@ std::string HashOps::digestFile( const std::string& file_path )
             IOutils::readFile( file_path, content );
         }
 
-    } catch (GenericException& err) {
-        // failed closing
-        throw err;
+    // re-catched in craplog
+    } catch (const GenericException) {
+        // failed closing gzip file pointer
+        throw GenericException( QString("%1:\n%2").arg(
+            DialogSec::tr("An error accured while reading the gzipped file"),
+            QString::fromStdString( file_path )
+            ).toStdString() );
 
     } catch (const std::ios_base::failure& err) {
-        // failed reading
-        throw err;
+        // failed reading as text
+        throw GenericException( QString("%1:\n%2").arg(
+            DialogSec::tr("An error accured while reading the file"),
+            QString::fromStdString( file_path )
+            ).toStdString() );
 
     } catch (...) {
         // failed somehow
-        throw GenericException( "Something failed while handling file" );
+        throw GenericException( QString("%1:\n%2").arg(
+            DialogSec::tr("Something failed while handling the file"),
+            QString::fromStdString( file_path )
+            ).toStdString() );
     }
 
     SHA256 sha;

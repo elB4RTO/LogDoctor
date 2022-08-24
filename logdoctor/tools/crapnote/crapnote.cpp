@@ -53,7 +53,7 @@ void Crapnote::setColorScheme( const int& scheme_id )
             break;
         default:
             // wrong
-            throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( scheme_id ) );
+            throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( scheme_id ), true ); // leave un-catched
     }
 }
 
