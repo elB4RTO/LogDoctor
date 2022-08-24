@@ -138,7 +138,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
             // try reading a gzipped file
             GZutils::readFile( path, aux );
 
-        } catch (GenericException& e) {
+        } catch (const GenericException& e) {
             // failed closing file pointer
             throw e;
 
@@ -181,21 +181,30 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
             }
         }
         aux_lines.clear();
-    } catch (const std::ios_base::failure& err) {
+
+    // re-catched in craplog
+    } catch (const GenericException) {
+        // failed closing gzip file pointer
+        lines.clear(); aux_lines.clear();
+        if ( file.is_open() ) {
+            file.close();
+        }
+        throw GenericException( "An error accured while reading the gzipped file" );
+
+    } catch (const std::ios_base::failure) {
         // failed reading
-        lines.clear();
-        aux_lines.clear();
+        lines.clear(); aux_lines.clear();
         if ( file.is_open() ) {
             file.close();
         }
-        throw err;
+        throw GenericException( "An error accured while reading the file" );
+
     } catch (...) {
-        lines.clear();
-        aux_lines.clear();
+        lines.clear(); aux_lines.clear();
         if ( file.is_open() ) {
             file.close();
         }
-        throw std::exception(); // exception catched in Craplog
+        throw GenericException( "Something failed while handling the file" );
     }
     if ( file.is_open() ) {
         file.close();
@@ -209,7 +218,7 @@ void IOutils::readFile( const std::string& path , std::string& content )
     // read the whole file
     std::ifstream file;
     try {
-        constexpr std::size_t read_size = std::size_t(4096);
+        /*constexpr std::size_t read_size = std::size_t(4096);*/
         file = std::ifstream(path);
         if ( ! file.is_open() ) {
             throw std::ios_base::failure( "file is not open" );

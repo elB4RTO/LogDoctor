@@ -35,7 +35,7 @@ const int DbQuery::getMinuteGap( const int& minute , const int& gap )
     int m = -1;
     if ( minute < 0 || minute >= 60 ) {
         // unexpected value
-        throw GenericException( "Unexpected Minute: "+std::to_string( minute ) );
+        throw DateTimeException( "Unexpected Minute: "+std::to_string( minute ) );
     }
     int n = 0;
     for ( int g=0; g<60; g+=gap ) {
@@ -81,7 +81,7 @@ const int DbQuery::getMonthsCount( const QString& from_year, const QString& from
         to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->getMonthNumber( to_month ) ;
     } catch (...) {
         // failed to convert to integers
-        throw GenericException( "Failed to convert from string to int" );
+        throw DateTimeException( "Failed to convert from string to int" ); // leave un-catched
     }
     return this->getMonthsCount( from_year_, from_month_, to_year_, to_month_ );
 }
