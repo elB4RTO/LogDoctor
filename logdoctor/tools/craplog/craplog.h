@@ -58,7 +58,7 @@ public:
     const int getLogsListSize();
     // log file related
     const LogFile& getLogFileItem( const QString& file_name );
-    const std::string& getLogFilePath( const QString& file_name );
+    /*const std::string& getLogFilePath( const QString& file_name );*/
     // set a file in the list as selected, to be used for the stats
     const bool setLogFileSelected( const QString& file_name );
     // check if a file name respects the one set
@@ -107,16 +107,17 @@ public:
               & isParsing();
     // job performancea
     void collectPerfData(),
-         sumWarningsSize( const int& size ),
-         sumBlacklistededSize( const int& size ),
-         sumPerfSize( const int& size );
-    const int& getPerfSize(),
-             & getTotalSize(),
-             & getParsedSize(),
-             & getParsedLines();
-             /*& getAccessSize(),
-             & getErrorSize(),
-             & getBlacklistedSize( const int& log_type );*/
+         sumWarningsSize( const unsigned& size ),
+         sumBlacklistededSize( const unsigned& size ),
+         sumPerfSize( const unsigned& size );
+    const unsigned
+        & getPerfSize(),
+        & getTotalSize(),
+        & getParsedSize(),
+        & getParsedLines();
+        /*& getAccessSize(),
+        & getErrorSize(),
+        & getBlacklistedSize( const int& log_type );*/
 
 private:
     // quantity of informational dialogs to display
@@ -135,7 +136,8 @@ private:
          parsing = false,
          proceed = false;
     // perf related
-    int total_lines  = 0,
+    unsigned
+        total_lines  = 0,
         parsed_lines = 0,
         perf_size        = 0,
         total_size       = 0,
@@ -143,7 +145,7 @@ private:
         warnlisted_size  = 0,
         blacklisted_size = 0;
     // chart related
-    const QString printableSize( const int& bytes );
+    const QString printableSize( const unsigned& bytes );
 
     // data collection, each item results from a log line
     /* structure

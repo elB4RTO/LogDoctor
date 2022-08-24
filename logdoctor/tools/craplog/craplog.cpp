@@ -397,7 +397,7 @@ const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
 
 
 // return the path of the file matching the given name
-const std::string& Craplog::getLogFilePath( const QString& file_name )
+/*const std::string& Craplog::getLogFilePath( const QString& file_name )
 {
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
@@ -406,7 +406,7 @@ const std::string& Craplog::getLogFilePath( const QString& file_name )
     }
     // should be unreachable
     throw GenericException("File item not found");
-}
+}*/
 
 // set a file as selected
 const bool Craplog::setLogFileSelected( const QString& file_name )
@@ -465,16 +465,11 @@ void Craplog::scanLogsDir()
             try {
                 // read 32 random lines
                 IOutils::randomLines( path, content, 32 );
-            } catch (const std::ios_base::failure& err) {
-                // failed reading
-                successful = false;
-                // >> err.what() << //
-                DialogSec::errFailedReadFile( nullptr, name );
-            } catch (...) {
-                // failed somehow
-                successful = false;
-                QString err_msg = DialogSec::tr("An error occured while handling the file");
-                DialogSec::errGeneric( nullptr, err_msg +":\n"+ name );
+
+            } catch (GenericException& e) {
+                // failed closing gzip file pointer
+                DialogSec::errGeneric( nullptr, e.what() );
+                continue;
             }
 
             if ( content.size() == 0 ) {
@@ -484,37 +479,42 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            if ( successful ) {
-                LogOps::LogType log_type = this->logOps.defineFileType(
-                    name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
-                content.clear();
-                if ( log_type == LogOps::LogType::Failed ) {
-                    // failed to get the log type, do not append
-                    DialogSec::errFailedDefiningLogType( nullptr, name );
-                    continue;
-                } else if ( log_type == LogOps::LogType::Discarded ) {
-                    // skip
-                    continue;
-                }
-
-                // match only valid files names
-                if ( ! this->isFileNameValid( name.toStdString() ) ) {
-                    continue;
-                }
-
-                std::string hash = this->hashOps.digestFile( path );
-
-                LogFile logfile = {
-                    .selected = false,
-                    .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS ),
-                    .size = size,
-                    .name = name,
-                    .hash = hash,
-                    .path = path
-                };
-                // push in the list
-                this->logs_list.push_back( logfile );
+            LogOps::LogType log_type = this->logOps.defineFileType(
+                name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
+            content.clear();
+            if ( log_type == LogOps::LogType::Failed ) {
+                // failed to get the log type, do not append
+                DialogSec::errFailedDefiningLogType( nullptr, name );
+                continue;
+            } else if ( log_type == LogOps::LogType::Discarded ) {
+                // skip
+                continue;
             }
+
+            // match only valid files names
+            if ( ! this->isFileNameValid( name.toStdString() ) ) {
+                continue;
+            }
+
+            std::string hash;
+            try {
+                hash = this->hashOps.digestFile( path );
+            } catch (GenericException& e) {
+                // failed to digest
+                DialogSec::errGeneric( nullptr, e.what() );
+                continue;
+            }
+
+            LogFile logfile = {
+                .selected = false,
+                .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS ),
+                .size = size,
+                .name = name,
+                .hash = hash,
+                .path = path
+            };
+            // push in the list
+            this->logs_list.push_back( logfile );
         }
     }
 }
@@ -531,7 +531,7 @@ void Craplog::changeIisLogsBaseNames( const int& module_id )
             this->logs_base_names.at( 13 ).contains = "_in"; break;
 
         default: // shouldn't be reachable
-            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ) );
+            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
     }
 }
 const bool Craplog::isFileNameValid( const std::string& name )
@@ -646,7 +646,6 @@ void Craplog::stopWorking()
 {
     this->working = false;
     this->parsing = false;
-    this->used_files_hashes.clear();
 }
 const bool& Craplog::isWorking()
 {
@@ -662,33 +661,33 @@ const bool& Craplog::editedDatabase()
 }
 
 // performances
-const int& Craplog::getPerfSize()
+const unsigned& Craplog::getPerfSize()
 {
     return this->perf_size;
 }
-void Craplog::sumPerfSize( const int& size )
+void Craplog::sumPerfSize( const unsigned& size )
 {
     this->perf_size   += size;
     this->parsed_size += size;
 }
-const int& Craplog::getTotalSize()
+const unsigned& Craplog::getTotalSize()
 {
     return this->total_size;
 }
-const int& Craplog::getParsedSize()
+const unsigned& Craplog::getParsedSize()
 {
     return this->parsed_size;
 }
-const int& Craplog::getParsedLines()
+const unsigned& Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
 
-void Craplog::sumWarningsSize( const int& size )
+void Craplog::sumWarningsSize( const unsigned& size )
 {
     this->warnlisted_size += size;
 }
-void Craplog::sumBlacklistededSize( const int& size )
+void Craplog::sumBlacklistededSize( const unsigned& size )
 {
     this->blacklisted_size += size;
 }
@@ -709,35 +708,42 @@ void Craplog::clearDataCollection()
 void Craplog::run()
 {
     this->startWorking();
-
-    if ( this->proceed ) {
-        // collect log lines
-        this->joinLogLines();
-    }
-    if ( this->proceed ) {
-        // parse the log lines to fill the collection
-        this->parseLogLines();
-        // finished parsing logs
-        this->parsing = false;
-        this->parsed_size  = this->logOps.getSize();
-        this->parsed_lines = this->logOps.getLines();
-        this->perf_size    = this->parsed_size;
-    }
-    // clear log lines data
-    this->logs_lines.clear();
-
-    if ( this->proceed ) {
-        // store the new data
-        this->storeLogLines();
-    }
-
-    if ( this->proceed ) {
-        // succesfully updated the database
-        if ( this->parsed_size > 0 ) {
-            this->db_edited = true;
+    try {
+        if ( this->proceed ) {
+            // collect log lines
+            this->joinLogLines();
         }
-        // insert the hashes of the used files
-        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
+        if ( this->proceed ) {
+            // parse the log lines to fill the collection
+            this->parseLogLines();
+            // finished parsing logs
+            this->parsing = false;
+            this->parsed_size  = this->logOps.getSize();
+            this->parsed_lines = this->logOps.getLines();
+            this->perf_size    = this->parsed_size;
+        }
+        // clear log lines data
+        this->logs_lines.clear();
+
+        if ( this->proceed ) {
+            // store the new data
+            this->storeLogLines();
+        }
+
+        if ( this->proceed ) {
+            // succesfully updated the database
+            if ( this->parsed_size > 0 ) {
+                this->db_edited = true;
+            }
+            // insert the hashes of the used files
+            this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
+        }
+        this->used_files_hashes.clear();
+
+    // only catch generic, leave others un-catched
+    } catch (GenericException& e) {
+        DialogSec::errGeneric( nullptr, e.what() );
+        this->proceed = false;;
     }
 
     this->stopWorking();
@@ -856,7 +862,7 @@ void Craplog::joinLogLines()
                 // try as gzip compressed archive first
                 GZutils::readFile( file.path, aux );
 
-            } catch (GenericException& e) {
+            } catch (const GenericException& e) {
                 // failed closing file pointer
                 throw e;
 
@@ -871,15 +877,28 @@ void Craplog::joinLogLines()
             if ( this->current_WS == this->IIS_ID ) {
                 this->logOps.cleanLines( content );
             }
+
+        // re-catched in run()
+        } catch (const GenericException) {
+            // failed closing gzip file pointer
+            throw GenericException( QString("%1:\n%2").arg(
+                DialogSec::tr("An error accured while reading the gzipped file"),
+                QString::fromStdString( file.path )
+                ).toStdString() );
+
         } catch (const std::ios_base::failure& err) {
-            // failed reading
-            // >> err.what() << //
-            DialogSec::errFailedReadFile( nullptr, file.name, true );
-            continue;
+            // failed reading as text
+            throw GenericException( QString("%1:\n%2").arg(
+                DialogSec::tr("An error accured while reading the file"),
+                QString::fromStdString( file.path )
+                ).toStdString() );
+
         } catch (...) {
             // failed somehow
-            DialogSec::errFailedReadFile( nullptr, file.name, true );
-            continue;
+            throw GenericException( QString("%1:\n%2").arg(
+                DialogSec::tr("Something failed while handling the file"),
+                QString::fromStdString( file.path )
+                ).toStdString() );
         }
 
         // append to the relative list
@@ -985,8 +1004,9 @@ void Craplog::storeLogLines()
             }
             if ( ! err_shown ) {
                 // show a message
-                QString msg = DialogSec::tr("An error occured while working on the database\n\nAborting");
-                DialogSec::errGeneric( nullptr, msg );
+                DialogSec::errGeneric( nullptr, QString("%1\n\n%2").arg(
+                    DialogSec::tr("An error occured while working on the database"),
+                    DialogSec::tr( f_ABORTING.c_str() ) ) );
             }
         }
 
@@ -996,7 +1016,7 @@ void Craplog::storeLogLines()
 }
 
 
-const QString Craplog::printableSize( const int& bytes )
+const QString Craplog::printableSize( const unsigned& bytes )
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -1020,7 +1040,7 @@ const QString Craplog::printableSize( const int& bytes )
     if ( cut_index != 0 ) {
         cut_index ++;
     }
-    int n_decimals = 3;
+    short n_decimals = 3;
     if ( size >= 100 ) {
         n_decimals = 2;
         if ( size >= 1000 ) {
