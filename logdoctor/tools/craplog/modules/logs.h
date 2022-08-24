@@ -39,8 +39,8 @@ public:
 
     void resetPerfData();
     // share perf data with craplog
-    const int getSize(),
-              getLines();
+    const unsigned getSize(),
+                   getLines();
 
 private:
 
@@ -53,12 +53,24 @@ private:
         {"date_time_hour",     4},
         {"date_time_minute",   5},
         {"date_time_second",   6},
-            {"date_time_ncsa",     0},
-            {"date_time_iso",      0},
-            {"date_time_mcs",      0},
-            {"date_time_gmt",      0},
-            {"date_time_utc_d",    0},
-            {"date_time_utc_t",    0},
+            {"date_time_ncsa",        0},
+            {"date_time_iso",         0},
+            {"date_time_mcs",         0},
+            {"date_time_gmt",         0},
+            {"date_time_utc_d",       0},
+            {"date_time_utc_t",       0},
+            {"date_time_epoch_s",     0},
+            {"date_time_epoch_s.ms",  0},
+            {"date_time_epoch_ms",    0},
+            {"date_time_epoch_us",    0},
+            {"date_time_YYYYMMDD",    0},
+            {"date_time_MMDDYY",      0},
+            {"date_time_MDYY",        0},
+            {"date_time_year_short",  0},
+            {"date_time_month_str",   0},
+            {"date_time_clock_12",    0},
+            {"date_time_clock_24",    0},
+            {"date_time_clock_short", 0},
         // request
         {"request_protocol",   10},
         {"request_method",     11},
@@ -68,9 +80,9 @@ private:
             {"request_full",       0},
         // performance
         {"time_taken_ms",      15},
-            {"time_taken_us",       0},
-            {"time_taken_s",       0},
+            {"time_taken_us",      0},
             {"time_taken_s.ms",    0},
+            {"time_taken_s",       0},
         {"bytes_sent",         16},
         {"bytes_received",     17},
         // referer
@@ -91,7 +103,7 @@ private:
         const FormatOps::LogsFormat& format
         );
     // temporary vars
-    int size=0, lines=0;
+    unsigned size=0, lines=0;
 
 
 };
