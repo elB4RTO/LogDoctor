@@ -289,7 +289,7 @@ void MainWindow::defineOSspec()
 
         default:
             // shouldn't be here
-            throw GenericException( "Unexpected OS ID: "+std::to_string( this->OS ) );
+            throw GenericException( "Unexpected OS ID: "+std::to_string( this->OS ), true );
     }
 }
 
@@ -922,7 +922,7 @@ void MainWindow::updateUiTheme()
 {
     if ( this->window_theme_id < 0 || this->window_theme_id > 2 ) {
         // wrong
-        throw GenericException( "Unexpected WindowTheme ID: "+std::to_string( this->window_theme_id ) );
+        throw GenericException( "Unexpected WindowTheme ID: "+std::to_string( this->window_theme_id ), true );
     }
     this->setPalette( ColorSec::getPalette( this->window_theme_id ) );
 }
@@ -1638,7 +1638,7 @@ void MainWindow::on_checkBox_LogFiles_CheckAll_stateChanged(int arg1)
         // do nothing
         return;
     }
-    QTreeWidgetItemIterator i(this->ui->listLogFiles);
+    QTreeWidgetItemIterator i( this->ui->listLogFiles );
     while ( *i ) {
         (*i)->setCheckState( 0, new_state );
         ++i;
@@ -1650,9 +1650,18 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 {
     if ( this->ui->listLogFiles->selectedItems().size() > 0 ) {
         bool proceed = true;
+        Craplog::LogFile item;
         // display the selected item
-        Craplog::LogFile item = this->craplog.getLogFileItem(
-            this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
+        try {
+            item = this->craplog.getLogFileItem(
+                this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
+
+        } catch (const GenericException& e) {
+            // failed to find file
+            proceed = false;
+            DialogSec::errFileNotFound( nullptr, QString::fromStdString( item.path ), true );
+        }
+
         FormatOps::LogsFormat format = this->craplog.getCurrentLogFormat();
 
         if ( proceed ) {
@@ -1662,7 +1671,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     // try reading as gzip compressed file
                     GZutils::readFile( item.path, content );
 
-                } catch (GenericException& e) {
+                } catch (const GenericException& e) {
                     // failed closing file pointer
                     throw e;
 
@@ -1674,17 +1683,19 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     IOutils::readFile( item.path, content );
                 }
 
-            } catch (GenericException& e) {
-                // failed closing
+            } catch (const GenericException/*& e*/) {
+                // failed closing gzip file pointer
                 proceed = false;
-                // >> err.what() << //
-                DialogSec::errGeneric( nullptr, DialogSec::tr("Failed closing file pointer for:\n") + item.name );
+                // >> e.what() << //
+                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(
+                    DialogSec::tr("Failed to read gzipped file"),
+                    item.name) );
 
-            } catch (const std::ios_base::failure& err) {
-                // failed reading
+            /*} catch (const std::ios_base::failure& err) {
+                // failed reading as text
                 proceed = false;
                 // >> err.what() << //
-                DialogSec::errFailedReadFile( nullptr, item.name );
+                DialogSec::errFailedReadFile( nullptr, item.name );*/
             } catch (...) {
                 // failed somehow
                 proceed = false;
@@ -1818,7 +1829,8 @@ void MainWindow::reset_MakeStats_labels()
 void MainWindow::update_MakeStats_labels()
 {
     // update values
-    int size, secs;
+    unsigned size;
+    long secs;
     // size and lines
     if ( this->craplog.isParsing() ) {
         this->craplog.collectPerfData();
@@ -2978,7 +2990,7 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
             font = this->FONTS.at( "script" );
             break;
         default:
-            throw GenericException( "Unexpected Font index: "+std::to_string(index) );
+            throw GenericException( "Unexpected Font index: "+std::to_string(index), true );
     }
     this->TB.setFont( font );
     this->TB.setFontFamily( this->ui->box_ConfTextBrowser_Font->currentText() );
