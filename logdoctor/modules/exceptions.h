@@ -8,7 +8,7 @@
 
 class GenericException : public std::exception {
 public:
-    GenericException( const std::string& msg );
+    GenericException( const std::string& msg , const bool& to_sys=false );
     const QString& what();
 
 private:
@@ -19,10 +19,10 @@ private:
 class WebServerException : public std::exception {
 public:
     WebServerException( const std::string& msg );
-    const QString& what();
+    /*const QString& what();
 
 private:
-    QString msg;
+    QString msg;*/
 };
 
 
@@ -39,20 +39,20 @@ private:
 class LogParserException : public std::exception {
 public:
     LogParserException( const std::string& msg );
-    const QString& what();
+    /*const QString& what();
 
 private:
-    QString msg;
+    QString msg;*/
 };
 
 
 class DateTimeException : public std::exception {
 public:
     DateTimeException( const std::string& msg );
-    const QString& what();
+    /*const QString& what();
 
 private:
-    QString msg;
+    QString msg;*/
 };
 
 #endif // EXCEPTIONS_H
