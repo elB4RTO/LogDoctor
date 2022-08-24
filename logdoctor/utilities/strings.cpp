@@ -307,10 +307,11 @@ void StringOps::splitrip( std::vector<std::string>& list, const std::string& tar
     const std::string str_ = StringOps::strip( target_str, strip );
     StringOps::split( aux, str_, separator );
     for ( const std::string& str : aux ) {
-        if ( str.size() == 0 ) {
+        const std::string str_aux = StringOps::strip( str, strip );
+        if ( str_aux.size() == 0 ) {
             continue;
         }
-        list.push_back( StringOps::strip( str, strip ) );
+        list.push_back( str_aux );
     }
     aux.clear();
 }
