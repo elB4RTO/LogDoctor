@@ -97,7 +97,7 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
     `cd LogDoctor/`<br/><br/>
   - Run the installation script
     - Linux/BSD: `chmod +x ./build_install.sh && ./build_install.sh`
-    - Windows: `chmod +x ./build_install.bat && ./build_install.bat`
+    - Windows: `./build_install.bat`
     - Mac OS: `chmod +x ./build_install_MAC.sh && ./build_install_MAC.sh`<br/><br/>
 - **From binary**
   - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
@@ -146,7 +146,7 @@ At the moment of writing, the only supported method is the manual update.
     `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
   - Run the update script
     - Linux/BSD: `chmod +x ./build_update.sh && ./build_update.sh`
-    - Windows: `chmod +x ./build_update.bat && ./build_update.bat`
+    - Windows: `./build_update.bat`
     - Mac OS: `chmod +x ./build_update_MAC.sh && ./build_update_MAC.sh`<br/><br/>
 - **From binary**
   - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)<br/>
