@@ -17,12 +17,12 @@ if [[ $(which cmake) =~ ^/ ]]
 	fi
 
 # Check the existence of a previous executable file
-if [ -e /usr/bin/logdoctor ]
+if [ -e /Applications/LogDoctor.app ]
 	then
 		while true;
 			do
-				echo "Warning: the file /usr/bin/logdoctor already exists"
-				printf "If you choose to continue, the actual file will be overwritten\nContinue? [y/n] : "
+				echo "Warning: the path /Applications/LogDoctor.app already exists"
+				printf "If you choose to continue, the actual content will be overwritten\nContinue? [y/n] : "
 				read agree
 				case "$agree"
 					in
@@ -58,7 +58,8 @@ if [[ "$?" == "0" ]]
 	then
 		# compiled succesfully
 		echo "Done compiling"
-		mv LogDoctor logdoctor
+		chmod 755 ./LogDoctor
+		mv LogDoctor ../installation_stuff/LogDoctor.app/bin/
 	else
 		# an error occured during compilation
 		echo "Error: failed to compile"
@@ -73,9 +74,9 @@ echo "Compilation finished"
 echo "Starting installation process"
 cd ../installation_stuff/
 
-if [ -e ~/.config/LogDoctor ]
+if [ -e ~/Lybrary/Preferences/LogDoctor ]
 	then
-		if [ -e ~/.config/LogDoctor/logdoctor.conf ]
+		if [ -e ~/Lybrary/Preferences/LogDoctor/logdoctor.conf ]
 			then
 				# A configuration file already exists
 				while true;
@@ -87,7 +88,7 @@ if [ -e ~/.config/LogDoctor ]
 							in
 								"y" | "Y")
 									printf "\n"
-									cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
+									cp --no-preserve=all ./logdoctor.conf ~/Lybrary/Preferences/LogDoctor/
 									if [[ "$?" != "0" ]]
 										then
 											# an error occured during compilation
@@ -103,13 +104,13 @@ if [ -e ~/.config/LogDoctor ]
 					done
 			fi
 	else
-		mkdir -p ~/.config/LogDoctor
+		mkdir -p ~/Lybrary/Preferences/LogDoctor
 		if [[ "$?" != "0" ]]
 			then
-				echo "Error: failed to create directory: ~/.config/LogDoctor"
+				echo "Error: failed to create directory: ~/Lybrary/Preferences/LogDoctor"
 				exit
 			fi
-		cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
+		cp --no-preserve=all ./logdoctor.conf ~/Lybrary/Preferences/LogDoctor/
 		if [[ "$?" != "0" ]]
 			then
 				echo "Error: failed to copy configuration file"
@@ -118,15 +119,15 @@ if [ -e ~/.config/LogDoctor ]
 	fi
 
 
-if [ ! -e ~/.local/share/LogDoctor ]
+if [ ! -e ~/Lybrary/Application Support/LogDoctor ]
 	else
-		mkdir -p ~/.local/share/LogDoctor
+		mkdir -p ~/Lybrary/Application Support/LogDoctor
 		if [[ "$?" != "0" ]]
 			then
-				echo "Error: failed to create directory: ~/.local/share/LogDoctor"
+				echo "Error: failed to create directory: ~/Lybrary/Application Support/LogDoctor"
 				exit
 	fi
-cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
+cp -r --no-preserve=all ./logdocdata/help ~/Lybrary/Application Support/LogDoctor/
 if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to copy LogDoctor's data"
@@ -134,28 +135,11 @@ if [[ "$?" != "0" ]]
 	fi
 
 
-cp --no-preserve=all ./LogDoctor.desktop ~/.local/share/applications/
-if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to create a menu entry"
-		exit
-	fi
-
-
-cp --no-preserve=all ./logdoctor ./logdoctor.copy
-chmod 755 ./logdoctor.copy
-sudo mv ./logdoctor.copy /usr/bin/logdoctor
+cp --no-preserve=all ./LogDoctor.app ./LogDoctor.app.copy
+sudo mv ./LogDoctor.app.copy /Applications/LogDoctor.app
 if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to copy the executable"
-		exit
-	fi
-
-
-sudo cp --no-preserve=all ./logdoctor.svg /usr/share/icons
-if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to copy LogDoctor's icon"
 		exit
 	fi
 
