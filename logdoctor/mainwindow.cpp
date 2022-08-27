@@ -261,28 +261,28 @@ void MainWindow::closeEvent (QCloseEvent *event)
 // os definition
 void MainWindow::defineOSspec()
 {
-    const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );
+    /*const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );*/
     switch ( this->OS ) {
         case 1:
             // unix-like
-            this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
-            this->logdoc_path    = home_path + "/.local/share/LogDoctor";
+            /*this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
+            this->logdoc_path    = home_path + "/.local/share/LogDoctor";*/
             this->db_data_path   = logdoc_path;
             this->db_hashes_path = logdoc_path;
             break;
 
         case 2:
             // windows
-            this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
-            this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";
+            /*this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
+            this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";*/
             this->db_data_path   = logdoc_path;
             this->db_hashes_path = logdoc_path;
             break;
 
         case 3:
             // darwin-based
-            this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
-            this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";
+            /*this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
+            this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";*/
             this->db_data_path   = logdoc_path;
             this->db_hashes_path = logdoc_path;
             break;
