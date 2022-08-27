@@ -1086,8 +1086,8 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
         parsed_slice_name      = TR::tr("Parsed"),
         warning_slice_name     = TR::tr("Warnings"),
         blacklisted_slice_name = TR::tr("Blacklisted");/*,
-        traffic_chart_name     = QMessageBox::tr("Time of Day Logs Traffic Ensemble"),
-        access_bar_name        = QMessageBox::tr("Access Logs");*/
+        traffic_chart_name     = TR::tr("Time of Day Logs Traffic Ensemble"),
+        access_bar_name        = TR::tr("Access Logs");*/
 
     // logs size donut chart
     QPieSeries *parsedSize_donut = new QPieSeries();
