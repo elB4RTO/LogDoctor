@@ -131,7 +131,7 @@ private:
     // conversion between text and IDs
     const QHash<QString, int>
         WebServer_s2i = {
-            {"Apache2",11}, {"Nginx",12}, {"IIS",13} },
+            {"apache",11}, {"nginx",12}, {"iis",13} },
         LogFields_s2i = {
             {QString::fromStdString(this->dbQuery.FIELDS.at( 0)), 0},
             {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},

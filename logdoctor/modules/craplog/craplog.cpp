@@ -1093,20 +1093,20 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
     QPieSeries *parsedSize_donut = new QPieSeries();
     parsedSize_donut->setName( this->printableSize( this->parsed_size ) );
     parsedSize_donut->append(
-        parsed_slice_name + "@" + parsed_slice_name + "@" + this->printableSize( this->parsed_size-this->warnlisted_size ),
+        "P@" + parsed_slice_name + "@" + this->printableSize( this->parsed_size-this->warnlisted_size ),
         this->parsed_size-this->warnlisted_size );
     parsedSize_donut->append(
-        warning_slice_name + "@" + warning_slice_name + "@" + this->printableSize( this->warnlisted_size ),
+        "W@" + warning_slice_name + "@" + this->printableSize( this->warnlisted_size ),
         this->warnlisted_size );
     parsedSize_donut->append(
-        blacklisted_slice_name + "@" + blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_size ),
+        "B@" + blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_size ),
         this->blacklisted_size );
 
     // logs size donut chart
     QPieSeries *ignoredSize_donut = new QPieSeries();
     ignoredSize_donut->setName( this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ) );
     ignoredSize_donut->append(
-        ignored_slice_name + "@#" + ignored_slice_name + "@#" + this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ),
+        "I@#" + ignored_slice_name + "@#" + this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ),
         this->total_size-this->parsed_size-this->blacklisted_size );
     ignoredSize_donut->setLabelsVisible( false );
 
