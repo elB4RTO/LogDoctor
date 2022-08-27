@@ -3,9 +3,7 @@
 
 #include "modules/exceptions.h"
 
-//#include <stdio.h>
-//#include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <errno.h>
 #include <zlib.h>
 

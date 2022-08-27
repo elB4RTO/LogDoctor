@@ -1,14 +1,14 @@
 
 #include "hash.h"
 
-#include "modules/dialogs.h"
-#include "modules/exceptions.h"
 
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/vectors.h"
 
-#include "tools/craplog/modules/sha256.h"
+#include "modules/dialogs.h"
+#include "modules/exceptions.h"
+#include "modules/craplog/modules/sha256.h"
 
 
 
@@ -250,7 +250,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                 }
                 if ( ! err_shown ) {
                     // show a message
-                    QString msg = QMessageBox::tr("An error occured while working on the database\n\nAborting");
+                    QString msg = DialogSec::tr("An error occured while working on the database\n\nAborting");
                     DialogSec::errGeneric( nullptr, msg );
                 }
             }

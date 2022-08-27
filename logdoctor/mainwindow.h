@@ -14,23 +14,25 @@
 
 #include <thread>
 
+#include "utilities/checks.h"
 #include "utilities/colors.h"
 #include "utilities/io.h"
 #include "utilities/rtf.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
 
-#include "modules/checks.h"
 #include "modules/dialogs.h"
 #include "modules/tb.h"
 
-#include "tools/shared.h"
-#include "tools/craplog/craplog.h"
-#include "tools/crapview/crapview.h"
-#include "tools/craphelp/craphelp.h"
-#include "tools/crapup/crapup.h"
+#include "modules/shared.h"
+#include "modules/craplog/craplog.h"
+#include "modules/crapview/crapview.h"
+#include "modules/craphelp/craphelp.h"
+#include "modules/crapup/crapup.h"
+#include "modules/crapinfo/crapinfo.h"
+
 #include "tools/crapnote/crapnote.h"
-#include "tools/crapinfo/crapinfo.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
