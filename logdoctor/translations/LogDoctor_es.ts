@@ -4,23 +4,13 @@
 <context>
     <name>Crapinfo</name>
     <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="39"/>
-        <source>LogDoctor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../tools/crapinfo/crapinfo.ui" line="159"/>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../tools/crapinfo/crapinfo.ui" line="186"/>
-        <source>Current version of the software</source>
+        <source>Currently installed version of the software</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -29,52 +19,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="244"/>
-        <source>https://github.com/elB4RTO/LogDoctor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="271"/>
-        <source>https://git.disroot.org/elB4RTO/LogDoctor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="298"/>
-        <source>https://gitlab.com/elB4RTO/LogDoctor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="442"/>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="445"/>
         <source>Paths</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="468"/>
-        <source>The path where the executable file will be placed in</source>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="471"/>
+        <source>The path of the executable file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="471"/>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="564"/>
+        <source>The path where the configuration file gets saved and searched in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="657"/>
+        <source>The path where the application searches for extra resources</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="474"/>
         <source>Executable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="558"/>
-        <source>The path where the configuration file will be saved and searched in</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="561"/>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="567"/>
         <source>Configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="648"/>
-        <source>The path where the application will search in for extra resources</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/crapinfo/crapinfo.ui" line="651"/>
+        <location filename="../tools/crapinfo/crapinfo.ui" line="660"/>
         <source>Application data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -82,17 +57,17 @@
 <context>
     <name>Crapnote</name>
     <message>
-        <location filename="../tools/crapnote/crapnote.ui" line="57"/>
+        <location filename="../tools/crapnote/crapnote.ui" line="60"/>
         <source>Reduce the font size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapnote/crapnote.ui" line="82"/>
+        <location filename="../tools/crapnote/crapnote.ui" line="85"/>
         <source>Font size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/crapnote/crapnote.ui" line="121"/>
+        <location filename="../tools/crapnote/crapnote.ui" line="124"/>
         <source>Increase the font size</source>
         <translation type="unfinished"></translation>
     </message>
@@ -148,297 +123,296 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1681"/>
-        <source>Failed closing file pointer for:
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../modules/dialogs.h" line="121"/>
-        <source>Continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../modules/dialogs.h" line="122"/>
-        <source>Your choice?</source>
+        <location filename="../mainwindow.cpp" line="1691"/>
+        <source>Failed to read gzipped file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../modules/dialogs.h" line="123"/>
-        <source>Discard it and continue, or Abort all and exit?</source>
+        <source>Continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../modules/dialogs.h" line="124"/>
-        <source>Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?</source>
+        <source>Your choice?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../modules/dialogs.h" line="125"/>
-        <source>Create a new database?</source>
+        <source>Discard it and continue, or Abort all and exit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../modules/dialogs.h" line="126"/>
+        <source>Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../modules/dialogs.h" line="127"/>
+        <source>Create a new database?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../modules/dialogs.h" line="128"/>
         <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
 Continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="127"/>
+        <location filename="../modules/dialogs.h" line="129"/>
         <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
 Continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="131"/>
+        <location filename="../modules/dialogs.h" line="133"/>
         <source>An error occured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="134"/>
+        <location filename="../modules/dialogs.h" line="136"/>
         <source>Failed renaming</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="137"/>
+        <location filename="../modules/dialogs.h" line="139"/>
         <source>Invalid locale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="140"/>
+        <location filename="../modules/dialogs.h" line="142"/>
         <source>Configuration file not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="141"/>
+        <location filename="../modules/dialogs.h" line="143"/>
         <source>Failed to write configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="144"/>
+        <location filename="../modules/dialogs.h" line="146"/>
         <source>Version check</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="145"/>
+        <location filename="../modules/dialogs.h" line="147"/>
         <source>Version check failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="146"/>
+        <location filename="../modules/dialogs.h" line="148"/>
         <source>Failed to establish a connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="149"/>
+        <location filename="../modules/dialogs.h" line="151"/>
         <source>Failed to retrieve the help file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="152"/>
+        <location filename="../modules/dialogs.h" line="154"/>
         <source>Not a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="153"/>
+        <location filename="../modules/dialogs.h" line="155"/>
         <source>File not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="154"/>
+        <location filename="../modules/dialogs.h" line="156"/>
         <source>File not readable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="155"/>
+        <location filename="../modules/dialogs.h" line="157"/>
         <source>File not writable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="156"/>
+        <location filename="../modules/dialogs.h" line="158"/>
         <source>File is empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="157"/>
+        <location filename="../modules/dialogs.h" line="159"/>
         <source>Failed reading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="158"/>
+        <location filename="../modules/dialogs.h" line="160"/>
         <source>Failed writing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="161"/>
+        <location filename="../modules/dialogs.h" line="163"/>
         <source>Not a folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="162"/>
+        <location filename="../modules/dialogs.h" line="164"/>
         <source>Directory not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="163"/>
+        <location filename="../modules/dialogs.h" line="165"/>
         <source>Directory not readable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="164"/>
+        <location filename="../modules/dialogs.h" line="166"/>
         <source>Directory not writable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="165"/>
+        <location filename="../modules/dialogs.h" line="167"/>
         <source>Failed creating directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="168"/>
+        <location filename="../modules/dialogs.h" line="170"/>
         <source>QSql driver not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="169"/>
+        <location filename="../modules/dialogs.h" line="171"/>
         <source>Database created</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="170"/>
+        <location filename="../modules/dialogs.h" line="172"/>
         <source>Failed creating database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="171"/>
+        <location filename="../modules/dialogs.h" line="173"/>
         <source>Failed opening database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="172"/>
+        <location filename="../modules/dialogs.h" line="174"/>
         <source>Failed executing on database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="173"/>
+        <location filename="../modules/dialogs.h" line="175"/>
         <source>Unexpected table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="174"/>
+        <location filename="../modules/dialogs.h" line="176"/>
         <source>Table not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="175"/>
+        <location filename="../modules/dialogs.h" line="177"/>
         <source>Unexpected column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="176"/>
+        <location filename="../modules/dialogs.h" line="178"/>
         <source>Column not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="177"/>
+        <location filename="../modules/dialogs.h" line="179"/>
         <source>Unexpected data-type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="178"/>
+        <location filename="../modules/dialogs.h" line="180"/>
         <source>Failed to backup database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="181"/>
+        <location filename="../modules/dialogs.h" line="183"/>
         <source>Failed defining type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="184"/>
+        <location filename="../modules/dialogs.h" line="186"/>
         <source>Log format error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="185"/>
+        <location filename="../modules/dialogs.h" line="187"/>
         <source>Misconfigured log format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="186"/>
+        <location filename="../modules/dialogs.h" line="188"/>
         <source>Invalid log format string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="189"/>
+        <location filename="../modules/dialogs.h" line="191"/>
         <source>File already used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="190"/>
+        <location filename="../modules/dialogs.h" line="192"/>
         <source>File exceeds warning size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="195"/>
+        <location filename="../modules/dialogs.h" line="197"/>
         <source>An error occured while renaming</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="198"/>
+        <location filename="../modules/dialogs.h" line="200"/>
         <source>Unexpected locale format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="199"/>
+        <location filename="../modules/dialogs.h" line="201"/>
         <source>The given locale is not an accepted language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="202"/>
+        <location filename="../modules/dialogs.h" line="204"/>
         <source>An error occured while handling the configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="203"/>
+        <location filename="../modules/dialogs.h" line="205"/>
         <source>Unable to retrieve the configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="204"/>
+        <location filename="../modules/dialogs.h" line="206"/>
         <source>Current configuration not saved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="207"/>
+        <location filename="../modules/dialogs.h" line="209"/>
         <source>Failed to fetch the upstream version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="208"/>
+        <location filename="../modules/dialogs.h" line="210"/>
         <source>An error occured while trying to establish a connection with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="209"/>
+        <location filename="../modules/dialogs.h" line="211"/>
         <source>An error occured while establishing a connection with any of the hosts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="210"/>
+        <location filename="../modules/dialogs.h" line="212"/>
         <source>An error occured while parsing:
 version mark not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="211"/>
+        <location filename="../modules/dialogs.h" line="213"/>
         <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="212"/>
+        <location filename="../modules/dialogs.h" line="214"/>
         <source>A new version available!
 
 Please visit LogDoctor&apos;s git repository
@@ -446,12 +420,12 @@ and follow the instruction about how to update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="213"/>
+        <location filename="../modules/dialogs.h" line="215"/>
         <source>LogDoctor is up-to-date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="214"/>
+        <location filename="../modules/dialogs.h" line="216"/>
         <source>You&apos;re running a version from the future!
 
 Your version is beyond the current upstream version
@@ -462,263 +436,265 @@ Please visit the LogDoctor&apos;s repository and get a fresh version of it</sour
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="217"/>
+        <location filename="../modules/dialogs.h" line="219"/>
         <source>An error occured while getting the help file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="220"/>
+        <location filename="../modules/dialogs.h" line="222"/>
         <source>The path was supposed to point to a file, but it doesn&apos;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="221"/>
+        <location filename="../modules/dialogs.h" line="223"/>
         <source>The file does not exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="222"/>
+        <location filename="../modules/dialogs.h" line="224"/>
         <source>Unable to retrieve the file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="223"/>
+        <location filename="../modules/dialogs.h" line="225"/>
         <source>The file is not readable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="224"/>
+        <location filename="../modules/dialogs.h" line="226"/>
         <source>The file is not writable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="225"/>
+        <location filename="../modules/dialogs.h" line="227"/>
         <source>The file is blank</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="226"/>
+        <location filename="../modules/dialogs.h" line="228"/>
+        <location filename="../tools/craplog/craplog.cpp" line="892"/>
+        <location filename="../tools/craplog/modules/hash.cpp" line="103"/>
         <source>An error accured while reading the file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="227"/>
+        <location filename="../modules/dialogs.h" line="229"/>
         <source>An error accured while writing the file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="230"/>
+        <location filename="../modules/dialogs.h" line="232"/>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="231"/>
+        <location filename="../modules/dialogs.h" line="233"/>
         <source>The directory does not exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="232"/>
+        <location filename="../modules/dialogs.h" line="234"/>
         <source>Unable to reach the directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="233"/>
+        <location filename="../modules/dialogs.h" line="235"/>
         <source>The directory is not readable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="234"/>
+        <location filename="../modules/dialogs.h" line="236"/>
         <source>The directory is not writable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="237"/>
+        <location filename="../modules/dialogs.h" line="239"/>
         <source>Failed to retrieve the driver neede to handle the database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="238"/>
+        <location filename="../modules/dialogs.h" line="240"/>
         <source>Failed to retrieve the database file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="239"/>
+        <location filename="../modules/dialogs.h" line="241"/>
         <source>The database file is not readable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="240"/>
+        <location filename="../modules/dialogs.h" line="242"/>
         <source>The database file is not writable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="241"/>
+        <location filename="../modules/dialogs.h" line="243"/>
         <source>Successfully created a new database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="242"/>
+        <location filename="../modules/dialogs.h" line="244"/>
         <source>An error occured while creating the database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="243"/>
+        <location filename="../modules/dialogs.h" line="245"/>
         <source>An error occured while opening the database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="244"/>
+        <location filename="../modules/dialogs.h" line="246"/>
         <source>An error occured while executing a statement on the database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="245"/>
+        <location filename="../modules/dialogs.h" line="247"/>
         <source>Failed at statement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="246"/>
+        <location filename="../modules/dialogs.h" line="248"/>
         <source>SQLite error message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="247"/>
+        <location filename="../modules/dialogs.h" line="249"/>
         <source>The database contains an unexpected table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="248"/>
+        <location filename="../modules/dialogs.h" line="250"/>
         <source>It seems that the database is missing a table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="249"/>
+        <location filename="../modules/dialogs.h" line="251"/>
         <source>It seems that the table is missing a column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="250"/>
+        <location filename="../modules/dialogs.h" line="252"/>
         <source>The database contains an unexpected column</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="251"/>
+        <location filename="../modules/dialogs.h" line="253"/>
         <source>A column has an unexpected data-type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="254"/>
+        <location filename="../modules/dialogs.h" line="256"/>
         <source>Failed to retrieve the selected file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="255"/>
+        <location filename="../modules/dialogs.h" line="257"/>
         <source>The file has probably been used already</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="256"/>
+        <location filename="../modules/dialogs.h" line="258"/>
         <source>The file&apos;s size exceeds the warning size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="259"/>
+        <location filename="../modules/dialogs.h" line="261"/>
         <source>Failed to determine the log type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="262"/>
+        <location filename="../modules/dialogs.h" line="264"/>
         <source>The log format has not been set, or is invalid
 Please add a valid one in the configurations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="263"/>
+        <location filename="../modules/dialogs.h" line="265"/>
         <source>No log field has been set in the current logs format,
 making it useless to parse logs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="264"/>
+        <location filename="../modules/dialogs.h" line="266"/>
         <source>A separator is missing between one or more fields,
 making it hard to establish net bounds,
 and possibly leading to store incorrect data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="268"/>
+        <location filename="../modules/dialogs.h" line="270"/>
         <source>Please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="271"/>
+        <location filename="../modules/dialogs.h" line="273"/>
         <source>IF you&apos;d like to have this locale in LogDoctor,
 please follow the instruction on the repository page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="274"/>
+        <location filename="../modules/dialogs.h" line="276"/>
         <source>Please check your internet connection and retry
 If this error persists, please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="277"/>
+        <location filename="../modules/dialogs.h" line="279"/>
         <source>Please remove the conflict and retry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="280"/>
+        <location filename="../modules/dialogs.h" line="282"/>
         <source>Please set the proper permissions before to start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="281"/>
+        <location filename="../modules/dialogs.h" line="283"/>
         <source>Please set the proper permissions and retry
 If this error persists, please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="284"/>
+        <location filename="../modules/dialogs.h" line="286"/>
         <source>If you haven&apos;t manually edited the configuration file,
 please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="285"/>
+        <location filename="../modules/dialogs.h" line="287"/>
         <source>If you haven&apos;t manually edited the database,
 please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="288"/>
+        <location filename="../modules/dialogs.h" line="290"/>
         <source>Please check that no error is thrown from your WebServer
 If it gets accepted, please check the presence of a typo here
 If everything is fine, please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="289"/>
+        <location filename="../modules/dialogs.h" line="291"/>
         <source>Please set up a format which contains at least one field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="290"/>
+        <location filename="../modules/dialogs.h" line="292"/>
         <source>Please set up a format which contains separators between fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="294"/>
+        <location filename="../modules/dialogs.h" line="296"/>
         <source>Skipping</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="295"/>
+        <location filename="../modules/dialogs.h" line="297"/>
         <source>Aborting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.h" line="298"/>
+        <location filename="../modules/dialogs.h" line="300"/>
         <source>Additional resources can be downloaded from the git repo</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,25 +706,30 @@ If everything is fine, please report this issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="476"/>
-        <source>An error occured while handling the file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../tools/craplog/craplog.cpp" line="796"/>
+        <location filename="../tools/craplog/craplog.cpp" line="802"/>
         <source>Size of the file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="806"/>
+        <location filename="../tools/craplog/craplog.cpp" line="812"/>
         <source>Warning size parameter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="988"/>
-        <source>An error occured while working on the database
-
-Aborting</source>
+        <location filename="../tools/craplog/craplog.cpp" line="885"/>
+        <location filename="../tools/craplog/modules/hash.cpp" line="96"/>
+        <source>An error accured while reading the gzipped file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../tools/craplog/craplog.cpp" line="899"/>
+        <location filename="../tools/craplog/modules/hash.cpp" line="110"/>
+        <source>Something failed while handling the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../tools/craplog/craplog.cpp" line="1008"/>
+        <source>An error occured while working on the database</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1890,12 +1871,12 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="3187"/>
+        <location filename="../mainwindow.cpp" line="3199"/>
         <source>copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="3189"/>
+        <location filename="../mainwindow.cpp" line="3201"/>
         <source>copies</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1903,7 +1884,7 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
 <context>
     <name>QMessageBox</name>
     <message>
-        <location filename="../tools/craplog/modules/hash.cpp" line="243"/>
+        <location filename="../tools/craplog/modules/hash.cpp" line="253"/>
         <source>An error occured while working on the database
 
 Aborting</source>
@@ -1931,27 +1912,27 @@ Aborting</source>
 <context>
     <name>TR</name>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="1064"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1084"/>
         <source>Logs Size Breakdown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="1065"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1085"/>
         <source>Ignored</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="1066"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1086"/>
         <source>Parsed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="1067"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1087"/>
         <source>Warnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/craplog/craplog.cpp" line="1068"/>
+        <location filename="../tools/craplog/craplog.cpp" line="1088"/>
         <source>Blacklisted</source>
         <translation type="unfinished"></translation>
     </message>
