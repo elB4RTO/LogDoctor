@@ -1195,6 +1195,20 @@ const bool& MainWindow::checkDataDB()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
+const QString MainWindow::wsFromIndex( const int& index )
+{
+    switch (index) {
+    case 0:
+        return QString("apache");
+    case 1:
+        return QString("nginx");
+    case 2:
+        return QString("iis");
+    default:
+        throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
+    }
+}
+
 const std::string MainWindow::resolvePath( const std::string& path )
 {
     std::string p;
@@ -1957,8 +1971,7 @@ void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
         this->ui->box_StatsWarn_Year->clear();
         if ( index != -1 ) {
             this->ui->box_StatsWarn_Year->addItems(
-                this->crapview.getYears(
-                    this->ui->box_StatsWarn_WebServer->currentText() ));
+                this->crapview.getYears( this->wsFromIndex( index ) ));
             this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
         }
     }
@@ -1971,7 +1984,7 @@ void MainWindow::on_box_StatsWarn_Year_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsWarn_Month->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsWarn_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
                 this->ui->box_StatsWarn_Year->currentText() ) );
         this->ui->box_StatsWarn_Month->setCurrentIndex( 0 );
     }
@@ -1984,7 +1997,7 @@ void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsWarn_Day->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsWarn_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
                 this->ui->box_StatsWarn_Year->currentText(),
                 this->ui->box_StatsWarn_Month->currentText() ) );
         this->ui->box_StatsWarn_Day->setCurrentIndex( 0 );
@@ -2038,7 +2051,7 @@ void MainWindow::drawStatsWarn()
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsWarn_WebServer->currentText(),
+        this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
         this->ui->box_StatsWarn_Day->currentText(),
@@ -2051,7 +2064,7 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
 {
     this->crapview.updateWarn(
         this->ui->table_StatsWarn,
-        this->ui->box_StatsWarn_WebServer->currentText() );
+        this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ) );
     this->db_edited = true;
 }
 
@@ -2081,8 +2094,7 @@ void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
         this->ui->box_StatsSpeed_Year->clear();
         if ( index != -1 ) {
             this->ui->box_StatsSpeed_Year->addItems(
-                this->crapview.getYears(
-                    this->ui->box_StatsSpeed_WebServer->currentText() ) );
+                this->crapview.getYears( this->wsFromIndex( index ) ) );
             this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
         }
     }
@@ -2095,7 +2107,7 @@ void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsSpeed_Month->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsSpeed_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
                 this->ui->box_StatsSpeed_Year->currentText() ) );
         this->ui->box_StatsSpeed_Month->setCurrentIndex( 0 );
     }
@@ -2108,7 +2120,7 @@ void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsSpeed_Day->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsSpeed_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
                 this->ui->box_StatsSpeed_Year->currentText(),
                 this->ui->box_StatsSpeed_Month->currentText() ) );
         this->ui->box_StatsSpeed_Day->setCurrentIndex( 0 );
@@ -2139,7 +2151,7 @@ void MainWindow::drawStatsSpeed()
         this->ui->table_StatsSpeed,
         this->ui->chart_SatsSpeed,
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsSpeed_WebServer->currentText(),
+        this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
         this->ui->box_StatsSpeed_Day->currentText(),
@@ -2177,8 +2189,7 @@ void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
         this->ui->box_StatsCount_Year->clear();
         if ( index != -1 ) {
             this->ui->box_StatsCount_Year->addItems(
-                this->crapview.getYears(
-                    this->ui->box_StatsCount_WebServer->currentText() ));
+                this->crapview.getYears( this->wsFromIndex( index ) ));
             this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
             this->resetStatsCountButtons();
         }
@@ -2192,7 +2203,7 @@ void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsCount_Month->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsCount_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
                 this->ui->box_StatsCount_Year->currentText() ) );
         this->ui->box_StatsCount_Month->setCurrentIndex( 0 );
     }
@@ -2205,7 +2216,7 @@ void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsCount_Day->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsCount_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
                 this->ui->box_StatsCount_Year->currentText(),
                 this->ui->box_StatsCount_Month->currentText() ) );
         this->ui->box_StatsCount_Day->setCurrentIndex( 0 );
@@ -2355,7 +2366,7 @@ void MainWindow::drawStatsCount()
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsCount_WebServer->currentText(),
+        this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(),
         this->ui->box_StatsCount_Month->currentText(),
         this->ui->box_StatsCount_Day->currentText(),
@@ -2430,8 +2441,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
                 this->crapview.getFields( "Daytime" ));
             this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
             // refresh dates
-            QStringList years = this->crapview.getYears(
-                this->ui->box_StatsDay_WebServer->currentText() );
+            QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
             this->ui->box_StatsDay_FromYear->addItems( years );
             this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
             if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
@@ -2457,7 +2467,7 @@ void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsDay_FromMonth->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsDay_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_FromYear->currentText() ) );
         this->ui->box_StatsDay_FromMonth->setCurrentIndex( 0 );
     }
@@ -2470,7 +2480,7 @@ void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsDay_FromDay->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsDay_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_FromYear->currentText(),
                 this->ui->box_StatsDay_FromMonth->currentText() ) );
         this->ui->box_StatsDay_FromDay->setCurrentIndex( 0 );
@@ -2491,7 +2501,7 @@ void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
         this->ui->box_StatsDay_ToDay->setEnabled( true );
         // add available dates
         this->ui->box_StatsDay_ToYear->addItems( this->crapview.getYears(
-            this->ui->box_StatsDay_WebServer->currentText() ) );
+            this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ) ) );
         this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
     } else {
         this->ui->box_StatsDay_ToYear->clear();
@@ -2509,7 +2519,7 @@ void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsDay_ToMonth->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsDay_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_ToYear->currentText() ) );
         this->ui->box_StatsDay_ToMonth->setCurrentIndex( 0 );
     }
@@ -2522,7 +2532,7 @@ void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsDay_ToDay->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsDay_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_ToYear->currentText(),
                 this->ui->box_StatsDay_ToMonth->currentText() ) );
         this->ui->box_StatsDay_ToDay->setCurrentIndex( 0 );
@@ -2560,7 +2570,7 @@ void MainWindow::drawStatsDay()
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsDay_WebServer->currentText(),
+        this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
         this->ui->box_StatsDay_FromDay->currentText(),
@@ -2638,8 +2648,7 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
             this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
             this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
             // refresh dates
-            QStringList years = this->crapview.getYears(
-                this->ui->box_StatsRelat_WebServer->currentText() );
+            QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
             // from
             this->ui->box_StatsRelat_FromYear->clear();
             this->ui->box_StatsRelat_FromYear->addItems( years );
@@ -2672,7 +2681,7 @@ void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsRelat_FromMonth->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_FromYear->currentText() ) );
         this->ui->box_StatsRelat_FromMonth->setCurrentIndex( 0 );
     }
@@ -2685,7 +2694,7 @@ void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsRelat_FromDay->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_FromYear->currentText(),
                 this->ui->box_StatsRelat_FromMonth->currentText() ) );
         this->ui->box_StatsRelat_FromDay->setCurrentIndex( 0 );
@@ -2704,7 +2713,7 @@ void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsRelat_ToMonth->addItems(
             this->crapview.getMonths(
-                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_ToYear->currentText() ) );
         this->ui->box_StatsRelat_ToMonth->setCurrentIndex( 0 );
     }
@@ -2717,7 +2726,7 @@ void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
     if ( index != -1 ) {
         this->ui->box_StatsRelat_ToDay->addItems(
             this->crapview.getDays(
-                this->ui->box_StatsRelat_WebServer->currentText(),
+                this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_ToYear->currentText(),
                 this->ui->box_StatsRelat_ToMonth->currentText() ) );
         this->ui->box_StatsRelat_ToDay->setCurrentIndex( 0 );
@@ -2765,7 +2774,7 @@ void MainWindow::drawStatsRelat()
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->box_StatsRelat_WebServer->currentText(),
+        this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
         this->ui->box_StatsRelat_FromYear->currentText(),
         this->ui->box_StatsRelat_FromMonth->currentText(),
         this->ui->box_StatsRelat_FromDay->currentText(),
@@ -2822,21 +2831,21 @@ void MainWindow::makeStatsGlobals()
             this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
             this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
 
-            if ( this->glob_ws == "Apache2" ) {
+            if ( this->glob_ws == "apache" ) {
                 if ( this->ui->button_StatsGlob_Apache->isFlat() ) {
                     // un-flat
                     this->ui->button_StatsGlob_Apache->setFlat( false );
                     this->ui->button_StatsGlob_Nginx->setFlat( true );
                     this->ui->button_StatsGlob_Iis->setFlat( true );
                 }
-            } else if ( this->glob_ws == "Nginx" ) {
+            } else if ( this->glob_ws == "nginx" ) {
                 if ( this->ui->button_StatsGlob_Nginx->isFlat() ) {
                     // un-flat
                     this->ui->button_StatsGlob_Nginx->setFlat( false );
                     this->ui->button_StatsGlob_Apache->setFlat( true );
                     this->ui->button_StatsGlob_Iis->setFlat( true );
                 }
-            } else if ( this->glob_ws == "IIS" ) {
+            } else if ( this->glob_ws == "iis" ) {
                 if ( this->ui->button_StatsGlob_Iis->isFlat() ) {
                     // un-flat
                     this->ui->button_StatsGlob_Iis->setFlat( false );
@@ -2911,7 +2920,7 @@ void MainWindow::globalsButtonClicked()
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
     if ( this->checkDataDB() ) {
-        this->glob_ws = "Apache2";
+        this->glob_ws = "apache";
         this->globalsButtonClicked();
     }
 }
@@ -2920,7 +2929,7 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
     if ( this->checkDataDB() ) {
-        this->glob_ws = "Nginx";
+        this->glob_ws = "nginx";
         this->globalsButtonClicked();
     }
 }
@@ -2929,7 +2938,7 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
     if ( this->checkDataDB() ) {
-        this->glob_ws = "IIS";
+        this->glob_ws = "iis";
         this->globalsButtonClicked();
     }
 }
