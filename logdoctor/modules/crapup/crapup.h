@@ -2,7 +2,6 @@
 #define CRAPUP_H
 
 #include <string>
-#include <tuple>
 
 
 class Crapup

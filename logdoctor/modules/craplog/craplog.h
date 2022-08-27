@@ -7,9 +7,9 @@
 #include <QMainWindow>
 #include <QtCharts>
 
-#include "tools/craplog/modules/formats.h"
-#include "tools/craplog/modules/hash.h"
-#include "tools/craplog/modules/logs.h"
+#include "modules/craplog/modules/formats.h"
+#include "modules/craplog/modules/hash.h"
+#include "modules/craplog/modules/logs.h"
 
 
 class Craplog

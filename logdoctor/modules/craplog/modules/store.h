@@ -1,7 +1,7 @@
 #ifndef STORE_H
 #define STORE_H
 
-#include "tools/craplog/craplog.h"
+#include "modules/craplog/craplog.h"
 
 
 class StoreOps

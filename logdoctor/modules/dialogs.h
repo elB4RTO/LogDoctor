@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QString>
-#include <QMessageBox>
 
 #include <string>
 

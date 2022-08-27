@@ -1,7 +1,11 @@
 #ifndef CHECKS_H
 #define CHECKS_H
 
-#include "tools/craplog/craplog.h"
+#include <QString>
+#include <QSqlDatabase>
+
+#include <string>
+#include <vector>
 
 
 class CheckSec

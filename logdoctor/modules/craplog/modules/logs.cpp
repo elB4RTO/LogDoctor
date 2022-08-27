@@ -1,9 +1,8 @@
 
 #include "logs.h"
 
-#include "datetime.h"
-
 #include "modules/exceptions.h"
+#include "modules/craplog/modules/datetime.h"
 
 
 LogOps::LogOps()

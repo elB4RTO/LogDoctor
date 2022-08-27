@@ -22,12 +22,15 @@ set(TS_FILES
         translations/LogDoctor_it.ts
 )
 
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.ui
         mainwindow.h
         mainwindow.cpp
 
+        utilities/checks.h
+        utilities/checks.cpp
         utilities/colors.h
         utilities/colors.cpp
         utilities/gzip.h
@@ -41,10 +44,6 @@ set(PROJECT_SOURCES
         utilities/vectors.h
         utilities/vectors.cpp
 
-        modules/charts/donuts.h
-        modules/charts/donuts.cpp
-        modules/checks.h
-        modules/checks.cpp
         modules/dialogs.h
         modules/dialogs.cpp
         modules/exceptions.h
@@ -52,43 +51,45 @@ set(PROJECT_SOURCES
         modules/tb.h
         modules/tb.cpp
 
-        tools/shared.h
-        tools/shared.cpp
+        modules/shared.h
+        modules/shared.cpp
 
-        tools/craplog/craplog.h
-        tools/craplog/craplog.cpp
-        tools/craplog/modules/datetime.h
-        tools/craplog/modules/datetime.cpp
-        tools/craplog/modules/formats.h
-        tools/craplog/modules/formats.cpp
-        tools/craplog/modules/hash.h
-        tools/craplog/modules/hash.cpp
-        tools/craplog/modules/logs.h
-        tools/craplog/modules/logs.cpp
-        tools/craplog/modules/sha256.h
-        tools/craplog/modules/sha256.cpp
-        tools/craplog/modules/store.h
-        tools/craplog/modules/store.cpp
+        modules/craplog/craplog.h
+        modules/craplog/craplog.cpp
+        modules/craplog/modules/datetime.h
+        modules/craplog/modules/datetime.cpp
+        modules/craplog/modules/donuts.h
+        modules/craplog/modules/donuts.cpp
+        modules/craplog/modules/formats.h
+        modules/craplog/modules/formats.cpp
+        modules/craplog/modules/hash.h
+        modules/craplog/modules/hash.cpp
+        modules/craplog/modules/logs.h
+        modules/craplog/modules/logs.cpp
+        modules/craplog/modules/sha256.h
+        modules/craplog/modules/sha256.cpp
+        modules/craplog/modules/store.h
+        modules/craplog/modules/store.cpp
 
-        tools/crapview/crapview.h
-        tools/crapview/crapview.cpp
-        tools/crapview/modules/query.h
-        tools/crapview/modules/query.cpp
+        modules/crapview/crapview.h
+        modules/crapview/crapview.cpp
+        modules/crapview/modules/query.h
+        modules/crapview/modules/query.cpp
 
-        tools/craphelp/craphelp.ui
-        tools/craphelp/craphelp.h
-        tools/craphelp/craphelp.cpp
+        modules/craphelp/craphelp.ui
+        modules/craphelp/craphelp.h
+        modules/craphelp/craphelp.cpp
 
-        tools/crapup/crapup.h
-        tools/crapup/crapup.cpp
+        modules/crapup/crapup.h
+        modules/crapup/crapup.cpp
+
+        modules/crapinfo/crapinfo.ui
+        modules/crapinfo/crapinfo.h
+        modules/crapinfo/crapinfo.cpp
 
         tools/crapnote/crapnote.ui
         tools/crapnote/crapnote.h
         tools/crapnote/crapnote.cpp
-
-        tools/crapinfo/crapinfo.ui
-        tools/crapinfo/crapinfo.h
-        tools/crapinfo/crapinfo.cpp
 
         resources/resources.qrc
         ${TS_FILES}

@@ -1,8 +1,7 @@
 #ifndef LOGFILESTB_H
 #define LOGFILESTB_H
 
-
-#include "qfont.h"
+#include <QFont>
 
 
 class TextBrowser
