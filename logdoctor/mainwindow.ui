@@ -146,7 +146,7 @@
                   <string>Parse logs from the Apache2 web server</string>
                  </property>
                  <property name="text">
-                  <string notr="true">Apache2</string>
+                  <string>Apache2</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -173,7 +173,7 @@
                   <string>Parse logs from the Nginx web server</string>
                  </property>
                  <property name="text">
-                  <string notr="true">Nginx</string>
+                  <string>Nginx</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -200,7 +200,7 @@
                   <string>Parse logs from the Microsoft IIS web server</string>
                  </property>
                  <property name="text">
-                  <string notr="true">IIS</string>
+                  <string>IIS</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -263,7 +263,7 @@ hr { height: 1px; border-width: 0; }
                <bool>false</bool>
               </property>
               <property name="toolTip">
-               <string>Toggle/untoggle selection for all files</string>
+               <string>Select/deselect all the files</string>
               </property>
               <property name="text">
                <string>All</string>
@@ -444,7 +444,7 @@ hr { height: 1px; border-width: 0; }
             </sizepolicy>
            </property>
            <attribute name="label">
-            <string>Make Statistics</string>
+            <string>Start Parsing</string>
            </attribute>
            <attribute name="toolTip">
             <string>Parse the selected files to make statistics</string>
@@ -1072,17 +1072,17 @@ hr { height: 1px; border-width: 0; }
                     </property>
                     <item>
                      <property name="text">
-                      <string notr="true">Apache2</string>
+                      <string>Apache2</string>
                      </property>
                     </item>
                     <item>
                      <property name="text">
-                      <string notr="true">Nginx</string>
+                      <string>Nginx</string>
                      </property>
                     </item>
                     <item>
                      <property name="text">
-                      <string notr="true">IIS</string>
+                      <string>IIS</string>
                      </property>
                     </item>
                    </widget>
@@ -1448,7 +1448,7 @@ hr { height: 1px; border-width: 0; }
                  <string notr="true">Query</string>
                 </property>
                 <property name="toolTip">
-                 <string>Query carried along with the requested URI</string>
+                 <string>Query carried along with the URI</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1470,7 +1470,7 @@ hr { height: 1px; border-width: 0; }
                  <string notr="true">Referrer</string>
                 </property>
                 <property name="toolTip">
-                 <string>The URL which redirected the Client to the request URI</string>
+                 <string>The URL which redirected the Client to the requested page</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1481,7 +1481,7 @@ hr { height: 1px; border-width: 0; }
                  <string notr="true">Cookie</string>
                 </property>
                 <property name="toolTip">
-                 <string>Cookie carried with the request</string>
+                 <string>Cookie used for the request</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1492,7 +1492,7 @@ hr { height: 1px; border-width: 0; }
                  <string notr="true">User-agent</string>
                 </property>
                 <property name="toolTip">
-                 <string>User-agent of the Client which made the request</string>
+                 <string>User-agent of the client which made the request</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1536,7 +1536,7 @@ hr { height: 1px; border-width: 0; }
                  <string notr="true">Time taken</string>
                 </property>
                 <property name="toolTip">
-                 <string>Amount of time needed by the server to accomplish to the request, in milliseconds</string>
+                 <string>Time taken by the server to serve the content, in milliseconds</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1634,17 +1634,17 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  </property>
                  <item>
                   <property name="text">
-                   <string notr="true">Apache2</string>
+                   <string>Apache2</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">Nginx</string>
+                   <string>Nginx</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">IIS</string>
+                   <string>IIS</string>
                   </property>
                  </item>
                 </widget>
@@ -1836,7 +1836,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <string notr="true">Time taken</string>
                 </property>
                 <property name="toolTip">
-                 <string>Time taken by the server to serve the content, in milliseconds </string>
+                 <string>Time taken by the server to serve the content, in milliseconds</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1858,7 +1858,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <string notr="true">Query</string>
                 </property>
                 <property name="toolTip">
-                 <string>Query carried along with the requested URI</string>
+                 <string>Query carried along with the URI</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1947,7 +1947,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Filter out field values not starting with this string</string>
+                  <string>Only use lines in which the field is starting with this string</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -1968,7 +1968,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Filter out field values not starting with this string</string>
+                  <string>Only use lines in which the field is starting with this string</string>
                  </property>
                 </widget>
                </item>
@@ -1978,6 +1978,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   <font>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Protocol of the request</string>
                  </property>
                  <property name="text">
                   <string>Protocol:</string>
@@ -1994,6 +1997,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                    <family>Noto Sans</family>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Method of the request</string>
                  </property>
                  <property name="text">
                   <string>Method:</string>
@@ -2017,7 +2023,8 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Use '&lt;','=','&gt;' to filter out non-matching values</string>
+                  <string>Only use lines in which the field is matching this statement.
+Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -2038,7 +2045,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Filter out field values not starting with this string</string>
+                  <string>Only use lines in which the field is starting with this string</string>
                  </property>
                 </widget>
                </item>
@@ -2049,6 +2056,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                    <family>Noto Sans</family>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Response code from the server</string>
                  </property>
                  <property name="text">
                   <string>Response:</string>
@@ -2065,6 +2075,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                    <family>Noto Sans</family>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Query carried along with the URI</string>
                  </property>
                  <property name="text">
                   <string>Query:</string>
@@ -2088,7 +2101,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Filter out field values not starting with this string</string>
+                  <string>Only use lines in which the field is starting with this string</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -2101,6 +2114,9 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                   <font>
                    <pointsize>13</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>URI of the requested page</string>
                  </property>
                  <property name="text">
                   <string>URI:</string>
@@ -2180,9 +2196,70 @@ If more than 1 request if found for the same time, the mean value is used.</stri
             <string notr="true"/>
            </attribute>
            <attribute name="toolTip">
-            <string>Group and count identical elements in a single date</string>
+            <string>Group and count identical elements of a field in a single date</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="1">
+             <widget class="QSplitter" name="splitter_StatsCount">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <widget class="QTableWidget" name="table_StatsCount">
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                </font>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="showDropIndicator" stdset="0">
+                <bool>false</bool>
+               </property>
+               <property name="dragDropOverwriteMode">
+                <bool>false</bool>
+               </property>
+               <property name="sortingEnabled">
+                <bool>true</bool>
+               </property>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>64</number>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>128</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderStretchLastSection">
+                <bool>false</bool>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Count</string>
+                </property>
+                <property name="toolTip">
+                 <string>Number of occurrences</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Item</string>
+                </property>
+                <property name="toolTip">
+                 <string>Value of the field</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+              </widget>
+              <widget class="QChartView" name="chart_StatsCount"/>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsCount_Opt">
               <property name="sizePolicy">
@@ -2260,17 +2337,17 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  </property>
                  <item>
                   <property name="text">
-                   <string notr="true">Apache2</string>
+                   <string>Apache2</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">Nginx</string>
+                   <string>Nginx</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">IIS</string>
+                   <string>IIS</string>
                   </property>
                  </item>
                 </widget>
@@ -2439,7 +2516,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>13</x>
+                    <x>0</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -2541,7 +2618,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                       <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Requested URI</string>
+                      <string>URI of the requested page</string>
                      </property>
                      <property name="text">
                       <string notr="true">URI</string>
@@ -2640,7 +2717,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                       <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>Referrer for the request</string>
+                      <string>The URL which redirected the Client to the requested page</string>
                      </property>
                      <property name="text">
                       <string notr="true">Referrer</string>
@@ -2754,67 +2831,6 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                 </widget>
                </item>
               </layout>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QSplitter" name="splitter_StatsCount">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <widget class="QTableWidget" name="table_StatsCount">
-               <property name="font">
-                <font>
-                 <pointsize>13</pointsize>
-                </font>
-               </property>
-               <property name="editTriggers">
-                <set>QAbstractItemView::NoEditTriggers</set>
-               </property>
-               <property name="showDropIndicator" stdset="0">
-                <bool>false</bool>
-               </property>
-               <property name="dragDropOverwriteMode">
-                <bool>false</bool>
-               </property>
-               <property name="sortingEnabled">
-                <bool>true</bool>
-               </property>
-               <attribute name="horizontalHeaderMinimumSectionSize">
-                <number>64</number>
-               </attribute>
-               <attribute name="horizontalHeaderDefaultSectionSize">
-                <number>128</number>
-               </attribute>
-               <attribute name="horizontalHeaderStretchLastSection">
-                <bool>true</bool>
-               </attribute>
-               <attribute name="verticalHeaderStretchLastSection">
-                <bool>false</bool>
-               </attribute>
-               <column>
-                <property name="text">
-                 <string>Count</string>
-                </property>
-                <property name="toolTip">
-                 <string>Number of occurrences</string>
-                </property>
-                <property name="textAlignment">
-                 <set>AlignLeading|AlignVCenter</set>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Item</string>
-                </property>
-                <property name="toolTip">
-                 <string>Value of the field</string>
-                </property>
-                <property name="textAlignment">
-                 <set>AlignLeading|AlignVCenter</set>
-                </property>
-               </column>
-              </widget>
-              <widget class="QChartView" name="chart_StatsCount"/>
              </widget>
             </item>
            </layout>
@@ -3139,7 +3155,8 @@ Counts of the elements for a single date, mean value of the counts for a period.
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter in</string>
+                     <string>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     </property>
                    </widget>
                   </item>
@@ -3233,17 +3250,17 @@ Counts of the elements for a single date, mean value of the counts for a period.
                  </property>
                  <item>
                   <property name="text">
-                   <string notr="true">Apache2</string>
+                   <string>Apache2</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">Nginx</string>
+                   <string>Nginx</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">IIS</string>
+                   <string>IIS</string>
                   </property>
                  </item>
                 </widget>
@@ -3279,7 +3296,7 @@ Counts of the elements for a single date, mean value of the counts for a period.
             <string notr="true"/>
            </attribute>
            <attribute name="toolTip">
-            <string>Relational chart for two elements: how many times a specific value brought to another.
+            <string>Relational chart for two elements: how many times a value is found in the same line with the other.
 Time of day counts for a single date, entire days counts in a period.</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_18">
@@ -3338,17 +3355,17 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  </property>
                  <item>
                   <property name="text">
-                   <string notr="true">Apache2</string>
+                   <string>Apache2</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">Nginx</string>
+                   <string>Nginx</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string notr="true">IIS</string>
+                   <string>IIS</string>
                   </property>
                  </item>
                 </widget>
@@ -3662,7 +3679,8 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter in</string>
+                     <string>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     </property>
                    </widget>
                   </item>
@@ -3704,7 +3722,8 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Filter out field values not starting with this string. When dealing with numbers, use '=','&lt;' or '&gt;' to declare what to filter in</string>
+                     <string>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     </property>
                    </widget>
                   </item>
@@ -3822,6 +3841,9 @@ Time of day counts for a single date, entire days counts in a period.</string>
            <attribute name="title">
             <string notr="true"/>
            </attribute>
+           <attribute name="toolTip">
+            <string>Global overview</string>
+           </attribute>
            <layout class="QGridLayout" name="gridLayout_25">
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsGlob_WebServer">
@@ -3886,7 +3908,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <string>Parse logs from the Apache2 web server</string>
                     </property>
                     <property name="text">
-                     <string notr="true">Apache2</string>
+                     <string>Apache2</string>
                     </property>
                     <property name="flat">
                      <bool>true</bool>
@@ -3913,7 +3935,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <string>Parse logs from the Nginx web server</string>
                     </property>
                     <property name="text">
-                     <string notr="true">Nginx</string>
+                     <string>Nginx</string>
                     </property>
                     <property name="flat">
                      <bool>true</bool>
@@ -3940,7 +3962,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      <string>Parse logs from the Microsoft IIS web server</string>
                     </property>
                     <property name="text">
-                     <string notr="true">IIS</string>
+                     <string>IIS</string>
                     </property>
                     <property name="flat">
                      <bool>true</bool>
@@ -4027,7 +4049,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4069,7 +4091,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4090,7 +4112,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4132,7 +4154,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4166,7 +4188,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4208,7 +4230,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4263,7 +4285,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4284,7 +4306,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4330,6 +4352,27 @@ Time of day counts for a single date, entire days counts in a period.</string>
                </widget>
                <widget class="QFrame" name="frame_StatsGlob_Traffic">
                 <layout class="QGridLayout" name="gridLayout_29">
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QLabel" name="label_StatsGlob_Traffic">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Most trafficked</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="0" colspan="2">
                   <widget class="QScrollArea" name="scrollArea_StatsGlob_Traffic">
                    <property name="widgetResizable">
@@ -4383,7 +4426,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4404,7 +4447,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4452,7 +4495,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4473,7 +4516,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4521,7 +4564,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4542,7 +4585,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>0</string>
+                           <string notr="true">0</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4568,27 +4611,6 @@ Time of day counts for a single date, entire days counts in a period.</string>
                      </item>
                     </layout>
                    </widget>
-                  </widget>
-                 </item>
-                 <item row="0" column="0" colspan="2">
-                  <widget class="QLabel" name="label_StatsGlob_Traffic">
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>32</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <pointsize>16</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Most trafficked</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignCenter</set>
-                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -4666,7 +4688,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4687,7 +4709,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4735,7 +4757,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4756,7 +4778,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4804,7 +4826,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4825,7 +4847,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4924,7 +4946,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -4979,7 +5001,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -5027,7 +5049,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>-</string>
+                           <string notr="true">-</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -5178,10 +5200,10 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Remember window's position and size</string>
+                      <string>Remember the window's position and size</string>
                      </property>
                      <property name="text">
-                      <string>Remember window position and size</string>
+                      <string>Remember position and size</string>
                      </property>
                     </widget>
                    </item>
@@ -5368,7 +5390,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>Define the quantity of dialog mesages/informations shown</string>
+                      <string>Define the quantity of dialog mesages shown</string>
                      </property>
                      <property name="text">
                       <string>Dialogs level</string>
@@ -5471,7 +5493,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                       </font>
                      </property>
                      <property name="toolTip">
-                      <string>More informations inside the shown dialog messages</string>
+                      <string>Augmented quantity of dialog messages shown</string>
                      </property>
                      <property name="text">
                       <string>Explanatory</string>
@@ -5533,7 +5555,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </font>
                         </property>
                         <property name="toolTip">
-                         <string>Quantity of informations in the dialog messages</string>
+                         <string>Dialogs from the main processes</string>
                         </property>
                         <property name="text">
                          <string>General</string>
@@ -5610,7 +5632,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </font>
                         </property>
                         <property name="toolTip">
-                         <string>Quantity of informations in the dialog messages, when parsing logs</string>
+                         <string>Dialogs emitted when parsing logs</string>
                         </property>
                         <property name="text">
                          <string>Logs parser</string>
@@ -5671,7 +5693,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                          </font>
                         </property>
                         <property name="toolTip">
-                         <string>Quantity of informations in the dialog messages, when viewing statistics</string>
+                         <string>Dialogs emitted when viewing statistics</string>
                         </property>
                         <property name="text">
                          <string>Statistics viewer</string>
@@ -6668,7 +6690,7 @@ hr { height: 1px; border-width: 0; }
                       </size>
                      </property>
                      <property name="suffix">
-                      <string> copies</string>
+                      <string notr="true"> copies</string>
                      </property>
                     </widget>
                    </item>
@@ -7303,7 +7325,7 @@ hr { height: 1px; border-width: 0; }
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Apply the current paths</string>
+                          <string>Apply the current path</string>
                          </property>
                          <property name="text">
                           <string notr="true"></string>
@@ -7352,7 +7374,7 @@ hr { height: 1px; border-width: 0; }
                   </widget>
                   <widget class="QWidget" name="tab_ConfApache_Formats">
                    <attribute name="title">
-                    <string>Formats</string>
+                    <string>Format</string>
                    </attribute>
                    <layout class="QVBoxLayout" name="verticalLayout_7">
                     <item>
@@ -7490,7 +7512,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -8304,7 +8326,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Apply the current paths</string>
+                          <string>Apply the current path</string>
                          </property>
                          <property name="text">
                           <string notr="true"></string>
@@ -8353,7 +8375,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   </widget>
                   <widget class="QWidget" name="tab_ConfNginx_Formats">
                    <attribute name="title">
-                    <string>Formats</string>
+                    <string>Format</string>
                    </attribute>
                    <layout class="QVBoxLayout" name="verticalLayout_9">
                     <item>
@@ -8491,7 +8513,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9324,7 +9346,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                           <cursorShape>PointingHandCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Apply the current paths</string>
+                          <string>Apply the current path</string>
                          </property>
                          <property name="text">
                           <string notr="true"></string>
@@ -9354,7 +9376,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   </widget>
                   <widget class="QWidget" name="tab_ConfIis_Formats">
                    <attribute name="title">
-                    <string>Formats</string>
+                    <string>Format</string>
                    </attribute>
                    <layout class="QVBoxLayout" name="verticalLayout_14">
                     <item>
@@ -9570,7 +9592,7 @@ Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
