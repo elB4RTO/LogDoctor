@@ -464,28 +464,35 @@ private:
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
 
     // operating system
+    const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );
     // 1: linux, 2:windows, 3:mac
     #if defined( Q_OS_UNIX )
         // Unix-like systems: Linux, BSD and SysV
         const unsigned int OS = 1;
+        const std::string configs_path = this->home_path + "/.config/LogDoctor/logdoctor.conf";
+        const std::string logdoc_path  = this->home_path + "/.local/share/LogDoctor";
     #elif defined( Q_OS_WIN )
         // Microsoft Windows systems
-        const unsigned int this->OS = 2;
+        const unsigned int OS = 2;
+        const std::string configs_path = this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
+        const std::string logdoc_path  = this->home_path + "/AppData/Local/LogDoctor";
     #elif defined( Q_OS_DARWIN )
-        // Darwin-based systems: macOS, macOS, iOS, watchOS and tvOS.
-        const unsigned int this->OS = 3;
+        // Darwin-based systems: macOS, iOS, watchOS and tvOS.
+        const unsigned int OS = 3;
+        const std::string configs_path = this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
+        const std::string logdoc_path  = this->home_path + "/Lybrary/Application Support/LogDoctor";
     #else
         #error "System not supported"
     #endif
 
     void defineOSspec();
-    std::string logdoc_path;
+    /*std::string logdoc_path;
+    std::string configs_path;*/
 
 
     ////////////////////////
     //// CONFIGURATIONS ////
     ////////////////////////
-    std::string configs_path;
     void readConfigs();
     void writeConfigs();
     // string to bool and vice versa
