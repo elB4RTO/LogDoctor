@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">LogDoctor - Info</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources/resources.qrc">
@@ -24,7 +24,7 @@
    <item row="0" column="0">
     <widget class="QToolBox" name="toolBox_Infos">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_LogDoc">
       <property name="geometry">
@@ -36,7 +36,7 @@
        </rect>
       </property>
       <attribute name="label">
-       <string>LogDoctor</string>
+       <string notr="true">LogDoctor</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
@@ -50,9 +50,9 @@
          <widget class="QWidget" name="scrollAreaContents_LogDoc">
           <property name="geometry">
            <rect>
-            <x>-6</x>
+            <x>0</x>
             <y>0</y>
-            <width>809</width>
+            <width>806</width>
             <height>686</height>
            </rect>
           </property>
@@ -110,7 +110,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string notr="true"/>
                 </property>
                 <property name="icon">
                  <iconset resource="../../resources/resources.qrc">
@@ -183,7 +183,7 @@
                     </font>
                    </property>
                    <property name="toolTip">
-                    <string>Current version of the software</string>
+                    <string>Currently installed version of the software</string>
                    </property>
                    <property name="text">
                     <string notr="true"/>
@@ -241,7 +241,7 @@
                     <string notr="true">GitHub</string>
                    </property>
                    <property name="text">
-                    <string>https://github.com/elB4RTO/LogDoctor</string>
+                    <string notr="true">https://github.com/elB4RTO/LogDoctor</string>
                    </property>
                    <property name="frame">
                     <bool>false</bool>
@@ -268,7 +268,7 @@
                     <string notr="true">Disroot</string>
                    </property>
                    <property name="text">
-                    <string>https://git.disroot.org/elB4RTO/LogDoctor</string>
+                    <string notr="true">https://git.disroot.org/elB4RTO/LogDoctor</string>
                    </property>
                    <property name="frame">
                     <bool>false</bool>
@@ -295,7 +295,7 @@
                     <string notr="true">GitLab</string>
                    </property>
                    <property name="text">
-                    <string>https://gitlab.com/elB4RTO/LogDoctor</string>
+                    <string notr="true">https://gitlab.com/elB4RTO/LogDoctor</string>
                    </property>
                    <property name="frame">
                     <bool>false</bool>
@@ -340,6 +340,9 @@
                <width>16777215</width>
                <height>352</height>
               </size>
+             </property>
+             <property name="acceptDrops">
+              <bool>false</bool>
              </property>
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
@@ -465,7 +468,7 @@ hr { height: 1px; border-width: 0; }
              </font>
             </property>
             <property name="toolTip">
-             <string>The path where the executable file will be placed in</string>
+             <string>The path of the executable file</string>
             </property>
             <property name="text">
              <string>Executable</string>
@@ -506,6 +509,9 @@ hr { height: 1px; border-width: 0; }
                <widget class="QLineEdit" name="inLine_ExecPath">
                 <property name="acceptDrops">
                  <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string notr="true"/>
                 </property>
                 <property name="frame">
                  <bool>false</bool>
@@ -555,7 +561,7 @@ hr { height: 1px; border-width: 0; }
              </font>
             </property>
             <property name="toolTip">
-             <string>The path where the configuration file will be saved and searched in</string>
+             <string>The path where the configuration file gets saved and searched in</string>
             </property>
             <property name="text">
              <string>Configuration file</string>
@@ -596,6 +602,9 @@ hr { height: 1px; border-width: 0; }
                <widget class="QLineEdit" name="inLine_ConfPath">
                 <property name="acceptDrops">
                  <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string notr="true"/>
                 </property>
                 <property name="frame">
                  <bool>false</bool>
@@ -645,7 +654,7 @@ hr { height: 1px; border-width: 0; }
              </font>
             </property>
             <property name="toolTip">
-             <string>The path where the application will search in for extra resources</string>
+             <string>The path where the application searches for extra resources</string>
             </property>
             <property name="text">
              <string>Application data</string>
@@ -686,6 +695,9 @@ hr { height: 1px; border-width: 0; }
                <widget class="QLineEdit" name="inLine_DataPath">
                 <property name="acceptDrops">
                  <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string notr="true"/>
                 </property>
                 <property name="frame">
                  <bool>false</bool>
