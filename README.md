@@ -41,7 +41,9 @@ Parse Apache2/Nginx/IIS logs to make statistics
 - [Final considerations](#final-considerations)
   - [Backups](#backups)
   - [Estimated working speed](#estimated-working-speed)
+- [Languages](#languages)
 - [Contributions](#contributions)
+  - [Translations](#translations)
 
 <br/><br/>
 
@@ -183,7 +185,7 @@ The considered fields are:
 - Server stuff: **Bytes received**, **Bytes sent** and **Time taken**
 - Client stuff: **User-agent**, **IP address**, **Cookie** and **Referrer site**
 
-Further informations can be found in the [wiki !!!LINK!!!]() or while running LogDoctor.
+Further informations can be found in the [wiki]() or while running LogDoctor.
 
 <br/>
 
@@ -199,9 +201,9 @@ When you parse a file, it will be hashed using the **SHA256** algorithm and the 
 
 ##### Note
 
-For the ones who don't know, *SHA256* produces an irreversible hash, which means that no information about the file can be retrieved from the hash.<br/>
+If you don't know, *SHA256* produces an irreversible hash, which means that no information about the file can be retrieved from the hash.<br/>
 You have full control on the hashes database (same as for the logs-data database): you can move, delete, view or edit it the way you want (but you must keep the original file-name).<br/>
-LogDoctor will **never** grab and/or use any information about you or the usage you make of it. Feel free.
+LogDoctor will **never** grab and/or use any information about you or the usage you make of it.
 
 <br/>
 
@@ -240,7 +242,7 @@ To retrieve your format string:
     ```
     please notice that you have to remove the enclosing quotes/apostrophes as well<br/>
 
-More informations can be found in the [wiki !!!LINK!!!]() or while setting the format.
+More informations can be found in the [wiki]() or while setting the format.
 
 <br/>
 
@@ -264,7 +266,7 @@ To retrieve your format string:<br/>
     ```
     please notice that you have to remove the enclosing apostrophes/quotes as well<br/>
 
-More informations can be found in the [wiki !!!LINK!!!]() or while setting the format.
+More informations can be found in the [wiki]() or while setting the format.
 
 <br/>
 
@@ -288,7 +290,7 @@ To retrieve your format string (for the *W3C* module only):
     date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken
     ```
 
-More informations can be found in the [wiki !!!LINK!!!]() or while setting the format.
+More informations can be found in the [wiki]() or while setting the format.
 
 <br/><br/>
 
@@ -412,12 +414,94 @@ This is because it is unlikely (supposedly impossible) that a hash equals anothe
 
 May be higher or lower depending on the complexity of the logs, the complexity of the blacklist/warnlists, your hardware and the workload of your system during the execution.
 
+<br/><br/>
+
+## Languages
+
+At the moment of writing, LogDoctor is available in:
+
+- 🇬🇧 English (100%)
+
+- 🇮🇹 Italian (100%)
+
+- 🇪🇸 Spanish (40%, *wanna [contribute](#translations)?*)
+
+- 🇫🇷 French (40%, *wanna [contribute](#translations)?*)
+
 <br/>
 
 ## Contributions
 
 LogDoctor is under development.
 
-If you have suggestions about how to improve it please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues) or make a ![pull request](https://github.com/elB4RTO/LogDoctor/pulls).
+If you have suggestions about how to improve it please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
+
+<br/>
+
+### Translations
+
+Current translations under developement:
+
+- Spanish: **40%**
+
+- French: **40%**
+
+<br/>
+
+If you have a request for a missing language please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
+
+<br/>
+
+#### How to contribute to translations
+
+*Please read the [translation guidelines](#translation-guidelines) before to start translating*
+
+Since the whole application is build upon Qt, translations are made throught `.ts` [translation files](https://github.com/elB4RTO/LogDoctor/blob/main/logdoctor/translations).
+
+<br/>
+
+The easiest way to go is to use **Qt Linguist**:<br/>
+- Download or clone this repo<br/>
+- Open the `.ts` translation file of your language using QtLinguist<br/>
+- Translate (*don't know how? Follow [this video](https://www.youtube.com/watch?v=GNyfkuDchNQ)*)<br/>
+- **Push only the `.ts` files, you don't have to release them**: merge request containing binaries won't be accepted.<br/>
+
+<br/>
+
+If you don't want to install QtLinguist, you can do it the hard way, by opening the files with a text editor and do it manually:<br/>
+- Here is a sample of message waiting for translation<br/>
+  ```
+      <message>
+          <location filename="..." line="n"/>
+          <source>Original text</source>
+      </message>
+  ```
+- Everything you need to do is to add the missing line containing the translated text, without editing the other lines.<br/>
+  Here is a sample after having translated it<br/>
+  ```
+      <message>
+          <location filename="..." line="n"/>
+          <source>Original text</source>
+          <translation type="unfinished">Translated text</translation>
+      </message>
+  ```
+
+<br/>
+
+I you don't feel comfortable with any of the above solutions, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
+
+<br/>
+
+#### Translation guidelines
+
+*[hints from Qt](https://doc.qt.io/qt-6/linguist-overview.html)*
+
+Just follow some simple guidelines to ensure a correct and clear contribution:
+
+- Respect the structure of the phrase: if *(for example)* it starts or ends with a whitespace or something, please do the same.
+
+- Please leave your translations marked as *unfinished*, they will be checked and un-marked after having been verified.
+
+- If you see a translation marked as *finished*, please edit it only if you're sure that your definition suits better.
 
 <br/>
