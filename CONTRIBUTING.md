@@ -10,7 +10,7 @@ Everyone is welcome.
 
 ## How to contribute
 
-If you don't know how to contribute to a project, read the [GitHub guideline](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) first.
+If you don't know how to contribute to a project, read the [GitHub Guidelines](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) first.
 
 If you want to contribute to LogDoctor, please follow these steps:
 
