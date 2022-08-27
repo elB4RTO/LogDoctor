@@ -218,7 +218,7 @@ It can be the default system folder or any folder you decide to use, just set it
 
 Before to start parsing logs, you must set-up the *log format* that LogDoctor will have to use.<br/>
 Head to the **configurations** section, tap `Logs`, select the **Web Server** you want to configure and tap `Format`.<br/>
-Once inside the **Format** section, yo can insert the *log format string* you're using. Don't forget to use the `Generete preview` button to generate a *log line sample* and **check the correctness** of the format!<br/>
+Once inside the **Format** section, you can insert the *log format string* you're using. Don't forget to use the `Generete preview` button to generate a *log line sample* and **check the correctness** of the format!<br/>
 
 For reliability reasons, LogDoctor **does not** support the usage of the **Carriage Return** inside the log format string.
 
@@ -434,7 +434,11 @@ At the moment of writing, LogDoctor is available in:
 
 LogDoctor is under development.
 
-If you have suggestions about how to improve it please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
+If you have suggestions about how to improve it, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues).
+
+If you want to contribute to the code, please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
+
+If you want to contribute to the translation, please read the [Translation Guidelines](#translation-guidelines).
 
 <br/>
 
@@ -446,34 +450,31 @@ Current translations under developement:
 
 - French: **40%**
 
-<br/>
-
 If you have a request for a missing language please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
 
 <br/>
 
 #### How to contribute to translations
 
-*Please read the [translation guidelines](#translation-guidelines) before to start translating*
-
 Since the whole application is build upon Qt, translations are made throught `.ts` [translation files](https://github.com/elB4RTO/LogDoctor/blob/main/logdoctor/translations).
 
 <br/>
 
-The easiest way to go is to use **Qt Linguist**:<br/>
+The easiest way to go is to use **Qt Linguist**:
 - Download or clone this repo<br/>
 - Open the `.ts` translation file of your language using QtLinguist<br/>
 - Translate (*don't know how? Follow [this video](https://www.youtube.com/watch?v=GNyfkuDchNQ)*)<br/>
-- **Push only the `.ts` files, you don't have to release them**: merge request containing binaries won't be accepted.<br/>
+- **Push only the `.ts` files, you don't have to release them**: pull request containing `.qm` binaries won't be accepted.<br/>
 
-<br/>
+<br/><br/>
 
-If you don't want to install QtLinguist, you can do it the hard way, by opening the files with a text editor and do it manually:<br/>
-- Here is a sample of message waiting for translation<br/>
+If you don't want to install QtLinguist, you can do it the hard way, by opening the files with a text editor and do it manually:
+- Here is a sample of some text waiting for translation<br/>
+  You can see the original text enclosed in the `<source>` tags. Don't edit it.<br/>
   ```
       <message>
           <location filename="..." line="n"/>
-          <source>Original text</source>
+          <source>This is the original text</source>
       </message>
   ```
 - Everything you need to do is to add the missing line containing the translated text, without editing the other lines.<br/>
@@ -482,13 +483,13 @@ If you don't want to install QtLinguist, you can do it the hard way, by opening 
       <message>
           <location filename="..." line="n"/>
           <source>Original text</source>
-          <translation type="unfinished">Translated text</translation>
+          <translation type="unfinished">Translated text goes here</translation>
       </message>
   ```
 
 <br/>
 
-I you don't feel comfortable with any of the above solutions, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
+If you don't feel comfortable with any of the above solutions, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
 
 <br/>
 
