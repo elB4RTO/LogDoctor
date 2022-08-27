@@ -306,14 +306,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -326,7 +319,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
             for ( const auto& data : updates ) {
                 // build the query statement
                 QString stmt = QString("UPDATE \"%1\" SET warning=%2 WHERE rowid=%3;")
-                        .arg( table )
+                        .arg( web_server )
                         .arg( std::get<1>(data) )
                         .arg( std::get<0>(data) );
 
@@ -363,14 +356,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -395,7 +381,7 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
             // build the query statement
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
-                    .arg( table )
+                    .arg( web_server )
                     .arg( year ).arg( month ).arg( day );
 
             if ( hour_.size() == 0 ) {
@@ -509,14 +495,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table += "apache";
-        } else if ( web_server == "Nginx" ) {
-            table += "nginx";
-        } else if ( web_server == "IIS" ) {
-            table += "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -543,7 +522,7 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
 
             // prepare the statement
             stmt = QString("SELECT \"hour\",\"minute\",\"second\",\"time_taken\",\"uri\",\"query\",\"method\",\"protocol\",\"response\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 AND \"time_taken\" IS NOT NULL")
-                .arg( table.replace("'","''") )
+                .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
 
             // apply a filter if present
@@ -867,14 +846,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -884,7 +856,7 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
             QSqlQuery query = QSqlQuery( db );
             QString stmt = QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
                 .arg( this->getDbField( log_field ),
-                      table,
+                      web_server,
                       this->getDbField( log_field ),
                       year,
                       QString::fromStdString( std::to_string( this->getMonthNumber( month ) )),
@@ -983,14 +955,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -1029,7 +994,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             if ( n_months == 1 ) {
                 // 1 month, no need to loop
                 stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\">=%4 AND \"day\"<=%5")
-                    .arg( table.replace("'","''") )
+                    .arg( web_server )
                     .arg( year ).arg( month )
                     .arg( from_day ).arg( to_day );
 
@@ -1101,7 +1066,7 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
             } else {
                 for ( int m=1; m<=n_months; m++ ) {
                     stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
-                        .arg( table )
+                        .arg( web_server )
                         .arg( year ).arg( month );
                     if ( m == 1 ) {
                         // first month, only get the day from the beginning day
@@ -1228,14 +1193,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -1265,7 +1223,7 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
 
             // 1 month, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
-                .arg( table.replace("'","''") )
+                .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
 
             // apply a filter if present
@@ -1478,14 +1436,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        QString table;
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -1524,7 +1475,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
             if ( n_months == 1 ) {
                 // 1 month, no need to loop
                 stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\">=%4 AND \"day\"<=%5")
-                    .arg( table.replace("'","''") )
+                    .arg( web_server )
                     .arg( year ).arg( month )
                     .arg( from_day ).arg( to_day );
 
@@ -1687,7 +1638,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
             } else {
                 for ( int m=1; m<=n_months; m++ ) {
                     stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
-                        .arg( table.replace("'","''") )
+                        .arg( web_server )
                         .arg( year ).arg( month );
 
                     if ( m == 1 ) {
@@ -1856,7 +1807,6 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
 const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, int>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count )
 {
     bool successful = true;
-    QString table;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( this->db_path ));
@@ -1871,13 +1821,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
         DialogSec::errDatabaseFailedOpening( nullptr, this->db_name, err_msg );
 
     } else {
-        if ( web_server == "Apache2" ) {
-            table = "apache";
-        } else if ( web_server == "Nginx" ) {
-            table = "nginx";
-        } else if ( web_server == "IIS" ) {
-            table = "iis";
-        } else {
+        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
             successful = false;
             DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
@@ -1905,7 +1849,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
                 hour=-1; hour_count=0;
                 day=-1; day_count=0;
 
-                if ( ! query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;").arg( table ).arg( year ).arg( month ).replace("'","''") ) ) {
+                if ( ! query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;")
+                                          .arg( web_server ).arg( year ).arg( month ).replace("'","''") ) ) {
                     // error querying database
                     successful = false;
                     DialogSec::errDatabaseFailedExecuting( nullptr, this->db_name, query.lastQuery(), query.lastError().text() );
