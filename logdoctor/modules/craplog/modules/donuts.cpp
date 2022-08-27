@@ -71,11 +71,11 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries *breakdownSeries, const QCol
     breakdownSeries->setLabelsVisible();
     const auto slices = breakdownSeries->slices();
     for (QPieSlice *slice : slices) {
-        if ( StringOps::startsWith( slice->label().toStdString(), "Blacklisted" ) ) {
+        if ( StringOps::startsWith( slice->label().toStdString(), "B" ) ) {
             slice->setBrush( Qt::GlobalColor::black );
-        } else if ( StringOps::startsWith( slice->label().toStdString(), "Warnings" ) ) {
+        } else if ( StringOps::startsWith( slice->label().toStdString(), "W" ) ) {
             slice->setBrush( QColor( 255, 140, 0, 255 ) );
-        } else if ( StringOps::startsWith( slice->label().toStdString(), "Ignored" ) ) {
+        } else if ( StringOps::startsWith( slice->label().toStdString(), "I" ) ) {
             slice->setBrush( Qt::GlobalColor::transparent );
             breakdownSeries->setPieSize( 0.0 );
         } else {
