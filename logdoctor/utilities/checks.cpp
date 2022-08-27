@@ -5,6 +5,10 @@
 
 #include "utilities/io.h"
 
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QVariant>
+
 
 CheckSec::CheckSec()
 {

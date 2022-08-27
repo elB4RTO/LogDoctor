@@ -4,7 +4,7 @@
 #include "modules/exceptions.h"
 #include "utilities/strings.h"
 
-#include "time.h"
+#include <ctime>
 
 
 DateTimeOps::DateTimeOps()

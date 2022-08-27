@@ -1,14 +1,13 @@
 #ifndef RTF_H
 #define RTF_H
 
-#include "qfont.h"
-#include "qstring.h"
+#include <QFont>
+#include <QString>
 
 #include "utilities/strings.h"
 
 #include "modules/tb.h"
-
-#include "tools/craplog/modules/formats.h"
+#include "modules/craplog/modules/formats.h"
 
 
 class RichText : public QObject

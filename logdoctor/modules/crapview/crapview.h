@@ -5,7 +5,7 @@
 #include <QtCharts>
 #include <QTableWidget>
 
-#include "tools/crapview/modules/query.h"
+#include "modules/crapview/modules/query.h"
 
 #include <string>
 

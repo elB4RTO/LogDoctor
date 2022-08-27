@@ -1,5 +1,6 @@
 
 #include "crapview.h"
+
 #include "utilities/strings.h"
 
 #include <QGraphicsItem>

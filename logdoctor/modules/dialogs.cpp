@@ -1,6 +1,7 @@
 
 #include "dialogs.h"
-#include "mainwindow.h"
+
+#include <QMessageBox>
 
 
 DialogSec::DialogSec()

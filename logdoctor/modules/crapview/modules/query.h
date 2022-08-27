@@ -1,10 +1,9 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include "tools/shared.h"
+#include "modules/shared.h"
 
 #include <QString>
-#include <QHash>
 
 #include <vector>
 #include <unordered_map>

@@ -1,16 +1,16 @@
 
 #include "craplog.h"
 
-#include "modules/checks.h"
-#include "modules/charts/donuts.h"
-#include "modules/exceptions.h"
-#include "modules/dialogs.h"
-
+#include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 
-#include "tools/shared.h"
-#include "tools/craplog/modules/store.h"
+#include "modules/dialogs.h"
+#include "modules/exceptions.h"
+#include "modules/shared.h"
+
+#include "modules/craplog/modules/donuts.h"
+#include "modules/craplog/modules/store.h"
 
 #include <QPainter>
 

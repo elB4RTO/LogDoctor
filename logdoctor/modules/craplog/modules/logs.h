@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "utilities/strings.h"
-#include "tools/craplog/modules/formats.h"
+#include "modules/craplog/modules/formats.h"
 
 
 class LogOps
