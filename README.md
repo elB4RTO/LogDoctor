@@ -54,9 +54,9 @@ Supported web servers are **Apache2**, **Nginx** and **IIS**.
 
 <br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/log_files.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/log_files.png)
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/make_stats.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/make_stats.png)
 
 <br/><br/>
 
@@ -321,7 +321,7 @@ Most of the *statistics sections* allows you to set filters to the log fields, t
 
 In the *warning* section you can view the lines which triggered a warning, as well as remove any of the warnings and/or add your own.<br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_warnings.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_warnings.png)
 
 <br/>
 
@@ -329,7 +329,7 @@ In the *warning* section you can view the lines which triggered a warning, as we
 
 In the *speed* section you can view how fast has been your server at serving contents (if you logged the *time taken*, of course).<br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_speed.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_speed.png)
 
 <br/>
 
@@ -337,7 +337,7 @@ In the *speed* section you can view how fast has been your server at serving con
 
 The *count* section is very simple. It just shows the recurrence of the elements for a specific field.<br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_counts.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_counts.png)
 
 <br/>
 
@@ -346,7 +346,7 @@ The *count* section is very simple. It just shows the recurrence of the elements
 In the *time of day* section you can see the traffic, in terms of number of requests logged.<br/>
 When viewing a period of time, the mean value (of all the logged days in that period) is shown.<br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_daytime.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_daytime.png)
 
 <br/>
 
@@ -355,7 +355,7 @@ When viewing a period of time, the mean value (of all the logged days in that pe
 In the *relational* section you can view how many times a specific field brought to another.<br/>
 This section is more suited for long periods of time.<br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_relational.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_relational.png)
 
 <br/>
 
@@ -363,7 +363,7 @@ This section is more suited for long periods of time.<br/>
 
 In the *globals* section you can have an overview of your logs history.<br/>
 
-![screenshot](https://github.com/elB4RTO/CRAPLOG/blob/main/crapshots/LogDoctor/stats_globals.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_globals.png)
 
 <br/><br/>
 
