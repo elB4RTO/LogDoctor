@@ -609,6 +609,14 @@ If everything is fine, please report this issue</translation>
         <source>An error occured while working on the database</source>
         <translation>An error occured while working on the database</translation>
     </message>
+    <message>
+        <source>An error occured while working on the database
+
+Aborting</source>
+        <translation>An error occured while working on the database
+
+Aborting</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -637,10 +645,6 @@ If everything is fine, please report this issue</translation>
         <translation>Parse logs from the Microsoft IIS web server</translation>
     </message>
     <message>
-        <source>Toggle/untoggle selection for all files</source>
-        <translation>Toggle/untoggle selection for all files</translation>
-    </message>
-    <message>
         <source>All</source>
         <translation>All</translation>
     </message>
@@ -658,10 +662,6 @@ If everything is fine, please report this issue</translation>
     </message>
     <message>
         <source>Refresh the list</source>
-        <translation>Refresh the list</translation>
-    </message>
-    <message>
-        <source>Make Statistics</source>
         <translation>Refresh the list</translation>
     </message>
     <message>
@@ -757,24 +757,8 @@ If everything is fine, please report this issue</translation>
         <translation>URI of the requested page</translation>
     </message>
     <message>
-        <source>Query carried along with the requested URI</source>
-        <translation>Query carried along with the requested URI</translation>
-    </message>
-    <message>
         <source>Response code from the server</source>
         <translation>Response code from the server</translation>
-    </message>
-    <message>
-        <source>The URL which redirected the Client to the request URI</source>
-        <translation>The URL which redirected the Client to the request URI</translation>
-    </message>
-    <message>
-        <source>Cookie carried with the request</source>
-        <translation>Cookie carried with the request</translation>
-    </message>
-    <message>
-        <source>User-agent of the Client which made the request</source>
-        <translation>User-agent of the Client which made the request</translation>
     </message>
     <message>
         <source>IP address of the Client which made the request</source>
@@ -789,22 +773,10 @@ If everything is fine, please report this issue</translation>
         <translation>Size in Bytes of the served content, usually includes header and data</translation>
     </message>
     <message>
-        <source>Amount of time needed by the server to accomplish to the request, in milliseconds</source>
-        <translation>Amount of time needed by the server to accomplish to the request, in milliseconds</translation>
-    </message>
-    <message>
         <source>View the Time Taken to serve the content, with a time gap of 1 second.
 If more than 1 request if found for the same time, the mean value is used.</source>
         <translation>View the Time Taken to serve the content, with a time gap of 1 second.
 If more than 1 request if found for the same time, the mean value is used.</translation>
-    </message>
-    <message>
-        <source>Time taken by the server to serve the content, in milliseconds </source>
-        <translation>Time taken by the server to serve the content, in milliseconds </translation>
-    </message>
-    <message>
-        <source>Filter out field values not starting with this string</source>
-        <translation>Filter out field values not starting with this string</translation>
     </message>
     <message>
         <source>Protocol:</source>
@@ -813,10 +785,6 @@ If more than 1 request if found for the same time, the mean value is used.</tran
     <message>
         <source>Method:</source>
         <translation>Method:</translation>
-    </message>
-    <message>
-        <source>Use &apos;&lt;&apos;,&apos;=&apos;,&apos;&gt;&apos; to filter out non-matching values</source>
-        <translation>Use &apos;&lt;&apos;,&apos;=&apos;,&apos;&gt;&apos; to filter out non-matching values</translation>
     </message>
     <message>
         <source>Response:</source>
@@ -835,20 +803,8 @@ If more than 1 request if found for the same time, the mean value is used.</tran
         <translation>Filters</translation>
     </message>
     <message>
-        <source>Group and count identical elements in a single date</source>
-        <translation>Group and count identical elements in a single date</translation>
-    </message>
-    <message>
-        <source>Requested URI</source>
-        <translation>Requested URI</translation>
-    </message>
-    <message>
         <source>Query carried along with the URI</source>
         <translation>Query carried along with the URI</translation>
-    </message>
-    <message>
-        <source>Referrer for the request</source>
-        <translation>Referrer for the request</translation>
     </message>
     <message>
         <source>Cookie used for the request</source>
@@ -905,26 +861,8 @@ Counts of the elements for a single date, mean value of the counts for a period.
         <translation>Filter:</translation>
     </message>
     <message>
-        <source>Filter out field values not starting with this string. When dealing with numbers, use &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to filter in</source>
-        <translation>Filter out field values not starting with this string. When dealing with numbers, use &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to filter in</translation>
-    </message>
-    <message>
-        <source>Relational chart for two elements: how many times a specific value brought to another.
-Time of day counts for a single date, entire days counts in a period.</source>
-        <translation>Relational chart for two elements: how many times a specific value brought to another.
-Time of day counts for a single date, entire days counts in a period.</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation>0</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protocol</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation>-</translation>
     </message>
     <message>
         <source>Method</source>
@@ -1003,10 +941,6 @@ Time of day counts for a single date, entire days counts in a period.</translati
         <translation>Remember window&apos;s position and size</translation>
     </message>
     <message>
-        <source>Remember window position and size</source>
-        <translation>Remember window position and size</translation>
-    </message>
-    <message>
         <source>Geometry</source>
         <translation>Geometry</translation>
     </message>
@@ -1035,10 +969,6 @@ Time of day counts for a single date, entire days counts in a period.</translati
         <translation>Dialogs</translation>
     </message>
     <message>
-        <source>Define the quantity of dialog mesages/informations shown</source>
-        <translation>Define the quantity of dialog mesages/informations shown</translation>
-    </message>
-    <message>
         <source>Dialogs level</source>
         <translation>Dialogs level</translation>
     </message>
@@ -1059,28 +989,12 @@ Time of day counts for a single date, entire days counts in a period.</translati
         <translation>Normal</translation>
     </message>
     <message>
-        <source>More informations inside the shown dialog messages</source>
-        <translation>More informations inside the shown dialog messages</translation>
-    </message>
-    <message>
         <source>Explanatory</source>
         <translation>Explanatory</translation>
     </message>
     <message>
-        <source>Quantity of informations in the dialog messages</source>
-        <translation>Quantity of informations in the dialog messages</translation>
-    </message>
-    <message>
-        <source>Quantity of informations in the dialog messages, when parsing logs</source>
-        <translation>Quantity of informations in the dialog messages, when parsing logs</translation>
-    </message>
-    <message>
         <source>Logs parser</source>
         <translation>Logs parser</translation>
-    </message>
-    <message>
-        <source>Quantity of informations in the dialog messages, when viewing statistics</source>
-        <translation>Quantity of informations in the dialog messages, when viewing statistics</translation>
     </message>
     <message>
         <source>Statistics viewer</source>
@@ -1211,10 +1125,6 @@ Time of day counts for a single date, entire days counts in a period.</translati
         <translation>Backup the Logs Data database and keep</translation>
     </message>
     <message>
-        <source> copies</source>
-        <translation> copies</translation>
-    </message>
-    <message>
         <source>Logs</source>
         <translation>Logs</translation>
     </message>
@@ -1263,16 +1173,8 @@ Time of day counts for a single date, entire days counts in a period.</translati
         <translation>Configure Apache2 specific options</translation>
     </message>
     <message>
-        <source>Apply the current paths</source>
-        <translation>Apply the current paths</translation>
-    </message>
-    <message>
         <source>Logs folder</source>
         <translation>Logs folder</translation>
-    </message>
-    <message>
-        <source>Formats</source>
-        <translation>Formats</translation>
     </message>
     <message>
         <source>Logs format string</source>
@@ -1414,14 +1316,83 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <source>copies</source>
         <translation>copies</translation>
     </message>
-</context>
-<context>
-    <name>QMessageBox</name>
     <message>
-        <source>An error occured while working on the database
-
-Aborting</source>
-        <translation type="unfinished"></translation>
+        <source>Time taken by the server to serve the content, in milliseconds</source>
+        <translation>Time taken by the server to serve the content, in milliseconds</translation>
+    </message>
+    <message>
+        <source>Only use lines in which the field is starting with this string</source>
+        <translation>Only use lines in which the field is starting with this string</translation>
+    </message>
+    <message>
+        <source>Only use lines in which the field is matching this statement.
+Use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
+        <translation>Only use lines in which the field is matching this statement.
+Use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</translation>
+    </message>
+    <message>
+        <source>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
+        <translation>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</translation>
+    </message>
+    <message>
+        <source>Start Parsing</source>
+        <translation>Start Parsing</translation>
+    </message>
+    <message>
+        <source>The URL which redirected the Client to the requested page</source>
+        <translation>The URL which redirected the Client to the requested page</translation>
+    </message>
+    <message>
+        <source>Group and count identical elements of a field in a single date</source>
+        <translation>Group and count identical elements of a field in a single date</translation>
+    </message>
+    <message>
+        <source>Relational chart for two elements: how many times a value is found in the same line with the other.
+Time of day counts for a single date, entire days counts in a period.</source>
+        <translation>Relational chart for two elements: how many times a value is found in the same line with the other.
+Time of day counts for a single date, entire days counts in a period.</translation>
+    </message>
+    <message>
+        <source>Global overview</source>
+        <translation>Global overview</translation>
+    </message>
+    <message>
+        <source>Remember the window&apos;s position and size</source>
+        <translation>Remember the window&apos;s position and size</translation>
+    </message>
+    <message>
+        <source>Remember position and size</source>
+        <translation>Remember position and size</translation>
+    </message>
+    <message>
+        <source>Define the quantity of dialog mesages shown</source>
+        <translation>Define the quantity of dialog mesages shown</translation>
+    </message>
+    <message>
+        <source>Augmented quantity of dialog messages shown</source>
+        <translation>Augmented quantity of dialog messages shown</translation>
+    </message>
+    <message>
+        <source>Dialogs from the main processes</source>
+        <translation>Dialogs from the main processes</translation>
+    </message>
+    <message>
+        <source>Dialogs emitted when parsing logs</source>
+        <translation>Dialogs emitted when parsing logs</translation>
+    </message>
+    <message>
+        <source>Dialogs emitted when viewing statistics</source>
+        <translation>Dialogs emitted when viewing statistics</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>Select/deselect all the files</source>
+        <translation>Select/deselect all the files</translation>
     </message>
 </context>
 <context>
