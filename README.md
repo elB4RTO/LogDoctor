@@ -337,7 +337,7 @@ In the *speed* section you can view how fast has been your server at serving con
 
 The *count* section is very simple. It just shows the recurrence of the elements for a specific field.<br/>
 
-![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_counts.png)
+![screenshot](https://raw.githubusercontent.com/elB4RTO/CRAPLOG/main/crapshots/LogDoctor/stats_count.png)
 
 <br/>
 
@@ -428,7 +428,7 @@ At the moment of writing, LogDoctor is available in:
 
 - 🇫🇷 French (40%, *wanna [contribute](#translations)?*)
 
-<br/>
+<br/><br/>
 
 ## Contributions
 
