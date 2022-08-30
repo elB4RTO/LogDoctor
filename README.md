@@ -4,6 +4,12 @@ Parse Apache2/Nginx/IIS logs to make statistics
 
 <br/>
 
+### DISCLAIMER
+
+**This repository is not fully functional yet. For further informations, please refer to the issues.**
+
+<br/>
+
 ## Table of contents
 
 - [Overview](#overview)
@@ -69,8 +75,9 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
 ### Requirements / Dependencies
 
 - **From source**:
+  - C++ 17
   - Cmake
-  - Qt5 *(Framework, Linguist, Widgets, Charts, Sql)*
+  - Qt5 *(Framework 5.15+, Linguist, Widgets, Charts, Sql)*
   - zlib
   - libcurl<br/><br/>
 - **From binary**:
@@ -125,7 +132,23 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
   If compilation fails, use the following command before to rebuild:
   <br/>`cmake --build ./ --target clean`
   <br/><br/>
-- Once done, you can move the executable file wherever you want and execute it from there.<br/>
+
+#### Additional steps
+
+- **Linux**:
+  - No additional steps. Once compiling is done, you can move the executable file wherever you want and execute it from there.<br/>
+
+- **Windows**:
+  - Create a new folder and move the executable in it:
+    <br/>`mkdir LogDoctor && mv LogDoctor.exe .\LogDoctor`<br/>
+  - Add Qt's libraries to the executable's folder:<br/>
+    - You need to know the path of your Qt installation, default is *C:\Qt*<br/><br/>
+    - You need to know which compiler you used, usually *MinGW*<br/><br/>
+    - Deploy the libraries using Qt's compiler additional tool:
+      <br/>`cd C:\<path>\<to>\Qt\<version>\<compiler>`<br/>
+      <br/>`windeployqt.exe C:\<path>\<to>\<executable>\<folder>`<br/><br/>
+    - *... work in progress ...*<br/><br/>
+    - You can now move the executable's folder wherever you want and execute it from there.<br/>
 
 <br/><br/>
 
