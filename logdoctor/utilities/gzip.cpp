@@ -5,7 +5,11 @@
 
 #include <string>
 #include <errno.h>
-#include <zlib.h>
+#if defined( Q_OS_WIN )
+    #include <QtZlib/zlib.h>
+#else
+    #include <zlib.h>
+#endif
 
 
 // avoid corruption of the data on Windows/MS-DOS systems
