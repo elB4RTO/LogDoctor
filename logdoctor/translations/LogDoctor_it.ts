@@ -115,7 +115,7 @@
     </message>
     <message>
         <source>Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?</source>
-        <translation>Ignorare l&apos;avvertimento e usarlo comunque, Scartarlo e continuare, o annullare tutto e terminare?</translation>
+        <translation>Ignorare l&apos;avvertimento e usarlo comunque, Scartarlo e continuare, o Annullare tutto e terminare?</translation>
     </message>
     <message>
         <source>Create a new database?</source>
@@ -239,7 +239,7 @@ Continuare?</translation>
     </message>
     <message>
         <source>Unexpected table</source>
-        <translation>Tabella insapettata</translation>
+        <translation>Tabella inaspettata</translation>
     </message>
     <message>
         <source>Table not found</source>
@@ -331,7 +331,7 @@ marcatura della versione non trovata</translation>
         <source>An error occured while parsing:
 malformed version</source>
         <translation>È avvenuto un errore durante l&apos;analisi:
-versione malformata</translation>
+versione mal formata</translation>
     </message>
     <message>
         <source>A new version available!
@@ -341,7 +341,7 @@ and follow the instruction about how to update</source>
         <translation>È disponibile una nuova versione!
 
 Visita il repository di LogDoctor
-e segui le istruzioni su come ggiornare</translation>
+e segui le istruzioni su come aggiornare</translation>
     </message>
     <message>
         <source>LogDoctor is up-to-date</source>
@@ -357,10 +357,10 @@ If you think so, you may be a victim of a malware
 Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
         <translation>La tua versione arriva dal futuro!
 
-La tua versione è maggiore di quella upstream
+La tua versione è maggiore di quella online
 
 Sei sicuro di avere la versione originale di LogDoctor?
-Se pensi che sia così, potresti essere la vittima di un malware.
+Se pensi che sia così, potresti essere la vittima di un malware
 È consigliato visitare il repository di LogDoctor e scaricalo di nuovo</translation>
     </message>
     <message>
@@ -499,7 +499,7 @@ Se pensi che sia così, potresti essere la vittima di un malware.
         <source>The log format has not been set, or is invalid
 Please add a valid one in the configurations</source>
         <translation>Il formato di log non è stato impostato, o è errato.
-Per favore aggiungine uno valido nella configurazione</translation>
+Per favore aggiungine uno valido nelle impostazioni</translation>
     </message>
     <message>
         <source>No log field has been set in the current logs format,
@@ -520,16 +520,10 @@ e può portare ad avere dati incorretti</translation>
         <translation>Per favore segnala questo problema</translation>
     </message>
     <message>
-        <source>IF you&apos;d like to have this locale in LogDoctor,
-please follow the instruction on the repository page</source>
-        <translation>Se vorresti avere questa lingua in LogDoctor,
-per favore segui le istruzioni nella pagina del repository</translation>
-    </message>
-    <message>
         <source>Please check your internet connection and retry
 If this error persists, please report this issue</source>
         <translation>Ricontrolla la tua connessione e riprova
-Se questo errore persiste, per favore segnala questo problema</translation>
+Se l&apos;errore persiste, per favore segnala questo problema</translation>
     </message>
     <message>
         <source>Please remove the conflict and retry</source>
@@ -543,7 +537,7 @@ Se questo errore persiste, per favore segnala questo problema</translation>
         <source>Please set the proper permissions and retry
 If this error persists, please report this issue</source>
         <translation>Imposta i dovuti permessi e riprova
-Se questo errore persiste, per favore segnala questo problema</translation>
+Se l&apos;errore persiste, per favore segnala questo problema</translation>
     </message>
     <message>
         <source>If you haven&apos;t manually edited the configuration file,
@@ -616,6 +610,12 @@ Aborting</source>
         <translation>Errore durante il lavoro sul database
 
 Annullato</translation>
+    </message>
+    <message>
+        <source>If you&apos;d like to have this locale in LogDoctor,
+please follow the instruction on the repository page</source>
+        <translation>Se desideri avere questa lingua in LogDoctor,
+per favore segui le istruzioni nella pagina del repository</translation>
     </message>
 </context>
 <context>
@@ -813,10 +813,6 @@ Se ci sono più richieste nello stesso secondo, verrà usata la media dei valori
     <message>
         <source>User-agent of the client which made the request</source>
         <translation>User-agent del cliente che ha effettuato la richiesta</translation>
-    </message>
-    <message>
-        <source>IP address of the client which made the request</source>
-        <translation>Indirizzo IP del cliente che ha effettuato la richiesta</translation>
     </message>
     <message>
         <source>Count</source>
