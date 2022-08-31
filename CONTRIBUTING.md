@@ -10,7 +10,9 @@ Everyone is welcome.
 
 ## How to contribute
 
-If you don't know how to contribute to a project, read the [GitHub Guidelines](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) first.
+*If you don't know how to contribute to a project, read the [GitHub Guidelines](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) first.*
+
+<br/>
 
 If you want to contribute to LogDoctor, please follow these steps:
 
@@ -24,7 +26,7 @@ If you want to contribute to LogDoctor, please follow these steps:
 
 <br/>
 
-## Pull Requests guideline
+## Pull Requests guidelines
 
 When submitting a PR, please leave a message with it explaining which has been your changes.
 
