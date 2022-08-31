@@ -6,7 +6,10 @@
 #include "utilities/io.h"
 #include "utilities/strings.h"
 
-#include <curl/curl.h>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QEventLoop>
+
 #include <stdexcept>
 
 
@@ -16,61 +19,52 @@ Crapup::Crapup()
 }
 
 
-size_t Crapup::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
-
-
 void Crapup::versionCheck( const float& v, const int& dialog_level )
 {
     bool successful = false;
     float version = -1;
+    int err;
 
-    CURL *curl;
-    CURLcode response;
-
+    QByteArray ua = QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+"(version check)");
     std::string content;
-    std::string URL;
 
     const std::string links[3] = {"https://raw.githubusercontent.com/elB4RTO/LogDoctor/main/version.txt",
                                   "https://git.disroot.org/elB4RTO/LogDoctor/raw/branch//main/version.txt",
                                   "https://gitlab.com/elB4RTO/LogDoctor/-/raw/main/version.txt"};
 
-    // init the curl session
-    curl_global_init( CURL_GLOBAL_ALL );
-    curl = curl_easy_init();
-    // fetched data will be sent to this function
-    curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback );
-    // fetched data will be stored in this variable
-    curl_easy_setopt( curl, CURLOPT_WRITEDATA, &content );
-    // set the user agent
-    curl_easy_setopt( curl, CURLOPT_USERAGENT, "LogDoctor/"+std::to_string(v)+" (version check)" );
 
-    int err = 0;
+    QNetworkAccessManager *networkMgr = new QNetworkAccessManager(this);
+
 
     for ( const std::string& URL : links ) {
 
         // reset the content
         content.clear();
 
-        // set the URL
-        curl_easy_setopt( curl, CURLOPT_URL, URL.c_str() );
-        // make the request
-        response = curl_easy_perform( curl );
+        // set the URL and make the request
+        QNetworkRequest request;
+        request.setRawHeader( "User-Agent", ua );
+        request.setUrl( QUrl( URL.c_str() ) );
+        QNetworkReply *reply = networkMgr->get( request );
 
-        // check for errors
-        if ( response != CURLE_OK ) {
+        QEventLoop loop;
+        QObject::connect(reply, SIGNAL(readyRead()), &loop, SLOT(quit()));
+        loop.exec();
+
+
+        if ( reply->error() ) {
             // failed
-            err = 1;
             if ( dialog_level == 2 ) {
                 DialogSec::warnConnectionFailed( nullptr,
                     QString::fromStdString( URL ),
-                    QString::fromStdString( curl_easy_strerror(response)) );
+                    QString::fromStdString( reply->errorString().toStdString() ) );
             }
+
         } else {
-            // successful
+
+            // successful, get the content
+            content = reply->readAll().toStdString();
+            // search for the version mark
             const std::string version_mark = ".:!¦version¦!:.";
             int start = content.find( version_mark );
             if ( start != std::string::npos ) {
@@ -98,12 +92,9 @@ void Crapup::versionCheck( const float& v, const int& dialog_level )
                 err = 10;
             }
         }
+
+        delete reply;
     }
-
-
-    // cleanup curl stuff
-    curl_easy_cleanup( curl );
-    curl_global_cleanup();
 
     if ( successful ) {
         // check the versions
