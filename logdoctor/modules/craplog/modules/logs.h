@@ -39,8 +39,9 @@ public:
 
     void resetPerfData();
     // share perf data with craplog
-    const unsigned getSize(),
-                   getLines();
+    const unsigned getTotalSize(),
+                   getParsedSize(),
+                   getParsedLines();
 
 private:
 
@@ -103,7 +104,7 @@ private:
         const FormatOps::LogsFormat& format
         );
     // temporary vars
-    unsigned size=0, lines=0;
+    unsigned total_size=0, parsed_size=0, parsed_lines=0;
 
 
 };
