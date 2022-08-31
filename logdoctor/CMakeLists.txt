@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 6.0 LANGUAGES CXX)
+project(LogDoctor VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTools Sql)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
 
 
 set(TS_FILES
@@ -122,20 +122,25 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(LogDoctor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::Sql)
+if(WIN32)
+    set(CMAKE_CXX_STANDARD_LIBRARIES "-static -static-libgcc -static-libstdc++")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
+    target_link_libraries(LogDoctor PRIVATE
+        -static Qt${QT_VERSION_MAJOR}::Widgets
+        -static Qt${QT_VERSION_MAJOR}::Charts
+        -static Qt${QT_VERSION_MAJOR}::Sql
+        -static Qt${QT_VERSION_MAJOR}::Network)
+else()
+    target_link_libraries(LogDoctor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Network)
+    # Include zlib
+    find_package( ZLIB REQUIRED )
+    include_directories(${ZLIB_INCLUDE_DIRS})
+    target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
+endif()
 
-# Include zlib
-find_package( ZLIB REQUIRED )
-include_directories(${ZLIB_INCLUDE_DIRS})
-target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
-
-# Include libcurl
-find_package( CURL REQUIRED )
-include_directories(${CURL_INCLUDE_DIRS})
-target_link_libraries(LogDoctor PRIVATE ${CURL_LIBRARIES})
 
 set_target_properties(LogDoctor PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+    #MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
