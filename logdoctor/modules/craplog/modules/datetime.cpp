@@ -4,6 +4,8 @@
 #include "modules/exceptions.h"
 #include "utilities/strings.h"
 
+#include <QDateTime>
+
 #include <ctime>
 
 
@@ -120,12 +122,15 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
             datetime = std::to_string( std::stoi( datetime ) );
         }
         // convert to iso date format
-        const char* c = datetime.c_str();
+        QDateTime e = QDateTime::fromSecsSinceEpoch( std::stoi( datetime ) );
+        datetime = e.toString( "yyyy-MM-dd  HH:mm:ss" ).toStdString();
+
+        /*const char* c = datetime.c_str();
         struct tm t;
         char d[32];
         strptime( c, "%s", &t );
         strftime( d, sizeof(d), "%Y-%m-%d %H:%M:%S", &t);
-        datetime = std::string( d );
+        datetime = std::string( d );*/
         // parse
         year   = datetime.substr( 0, 4 );
         month  = datetime.substr( 5, 2 );
