@@ -694,8 +694,8 @@ void Craplog::sumBlacklistededSize( const unsigned& size )
 
 void Craplog::collectPerfData()
 {
-    this->parsed_size  = this->logOps.getSize();
-    this->parsed_lines = this->logOps.getLines();
+    this->parsed_size  = this->logOps.getParsedSize();
+    this->parsed_lines = this->logOps.getParsedLines();
     this->perf_size    = this->parsed_size;
 }
 
@@ -718,8 +718,9 @@ void Craplog::run()
             this->parseLogLines();
             // finished parsing logs
             this->parsing = false;
-            this->parsed_size  = this->logOps.getSize();
-            this->parsed_lines = this->logOps.getLines();
+            this->total_size   = this->logOps.getTotalSize();
+            this->parsed_size  = this->logOps.getParsedSize();
+            this->parsed_lines = this->logOps.getParsedLines();
             this->perf_size    = this->parsed_size;
         }
         // clear log lines data
@@ -904,7 +905,6 @@ void Craplog::joinLogLines()
         // append to the relative list
         this->logs_lines.insert( this->logs_lines.end(), content.begin(), content.end() );
         this->used_files_hashes.push_back( file.hash );
-        this->total_size  += file.size;
         this->total_lines += content.size();
     }
     aux.clear();

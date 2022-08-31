@@ -253,7 +253,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
             }
 
             // process the field
-            this->size += fld_str.size();
+            this->parsed_size += fld_str.size();
 
             if ( fld_str != "" ) {
                 int fld_id = this->field2id.at(fld);
@@ -414,7 +414,8 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
     // set the default warning mark ( 0=false ) to default status
     data.emplace( 99, "0" );
 
-    this->lines ++;
+    this->total_size += line_size;
+    this->parsed_lines ++;
 
     return data;
 }
@@ -430,9 +431,9 @@ void LogOps::parseLines( std::vector<std::unordered_map<int, std::string>>& data
             data.push_back( this->parseLine( line, format ) );
         }
     } else {
-        data.reserve( size / (nl+1) );
-        size --;
-        for ( int i=0; i<size; i++ ) {
+        data.reserve( parsed_size / (nl+1) );
+        parsed_size --;
+        for ( int i=0; i<parsed_size; i++ ) {
             std::string line = lines.at( i );
             for ( int n=0; n<nl; n++ ) {
                 i++;
@@ -449,15 +450,20 @@ void LogOps::parseLines( std::vector<std::unordered_map<int, std::string>>& data
 
 void LogOps::resetPerfData()
 {
-    this->size  = 0;
-    this->lines = 0;
+    this->total_size   = 0;
+    this->parsed_size  = 0;
+    this->parsed_lines = 0;
 }
-const unsigned LogOps::getSize()
+const unsigned LogOps::getTotalSize()
 {
-    return this->size;
+    return this->total_size;
 }
-const unsigned LogOps::getLines()
+const unsigned LogOps::getParsedSize()
 {
-    return this->lines;
+    return this->parsed_size;
+}
+const unsigned LogOps::getParsedLines()
+{
+    return this->parsed_lines;
 }
 
