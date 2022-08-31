@@ -520,12 +520,6 @@ and possibly leading to store incorrect data</translation>
         <translation>Please report this issue</translation>
     </message>
     <message>
-        <source>IF you&apos;d like to have this locale in LogDoctor,
-please follow the instruction on the repository page</source>
-        <translation>IF you&apos;d like to have this locale in LogDoctor,
-please follow the instruction on the repository page</translation>
-    </message>
-    <message>
         <source>Please check your internet connection and retry
 If this error persists, please report this issue</source>
         <translation>Please check your internet connection and retry
@@ -616,6 +610,12 @@ Aborting</source>
         <translation>An error occured while working on the database
 
 Aborting</translation>
+    </message>
+    <message>
+        <source>If you&apos;d like to have this locale in LogDoctor,
+please follow the instruction on the repository page</source>
+        <translation>If you&apos;d like to have this locale in LogDoctor,
+please follow the instruction on the repository page</translation>
     </message>
 </context>
 <context>
@@ -813,10 +813,6 @@ If more than 1 request if found for the same time, the mean value is used.</tran
     <message>
         <source>User-agent of the client which made the request</source>
         <translation>User-agent of the client which made the request</translation>
-    </message>
-    <message>
-        <source>IP address of the client which made the request</source>
-        <translation>IP address of the client which made the request</translation>
     </message>
     <message>
         <source>Count</source>
