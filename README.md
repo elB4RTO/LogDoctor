@@ -55,7 +55,7 @@ Parse Apache2/Nginx/IIS logs to make statistics
 
 ## Overview
 
-LogDoctor is a web servers' access logs parser which allows to view dynamic satistics of the collected data.
+LogDoctor is a web servers' access logs parser which allows to view dynamic satistics of the collected data.<br/>
 Supported web servers are **Apache2**, **Nginx** and **IIS**.
 
 <br/>
@@ -77,9 +77,7 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
 - **From source**:
   - C++ 17
   - Cmake
-  - Qt5 *(Framework 5.15+, Linguist, Widgets, Charts, Sql)*
-  - zlib
-  - libcurl<br/><br/>
+  - Qt5 *(Framework 5.15+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From binary**:
   - None
 
@@ -136,19 +134,22 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
 #### Additional steps
 
 - **Linux**:
-  - No additional steps. Once compiling is done, you can move the executable file wherever you want and execute it from there.<br/>
+  - No additional steps. Once compiling is done, you can move the executable file wherever you want and execute it from there.<br/><br/>
 
 - **Windows**:
   - Create a new folder and move the executable in it:
-    <br/>`mkdir LogDoctor && mv LogDoctor.exe .\LogDoctor`<br/>
+    <br/>`mkdir LogDoctor && mv LogDoctor.exe .\LogDoctor`<br/><br/>
   - Add Qt's libraries to the executable's folder:<br/>
-    - You need to know the path of your Qt installation, default is *C:\Qt*<br/><br/>
-    - You need to know which compiler you used, usually *MinGW*<br/><br/>
+    - You need to know the path of your Qt installation, default is *C:\Qt*<br/>
+    - You need to know which compiler you used, usually *MinGW*<br/>
     - Deploy the libraries using Qt's compiler additional tool:
-      <br/>`cd C:\<path>\<to>\Qt\<version>\<compiler>`<br/>
-      <br/>`windeployqt.exe C:\<path>\<to>\<executable>\<folder>`<br/><br/>
-    - *... work in progress ...*<br/><br/>
-    - You can now move the executable's folder wherever you want and execute it from there.<br/>
+      <br/>`cd C:\<path>\<to>\Qt\<version>\<compiler>\bin`
+      <br/>`windeployqt.exe C:\<path>\<to>\<executable>\<folder>`<br/>
+    - *[ work in progress ]*<br/>
+    - You can now move the executable's folder wherever you want and execute LogDoctor from there.<br/><br/>
+
+- **Mac OS**:
+  - *[ to be defined ]*
 
 <br/><br/>
 
@@ -469,9 +470,9 @@ If you want to contribute to the translation, please read the [Translation Guide
 
 Current translations under developement:
 
-- Spanish: **40%**
+- Spanish: **99%**
 
-- French: **40%**
+- French: **90%**
 
 If you have a request for a missing language please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
 
