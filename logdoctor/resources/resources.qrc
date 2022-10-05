@@ -38,6 +38,10 @@
         <file>icons/rem.png</file>
         <file>icons/up.png</file>
         <file>icons/down.png</file>
+        <file>icons/dialog_err.png</file>
+        <file>icons/dialog_warn.png</file>
+        <file>icons/dialog_info.png</file>
+        <file>icons/dialog_quest.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/en.png</file>
