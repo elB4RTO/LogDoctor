@@ -44,15 +44,25 @@ set(PROJECT_SOURCES
         utilities/vectors.h
         utilities/vectors.cpp
 
-        modules/dialogs.h
-        modules/dialogs.cpp
+        modules/shared.h
+        modules/shared.cpp
+
         modules/exceptions.h
         modules/exceptions.cpp
         modules/tb.h
         modules/tb.cpp
 
-        modules/shared.h
-        modules/shared.cpp
+        modules/dialogs.h
+        modules/dialogs.cpp
+        modules/dialogs/dialogmsg.ui
+        modules/dialogs/dialogmsg.h
+        modules/dialogs/dialogmsg.cpp
+        modules/dialogs/dialogbool.ui
+        modules/dialogs/dialogbool.h
+        modules/dialogs/dialogbool.cpp
+        modules/dialogs/dialogdia.ui
+        modules/dialogs/dialogdia.h
+        modules/dialogs/dialogdia.cpp
 
         modules/craplog/craplog.h
         modules/craplog/craplog.cpp
