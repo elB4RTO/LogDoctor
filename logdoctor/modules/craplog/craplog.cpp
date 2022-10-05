@@ -279,9 +279,9 @@ void Craplog::setApacheLogFormat( const std::string& format_string )
             this->formatOps.processApacheFormatString( format_string );
         this->logs_format_strings.at( this->APACHE_ID ) = format_string;
     } catch ( LogFormatException& e ) {
-        DialogSec::errInvalidLogFormatString( nullptr, e.what() );
+        DialogSec::errInvalidLogFormatString( e.what() );
     } catch (...) {
-        DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while parsing the format string"), true );
+        DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
     }
 }
 void Craplog::setNginxLogFormat( const std::string& format_string )
@@ -292,9 +292,9 @@ void Craplog::setNginxLogFormat( const std::string& format_string )
             this->formatOps.processNginxFormatString( format_string );
         this->logs_format_strings.at( this->NGINX_ID ) = format_string;
     } catch ( LogFormatException& e ) {
-        DialogSec::errInvalidLogFormatString( nullptr, e.what() );
+        DialogSec::errInvalidLogFormatString( e.what() );
     } catch (...) {
-        DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while parsing the format string"), true );
+        DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
     }
 }
 void Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
@@ -306,9 +306,9 @@ void Craplog::setIisLogFormat( const std::string& format_string, const int& log_
         this->logs_format_strings.at( this->IIS_ID ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
-        DialogSec::errInvalidLogFormatString( nullptr, e.what() );
+        DialogSec::errInvalidLogFormatString( e.what() );
     } catch (...) {
-        DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while parsing the format string"), true );
+        DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
     }
 }
 
@@ -432,7 +432,7 @@ void Craplog::scanLogsDir()
     if ( ! IOutils::isDir( logs_path ) ) {
         // this directory doesn't exists
         if ( IOutils::exists( logs_path ) ) {
-            DialogSec::errDirNotExists( nullptr, QString::fromStdString( logs_path ) );
+            DialogSec::errDirNotExists( QString::fromStdString( logs_path ) );
         }
         successful = false;
     }
@@ -451,7 +451,7 @@ void Craplog::scanLogsDir()
                 if ( ! IOutils::checkFile( path, true ) ) {
                     // not readable, skip
                     if ( this->dialogs_level == 2 ) {
-                        DialogSec::warnFileNotReadable( nullptr, name );
+                        DialogSec::warnFileNotReadable( name );
                     }
                     continue;
                 }
@@ -468,13 +468,13 @@ void Craplog::scanLogsDir()
 
             } catch (GenericException& e) {
                 // failed closing gzip file pointer
-                DialogSec::errGeneric( nullptr, e.what() );
+                DialogSec::errGeneric( e.what() );
                 continue;
             }
 
             if ( content.size() == 0 ) {
                 if ( this->dialogs_level == 2 ) {
-                    DialogSec::warnEmptyFile( nullptr, name );
+                    DialogSec::warnEmptyFile( name );
                 }
                 continue;
             }
@@ -484,7 +484,7 @@ void Craplog::scanLogsDir()
             content.clear();
             if ( log_type == LogOps::LogType::Failed ) {
                 // failed to get the log type, do not append
-                DialogSec::errFailedDefiningLogType( nullptr, name );
+                DialogSec::errFailedDefiningLogType( name );
                 continue;
             } else if ( log_type == LogOps::LogType::Discarded ) {
                 // skip
@@ -501,7 +501,7 @@ void Craplog::scanLogsDir()
                 hash = this->hashOps.digestFile( path );
             } catch (GenericException& e) {
                 // failed to digest
-                DialogSec::errGeneric( nullptr, e.what() );
+                DialogSec::errGeneric( e.what() );
                 continue;
             }
 
@@ -743,7 +743,7 @@ void Craplog::run()
 
     // only catch generic, leave others un-catched
     } catch (GenericException& e) {
-        DialogSec::errGeneric( nullptr, e.what() );
+        DialogSec::errGeneric( e.what() );
         this->proceed = false;;
     }
 
@@ -772,17 +772,21 @@ const bool Craplog::checkStuff()
             if ( this->dialogs_level == 2 ) {
                 msg += "\n" + QString::fromStdString( file.hash );
             }
-            int choice = DialogSec::choiceFileAlreadyUsed( nullptr, msg );
-            if ( choice < 0 ) {
+            const int choice = DialogSec::choiceFileAlreadyUsed( msg );
+            if ( choice == 0 ) {
                 // choosed to abort all
                 this->proceed = false;
                 break;
-            } else if ( choice > 0 ) {
-                // choosed to discard and continue
+            } else if ( choice == 1 ) {
+                // choosed to discard the file and continue
                 continue;
-            }/* else {
+            } else if ( choice == 2 ) {
                 // choosed to ignore and use the file anyway
-            }*/
+                ;
+            } else {
+                // shouldn't be here
+                throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
+            }
         }
 
         // check if the file respects the warning size
@@ -813,17 +817,21 @@ const bool Craplog::checkStuff()
                         msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Warning size parameter"), size_str, size_sfx.c_str() );
                     }
                 }
-                int choice = DialogSec::choiceFileSizeWarning( nullptr, msg );
-                if ( choice < 0 ) {
+                const int choice = DialogSec::choiceFileSizeWarning( msg );
+                if ( choice == 0 ) {
                     // choosed to abort all
                     this->proceed = false;
                     break;
-                } else if ( choice > 0 ) {
-                    // choosed to discard and continue
+                } else if ( choice == 1 ) {
+                    // choosed to discard the file and continue
                     continue;
-                }/* else {
+                } else if ( choice == 2 ) {
                     // choosed to ignore and use the file anyway
-                }*/
+                    ;
+                } else {
+                    // shouldn't be here
+                    throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
+                }
             }
         }
 
@@ -930,7 +938,12 @@ void Craplog::storeLogLines()
     QString db_path = QString::fromStdString( this->db_stats_path );
     QString db_name = QString::fromStdString( this->db_stats_path.substr( this->db_stats_path.find_last_of( '/' ) + 1 ) );
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( db_path );
 
     if ( ! db.open() ) {
@@ -940,7 +953,7 @@ void Craplog::storeLogLines()
         if ( this->dialogs_level == 2 ) {
             err_msg = db.lastError().text();
         }
-        DialogSec::errDatabaseFailedOpening( nullptr, db_name, err_msg );
+        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
 
     } else {
 
@@ -957,7 +970,7 @@ void Craplog::storeLogLines()
                         err_msg = db.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
             }
 
             if ( this->proceed && this->data_collection.size() > 0 ) {
@@ -977,7 +990,7 @@ void Craplog::storeLogLines()
                             err_msg= db.lastError().text();
                         }
                     }
-                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                    DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
                 }
             }
             if ( ! proceed ) {
@@ -999,14 +1012,14 @@ void Craplog::storeLogLines()
                         err_msg = db.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
                 err_shown = true;
             }
             if ( ! err_shown ) {
                 // show a message
-                DialogSec::errGeneric( nullptr, QString("%1\n\n%2").arg(
+                DialogSec::errGeneric( QString("%1\n\n%2").arg(
                     DialogSec::tr("An error occured while working on the database"),
-                    DialogSec::tr( f_ABORTING.c_str() ) ) );
+                    DialogSec::tr("Aborting") ) );
             }
         }
 

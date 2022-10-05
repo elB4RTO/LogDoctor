@@ -39,7 +39,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
-        DialogSec::errDatabaseFailedOpening( nullptr, db_name, err_msg );
+        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
 
     } else {
         QSqlQuery query = QSqlQuery( db );
@@ -47,7 +47,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
             if ( ! query.exec("SELECT hash FROM "+name+";") ) {
                 // error querying database
                 successful = false;
-                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query.lastQuery(), query.lastError().text() );
+                DialogSec::errDatabaseFailedExecuting( db_name, query.lastQuery(), query.lastError().text() );
                 break;
             } else {
                 // iterate over results
@@ -155,7 +155,7 @@ bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const st
                         err_msg = query.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query_msg, err_msg );
+                DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
             }
         }/* else {
             // hash already stored
@@ -184,7 +184,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
-        DialogSec::errDatabaseFailedOpening( nullptr, db_name, err_msg );
+        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
 
     } else {
         QSqlQuery query = QSqlQuery( db );
@@ -198,7 +198,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                     err_msg = db.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+            DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
 
         } else {
 
@@ -223,7 +223,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                                 err_msg= db.lastError().text();
                             }
                         }
-                        DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                        DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
                     }
                 }
                 if ( ! proceed ) {
@@ -245,13 +245,13 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                             err_msg = db.lastError().text();
                         }
                     }
-                    DialogSec::errDatabaseFailedExecuting( nullptr, db_name, stmt_msg, err_msg );
+                    DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
                     err_shown = true;
                 }
                 if ( ! err_shown ) {
                     // show a message
                     QString msg = DialogSec::tr("An error occured while working on the database\n\nAborting");
-                    DialogSec::errGeneric( nullptr, msg );
+                    DialogSec::errGeneric( msg );
                 }
             }
         }

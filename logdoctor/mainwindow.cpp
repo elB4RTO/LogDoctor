@@ -313,12 +313,12 @@ void MainWindow::readConfigs()
                     if ( this->dialogs_level > 0 ) {
                         file = QString::fromStdString( this->configs_path );
                     }
-                    DialogSec::errConfFileNotReadable( nullptr, file );
+                    DialogSec::errConfFileNotReadable( file );
                 }
             }
         } else {
             // the given path doesn't point to a file
-            proceed = DialogSec::choiceFileNotFile( nullptr, QString::fromStdString( this->configs_path ) );
+            proceed = DialogSec::choiceFileNotFile( QString::fromStdString( this->configs_path ) );
             if ( proceed ) {
                 proceed = IOutils::renameAsCopy( this->configs_path );
                 if ( ! proceed ) {
@@ -326,7 +326,7 @@ void MainWindow::readConfigs()
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
                     }
-                    DialogSec::errRenaming( nullptr, QString::fromStdString( this->configs_path ) );
+                    DialogSec::errRenaming( QString::fromStdString( this->configs_path ) );
                 }
             }
         }
@@ -337,7 +337,7 @@ void MainWindow::readConfigs()
         if ( this->dialogs_level == 2 ) {
             file = QString::fromStdString( this->configs_path );
         }
-        DialogSec::warnConfFileNotFound( nullptr, file );
+        DialogSec::warnConfFileNotFound( file );
     }
 
     if ( proceed ) {
@@ -376,12 +376,12 @@ void MainWindow::readConfigs()
                 if ( var == "Language" ) {
                     if ( val.size() > 2 ) {
                         // not a valid locale, keep the default
-                        DialogSec::errLangLocaleInvalid( nullptr, QString::fromStdString( val ) );
+                        DialogSec::errLangLocaleInvalid( QString::fromStdString( val ) );
                     } else {
                         if ( val == "en" || val == "es" || val == "fr" || val == "it" ) {
                             this->language = val;
                         } else {
-                            DialogSec::errLangNotAccepted( nullptr, QString::fromStdString( val ) );
+                            DialogSec::errLangNotAccepted( QString::fromStdString( val ) );
                         }
                     }
 
@@ -564,11 +564,11 @@ void MainWindow::readConfigs()
         } catch (const std::ios_base::failure& err) {
             // failed reading
             QString msg = DialogSec::tr("An error occured while reading the configuration file");
-            DialogSec::errGeneric( nullptr, msg );
+            DialogSec::errGeneric( msg );
         } catch (...) {
             // something failed
             QString msg = DialogSec::tr("An error occured while parsing configuration file's data");
-            DialogSec::errGeneric( nullptr, msg );
+            DialogSec::errGeneric( msg );
         }
     }
 }
@@ -594,13 +594,13 @@ void MainWindow::writeConfigs()
                     if ( this->dialogs_level > 0 ) {
                         file = QString::fromStdString( this->configs_path );
                     }
-                    DialogSec::errConfFileNotWritable( nullptr, file );
+                    DialogSec::errConfFileNotWritable( file );
                     msg_shown = true;
                 }
             }
         } else {
             // the given path doesn't point to a file
-            proceed = DialogSec::choiceFileNotFile( nullptr, QString::fromStdString( this->configs_path ) );
+            proceed = DialogSec::choiceFileNotFile( QString::fromStdString( this->configs_path ) );
             if ( proceed ) {
                 proceed = IOutils::renameAsCopy( this->configs_path );
                 if ( ! proceed ) {
@@ -608,7 +608,7 @@ void MainWindow::writeConfigs()
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
                     }
-                    DialogSec::errRenaming( nullptr, path );
+                    DialogSec::errRenaming( path );
                     msg_shown = true;
                 }
             }
@@ -631,13 +631,13 @@ void MainWindow::writeConfigs()
                         if ( this->dialogs_level > 0 ) {
                             file = QString::fromStdString( base_path );
                         }
-                        DialogSec::errConfDirNotWritable( nullptr, file );
+                        DialogSec::errConfDirNotWritable( file );
                         msg_shown = true;
                     }
                 }
             } else {
                 // not a directory
-                proceed = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( base_path ) );
+                proceed = DialogSec::choiceDirNotDir( QString::fromStdString( base_path ) );
                 if ( proceed ) {
                     proceed = IOutils::renameAsCopy( base_path );
                     if ( ! proceed ) {
@@ -645,7 +645,7 @@ void MainWindow::writeConfigs()
                         if ( this->dialogs_level > 0 ) {
                             path = QString::fromStdString( base_path );
                         }
-                        DialogSec::errRenaming( nullptr, path );
+                        DialogSec::errRenaming( path );
                         msg_shown = true;
                     } else {
                         // make the new folder
@@ -671,7 +671,7 @@ void MainWindow::writeConfigs()
         }
     }
     if ( !proceed && !msg_shown ) {
-        DialogSec::errConfFailedWriting( nullptr, msg );
+        DialogSec::errConfFailedWriting( msg );
     }
 
     if ( proceed ) {
@@ -757,10 +757,10 @@ void MainWindow::writeConfigs()
 
         } catch (const std::ios_base::failure& err) {
             // failed writing
-            DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while writing the configuration file") );
+            DialogSec::errGeneric( DialogSec::tr("An error occured while writing the configuration file") );
         } catch (...) {
             // something failed
-            DialogSec::errGeneric( nullptr, DialogSec::tr("An error occured while preparing the configuration file's data") );
+            DialogSec::errGeneric( DialogSec::tr("An error occured while preparing the configuration file's data") );
         }
     }
 }
@@ -776,7 +776,7 @@ void MainWindow::backupDatabase()
         if ( std::filesystem::exists( path ) ) {
             if ( !std::filesystem::is_directory( path, err ) ) {
                 // exists but it's not a directory, rename as copy and make a new one
-                proceed = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( path ) );
+                proceed = DialogSec::choiceDirNotDir( QString::fromStdString( path ) );
                 if ( proceed ) {
                     proceed = IOutils::renameAsCopy( path );
                     if ( ! proceed ) {
@@ -784,7 +784,7 @@ void MainWindow::backupDatabase()
                         if ( this->dialogs_level > 0 ) {
                             p = QString::fromStdString( path );
                         }
-                        DialogSec::errRenaming( nullptr, p );
+                        DialogSec::errRenaming( p );
                     } else {
                         // sucesfully renamed, make the new one
                         proceed = IOutils::makeDir( path );
@@ -793,7 +793,7 @@ void MainWindow::backupDatabase()
                             if ( this->dialogs_level > 0 ) {
                                 msg += ":\n"+QString::fromStdString( path );
                             }
-                            DialogSec::errFailedMakeDir( nullptr, msg );
+                            DialogSec::errFailedMakeDir( msg );
                         }
                     }
                 }
@@ -806,7 +806,7 @@ void MainWindow::backupDatabase()
                 if ( this->dialogs_level > 0 ) {
                     msg += ":\n"+QString::fromStdString( path );
                 }
-                DialogSec::errFailedMakeDir( nullptr, msg );
+                DialogSec::errFailedMakeDir( msg );
             }
         }
 
@@ -823,7 +823,7 @@ void MainWindow::backupDatabase()
             err );
         if ( ! proceed ) {
             // failed to copy
-            DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to copy the database file" ) );
+            DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ) );
         } else {
             // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
             std::string path, new_path;
@@ -832,7 +832,7 @@ void MainWindow::backupDatabase()
                 std::ignore = std::filesystem::remove_all( path, err );
                 proceed = ! std::filesystem::exists( path );
                 if ( ! proceed ) {
-                    DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to update the backups" ) );
+                    DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ) );
                 }
             }
             if ( proceed ) {
@@ -846,7 +846,7 @@ void MainWindow::backupDatabase()
                     }
                     if ( ! proceed ) {
                         // seems it failed to rename
-                        DialogSec::errDatabaseFailedBackup( nullptr, DialogSec::tr( "Failed to update the backups" ) );
+                        DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ) );
                         break;
                     }
                 }
@@ -1036,7 +1036,7 @@ void MainWindow::makeInitialChecks()
     // check that the sqlite plugin is available
     if ( ! QSqlDatabase::drivers().contains("QSQLITE") ) {
         // checks failed, abort
-        DialogSec::errSqlDriverNotFound( nullptr, "QSQLITE" );
+        DialogSec::errSqlDriverNotFound( "QSQLITE" );
         ok = false;
     }
 
@@ -1053,7 +1053,7 @@ void MainWindow::makeInitialChecks()
                                                           err );
                         } catch (...) {
                             ok = false;
-                            DialogSec::errDirNotReadable( nullptr, QString::fromStdString( path ) );
+                            DialogSec::errDirNotReadable( QString::fromStdString( path ) );
                         }
                     }
                     if ( ok ) {
@@ -1065,14 +1065,14 @@ void MainWindow::makeInitialChecks()
                                                               err );
                             } catch (...) {
                                 ok = false;
-                                DialogSec::errDirNotWritable( nullptr, QString::fromStdString( path ) );
+                                DialogSec::errDirNotWritable( QString::fromStdString( path ) );
                             }
                         }
                     }
 
                 } else {
                     // not a directory, rename as copy a make a new one
-                    ok = DialogSec::choiceDirNotDir( nullptr, QString::fromStdString( path ) );
+                    ok = DialogSec::choiceDirNotDir( QString::fromStdString( path ) );
                     if ( ok ) {
                         ok = IOutils::renameAsCopy( path );
                         if ( ! ok ) {
@@ -1080,7 +1080,7 @@ void MainWindow::makeInitialChecks()
                             if ( this->dialogs_level > 0 ) {
                                 p = QString::fromStdString( path );
                             }
-                            DialogSec::errRenaming( nullptr, p );
+                            DialogSec::errRenaming( p );
                         }
                     }
                 }
@@ -1342,15 +1342,15 @@ void MainWindow::showHelp( const std::string& filename )
                 }
             } else {
                 // resource not readable
-                DialogSec::errHelpNotReadable( nullptr, QString::fromStdString( link ) );
+                DialogSec::errHelpNotReadable( QString::fromStdString( link ) );
             }
         } else {
             // resource is not a file
-            DialogSec::errHelpFailed( nullptr, QString::fromStdString( link ), DialogSec::tr("unrecognized entry") );
+            DialogSec::errHelpFailed( QString::fromStdString( link ), DialogSec::tr("unrecognized entry") );
         }
     } else {
         // resource not found
-        DialogSec::errHelpNotFound( nullptr, QString::fromStdString( link ) );
+        DialogSec::errHelpNotFound( QString::fromStdString( link ) );
     }
 }
 
@@ -1673,7 +1673,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
         } catch (const GenericException& e) {
             // failed to find file
             proceed = false;
-            DialogSec::errFileNotFound( nullptr, QString::fromStdString( item.path ), true );
+            DialogSec::errFileNotFound( QString::fromStdString( item.path ), true );
         }
 
         FormatOps::LogsFormat format = this->craplog.getCurrentLogFormat();
@@ -1701,7 +1701,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 // failed closing gzip file pointer
                 proceed = false;
                 // >> e.what() << //
-                DialogSec::errGeneric( nullptr, QString("%1:\n%2").arg(
+                DialogSec::errGeneric( QString("%1:\n%2").arg(
                     DialogSec::tr("Failed to read gzipped file"),
                     item.name) );
 
@@ -1709,11 +1709,11 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 // failed reading as text
                 proceed = false;
                 // >> err.what() << //
-                DialogSec::errFailedReadFile( nullptr, item.name );*/
+                DialogSec::errFailedReadFile( item.name );*/
             } catch (...) {
                 // failed somehow
                 proceed = false;
-                DialogSec::errFailedReadFile( nullptr, item.name );
+                DialogSec::errFailedReadFile( item.name );
             }
 
             if ( proceed ) {
@@ -1797,10 +1797,18 @@ void MainWindow::on_button_MakeStats_Start_clicked()
                 if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
                     // tell Craplog to set this file as selected
                     if ( ! this->craplog.setLogFileSelected( (*i)->text(0) ) ) {
-                        // this shouldn't be, but...
-                        if ( ! DialogSec::choiceSelectedFileNotFound( nullptr, (*i)->text(0) ) ) {
+                        // failed to retrieve the file. this shouldn't be, but...
+                        const int choice = DialogSec::choiceSelectedFileNotFound( (*i)->text(0) );
+                        if ( choice == 0 ) {
+                            // choosed to abort all
                             proceed = false;
                             break;
+                        } else if ( choice == 1 ) {
+                            // choosed to discard the file and continue
+                            ;
+                        } else {
+                            // shouldn't be here
+                            throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
                         }
                     }
                 }
