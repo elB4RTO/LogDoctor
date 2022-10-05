@@ -55,7 +55,7 @@ void Crapup::versionCheck( const float& v, const int& dialog_level )
         if ( reply->error() ) {
             // failed
             if ( dialog_level == 2 ) {
-                DialogSec::warnConnectionFailed( nullptr,
+                DialogSec::warnConnectionFailed(
                     QString::fromStdString( URL ),
                     QString::fromStdString( reply->errorString().toStdString() ) );
             }
@@ -112,6 +112,6 @@ void Crapup::versionCheck( const float& v, const int& dialog_level )
             successful = false;
         }
     } else {
-        DialogSec::errVersionCheckFailed( nullptr, err );
+        DialogSec::errVersionCheckFailed( err );
     }
 }

@@ -259,7 +259,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                     err_msg = query.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query_msg, err_msg );
+            DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
         }
 
         // sum stored data size for the perfs
@@ -276,7 +276,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
                     err_msg = query.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( nullptr, db_name, query_msg, err_msg );
+            DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
             break;
         }
 
