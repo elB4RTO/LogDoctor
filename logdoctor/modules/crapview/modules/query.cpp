@@ -154,7 +154,12 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates = {
         {11, {}}, {12, {}}, {13, {}} };
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -294,7 +299,12 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 {
     bool successful = true;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -343,7 +353,12 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
     bool successful = true;
     std::vector<std::vector<std::vector<std::vector<QString>>>> items;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -482,7 +497,12 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
     bool successful = true;
     std::vector<std::tuple<long long, std::vector<QString>>> data;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -833,7 +853,12 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
     QHash<QString, int> aux_items;
     std::vector<std::tuple<QString, int>> items;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -942,7 +967,12 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
         {22, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {23, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
     };
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -1180,7 +1210,12 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
     bool successful = true;
     std::vector<std::tuple<long long, int>> data;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -1423,7 +1458,12 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
     bool successful = true;
     std::vector<std::tuple<long long, int>> data;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
@@ -1808,7 +1848,12 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
 {
     bool successful = true;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
     if ( ! db.open() ) {
