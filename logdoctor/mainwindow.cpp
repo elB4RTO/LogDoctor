@@ -225,14 +225,15 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // get a fresh list of LogFiles
-    this->craplog_timer = new QTimer(this);
-    connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
-    this->craplog_timer->start(250);
+    this->waiter_timer = new QTimer(this);
+    connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
+    this->waiter_timer->start(250);
 }
 
 MainWindow::~MainWindow()
 {
     delete this->ui;
+    delete this->waiter_timer;
     delete this->craplog_timer;
     delete this->crapview_timer;
     delete this->craphelp;
@@ -1025,7 +1026,7 @@ void MainWindow::wait_ActiveWindow()
     if ( ! this->isActiveWindow() ) {
         std::this_thread::sleep_for( std::chrono::milliseconds(250) );
     } else {
-        this->craplog_timer->stop();
+        this->waiter_timer->stop();
         this->makeInitialChecks();
     }
 }
@@ -1571,12 +1572,16 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
     this->ui->button_LogFiles_Iis->setEnabled( false );
     // start refreshing as thread
     this->refreshing_list = true;
-    this->craplog_thread = std::thread( &MainWindow::refreshLogsList, this );
-    // periodically check if thread finished
     delete this->craplog_timer;
     this->craplog_timer = new QTimer(this);
-    connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(check_CraplogLLT_Finished()));
+    this->craplog_timer->setSingleShot( true );
+    connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(refreshLogsList()));
     this->craplog_timer->start(250);
+    // periodically check if thread finished
+    delete this->waiter_timer;
+    this->waiter_timer = new QTimer(this);
+    connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(check_CraplogLLT_Finished()));
+    this->waiter_timer->start(250);
 }
 
 void MainWindow::refreshLogsList()
@@ -1627,8 +1632,7 @@ void MainWindow::refreshLogsList()
 void MainWindow::check_CraplogLLT_Finished()
 {
     if ( ! this->refreshing_list ) {
-        this->craplog_timer->stop();
-        this->craplog_thread.join();
+        this->waiter_timer->stop();
         // back to normal state
         this->ui->button_LogFiles_RefreshList->setEnabled( true );
         this->ui->button_LogFiles_Apache->setEnabled( true );
@@ -1824,18 +1828,27 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 
             if ( proceed ) {
                 // periodically update perfs
+                delete this->waiter_timer;
+                this->waiter_timer = new QTimer(this);
+                connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
+                // run craplog as thread
+                this->waiter_timer_start = std::chrono::system_clock::now();
                 delete this->craplog_timer;
                 this->craplog_timer = new QTimer(this);
-                connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
-                this->craplog_timer->start(250);
-                // run craplog as thread
-                this->craplog_timer_start = std::chrono::system_clock::now();
-                this->craplog_thread = std::thread( &Craplog::run, &this->craplog );
+                this->craplog_timer->setSingleShot( true );
+                connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(runCraplog()));
+                // start processing
+                this->waiter_timer->start(250);
+                this->craplog_timer->start(100);
             } else {
                 this->craplogFinished();
             }
         }
     }
+}
+void MainWindow::runCraplog()
+{
+    this->craplog.run();
 }
 
 void MainWindow::reset_MakeStats_labels()
@@ -1862,11 +1875,11 @@ void MainWindow::update_MakeStats_labels()
     this->ui->label_MakeStats_Size->setText( this->printableSize( size ) );
     this->ui->label_MakeStats_Lines->setText( QString::fromStdString(std::to_string(this->craplog.getParsedLines())) );
     // time and speed
-    this->craplog_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-        this->craplog_timer_start - std::chrono::system_clock::now()
+    this->waiter_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        this->waiter_timer_start - std::chrono::system_clock::now()
     );
     size = this->craplog.getPerfSize();
-    secs = this->craplog_timer_elapsed.count() / -1000000000;
+    secs = this->waiter_timer_elapsed.count() / -1000000000;
     this->ui->label_MakeStats_Time->setText( this->printableTime( secs ));
     this->ui->label_MakeStats_Speed->setText( this->printableSpeed( size, secs ));
 }
@@ -1877,8 +1890,7 @@ void MainWindow::update_Craplog_PerfData()
     this->update_MakeStats_labels();
     // check if Craplog has finished working
     if ( ! this->craplog.isWorking() ) {
-        this->craplog_timer->stop();
-        this->craplog_thread.join();
+        this->waiter_timer->stop();
         this->craplogFinished();
     }
 }
