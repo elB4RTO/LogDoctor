@@ -138,7 +138,12 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
     const std::vector<QString> ws_names = { "apache", "nginx", "iis" };
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
     // check the existence
@@ -346,7 +351,12 @@ bool CheckSec::checkHashesDatabase( const std::string& db_path )
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
     const std::vector<QString> ws_names = { "apache", "nginx", "iis" };
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db;
+    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
     // check the existence
