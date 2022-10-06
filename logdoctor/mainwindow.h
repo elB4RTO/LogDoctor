@@ -12,8 +12,6 @@
 #include <QTreeWidget>
 #include <QChartView>
 
-#include <thread>
-
 #include "utilities/checks.h"
 #include "utilities/colors.h"
 #include "utilities/io.h"
@@ -60,6 +58,10 @@ private slots:
     // Qt's
     /////////////////
     //// CRAPLOG ////
+
+    void refreshLogsList();
+
+    void runCraplog();
 
     void on_button_LogFiles_ViewFile_clicked();
 
@@ -581,10 +583,10 @@ private:
     //// CRAPLOG ////
     /////////////////
     Craplog craplog;
-    std::thread craplog_thread;
-    QTimer *craplog_timer;
-    std::chrono::system_clock::time_point craplog_timer_start;
-    std::chrono::system_clock::duration craplog_timer_elapsed;
+    QTimer* craplog_timer = new QTimer();
+    QTimer* waiter_timer;
+    std::chrono::system_clock::time_point waiter_timer_start;
+    std::chrono::system_clock::duration waiter_timer_elapsed;
     void craplogStarted();
     void craplogFinished();
     void checkMakeStats_Makable();
@@ -598,7 +600,6 @@ private:
     // logs list related
     bool hide_used_files = false;
     bool refreshing_list = false;
-    void refreshLogsList();
     // text browser related
     TextBrowser TB;
 
@@ -613,7 +614,6 @@ private:
     //// CRAPVIEW ////
     //////////////////
     Crapview crapview;
-    /*std::thread crapview_thread;*/
     QTimer *crapview_timer = new QTimer();
     // refresh dates: query a new collection from the db and apply to the tabs
     void refreshStatsDates();
