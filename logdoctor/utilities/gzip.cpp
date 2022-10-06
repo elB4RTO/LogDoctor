@@ -55,6 +55,11 @@ void GZutils::readFile( const std::string& path, std::string& content )
     if ( successful ) {
         FILE *file = fopen ( path.c_str(), "rb" );
         /*FILE *dest = fopen ( out_path.c_str(), "wb" );*/
+        if ( file == NULL ) {
+            // unable to open the file
+            //throw("cannot read");
+            return;
+        }
         // decompress until deflate stream ends or end of file is reached
         do {
             strm.avail_in = fread( in, 1, CHUNK, file );
