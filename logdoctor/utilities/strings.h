@@ -14,13 +14,17 @@ public:
     static const int count( const std::string& str, const std::string& flag, const bool& consecutives=true );
 
     static const bool isNumeric( const std::string& str );
-    static const bool isNumeric( const char& chr );
+    static const bool isNumeric( const unsigned char& chr );
 
     static const bool isAlphabetic( const std::string& str );
-    static const bool isAlphabetic( const char& chr );
+    static const bool isAlphabetic( const unsigned char& chr );
 
     static const bool isAlnum( const std::string& str );
-    static const bool isAlnum( const char& chr );
+    static const bool isAlnum( const unsigned char& chr );
+
+    static const bool isHex( const unsigned char& chr );
+
+    static const bool isIP( const std::string& str );
 
     static const size_t findLast( const std::string& str, const std::string& flag );
 
@@ -38,7 +42,12 @@ public:
 
     static void splitrip( std::vector<std::string>& list, const std::string& target_str, const std::string& separator="\n", const std::string& strip=" \n\t\b\r\v" );
 
-    static std::string replace( const std::string& str, const std::string& target, const std::string& replace );
+    static const std::string replace( const std::string& str, const std::string& target, const std::string& replace );
+
+    static const std::string toUpper( const std::string& str );
+
+    static const std::string toLower( const std::string& str );
+
 };
 
 #endif // STRINGS_H
