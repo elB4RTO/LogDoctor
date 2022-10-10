@@ -19,10 +19,10 @@
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
 
+#include "modules/shared.h"
 #include "modules/dialogs.h"
 #include "modules/tb.h"
 
-#include "modules/shared.h"
 #include "modules/craplog/craplog.h"
 #include "modules/crapview/crapview.h"
 #include "modules/craphelp/craphelp.h"
