@@ -29,9 +29,10 @@ public:
          setHashesDatabasePath( const std::string& path );
 
     // logs formats web server specific settings
-    void setApacheLogFormat( const std::string& format_string );
-    void setNginxLogFormat(  const std::string& format_string );
-    void setIisLogFormat(    const std::string& format_string, const int& log_module );
+    const bool
+        setApacheLogFormat( const std::string& format_string ),
+        setNginxLogFormat(  const std::string& format_string ),
+        setIisLogFormat(    const std::string& format_string, const int& log_module );
     const std::string& getLogsFormatString( const int& web_server_id );
     const FormatOps::LogsFormat& getLogsFormat( const int& web_server_id );
     const QString getLogsFormatSample( const int& web_server_id );
@@ -78,8 +79,9 @@ public:
         bool used;
         std::vector<std::string> list;
     };
-    const bool& isBlacklistUsed( const int& web_server_id, const int& log_field_id ),
-              & isWarnlistUsed( const int& web_server_id, const int& log_field_id );
+    const bool
+        &isBlacklistUsed( const int& web_server_id, const int& log_field_id ),
+        &isWarnlistUsed( const int& web_server_id, const int& log_field_id );
     void setBlacklistUsed( const int& web_server_id, const int& log_field_id, const bool& used ),
          setWarnlistUsed( const int& web_server_id, const int& log_field_id, const bool& used );
     const std::vector<std::string>
@@ -91,10 +93,12 @@ public:
          warnlistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
          blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
          warnlistRemove( const int& web_server_id, const int& log_field_id, const std::string& item );
-    int blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item ),
+    const int
+        blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item ),
         warnlistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item ),
         blacklistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item ),
         warnlistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item );
+    const std::string sanitizeBWitem( const int& log_field_id, const std::string& new_item );
 
     // job related
     const bool& editedDatabase();
