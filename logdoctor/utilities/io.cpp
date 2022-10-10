@@ -138,7 +138,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
             // try reading a gzipped file
             GZutils::readFile( path, aux );
 
-        } catch (const GenericException& e) {
+        } catch ( const GenericException& e ) {
             // failed closing file pointer
             throw e;
 
@@ -172,18 +172,31 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
                     if ( strip_lines ) {
                         line = StringOps::strip( line );
                     }
-                    if ( line.size() == 0 || StringOps::startsWith( line, "#" ) ) {
+                    if ( line.size() == 0 || StringOps::startsWith( line, "#" ) ) { // leave the "#" check for IIS logs
                         i--;
                         continue;
                     }
                     lines.push_back( line );
+                }
+                // add the first and last lines, to double check for file integrity
+                for ( int& index : std::vector<int>({0,max-1}) ) {
+                    if ( ! VecOps::contains( picked_indexes, index ) ) {
+                        line = aux_lines.at( index );
+                        if ( strip_lines ) {
+                            line = StringOps::strip( line );
+                        }
+                        if ( line.size() == 0 || StringOps::startsWith( line, "#" ) ) {
+                            continue;
+                        }
+                        lines.push_back( line );
+                    }
                 }
             }
         }
         aux_lines.clear();
 
     // re-catched in craplog
-    } catch (const GenericException) {
+    } catch ( const GenericException ) {
         // failed closing gzip file pointer
         lines.clear(); aux_lines.clear();
         if ( file.is_open() ) {
