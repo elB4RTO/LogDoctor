@@ -55,4 +55,14 @@ private:
     QString msg;*/
 };
 
+
+class BWlistException : public std::exception {
+public:
+    BWlistException( const std::string& msg );
+    /*const QString& what();
+
+private:
+    QString msg;*/
+};
+
 #endif // EXCEPTIONS_H
