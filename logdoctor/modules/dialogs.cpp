@@ -105,10 +105,22 @@ void DialogSec::errConfDirNotWritable( const QString& dir, QWidget *parent )
 }
 
 
+void DialogSec::errFailedApplyingConfigs( const QString& msg, QWidget *parent )
+{
+    DialogMsg dialog = DialogMsg(
+        DialogSec::tr("Failed applying configuration"),
+        QString("%1\n%2").arg(
+            (msg=="") ? msg : QString("%1\n").arg(msg),
+            DialogSec::tr("Aborting") ),
+        "", 2, parent );
+    std::ignore = dialog.exec();
+}
 
-//////////////////
-//// LANGUAGE ////
-//////////////////
+
+
+///////////////////////
+//// VERSION CHECK ////
+///////////////////////
 void DialogSec::errVersionCheckFailed( const int& err_code, QWidget *parent )
 {
     QString msg;
@@ -205,6 +217,19 @@ void DialogSec::errHelpNotReadable( const QString& link, QWidget *parent )
         parent );
 }
 
+
+
+//////////////////////////
+//// WARN/BLACK LISTS ////
+//////////////////////////
+void DialogSec::warnInvalidItemBW( QWidget *parent )
+{
+    DialogMsg dialog = DialogMsg(
+        DialogSec::tr("Invalid string"),
+        DialogSec::tr("The given string is invalid and cannot be added to the list\n\nPlease correct it and retry"),
+        "", 1, parent );
+    std::ignore = dialog.exec();
+}
 
 
 
@@ -401,10 +426,8 @@ void DialogSec::errInvalidLogFormatString( const QString& msg, QWidget *parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Invalid log format string"),
-        QString("%1\n\n%2").arg(
-            msg,
-            DialogSec::tr("Please check that no error is thrown from your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue") ),
-        "", 2, parent );
+        DialogSec::tr("Please check that no error is thrown by your WebServer\nIf it gets accepted, please check the presence of a typo here\nIf everything is fine, please report this issue"),
+        msg, 2, parent );
     std::ignore = dialog.exec();
 }
 
@@ -481,6 +504,18 @@ const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget *parent 
             DialogSec::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?") ),
         true, true, true, parent );
     const int choice = dialog.exec();
+    return choice;
+}
+const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget *parent )
+{
+    DialogBool dialog = DialogBool(
+        DialogSec::tr("File exceeds warning size"),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr("The file's size exceeds the warning size"),
+            msg,
+            DialogSec::tr("Proceed anyway?") ),
+        parent );
+    const bool choice = dialog.exec();
     return choice;
 }
 

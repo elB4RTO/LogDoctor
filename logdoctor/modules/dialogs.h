@@ -29,6 +29,7 @@ public:
     static void errConfFileNotReadable( const QString& file, QWidget *parent=nullptr );
     static void errConfFileNotWritable( const QString& file, QWidget *parent=nullptr );
     static void errConfDirNotWritable( const QString& dir, QWidget *parent=nullptr );
+    static void errFailedApplyingConfigs( const QString& msg="", QWidget *parent=nullptr );
 
     // update
     static void errVersionCheckFailed( const int& err_code, QWidget *parent=nullptr );
@@ -62,12 +63,16 @@ public:
     // LogsList
     static const int choiceSelectedFileNotFound( const QString& file, QWidget *parent=nullptr );
 
+    // Warn/Black lists
+    static void warnInvalidItemBW( QWidget *parent=nullptr );
+
     // log files type
     static void errFailedDefiningLogType( const QString& file, QWidget *parent=nullptr );
     // log files hash
     static const int choiceFileAlreadyUsed( const QString& msg, QWidget *parent=nullptr );
     // log files size
     static const int choiceFileSizeWarning( const QString& msg, QWidget *parent=nullptr );
+    static const bool choiceFileSizeWarning2( const QString& msg, QWidget *parent=nullptr );
 
     // log format string invalid
     static void errInvalidLogFormatString( const QString& msg, QWidget *parent=nullptr );
