@@ -53,6 +53,4 @@ const std::string DAYS__FRIDAY    = TR::tr("Friday").toStdString();
 const std::string DAYS__SATURDAY  = TR::tr("Saturday").toStdString();
 
 
-
-
 #endif // TR_H
