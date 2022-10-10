@@ -78,34 +78,64 @@ const QPalette ColorSec::getPalette( const int&theme )
 {
     QPalette p;
     switch ( theme ) {
-        case 0:
-            p = QPalette();
-            break;
         case 1:
-            // light
-            p = QPalette( QBrush(QColor(  14,  20,   0 )), /* window text */
-                          QBrush(QColor( 193, 175, 129 )), /* button */
-                          QBrush(QColor( 164, 178, 140 )), /* light */
-                          QBrush(QColor(  24,  38,   0 )), /* dark */
-                          QBrush(QColor(  94, 108,  70 )), /* mid */
-                          QBrush(QColor(  14,  20,   0 )), /* text */
-                          QBrush(QColor(  54,  60,  40 )), /* bright text */
-                          QBrush(QColor( 220, 211, 187 )), /* base */
-                          QBrush(QColor( 220, 211, 187 ))  /* window */ );
-            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(94,108,70)) );
+            // candyland
+            p = QPalette( QBrush(QColor(  45,   0,  30 )), /* window text */
+                          //QBrush(QColor( 215, 110, 111 )), /* button */
+                          QBrush(QColor( 225, 120, 121 )), /* button */
+                          QBrush(QColor( 255, 170, 171 )), /* light */
+                          QBrush(QColor( 195,  80,  81 )), /* dark */
+                          QBrush(QColor( 235, 120, 121 )), /* mid */
+                          QBrush(QColor(  45,   0,  30 )), /* text */
+                          QBrush(QColor( 145, 100, 130 )), /* bright text */
+                          //QBrush(QColor( 255, 180, 181 )), /* base */
+                          QBrush(QColor( 194, 255, 195 )), /* base */
+                          //QBrush(QColor( 195,  80,  81 ))  /* window */
+                          QBrush(QColor( 255, 204, 143 ))  /* window */ );
+            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(195,80,81)) );
             break;
         case 2:
-            // dark
+            // carbon
+            p = QPalette( QBrush(QColor( 250, 250, 250 )), /* window text */
+                          QBrush(QColor(  50,  50,  50 )), /* button */
+                          QBrush(QColor(  10,  10,  10 )), /* light */
+                          QBrush(QColor( 110, 110, 110 )), /* dark */
+                          QBrush(QColor(  60,  60,  60 )), /* mid */
+                          QBrush(QColor( 220, 220, 220 )), /* text */
+                          QBrush(QColor( 170, 170, 170 )), /* bright text */
+                          QBrush(QColor(  30,  30,  30 )), /* base */
+                          QBrush(QColor(  10,  10,  10 ))  /* window */ );
+            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(70,70,70)) );
+            break;
+        case 3:
+            // forest
             p = QPalette( QBrush(QColor( 220, 211, 187 )), /* window text */
-                          QBrush(QColor(  44,  58,  20 )), /* button */
+                          QBrush(QColor(  54,  68,  30 )), /* button */
                           QBrush(QColor(  24,  38,   0 )), /* light */
                           QBrush(QColor( 164, 178, 140 )), /* dark */
                           QBrush(QColor(  94, 108,  70 )), /* mid */
                           QBrush(QColor( 220, 211, 187 )), /* text */
                           QBrush(QColor( 193, 175, 129 )), /* bright text */
-                          QBrush(QColor(  14,  20,   0 )), /* base */
+                          QBrush(QColor(  34,  50,  20 )), /* base */
                           QBrush(QColor(  14,  20,   0 ))  /* window */ );
             p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(94,108,70)) );
+            break;
+        case 4:
+            // moon
+            p = QPalette( QBrush(QColor(  14,  20,   0 )), /* window text */
+                          QBrush(QColor( 153, 135,  89 )), /* button */
+                          QBrush(QColor( 164, 178, 140 )), /* light */
+                          QBrush(QColor(  24,  38,   0 )), /* dark */
+                          QBrush(QColor(  94, 108,  70 )), /* mid */
+                          QBrush(QColor(  14,  20,   0 )), /* text */
+                          QBrush(QColor(  54,  60,  40 )), /* bright text */
+                          QBrush(QColor( 230, 221, 197 )), /* base */
+                          QBrush(QColor( 190, 181, 157 ))  /* window */ );
+            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(94,108,70)) );
+            break;
+        //case 0:
+        default:
+            p = QPalette();
             break;
     }
 
