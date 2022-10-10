@@ -12,6 +12,7 @@
 #include "modules/craplog/modules/donuts.h"
 #include "modules/craplog/modules/store.h"
 
+#include <QUrl>
 #include <QPainter>
 
 #include <filesystem>
@@ -152,24 +153,26 @@ void Craplog::setBlacklist( const int& web_server_id, const int& log_field_id, c
 {
     this->blacklists.at( web_server_id ).at( log_field_id ).list.clear();
     for ( const std::string& item : new_list ) {
-        this->blacklists.at( web_server_id ).at( log_field_id ).list.push_back( item );
+        this->blacklistAdd( web_server_id, log_field_id, item );
     }
 }
 void Craplog::setWarnlist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list )
 {
     this->warnlists.at( web_server_id ).at( log_field_id ).list.clear();
     for ( const std::string& item : new_list ) {
-        this->warnlists.at( web_server_id ).at( log_field_id ).list.push_back( item );
+        this->warnlistAdd( web_server_id, log_field_id, item );
     }
 }
 
 void Craplog::blacklistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item )
 {
-    this->blacklists.at( web_server_id ).at( log_field_id ).list.push_back( new_item );
+    this->blacklists.at( web_server_id ).at( log_field_id ).list.push_back(
+        this->sanitizeBWitem( log_field_id, new_item ) );
 }
 void Craplog::warnlistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item )
 {
-    this->warnlists.at( web_server_id ).at( log_field_id ).list.push_back( new_item );
+    this->warnlists.at( web_server_id ).at( log_field_id ).list.push_back(
+        this->sanitizeBWitem( log_field_id, new_item ) );
 }
 
 void Craplog::blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& item )
@@ -197,7 +200,7 @@ void Craplog::warnlistRemove( const int& web_server_id, const int& log_field_id,
     list.pop_back();
 }
 
-int Craplog::blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item )
+const int Craplog::blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
@@ -211,7 +214,7 @@ int Craplog::blacklistMoveUp( const int& web_server_id, const int& log_field_id,
     }
     return i;
 }
-int Craplog::warnlistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item )
+const int Craplog::warnlistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
@@ -226,7 +229,7 @@ int Craplog::warnlistMoveUp( const int& web_server_id, const int& log_field_id, 
     return i;
 }
 
-int Craplog::blacklistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item )
+const int Craplog::blacklistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
@@ -240,7 +243,7 @@ int Craplog::blacklistMoveDown( const int& web_server_id, const int& log_field_i
     }
     return i;
 }
-int Craplog::warnlistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item )
+const int Craplog::warnlistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item )
 {
     int i;
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
@@ -253,6 +256,41 @@ int Craplog::warnlistMoveDown( const int& web_server_id, const int& log_field_id
         }
     }
     return i;
+}
+
+const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item )
+{
+    std::string sanitized_item;
+    switch ( log_field_id ) {
+        case 11:
+            sanitized_item = StringOps::strip( new_item );
+            if ( ! StringOps::isAlphabetic( sanitized_item ) ) {
+                // only letters allowed
+                throw BWlistException("Invalid Method");
+            }
+            sanitized_item = StringOps::toUpper( new_item );
+            break;
+        case 12:
+            sanitized_item = QUrl::toPercentEncoding(
+                QString::fromStdString( new_item ),
+                "/#&?=+").toStdString();
+            break;
+        case 20:
+            sanitized_item = StringOps::strip( new_item );
+            if ( ! StringOps::isIP( sanitized_item ) ) {
+                // only IPv4/IPv6 allowed
+                throw BWlistException("Invalid Client");
+            }
+            break;
+        case 21:
+            sanitized_item = StringOps::replace( new_item, "\"", "\\\"" );
+            break;
+        default:
+            // shouldn't be here
+            throw GenericException("Unexpected LogField ID: "+std::to_string(log_field_id));
+            break;
+    }
+    return sanitized_item;
 }
 
 
@@ -271,45 +309,57 @@ const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id )
 }
 
 // set the logs format
-void Craplog::setApacheLogFormat( const std::string& format_string )
+const bool Craplog::setApacheLogFormat( const std::string& format_string )
 {
     // apache
+    bool success = true;
     try {
         this->logs_formats.at( this->APACHE_ID ) =
             this->formatOps.processApacheFormatString( format_string );
         this->logs_format_strings.at( this->APACHE_ID ) = format_string;
     } catch ( LogFormatException& e ) {
+        success = false;
         DialogSec::errInvalidLogFormatString( e.what() );
     } catch (...) {
+        success = false;
         DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
     }
+    return success;
 }
-void Craplog::setNginxLogFormat( const std::string& format_string )
+const bool Craplog::setNginxLogFormat( const std::string& format_string )
 {
     // nginx
+    bool success = true;
     try {
         this->logs_formats.at( this->NGINX_ID ) =
             this->formatOps.processNginxFormatString( format_string );
         this->logs_format_strings.at( this->NGINX_ID ) = format_string;
     } catch ( LogFormatException& e ) {
+        success = false;
         DialogSec::errInvalidLogFormatString( e.what() );
     } catch (...) {
+        success = false;
         DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
     }
+    return success;
 }
-void Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
+const bool Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
 {
     // iis
+    bool success = true;
     try {
         this->logs_formats.at( this->IIS_ID ) =
             this->formatOps.processIisFormatString( format_string, log_module );
         this->logs_format_strings.at( this->IIS_ID ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
+        success = false;
         DialogSec::errInvalidLogFormatString( e.what() );
     } catch (...) {
+        success = false;
         DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
     }
+    return success;
 }
 
 const QString Craplog::getLogsFormatSample( const int& web_server_id )
@@ -466,7 +516,7 @@ void Craplog::scanLogsDir()
                 // read 32 random lines
                 IOutils::randomLines( path, content, 32 );
 
-            } catch (GenericException& e) {
+            } catch ( GenericException& e ) {
                 // failed closing gzip file pointer
                 DialogSec::errGeneric( e.what() );
                 continue;
@@ -499,7 +549,7 @@ void Craplog::scanLogsDir()
             std::string hash;
             try {
                 hash = this->hashOps.digestFile( path );
-            } catch (GenericException& e) {
+            } catch ( GenericException& e ) {
                 // failed to digest
                 DialogSec::errGeneric( e.what() );
                 continue;
@@ -742,7 +792,7 @@ void Craplog::run()
         this->used_files_hashes.clear();
 
     // only catch generic, leave others un-catched
-    } catch (GenericException& e) {
+    } catch ( GenericException& e ) {
         DialogSec::errGeneric( e.what() );
         this->proceed = false;;
     }
@@ -871,7 +921,7 @@ void Craplog::joinLogLines()
                 // try as gzip compressed archive first
                 GZutils::readFile( file.path, aux );
 
-            } catch (const GenericException& e) {
+            } catch ( const GenericException& e ) {
                 // failed closing file pointer
                 throw e;
 
@@ -888,7 +938,7 @@ void Craplog::joinLogLines()
             }
 
         // re-catched in run()
-        } catch (const GenericException) {
+        } catch ( const GenericException ) {
             // failed closing gzip file pointer
             throw GenericException( QString("%1:\n%2").arg(
                 DialogSec::tr("An error accured while reading the gzipped file"),
