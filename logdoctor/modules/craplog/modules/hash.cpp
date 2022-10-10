@@ -82,7 +82,7 @@ std::string HashOps::digestFile( const std::string& file_path )
             // try reading as gzip compressed file
             GZutils::readFile( file_path, content );
 
-        } catch (const GenericException& e) {
+        } catch ( const GenericException& e ) {
             // failed closing file pointer
             throw e;
 
@@ -95,7 +95,7 @@ std::string HashOps::digestFile( const std::string& file_path )
         }
 
     // re-catched in craplog
-    } catch (const GenericException) {
+    } catch ( const GenericException ) {
         // failed closing gzip file pointer
         throw GenericException( QString("%1:\n%2").arg(
             DialogSec::tr("An error accured while reading the gzipped file"),
