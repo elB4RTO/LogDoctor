@@ -101,7 +101,7 @@
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>473</height>
+             <height>484</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -229,11 +229,10 @@
               </property>
               <property name="html">
                <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -434,7 +433,7 @@ hr { height: 1px; border-width: 0; }
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>473</height>
+             <height>484</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -4027,8 +4026,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>173</width>
-                      <height>348</height>
+                      <width>184</width>
+                      <height>324</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_31">
@@ -4383,8 +4382,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>157</width>
-                      <height>348</height>
+                      <width>175</width>
+                      <height>324</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_36">
@@ -4638,8 +4637,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>145</width>
-                      <height>276</height>
+                      <width>162</width>
+                      <height>255</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_46">
@@ -4903,8 +4902,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>173</width>
-                      <height>276</height>
+                      <width>193</width>
+                      <height>255</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_42">
@@ -5308,6 +5307,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                        <pointsize>13</pointsize>
                       </font>
                      </property>
+                     <property name="maxCount">
+                      <number>10</number>
+                     </property>
                      <item>
                       <property name="text">
                        <string>None (System)</string>
@@ -5315,12 +5317,22 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Light</string>
+                       <string>CandyLand</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Dark</string>
+                       <string>Carbon</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Forest</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Moon</string>
                       </property>
                      </item>
                     </widget>
@@ -6123,11 +6135,10 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </property>
                      <property name="html">
                       <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="openLinks">
                       <bool>true</bool>
@@ -10316,7 +10327,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
      <x>0</x>
      <y>0</y>
      <width>952</width>
-     <height>29</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="font">
