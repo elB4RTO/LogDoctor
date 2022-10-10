@@ -322,8 +322,8 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
             // entire day
             for ( int i=0; i<6; i++ ) {
                 sets.push_back( std::vector<QBarSet*>() );
-                sets.at( i ).push_back( new QBarSet("") );
-                sets.at( i ).push_back( new QBarSet("") );
+                sets.back().push_back( new QBarSet("") );
+                sets.back().push_back( new QBarSet("") );
             }
             for ( int h=0; h<24; h++ ) {
                 for ( int m=0; m<6; m++ ) {
@@ -363,8 +363,8 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
             // 1 hour
             for ( int i=0; i<10; i++ ) {
                 sets.push_back( std::vector<QBarSet*>() );
-                sets.at( i ).push_back( new QBarSet("") );
-                sets.at( i ).push_back( new QBarSet("") );
+                sets.back().push_back( new QBarSet("") );
+                sets.back().push_back( new QBarSet("") );
             }
             for ( int g=0; g<6; g++ ) {
                 for ( int m=0; m<10; m++ ) {
@@ -488,7 +488,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         // { hour : { 10th_minutes : count } }
         std::vector<std::tuple<long long, std::vector<QString>>> &items = std::get<1>(result);
 
-        // draw the relational chart
+        // draw the speed chart
         QLineSeries *line = new QLineSeries();
         line->setName( this->printableDate( year, this->getMonthNumber(month), day ));
 
@@ -507,6 +507,9 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
             // append only if the second is different, else sum
             if ( aux_time > time ) {
                 t = t/count;
+                if ( t == 0 ) {
+                    t = 1;
+                }
                 line->append( time, t );
                 if ( t > max_t ) {
                     max_t = t;
@@ -516,6 +519,9 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
                 count = 1;
                 if ( i == max_i ) {
                     // final
+                    if ( t == 0 ) {
+                        t = 1;
+                    }
                     line->append( time, t );
                     if ( t > max_t ) {
                         max_t = t;
@@ -527,6 +533,9 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
                 if ( i == max_i ) {
                     // final
                     t = t/count;
+                    if ( t == 0 ) {
+                        t = 1;
+                    }
                     line->append( aux_time, t );
                     if ( t > max_t ) {
                         max_t = t;
@@ -595,6 +604,9 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelFormat( "%d" );
         axisY->setTickCount( ( max_t < 16 ) ? max_t : 16 );
+        if ( max_t == 1 ) {
+            max_t = 0;
+        }
         axisY->setRange( 0, max_t );
         axisY->setLabelsFont( fonts.at( "main_small" ) );
         l_chart->addAxis( axisY, Qt::AlignLeft );
@@ -1005,13 +1017,13 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
 
             // mean/max time-taken
             perf_list.push_back( std::make_tuple(
-                QString("%1 ms").arg( perf_time.at(1)/perf_time.at(2) ),
+                QString("%1 ms").arg( (perf_time.at(2)>0) ? perf_time.at(1)/perf_time.at(2) : perf_time.at(1) ),
                 QString("%1 ms").arg( perf_time.at(0) ) ));
             perf_list.push_back( std::make_tuple(
-                QString("%1 B").arg( perf_sent.at(1)/perf_sent.at(2) ),
+                QString("%1 B").arg( (perf_sent.at(2)>0) ? perf_sent.at(1)/perf_sent.at(2) : perf_time.at(1) ),
                 QString("%1 B").arg( perf_sent.at(0) ) ));
             perf_list.push_back( std::make_tuple(
-                QString("%1 B").arg( perf_receiv.at(1)/perf_receiv.at(2) ),
+                QString("%1 B").arg( (perf_receiv.at(2)>0) ? perf_receiv.at(1)/perf_receiv.at(2) : perf_receiv.at(1) ),
                 QString("%1 B").arg( perf_receiv.at(0) ) ));
 
             // overall work list
