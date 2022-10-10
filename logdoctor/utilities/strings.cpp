@@ -36,7 +36,7 @@ const bool StringOps::isNumeric( const std::string& str )
     bool result = false;
     if ( str.size() > 0 ) {
         result = true;
-        for ( const char& chr : str ) {
+        for ( const unsigned char& chr : str ) {
             if ( ! StringOps::isNumeric( chr ) ) {
                 result = false;
                 break;
@@ -45,7 +45,7 @@ const bool StringOps::isNumeric( const std::string& str )
     }
     return result;
 }
-const bool StringOps::isNumeric( const char& chr )
+const bool StringOps::isNumeric(const unsigned char& chr )
 {
     if ( chr > 47 && chr < 58 ) {
         return true;
@@ -60,7 +60,7 @@ const bool StringOps::isAlphabetic( const std::string& str )
     bool result = false;
     if ( str.size() > 0 ) {
         result = true;
-        for ( const char& chr : str ) {
+        for ( const unsigned char& chr : str ) {
             if ( ! StringOps::isAlphabetic( chr ) ) {
                 result = false;
                 break;
@@ -69,7 +69,7 @@ const bool StringOps::isAlphabetic( const std::string& str )
     }
     return result;
 }
-const bool StringOps::isAlphabetic( const char& chr )
+const bool StringOps::isAlphabetic(const unsigned char& chr )
 {
     if ( (chr > 64 && chr < 91)
       || (chr > 96 && chr < 123) ) {
@@ -85,7 +85,7 @@ const bool StringOps::isAlnum( const std::string& str )
     bool result = false;
     if ( str.size() > 0 ) {
         result = true;
-        for ( const char& chr : str ) {
+        for ( const unsigned char& chr : str ) {
             if ( ! StringOps::isAlnum( chr ) ) {
                 result = false;
                 break;
@@ -94,7 +94,7 @@ const bool StringOps::isAlnum( const std::string& str )
     }
     return result;
 }
-const bool StringOps::isAlnum( const char& chr )
+const bool StringOps::isAlnum(const unsigned char& chr )
 {
     if ( !StringOps::isNumeric( chr )
       && !StringOps::isAlphabetic( chr ) ) {
@@ -102,6 +102,36 @@ const bool StringOps::isAlnum( const char& chr )
     } else {
         return true;
     }
+}
+
+
+const bool StringOps::isHex( const unsigned char& chr )
+{
+    if ( (chr > 47 && chr < 58)
+      || (chr > 64 && chr < 71)
+      || (chr > 96 && chr < 103) ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+const bool StringOps::isIP( const std::string& str )
+{
+    bool result = false;
+    if ( str.size() > 0 ) {
+        result = true;
+        for ( const unsigned char& chr : str ) {
+            if ( chr == '.' || chr == ':' ) {
+                continue;
+            } else if ( ! StringOps::isHex( chr ) ) {
+                result = false;
+                break;
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -317,7 +347,7 @@ void StringOps::splitrip( std::vector<std::string>& list, const std::string& tar
 }
 
 
-std::string StringOps::replace( const std::string& str, const std::string& target, const std::string& replace )
+const std::string StringOps::replace( const std::string& str, const std::string& target, const std::string& replace )
 {
     size_t start=0, stop;
     const int size = target.size();
@@ -336,4 +366,23 @@ std::string StringOps::replace( const std::string& str, const std::string& targe
         }
     }
     return string;
+}
+
+
+const std::string StringOps::toUpper( const std::string& str )
+{
+    std::string up = "";
+    for ( const unsigned char& ch : str ) {
+        up.push_back( (char)std::toupper( ch ) );
+    }
+    return up;
+}
+
+const std::string StringOps::toLower( const std::string& str )
+{
+    std::string low = "";
+    for ( const unsigned char& ch : str ) {
+        low.push_back( (char)std::tolower( ch ) );
+    }
+    return low;
 }
