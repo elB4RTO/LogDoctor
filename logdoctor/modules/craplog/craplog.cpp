@@ -791,10 +791,13 @@ void Craplog::run()
         }
         this->used_files_hashes.clear();
 
-    // only catch generic, leave others un-catched
     } catch ( GenericException& e ) {
         DialogSec::errGeneric( e.what() );
-        this->proceed = false;;
+        this->proceed = false;
+
+    } catch ( LogParserException& e ) {
+        DialogSec::errFailedParsingLogs( e.what() );
+        this->proceed = false;
     }
 
     this->stopWorking();
