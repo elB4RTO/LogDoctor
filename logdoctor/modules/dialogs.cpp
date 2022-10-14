@@ -463,6 +463,15 @@ void DialogSec::errLogFormatNoSeparators( QWidget *parent )
     std::ignore = dialog.exec();
 }
 
+void DialogSec::errFailedParsingLogs( const QString& message, QWidget *parent )
+{
+    DialogMsg dialog = DialogMsg(
+        DialogSec::tr("An error occured while parsing logs"),
+        message,
+        "", 2, parent );
+    std::ignore = dialog.exec();
+}
+
 
 
 ///////////////////
