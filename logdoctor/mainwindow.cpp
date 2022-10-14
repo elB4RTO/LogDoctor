@@ -162,7 +162,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( this->TB.getColorSchemeID() );
     this->refreshTextBrowserPreview();
     // charts
-    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->CHARTS_THEMES.at( this->charts_theme_id ) );
+    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->charts_theme_id );
     this->refreshChartsPreview();
     // databases
     this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
