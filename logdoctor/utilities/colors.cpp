@@ -79,7 +79,7 @@ const QPalette ColorSec::getPalette( const int&theme )
     QPalette p;
     switch ( theme ) {
         case 1:
-            // candyland
+            // candy
             p = QPalette( QBrush(QColor(  45,   0,  30 )), /* window text */
                           //QBrush(QColor( 215, 110, 111 )), /* button */
                           QBrush(QColor( 225, 120, 121 )), /* button */
@@ -95,7 +95,7 @@ const QPalette ColorSec::getPalette( const int&theme )
             p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(195,80,81)) );
             break;
         case 2:
-            // carbon
+            // hash
             p = QPalette( QBrush(QColor( 250, 250, 250 )), /* window text */
                           QBrush(QColor(  50,  50,  50 )), /* button */
                           QBrush(QColor(  10,  10,  10 )), /* light */
@@ -108,7 +108,7 @@ const QPalette ColorSec::getPalette( const int&theme )
             p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(70,70,70)) );
             break;
         case 3:
-            // forest
+            // herb
             p = QPalette( QBrush(QColor( 220, 211, 187 )), /* window text */
                           QBrush(QColor(  54,  68,  30 )), /* button */
                           QBrush(QColor(  24,  38,   0 )), /* light */
@@ -121,7 +121,7 @@ const QPalette ColorSec::getPalette( const int&theme )
             p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(94,108,70)) );
             break;
         case 4:
-            // moon
+            // powder
             p = QPalette( QBrush(QColor(  14,  20,   0 )), /* window text */
                           QBrush(QColor( 153, 135,  89 )), /* button */
                           QBrush(QColor( 164, 178, 140 )), /* light */
