@@ -81,6 +81,9 @@ public:
     static void errLogFormatNoFields( QWidget *parent=nullptr );
     static void errLogFormatNoSeparators( QWidget *parent=nullptr );
 
+    // log parser
+    static void errFailedParsingLogs( const QString& message, QWidget *parent=nullptr );
+
     // files
     static void errFileNotFound( const QString& file, const bool& report=false, QWidget *parent=nullptr );
     // files permissions
