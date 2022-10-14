@@ -38,11 +38,11 @@ private:
 
 class LogParserException : public std::exception {
 public:
-    LogParserException( const std::string& msg );
-    /*const QString& what();
+    LogParserException( const std::string& txt, const std::string& val );
+    const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
 };
 
 

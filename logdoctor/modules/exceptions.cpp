@@ -51,16 +51,18 @@ const QString& LogFormatException::what()
 
 ////////////////////
 //// LOG PARSER ////
-LogParserException::LogParserException(const std::string& msg ) // un-catched atm
+LogParserException::LogParserException( const std::string& txt , const std::string& val )
 {
-    std::cout << "LogDoctor: LogParserException: " << msg << std::endl;
-    std::cerr << "LogDoctor: LogParserException: " << msg << std::endl;
-    /*this->msg = QString::fromStdString( msg );*/
+    std::cout << "LogDoctor: LogParserException: " << txt << ": '" << val << "'" << std::endl;
+    std::cerr << "LogDoctor: LogParserException: " << txt << ": '" << val << "'" << std::endl;
+    this->msg = QString("%1:\n'%2'").arg(
+        QString::fromStdString( txt ),
+        QString::fromStdString( val ) );
 }
-/*const QString& LogParserException::what()
+const QString& LogParserException::what()
 {
     return msg;
-}*/
+}
 
 
 ///////////////////
