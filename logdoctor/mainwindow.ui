@@ -5317,22 +5317,22 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </item>
                      <item>
                       <property name="text">
-                       <string>CandyLand</string>
+                       <string>Candy</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Carbon</string>
+                       <string>Hash</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Forest</string>
+                       <string>Herb</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Moon</string>
+                       <string>Powder</string>
                       </property>
                      </item>
                     </widget>
