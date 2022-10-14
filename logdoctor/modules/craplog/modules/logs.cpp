@@ -185,7 +185,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
         }
         if ( stop == std::string::npos ) {
             // separator not found, abort
-            throw LogParserException( "Separator not found: '"+sep+"'" );
+            throw LogParserException( "Separator not found", sep );
         }
 
         // get the field
@@ -381,7 +381,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
                     // something went wrong
                     } else {
                         // hmmm.. no...
-                        throw LogParserException( "Unexpected LogField: '"+fld+"'" );
+                        throw LogParserException( "Unexpected LogField", fld );
                     }
                 }
             }
