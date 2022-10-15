@@ -16,93 +16,93 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTo
 
 
 set(TS_FILES
-        translations/LogDoctor_en.ts
-        translations/LogDoctor_es.ts
-        translations/LogDoctor_fr.ts
-        translations/LogDoctor_it.ts
+    translations/LogDoctor_en.ts
+    translations/LogDoctor_es.ts
+    translations/LogDoctor_fr.ts
+    translations/LogDoctor_it.ts
 )
 
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.ui
-        mainwindow.h
-        mainwindow.cpp
+    main.cpp
+    mainwindow.ui
+    mainwindow.h
+    mainwindow.cpp
 
-        utilities/checks.h
-        utilities/checks.cpp
-        utilities/colors.h
-        utilities/colors.cpp
-        utilities/gzip.h
-        utilities/gzip.cpp
-        utilities/io.h
-        utilities/io.cpp
-        utilities/rtf.h
-        utilities/rtf.cpp
-        utilities/strings.h
-        utilities/strings.cpp
-        utilities/vectors.h
-        utilities/vectors.cpp
+    utilities/checks.h
+    utilities/checks.cpp
+    utilities/colors.h
+    utilities/colors.cpp
+    utilities/gzip.h
+    utilities/gzip.cpp
+    utilities/io.h
+    utilities/io.cpp
+    utilities/rtf.h
+    utilities/rtf.cpp
+    utilities/strings.h
+    utilities/strings.cpp
+    utilities/vectors.h
+    utilities/vectors.cpp
 
-        modules/shared.h
-        modules/shared.cpp
+    modules/shared.h
+    modules/shared.cpp
 
-        modules/exceptions.h
-        modules/exceptions.cpp
-        modules/tb.h
-        modules/tb.cpp
+    modules/exceptions.h
+    modules/exceptions.cpp
+    modules/tb.h
+    modules/tb.cpp
 
-        modules/dialogs.h
-        modules/dialogs.cpp
-        modules/dialogs/dialogmsg.ui
-        modules/dialogs/dialogmsg.h
-        modules/dialogs/dialogmsg.cpp
-        modules/dialogs/dialogbool.ui
-        modules/dialogs/dialogbool.h
-        modules/dialogs/dialogbool.cpp
-        modules/dialogs/dialogdia.ui
-        modules/dialogs/dialogdia.h
-        modules/dialogs/dialogdia.cpp
+    modules/dialogs.h
+    modules/dialogs.cpp
+    modules/dialogs/dialogmsg.ui
+    modules/dialogs/dialogmsg.h
+    modules/dialogs/dialogmsg.cpp
+    modules/dialogs/dialogbool.ui
+    modules/dialogs/dialogbool.h
+    modules/dialogs/dialogbool.cpp
+    modules/dialogs/dialogdia.ui
+    modules/dialogs/dialogdia.h
+    modules/dialogs/dialogdia.cpp
 
-        modules/craplog/craplog.h
-        modules/craplog/craplog.cpp
-        modules/craplog/modules/datetime.h
-        modules/craplog/modules/datetime.cpp
-        modules/craplog/modules/donuts.h
-        modules/craplog/modules/donuts.cpp
-        modules/craplog/modules/formats.h
-        modules/craplog/modules/formats.cpp
-        modules/craplog/modules/hash.h
-        modules/craplog/modules/hash.cpp
-        modules/craplog/modules/logs.h
-        modules/craplog/modules/logs.cpp
-        modules/craplog/modules/sha256.h
-        modules/craplog/modules/sha256.cpp
-        modules/craplog/modules/store.h
-        modules/craplog/modules/store.cpp
+    modules/craplog/craplog.h
+    modules/craplog/craplog.cpp
+    modules/craplog/modules/datetime.h
+    modules/craplog/modules/datetime.cpp
+    modules/craplog/modules/donuts.h
+    modules/craplog/modules/donuts.cpp
+    modules/craplog/modules/formats.h
+    modules/craplog/modules/formats.cpp
+    modules/craplog/modules/hash.h
+    modules/craplog/modules/hash.cpp
+    modules/craplog/modules/logs.h
+    modules/craplog/modules/logs.cpp
+    modules/craplog/modules/sha256.h
+    modules/craplog/modules/sha256.cpp
+    modules/craplog/modules/store.h
+    modules/craplog/modules/store.cpp
 
-        modules/crapview/crapview.h
-        modules/crapview/crapview.cpp
-        modules/crapview/modules/query.h
-        modules/crapview/modules/query.cpp
+    modules/crapview/crapview.h
+    modules/crapview/crapview.cpp
+    modules/crapview/modules/query.h
+    modules/crapview/modules/query.cpp
 
-        modules/craphelp/craphelp.ui
-        modules/craphelp/craphelp.h
-        modules/craphelp/craphelp.cpp
+    modules/craphelp/craphelp.ui
+    modules/craphelp/craphelp.h
+    modules/craphelp/craphelp.cpp
 
-        modules/crapup/crapup.h
-        modules/crapup/crapup.cpp
+    modules/crapup/crapup.h
+    modules/crapup/crapup.cpp
 
-        modules/crapinfo/crapinfo.ui
-        modules/crapinfo/crapinfo.h
-        modules/crapinfo/crapinfo.cpp
+    modules/crapinfo/crapinfo.ui
+    modules/crapinfo/crapinfo.h
+    modules/crapinfo/crapinfo.cpp
 
-        tools/crapnote/crapnote.ui
-        tools/crapnote/crapnote.h
-        tools/crapnote/crapnote.cpp
+    tools/crapnote/crapnote.ui
+    tools/crapnote/crapnote.h
+    tools/crapnote/crapnote.cpp
 
-        resources/resources.qrc
-        ${TS_FILES}
+    resources/resources.qrc
+    ${TS_FILES}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -133,17 +133,20 @@ else()
 endif()
 
 if(WIN32)
-    set(CMAKE_CXX_STANDARD_LIBRARIES "-static -static-libgcc -static-libstdc++")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -Wl,--no-whole-archive")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lgcc -lstdc++ -lwinpthread")
     target_link_libraries(LogDoctor PRIVATE
         -static Qt${QT_VERSION_MAJOR}::Widgets
         -static Qt${QT_VERSION_MAJOR}::Charts
         -static Qt${QT_VERSION_MAJOR}::Sql
         -static Qt${QT_VERSION_MAJOR}::Network)
 else()
-    target_link_libraries(LogDoctor PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Network)
+    target_link_libraries(LogDoctor PRIVATE
+        Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Charts
+        Qt${QT_VERSION_MAJOR}::Sql
+        Qt${QT_VERSION_MAJOR}::Network)
     # Include zlib
-    find_package( ZLIB REQUIRED )
+    find_package(ZLIB REQUIRED)
     include_directories(${ZLIB_INCLUDE_DIRS})
     target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 endif()
