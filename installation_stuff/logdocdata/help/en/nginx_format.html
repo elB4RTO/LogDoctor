@@ -6,7 +6,7 @@
     <style type="text/css">
       body {
         color: $TEXT$;
-        font-size: 23px;
+        font-size: 19px;
         background-color: $BG$;
       }
       h1 {
@@ -24,7 +24,7 @@
       }
       code {
         color: $CODE$;
-        font-size: 21px;
+        font-size: 17px;
         padding-left:16px
       }
       i {
@@ -37,16 +37,20 @@
   </head>
   <body>
 
+    <br>
     <h1 align="center">Nginx</h1>
+    <br>
+    <br>
     <br>
     <h2 align="center"><br>Access logs format string</h2>
     <br>
-    <h3>Configuration file</h3>
+    <h3><br>Configuration file</h3>
     <br>
     <p>The configuration file should be located at:</p><br>
       <code>/usr/local/etc/nginx/nginx.conf</code>
     <br>
     <p>The line to configure access logs is the one starting with "<b>log_format main</b>" followed by the list of fields codes.</p>
+    <br>
     <br>
     <br>
     <h3>Default logs formats</h3>
@@ -56,15 +60,18 @@
     <code>log_format main '$remote_addr - $remote_user [$time_local] "$request" $status $bytes_sent "$http_referer" "$http_user_agent"'</code>
     <br>
     <br>
+    <br>
     <h3>Suggested logs format</h3>
     <br>
     <p>The suggested format string, to allow using the most of the functionalities of LogDoctor, is:</p><br>
       <code>log_format main '$time_iso8601 "$request" $status $request_length $bytes_sent $request_time "$http_referer" "$http_user_agent" $remote_addr'</code>
     <br>
     <br>
+    <br>
     <h3>Note the format strings</h3>
     <br>
     <p>When copy-pasting the format string, please remove any identation (if present) and just paste the resulting format string only.</p>
+    <br>
     <br>
     <br>
     <h3>Note on control-characters</h3>
@@ -76,9 +83,12 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
+    <br>
     <h2 align="center"><br>Access logs format fields</h2>
     <br>
-    <h3>Fields considered by LogDoctor</h3>
+    <h3><br>Fields considered by LogDoctor</h3>
     <br>
     <p>Only the following fields will be considered, meaning that only these fields' data will be stored and used for the statistics.</p>
     <br>
@@ -159,11 +169,14 @@
     </table>
     <br>
     <br>
+    <br>
     <h3>Fields discarded by LogDoctor</h3>
     <br>
     <p>Any field than the ones above won't be considered by LogDoctor.<br>
     When generating a <i>log sample</i>, these fields will appear as '<b>DISCARDED</b>'.<br>
     If you aint using logs for any other purpose, please remove unnecessary fields to make the process faster and reduce the possibility of errors.</p>
+    <br>
+    <br>
     <br>
     <br>
     <h3>References</h3>
