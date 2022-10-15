@@ -6,7 +6,7 @@
     <style type="text/css">
       body {
         color: $TEXT$;
-        font-size: 23px;
+        font-size: 19px;
         background-color: $BG$;
       }
       h1 {
@@ -24,7 +24,7 @@
       }
       code {
         color: $CODE$;
-        font-size: 21px;
+        font-size: 17px;
         padding-left:16px
       }
       i {
@@ -37,16 +37,20 @@
   </head>
   <body>
 
+    <br>
     <h1 align="center">Apache2</h1>
+    <br>
+    <br>
     <br>
     <h2 align="center"><br>Access logs format string</h2>
     <br>
-    <h3>Configuration file</h3>
+    <h3><br>Configuration file</h3>
     <br>
     <p>The configuration file should be located at:</p><br>
       <code>/etc/apache2/apache2.conf</code>
     <br>
     <p>The line to configure access logs is the one starting with "<b>LogFormat</b>" followed by the list of fields codes.</p>
+    <br>
     <br>
     <br>
     <h3>Common logs formats</h3>
@@ -62,6 +66,7 @@
     </ul>
     <br>
     <br>
+    <br>
     <h3>Suggested logs formats</h3>
     <br>
     <p>A suggested format string, to allow using the complete set of functionalities of LogDoctor, is:</p><br>
@@ -71,10 +76,12 @@
       <code>LogFormat "%{sec}t \"%r\" %q %&lt;s %I %O %D \"%{Referer}i\" \"%{Cookie}i\" \"%{User-agent}i\" %h" combined</code>
     <br>
     <br>
+    <br>
     <h3>Note on custom format strings</h3>
     <br>
     <p>If you're using your own custom string, please keep in mind that parsing is not magic. When you define your own string, think about which characters can be there in a field and use separators accordingly to not conflict with the field itself.<br>
     As an example: an URI (<i>%U</i>) can't contain whitespaces, so it is safe to use a space to separe this field by the previous and next one. Instead, the User-Agent (*%{User-agent}i*) may contain spaces, as well as parenthesis, brackets, dashes, etc, so it's better to pick an appropriate separator (double-quotes are a good choice, since they get escaped while logging).</p>
+    <br>
     <br>
     <br>
     <h3>Note on control-characters</h3>
@@ -86,9 +93,12 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
+    <br>
     <h2 align="center"><br>Access logs format fields</h2>
     <br>
-    <h3>Fields considered by LogDoctor</h3>
+    <h3><br>Fields considered by LogDoctor</h3>
     <br>
     <p>Only the following fields will be considered, meaning that only these fields' data will be stored and used for the statistics.</p>
     <br>
@@ -131,7 +141,8 @@
           <tr><td align="center" style="padding:10px">%X</td><td style="padding:10px">time representation</td></tr>
           <tr><td align="center" style="padding:10px">%y</td><td style="padding:10px">year, last two digits <i>(YY)</i></td></tr>
           <tr><td align="center" style="padding:10px">%Y</td><td style="padding:10px">year</td></tr>
-        </table></td>
+        </table>
+        <br>
         <br>
         <i>Note:</i> time formats <i>sec</i>, <i>msec</i> and <i>usec</i> can't be mixed together or with other formats.
       </tr>
@@ -216,11 +227,15 @@
     </table>
     <br>
     <br>
+    <br>
     <h3>Fields discarded by LogDoctor</h3>
     <br>
     <p>Any field than the ones above won't be considered by LogDoctor.<br>
     When generating a <i>log sample</i>, these fields will appear as '<b>DISCARDED</b>'.<br>
     If you aint using logs for any other purpose, please remove unnecessary fields to make the process faster and reduce the possibility of errors.</p>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <h3>References</h3>

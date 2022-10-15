@@ -5,37 +5,46 @@
     <title>LogDoctor - Help</title>
     <style type="text/css">
       body {
-        color: $TXT$;
-        font-size: 23px;
+        color: $TEXT$;
+        font-size: 19px;
         background-color: $BG$;
       }
       h1 {
-        color: $IP$;
+        color: $H1$;
       }
       h2 {
         color: $BG$;
-        background-color: $UA$;
+        background-color: $H1$;
       }
       h3 {
-        color: $T$;
+        color: $H3$;
       }
       th,td {
         padding: 20px;
       }
       code {
-        color: $PT$;
-        font-size: 21px;
+        color: $CODE$;
+        font-size: 17px;
         padding-left:16px
+      }
+      i {
+        color: $IT$;
+      }
+      a {
+        color: $LINK$;
       }
     </style>
   </head>
   <body>
 
+    <br>
     <h1 align="center">IIS</h1>
     <br>
-    <h2 align="center">Access logs format string</h2>
     <br>
-    <h3>Configuration</h3>
+    <br>
+    <h2 align="center"><br>Access logs format string</h2>
+    <br>
+    <h3><br>Configuration</h3>
     <br>
     <p>The configuration file should be located at:</p><br>
       <code>C:\inetpub\logs\LogFiles\&lt;YourSiteName&gt;</code>
@@ -45,20 +54,22 @@
     Once inside, click on <code>Logging</code> to edit the logs settings.</p>
     <br>
     <br>
+    <br>
     <h3>Logs format modules</h3>
     <br>
     <p>Available logs formats (supported by LogDoctor) are:</p>
     <br>
     <ul>
-      <li style="padding-bottom:10px"><i>IIS</i></li><br>
+      <li style="padding-bottom:10px"><i>IIS</i></li>
         <p>Comma-separated values, can't be customized further. The file name is usually something like <code>u_in&lt;DATE&gt;.log</code></p>
       <br>
-      <li style="padding-bottom:10px"><i>NCSA</i></li><br>
+      <li style="padding-bottom:10px"><i>NCSA</i></li>
         <p>Whitespace-separated values, can't be customized further. The file name is usually something like <code>u_nc&lt;DATE&gt;.log</code></p>
       <br>
-      <li style="padding-bottom:10px"><i>W3C</i></li><br>
+      <li style="padding-bottom:10px"><i>W3C</i></li>
         <p>Whitespace-separated values, can be customized by selecting which fields to log. The file name is usually something like <code>u_ex&lt;DATE&gt;.log</code></p>
     </ul>
+    <br>
     <br>
     <br>
     <h3>Suggested logs format</h3>
@@ -68,6 +79,7 @@
       <code>date</code>, <code>time</code>, <code>cs-method</code>, <code>cs-uri-stem</code>, <code>cs-uri-query</code>, <code>c-ip</code>, <code>cs-version</code>, <code>cs(User-Agent)</code>, <code>cs(Cookie)</code>, <code>cs(Referer)</code>, <code>sc-status</code>, <code>sc-bytes</code>, <code>cs-bytes</code>, <code>time-taken</code>
     <br>
     <br>
+    <br>
     <h3>Logs format strings</h3>
     <br>
     <p>Both the <i>IIS</i> and <i>NCSA</i> modules are standard, and thus LogDoctor doesn't need the <i>format string</i> to be specified.<br>
@@ -75,9 +87,12 @@
     <br>
     <br>
     <br>
-    <h2 align="center">W£C logs format fields</h2>
     <br>
-    <h3>Fields considered by LogDoctor</h3>
+    <br>
+    <br>
+    <h2 align="center"><br>W3C logs format fields</h2>
+    <br>
+    <h3><br>Fields considered by LogDoctor</h3>
     <br>
     <p>Only the following fields will be considered, meaning that only these fields' data will be stored and used for the statistics.</p>
     <br>
@@ -142,6 +157,7 @@
     </table>
     <br>
     <br>
+    <br>
     <h3>Fields discarded by LogDoctor</h3>
     <br>
     <p>Any field than the ones above won't be considered by LogDoctor.<br>
@@ -149,15 +165,17 @@
     If you aint using logs for any other purpose, please remove unnecessary fields to make the process faster and reduce the possibility of errors.</p>
     <br>
     <br>
+    <br>
+    <br>
     <h3>References</h3>
     <br>
     <ul>
       <li>Configure IIS logging:<br>
-        <i style="color:$REQ$">https://docs.microsoft.com/en-us/iis/manage/provisioning-and-managing-iis/configure-logging-in-iis</i></li><br>
+        <a style="color:$LINK$">https://docs.microsoft.com/en-us/iis/manage/provisioning-and-managing-iis/configure-logging-in-iis</a></li><br>
       <li>Logs format modules overview:<br>
-        <i style="color:$REQ$">https://docs.microsoft.com/en-us/previous-versions/iis/6.0-sdk/ms525807(v=vs.90)</i></li>
+        <a style="color:$LINK$">https://docs.microsoft.com/en-us/previous-versions/iis/6.0-sdk/ms525807(v=vs.90)</a></li><br>
       <li>The W3C log format:<br>
-        <i style="color:$REQ$">https://docs.microsoft.com/en-us/windows/win32/http/w3c-logging</i></li>
+        <a style="color:$LINK$">https://docs.microsoft.com/en-us/windows/win32/http/w3c-logging</a></li>
     </ul>
     <br>
     <br>
