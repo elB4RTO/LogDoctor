@@ -79,6 +79,19 @@ const QPalette ColorSec::getPalette( const int&theme )
     QPalette p;
     switch ( theme ) {
         case 1:
+            // ash
+            p = QPalette( QBrush(QColor( 250, 250, 250 )), /* window text */
+                          QBrush(QColor(  50,  50,  50 )), /* button */
+                          QBrush(QColor(  10,  10,  10 )), /* light */
+                          QBrush(QColor( 110, 110, 110 )), /* dark */
+                          QBrush(QColor(  60,  60,  60 )), /* mid */
+                          QBrush(QColor( 220, 220, 220 )), /* text */
+                          QBrush(QColor( 170, 170, 170 )), /* bright text */
+                          QBrush(QColor(  30,  30,  30 )), /* base */
+                          QBrush(QColor(  10,  10,  10 ))  /* window */ );
+            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(70,70,70)) );
+            break;
+        case 2:
             // candy
             p = QPalette( QBrush(QColor(  45,   0,  30 )), /* window text */
                           //QBrush(QColor( 215, 110, 111 )), /* button */
@@ -93,19 +106,6 @@ const QPalette ColorSec::getPalette( const int&theme )
                           //QBrush(QColor( 195,  80,  81 ))  /* window */
                           QBrush(QColor( 255, 204, 143 ))  /* window */ );
             p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(195,80,81)) );
-            break;
-        case 2:
-            // hash
-            p = QPalette( QBrush(QColor( 250, 250, 250 )), /* window text */
-                          QBrush(QColor(  50,  50,  50 )), /* button */
-                          QBrush(QColor(  10,  10,  10 )), /* light */
-                          QBrush(QColor( 110, 110, 110 )), /* dark */
-                          QBrush(QColor(  60,  60,  60 )), /* mid */
-                          QBrush(QColor( 220, 220, 220 )), /* text */
-                          QBrush(QColor( 170, 170, 170 )), /* bright text */
-                          QBrush(QColor(  30,  30,  30 )), /* base */
-                          QBrush(QColor(  10,  10,  10 ))  /* window */ );
-            p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(70,70,70)) );
             break;
         case 3:
             // herb
