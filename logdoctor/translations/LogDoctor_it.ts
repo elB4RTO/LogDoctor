@@ -60,6 +60,39 @@
     </message>
 </context>
 <context>
+    <name>DialogBool</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sì</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>No</translation>
+    </message>
+</context>
+<context>
+    <name>DialogDia</name>
+    <message>
+        <source>Ignore</source>
+        <translation>Ignora</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation>Scarta</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation>Annulla</translation>
+    </message>
+</context>
+<context>
+    <name>DialogMsg</name>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>DialogSec</name>
     <message>
         <source>An error occured while reading the configuration file</source>
@@ -102,20 +135,8 @@
         <translation>Lettura del file gzip non riuscita</translation>
     </message>
     <message>
-        <source>Continue?</source>
-        <translation>Continuare?</translation>
-    </message>
-    <message>
-        <source>Your choice?</source>
-        <translation>La tua scelta?</translation>
-    </message>
-    <message>
         <source>Discard it and continue, or Abort all and exit?</source>
         <translation>Scartarlo e continuare, o Annullare tutto e terminare?</translation>
-    </message>
-    <message>
-        <source>Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?</source>
-        <translation>Ignorare l&apos;avvertimento e usarlo comunque, Scartarlo e continuare, o Annullare tutto e terminare?</translation>
     </message>
     <message>
         <source>Create a new database?</source>
@@ -148,10 +169,6 @@ Continuare?</translation>
     <message>
         <source>Configuration file not found</source>
         <translation>File di configurazione non trovato</translation>
-    </message>
-    <message>
-        <source>Failed to write configuration file</source>
-        <translation>Scrittura del file di configurazione non riuscita</translation>
     </message>
     <message>
         <source>Version check</source>
@@ -372,10 +389,6 @@ Se pensi che sia così, potresti essere la vittima di un malware
         <translation>Il percorso dovrebbe puntare ad un file, ma non è così</translation>
     </message>
     <message>
-        <source>The file does not exists</source>
-        <translation>Il file non esiste</translation>
-    </message>
-    <message>
         <source>Unable to retrieve the file</source>
         <translation>Fallimeno nel recuperare il file</translation>
     </message>
@@ -406,10 +419,6 @@ Se pensi che sia così, potresti essere la vittima di un malware
     <message>
         <source>The directory does not exists</source>
         <translation>La cartella non esiste</translation>
-    </message>
-    <message>
-        <source>Unable to reach the directory</source>
-        <translation>Fallimento nel raggiungere la directory</translation>
     </message>
     <message>
         <source>The directory is not readable</source>
@@ -450,14 +459,6 @@ Se pensi che sia così, potresti essere la vittima di un malware
     <message>
         <source>An error occured while executing a statement on the database</source>
         <translation>Errore nell&apos;eseguire un comando sul database</translation>
-    </message>
-    <message>
-        <source>Failed at statement</source>
-        <translation>Fallimento al comando</translation>
-    </message>
-    <message>
-        <source>SQLite error message</source>
-        <translation>Messaggio di errore di SQLite</translation>
     </message>
     <message>
         <source>The database contains an unexpected table</source>
@@ -546,20 +547,6 @@ please report this issue</source>
 per favore segnala questo problema</translation>
     </message>
     <message>
-        <source>If you haven&apos;t manually edited the database,
-please report this issue</source>
-        <translation>Se non hai modificato manualmente il database,
-per favore segnala questo problema</translation>
-    </message>
-    <message>
-        <source>Please check that no error is thrown from your WebServer
-If it gets accepted, please check the presence of a typo here
-If everything is fine, please report this issue</source>
-        <translation>Controlla che il tuo WebServer non segnali errori
-Se lo accetta, controlla la presenza di errori durante la copia
-Se tutto sembra apposto, per favore segnala questo problema</translation>
-    </message>
-    <message>
         <source>Please set up a format which contains at least one field</source>
         <translation>Per favore imposta un formato che contenga almeno un campo</translation>
     </message>
@@ -610,6 +597,50 @@ Aborting</source>
         <translation>Errore durante il lavoro sul database
 
 Annullato</translation>
+    </message>
+    <message>
+        <source>One of the lists has an invalid item</source>
+        <translation>Una delle liste contiene un elemento non valido</translation>
+    </message>
+    <message>
+        <source>Failed to write the configuration file</source>
+        <translation>Scrittura del file di configurazione non riuscita</translation>
+    </message>
+    <message>
+        <source>Failed applying configuration</source>
+        <translation>Fallimento nell&apos;applicare la configurazione</translation>
+    </message>
+    <message>
+        <source>Invalid string</source>
+        <translation>Stringa non valida</translation>
+    </message>
+    <message>
+        <source>The given string is invalid and cannot be added to the list
+
+Please correct it and retry</source>
+        <translation>La stringa fornita non è valida e non può essere aggiunta alla lista
+
+Correggila e poi riprova</translation>
+    </message>
+    <message>
+        <source>Please check that no error is thrown by your WebServer
+If it gets accepted, please check the presence of a typo here
+If everything is fine, please report this issue</source>
+        <translation>Controlla che il tuo web server non dia errori
+Se la accetta, controlla la presenza di un errore nel riportarla qui
+Se tutto è corretto, per favore segnala questo errore</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing logs</source>
+        <translation>Errore durante l&apos;analisi dei log</translation>
+    </message>
+    <message>
+        <source>Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?</source>
+        <translation>Ignorare l&apos;avvertimento e usarlo comunque, Scartarlo e continuare, o Annullare l&apos;intero processo?</translation>
+    </message>
+    <message>
+        <source>Proceed anyway?</source>
+        <translation>Continuare comunque?</translation>
     </message>
     <message>
         <source>If you&apos;d like to have this locale in LogDoctor,
@@ -951,10 +982,6 @@ Conteggio degli elementi per una singola data, media dei valori per un periodo.<
     <message>
         <source>None (System)</source>
         <translation>Nessuno (Sistema)</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>Chiaro</translation>
     </message>
     <message>
         <source>Dark</source>
@@ -1390,6 +1417,30 @@ Conto negli orari del giorno per una singola data, o totali delle giornate per u
     <message>
         <source>Select/deselect all the files</source>
         <translation>Seleziona/deseleziona tutti i files</translation>
+    </message>
+    <message>
+        <source>Candy</source>
+        <translation>Caramella</translation>
+    </message>
+    <message>
+        <source>Herb</source>
+        <translation>Erba</translation>
+    </message>
+    <message>
+        <source>Powder</source>
+        <translation>Polvere</translation>
+    </message>
+    <message>
+        <source>warnlist</source>
+        <translation>warnlist</translation>
+    </message>
+    <message>
+        <source>blacklist</source>
+        <translation>blacklist</translation>
+    </message>
+    <message>
+        <source>Ash</source>
+        <translation>Cenere</translation>
     </message>
 </context>
 <context>

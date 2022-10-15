@@ -60,6 +60,39 @@
     </message>
 </context>
 <context>
+    <name>DialogBool</name>
+    <message>
+        <source>Yes</source>
+        <translation>Yes</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>No</translation>
+    </message>
+</context>
+<context>
+    <name>DialogDia</name>
+    <message>
+        <source>Ignore</source>
+        <translation>Ignore</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation>Discard</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation>Abort</translation>
+    </message>
+</context>
+<context>
+    <name>DialogMsg</name>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>DialogSec</name>
     <message>
         <source>An error occured while reading the configuration file</source>
@@ -102,20 +135,8 @@
         <translation>Failed to read gzipped file</translation>
     </message>
     <message>
-        <source>Continue?</source>
-        <translation>Continue?</translation>
-    </message>
-    <message>
-        <source>Your choice?</source>
-        <translation>Your choice?</translation>
-    </message>
-    <message>
         <source>Discard it and continue, or Abort all and exit?</source>
         <translation>Discard it and continue, or Abort all and exit?</translation>
-    </message>
-    <message>
-        <source>Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?</source>
-        <translation>Ignore the warning and use it anyway, Discard it and continue, or Abort all and exit?</translation>
     </message>
     <message>
         <source>Create a new database?</source>
@@ -148,10 +169,6 @@ Continue?</translation>
     <message>
         <source>Configuration file not found</source>
         <translation>Configuration file not found</translation>
-    </message>
-    <message>
-        <source>Failed to write configuration file</source>
-        <translation>Failed to write configuration file</translation>
     </message>
     <message>
         <source>Version check</source>
@@ -372,10 +389,6 @@ Please visit the LogDoctor&apos;s repository and get a fresh version of it</tran
         <translation>The path was supposed to point to a file, but it doesn&apos;t</translation>
     </message>
     <message>
-        <source>The file does not exists</source>
-        <translation>The file does not exists</translation>
-    </message>
-    <message>
         <source>Unable to retrieve the file</source>
         <translation>Unable to retrieve the file</translation>
     </message>
@@ -406,10 +419,6 @@ Please visit the LogDoctor&apos;s repository and get a fresh version of it</tran
     <message>
         <source>The directory does not exists</source>
         <translation>The directory does not exists</translation>
-    </message>
-    <message>
-        <source>Unable to reach the directory</source>
-        <translation>Unable to reach the directory</translation>
     </message>
     <message>
         <source>The directory is not readable</source>
@@ -450,14 +459,6 @@ Please visit the LogDoctor&apos;s repository and get a fresh version of it</tran
     <message>
         <source>An error occured while executing a statement on the database</source>
         <translation>An error occured while executing a statement on the database</translation>
-    </message>
-    <message>
-        <source>Failed at statement</source>
-        <translation>Failed at statement</translation>
-    </message>
-    <message>
-        <source>SQLite error message</source>
-        <translation>SQLite error message</translation>
     </message>
     <message>
         <source>The database contains an unexpected table</source>
@@ -546,20 +547,6 @@ please report this issue</source>
 please report this issue</translation>
     </message>
     <message>
-        <source>If you haven&apos;t manually edited the database,
-please report this issue</source>
-        <translation>If you haven&apos;t manually edited the database,
-please report this issue</translation>
-    </message>
-    <message>
-        <source>Please check that no error is thrown from your WebServer
-If it gets accepted, please check the presence of a typo here
-If everything is fine, please report this issue</source>
-        <translation>Please check that no error is thrown from your WebServer
-If it gets accepted, please check the presence of a typo here
-If everything is fine, please report this issue</translation>
-    </message>
-    <message>
         <source>Please set up a format which contains at least one field</source>
         <translation>Please set up a format which contains at least one field</translation>
     </message>
@@ -610,6 +597,50 @@ Aborting</source>
         <translation>An error occured while working on the database
 
 Aborting</translation>
+    </message>
+    <message>
+        <source>One of the lists has an invalid item</source>
+        <translation>One of the lists has an invalid item</translation>
+    </message>
+    <message>
+        <source>Failed to write the configuration file</source>
+        <translation>Failed to write the configuration file</translation>
+    </message>
+    <message>
+        <source>Failed applying configuration</source>
+        <translation>Failed applying configuration</translation>
+    </message>
+    <message>
+        <source>Invalid string</source>
+        <translation>Invalid string</translation>
+    </message>
+    <message>
+        <source>The given string is invalid and cannot be added to the list
+
+Please correct it and retry</source>
+        <translation>The given string is invalid and cannot be added to the list
+
+Please correct it and retry</translation>
+    </message>
+    <message>
+        <source>Please check that no error is thrown by your WebServer
+If it gets accepted, please check the presence of a typo here
+If everything is fine, please report this issue</source>
+        <translation>Please check that no error is thrown by your WebServer
+If it gets accepted, please check the presence of a typo here
+If everything is fine, please report this issue</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing logs</source>
+        <translation>An error occured while parsing logs</translation>
+    </message>
+    <message>
+        <source>Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?</source>
+        <translation>Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?</translation>
+    </message>
+    <message>
+        <source>Proceed anyway?</source>
+        <translation>Proceed anyway?</translation>
     </message>
     <message>
         <source>If you&apos;d like to have this locale in LogDoctor,
@@ -951,10 +982,6 @@ Counts of the elements for a single date, mean value of the counts for a period.
     <message>
         <source>None (System)</source>
         <translation>None (System)</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>Light</translation>
     </message>
     <message>
         <source>Dark</source>
@@ -1389,6 +1416,30 @@ Time of day counts for a single date, entire days counts in a period.</translati
     <message>
         <source>Select/deselect all the files</source>
         <translation>Select/deselect all the files</translation>
+    </message>
+    <message>
+        <source>Candy</source>
+        <translation>Candy</translation>
+    </message>
+    <message>
+        <source>Herb</source>
+        <translation>Herb</translation>
+    </message>
+    <message>
+        <source>Powder</source>
+        <translation>Powder</translation>
+    </message>
+    <message>
+        <source>warnlist</source>
+        <translation>warnlist</translation>
+    </message>
+    <message>
+        <source>blacklist</source>
+        <translation>blacklist</translation>
+    </message>
+    <message>
+        <source>Ash</source>
+        <translation>Ash</translation>
     </message>
 </context>
 <context>
