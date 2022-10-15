@@ -101,7 +101,7 @@
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>484</height>
+             <height>473</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -229,10 +229,11 @@
               </property>
               <property name="html">
                <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+hr { height: 1px; border-width: 0; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -433,7 +434,7 @@ p, li { white-space: pre-wrap; }
              <x>0</x>
              <y>0</y>
              <width>858</width>
-             <height>484</height>
+             <height>473</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -2815,7 +2816,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <cursorShape>PointingHandCursor</cursorShape>
                      </property>
                      <property name="toolTip">
-                      <string>IP address of the client which made the request</string>
+                      <string>IP address of the Client which made the request</string>
                      </property>
                      <property name="text">
                       <string notr="true">Client</string>
@@ -4026,8 +4027,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>184</width>
-                      <height>324</height>
+                      <width>173</width>
+                      <height>348</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_31">
@@ -4382,8 +4383,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>175</width>
-                      <height>324</height>
+                      <width>157</width>
+                      <height>348</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_36">
@@ -4637,8 +4638,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>162</width>
-                      <height>255</height>
+                      <width>145</width>
+                      <height>276</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_46">
@@ -4902,8 +4903,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>193</width>
-                      <height>255</height>
+                      <width>173</width>
+                      <height>276</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_42">
@@ -5317,12 +5318,12 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Candy</string>
+                       <string>Ash</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Hash</string>
+                       <string>Candy</string>
                       </property>
                      </item>
                      <item>
@@ -6135,10 +6136,11 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </property>
                      <property name="html">
                       <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+hr { height: 1px; border-width: 0; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="openLinks">
                       <bool>true</bool>
@@ -7244,7 +7246,7 @@ p, li { white-space: pre-wrap; }
                    </font>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>2</number>
                   </property>
                   <property name="documentMode">
                    <bool>true</bool>
@@ -10327,7 +10329,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
      <x>0</x>
      <y>0</y>
      <width>952</width>
-     <height>26</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="font">
