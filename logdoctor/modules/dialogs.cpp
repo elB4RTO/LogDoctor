@@ -34,7 +34,7 @@ void DialogSec::errLangNotAccepted( const QString& locale, QWidget *parent )
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The given locale is not an accepted language"),
             locale,
-            DialogSec::tr("IF you'd like to have this locale in LogDoctor,\nplease follow the instruction on the repository page") ),
+            DialogSec::tr("If you'd like to have this locale in LogDoctor,\nplease follow the instruction on the repository page") ),
         "", 2, parent );
     std::ignore = dialog.exec();
 }
