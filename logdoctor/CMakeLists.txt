@@ -101,6 +101,10 @@ set(PROJECT_SOURCES
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
 
+    games/crisscross.ui
+    games/crisscross.h
+    games/crisscross.cpp
+
     resources/resources.qrc
     ${TS_FILES}
 )
