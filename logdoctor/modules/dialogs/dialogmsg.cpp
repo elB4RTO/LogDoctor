@@ -26,7 +26,7 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
             this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialog_warn.png") );
             break;
         case 2:
-            // error message, change the icon
+            // error message
             this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialog_err.png") );
             break;
         default:
