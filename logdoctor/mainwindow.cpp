@@ -103,6 +103,8 @@ MainWindow::MainWindow(QWidget *parent)
     // utilities
     connect( this->ui->actionInfos, &QAction::triggered, this, &MainWindow::menu_actionInfos_triggered );
     connect( this->ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::menu_actionCheckUpdates_triggered );
+    // games
+    connect( this->ui->actionCrissCross, &QAction::triggered, this, &MainWindow::menu_actionCrissCross_triggered );
 
 
     /////////////////
@@ -239,6 +241,7 @@ MainWindow::~MainWindow()
     delete this->craphelp;
     delete this->crapnote;
     delete this->crapinfo;
+    delete this->crisscross;
     //delete this->translator;
 }
 
@@ -1490,6 +1493,19 @@ void MainWindow::menu_actionInfos_triggered()
 void MainWindow::menu_actionCheckUpdates_triggered()
 {
     this->crapup.versionCheck( this->version, this->dialogs_level );
+}
+
+// play a game
+void MainWindow::menu_actionCrissCross_triggered()
+{
+    if ( this->crisscross->isVisible() ) {
+        this->crisscross->activateWindow();
+
+    } else {
+        delete this->crisscross;
+        this->crisscross = new CrissCross( this->palette() );
+        this->crisscross->show();
+    }
 }
 
 
@@ -4465,5 +4481,4 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
-
 
