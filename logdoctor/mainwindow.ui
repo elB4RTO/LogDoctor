@@ -10364,9 +10364,17 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     </property>
     <addaction name="actionBlockNote"/>
    </widget>
+   <widget class="QMenu" name="menuGames">
+    <property name="title">
+     <string>Games</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionCrissCross"/>
+   </widget>
    <addaction name="menuLanguage"/>
    <addaction name="menuTools"/>
    <addaction name="menuUtilities"/>
+   <addaction name="menuGames"/>
   </widget>
   <action name="actionCrapnote">
    <property name="text">
@@ -10455,6 +10463,14 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
    <property name="toolTip">
     <string>Open a block-note like window to write temporary text</string>
+   </property>
+  </action>
+  <action name="actionCrissCross">
+   <property name="text">
+    <string>CrissCross</string>
+   </property>
+   <property name="toolTip">
+    <string>Play CrissCross</string>
    </property>
   </action>
  </widget>
