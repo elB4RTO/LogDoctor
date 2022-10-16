@@ -31,6 +31,8 @@
 
 #include "tools/crapnote/crapnote.h"
 
+#include "games/crisscross.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -458,6 +460,10 @@ private slots:
 
     void menu_actionCheckUpdates_triggered();
 
+    //// TOOLS ////
+
+    void menu_actionCrissCross_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -664,6 +670,12 @@ private:
     //// CRAPINFO ////
     //////////////////
     Crapinfo* crapinfo = new Crapinfo("","","","");
+
+
+    ///////////////////
+    //// CRAPGAMES ////
+    ///////////////////
+    CrissCross* crisscross = new CrissCross( QPalette() );
 
 };
 #endif // MAINWINDOW_H
