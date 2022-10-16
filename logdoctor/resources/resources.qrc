@@ -49,4 +49,8 @@
         <file>flags/fr.png</file>
         <file>flags/it.png</file>
     </qresource>
+    <qresource prefix="/games">
+        <file>games/o.png</file>
+        <file>games/x.png</file>
+    </qresource>
 </RCC>
