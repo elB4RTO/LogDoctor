@@ -105,6 +105,10 @@ set(PROJECT_SOURCES
     games/crisscross.h
     games/crisscross.cpp
 
+    games/snake.ui
+    games/snake.h
+    games/snake.cpp
+
     resources/resources.qrc
     ${TS_FILES}
 )
