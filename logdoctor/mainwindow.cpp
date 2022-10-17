@@ -105,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect( this->ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::menu_actionCheckUpdates_triggered );
     // games
     connect( this->ui->actionCrissCross, &QAction::triggered, this, &MainWindow::menu_actionCrissCross_triggered );
+    connect( this->ui->actionSnake, &QAction::triggered, this, &MainWindow::menu_actionSnake_triggered );
 
 
     /////////////////
@@ -242,6 +243,7 @@ MainWindow::~MainWindow()
     delete this->crapnote;
     delete this->crapinfo;
     delete this->crisscross;
+    delete this->snake;
     //delete this->translator;
 }
 
@@ -1505,6 +1507,18 @@ void MainWindow::menu_actionCrissCross_triggered()
         delete this->crisscross;
         this->crisscross = new CrissCross( this->palette() );
         this->crisscross->show();
+    }
+}
+
+void MainWindow::menu_actionSnake_triggered()
+{
+    if ( this->snake->isVisible() ) {
+        this->snake->activateWindow();
+
+    } else {
+        delete this->snake;
+        this->snake = new Snake( this->palette() );
+        this->snake->show();
     }
 }
 
