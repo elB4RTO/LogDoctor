@@ -32,6 +32,7 @@
 #include "tools/crapnote/crapnote.h"
 
 #include "games/crisscross.h"
+#include "games/snake.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -464,6 +465,8 @@ private slots:
 
     void menu_actionCrissCross_triggered();
 
+    void menu_actionSnake_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -676,6 +679,7 @@ private:
     //// CRAPGAMES ////
     ///////////////////
     CrissCross* crisscross = new CrissCross( QPalette() );
+    Snake* snake = new Snake( QPalette() );
 
 };
 #endif // MAINWINDOW_H
