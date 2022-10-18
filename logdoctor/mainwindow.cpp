@@ -1517,7 +1517,7 @@ void MainWindow::menu_actionSnake_triggered()
 
     } else {
         delete this->snake;
-        this->snake = new Snake( this->palette() );
+        this->snake = new Snake( this->palette(), this->FONTS.at("script") );
         this->snake->show();
     }
 }
