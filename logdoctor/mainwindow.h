@@ -679,7 +679,7 @@ private:
     //// CRAPGAMES ////
     ///////////////////
     CrissCross* crisscross = new CrissCross( QPalette() );
-    Snake* snake = new Snake( QPalette() );
+    Snake* snake = new Snake( QPalette(), QFont() );
 
 };
 #endif // MAINWINDOW_H
