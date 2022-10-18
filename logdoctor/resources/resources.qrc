@@ -52,5 +52,10 @@
     <qresource prefix="/games">
         <file>games/o.png</file>
         <file>games/x.png</file>
+        <file>games/body_c.png</file>
+        <file>games/body_s.png</file>
+        <file>games/head.png</file>
+        <file>games/tail.png</file>
+        <file>games/food.png</file>
     </qresource>
 </RCC>
