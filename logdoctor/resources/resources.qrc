@@ -57,5 +57,6 @@
         <file>games/head.png</file>
         <file>games/tail.png</file>
         <file>games/food.png</file>
+        <file>games/water.png</file>
     </qresource>
 </RCC>
