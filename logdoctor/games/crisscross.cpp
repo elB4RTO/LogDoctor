@@ -302,7 +302,9 @@ void CrissCross::AI_updateWeights()
             }
         }
         // set the new weight for the empty tiles
-        const unsigned int new_weight = (win_streak>lose_streak) ? win_streak+1 : lose_streak+1;
+        const unsigned int new_weight = (win_streak>=lose_streak)
+            ? (win_streak==2) ? win_streak+2 : win_streak+1
+            : lose_streak+1;
         for ( const auto& index : empty_tiles ) {
             if ( new_weight > this->board_weights[ index ] ) {
                 this->board_weights[ index ] = new_weight;
