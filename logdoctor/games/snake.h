@@ -1,6 +1,8 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
+#include <queue>
+
 #include <QTimer>
 #include <QWidget>
 #include <QKeyEvent>
@@ -31,7 +33,8 @@ private:
     Ui::Snake *ui;
 
     void keyPressEvent( QKeyEvent* event ) override;
-    bool lock_movements = true;
+    std::queue<unsigned short> key_events;
+    void processNextKeyEvent();
 
     bool playing = false;
     QTimer* game_loop = new QTimer();
@@ -67,8 +70,8 @@ private:
         Direction direction;
         Direction prev_direction;
         QGraphicsPixmapItem* image;
-        const bool head=false;
-        /*bool tail=true;
+        /*const bool head=false;
+        bool tail=true;
         void tail2body () {
             this->tail = false;
         }*/
@@ -83,11 +86,11 @@ private:
 
     std::vector<BodyPart> snake;
 
-    void increaseSnakeBody();
+    void increaseSnakeBody( const bool& initial=false );
 
     void updateSnakePosition( const bool& dry=false );
 
-    void checkCollision( const unsigned int& x, const unsigned int& y );
+    void checkCollision();
 
 
     // food
@@ -105,6 +108,7 @@ private:
     Food food;
 
     void spawnFood();
+    bool spawn_food = true;
 
 
     // field
