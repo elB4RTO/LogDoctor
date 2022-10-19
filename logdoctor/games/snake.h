@@ -44,6 +44,8 @@ private:
     // graphics
     QGraphicsScene* field_scene;
 
+    QPixmap img_water = QPixmap(":/games/games/water.png");
+
     QPixmap img_food = QPixmap(":/games/games/food.png");
 
     QPixmap img_snakeHead  = QPixmap(":/games/games/head.png");
@@ -70,21 +72,18 @@ private:
         Direction direction;
         Direction prev_direction;
         QGraphicsPixmapItem* image;
-        /*const bool head=false;
-        bool tail=true;
-        void tail2body () {
-            this->tail = false;
-        }*/
         void update( const unsigned int& new_x, const unsigned int& new_y, const Direction& new_direction ) {
             this->x = new_x;
             this->y = new_y;
-            this->image->setOffset( new_x*32, new_y*32 );
+            this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
             this->prev_direction = this->direction;
             this->direction = new_direction;
         }
     };
 
     std::vector<BodyPart> snake;
+
+    const bool snakeInTile( const unsigned int& x, const unsigned int& y );
 
     void increaseSnakeBody( const bool& initial=false );
 
@@ -101,7 +100,7 @@ private:
         void update( const unsigned int& new_x, const unsigned int& new_y ) {
             this->x = new_x;
             this->y = new_y;
-            this->image->setOffset( new_x*32, new_y*32 );
+            this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
         }
     };
 
@@ -109,16 +108,6 @@ private:
 
     void spawnFood();
     bool spawn_food = true;
-
-
-    // field
-    enum Tile{
-        EMPTY,
-        SNAKE,
-        FOOD
-    };
-
-    Tile field[16][16];
 
 
     // score

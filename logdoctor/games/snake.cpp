@@ -19,17 +19,12 @@ Snake:: Snake(const QPalette& style, const QFont& term_font, QWidget* parent ) :
     this->ui->button_Play->setFont( font );
 
     this->field_scene = new QGraphicsScene( this );
-    this->field_scene->setSceneRect( 0,0, 512, 512 );
+    this->field_scene->setSceneRect( 0,0, 544, 544 );
     this->field_scene->setBackgroundBrush( Qt::black );
+    // put water limits
+    this->field_scene->addItem( new QGraphicsPixmapItem( this->img_water ) );
     // add the scene to the view
     this->ui->view_Field->setScene( this->field_scene );
-
-    // initialize an empty field
-    for (int x=0; x<16; x++) {
-        for (int y=0; y<16; y++) {
-            this->field[x][y] = Tile::EMPTY;
-        }
-    }
 
     // snake initial position
     const unsigned int head_x = (rand()%4)+6;
@@ -38,7 +33,6 @@ Snake:: Snake(const QPalette& style, const QFont& term_font, QWidget* parent ) :
         // should be unreachable
         throw("Unexpected initial position: ("+std::to_string(head_x)+","+std::to_string(head_y)+")");
     }
-    this->field[ head_x ][ head_y ] = Tile::SNAKE;
 
     // snake initial direction
     const int rand_d = rand()%4;
@@ -59,6 +53,7 @@ Snake:: Snake(const QPalette& style, const QFont& term_font, QWidget* parent ) :
             // should be unreachable
             throw("Unexpected initial direction: "+std::to_string(rand_d));
     }
+    this->key_events.push( rand_d );
 
     // build the body with a head
     this->snake.push_back(
@@ -78,6 +73,7 @@ Snake:: Snake(const QPalette& style, const QFont& term_font, QWidget* parent ) :
     this->food = Food{ 0, 0, new QGraphicsPixmapItem( this->img_food ) };
     this->field_scene->addItem( this->food.image );
     this->spawnFood();
+
 }
 
 Snake::~Snake()
@@ -131,7 +127,7 @@ void Snake::on_button_Play_clicked()
     // start playing
     this->game_loop = new QTimer(this);
     connect(this->game_loop, SIGNAL(timeout()), this, SLOT(processGameLogic()));
-    this->game_loop->start(200);
+    this->game_loop->start(175);
     this->playing = true;
 }
 
@@ -148,18 +144,23 @@ void Snake::processGameLogic()
             Snake::tr("Game Over"),
             this->game_over_msg );
     } else {
-        if ( this->spawn_food ) {
-            // increase the score
-            this->increaseGameScore();
-            // spawn food in a new position
-            this->spawnFood();
-        }
+
+
         if ( this->key_events.size() > 0 ) {
             this->processNextKeyEvent();
         }
-        this->updateSnakePosition();
         // check for a possible collision of the head
         this->checkCollision();
+        if ( ! this->game_over ) {
+            // update snake position
+            this->updateSnakePosition();
+            if ( this->spawn_food ) {
+                // increase the score
+                this->increaseGameScore();
+                // spawn food in a new position
+                this->spawnFood();
+            }
+        }
     }
 }
 
@@ -210,16 +211,15 @@ void Snake::spawnFood()
         // check it's actually inside the field
         if ( x < 16 && y < 16 ) {
             // check the tile is empty
-            if ( this->field[x][y] == Tile::EMPTY ) {
-                break;
+            if ( x != this->food.x && y != food.y ) {
+                if ( ! this->snakeInTile( x, y ) ) {
+                    break;
+                }
             }
         }
     }
 
-    // remove the old food from the field
-    this->field[this->food.x][this->food.y] = Tile::EMPTY;
-    // add the new food to the field and update the position
-    this->field[x][y] = Tile::FOOD;
+    // update to new position
     this->food.update( x, y );
 
     // randomly rotate the image
@@ -288,21 +288,13 @@ void Snake::updateSnakePosition( const bool& dry )
                 new_y = prev_y;
                 new_direction = prev_direction;
             }
-            // update for the next part
+            // store for the next part
             prev_x = bp.x;
             prev_y = bp.y;
             prev_direction = bp.direction;
 
             // update the body-part position
             bp.update( new_x, new_y, new_direction );
-            // and the field
-            if ( i == 0 ) {
-                // head
-                this->field[ new_x ][ new_y ] = Tile::SNAKE;
-            } else if ( i == max_i ) {
-                // tail
-                this->field[ prev_x ][ prev_y ] = Tile::EMPTY;
-            }
         }
 
         // finally set the image to be shown
@@ -510,49 +502,6 @@ void Snake::updateSnakePosition( const bool& dry )
 }
 
 
-void Snake::checkCollision()
-{
-    unsigned int x = this->snake.front().x,
-                 y = this->snake.front().y;
-    switch ( this->head_direction ) {
-        case Direction::UP:
-            y--;
-            break;
-        case Direction::DOWN:
-            y++;
-            break;
-        case Direction::LEFT:
-            x--;
-            break;
-        case Direction::RIGHT:
-            x++;
-            break;
-        default:
-            // should be unreachable
-            throw("Unexpected direction: "+std::to_string(this->head_direction));
-    }
-    // check the upcoming movement
-    if ( x > 15 || y > 15 ) {
-        // collision with the field limits
-        this->game_over = true;
-        this->game_over_msg = Snake::tr("You fell in the water!");
-
-    } else if ( this->field[x][y] == Tile::SNAKE ) {
-        // collision with another part of the snake
-        this->game_over = true;
-        this->game_over_msg = Snake::tr("You ate yourself!");
-
-    } else if ( this->field[x][y] == Tile::FOOD ) {
-        // will eat
-        if ( this->snake.size() < this->MAX_SNAKE_LENGTH ) {
-            // below max size, increase the size
-            this->increaseSnakeBody();
-        }
-        this->spawn_food = true;
-    }
-}
-
-
 void Snake::increaseSnakeBody( const bool& initial )
 {
     // build from the tail
@@ -589,6 +538,68 @@ void Snake::increaseSnakeBody( const bool& initial )
     this->updateSnakePosition( true );
     this->snake.back().update( x, y, d );
     this->field_scene->addItem( this->snake.back().image );
+}
+
+
+const bool Snake::snakeInTile(  const unsigned int& x, const unsigned int& y  )
+{
+    bool result = false;
+    for ( const BodyPart& bp : this->snake ) {
+        if ( bp.x == x && bp.y == y ) {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+
+void Snake::checkCollision()
+{
+    unsigned int x = this->snake.front().x,
+                 y = this->snake.front().y;
+    switch ( this->head_direction ) {
+        case Direction::UP:
+            y--;
+            break;
+        case Direction::DOWN:
+            y++;
+            break;
+        case Direction::LEFT:
+            x--;
+            break;
+        case Direction::RIGHT:
+            x++;
+            break;
+        default:
+            // should be unreachable
+            throw("Unexpected direction: "+std::to_string(this->head_direction));
+    }
+    // check the upcoming movement
+    if ( x > 15 || y > 15 ) {
+        // collision with the field limits
+        this->game_over = true;
+        this->game_over_msg = Snake::tr("You fell in the water!");
+
+    } else if ( this->snakeInTile( x, y ) ) {
+        // collision with another part of the snake
+        this->game_over = true;
+        this->game_over_msg = Snake::tr("You ate yourself!");
+
+    } else if ( x == this->food.x && y == this->food.y ) {
+        // will eat
+        if ( this->snake.size() < this->MAX_SNAKE_LENGTH ) {
+            // below max size, increase the size
+            this->increaseSnakeBody();
+        } else {
+            // max size reached, increase speed
+            const int interval = this->game_loop->interval();
+            if ( interval > 50 ) {
+                this->game_loop->setInterval( interval - 5 );
+            }
+        }
+        this->spawn_food = true;
+    }
 }
 
 
