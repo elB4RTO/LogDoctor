@@ -100,7 +100,7 @@ std::string HashOps::digestFile( const std::string& file_path )
             QString::fromStdString( file_path )
             ).toStdString() );
 
-    } catch (const std::ios_base::failure& err) {
+    } catch ( const std::ios_base::failure& ) {
         // failed reading as text
         throw GenericException( QString("%1:\n%2").arg(
             DialogSec::tr("An error accured while reading the file"),

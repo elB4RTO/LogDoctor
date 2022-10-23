@@ -603,7 +603,7 @@ void MainWindow::readConfigs()
                 }*/
             }
 
-        } catch ( const std::ios_base::failure&/* err*/ ) {
+        } catch ( const std::ios_base::failure& ) {
             // failed reading
             proceed = false;
             err_msg = DialogSec::tr("An error occured while reading the configuration file");
@@ -1752,7 +1752,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             item = this->craplog.getLogFileItem(
                 this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
 
-        } catch (const GenericException& e) {
+        } catch ( const GenericException& ) {
             // failed to find file
             proceed = false;
             DialogSec::errFileNotFound( QString::fromStdString( item.path ), true );
@@ -1807,7 +1807,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     // try reading as gzip compressed file
                     GZutils::readFile( item.path, content );
 
-                } catch (const GenericException) {
+                } catch ( const GenericException& ) {
                     // failed closing file pointer
                     throw;
 
@@ -1819,7 +1819,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     IOutils::readFile( item.path, content );
                 }
 
-            } catch (const GenericException/*& e*/) {
+            } catch ( const GenericException& ) {
                 // failed closing gzip file pointer
                 proceed = false;
                 // >> e.what() << //
@@ -1827,7 +1827,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     DialogSec::tr("Failed to read gzipped file"),
                     item.name) );
 
-            /*} catch (const std::ios_base::failure& err) {
+            /*} catch ( const std::ios_base::failure& err ) {
                 // failed reading as text
                 proceed = false;
                 // >> err.what() << //
