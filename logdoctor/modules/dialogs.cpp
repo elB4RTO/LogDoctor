@@ -12,7 +12,6 @@ DialogSec::DialogSec()
 }
 
 
-
 //////////////////
 //// LANGUAGE ////
 //////////////////
@@ -135,6 +134,12 @@ void DialogSec::errVersionCheckFailed( const int& err_code, QWidget *parent )
             break;
         case 11:
             msg = DialogSec::tr("An error occured while parsing:\nmalformed version");
+            break;
+        case 20:
+            msg = DialogSec::tr("An error occured while comparing:\nversion lesser than 0");
+            break;
+        default:
+            throw("Unexpected err_code in VersionCheck dialog: "+std::to_string(err_code));
             break;
     }
 

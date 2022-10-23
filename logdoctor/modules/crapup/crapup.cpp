@@ -79,7 +79,7 @@ void Crapup::versionCheck( const float& v, const int& dialog_level )
                         successful = true;
                         break;
 
-                    } catch (std::invalid_argument& e) {
+                    } catch ( const std::invalid_argument&/*& e*/ ) {
                         // failed to convert string to float
                         err = 11;
                     }
@@ -110,8 +110,10 @@ void Crapup::versionCheck( const float& v, const int& dialog_level )
         } else {
             // something went wrong, can't be successful if version is less than 0
             successful = false;
+            err = 20;
         }
-    } else {
+    }
+    if ( ! successful ) {
         DialogSec::errVersionCheckFailed( err );
     }
 }

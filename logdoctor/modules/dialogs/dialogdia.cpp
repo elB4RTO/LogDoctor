@@ -1,5 +1,7 @@
+
 #include "dialogdia.h"
 #include "ui_dialogdia.h"
+
 
 DialogDia::DialogDia( const QString& title, const QString& text, const bool& ignore, const bool& discard, const bool& abort, QWidget *parent ) :
     QDialog(parent),
@@ -39,15 +41,12 @@ void DialogDia::on_button_IGNORE_clicked()
     this->done( 2 );
 }
 
-
 void DialogDia::on_button_DISCARD_clicked()
 {
     this->done( 1 );
 }
 
-
 void DialogDia::on_button_ABORT_clicked()
 {
     this->done( 0 );
 }
-

@@ -264,9 +264,9 @@ std::string StringOps::rstrip( const std::string& str, const std::string& chars 
 std::string StringOps::lstripUntil( const std::string& str, const std::string& chr, const bool& inclusive, const bool& consecutives )
 {
     size_t start, aux_start, aux;
-    const size_t max_size = str.size()-1;
+    const size_t max_size = str.size();
     std::string stripped = "";
-    if ( max_size >= 0 ) {
+    if ( max_size > 0 ) {
         start = str.find( chr );
         if ( inclusive == true ) {
             start += chr.size();
@@ -286,17 +286,13 @@ std::string StringOps::lstripUntil( const std::string& str, const std::string& c
                 }
                 aux_start = aux;
             }
-            if ( aux_start == max_size+1 ) {
-                stripped = "";
-            } else {
+            if ( aux_start < max_size ) {
                 stripped = str.substr( aux_start );
             }
         } else {
             if ( start == std::string::npos ) {
                 stripped = str;
-            } else if ( start == max_size+1 ) {
-                stripped = "";
-            } else {
+            } else if ( start < max_size ) {
                 stripped = str.substr( start );
             }
         }
@@ -310,7 +306,7 @@ void StringOps::split( std::vector<std::string>& list, const std::string& target
 {
     std::string slice;
     size_t start=0, stop;
-    if ( target_str.size()-1 >= 0 ) {
+    if ( target_str.size() > 0 ) {
         while (true) {
             stop = target_str.find( separator, start );
             if ( stop == std::string::npos ) {
@@ -350,18 +346,23 @@ void StringOps::splitrip( std::vector<std::string>& list, const std::string& tar
 const std::string StringOps::replace( const std::string& str, const std::string& target, const std::string& replace )
 {
     size_t start=0, stop;
-    const int size = target.size();
+    const size_t size = target.size();
     std::string string = "";
-    if ( str.size()-1 >= 0 ) {
-        while ( true ) {
-            stop = str.find( target, start );
-            if ( stop == std::string::npos ) {
-                string += str.substr( start );
-                break;
-            } else {
-                string += str.substr( start, stop-start );
-                string += replace;
-                start = stop+size;
+    if ( str.size() > 0 ) {
+        if ( size == 0 ) {
+            // target is empty, nothing to replace
+            string = str;
+        } else {
+            while ( true ) {
+                stop = str.find( target, start );
+                if ( stop == std::string::npos ) {
+                    string += str.substr( start );
+                    break;
+                } else {
+                    string += str.substr( start, stop-start );
+                    string += replace;
+                    start = stop+size;
+                }
             }
         }
     }

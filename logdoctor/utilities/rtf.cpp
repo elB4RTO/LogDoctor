@@ -25,7 +25,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
         rich_content += "<br/>";
     }
     QString rich_line="", class_name="";
-    std::string sep, fld, fld_str, aux_sep1, aux_sep2, aux_fld_str;
+    std::string sep, fld, fld_str, aux_sep2;
     bool missing=false;
     size_t start, stop, i, aux_start, aux_stop,
            line_size, sep_size;
@@ -206,7 +206,6 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     lines.clear();
     rich_content.push_back("</body></html>");
 }
-
 
 
 

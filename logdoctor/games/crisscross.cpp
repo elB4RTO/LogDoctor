@@ -179,7 +179,7 @@ void CrissCross::nextTurn()
 
 const bool CrissCross::checkVictory()
 {
-    bool victory = false;
+    bool result = false;
     unsigned int streak;
     for ( const auto& sequence : this->sequences ) {
         streak = 0;
@@ -193,13 +193,13 @@ const bool CrissCross::checkVictory()
         }
         if ( streak == 3 ) {
             // victory
-            victory = true;
+            result = true;
             break;
         } else {
             this->victory_sequence.clear();
         }
     }
-    return victory;
+    return result;
 }
 
 void CrissCross::victory()
@@ -241,7 +241,7 @@ void CrissCross::victory()
 
 const bool CrissCross::gameDraw()
 {
-    bool draw = false;
+    bool result = false;
     unsigned int empty_tiles = 9;
     for ( const auto& tile : this->board ) {
         if ( tile > 0 ) {
@@ -250,9 +250,9 @@ const bool CrissCross::gameDraw()
     }
     if ( empty_tiles == 0 ) {
         // no movement left
-        draw = true;
+        result = true;
     }
-    return draw;
+    return result;
 }
 
 void CrissCross::draw()
@@ -345,4 +345,3 @@ const unsigned int CrissCross::AI_makeChoice()
     }
     return next_move;
 }
-

@@ -36,7 +36,7 @@ private:
     const std::string parseApacheEscapes( const std::string& string, const bool& strftime=false );
     const std::string parseNginxEscapes( const std::string& string );
 
-    const int countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separatprs );
+    const int countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators );
 
     const size_t findNginxFieldEnd( const std::string& string, const int& start );
     void checkIisString( const std::string& string );

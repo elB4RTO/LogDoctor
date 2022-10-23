@@ -138,9 +138,9 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
             // try reading a gzipped file
             GZutils::readFile( path, aux );
 
-        } catch ( const GenericException& e ) {
+        } catch ( const GenericException& ) {
             // failed closing file pointer
-            throw e;
+            throw;
 
         } catch (...) {
             // fallback in reading as text file
@@ -179,7 +179,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
                     lines.push_back( line );
                 }
                 // add the first and last lines, to double check for file integrity
-                for ( int& index : std::vector<int>({0,max-1}) ) {
+                for ( const int& index : std::vector<int>({0,max-1}) ) {
                     if ( ! VecOps::contains( picked_indexes, index ) ) {
                         line = aux_lines.at( index );
                         if ( strip_lines ) {
@@ -196,7 +196,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
         aux_lines.clear();
 
     // re-catched in craplog
-    } catch ( const GenericException ) {
+    } catch ( const GenericException& ) {
         // failed closing gzip file pointer
         lines.clear(); aux_lines.clear();
         if ( file.is_open() ) {
@@ -204,7 +204,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
         }
         throw GenericException( "An error accured while reading the gzipped file" );
 
-    } catch (const std::ios_base::failure) {
+    } catch ( const std::ios_base::failure& ) {
         // failed reading
         lines.clear(); aux_lines.clear();
         if ( file.is_open() ) {
@@ -247,12 +247,12 @@ void IOutils::readFile( const std::string& path , std::string& content )
             (std::istreambuf_iterator<char>( file )),
             std::istreambuf_iterator<char>() );
 
-    } catch (const std::ios_base::failure& err) {
+    } catch ( const std::ios_base::failure& ) {
         // failed reading
         if ( file.is_open() ) {
             file.close();
         }
-        throw err;
+        throw;
     } catch (...) {
         if ( file.is_open() ) {
             file.close();
@@ -283,12 +283,12 @@ void IOutils::writeOnFile( const std::string& path, const std::string& content )
         // write the content
         file << content << std::endl;
 
-    } catch (const std::ios_base::failure& err) {
+    } catch ( const std::ios_base::failure& ) {
         // failed writing
         if ( file.is_open() ) {
             file.close();
         }
-        throw err;
+        throw;
     } catch (...) {
         if ( file.is_open() ) {
             file.close();

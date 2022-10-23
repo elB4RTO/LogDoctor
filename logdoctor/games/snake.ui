@@ -20,7 +20,7 @@
    <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>LogDoctor - Snake</string>
+   <string notr="true">LogDoctor - Snake</string>
   </property>
   <property name="windowIcon">
    <iconset>

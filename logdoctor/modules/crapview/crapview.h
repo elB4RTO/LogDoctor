@@ -102,14 +102,6 @@ private:
 
     DbQuery dbQuery;
 
-    const std::string TITLE_WARN  = TR::tr("Log Lines Marked as Warning").toStdString();
-    const std::string TITLE_SPEED = TR::tr("Time Taken to Serve Requests").toStdString();
-    const std::string TEXT_COUNT_OTHERS = TR::tr("Others").toStdString();
-    const std::string TITLE_DAY  = TR::tr("Time of Day Count").toStdString();
-    const std::string TITLE_RELAT       = TR::tr("Relational Count").toStdString();
-    const std::string LEGEND_FROM = TR::tr("from").toStdString();
-    const std::string LEGEND_TO   = TR::tr("to").toStdString();
-
     // collection of available dates
     // { web_server_id : { year : { month_str : [ days ] } } }
     std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates;

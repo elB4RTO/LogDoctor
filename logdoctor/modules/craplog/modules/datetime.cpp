@@ -125,12 +125,6 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
         QDateTime e = QDateTime::fromSecsSinceEpoch( std::stoi( datetime ) );
         datetime = e.toString( "yyyy-MM-dd  HH:mm:ss" ).toStdString();
 
-        /*const char* c = datetime.c_str();
-        struct tm t;
-        char d[32];
-        strptime( c, "%s", &t );
-        strftime( d, sizeof(d), "%Y-%m-%d %H:%M:%S", &t);
-        datetime = std::string( d );*/
         // parse
         year   = datetime.substr( 0, 4 );
         month  = datetime.substr( 5, 2 );
@@ -151,22 +145,22 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
             year   = "20" + datetime.substr( 6, 2 );
 
         } else if ( format == "MDYY" ) {
-            int aux;
+            int aux_;
             if ( datetime.at(2) == '/' ) {
                 month = datetime.substr( 0, 2 );
-                aux = 3;
+                aux_ = 3;
             } else {
                 month = "0" + datetime.substr( 0, 1 );
-                aux = 2;
+                aux_ = 2;
             }
-            if ( datetime.at(aux+2) == '/' ) {
-                day = datetime.substr( aux, 2 );
-                aux += 3;
+            if ( datetime.at(aux_+2) == '/' ) {
+                day = datetime.substr( aux_, 2 );
+                aux_ += 3;
             } else {
-                day = "0" + datetime.substr( aux, 1 );
-                aux = +2;
+                day = "0" + datetime.substr( aux_, 1 );
+                aux_ = +2;
             }
-            year = "20" + datetime.substr( aux );
+            year = "20" + datetime.substr( aux_ );
 
         } else if ( StringOps::startsWith( format, "year" ) ) {
             year = datetime;

@@ -25,11 +25,11 @@ void Crapnote::setTextFont( const QFont& font )
     this->ui->textEdit->setFont( f );
 }
 
-void Crapnote::setColorScheme( const int& scheme_id )
+void Crapnote::setColorScheme( const int& color_scheme_id )
 {
     QColor b, t;
     // update the colors palette
-    switch ( scheme_id ) {
+    switch ( color_scheme_id ) {
         case 0:
             this->ui->textEdit->setPalette( QPalette() );
             break;
@@ -75,4 +75,3 @@ void Crapnote::on_button_FontSize_Plus_clicked()
 {
     this->ui->spinBox_FontSize->setValue( this->font_size+1 );
 }
-

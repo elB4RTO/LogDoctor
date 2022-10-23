@@ -244,7 +244,6 @@ MainWindow::~MainWindow()
     delete this->crapinfo;
     delete this->crisscross;
     delete this->snake;
-    //delete this->translator;
 }
 
 void MainWindow::closeEvent( QCloseEvent *event )
@@ -604,13 +603,13 @@ void MainWindow::readConfigs()
                 }*/
             }
 
-        } catch ( const std::ios_base::failure/*& err*/ ) {
+        } catch ( const std::ios_base::failure&/* err*/ ) {
             // failed reading
             proceed = false;
             err_msg = DialogSec::tr("An error occured while reading the configuration file");
-        } catch ( const LogFormatException ) {
+        } catch ( const LogFormatException& ) {
             proceed = false; // message already shown
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             proceed = false;
             err_msg = QString("%1:\n%2").arg(
                 DialogSec::tr("One of the lists has an invalid item"),
@@ -809,7 +808,7 @@ void MainWindow::writeConfigs()
         try {
             IOutils::writeOnFile( this->configs_path, configs );
 
-        } catch (const std::ios_base::failure& err) {
+        } catch ( const std::ios_base::failure&/* err*/ ) {
             // failed writing
             DialogSec::errGeneric( DialogSec::tr("An error occured while writing the configuration file") );
         } catch (...) {
@@ -1375,10 +1374,10 @@ const QString MainWindow::printableTime( const int& secs_ )
 //////////////
 //// HELP ////
 //////////////
-void MainWindow::showHelp( const std::string& filename )
+void MainWindow::showHelp( const std::string& file_name )
 {
     const std::string link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
-    const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+filename+".html";
+    const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+file_name+".html";
     if ( IOutils::exists( path ) ) {
         if ( IOutils::isFile( path ) ) {
             if ( IOutils::checkFile( path, true ) ) {
@@ -1474,18 +1473,18 @@ void MainWindow::menu_actionBlockNote_triggered()
 
 void MainWindow::menu_actionInfos_triggered()
 {
-    std::string version = std::to_string( this->version );
-    size_t cut = version.find('.');
+    std::string version_ = std::to_string( this->version );
+    size_t cut = version_.find('.');
     if ( cut == std::string::npos ) {
-        cut = version.find(',');
+        cut = version_.find(',');
         if ( cut == std::string::npos ) {
-            cut = version.size()-3;
+            cut = version_.size()-3;
         }
     }
-    version = version.substr( 0, cut+3 );
+    version_ = version_.substr( 0, cut+3 );
     delete this->crapinfo;
     this->crapinfo = new Crapinfo(
-        QString::fromStdString( version ),
+        QString::fromStdString( version_ ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->logdoc_path ),
         QString::fromStdString( this->configs_path ) );
@@ -1808,9 +1807,9 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     // try reading as gzip compressed file
                     GZutils::readFile( item.path, content );
 
-                } catch (const GenericException& e) {
+                } catch (const GenericException) {
                     // failed closing file pointer
-                    throw e;
+                    throw;
 
                 } catch (...) {
                     // failed as gzip, try as text file
@@ -3531,7 +3530,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Add_clicked()
                 this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfApache_Warnlist_List->addItem( item );
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             DialogSec::warnInvalidItemBW();
             return;
         }
@@ -3669,7 +3668,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Add_clicked()
                 this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfApache_Blacklist_List->addItem( item );
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             DialogSec::warnInvalidItemBW();
             return;
         }
@@ -3880,7 +3879,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Add_clicked()
                 this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfNginx_Warnlist_List->addItem( item );
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             DialogSec::warnInvalidItemBW();
             return;
         }
@@ -4018,7 +4017,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Add_clicked()
                 this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfNginx_Blacklist_List->addItem( item );
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             DialogSec::warnInvalidItemBW();
             return;
         }
@@ -4281,7 +4280,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Add_clicked()
                 this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfIis_Warnlist_List->addItem( item );
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             DialogSec::warnInvalidItemBW();
             return;
         }
@@ -4419,7 +4418,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Add_clicked()
                 this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfIis_Blacklist_List->addItem( item );
-        } catch ( const BWlistException ) {
+        } catch ( const BWlistException& ) {
             DialogSec::warnInvalidItemBW();
             return;
         }
@@ -4495,4 +4494,3 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
-

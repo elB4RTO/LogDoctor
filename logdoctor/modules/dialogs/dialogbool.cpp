@@ -1,5 +1,7 @@
+
 #include "dialogbool.h"
 #include "ui_dialogbool.h"
+
 
 DialogBool::DialogBool( const QString& title, const QString& text, QWidget *parent ) :
     QDialog(parent),
@@ -26,9 +28,7 @@ void DialogBool::on_button_NO_clicked()
     this->done( 0 );
 }
 
-
 void DialogBool::on_button_YES_clicked()
 {
     this->done( 1 );
 }
-

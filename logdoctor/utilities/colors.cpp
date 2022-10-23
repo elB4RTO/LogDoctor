@@ -94,16 +94,13 @@ const QPalette ColorSec::getPalette( const int&theme )
         case 2:
             // candy
             p = QPalette( QBrush(QColor(  45,   0,  30 )), /* window text */
-                          //QBrush(QColor( 215, 110, 111 )), /* button */
                           QBrush(QColor( 225, 120, 121 )), /* button */
                           QBrush(QColor( 255, 170, 171 )), /* light */
                           QBrush(QColor( 195,  80,  81 )), /* dark */
                           QBrush(QColor( 235, 120, 121 )), /* mid */
                           QBrush(QColor(  45,   0,  30 )), /* text */
                           QBrush(QColor( 145, 100, 130 )), /* bright text */
-                          //QBrush(QColor( 255, 180, 181 )), /* base */
                           QBrush(QColor( 194, 255, 195 )), /* base */
-                          //QBrush(QColor( 195,  80,  81 ))  /* window */
                           QBrush(QColor( 255, 204, 143 ))  /* window */ );
             p.setBrush( QPalette::ColorRole::Highlight, QBrush(QColor(195,80,81)) );
             break;
