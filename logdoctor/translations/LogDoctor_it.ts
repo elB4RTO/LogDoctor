@@ -60,6 +60,29 @@
     </message>
 </context>
 <context>
+    <name>CrissCross</name>
+    <message>
+        <source>You beated me!</source>
+        <translation>Mi hai battuto!</translation>
+    </message>
+    <message>
+        <source>This time you lost!</source>
+        <translation>Stavolta hai perso!</translation>
+    </message>
+    <message>
+        <source>Victory</source>
+        <translation>Vittoria</translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation>Pareggio</translation>
+    </message>
+    <message>
+        <source>Nice match</source>
+        <translation>Bella partita</translation>
+    </message>
+</context>
+<context>
     <name>DialogBool</name>
     <message>
         <source>Yes</source>
@@ -647,6 +670,12 @@ Se tutto è corretto, per favore segnala questo errore</translation>
 please follow the instruction on the repository page</source>
         <translation>Se desideri avere questa lingua in LogDoctor,
 per favore segui le istruzioni nella pagina del repository</translation>
+    </message>
+    <message>
+        <source>An error occured while comparing:
+version lesser than 0</source>
+        <translation>È avvenuto un errore durante il confronto:
+la versione è minore di 0</translation>
     </message>
 </context>
 <context>
@@ -1442,6 +1471,26 @@ Conto negli orari del giorno per una singola data, o totali delle giornate per u
         <source>Ash</source>
         <translation>Cenere</translation>
     </message>
+    <message>
+        <source>Games</source>
+        <translation>Giochi</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation>Tris</translation>
+    </message>
+    <message>
+        <source>Play CrissCross</source>
+        <translation>Gioca a Tris</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation>Snake</translation>
+    </message>
+    <message>
+        <source>Play Snake</source>
+        <translation>Gioca a Snake</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1456,6 +1505,25 @@ Conto negli orari del giorno per una singola data, o totali delle giornate per u
     <message>
         <source>Failed to read</source>
         <translation>Lettura fallita</translation>
+    </message>
+</context>
+<context>
+    <name>Snake</name>
+    <message>
+        <source>PLAY</source>
+        <translation>GIOCA</translation>
+    </message>
+    <message>
+        <source>Game Over</source>
+        <translation>Game Over</translation>
+    </message>
+    <message>
+        <source>You fell in the water!</source>
+        <translation>Sei caduto nell&apos;acqua!</translation>
+    </message>
+    <message>
+        <source>You ate yourself!</source>
+        <translation>Ti sei mangiato da solo!</translation>
     </message>
 </context>
 <context>
@@ -1503,10 +1571,6 @@ Conto negli orari del giorno per una singola data, o totali delle giornate per u
     <message>
         <source>Time of Day Count</source>
         <translation>Conteggio dei Momenti del Giorno</translation>
-    </message>
-    <message>
-        <source>Relational Count</source>
-        <translation>Conteggio relazionale</translation>
     </message>
     <message>
         <source>from</source>
