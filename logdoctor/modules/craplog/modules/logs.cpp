@@ -154,7 +154,7 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 {
     std::unordered_map<int, std::string> data;
     std::string sep, fld, fld_str;
-    bool missing=false, add_pm=false;
+    bool add_pm=false;
     size_t start, stop=0, aux_start, aux_stop,
            line_size = line.size()-1;
     int i=0, n_sep=format.separators.size()-1;
@@ -389,13 +389,8 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
 
         // update the stop for the next start
-        if ( missing ) {
-            missing = false;
-            stop = aux_stop;
-        } else {
-            stop = stop + sep.size();
-            i++;
-        }
+        stop += sep.size();
+        i++;
         if ( stop > line_size ) {
             // this was the final separator
             break;
@@ -466,4 +461,3 @@ const unsigned LogOps::getParsedLines()
 {
     return this->parsed_lines;
 }
-

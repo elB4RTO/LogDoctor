@@ -31,7 +31,7 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
             break;
         default:
             // shouldn't be here
-            throw GenericException("Unexpected dialog type: "+ type);
+            throw GenericException("Unexpected dialog type: "+ std::to_string(type));
     }
 
     // insert the given text
@@ -86,4 +86,3 @@ void DialogMsg::on_button_Ok_clicked()
 {
     this->done( 1 );
 }
-

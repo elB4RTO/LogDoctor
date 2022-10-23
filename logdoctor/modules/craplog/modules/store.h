@@ -9,7 +9,7 @@ class StoreOps
 public:
     StoreOps();
 
-    static bool storeData( QSqlDatabase& db, Craplog& caplog, const std::vector<std::unordered_map<int, std::string>>& data );
+    static bool storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<std::unordered_map<int, std::string>>& data );
 };
 
 #endif // STORE_H

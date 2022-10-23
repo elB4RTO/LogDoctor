@@ -446,18 +446,6 @@ const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
 }
 
 
-// return the path of the file matching the given name
-/*const std::string& Craplog::getLogFilePath( const QString& file_name )
-{
-    for ( const Craplog::LogFile& item : this->logs_list ) {
-        if ( item.name == file_name ) {
-            return item.path;
-        }
-    }
-    // should be unreachable
-    throw GenericException("File item not found");
-}*/
-
 // set a file as selected
 const bool Craplog::setLogFileSelected( const QString& file_name )
 {
@@ -924,9 +912,9 @@ void Craplog::joinLogLines()
                 // try as gzip compressed archive first
                 GZutils::readFile( file.path, aux );
 
-            } catch ( const GenericException& e ) {
+            } catch ( const GenericException& ) {
                 // failed closing file pointer
-                throw e;
+                throw;
 
             } catch (...) {
                 // fallback on reading as normal file
@@ -941,7 +929,7 @@ void Craplog::joinLogLines()
             }
 
         // re-catched in run()
-        } catch ( const GenericException ) {
+        } catch ( const GenericException& ) {
             // failed closing gzip file pointer
             throw GenericException( QString("%1:\n%2").arg(
                 DialogSec::tr("An error accured while reading the gzipped file"),
@@ -1127,23 +1115,6 @@ const QString Craplog::printableSize( const unsigned& bytes )
 }
 
 
-/*const std::vector<int> Craplog::calcDayTraffic()
-{
-    std::vector<int> traffic = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    if ( this->data_collection.size() > 0 ) {
-        for ( const auto& data : this->data_collection ) {
-            if ( data.find( 4 ) != data.end() ) {
-                try {
-                    traffic.at( std::stoi(data.at(4)) ) ++;
-                } catch (...) {
-                    continue;
-                }
-            }
-        }
-    }
-    return traffic;
-}*/
-
 void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
 {
     const QString
@@ -1151,9 +1122,7 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
         ignored_slice_name     = TR::tr("Ignored"),
         parsed_slice_name      = TR::tr("Parsed"),
         warning_slice_name     = TR::tr("Warnings"),
-        blacklisted_slice_name = TR::tr("Blacklisted");/*,
-        traffic_chart_name     = TR::tr("Time of Day Logs Traffic Ensemble"),
-        access_bar_name        = TR::tr("Access Logs");*/
+        blacklisted_slice_name = TR::tr("Blacklisted");
 
     // logs size donut chart
     QPieSeries *parsedSize_donut = new QPieSeries();
@@ -1186,10 +1155,6 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
         sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
         sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::gray, fonts.at("main_small") );
     } else {
-        /*sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
-        parsedSize_donut->setVisible( false );
-        sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::white, fonts.at("main_small") );
-        ignoredSize_donut->setVisible( false );*/
         sizeBreakdown->legend()->setVisible( false );
         sizeBreakdown->setTitle("");
     }
@@ -1197,56 +1162,4 @@ void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_
 
     size_chart->setChart( sizeBreakdown );
     size_chart->setRenderHint( QPainter::Antialiasing );
-
-
-    // logs traffic bars chart
-    /*QColor col;
-    QBarSet *access_bars = new QBarSet( access_bar_name );
-    col = Qt::GlobalColor::darkCyan;
-    access_bars->setColor( col.lighter( 130 ) );
-
-    int max_traf = 0;
-    for ( const int& tfc : this->calcDayTraffic() ) {
-        *access_bars << tfc;
-        if ( tfc > max_traf ) {
-            max_traf = tfc;
-        }
-    }
-
-    QBarSeries *bars = new QBarSeries();
-    bars->append( access_bars );
-
-    QChart *t_chart = new QChart();
-    t_chart->setTheme( theme );
-    t_chart->addSeries( bars );
-    t_chart->setTitle( traffic_chart_name );
-    t_chart->setTitleFont( fonts.at("main") );
-    t_chart->legend()->setFont( fonts.at("main_small") );
-    t_chart->setAnimationOptions( QChart::SeriesAnimations );
-    //t_chart->setBackgroundBrush( Qt::darkGray );
-
-    QStringList categories;
-    categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
-               << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
-
-    QBarCategoryAxis *axisX = new QBarCategoryAxis();
-    axisX->append( categories );
-    axisX->setLabelsFont( fonts.at( "main_small" ) );
-    t_chart->addAxis( axisX, Qt::AlignBottom );
-    bars->attachAxis( axisX );
-
-    QValueAxis *axisY = new QValueAxis();
-    axisY->setLabelFormat( "%d" );
-    axisY->setRange( 0, max_traf );
-    axisY->setLabelsFont( fonts.at( "main_small" ) );
-    t_chart->addAxis( axisY, Qt::AlignLeft );
-    bars->attachAxis( axisY) ;
-
-    t_chart->legend()->setVisible( true );
-    t_chart->legend()->setAlignment( Qt::AlignBottom );
-
-    traf_chart->setChart( t_chart );
-    traf_chart->setRenderHint( QPainter::Antialiasing );*/
-
 }
-

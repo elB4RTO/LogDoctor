@@ -91,7 +91,7 @@ public:
          setWarnlist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
     void blacklistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
          warnlistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
-         blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& new_item ),
+         blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& item ),
          warnlistRemove( const int& web_server_id, const int& log_field_id, const std::string& item );
     const int
         blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item ),

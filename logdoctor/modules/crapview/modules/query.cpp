@@ -2125,7 +2125,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unord
 
             // process the day of the week
             for ( int i=1; i<8; i++ ) {
-                int &x = num_day_count.at( i );
+                const int &x = num_day_count.at( i );
                 if ( x > 0 ) {
                     traf_day.at( i ) /= x;
                 }

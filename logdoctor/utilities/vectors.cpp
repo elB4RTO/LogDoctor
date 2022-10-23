@@ -8,7 +8,6 @@ VecOps::VecOps()
 }
 
 
-
 const bool VecOps::contains( const std::vector<int>& list, const int& flag )
 {
     bool result = false;
