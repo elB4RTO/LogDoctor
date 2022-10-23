@@ -211,7 +211,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
     int n_fld=0;
     size_t start, stop=0, aux, aux_start, aux_stop;
     const size_t max=f_str.size()-1;
-    std::string aux_fld, aux_fld_v, cur_fld, cur_sep="";
+    std::string aux_fld, aux_fld_v, cur_fld, cur_sep;
     // find and convert any field
     while (true) {
         // start after the last found field
@@ -285,7 +285,6 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     } else {
                         // stop
                         aux = aux_aux;
-                        aux_fld = c;
                         break;
                     }
                 }
@@ -385,8 +384,8 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                                     // check if false positive
                                     if ( aux_aux != std::string::npos ) {
                                         // same escape rules as before, but single percent-signs are considered valid and treated as text
-                                        const char c = aux_fld.at( aux_aux+1 );
-                                        if ( c == '%' || c == 'n' || c == 't' ) {
+                                        const char c_ = aux_fld.at( aux_aux+1 );
+                                        if ( c_ == '%' || c_ == 'n' || c_ == 't' ) {
                                             // control characters, will be used as separator, skip
                                             aux_aux_stop = aux_aux + 2;
                                             continue;

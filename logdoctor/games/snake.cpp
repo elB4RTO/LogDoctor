@@ -505,7 +505,7 @@ void Snake::updateSnakePosition( const bool& dry )
 void Snake::increaseSnakeBody( const bool& initial )
 {
     // build from the tail
-    BodyPart& tail = this->snake.back();
+    const BodyPart& tail = this->snake.back();
     unsigned int x = tail.x;
     unsigned int y = tail.y;
     const Direction d  = tail.direction;
@@ -601,5 +601,3 @@ void Snake::checkCollision()
         this->spawn_food = true;
     }
 }
-
-

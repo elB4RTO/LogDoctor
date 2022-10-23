@@ -87,13 +87,8 @@ public:
     // files
     static void errFileNotFound( const QString& file, const bool& report=false, QWidget *parent=nullptr );
     // files permissions
-    /*static void errFileNotExists( QWidget *parent=nullptr );
-    static void errFileNotReadable( QWidget *parent=nullptr );
-    static void errFileNotWritable( QWidget *parent=nullptr );*/
     static void warnFileNotReadable( const QString& file, QWidget *parent=nullptr );
-    /*static const bool choiceFileNotExists( QWidget *parent=nullptr );
-    static const bool choiceFileNotReadable( QWidget *parent=nullptr );
-    static const bool choiceFileNotWritable( QWidget *parent=nullptr );*/
+
     // files actions
     static void warnEmptyFile( const QString& file, QWidget *parent=nullptr );
     static void errFailedReadFile( const QString& file, const bool& skipping=false, QWidget *parent=nullptr );
@@ -106,16 +101,12 @@ public:
     static void errDirNotWritable( const QString& dir, QWidget *parent=nullptr );
     static void warnDirNotReadable( QWidget *parent=nullptr );
     static void warnDirNotWritable( QWidget *parent=nullptr );
-    /*static void choiceDirNotReadable( QWidget *parent=nullptr );
-    static void choiceDirNotWritable( QWidget *parent=nullptr );*/
     // folders actions
     static void errFailedMakeDir( const QString& msg, QWidget *parent=nullptr );
 
     // generic choices
     static const bool choiceDirNotDir( const QString& path, QWidget *parent=nullptr );
     static const bool choiceFileNotFile( const QString& path, QWidget *parent=nullptr );
-    /*static void choiceYesNo( QWidget *parent=nullptr );
-    static const bool choiceIgnoreAbort( QWidget *parent=nullptr );*/
 
 
 

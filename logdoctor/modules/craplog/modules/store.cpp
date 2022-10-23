@@ -33,7 +33,7 @@ bool StoreOps::storeData( QSqlDatabase& db, Craplog& craplog, const std::vector<
     check_wl_req = craplog.isWarnlistUsed( wsID, 12 );
     check_wl_cli = craplog.isWarnlistUsed( wsID, 20 );
     check_wl_ua  = craplog.isWarnlistUsed( wsID, 21 );
-    std::vector<std::string> bl_cli_list, bl_err_list, wl_cli_list, wl_ua_list, wl_met_list, wl_req_list, wl_err_list;
+    std::vector<std::string> bl_cli_list, wl_cli_list, wl_ua_list, wl_met_list, wl_req_list;
     if ( check_bl_cli ) {
         bl_cli_list = craplog.getBlacklist( wsID, 20 );
     }

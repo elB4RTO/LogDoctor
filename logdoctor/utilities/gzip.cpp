@@ -66,7 +66,7 @@ void GZutils::readFile( const std::string& path, std::string& content )
             if ( ferror( file ) ) {
                 // error reading
                 (void)inflateEnd( &strm );
-                successful = false;
+                /*successful = false;*/
                 break;
             }
             if ( strm.avail_in == 0 ) {

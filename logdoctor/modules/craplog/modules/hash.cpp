@@ -1,7 +1,6 @@
 
 #include "hash.h"
 
-
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/vectors.h"
@@ -9,7 +8,6 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 #include "modules/craplog/modules/sha256.h"
-
 
 
 HashOps::HashOps()
@@ -82,9 +80,9 @@ std::string HashOps::digestFile( const std::string& file_path )
             // try reading as gzip compressed file
             GZutils::readFile( file_path, content );
 
-        } catch ( const GenericException& e ) {
+        } catch ( const GenericException& ) {
             // failed closing file pointer
-            throw e;
+            throw;
 
         } catch (...) {
             // failed as gzip, try as text file
@@ -95,7 +93,7 @@ std::string HashOps::digestFile( const std::string& file_path )
         }
 
     // re-catched in craplog
-    } catch ( const GenericException ) {
+    } catch ( const GenericException& ) {
         // failed closing gzip file pointer
         throw GenericException( QString("%1:\n%2").arg(
             DialogSec::tr("An error accured while reading the gzipped file"),
@@ -269,4 +267,3 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
     db.close();
     return proceed;
 }
-

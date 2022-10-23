@@ -327,7 +327,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
             }
             for ( int h=0; h<24; h++ ) {
                 for ( int m=0; m<6; m++ ) {
-                    auto& data = items.at( h ).at( m );
+                    const auto& data = items.at( h ).at( m );
                     norm_count = warn_count = 0;
                     for ( const std::vector<QString>& line : data ) {
                         aux = table->rowCount();
@@ -368,7 +368,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
             }
             for ( int g=0; g<6; g++ ) {
                 for ( int m=0; m<10; m++ ) {
-                    auto& data = items.at( g ).at( m );
+                    const auto& data = items.at( g ).at( m );
                     norm_count = warn_count = 0;
                     for ( const std::vector<QString>& line : data ) {
                         aux = table->rowCount();
@@ -428,8 +428,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         foreach ( auto& bars, b_series ) {
             b_chart->addSeries( bars );
         }
-        //b_chart->setTitle( QString("%1: %2").arg( this->TITLE_WARN ) );
-        b_chart->setTitle( TR::tr( this->TITLE_WARN.c_str() ) );
+        b_chart->setTitle( TR::tr( "Log Lines Marked as Warning" ) );
         b_chart->setTitleFont( fonts.at("main") );
         //b_chart->legend()->setVisible( false );
         b_chart->legend()->setFont( fonts.at("main_small") );
@@ -587,7 +586,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         l_chart->setTheme( theme );
         l_chart->addSeries( line );
         l_chart->addSeries( line_ );
-        l_chart->setTitle( TR::tr( this->TITLE_SPEED.c_str() ) );
+        l_chart->setTitle( TR::tr( "Time Taken to Serve Requests" ) );
         l_chart->setTitleFont( fonts.at("main") );
         l_chart->legend()->setFont( fonts.at( "main_small" ) );
         l_chart->legend()->setAlignment( Qt::AlignBottom );
@@ -647,7 +646,6 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
                 oth_count += count;
             } else {
                 pie->append( item, count );
-                //items.push_back( aux_items.at( i ) );
             }
             aux = table->rowCount();
             table->insertRow( aux );
@@ -658,7 +656,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
         aux_items.clear();
 
         if ( oth_count > 0 ) {
-            pie->append( TR::tr( this->TEXT_COUNT_OTHERS.c_str() ), oth_count );
+            pie->append( TR::tr( "Others" ), oth_count );
             QPieSlice *slice = pie->slices().at( pie->count()-1 );
             slice->setBrush( Qt::gray );
         }
@@ -703,9 +701,9 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
             b_30->setLabel( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ) );
         } else {
             b_30->setLabel( QString("%1 %2 %3 %4")
-                .arg( TR::tr( this->LEGEND_FROM.c_str() ),
+                .arg( TR::tr( "from" ),
                       this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
-                      TR::tr( this->LEGEND_TO.c_str() ),
+                      TR::tr( "to" ),
                       this->printableDate( to_year, this->getMonthNumber(to_month), to_day ) ));
         }
         b_30->setColor( col );
@@ -762,7 +760,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         QChart *b_chart = new QChart();
         b_chart->setTheme( theme );
         b_chart->addSeries( bars );
-        b_chart->setTitle( QString("%1: %2").arg( TR::tr( this->TITLE_DAY.c_str() ), field ) );
+        b_chart->setTitle( QString("%1: %2").arg( TR::tr( "Time of Day Count" ), field ) );
         b_chart->setTitleFont( fonts.at("main") );
         b_chart->legend()->setFont( fonts.at("main_small") );
         //b_chart->legend()->setVisible( true );
@@ -838,7 +836,6 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
             time  = std::get<0>(item);
             count = std::get<1>(item);
             line->append( time, (double)count );
-            //*line << QPoint( time, (double)count );
             if ( count > max_count ) {
                 max_count = count;
             }
@@ -850,9 +847,9 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
             area->setName( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ));
         } else {
             area->setName(QString("%1 %2 %3 %4")
-                .arg( TR::tr( this->LEGEND_FROM.c_str() ),
+                .arg( TR::tr( "from" ),
                       this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
-                      TR::tr( this->LEGEND_TO.c_str() ),
+                      TR::tr( "to" ),
                       this->printableDate( to_year, this->getMonthNumber(to_month), to_day )) );
         }
 
@@ -879,7 +876,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         a_chart->setTheme( theme );
         a_chart->addSeries( area );
         a_chart->addSeries( area_ );
-        a_chart->setTitle( QString("%1: %2 -> %3").arg( TR::tr( this->TITLE_RELAT.c_str() ), field_1, field_2) );
+        a_chart->setTitle( QString("%1: %2 -> %3").arg( TR::tr( "Time of Day Count" ), field_1, field_2) );
         a_chart->setTitleFont( fonts.at("main") );
         a_chart->legend()->setFont( fonts.at( "main_small" ) );
         a_chart->legend()->setAlignment( Qt::AlignBottom );
@@ -961,7 +958,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             for ( int i=0; i<4; i++ ) {
                 int max=0;
                 QString max_str="";
-                std::unordered_map<QString, int>& aux = recurs.at( i );
+                const auto& aux = recurs.at( i );
                 for ( const auto& [s,c] : aux ) {
                     if ( c > max ) {
                         max = c;

@@ -3,11 +3,12 @@
 
 #include <QObject>
 
+
 class TR : public QObject
 {
     Q_OBJECT
 public:
-    explicit TR(QObject *parent = nullptr);
+    explicit TR(QObject *parent=nullptr);
 };
 
 
