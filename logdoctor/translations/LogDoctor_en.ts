@@ -60,6 +60,29 @@
     </message>
 </context>
 <context>
+    <name>CrissCross</name>
+    <message>
+        <source>You beated me!</source>
+        <translation>You beated me!</translation>
+    </message>
+    <message>
+        <source>This time you lost!</source>
+        <translation>This time you lost!</translation>
+    </message>
+    <message>
+        <source>Victory</source>
+        <translation>Victory</translation>
+    </message>
+    <message>
+        <source>Draw</source>
+        <translation>Draw</translation>
+    </message>
+    <message>
+        <source>Nice match</source>
+        <translation>Nice match</translation>
+    </message>
+</context>
+<context>
     <name>DialogBool</name>
     <message>
         <source>Yes</source>
@@ -647,6 +670,12 @@ If everything is fine, please report this issue</translation>
 please follow the instruction on the repository page</source>
         <translation>If you&apos;d like to have this locale in LogDoctor,
 please follow the instruction on the repository page</translation>
+    </message>
+    <message>
+        <source>An error occured while comparing:
+version lesser than 0</source>
+        <translation>An error occured while comparing:
+version lesser than 0</translation>
     </message>
 </context>
 <context>
@@ -1441,6 +1470,26 @@ Time of day counts for a single date, entire days counts in a period.</translati
         <source>Ash</source>
         <translation>Ash</translation>
     </message>
+    <message>
+        <source>Games</source>
+        <translation>Games</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation>CrissCross</translation>
+    </message>
+    <message>
+        <source>Play CrissCross</source>
+        <translation>Play CrissCross</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation>Snake</translation>
+    </message>
+    <message>
+        <source>Play Snake</source>
+        <translation>Play Snake</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1455,6 +1504,25 @@ Time of day counts for a single date, entire days counts in a period.</translati
     <message>
         <source>Failed to read</source>
         <translation>Failed to read</translation>
+    </message>
+</context>
+<context>
+    <name>Snake</name>
+    <message>
+        <source>PLAY</source>
+        <translation>PLAY</translation>
+    </message>
+    <message>
+        <source>Game Over</source>
+        <translation>Game Over</translation>
+    </message>
+    <message>
+        <source>You fell in the water!</source>
+        <translation>You fell in the water!</translation>
+    </message>
+    <message>
+        <source>You ate yourself!</source>
+        <translation>You ate yourself!</translation>
     </message>
 </context>
 <context>
@@ -1502,10 +1570,6 @@ Time of day counts for a single date, entire days counts in a period.</translati
     <message>
         <source>Time of Day Count</source>
         <translation>Time of Day Count</translation>
-    </message>
-    <message>
-        <source>Relational Count</source>
-        <translation>Relational Count</translation>
     </message>
     <message>
         <source>from</source>
