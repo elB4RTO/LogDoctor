@@ -3,13 +3,11 @@
 
 #include "modules/dialogs.h"
 
-#include "utilities/io.h"
-#include "utilities/strings.h"
-
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QEventLoop>
 
+#include <string>
 #include <stdexcept>
 
 

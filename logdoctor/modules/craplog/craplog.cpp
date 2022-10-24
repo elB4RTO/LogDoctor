@@ -4,6 +4,7 @@
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
+#include "utilities/strings.h"
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"

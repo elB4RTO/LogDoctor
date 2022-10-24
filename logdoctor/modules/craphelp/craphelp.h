@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <unordered_map>
+
 
 namespace Ui {
 class Craphelp;

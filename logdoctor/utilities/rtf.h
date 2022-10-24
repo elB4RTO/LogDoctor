@@ -4,8 +4,6 @@
 #include <QFont>
 #include <QString>
 
-#include "utilities/strings.h"
-
 #include "modules/tb.h"
 #include "modules/craplog/modules/formats.h"
 
