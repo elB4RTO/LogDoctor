@@ -1,6 +1,8 @@
 
 #include "rtf.h"
 
+#include "utilities/strings.h"
+
 
 RichText::RichText()
 {

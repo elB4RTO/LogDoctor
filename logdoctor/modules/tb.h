@@ -3,6 +3,9 @@
 
 #include <QFont>
 
+#include <string>
+#include <unordered_map>
+
 
 class TextBrowser
 {

@@ -3,8 +3,6 @@
 
 #include <QObject>
 
-#include <string>
-
 
 class Crapup : public QObject
 {

@@ -2,9 +2,15 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include "modules/exceptions.h"
-
+#include "utilities/checks.h"
+#include "utilities/colors.h"
 #include "utilities/gzip.h"
+#include "utilities/io.h"
+#include "utilities/rtf.h"
+
+#include "modules/dialogs.h"
+#include "modules/exceptions.h"
+#include "modules/shared.h"
 
 #include <QTimer>
 
@@ -271,24 +277,24 @@ void MainWindow::defineOSspec()
             // unix-like
             /*this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/.local/share/LogDoctor";*/
-            this->db_data_path   = logdoc_path;
-            this->db_hashes_path = logdoc_path;
+            this->db_data_path   = this->logdoc_path;
+            this->db_hashes_path = this->logdoc_path;
             break;
 
         case 2:
             // windows
             /*this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";*/
-            this->db_data_path   = logdoc_path;
-            this->db_hashes_path = logdoc_path;
+            this->db_data_path   = this->logdoc_path;
+            this->db_hashes_path = this->logdoc_path;
             break;
 
         case 3:
             // darwin-based
             /*this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";*/
-            this->db_data_path   = logdoc_path;
-            this->db_hashes_path = logdoc_path;
+            this->db_data_path   = this->logdoc_path;
+            this->db_hashes_path = this->logdoc_path;
             break;
 
         default:

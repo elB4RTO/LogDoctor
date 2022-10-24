@@ -9,6 +9,8 @@
 #include "modules/exceptions.h"
 #include "modules/craplog/modules/sha256.h"
 
+#include <ios>
+
 
 HashOps::HashOps()
 {

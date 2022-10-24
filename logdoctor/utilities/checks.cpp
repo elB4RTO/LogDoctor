@@ -9,6 +9,8 @@
 #include <QSqlError>
 #include <QVariant>
 
+#include <unordered_map>
+
 
 CheckSec::CheckSec()
 {

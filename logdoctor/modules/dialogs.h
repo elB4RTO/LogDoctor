@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <QString>
 
-#include <string>
-
 
 class DialogSec : public QObject
 {
