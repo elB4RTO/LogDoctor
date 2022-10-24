@@ -45,6 +45,21 @@
       </size>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <property name="spacing">
+       <number>8</number>
+      </property>
       <item row="0" column="0">
        <widget class="QPushButton" name="button_NW">
         <property name="sizePolicy">
@@ -55,14 +70,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -96,14 +111,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -137,14 +152,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -198,14 +213,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -239,14 +254,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -280,14 +295,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -341,14 +356,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -382,14 +397,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
@@ -423,14 +438,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>256</width>
-          <height>256</height>
+          <width>120</width>
+          <height>120</height>
          </size>
         </property>
         <property name="cursor">
