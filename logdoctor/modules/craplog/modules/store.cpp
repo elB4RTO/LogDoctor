@@ -4,6 +4,8 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
+#include "utilities/strings.h"
+
 #include <QVariant>
 
 

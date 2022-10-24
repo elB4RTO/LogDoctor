@@ -4,6 +4,8 @@
 #include "modules/exceptions.h"
 #include "modules/craplog/modules/datetime.h"
 
+#include "utilities/strings.h"
+
 
 LogOps::LogOps()
 {

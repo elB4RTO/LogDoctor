@@ -5,7 +5,6 @@
 #include <vector>
 #include <unordered_map>
 
-#include "utilities/strings.h"
 #include "modules/craplog/modules/formats.h"
 
 
