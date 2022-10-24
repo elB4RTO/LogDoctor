@@ -12,15 +12,8 @@
 #include <QTreeWidget>
 #include <QChartView>
 
-#include "utilities/checks.h"
-#include "utilities/colors.h"
-#include "utilities/io.h"
-#include "utilities/rtf.h"
 #include "utilities/strings.h"
-#include "utilities/vectors.h"
 
-#include "modules/shared.h"
-#include "modules/dialogs.h"
 #include "modules/tb.h"
 
 #include "modules/craplog/craplog.h"
@@ -480,21 +473,21 @@ private:
     // operating system
     const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );
     // 1: linux, 2:windows, 3:mac
-    #if defined( Q_OS_UNIX )
-        // Unix-like systems: Linux, BSD and SysV
-        const unsigned int OS = 1;
-        const std::string configs_path = this->home_path + "/.config/LogDoctor/logdoctor.conf";
-        const std::string logdoc_path  = this->home_path + "/.local/share/LogDoctor";
+    #if defined( Q_OS_DARWIN )
+        // Darwin-based systems: macOS, iOS, watchOS and tvOS.
+        const unsigned int OS = 3;
+        const std::string configs_path = this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
+        const std::string logdoc_path  = this->home_path + "/Lybrary/Application Support/LogDoctor";
     #elif defined( Q_OS_WIN )
         // Microsoft Windows systems
         const unsigned int OS = 2;
         const std::string configs_path = this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
         const std::string logdoc_path  = this->home_path + "/AppData/Local/LogDoctor";
-    #elif defined( Q_OS_DARWIN )
-        // Darwin-based systems: macOS, iOS, watchOS and tvOS.
-        const unsigned int OS = 3;
-        const std::string configs_path = this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
-        const std::string logdoc_path  = this->home_path + "/Lybrary/Application Support/LogDoctor";
+    #elif defined( Q_OS_UNIX )
+        // Unix-like systems: Linux, BSD and SysV
+        const unsigned int OS = 1;
+        const std::string configs_path = this->home_path + "/.config/LogDoctor/logdoctor.conf";
+        const std::string logdoc_path  = this->home_path + "/.local/share/LogDoctor";
     #else
         #error "System not supported"
     #endif
