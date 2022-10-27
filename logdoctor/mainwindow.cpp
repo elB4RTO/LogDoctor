@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
         this->font_size ) );
 
     // parent font for every tab
-    this->ui->CrapTabs->setFont( this->FONTS.at( "main_big" ) );
+    this->ui->mainwidget->setFont( this->FONTS.at( "main_big" ) );
 
     // WebServers buttons for the LogFiles
     this->ui->button_LogFiles_Apache->setFont( this->FONTS.at( "main" ) );
@@ -129,6 +129,9 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
     this->updateUiLanguage();
+    if ( this->icons_theme_id == 0 ) {
+        this->detectIconsTheme();
+    }
     if ( this->window_theme_id != 0 ) {
         this->updateUiTheme();
     }
@@ -407,6 +410,9 @@ void MainWindow::readConfigs()
 
                 } else if ( var == "ChartsTheme" ) {
                     this->charts_theme_id = std::stoi( val );
+
+                } else if ( var == "IconsTheme" ) {
+                    this->icons_theme_id = std::stoi( val );
 
                 } else if ( var == "MainDialogLevel" ) {
                     this->dialogs_level = std::stoi( val );
@@ -735,12 +741,14 @@ void MainWindow::writeConfigs()
 
     if ( proceed ) {
         //// USER INTERFACE ////
-        std::string configs = "[UI]";
+        std::string configs = "";
+        configs += "\n\n[UI]";
         configs += "\nLanguage=" + this->language;
         configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
         configs += "\nGeometry=" + this->geometryToString();
         configs += "\nWindowTheme=" + std::to_string( this->window_theme_id );
         configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
+        configs += "\nIconsTheme=" + std::to_string( this->icons_theme_id );
         configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
@@ -977,14 +985,123 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 //////////////////
 //// GRAPHICS ////
 //////////////////
+void MainWindow::detectIconsTheme()
+{
+    // use window color to determine if theme will be dark/light
+    if ( this->palette().window().color().black() > 127 ) {
+        this->icons_theme = "light";
+    } else {
+        this->icons_theme = "dark";
+    }
+}
+
+
 void MainWindow::updateUiTheme()
 {
     if ( this->window_theme_id < 0 || this->window_theme_id > 4 ) {
         // wrong
-        throw GenericException( "Unexpected WindowTheme ID: "+std::to_string( this->window_theme_id ), true );
+        throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
     }
+
+    // window
     this->setPalette( ColorSec::getPalette( this->window_theme_id ) );
+    // icons
+    if ( this->icons_theme_id == 0 ) {
+        this->updateUiIcons();
+    }
 }
+
+
+void MainWindow::updateUiIcons()
+{
+    switch ( this->icons_theme_id ) {
+        case 0:
+            this->detectIconsTheme();
+            break;
+        case 1:
+            this->icons_theme = "light";
+            break;
+        case 2:
+            this->icons_theme = "dark";
+            break;
+        default:
+            throw GenericException( "Unexpected IconSet index: "+std::to_string(this->icons_theme_id), true );
+            break;
+    }
+
+    // main tabs
+    const int m_index = this->ui->stacked_Tabs_Pages->currentIndex();
+    this->ui->button_Tab_Log->setIcon(
+        QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
+            this->icons_theme,
+            (m_index==0) ? "on" : "off" )) );
+    this->ui->button_Tab_View->setIcon(
+        QIcon(QString(":/icons/icons/%1/view_%2.png").arg(
+            this->icons_theme,
+            (m_index==1) ? "on" : "off" )) );
+    this->ui->button_Tab_Conf->setIcon(
+        QIcon(QString(":/icons/icons/%1/conf_%2.png").arg(
+            this->icons_theme,
+            (m_index==2) ? "on" : "off" )) );
+    // view logs
+    this->ui->button_LogFiles_ViewFile->setIcon(
+        QIcon(QString(":/icons/icons/%1/show_file.png").arg(this->icons_theme)) );
+    this->ui->button_LogFiles_RefreshList->setIcon(
+        QIcon(QString(":/icons/icons/%1/refresh.png").arg(this->icons_theme)) );
+    // parse logs
+    this->ui->icon_MakeStats_Size->setPixmap(
+        QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(this->icons_theme)) );
+    this->ui->icon_MakeStats_Lines->setPixmap(
+        QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(this->icons_theme)) );
+    this->ui->icon_MakeStats_Time->setPixmap(
+        QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(this->icons_theme)) );
+    this->ui->icon_MakeStats_Speed->setPixmap(
+        QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
+    // stats
+    const int s_index = this->ui->stacked_Stats_Pages->currentIndex();
+    // stats warn
+    this->ui->button_Tab_StatsWarn->setIcon(
+        QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
+            this->icons_theme,
+            (s_index==0) ? "on" : "off" )) );
+    this->ui->button_StatsWarn_Draw->setIcon(
+        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+    this->ui->button_StatsWarn_Update->setIcon(
+        QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+    // stats speed
+    this->ui->button_Tab_StatsSpeed->setIcon(
+        QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
+            this->icons_theme,
+            (s_index==1) ? "on" : "off" )) );
+    this->ui->button_StatsSpeed_Draw->setIcon(
+        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+    // stats count
+    this->ui->button_Tab_StatsCount->setIcon(
+        QIcon(QString(":/icons/icons/%1/count_%2.png").arg(
+            this->icons_theme,
+            (s_index==2) ? "on" : "off" )) );
+    // stats daytime
+    this->ui->button_Tab_StatsDay->setIcon(
+        QIcon(QString(":/icons/icons/%1/daytime_%2.png").arg(
+            this->icons_theme,
+            (s_index==3) ? "on" : "off" )) );
+    this->ui->button_StatsDay_Draw->setIcon(
+        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+    // stats relational
+    this->ui->button_Tab_StatsRelat->setIcon(
+        QIcon(QString(":/icons/icons/%1/relational_%2.png").arg(
+            this->icons_theme,
+            (s_index==4) ? "on" : "off" )) );
+    this->ui->button_StatsRelat_Draw->setIcon(
+        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+    // stats globals
+    this->ui->button_Tab_StatsGlob->setIcon(
+        QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
+            this->icons_theme,
+            (s_index==5) ? "on" : "off" )) );
+}
+
+
 
 
 //////////////////
@@ -1528,6 +1645,187 @@ void MainWindow::menu_actionSnake_triggered()
 }
 
 
+
+//////////////
+//// TABS ////
+//////////////
+void MainWindow::switchMainTab( const int& new_index )
+{
+    const int old_index = this->ui->stacked_Tabs_Pages->currentIndex();
+    // turn off the old icon
+    switch ( old_index ) {
+        case 0:
+            // make
+            this->ui->button_Tab_Log->setIcon(
+                QIcon(QString(":/icons/icons/%1/log_off.png").arg(this->icons_theme)) );
+            break;
+        case 1:
+            // view
+            this->ui->button_Tab_View->setIcon(
+                QIcon(QString(":/icons/icons/%1/view_off.png").arg(this->icons_theme)) );
+            break;
+        case 2:
+            // config
+            this->ui->button_Tab_Conf->setIcon(
+                QIcon(QString(":/icons/icons/%1/conf_off.png").arg(this->icons_theme)) );
+            break;
+        default:
+            throw("Unexpected Tabs index: "+std::to_string(old_index));
+            break;
+    }
+    // turn on the new one
+    switch ( new_index ) {
+        case 0:
+            // make
+            this->ui->button_Tab_Log->setIcon(
+                QIcon(QString(":/icons/icons/%1/log_on.png").arg(this->icons_theme)) );
+            break;
+        case 1:
+            // view
+            this->ui->button_Tab_View->setIcon(
+                QIcon(QString(":/icons/icons/%1/view_on.png").arg(this->icons_theme)) );
+            break;
+        case 2:
+            // config
+            this->ui->button_Tab_Conf->setIcon(
+                QIcon(QString(":/icons/icons/%1/conf_on.png").arg(this->icons_theme)) );
+            break;
+        default:
+            throw("Unexpected MainTabs index: "+std::to_string(new_index));
+            break;
+    }
+    this->ui->stacked_Tabs_Pages->setCurrentIndex( new_index );
+}
+
+
+void MainWindow::on_button_Tab_Log_clicked()
+{
+    this->switchMainTab( 0 );
+}
+
+void MainWindow::on_button_Tab_View_clicked()
+{
+    this->switchMainTab( 1 );
+}
+
+void MainWindow::on_button_Tab_Conf_clicked()
+{
+    this->switchMainTab( 2 );
+}
+
+
+//// STATS ////
+void MainWindow::switchStatsTab( const int& new_index )
+{
+    const int old_index = this->ui->stacked_Stats_Pages->currentIndex();
+    // turn off the old icon
+    switch ( old_index ) {
+        case 0:
+            // warning
+            this->ui->button_Tab_StatsWarn->setIcon(
+                QIcon(QString(":/icons/icons/%1/warn_off.png").arg(this->icons_theme)) );
+            break;
+        case 1:
+            // speed
+            this->ui->button_Tab_StatsSpeed->setIcon(
+                QIcon(QString(":/icons/icons/%1/speed_off.png").arg(this->icons_theme)) );
+            break;
+        case 2:
+            // counts
+            this->ui->button_Tab_StatsCount->setIcon(
+                QIcon(QString(":/icons/icons/%1/count_off.png").arg(this->icons_theme)) );
+            break;
+        case 3:
+            // daytime
+            this->ui->button_Tab_StatsDay->setIcon(
+                QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(this->icons_theme)) );
+            break;
+        case 4:
+            // relational
+            this->ui->button_Tab_StatsRelat->setIcon(
+                QIcon(QString(":/icons/icons/%1/relational_off.png").arg(this->icons_theme)) );
+            break;
+        case 5:
+            // globals
+            this->ui->button_Tab_StatsGlob->setIcon(
+                QIcon(QString(":/icons/icons/%1/global_off.png").arg(this->icons_theme)) );
+            break;
+        default:
+            throw("Unexpected StatsTabs index: "+std::to_string(old_index));
+            break;
+    }
+    // turn on the new one
+    switch ( new_index ) {
+        case 0:
+            // warning
+            this->ui->button_Tab_StatsWarn->setIcon(
+                QIcon(QString(":/icons/icons/%1/warn_on.png").arg(this->icons_theme)) );
+            break;
+        case 1:
+            // speed
+            this->ui->button_Tab_StatsSpeed->setIcon(
+                QIcon(QString(":/icons/icons/%1/speed_on.png").arg(this->icons_theme)) );
+            break;
+        case 2:
+            // counts
+            this->ui->button_Tab_StatsCount->setIcon(
+                QIcon(QString(":/icons/icons/%1/count_on.png").arg(this->icons_theme)) );
+            break;
+        case 3:
+            // daytime
+            this->ui->button_Tab_StatsDay->setIcon(
+                QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(this->icons_theme)) );
+            break;
+        case 4:
+            // relational
+            this->ui->button_Tab_StatsRelat->setIcon(
+                QIcon(QString(":/icons/icons/%1/relational_on.png").arg(this->icons_theme)) );
+            break;
+        case 5:
+            // globals
+            this->ui->button_Tab_StatsGlob->setIcon(
+                QIcon(QString(":/icons/icons/%1/global_on.png").arg(this->icons_theme)) );
+            break;
+        default:
+            throw("Unexpected StatsTabs index: "+std::to_string(new_index));
+            break;
+    }
+    this->ui->stacked_Stats_Pages->setCurrentIndex( new_index );
+}
+
+
+void MainWindow::on_button_Tab_StatsWarn_clicked()
+{
+    this->switchStatsTab( 0 );
+}
+
+void MainWindow::on_button_Tab_StatsSpeed_clicked()
+{
+    this->switchStatsTab( 1 );
+}
+
+void MainWindow::on_button_Tab_StatsCount_clicked()
+{
+    this->switchStatsTab( 2 );
+}
+
+void MainWindow::on_button_Tab_StatsDay_clicked()
+{
+    this->switchStatsTab( 3 );
+}
+
+void MainWindow::on_button_Tab_StatsRelat_clicked()
+{
+    this->switchStatsTab( 4 );
+}
+
+void MainWindow::on_button_Tab_StatsGlob_clicked()
+{
+    this->switchStatsTab( 5 );
+}
+
+
+
 ////////////
 //// DB ////
 ////////////
@@ -1547,7 +1845,7 @@ void MainWindow::setDbWorkingState( const bool& state )
         this->ui->button_StatsGlob_Apache->setEnabled( true );
         this->ui->button_StatsGlob_Nginx->setEnabled( true );
         this->ui->button_StatsGlob_Iis->setEnabled( true );
-        this->ui->Set->setEnabled( true );
+        this->ui->page_Tab_Conf->setEnabled( true );
     } else {
         this->ui->button_MakeStats_Start->setEnabled( false );
         this->ui->button_StatsWarn_Update->setEnabled( false );
@@ -1559,7 +1857,7 @@ void MainWindow::setDbWorkingState( const bool& state )
         this->ui->button_StatsGlob_Apache->setEnabled( false );
         this->ui->button_StatsGlob_Nginx->setEnabled( false );
         this->ui->button_StatsGlob_Iis->setEnabled( false );
-        this->ui->Set->setEnabled( false );
+        this->ui->page_Tab_Conf->setEnabled( false );
     }
 }
 
@@ -3110,6 +3408,12 @@ void MainWindow::on_box_ConfWindow_Theme_currentIndexChanged(int index)
     this->updateUiTheme();
 }
 
+void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
+{
+    this->icons_theme_id = index;
+    this->updateUiIcons();
+}
+
 
 /////////////////
 //// DIALOGS ////
@@ -4500,3 +4804,5 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
+
+

@@ -51,6 +51,27 @@ private slots:
 
     void check_CraplogLLT_Finished();
 
+    //////////////
+    //// TABS ////
+    void on_button_Tab_Log_clicked();
+
+    void on_button_Tab_View_clicked();
+
+    void on_button_Tab_Conf_clicked();
+
+    //// STATS ////
+    void on_button_Tab_StatsWarn_clicked();
+
+    void on_button_Tab_StatsSpeed_clicked();
+
+    void on_button_Tab_StatsCount_clicked();
+
+    void on_button_Tab_StatsDay_clicked();
+
+    void on_button_Tab_StatsRelat_clicked();
+
+    void on_button_Tab_StatsGlob_clicked();
+
     // Qt's
     /////////////////
     //// CRAPLOG ////
@@ -208,6 +229,8 @@ private slots:
     void on_checkBox_ConfWindow_Geometry_clicked(bool checked);
 
     void on_box_ConfWindow_Theme_currentIndexChanged(int index);
+
+    void on_box_ConfWindow_Icons_currentIndexChanged(int index);
 
     //// DIALOGS ////
 
@@ -534,7 +557,11 @@ private:
     bool remember_window = true;
     // themes
     int window_theme_id = 0,
-        charts_theme_id = 0;
+        charts_theme_id = 0,
+        icons_theme_id  = 0;
+    QString icons_theme;
+    void detectIconsTheme();
+    void updateUiIcons();
     void updateUiTheme();
     const std::vector<QChart::ChartTheme> CHARTS_THEMES = {
         QChart::ChartTheme::ChartThemeLight,
@@ -580,6 +607,11 @@ private:
     bool db_working = false;
     void setDbWorkingState( const bool& state );
 
+    //////////////////
+    //// CRAPTABS ////
+    //////////////////
+    void switchMainTab( const int& new_index );
+
 
     /////////////////
     //// CRAPLOG ////
@@ -617,6 +649,8 @@ private:
     //////////////////
     Crapview crapview;
     QTimer *crapview_timer = new QTimer();
+    // change tab
+    void switchStatsTab( const int& new_index );
     // refresh dates: query a new collection from the db and apply to the tabs
     void refreshStatsDates();
     // check if drawing conditions are met
