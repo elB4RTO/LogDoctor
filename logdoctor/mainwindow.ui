@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>952</width>
+    <width>971</width>
     <height>634</height>
    </rect>
   </property>
@@ -26,16 +26,149 @@
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="mainwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QTabWidget" name="CrapTabs">
+   <layout class="QHBoxLayout" name="horizontalLayout_8">
+    <property name="leftMargin">
+     <number>8</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>8</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frame_Tabs_Buttons">
+      <property name="minimumSize">
+       <size>
+        <width>70</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>70</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_20">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="button_Tab_Log">
+         <property name="minimumSize">
+          <size>
+           <width>68</width>
+           <height>84</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>68</width>
+           <height>84</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>48</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="button_Tab_View">
+         <property name="minimumSize">
+          <size>
+           <width>68</width>
+           <height>84</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>68</width>
+           <height>84</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>48</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="button_Tab_Conf">
+         <property name="minimumSize">
+          <size>
+           <width>68</width>
+           <height>84</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>68</width>
+           <height>84</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>48</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>273</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stacked_Tabs_Pages">
       <property name="font">
        <font>
         <pointsize>16</pointsize>
@@ -47,40 +180,23 @@
       <property name="locale">
        <locale language="English" country="UnitedStates"/>
       </property>
-      <property name="tabPosition">
-       <enum>QTabWidget::West</enum>
-      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <property name="iconSize">
-       <size>
-        <width>88</width>
-        <height>44</height>
-       </size>
-      </property>
-      <property name="tabBarAutoHide">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="Log">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <attribute name="icon">
-        <iconset resource="resources/resources.qrc">
-         <normaloff>:/icons/icons/make_off.png</normaloff>
-         <normalon>:/icons/icons/make_on.png</normalon>:/icons/icons/make_off.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string notr="true"/>
-       </attribute>
-       <attribute name="toolTip">
-        <string>Parse and store logs</string>
-       </attribute>
+      <widget class="QWidget" name="page_Tab_Log">
        <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QToolBox" name="LogBox">
           <property name="sizePolicy">
@@ -100,8 +216,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>858</width>
-             <height>473</height>
+             <width>863</width>
+             <height>508</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -134,6 +250,12 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <pointsize>13</pointsize>
@@ -161,6 +283,12 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <pointsize>13</pointsize>
@@ -187,6 +315,12 @@
                    <horstretch>96</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
                  </property>
                  <property name="font">
                   <font>
@@ -229,13 +363,10 @@
               </property>
               <property name="html">
                <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -296,16 +427,17 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="maximumSize">
+              <property name="minimumSize">
                <size>
-                <width>36</width>
-                <height>40</height>
+                <width>32</width>
+                <height>36</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <pointsize>16</pointsize>
-               </font>
+              <property name="maximumSize">
+               <size>
+                <width>32</width>
+                <height>36</height>
+               </size>
               </property>
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
@@ -314,7 +446,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <string>Inspect a log file</string>
               </property>
               <property name="text">
-               <string notr="true"></string>
+               <string notr="true"/>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>32</width>
+                <height>32</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -387,6 +525,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>32</width>
+                <height>32</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>32</width>
@@ -405,7 +549,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <string>Refresh the list</string>
               </property>
               <property name="text">
-               <string notr="true"></string>
+               <string notr="true"/>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -435,8 +585,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>858</width>
-             <height>473</height>
+             <width>863</width>
+             <height>508</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -513,9 +663,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      <font>
                       <pointsize>32</pointsize>
                      </font>
-                    </property>
-                    <property name="text">
-                     <string notr="true"></string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -607,9 +754,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      <font>
                       <pointsize>32</pointsize>
                      </font>
-                    </property>
-                    <property name="text">
-                     <string notr="true"></string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -752,9 +896,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       <pointsize>32</pointsize>
                      </font>
                     </property>
-                    <property name="text">
-                     <string notr="true"></string>
-                    </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
                     </property>
@@ -849,9 +990,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       <pointsize>32</pointsize>
                      </font>
                     </property>
-                    <property name="text">
-                     <string notr="true"></string>
-                    </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
                     </property>
@@ -934,51 +1072,26 @@ li.checked::marker { content: &quot;\2612&quot;; }
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="View">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <attribute name="icon">
-        <iconset resource="resources/resources.qrc">
-         <normaloff>:/icons/icons/view_off.png</normaloff>
-         <normalon>:/icons/icons/view_on.png</normalon>:/icons/icons/view_off.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string notr="true"/>
-       </attribute>
-       <attribute name="toolTip">
-        <string>View statistics about stored logs</string>
-       </attribute>
+      <widget class="QWidget" name="page_Tab_View">
        <layout class="QGridLayout" name="gridLayout_12">
-        <item row="0" column="0">
-         <widget class="QTabWidget" name="StatsTabs">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="1" column="0">
+         <widget class="QStackedWidget" name="stacked_Stats_Pages">
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <property name="iconSize">
-           <size>
-            <width>160</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="documentMode">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="Warn">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/warn_off.png</normaloff>
-             <normalon>:/icons/icons/warn_on.png</normalon>:/icons/icons/warn_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>View the log lines marked as Warning</string>
-           </attribute>
+          <widget class="QWidget" name="StatsTabsPage1">
            <layout class="QGridLayout" name="gridLayout_24">
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsWarn_Opt">
@@ -993,14 +1106,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 <widget class="QPushButton" name="button_StatsWarn_Draw">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>64</width>
                    <height>88</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
-                   <height>16777215</height>
+                   <height>88</height>
                   </size>
                  </property>
                  <property name="font">
@@ -1014,8 +1127,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  <property name="toolTip">
                   <string>Draw the chart</string>
                  </property>
-                 <property name="text">
-                  <string notr="true"></string>
+                 <property name="iconSize">
+                  <size>
+                   <width>44</width>
+                   <height>44</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -1052,7 +1168,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                     <property name="minimumSize">
                      <size>
                       <width>100</width>
-                      <height>0</height>
+                      <height>32</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -1315,14 +1431,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>64</width>
                    <height>88</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
-                   <height>16777215</height>
+                   <height>88</height>
                   </size>
                  </property>
                  <property name="font">
@@ -1336,8 +1452,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  <property name="toolTip">
                   <string>Update the database with current Warning States</string>
                  </property>
-                 <property name="text">
-                  <string notr="true"></string>
+                 <property name="iconSize">
+                  <size>
+                   <width>44</width>
+                   <height>44</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -1561,19 +1680,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="Speed">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/speed_off.png</normaloff>
-             <normalon>:/icons/icons/speed_on.png</normalon>:/icons/icons/speed_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>View the Time Taken to serve the content, with a time gap of 1 second.
-If more than 1 request if found for the same time, the mean value is used.</string>
-           </attribute>
+          <widget class="QWidget" name="StatsTabsPage2">
            <layout class="QGridLayout" name="gridLayout_19">
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsSpeed_1">
@@ -1614,7 +1721,7 @@ If more than 1 request if found for the same time, the mean value is used.</stri
                  <property name="minimumSize">
                   <size>
                    <width>112</width>
-                   <height>0</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="maximumSize">
@@ -2139,13 +2246,13 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>32</height>
+                   <height>64</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>52</height>
+                   <height>64</height>
                   </size>
                  </property>
                  <property name="font">
@@ -2156,8 +2263,11 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <property name="cursor">
                   <cursorShape>PointingHandCursor</cursorShape>
                  </property>
-                 <property name="text">
-                  <string notr="true"></string>
+                 <property name="iconSize">
+                  <size>
+                   <width>44</width>
+                   <height>44</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -2188,18 +2298,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="Count">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/count_off.png</normaloff>
-             <normalon>:/icons/icons/count_on.png</normalon>:/icons/icons/count_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Group and count identical elements of a field in a single date</string>
-           </attribute>
+          <widget class="QWidget" name="StatsTabsPage3">
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="0" column="1">
              <widget class="QSplitter" name="splitter_StatsCount">
@@ -2317,7 +2416,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <property name="minimumSize">
                   <size>
                    <width>112</width>
-                   <height>0</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="maximumSize">
@@ -2837,19 +2936,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="DayTime">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/daytime_off.png</normaloff>
-             <normalon>:/icons/icons/daytime_on.png</normalon>:/icons/icons/daytime_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Time of day perspective with a 10 minutes gap for every hour.
-Counts of the elements for a single date, mean value of the counts for a period.</string>
-           </attribute>
+          <widget class="QWidget" name="StatsTabsPage4">
            <layout class="QGridLayout" name="gridLayout_13">
             <item row="2" column="0">
              <widget class="QChartView" name="chart_StatsDay"/>
@@ -3176,14 +3263,14 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                 <widget class="QPushButton" name="button_StatsDay_Draw">
                  <property name="minimumSize">
                   <size>
-                   <width>106</width>
+                   <width>100</width>
                    <height>88</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>100</width>
-                   <height>16777215</height>
+                   <height>88</height>
                   </size>
                  </property>
                  <property name="font">
@@ -3197,8 +3284,11 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <property name="toolTip">
                   <string>Draw the chart</string>
                  </property>
-                 <property name="text">
-                  <string notr="true"></string>
+                 <property name="iconSize">
+                  <size>
+                   <width>44</width>
+                   <height>44</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -3288,19 +3378,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="Relational">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/relational_off.png</normaloff>
-             <normalon>:/icons/icons/relational_on.png</normalon>:/icons/icons/relational_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Relational chart for two elements: how many times a value is found in the same line with the other.
-Time of day counts for a single date, entire days counts in a period.</string>
-           </attribute>
+          <widget class="QWidget" name="StatsTabsPage5">
            <layout class="QGridLayout" name="gridLayout_18">
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsRelat_Opt">
@@ -3335,7 +3413,7 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  <property name="minimumSize">
                   <size>
                    <width>100</width>
-                   <height>0</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="maximumSize">
@@ -3598,14 +3676,14 @@ Time of day counts for a single date, entire days counts in a period.</string>
                 <widget class="QPushButton" name="button_StatsRelat_Draw">
                  <property name="minimumSize">
                   <size>
-                   <width>106</width>
+                   <width>100</width>
                    <height>88</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>100</width>
-                   <height>16777215</height>
+                   <height>88</height>
                   </size>
                  </property>
                  <property name="font">
@@ -3619,8 +3697,11 @@ Time of day counts for a single date, entire days counts in a period.</string>
                  <property name="toolTip">
                   <string>Draw the chart</string>
                  </property>
-                 <property name="text">
-                  <string notr="true"></string>
+                 <property name="iconSize">
+                  <size>
+                   <width>44</width>
+                   <height>44</height>
+                  </size>
                  </property>
                 </widget>
                </item>
@@ -3834,18 +3915,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="Global">
-           <attribute name="icon">
-            <iconset resource="resources/resources.qrc">
-             <normaloff>:/icons/icons/global_off.png</normaloff>
-             <normalon>:/icons/icons/global_on.png</normalon>:/icons/icons/global_off.png</iconset>
-           </attribute>
-           <attribute name="title">
-            <string notr="true"/>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Global overview</string>
-           </attribute>
+          <widget class="QWidget" name="StatsTabsPage6">
            <layout class="QGridLayout" name="gridLayout_25">
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsGlob_WebServer">
@@ -4029,8 +4099,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>173</width>
-                      <height>348</height>
+                      <width>320</width>
+                      <height>324</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_31">
@@ -4385,8 +4455,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>157</width>
-                      <height>348</height>
+                      <width>320</width>
+                      <height>324</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_36">
@@ -4640,8 +4710,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>145</width>
-                      <height>276</height>
+                      <width>449</width>
+                      <height>255</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_46">
@@ -4905,8 +4975,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>173</width>
-                      <height>276</height>
+                      <width>449</width>
+                      <height>255</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_42">
@@ -5102,27 +5172,205 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
           </widget>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QFrame" name="frame_Stats_Buttons">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>34</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>34</height>
+           </size>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="button_Tab_StatsWarn">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="button_Tab_StatsSpeed">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="button_Tab_StatsCount">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="button_Tab_StatsDay">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="button_Tab_StatsRelat">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="button_Tab_StatsGlob">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="Set">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <attribute name="icon">
-        <iconset resource="resources/resources.qrc">
-         <normaloff>:/icons/icons/config_off.png</normaloff>
-         <normalon>:/icons/icons/config_on.png</normalon>:/icons/icons/config_off.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string notr="true"/>
-       </attribute>
-       <attribute name="toolTip">
-        <string>Configure LogDoctor</string>
-       </attribute>
+      <widget class="QWidget" name="page_Tab_Conf">
        <layout class="QGridLayout" name="gridLayout_37">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item row="0" column="0">
          <widget class="QTabWidget" name="ConfTabs">
           <property name="tabPosition">
@@ -5142,6 +5390,18 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             <string>General settings</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_48">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item row="0" column="0">
              <widget class="QTabWidget" name="tabs_ConfGeneral">
               <property name="font">
@@ -5342,6 +5602,113 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                    </item>
                    <item row="1" column="2">
                     <spacer name="spacer_ConfWindow_Theme_2">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>569</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QFrame" name="frame_ConfWindow_Theme_2">
+                  <layout class="QGridLayout" name="gridLayout_67">
+                   <item row="0" column="0" colspan="3">
+                    <widget class="QLabel" name="label_ConfWindow_Icons">
+                     <property name="minimumSize">
+                      <size>
+                       <width>128</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>16</pointsize>
+                      </font>
+                     </property>
+                     <property name="toolTip">
+                      <string>Theme to use for the window</string>
+                     </property>
+                     <property name="text">
+                      <string>Icons set</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <spacer name="spacer_ConfWindow_Icons_1">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>16</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="box_ConfWindow_Icons">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>160</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>160</width>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>13</pointsize>
+                      </font>
+                     </property>
+                     <property name="maxCount">
+                      <number>10</number>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>Auto (Default)</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Light</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Dark</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <spacer name="spacer_ConfWindow_Icons_2">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -6138,13 +6505,10 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </property>
                      <property name="html">
                       <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="openLinks">
                       <bool>true</bool>
@@ -6757,6 +7121,18 @@ li.checked::marker { content: &quot;\2612&quot;; }
             <string>Logs related settings</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_3">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item row="0" column="0">
              <widget class="QTabWidget" name="tabs_ConfLogs">
               <property name="font">
@@ -10332,8 +10708,8 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>952</width>
-     <height>29</height>
+     <width>971</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="font">
@@ -10381,11 +10757,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    <addaction name="menuUtilities"/>
    <addaction name="menuGames"/>
   </widget>
-  <action name="actionCrapnote">
-   <property name="text">
-    <string>Block-note</string>
-   </property>
-  </action>
   <action name="actionEnglish">
    <property name="checkable">
     <bool>true</bool>
