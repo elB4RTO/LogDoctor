@@ -24,9 +24,6 @@ Crapinfo::Crapinfo( const QString& version, const QString& exec_path, const QStr
     // version
     this->ui->label_Verion_Number->setText( QString(version).replace(",",".") );
     this->ui->label_Verion_Number->setFont( font_script );
-    // tb info
-    this->ui->textElBarto->setFont( font_script );
-    this->ui->textElBarto->setAlignment( Qt::AlignHCenter );
     // paths
     this->ui->inLine_ExecPath->setText( exec_path );
     this->ui->inLine_ExecPath->setCursorPosition( 0 );
