@@ -14,34 +14,61 @@
         <file alias="Metropolis">fonts/Metropolis.ttf</file>
     </qresource>
     <qresource prefix="/icons">
-        <file>icons/make_off.png</file>
-        <file>icons/make_on.png</file>
-        <file>icons/view_off.png</file>
-        <file>icons/view_on.png</file>
-        <file>icons/config_off.png</file>
-        <file>icons/config_on.png</file>
-        <file>icons/count_off.png</file>
-        <file>icons/count_on.png</file>
-        <file>icons/speed_off.png</file>
-        <file>icons/speed_on.png</file>
-        <file>icons/daytime_off.png</file>
-        <file>icons/daytime_on.png</file>
-        <file>icons/relational_off.png</file>
-        <file>icons/relational_on.png</file>
-        <file>icons/warn_on.png</file>
-        <file>icons/warn_off.png</file>
-        <file>icons/global_on.png</file>
-        <file>icons/global_off.png</file>
         <file>icons/err.png</file>
-        <file>icons/help.png</file>
         <file>icons/add.png</file>
         <file>icons/rem.png</file>
         <file>icons/up.png</file>
         <file>icons/down.png</file>
-        <file>icons/dialog_err.png</file>
-        <file>icons/dialog_warn.png</file>
-        <file>icons/dialog_info.png</file>
-        <file>icons/dialog_quest.png</file>
+        <file>icons/dialogs/err.png</file>
+        <file>icons/dialogs/info.png</file>
+        <file>icons/dialogs/quest.png</file>
+        <file>icons/dialogs/warn.png</file>
+        <file>icons/light/conf_off.png</file>
+        <file>icons/light/conf_on.png</file>
+        <file>icons/light/count_off.png</file>
+        <file>icons/light/count_on.png</file>
+        <file>icons/light/daytime_off.png</file>
+        <file>icons/light/daytime_on.png</file>
+        <file>icons/light/draw.png</file>
+        <file>icons/light/global_off.png</file>
+        <file>icons/light/global_on.png</file>
+        <file>icons/light/help.png</file>
+        <file>icons/light/log_off.png</file>
+        <file>icons/light/log_on.png</file>
+        <file>icons/light/refresh.png</file>
+        <file>icons/light/relational_off.png</file>
+        <file>icons/light/relational_on.png</file>
+        <file>icons/light/save.png</file>
+        <file>icons/light/show_file.png</file>
+        <file>icons/light/speed_off.png</file>
+        <file>icons/light/speed_on.png</file>
+        <file>icons/light/view_off.png</file>
+        <file>icons/light/view_on.png</file>
+        <file>icons/light/warn_off.png</file>
+        <file>icons/light/warn_on.png</file>
+        <file>icons/dark/conf_off.png</file>
+        <file>icons/dark/conf_on.png</file>
+        <file>icons/dark/count_off.png</file>
+        <file>icons/dark/count_on.png</file>
+        <file>icons/dark/daytime_off.png</file>
+        <file>icons/dark/daytime_on.png</file>
+        <file>icons/dark/draw.png</file>
+        <file>icons/dark/global_off.png</file>
+        <file>icons/dark/global_on.png</file>
+        <file>icons/dark/help.png</file>
+        <file>icons/dark/log_off.png</file>
+        <file>icons/dark/log_on.png</file>
+        <file>icons/dark/refresh.png</file>
+        <file>icons/dark/relational_off.png</file>
+        <file>icons/dark/relational_on.png</file>
+        <file>icons/dark/save.png</file>
+        <file>icons/dark/show_file.png</file>
+        <file>icons/dark/speed_off.png</file>
+        <file>icons/dark/speed_on.png</file>
+        <file>icons/dark/view_off.png</file>
+        <file>icons/dark/view_on.png</file>
+        <file>icons/dark/warn_off.png</file>
+        <file>icons/dark/warn_on.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/en.png</file>
