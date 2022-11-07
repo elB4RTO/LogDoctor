@@ -7,6 +7,7 @@
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/rtf.h"
+#include "utilities/stylesheets.h"
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
@@ -65,29 +66,13 @@ MainWindow::MainWindow(QWidget *parent)
         this->script_font_family,
         this->font_size ) );
 
-    // parent font for every tab
+    // parent fonts
     this->ui->mainwidget->setFont( this->FONTS.at( "main_big" ) );
 
-    // WebServers buttons for the LogFiles
-    this->ui->button_LogFiles_Apache->setFont( this->FONTS.at( "main" ) );
-    this->ui->button_LogFiles_Nginx->setFont( this->FONTS.at(  "main" ) );
-    this->ui->button_LogFiles_Iis->setFont( this->FONTS.at(    "main" ) );
-    // TreeView for the LogFiles
-    this->ui->checkBox_LogFiles_CheckAll->setFont( this->FONTS.at( "main_small" ) );
-    this->ui->listLogFiles->setFont( this->FONTS.at( "main" ) );
     // TextBrowser for the LogFiles
     this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES.at( 1 ) );
-    this->TB.setFontFamily( this->main_font_family );
     this->TB.setFont( this->FONTS.at( "main" ) );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
-    // MakeStats labels
-    this->ui->label_MakeStats_Size->setFont(  this->FONTS.at( "main" ) );
-    this->ui->label_MakeStats_Lines->setFont( this->FONTS.at( "main" ) );
-    this->ui->label_MakeStats_Time->setFont(  this->FONTS.at( "main" ) );
-    this->ui->label_MakeStats_Speed->setFont( this->FONTS.at( "main" ) );
-
-    // StatsSpeed table
-    this->ui->table_StatsSpeed->setFont( this->FONTS.at("main") );
 
     // adjust LogsList headers width
     this->ui->listLogFiles->header()->resizeSection(0,200);
@@ -118,6 +103,15 @@ MainWindow::MainWindow(QWidget *parent)
     //// CONFIGS ////
     this->defineOSspec();
     this->readConfigs();
+
+
+    ///////////////////
+    //// POLISHING ////
+    // default tabs
+    this->switchMainTab( 0 );
+    this->switchStatsTab( 0 );
+
+    // language menu
     if ( this->language != "en" ) {
         this->ui->actionEnglish->setChecked( false );
         if ( language == "es" ) {
@@ -128,17 +122,7 @@ MainWindow::MainWindow(QWidget *parent)
             this->ui->actionItaliano->setChecked( true );
         }
     }
-    this->updateUiLanguage();
-    if ( this->icons_theme_id == 0 ) {
-        this->detectIconsTheme();
-    }
-    if ( this->window_theme_id != 0 ) {
-        this->updateUiTheme();
-    }
 
-
-    ///////////////////
-    //// POLISHING ////
     // set the default WS as the current one
     switch ( this->default_ws ) {
         case 11:
@@ -164,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
     // window
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
     this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme_id );
+    this->ui->box_ConfWindow_Icons->setCurrentIndex( this->icons_theme_id );
     // dialogs
     this->ui->slider_ConfDialogs_General->setValue( this->dialogs_level );
     this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
@@ -236,6 +221,15 @@ MainWindow::MainWindow(QWidget *parent)
         rich_text.clear();
     }
 
+
+    ///////////////////
+    //// INTERFACE ////
+    this->updateUiLanguage();
+    this->updateUiTheme();
+
+
+    ///////////////
+    //// START ////
     // get a fresh list of LogFiles
     this->waiter_timer = new QTimer(this);
     connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
@@ -987,33 +981,64 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 //////////////////
 void MainWindow::detectIconsTheme()
 {
-    // use window color to determine if theme will be dark/light
-    if ( this->palette().window().color().black() > 127 ) {
-        this->icons_theme = "light";
-    } else {
-        this->icons_theme = "dark";
+    switch ( this->window_theme_id ) {
+        case 0:
+            // system default, use window color to determine the theme
+            if ( this->palette().window().color().black() > 127 ) {
+                this->icons_theme = "light";
+            } else {
+                this->icons_theme = "dark";
+            }
+            break;
+        case 1:
+        case 3:
+            // ash / herb
+            this->icons_theme = "light";
+            break;
+        case 2:
+        case 4:
+            // candy / powder
+            this->icons_theme = "dark";
+            break;
+        default:
+            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+            break;
     }
 }
 
 
 void MainWindow::updateUiTheme()
 {
-    if ( this->window_theme_id < 0 || this->window_theme_id > 4 ) {
-        // wrong
-        throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+    // window and fonts
+    switch ( this->window_theme_id ) {
+        case 0:
+            // window first
+            this->setStyleSheet("");
+            // icons last
+            this->updateUiIcons();
+            break;
+        case 1: case 2: case 3: case 4:
+            {
+            // icons first
+            this->updateUiIcons();
+            // window last
+            QString ss;
+            StyleSec::getStyleSheet( ss, this->icons_theme, this->window_theme_id );
+            this->setStyleSheet( ss );
+            break;
+            }
+        default:
+            // wrong
+            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+            break;
     }
-
-    // window
-    this->setPalette( ColorSec::getPalette( this->window_theme_id ) );
-    // icons
-    if ( this->icons_theme_id == 0 ) {
-        this->updateUiIcons();
-    }
+    // fonts
+    this->updateUiFonts();
 }
-
 
 void MainWindow::updateUiIcons()
 {
+    const QString old_icons_theme = this->icons_theme;
     switch ( this->icons_theme_id ) {
         case 0:
             this->detectIconsTheme();
@@ -1029,76 +1054,366 @@ void MainWindow::updateUiIcons()
             break;
     }
 
-    // main tabs
-    const int m_index = this->ui->stacked_Tabs_Pages->currentIndex();
-    this->ui->button_Tab_Log->setIcon(
-        QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
-            this->icons_theme,
-            (m_index==0) ? "on" : "off" )) );
-    this->ui->button_Tab_View->setIcon(
-        QIcon(QString(":/icons/icons/%1/view_%2.png").arg(
-            this->icons_theme,
-            (m_index==1) ? "on" : "off" )) );
-    this->ui->button_Tab_Conf->setIcon(
-        QIcon(QString(":/icons/icons/%1/conf_%2.png").arg(
-            this->icons_theme,
-            (m_index==2) ? "on" : "off" )) );
-    // view logs
-    this->ui->button_LogFiles_ViewFile->setIcon(
-        QIcon(QString(":/icons/icons/%1/show_file.png").arg(this->icons_theme)) );
-    this->ui->button_LogFiles_RefreshList->setIcon(
-        QIcon(QString(":/icons/icons/%1/refresh.png").arg(this->icons_theme)) );
-    // parse logs
-    this->ui->icon_MakeStats_Size->setPixmap(
-        QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(this->icons_theme)) );
-    this->ui->icon_MakeStats_Lines->setPixmap(
-        QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(this->icons_theme)) );
-    this->ui->icon_MakeStats_Time->setPixmap(
-        QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(this->icons_theme)) );
-    this->ui->icon_MakeStats_Speed->setPixmap(
-        QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
-    // stats
-    const int s_index = this->ui->stacked_Stats_Pages->currentIndex();
+    if ( this->icons_theme != old_icons_theme ) {
+        // main tabs
+        const int m_index = this->ui->stacked_Tabs_Pages->currentIndex();
+        this->ui->button_Tab_Log->setIcon(
+            QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
+                this->icons_theme,
+                (m_index==0) ? "on" : "off" )) );
+        this->ui->button_Tab_View->setIcon(
+            QIcon(QString(":/icons/icons/%1/view_%2.png").arg(
+                this->icons_theme,
+                (m_index==1) ? "on" : "off" )) );
+        this->ui->button_Tab_Conf->setIcon(
+            QIcon(QString(":/icons/icons/%1/conf_%2.png").arg(
+                this->icons_theme,
+                (m_index==2) ? "on" : "off" )) );
+        // view logs
+        this->ui->button_LogFiles_ViewFile->setIcon(
+            QIcon(QString(":/icons/icons/%1/show_file.png").arg(this->icons_theme)) );
+        this->ui->button_LogFiles_RefreshList->setIcon(
+            QIcon(QString(":/icons/icons/%1/refresh.png").arg(this->icons_theme)) );
+        // parse logs
+        this->ui->icon_MakeStats_Size->setPixmap(
+            QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(this->icons_theme)) );
+        this->ui->icon_MakeStats_Lines->setPixmap(
+            QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(this->icons_theme)) );
+        this->ui->icon_MakeStats_Time->setPixmap(
+            QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(this->icons_theme)) );
+        this->ui->icon_MakeStats_Speed->setPixmap(
+            QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
+        // stats
+        const int s_index = this->ui->stacked_Stats_Pages->currentIndex();
+        // stats warn
+        this->ui->button_Tab_StatsWarn->setIcon(
+            QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
+                this->icons_theme,
+                (s_index==0) ? "on" : "off" )) );
+        this->ui->button_StatsWarn_Draw->setIcon(
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+        this->ui->button_StatsWarn_Update->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        // stats speed
+        this->ui->button_Tab_StatsSpeed->setIcon(
+            QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
+                this->icons_theme,
+                (s_index==1) ? "on" : "off" )) );
+        this->ui->button_StatsSpeed_Draw->setIcon(
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+        // stats count
+        this->ui->button_Tab_StatsCount->setIcon(
+            QIcon(QString(":/icons/icons/%1/count_%2.png").arg(
+                this->icons_theme,
+                (s_index==2) ? "on" : "off" )) );
+        // stats daytime
+        this->ui->button_Tab_StatsDay->setIcon(
+            QIcon(QString(":/icons/icons/%1/daytime_%2.png").arg(
+                this->icons_theme,
+                (s_index==3) ? "on" : "off" )) );
+        this->ui->button_StatsDay_Draw->setIcon(
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+        // stats relational
+        this->ui->button_Tab_StatsRelat->setIcon(
+            QIcon(QString(":/icons/icons/%1/relational_%2.png").arg(
+                this->icons_theme,
+                (s_index==4) ? "on" : "off" )) );
+        this->ui->button_StatsRelat_Draw->setIcon(
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+        // stats globals
+        this->ui->button_Tab_StatsGlob->setIcon(
+            QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
+                this->icons_theme,
+                (s_index==5) ? "on" : "off" )) );
+        // configs
+        this->ui->button_ConfDatabases_Data_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfDatabases_Hashes_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Path_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Format_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Format_Help->setIcon(
+            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Path_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Format_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Format_Help->setIcon(
+            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Path_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Format_Save->setIcon(
+            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Format_Help->setIcon(
+            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+    }
+}
+
+void MainWindow::updateUiFonts()
+{
+    const QFont &small_font = this->FONTS.at( "main_small" );
+    const QFont &font = this->FONTS.at( "main" );
+    const QFont &big_font = this->FONTS.at( "main_big" );
+    QFont menu_font = this->FONTS.at( "main" );
+    menu_font.setPointSizeF( this->font_size_small+1.5 );
+    // menu
+    this->ui->menuLanguage->setFont( menu_font );
+    this->ui->actionEnglish->setFont( menu_font );
+    this->ui->actionEspanol->setFont( menu_font );
+    this->ui->actionFrancais->setFont( menu_font );
+    this->ui->actionItaliano->setFont( menu_font );
+    this->ui->menuTools->setFont( menu_font );
+    this->ui->actionBlockNote->setFont( menu_font );
+    this->ui->menuUtilities->setFont( menu_font );
+    this->ui->actionInfos->setFont( menu_font );
+    this->ui->actionCheckUpdates->setFont( menu_font );
+    this->ui->menuGames->setFont( menu_font );
+    this->ui->actionCrissCross->setFont( menu_font );
+    this->ui->actionSnake->setFont( menu_font );
+    // log files view
+    this->ui->button_LogFiles_Apache->setFont( font );
+    this->ui->button_LogFiles_Nginx->setFont( font );
+    this->ui->button_LogFiles_Iis->setFont( font );
+    this->ui->checkBox_LogFiles_CheckAll->setFont( small_font );
+    this->ui->listLogFiles->setFont( font );
+    this->ui->textLogFiles->setFont( this->TB.getFont() );
+    // log files parse
+    this->ui->label_MakeStats_Size->setFont( font );
+    this->ui->label_MakeStats_Lines->setFont( font );
+    this->ui->label_MakeStats_Time->setFont( font );
+    this->ui->label_MakeStats_Speed->setFont( font );
+    this->ui->button_MakeStats_Start->setFont( big_font );
     // stats warn
-    this->ui->button_Tab_StatsWarn->setIcon(
-        QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
-            this->icons_theme,
-            (s_index==0) ? "on" : "off" )) );
-    this->ui->button_StatsWarn_Draw->setIcon(
-        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
-    this->ui->button_StatsWarn_Update->setIcon(
-        QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+    this->ui->label_StatsWarn_WebServer->setFont( font );
+    this->ui->box_StatsWarn_WebServer->setFont( font );
+    this->ui->label_StatsWarn_Year->setFont( font );
+    this->ui->box_StatsWarn_Year->setFont( font );
+    this->ui->label_StatsWarn_Month->setFont( font );
+    this->ui->box_StatsWarn_Month->setFont( font );
+    this->ui->label_StatsWarn_Day->setFont( font );
+    this->ui->box_StatsWarn_Day->setFont( font );
+    this->ui->checkBox_StatsWarn_Hour->setFont( font );
+    this->ui->box_StatsWarn_Hour->setFont( font );
+    this->ui->table_StatsWarn->setFont( font );
     // stats speed
-    this->ui->button_Tab_StatsSpeed->setIcon(
-        QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
-            this->icons_theme,
-            (s_index==1) ? "on" : "off" )) );
-    this->ui->button_StatsSpeed_Draw->setIcon(
-        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+    this->ui->box_StatsSpeed_WebServer->setFont( font );
+    this->ui->label_StatsSpeed_Year->setFont( font );
+    this->ui->box_StatsSpeed_Year->setFont( font );
+    this->ui->label_StatsSpeed_Month->setFont( font );
+    this->ui->box_StatsSpeed_Month->setFont( font );
+    this->ui->label_StatsSpeed_Day->setFont( font );
+    this->ui->box_StatsSpeed_Day->setFont( font );
+    this->ui->label_StatsSpeed_Filters->setFont( big_font );
+    this->ui->label_StatsSpeed_Protocol->setFont( font );
+    this->ui->inLine_StatsSpeed_Protocol->setFont( font );
+    this->ui->label_StatsSpeed_Method->setFont( font );
+    this->ui->inLine_StatsSpeed_Method->setFont( font );
+    this->ui->label_StatsSpeed_Uri->setFont( font );
+    this->ui->inLine_StatsSpeed_Uri->setFont( font );
+    this->ui->label_StatsSpeed_Query->setFont( font );
+    this->ui->inLine_StatsSpeed_Query->setFont( font );
+    this->ui->label_StatsSpeed_Response->setFont( font );
+    this->ui->inLine_StatsSpeed_Response->setFont( font );
+    this->ui->table_StatsSpeed->setFont( font );
     // stats count
-    this->ui->button_Tab_StatsCount->setIcon(
-        QIcon(QString(":/icons/icons/%1/count_%2.png").arg(
-            this->icons_theme,
-            (s_index==2) ? "on" : "off" )) );
-    // stats daytime
-    this->ui->button_Tab_StatsDay->setIcon(
-        QIcon(QString(":/icons/icons/%1/daytime_%2.png").arg(
-            this->icons_theme,
-            (s_index==3) ? "on" : "off" )) );
-    this->ui->button_StatsDay_Draw->setIcon(
-        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
-    // stats relational
-    this->ui->button_Tab_StatsRelat->setIcon(
-        QIcon(QString(":/icons/icons/%1/relational_%2.png").arg(
-            this->icons_theme,
-            (s_index==4) ? "on" : "off" )) );
-    this->ui->button_StatsRelat_Draw->setIcon(
-        QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
-    // stats globals
-    this->ui->button_Tab_StatsGlob->setIcon(
-        QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
-            this->icons_theme,
-            (s_index==5) ? "on" : "off" )) );
+    this->ui->box_StatsCount_WebServer->setFont( font );
+    this->ui->label_StatsCount_Year->setFont( font );
+    this->ui->box_StatsCount_Year->setFont( font );
+    this->ui->label_StatsCount_Month->setFont( font );
+    this->ui->box_StatsCount_Month->setFont( font );
+    this->ui->label_StatsCount_Day->setFont( font );
+    this->ui->box_StatsCount_Day->setFont( font );
+    this->ui->button_StatsCount_Protocol->setFont( font );
+    this->ui->button_StatsCount_Method->setFont( font );
+    this->ui->button_StatsCount_Uri->setFont( font );
+    this->ui->button_StatsCount_Query->setFont( font );
+    this->ui->button_StatsCount_Response->setFont( font );
+    this->ui->button_StatsCount_Referrer->setFont( font );
+    this->ui->button_StatsCount_Cookie->setFont( font );
+    this->ui->button_StatsCount_UserAgent->setFont( font );
+    this->ui->button_StatsCount_Client->setFont( font );
+    this->ui->table_StatsCount->setFont( font );
+    // stats day
+    this->ui->box_StatsDay_WebServer->setFont( font );
+    this->ui->label_StatsDay_From->setFont( font );
+    this->ui->checkBox_StatsDay_Period->setFont( font );
+    this->ui->label_StatsDay_Year->setFont( font );
+    this->ui->box_StatsDay_FromYear->setFont( font );
+    this->ui->box_StatsDay_ToYear->setFont( font );
+    this->ui->label_StatsDay_Month->setFont( font );
+    this->ui->box_StatsDay_FromMonth->setFont( font );
+    this->ui->box_StatsDay_ToMonth->setFont( font );
+    this->ui->label_StatsDay_Day->setFont( font );
+    this->ui->box_StatsDay_FromDay->setFont( font );
+    this->ui->box_StatsDay_ToDay->setFont( font );
+    this->ui->label_StatsDay_LogsField->setFont( font );
+    this->ui->box_StatsDay_LogsField->setFont( font );
+    this->ui->label_StatsDay_Filter->setFont( font );
+    this->ui->inLine_StatsDay_Filter->setFont( font );
+    // stats relat
+    this->ui->box_StatsRelat_WebServer->setFont( font );
+    this->ui->label_StatsRelat_From->setFont( font );
+    this->ui->label_StatsRelat_To->setFont( font );
+    this->ui->box_StatsRelat_FromYear->setFont( font );
+    this->ui->box_StatsRelat_ToYear->setFont( font );
+    this->ui->box_StatsRelat_FromMonth->setFont( font );
+    this->ui->box_StatsRelat_ToMonth->setFont( font );
+    this->ui->box_StatsRelat_FromDay->setFont( font );
+    this->ui->box_StatsRelat_ToDay->setFont( font );
+    this->ui->label_StatsRelat_LogsField_1->setFont( font );
+    this->ui->box_StatsRelat_LogsField_1->setFont( font );
+    this->ui->label_StatsRelat_Filter_1->setFont( font );
+    this->ui->inLine_StatsRelat_Filter_1->setFont( font );
+    this->ui->label_StatsRelat_LogsField_2->setFont( font );
+    this->ui->box_StatsRelat_LogsField_2->setFont( font );
+    this->ui->label_StatsRelat_Filter_2->setFont( font );
+    this->ui->inLine_StatsRelat_Filter_2->setFont( font );
+    // stats glob
+    this->ui->button_StatsGlob_Apache->setFont( font );
+    this->ui->button_StatsGlob_Nginx->setFont( font );
+    this->ui->button_StatsGlob_Iis->setFont( font );
+    this->ui->label_StatsGlob_Recur->setFont( big_font );
+    this->ui->label_StatsGlob_Recur_Protocol->setFont( font );
+    this->ui->label_StatsGlob_Recur_Protocol_String->setFont( font );
+    this->ui->label_StatsGlob_Recur_Protocol_Count->setFont( font );
+    this->ui->label_StatsGlob_Recur_Method->setFont( font );
+    this->ui->label_StatsGlob_Recur_Method_String->setFont( font );
+    this->ui->label_StatsGlob_Recur_Method_Count->setFont( font );
+    this->ui->label_StatsGlob_Recur_URI->setFont( font );
+    this->ui->label_StatsGlob_Recur_URI_String->setFont( font );
+    this->ui->label_StatsGlob_Recur_URI_Count->setFont( font );
+    this->ui->label_StatsGlob_Recur_UserAgent->setFont( font );
+    this->ui->label_StatsGlob_Recur_UserAgent_String->setFont( font );
+    this->ui->label_StatsGlob_Recur_UserAgent_Count->setFont( font );
+    this->ui->label_StatsGlob_Perf->setFont( big_font );
+    this->ui->label_StatsGlob_Perf_Time->setFont( font );
+    this->ui->label_StatsGlob_Perf_Time_Mean->setFont( font );
+    this->ui->label_StatsGlob_Perf_Time_Max->setFont( font );
+    this->ui->label_StatsGlob_Perf_Sent->setFont( font );
+    this->ui->label_StatsGlob_Perf_Sent_Mean->setFont( font );
+    this->ui->label_StatsGlob_Perf_Sent_Max->setFont( font );
+    this->ui->label_StatsGlob_Perf_Received->setFont( font );
+    this->ui->label_StatsGlob_Perf_Received_Mean->setFont( font );
+    this->ui->label_StatsGlob_Perf_Received_Max->setFont( font );
+    this->ui->label_StatsGlob_Traffic->setFont( big_font );
+    this->ui->label_StatsGlob_Traffic_Date->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Date_String->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Date_Count->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Day->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Day_String->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Day_Count->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Hour->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Hour_String->setFont( font );
+    this->ui->label_StatsGlob_Traffic_Hour_Count->setFont( font );
+    this->ui->label_StatsGlob_Work->setFont( big_font );
+    this->ui->label_StatsGlob_Work_Req->setFont( font );
+    this->ui->label_StatsGlob_Work_Req_Count->setFont( font );
+    this->ui->label_StatsGlob_Work_Time->setFont( font );
+    this->ui->label_StatsGlob_Work_Time_Count->setFont( font );
+    this->ui->label_StatsGlob_Work_Sent->setFont( font );
+    this->ui->label_StatsGlob_Work_Sent_Count->setFont( font );
+    // configs tab
+    this->ui->ConfTabs->tabBar()->setFont( big_font );
+    this->ui->tabs_ConfGeneral->tabBar()->setFont( font );
+    this->ui->tabs_ConfLogs->tabBar()->setFont( font );
+    this->ui->tabs_ConfApache->tabBar()->setFont( font );
+    this->ui->tabs_ConfNginx->tabBar()->setFont( font );
+    this->ui->tabs_ConfIis->tabBar()->setFont( font );
+    // conf window
+    this->ui->label_ConfWindow_Geometry->setFont( big_font );
+    this->ui->checkBox_ConfWindow_Geometry->setFont( font );
+    this->ui->label_ConfWindow_Theme->setFont( big_font );
+    this->ui->box_ConfWindow_Theme->setFont( font );
+    this->ui->label_ConfWindow_Icons->setFont( big_font );
+    this->ui->box_ConfWindow_Icons->setFont( font );
+    // conf dialogs
+    this->ui->label_ConfDialogs_Level->setFont( big_font );
+    this->ui->label_ConfDialogs_General->setFont( font );
+    this->ui->label_ConfDialogs_Logs->setFont( font );
+    this->ui->label_ConfDialogs_Stats->setFont( font );
+    this->ui->label_ConfDialogs_Essential->setFont( small_font );
+    this->ui->label_ConfDialogs_Normal->setFont( small_font );
+    this->ui->label_ConfDialogs_Explanatory->setFont( small_font );
+    // conf text-browser
+    this->ui->label_ConfTextBrowser_Font->setFont( big_font );
+    this->ui->box_ConfTextBrowser_Font->setFont( font );
+    this->ui->label_ConfTextBrowser_Lines->setFont( big_font );
+    this->ui->checkBox_ConfTextBrowser_WideLines->setFont( font );
+    this->ui->label_ConfTextBrowser_ColorScheme->setFont( big_font );
+    this->ui->box_ConfTextBrowser_ColorScheme->setFont( font );
+    this->ui->label_ConfTextBrowser_Preview->setFont( big_font );
+    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( this->TB.getFont() );
+    // conf charts
+    this->ui->label_ConfCharts_Theme->setFont( big_font );
+    this->ui->box_ConfCharts_Theme->setFont( font );
+    this->ui->label_ConfCharts_Preview->setFont( big_font );
+    // conf databases
+    this->ui->label_ConfDatabases_Paths->setFont( big_font );
+    this->ui->label_ConfDatabases_Data->setFont( font );
+    this->ui->inLine_ConfDatabases_Data_Path->setFont( font );
+    this->ui->label_ConfDatabases_Hashes->setFont( font );
+    this->ui->inLine_ConfDatabases_Hashes_Path->setFont( font );
+    this->ui->label_ConfDatabases_Backups->setFont( big_font );
+    this->ui->checkBox_ConfDatabases_DoBackup->setFont( font );
+    this->ui->spinBox_ConfDatabases_NumBackups->setFont( font );
+    // conf logs default
+    this->ui->label_ConfDefaults_WebServer->setFont( big_font );
+    this->ui->radio_ConfDefaults_Apache->setFont( font );
+    this->ui->radio_ConfDefaults_Nginx->setFont( font );
+    this->ui->radio_ConfDefaults_Iis->setFont( font );
+    // conf logs control
+    this->ui->label_ConfControl_Usage->setFont( big_font );
+    this->ui->checkBox_ConfControl_Usage->setFont( font );
+    this->ui->label_ConfControl_Size->setFont( big_font );
+    this->ui->checkBox_ConfControl_Size->setFont( font );
+    this->ui->spinBox_ConfControl_Size->setFont( font );
+    // conf apache
+    this->ui->label_ConfApache_Path_Path->setFont( font );
+    this->ui->inLine_ConfApache_Path_String->setFont( font );
+    this->ui->label_ConfApache_Format_String->setFont( font );
+    this->ui->inLine_ConfApache_Format_String->setFont( font );
+    this->ui->button_ConfApache_Format_Sample->setFont( font );
+    this->ui->preview_ConfApache_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->box_ConfApache_Warnlist_Field->setFont( font );
+    this->ui->checkBox_ConfApache_Warnlist_Used->setFont( font );
+    this->ui->inLine_ConfApache_Warnlist_String->setFont( font );
+    this->ui->list_ConfApache_Warnlist_List->setFont( font );
+    this->ui->box_ConfApache_Blacklist_Field->setFont( font );
+    this->ui->checkBox_ConfApache_Blacklist_Used->setFont( font );
+    this->ui->inLine_ConfApache_Blacklist_String->setFont( font );
+    this->ui->list_ConfApache_Blacklist_List->setFont( font );
+    // conf nginx
+    this->ui->label_ConfNginx_Path_Path->setFont( font );
+    this->ui->inLine_ConfNginx_Path_String->setFont( font );
+    this->ui->label_ConfNginx_Format_String->setFont( font );
+    this->ui->inLine_ConfNginx_Format_String->setFont( font );
+    this->ui->button_ConfNginx_Format_Sample->setFont( font );
+    this->ui->preview_ConfNginx_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->box_ConfNginx_Warnlist_Field->setFont( font );
+    this->ui->checkBox_ConfNginx_Warnlist_Used->setFont( font );
+    this->ui->inLine_ConfNginx_Warnlist_String->setFont( font );
+    this->ui->list_ConfNginx_Warnlist_List->setFont( font );
+    this->ui->box_ConfNginx_Blacklist_Field->setFont( font );
+    this->ui->checkBox_ConfNginx_Blacklist_Used->setFont( font );
+    this->ui->inLine_ConfNginx_Blacklist_String->setFont( font );
+    this->ui->list_ConfNginx_Blacklist_List->setFont( font );
+    // conf iis
+    this->ui->label_ConfIis_Path_Path->setFont( font );
+    this->ui->inLine_ConfIis_Path_String->setFont( font );
+    this->ui->label_ConfIis_Format_String->setFont( font );
+    this->ui->inLine_ConfIis_Format_String->setFont( font );
+    this->ui->button_ConfIis_Format_Sample->setFont( font );
+    this->ui->preview_ConfIis_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->box_ConfIis_Warnlist_Field->setFont( font );
+    this->ui->checkBox_ConfIis_Warnlist_Used->setFont( font );
+    this->ui->inLine_ConfIis_Warnlist_String->setFont( font );
+    this->ui->list_ConfIis_Warnlist_List->setFont( font );
+    this->ui->box_ConfIis_Blacklist_Field->setFont( font );
+    this->ui->checkBox_ConfIis_Blacklist_Used->setFont( font );
+    this->ui->inLine_ConfIis_Blacklist_String->setFont( font );
+    this->ui->list_ConfIis_Blacklist_List->setFont( font );
 }
 
 
@@ -1656,16 +1971,19 @@ void MainWindow::switchMainTab( const int& new_index )
     switch ( old_index ) {
         case 0:
             // make
+            this->ui->button_Tab_Log->setFlat( true );
             this->ui->button_Tab_Log->setIcon(
                 QIcon(QString(":/icons/icons/%1/log_off.png").arg(this->icons_theme)) );
             break;
         case 1:
             // view
+            this->ui->button_Tab_View->setFlat( true );
             this->ui->button_Tab_View->setIcon(
                 QIcon(QString(":/icons/icons/%1/view_off.png").arg(this->icons_theme)) );
             break;
         case 2:
             // config
+            this->ui->button_Tab_Conf->setFlat( true );
             this->ui->button_Tab_Conf->setIcon(
                 QIcon(QString(":/icons/icons/%1/conf_off.png").arg(this->icons_theme)) );
             break;
@@ -1677,16 +1995,19 @@ void MainWindow::switchMainTab( const int& new_index )
     switch ( new_index ) {
         case 0:
             // make
+            this->ui->button_Tab_Log->setFlat( false );
             this->ui->button_Tab_Log->setIcon(
                 QIcon(QString(":/icons/icons/%1/log_on.png").arg(this->icons_theme)) );
             break;
         case 1:
             // view
+            this->ui->button_Tab_View->setFlat( false );
             this->ui->button_Tab_View->setIcon(
                 QIcon(QString(":/icons/icons/%1/view_on.png").arg(this->icons_theme)) );
             break;
         case 2:
             // config
+            this->ui->button_Tab_Conf->setFlat( false );
             this->ui->button_Tab_Conf->setIcon(
                 QIcon(QString(":/icons/icons/%1/conf_on.png").arg(this->icons_theme)) );
             break;
@@ -1722,31 +2043,37 @@ void MainWindow::switchStatsTab( const int& new_index )
     switch ( old_index ) {
         case 0:
             // warning
+            this->ui->button_Tab_StatsWarn->setFlat( true );
             this->ui->button_Tab_StatsWarn->setIcon(
                 QIcon(QString(":/icons/icons/%1/warn_off.png").arg(this->icons_theme)) );
             break;
         case 1:
             // speed
+            this->ui->button_Tab_StatsSpeed->setFlat( true );
             this->ui->button_Tab_StatsSpeed->setIcon(
                 QIcon(QString(":/icons/icons/%1/speed_off.png").arg(this->icons_theme)) );
             break;
         case 2:
             // counts
+            this->ui->button_Tab_StatsCount->setFlat( true );
             this->ui->button_Tab_StatsCount->setIcon(
                 QIcon(QString(":/icons/icons/%1/count_off.png").arg(this->icons_theme)) );
             break;
         case 3:
             // daytime
+            this->ui->button_Tab_StatsDay->setFlat( true );
             this->ui->button_Tab_StatsDay->setIcon(
                 QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(this->icons_theme)) );
             break;
         case 4:
             // relational
+            this->ui->button_Tab_StatsRelat->setFlat( true );
             this->ui->button_Tab_StatsRelat->setIcon(
                 QIcon(QString(":/icons/icons/%1/relational_off.png").arg(this->icons_theme)) );
             break;
         case 5:
             // globals
+            this->ui->button_Tab_StatsGlob->setFlat( true );
             this->ui->button_Tab_StatsGlob->setIcon(
                 QIcon(QString(":/icons/icons/%1/global_off.png").arg(this->icons_theme)) );
             break;
@@ -1758,31 +2085,37 @@ void MainWindow::switchStatsTab( const int& new_index )
     switch ( new_index ) {
         case 0:
             // warning
+            this->ui->button_Tab_StatsWarn->setFlat( false );
             this->ui->button_Tab_StatsWarn->setIcon(
                 QIcon(QString(":/icons/icons/%1/warn_on.png").arg(this->icons_theme)) );
             break;
         case 1:
             // speed
+            this->ui->button_Tab_StatsSpeed->setFlat( false );
             this->ui->button_Tab_StatsSpeed->setIcon(
                 QIcon(QString(":/icons/icons/%1/speed_on.png").arg(this->icons_theme)) );
             break;
         case 2:
             // counts
+            this->ui->button_Tab_StatsCount->setFlat( false );
             this->ui->button_Tab_StatsCount->setIcon(
                 QIcon(QString(":/icons/icons/%1/count_on.png").arg(this->icons_theme)) );
             break;
         case 3:
             // daytime
+            this->ui->button_Tab_StatsDay->setFlat( false );
             this->ui->button_Tab_StatsDay->setIcon(
                 QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(this->icons_theme)) );
             break;
         case 4:
             // relational
+            this->ui->button_Tab_StatsRelat->setFlat( false );
             this->ui->button_Tab_StatsRelat->setIcon(
                 QIcon(QString(":/icons/icons/%1/relational_on.png").arg(this->icons_theme)) );
             break;
         case 5:
             // globals
+            this->ui->button_Tab_StatsGlob->setFlat( false );
             this->ui->button_Tab_StatsGlob->setIcon(
                 QIcon(QString(":/icons/icons/%1/global_on.png").arg(this->icons_theme)) );
             break;
@@ -1865,6 +2198,19 @@ void MainWindow::setDbWorkingState( const bool& state )
 //////////////
 //// LOGS ////
 //////////////
+// switch pages
+void MainWindow::on_button_Logs_Down_clicked()
+{
+    this->ui->stacked_Logs_Pages->setCurrentIndex( 1 );
+}
+
+
+void MainWindow::on_button_Logs_Up_clicked()
+{
+    this->ui->stacked_Logs_Pages->setCurrentIndex( 0 );
+}
+
+
 // check
 void MainWindow::checkMakeStats_Makable()
 {
@@ -1948,6 +2294,7 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
     this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
     // disable elements
     this->ui->button_LogFiles_RefreshList->setEnabled( false );
+    this->ui->button_LogFiles_ViewFile->setEnabled( false );
     this->ui->button_LogFiles_Apache->setEnabled( false );
     this->ui->button_LogFiles_Nginx->setEnabled( false );
     this->ui->button_LogFiles_Iis->setEnabled( false );
@@ -2016,6 +2363,7 @@ void MainWindow::check_CraplogLLT_Finished()
         this->waiter_timer->stop();
         // back to normal state
         this->ui->button_LogFiles_RefreshList->setEnabled( true );
+        this->ui->button_LogFiles_ViewFile->setEnabled( true );
         this->ui->button_LogFiles_Apache->setEnabled( true );
         this->ui->button_LogFiles_Nginx->setEnabled( true );
         this->ui->button_LogFiles_Iis->setEnabled( true );
@@ -2323,7 +2671,7 @@ void MainWindow::craplogStarted()
     this->reset_MakeStats_labels();
     this->craplog.logOps.resetPerfData();
     // disable the LogFiles section
-    this->ui->LogBoxFiles->setEnabled(false);
+    this->ui->stacked_Logs_Pages->setEnabled(false);
     // disable things which needs database access
     this->setDbWorkingState( true );
     // enable all labels (needed only the first time)
@@ -2359,7 +2707,7 @@ void MainWindow::craplogFinished()
     // refresh the logs list
     this->on_button_LogFiles_RefreshList_clicked();
     // enable the LogFiles section
-    this->ui->LogBoxFiles->setEnabled( true );
+    this->ui->stacked_Logs_Pages->setEnabled( true );
     // enable all labels (needed only the first time each session)
     this->ui->icon_MakeStats_Size->setEnabled(  true );
     this->ui->icon_MakeStats_Lines->setEnabled( true );
@@ -3450,9 +3798,11 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
             throw GenericException( "Unexpected Font index: "+std::to_string(index), true );
     }
     this->TB.setFont( font );
-    this->TB.setFontFamily( this->ui->box_ConfTextBrowser_Font->currentText() );
     this->crapnote->setTextFont( font );
     this->ui->textBrowser_ConfTextBrowser_Preview->setFont( font );
+    this->ui->preview_ConfApache_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfNginx_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfIis_Format_Sample->setFont( this->TB.getFont() );
 }
 void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 {
@@ -4804,5 +5154,4 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
-
 
