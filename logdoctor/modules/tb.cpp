@@ -24,10 +24,10 @@ const std::unordered_map<std::string, QString>& TextBrowser::getColorScheme()
     return this->color_scheme;
 }
 
-const int& TextBrowser::getFontSize()
+/*const int& TextBrowser::getFontSize()
 {
     return this->font_size;
-}
+}*/
 
 const QString& TextBrowser::getFontFamily()
 {
@@ -52,7 +52,7 @@ void TextBrowser::setColorScheme( const int& color_scheme_id, const std::unorder
     this->color_scheme = color_scheme;
 }
 
-void TextBrowser::setFontSize( const int& font_size )
+/*void TextBrowser::setFontSize( const int& font_size )
 {
     this->font_size = font_size;
 }
@@ -60,11 +60,12 @@ void TextBrowser::setFontSize( const int& font_size )
 void TextBrowser::setFontFamily( const QString& font_family )
 {
     this->font_family = font_family;
-}
+}*/
 
 void TextBrowser::setFont( const QFont& font )
 {
     this->font = font;
+    this->font_family = font.family();
 }
 
 
