@@ -33,7 +33,7 @@ Craplog::Craplog()
         this->blacklists.emplace( i, std::unordered_map<int, BWlist>() );
         // default data
         this->warnlists.at( i ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists.at( i ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/stepu.cgi","/cgi-bin"} } );
+        this->warnlists.at( i ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/setup.cgi","/cgi-bin"} } );
         this->warnlists.at( i ).emplace( 20, BWlist{ .used=false, .list={} } );
         this->warnlists.at( i ).emplace( 21, BWlist{ .used=false, .list={} } );
         this->blacklists.at( i ).emplace( 20, BWlist{ .used=true,  .list={} } );
