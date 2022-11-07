@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>971</width>
-    <height>634</height>
+    <width>924</width>
+    <height>574</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,31 +34,43 @@
     </sizepolicy>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_8">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
-     <number>8</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
      <number>8</number>
     </property>
     <property name="rightMargin">
-     <number>8</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>8</number>
+     <number>0</number>
     </property>
     <item>
      <widget class="QFrame" name="frame_Tabs_Buttons">
       <property name="minimumSize">
        <size>
-        <width>70</width>
+        <width>68</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>70</width>
+        <width>68</width>
         <height>16777215</height>
        </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_20">
        <property name="spacing">
@@ -90,6 +102,9 @@
            <height>84</height>
           </size>
          </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -98,6 +113,9 @@
            <width>48</width>
            <height>64</height>
           </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -115,6 +133,9 @@
            <height>84</height>
           </size>
          </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -123,6 +144,9 @@
            <width>48</width>
            <height>64</height>
           </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -140,6 +164,9 @@
            <height>84</height>
           </size>
          </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -148,6 +175,9 @@
            <width>48</width>
            <height>64</height>
           </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -184,21 +214,9 @@
        <number>0</number>
       </property>
       <widget class="QWidget" name="page_Tab_Log">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="leftMargin">
-         <number>8</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>8</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_21">
         <item>
-         <widget class="QToolBox" name="LogBox">
+         <widget class="QStackedWidget" name="stacked_Logs_Pages">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -208,31 +226,26 @@
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
-          <property name="tabSpacing">
-           <number>9</number>
+          <property name="currentIndex">
+           <number>0</number>
           </property>
-          <widget class="QWidget" name="LogBoxFiles">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>863</width>
-             <height>508</height>
-            </rect>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <attribute name="label">
-            <string>Log Files</string>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Select which log files to use</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_2">
+          <widget class="QWidget" name="page_Logs_Files">
+           <layout class="QGridLayout" name="gridLayout">
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <property name="horizontalSpacing">
+             <number>8</number>
+            </property>
             <item row="0" column="0" colspan="4">
              <widget class="QFrame" name="frame_LogFiles_WebServer">
               <property name="maximumSize">
@@ -241,7 +254,28 @@
                 <height>48</height>
                </size>
               </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Sunken</enum>
+              </property>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <property name="leftMargin">
+                <number>8</number>
+               </property>
+               <property name="topMargin">
+                <number>8</number>
+               </property>
+               <property name="rightMargin">
+                <number>8</number>
+               </property>
+               <property name="bottomMargin">
+                <number>8</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="button_LogFiles_Apache">
                  <property name="sizePolicy">
@@ -253,6 +287,12 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
                    <height>32</height>
                   </size>
                  </property>
@@ -289,6 +329,12 @@
                    <height>32</height>
                   </size>
                  </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <pointsize>13</pointsize>
@@ -319,6 +365,12 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
                    <height>32</height>
                   </size>
                  </property>
@@ -363,10 +415,13 @@
               </property>
               <property name="html">
                <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -386,7 +441,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="font">
                <font>
-                <pointsize>13</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="cursor">
@@ -469,6 +524,11 @@ p, li { white-space: pre-wrap; }
                 <width>320</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+               </font>
               </property>
               <property name="tabKeyNavigation">
                <bool>true</bool>
@@ -578,45 +638,243 @@ p, li { white-space: pre-wrap; }
               </property>
              </spacer>
             </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="LogBoxStart">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>863</width>
-             <height>508</height>
-            </rect>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <attribute name="label">
-            <string>Start Parsing</string>
-           </attribute>
-           <attribute name="toolTip">
-            <string>Parse the selected files to make statistics</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_16">
-            <item>
-             <widget class="QFrame" name="frame_MakeStats_icons">
+            <item row="4" column="0" colspan="5">
+             <widget class="QFrame" name="frame_Logs_Down">
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>128</height>
+                <height>32</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>128</height>
+                <height>32</height>
+               </size>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <spacer name="spacer_Logs_Down_1">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>154</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="button_Logs_Down">
+                 <property name="minimumSize">
+                  <size>
+                   <width>512</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>512</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resources/resources.qrc">
+                   <normaloff>:/icons/icons/midtone/down.png</normaloff>:/icons/icons/midtone/down.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>512</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="spacer_Logs_Down_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>153</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_Logs_Make">
+           <layout class="QVBoxLayout" name="verticalLayout_16">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QFrame" name="frame_Logs_Up">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>32</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>32</height>
+               </size>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_12">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <spacer name="spacer_Logs_Up_1">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>154</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="button_Logs_Up">
+                 <property name="minimumSize">
+                  <size>
+                   <width>512</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>512</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resources/resources.qrc">
+                   <normaloff>:/icons/icons/midtone/up.png</normaloff>:/icons/icons/midtone/up.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>512</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="spacer_Logs_Up_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>153</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_MakeStats_icons">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>112</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>112</height>
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <property name="leftMargin">
+                <number>8</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>8</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <spacer name="spacer_MakeStats_1">
                  <property name="orientation">
@@ -648,6 +906,12 @@ p, li { white-space: pre-wrap; }
                   <string>Total size of the parsed data</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
+                  <property name="topMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>4</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Size">
                     <property name="enabled">
@@ -739,6 +1003,12 @@ p, li { white-space: pre-wrap; }
                   <string>Total number of parsed lines</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_2">
+                  <property name="topMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>4</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Lines">
                     <property name="enabled">
@@ -880,6 +1150,12 @@ p, li { white-space: pre-wrap; }
                   <string>Time elapsed since the start</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <property name="topMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>4</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Time">
                     <property name="enabled">
@@ -974,6 +1250,12 @@ p, li { white-space: pre-wrap; }
                   <enum>QFrame::Raised</enum>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="topMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>4</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Speed">
                     <property name="enabled">
@@ -1093,6 +1375,18 @@ p, li { white-space: pre-wrap; }
           </property>
           <widget class="QWidget" name="StatsTabsPage1">
            <layout class="QGridLayout" name="gridLayout_24">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsWarn_Opt">
               <property name="sizePolicy">
@@ -1270,7 +1564,7 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item row="0" column="3" rowspan="2">
-                   <widget class="Line" name="line">
+                   <widget class="Line" name="gline_StatsWarn_3">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -1682,6 +1976,18 @@ p, li { white-space: pre-wrap; }
           </widget>
           <widget class="QWidget" name="StatsTabsPage2">
            <layout class="QGridLayout" name="gridLayout_19">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>18</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsSpeed_1">
               <property name="sizePolicy">
@@ -1703,8 +2009,20 @@ p, li { white-space: pre-wrap; }
                </size>
               </property>
               <layout class="QGridLayout" name="gridLayout_15">
-               <item row="1" column="2">
-                <spacer name="spacer_StatsSpeed_3">
+               <property name="leftMargin">
+                <number>8</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>8</number>
+               </property>
+               <property name="bottomMargin">
+                <number>8</number>
+               </property>
+               <item row="0" column="0">
+                <spacer name="spacer_StatsSpeed_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1716,7 +2034,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                 </spacer>
                </item>
-               <item row="1" column="1">
+               <item row="0" column="1">
                 <widget class="QComboBox" name="box_StatsSpeed_WebServer">
                  <property name="minimumSize">
                   <size>
@@ -1758,7 +2076,20 @@ p, li { white-space: pre-wrap; }
                  </item>
                 </widget>
                </item>
-               <item row="2" column="0" colspan="3">
+               <item row="0" column="2">
+                <spacer name="spacer_StatsSpeed_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="3">
                 <widget class="Line" name="gline_StatsSpeed_1">
                  <property name="minimumSize">
                   <size>
@@ -1771,40 +2102,17 @@ p, li { white-space: pre-wrap; }
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0" colspan="3">
-                <spacer name="spacer_StatsSpeed_1">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>298</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="0">
-                <spacer name="spacer_StatsSpeed_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="3" column="0" colspan="3">
+               <item row="2" column="0" colspan="3">
                 <widget class="QFrame" name="frame_StatsSpeed_Date">
                  <layout class="QGridLayout" name="gridLayout_16">
                   <item row="2" column="2">
                    <widget class="QComboBox" name="box_StatsSpeed_Day">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>64</width>
@@ -1823,6 +2131,12 @@ p, li { white-space: pre-wrap; }
                   </item>
                   <item row="2" column="0">
                    <widget class="QComboBox" name="box_StatsSpeed_Year">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>80</width>
@@ -1841,6 +2155,12 @@ p, li { white-space: pre-wrap; }
                   </item>
                   <item row="2" column="1">
                    <widget class="QComboBox" name="box_StatsSpeed_Month">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
@@ -2044,6 +2364,12 @@ p, li { white-space: pre-wrap; }
               <layout class="QGridLayout" name="gridLayout_20">
                <item row="4" column="1">
                 <widget class="QLineEdit" name="inLine_StatsSpeed_Query">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -2065,6 +2391,12 @@ p, li { white-space: pre-wrap; }
                </item>
                <item row="1" column="1">
                 <widget class="QLineEdit" name="inLine_StatsSpeed_Protocol">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -2120,6 +2452,12 @@ p, li { white-space: pre-wrap; }
                </item>
                <item row="5" column="1">
                 <widget class="QLineEdit" name="inLine_StatsSpeed_Response">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -2142,6 +2480,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                </item>
                <item row="3" column="1">
                 <widget class="QLineEdit" name="inLine_StatsSpeed_Uri">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -2198,6 +2542,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                </item>
                <item row="2" column="1">
                 <widget class="QLineEdit" name="inLine_StatsSpeed_Method">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>32</height>
+                  </size>
+                 </property>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -2300,6 +2650,18 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
           </widget>
           <widget class="QWidget" name="StatsTabsPage3">
            <layout class="QGridLayout" name="gridLayout_4">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>18</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
             <item row="0" column="1">
              <widget class="QSplitter" name="splitter_StatsCount">
               <property name="orientation">
@@ -2382,225 +2744,19 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                </size>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
-               <item row="0" column="0" colspan="3">
-                <spacer name="spacer_StatsCount_1">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>298</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="0">
-                <spacer name="spacer_StatsCount_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="box_StatsCount_WebServer">
-                 <property name="minimumSize">
-                  <size>
-                   <width>112</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>112</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>13</pointsize>
-                  </font>
-                 </property>
-                 <property name="toolTip">
-                  <string>Select a Web Server</string>
-                 </property>
-                 <property name="sizeAdjustPolicy">
-                  <enum>QComboBox::AdjustToContents</enum>
-                 </property>
-                 <item>
-                  <property name="text">
-                   <string>Apache2</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Nginx</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>IIS</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <spacer name="spacer_StatsCount_3">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="2" column="0" colspan="3">
-                <widget class="Line" name="gline_StatsCount_1">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0" colspan="3">
-                <widget class="QFrame" name="frame_StatsCount_Date">
-                 <layout class="QGridLayout" name="gridLayout_5">
-                  <item row="2" column="0">
-                   <widget class="QComboBox" name="box_StatsCount_Year">
-                    <property name="maximumSize">
-                     <size>
-                      <width>80</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QComboBox" name="box_StatsCount_Month">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="label_StatsCount_Day">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Day</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_StatsCount_Year">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Year</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="2">
-                   <widget class="QComboBox" name="box_StatsCount_Day">
-                    <property name="maximumSize">
-                     <size>
-                      <width>64</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::RightToLeft</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="label_StatsCount_Month">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Month</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
+               <property name="leftMargin">
+                <number>8</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>8</number>
+               </property>
+               <property name="bottomMargin">
+                <number>8</number>
+               </property>
                <item row="4" column="0" colspan="3">
-                <spacer name="spacer_StatsCount_4">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>298</width>
-                   <height>8</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="5" column="0" colspan="3">
                 <widget class="QScrollArea" name="scrollArea_StatsCount">
                  <property name="frameShape">
                   <enum>QFrame::NoFrame</enum>
@@ -2617,7 +2773,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>13</x>
+                    <x>14</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -2931,6 +3087,226 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  </widget>
                 </widget>
                </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="box_StatsCount_WebServer">
+                 <property name="minimumSize">
+                  <size>
+                   <width>112</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>112</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>13</pointsize>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Select a Web Server</string>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QComboBox::AdjustToContents</enum>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>Apache2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Nginx</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>IIS</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="3">
+                <widget class="Line" name="gline_StatsCount_1">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>8</height>
+                  </size>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <spacer name="spacer_StatsCount_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="0" colspan="3">
+                <widget class="QFrame" name="frame_StatsCount_Date">
+                 <layout class="QGridLayout" name="gridLayout_5">
+                  <item row="2" column="0">
+                   <widget class="QComboBox" name="box_StatsCount_Year">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>80</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="box_StatsCount_Month">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_StatsCount_Day">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Day</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_StatsCount_Year">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Year</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QComboBox" name="box_StatsCount_Day">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>64</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="label_StatsCount_Month">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Month</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="3">
+                <spacer name="spacer_StatsCount_4">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>298</width>
+                   <height>8</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="0">
+                <spacer name="spacer_StatsCount_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
               </layout>
              </widget>
             </item>
@@ -2938,10 +3314,19 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
           </widget>
           <widget class="QWidget" name="StatsTabsPage4">
            <layout class="QGridLayout" name="gridLayout_13">
-            <item row="2" column="0">
-             <widget class="QChartView" name="chart_StatsDay"/>
-            </item>
-            <item row="1" column="0">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
+            <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsDay_Opt">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -3009,6 +3394,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>72</width>
@@ -3032,6 +3423,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
                     </property>
                     <property name="maximumSize">
                      <size>
@@ -3066,6 +3463,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item row="1" column="3">
                    <widget class="QComboBox" name="box_StatsDay_FromDay">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>56</width>
@@ -3086,6 +3489,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                    <widget class="QComboBox" name="box_StatsDay_ToMonth">
                     <property name="enabled">
                      <bool>false</bool>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
                     </property>
                     <property name="maximumSize">
                      <size>
@@ -3120,6 +3529,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>56</width>
@@ -3141,7 +3556,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="minimumSize">
                      <size>
                       <width>120</width>
-                      <height>0</height>
+                      <height>32</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -3166,6 +3581,31 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <item row="0" column="4" rowspan="3">
                 <widget class="QFrame" name="frame_StatsDay_Field">
                  <layout class="QGridLayout" name="gridLayout_8">
+                  <item row="2" column="1">
+                   <widget class="QLineEdit" name="inLine_StatsDay_Filter">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="0" column="0" colspan="2">
                    <spacer name="verticalSpacer">
                     <property name="orientation">
@@ -3177,7 +3617,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="sizeHint" stdset="0">
                      <size>
                       <width>298</width>
-                      <height>32</height>
+                      <height>44</height>
                      </size>
                     </property>
                    </spacer>
@@ -3199,6 +3639,12 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item row="1" column="1">
                    <widget class="QComboBox" name="box_StatsDay_LogsField">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>160</width>
@@ -3227,25 +3673,6 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QLineEdit" name="inLine_StatsDay_Filter">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="toolTip">
-                     <string>With strings, only the lines in which the field is starting with this string will be used.
-With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     </property>
                    </widget>
                   </item>
@@ -3310,7 +3737,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
-                   <height>4</height>
+                   <height>10</height>
                   </size>
                  </property>
                 </spacer>
@@ -3360,26 +3787,25 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
               </layout>
              </widget>
             </item>
-            <item row="0" column="0">
-             <spacer name="spacer_StatsDay_1">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>8</height>
-               </size>
-              </property>
-             </spacer>
+            <item row="1" column="0">
+             <widget class="QChartView" name="chart_StatsDay"/>
             </item>
            </layout>
           </widget>
           <widget class="QWidget" name="StatsTabsPage5">
            <layout class="QGridLayout" name="gridLayout_18">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>2</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
+            </property>
+            <property name="bottomMargin">
+             <number>8</number>
+            </property>
             <item row="0" column="0">
              <widget class="QFrame" name="frame_StatsRelat_Opt">
               <property name="sizePolicy">
@@ -3459,6 +3885,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </sizepolicy>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_2">
+                  <property name="topMargin">
+                   <number>6</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="label_StatsRelat_From">
                     <property name="minimumSize">
@@ -3488,9 +3917,15 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
-                      <width>68</width>
+                      <width>72</width>
                       <height>32</height>
                      </size>
                     </property>
@@ -3515,7 +3950,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="minimumSize">
                      <size>
                       <width>120</width>
-                      <height>0</height>
+                      <height>32</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -3542,6 +3977,12 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item>
                    <widget class="QComboBox" name="box_StatsRelat_FromDay">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>60</width>
@@ -3593,9 +4034,15 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item>
                    <widget class="QComboBox" name="box_StatsRelat_ToYear">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
-                      <width>68</width>
+                      <width>72</width>
                       <height>32</height>
                      </size>
                     </property>
@@ -3620,7 +4067,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="minimumSize">
                      <size>
                       <width>120</width>
-                      <height>0</height>
+                      <height>32</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -3647,6 +4094,12 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item>
                    <widget class="QComboBox" name="box_StatsRelat_ToDay">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>60</width>
@@ -3705,19 +4158,6 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <spacer name="verticalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
                <item row="3" column="2">
                 <widget class="QFrame" name="frame_StatsRelat_Field">
                  <property name="frameShape">
@@ -3750,6 +4190,12 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item row="2" column="3" rowspan="2">
                    <widget class="QLineEdit" name="inLine_StatsRelat_Filter_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
@@ -3772,7 +4218,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="minimumSize">
                      <size>
                       <width>160</width>
-                      <height>0</height>
+                      <height>32</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -3793,6 +4239,12 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item row="0" column="3" rowspan="2">
                    <widget class="QLineEdit" name="inLine_StatsRelat_Filter_1">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
@@ -3815,7 +4267,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <property name="minimumSize">
                      <size>
                       <width>160</width>
-                      <height>0</height>
+                      <height>32</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -3946,7 +4398,13 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                 </spacer>
                </item>
                <item>
-                <widget class="QFrame" name="frame_StatsGlob_1">
+                <widget class="QFrame" name="frame_StatsGlob_WebServers">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>48</height>
+                  </size>
+                 </property>
                  <property name="maximumSize">
                   <size>
                    <width>320</width>
@@ -3960,6 +4418,21 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   <enum>QFrame::Sunken</enum>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <property name="spacing">
+                   <number>8</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>8</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>8</number>
+                  </property>
                   <item>
                    <widget class="QPushButton" name="button_StatsGlob_Apache">
                     <property name="sizePolicy">
@@ -3967,6 +4440,18 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <horstretch>96</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
                     </property>
                     <property name="font">
                      <font>
@@ -3995,6 +4480,18 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
                     <property name="font">
                      <font>
                       <pointsize>13</pointsize>
@@ -4021,6 +4518,18 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <horstretch>96</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
                     </property>
                     <property name="font">
                      <font>
@@ -4099,8 +4608,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>320</width>
-                      <height>324</height>
+                      <width>173</width>
+                      <height>348</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_31">
@@ -4455,8 +4964,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>320</width>
-                      <height>324</height>
+                      <width>157</width>
+                      <height>348</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_36">
@@ -4705,13 +5214,13 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Perf_">
+                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Perf">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>449</width>
-                      <height>255</height>
+                      <width>145</width>
+                      <height>276</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_46">
@@ -4970,13 +5479,13 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Work_">
+                   <widget class="QWidget" name="scrollAreaContent_StatsGlob_Work">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>449</width>
-                      <height>255</height>
+                      <width>173</width>
+                      <height>276</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_42">
@@ -5186,6 +5695,12 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             <height>34</height>
            </size>
           </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
+          </property>
           <layout class="QHBoxLayout" name="horizontalLayout_10">
            <property name="spacing">
             <number>0</number>
@@ -5225,6 +5740,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <height>32</height>
               </size>
              </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
@@ -5249,6 +5767,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <width>32</width>
                <height>32</height>
               </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -5275,6 +5796,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <height>32</height>
               </size>
              </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
@@ -5299,6 +5823,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <width>32</width>
                <height>32</height>
               </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -5325,6 +5852,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <height>32</height>
               </size>
              </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
@@ -5350,6 +5880,9 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <height>32</height>
               </size>
              </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
           </layout>
@@ -5363,13 +5896,13 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
          <number>8</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>8</number>
         </property>
         <property name="rightMargin">
          <number>8</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>8</number>
         </property>
         <item row="0" column="0">
          <widget class="QTabWidget" name="ConfTabs">
@@ -5379,10 +5912,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <property name="documentMode">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="General">
+          <widget class="QWidget" name="confGeneral">
            <attribute name="title">
             <string>General</string>
            </attribute>
@@ -5394,13 +5924,13 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
              <number>8</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>8</number>
             </property>
             <property name="rightMargin">
              <number>8</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>8</number>
             </property>
             <item row="0" column="0">
              <widget class="QTabWidget" name="tabs_ConfGeneral">
@@ -6438,7 +6968,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="gline_ConfTextBrowser_2">
+                 <widget class="Line" name="gline_ConfTextBrowser">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -6505,10 +7035,13 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </property>
                      <property name="html">
                       <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Noto Sans';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="openLinks">
                       <bool>true</bool>
@@ -6731,9 +7264,6 @@ p, li { white-space: pre-wrap; }
                      <property name="toolTip">
                       <string>Apply the current path</string>
                      </property>
-                     <property name="text">
-                      <string notr="true"></string>
-                     </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
@@ -6822,9 +7352,6 @@ p, li { white-space: pre-wrap; }
                      </property>
                      <property name="toolTip">
                       <string>Apply the current path</string>
-                     </property>
-                     <property name="text">
-                      <string notr="true"></string>
                      </property>
                     </widget>
                    </item>
@@ -7067,7 +7594,13 @@ p, li { white-space: pre-wrap; }
                      <property name="minimumSize">
                       <size>
                        <width>100</width>
-                       <height>0</height>
+                       <height>32</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>32</height>
                       </size>
                      </property>
                      <property name="suffix">
@@ -7113,7 +7646,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="Logs">
+          <widget class="QWidget" name="confLogs">
            <attribute name="title">
             <string>Logs</string>
            </attribute>
@@ -7125,13 +7658,13 @@ p, li { white-space: pre-wrap; }
              <number>8</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>8</number>
             </property>
             <property name="rightMargin">
              <number>8</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>8</number>
             </property>
             <item row="0" column="0">
              <widget class="QTabWidget" name="tabs_ConfLogs">
@@ -7143,7 +7676,7 @@ p, li { white-space: pre-wrap; }
               <property name="currentIndex">
                <number>0</number>
               </property>
-              <widget class="QWidget" name="tab_ConfDefaults">
+              <widget class="QWidget" name="tab_ConfLogs_Defaults">
                <attribute name="title">
                 <string>Defaults</string>
                </attribute>
@@ -7628,9 +8161,6 @@ p, li { white-space: pre-wrap; }
                   <property name="currentIndex">
                    <number>0</number>
                   </property>
-                  <property name="documentMode">
-                   <bool>true</bool>
-                  </property>
                   <widget class="QWidget" name="tab_ConfApache_Paths">
                    <attribute name="title">
                     <string>Paths</string>
@@ -7720,13 +8250,16 @@ p, li { white-space: pre-wrap; }
                          <property name="toolTip">
                           <string>Apply the current path</string>
                          </property>
-                         <property name="text">
-                          <string notr="true"></string>
+                         <property name="iconSize">
+                          <size>
+                           <width>22</width>
+                           <height>22</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
                        <item row="0" column="0" colspan="3">
-                        <widget class="QLabel" name="label__ConfApache_Path_Path">
+                        <widget class="QLabel" name="label_ConfApache_Path_Path">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -7842,8 +8375,11 @@ p, li { white-space: pre-wrap; }
                          <property name="toolTip">
                           <string>Apply the current string</string>
                          </property>
-                         <property name="text">
-                          <string notr="true"></string>
+                         <property name="iconSize">
+                          <size>
+                           <width>22</width>
+                           <height>22</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
@@ -7876,7 +8412,7 @@ p, li { white-space: pre-wrap; }
                          </property>
                          <property name="toolTip">
                           <string>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
+Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                          </property>
                          <property name="text">
                           <string>Generate sample</string>
@@ -8629,9 +9165,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   <property name="currentIndex">
                    <number>0</number>
                   </property>
-                  <property name="documentMode">
-                   <bool>true</bool>
-                  </property>
                   <widget class="QWidget" name="tab_ConfNginx_Paths">
                    <attribute name="title">
                     <string>Paths</string>
@@ -8721,13 +9254,16 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Apply the current path</string>
                          </property>
-                         <property name="text">
-                          <string notr="true"></string>
+                         <property name="iconSize">
+                          <size>
+                           <width>22</width>
+                           <height>22</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
                        <item row="0" column="0" colspan="3">
-                        <widget class="QLabel" name="label__ConfNginx_Path_Path">
+                        <widget class="QLabel" name="label_ConfNginx_Path_Path">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -8843,8 +9379,11 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Apply the current string</string>
                          </property>
-                         <property name="text">
-                          <string notr="true"></string>
+                         <property name="iconSize">
+                          <size>
+                           <width>22</width>
+                           <height>22</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
@@ -8877,7 +9416,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          </property>
                          <property name="toolTip">
                           <string>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
+Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                          </property>
                          <property name="text">
                           <string>Generate sample</string>
@@ -9630,9 +10169,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   <property name="currentIndex">
                    <number>0</number>
                   </property>
-                  <property name="documentMode">
-                   <bool>true</bool>
-                  </property>
                   <widget class="QWidget" name="tab_ConfIis_Paths">
                    <attribute name="title">
                     <string>Paths</string>
@@ -9648,7 +10184,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                       </property>
                       <layout class="QGridLayout" name="gridLayout_58">
                        <item row="0" column="0" colspan="3">
-                        <widget class="QLabel" name="label__ConfIis_Path_Path">
+                        <widget class="QLabel" name="label_ConfIis_Path_Path">
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -9741,8 +10277,11 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Apply the current path</string>
                          </property>
-                         <property name="text">
-                          <string notr="true"></string>
+                         <property name="iconSize">
+                          <size>
+                           <width>22</width>
+                           <height>22</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
@@ -9922,8 +10461,11 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          <property name="toolTip">
                           <string>Apply the current string</string>
                          </property>
-                         <property name="text">
-                          <string notr="true"></string>
+                         <property name="iconSize">
+                          <size>
+                           <width>22</width>
+                           <height>22</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
@@ -9956,7 +10498,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                          </property>
                          <property name="toolTip">
                           <string>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as 'DISCARDED'</string>
+Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                          </property>
                          <property name="text">
                           <string>Generate sample</string>
@@ -10708,13 +11250,13 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>971</width>
+     <width>924</width>
      <height>26</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>13</pointsize>
+     <pointsize>11</pointsize>
     </font>
    </property>
    <widget class="QMenu" name="menuLanguage">
@@ -10729,7 +11271,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    <widget class="QMenu" name="menuUtilities">
     <property name="font">
      <font>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="title">
@@ -10739,16 +11281,25 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <addaction name="actionCheckUpdates"/>
    </widget>
    <widget class="QMenu" name="menuTools">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>Tools</string>
     </property>
     <addaction name="actionBlockNote"/>
    </widget>
    <widget class="QMenu" name="menuGames">
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>Games</string>
     </property>
-    <addaction name="separator"/>
     <addaction name="actionCrissCross"/>
     <addaction name="actionSnake"/>
    </widget>
