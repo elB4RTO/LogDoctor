@@ -19,15 +19,15 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
     switch (type) {
         case 0:
             // info message
-            this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialog_info.png") );
+            this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/info.png") );
             break;
         case 1:
             // warning message
-            this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialog_warn.png") );
+            this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/warn.png") );
             break;
         case 2:
             // error message
-            this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialog_err.png") );
+            this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/err.png") );
             break;
         default:
             // shouldn't be here
