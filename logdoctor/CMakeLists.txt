@@ -41,6 +41,8 @@ set(PROJECT_SOURCES
     utilities/rtf.cpp
     utilities/strings.h
     utilities/strings.cpp
+    utilities/stylesheets.h
+    utilities/stylesheets.cpp
     utilities/vectors.h
     utilities/vectors.cpp
 
