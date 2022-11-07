@@ -60,7 +60,7 @@
          </size>
         </property>
         <property name="pixmap">
-         <pixmap resource="../../resources/resources.qrc">:/icons/icons/dialog_quest.png</pixmap>
+         <pixmap resource="../../resources/resources.qrc">:/icons/icons/dialogs/quest.png</pixmap>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
