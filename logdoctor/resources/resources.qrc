@@ -14,11 +14,11 @@
         <file alias="Metropolis">fonts/Metropolis.ttf</file>
     </qresource>
     <qresource prefix="/icons">
-        <file>icons/err.png</file>
         <file>icons/add.png</file>
         <file>icons/rem.png</file>
-        <file>icons/up.png</file>
         <file>icons/down.png</file>
+        <file>icons/up.png</file>
+        <file>icons/err.png</file>
         <file>icons/dialogs/err.png</file>
         <file>icons/dialogs/info.png</file>
         <file>icons/dialogs/quest.png</file>
@@ -29,12 +29,17 @@
         <file>icons/light/count_on.png</file>
         <file>icons/light/daytime_off.png</file>
         <file>icons/light/daytime_on.png</file>
+        <file>icons/light/down.png</file>
         <file>icons/light/draw.png</file>
         <file>icons/light/global_off.png</file>
         <file>icons/light/global_on.png</file>
         <file>icons/light/help.png</file>
         <file>icons/light/log_off.png</file>
         <file>icons/light/log_on.png</file>
+        <file>icons/light/mk_lines.png</file>
+        <file>icons/light/mk_size.png</file>
+        <file>icons/light/mk_speed.png</file>
+        <file>icons/light/mk_time.png</file>
         <file>icons/light/refresh.png</file>
         <file>icons/light/relational_off.png</file>
         <file>icons/light/relational_on.png</file>
@@ -42,6 +47,7 @@
         <file>icons/light/show_file.png</file>
         <file>icons/light/speed_off.png</file>
         <file>icons/light/speed_on.png</file>
+        <file>icons/light/up.png</file>
         <file>icons/light/view_off.png</file>
         <file>icons/light/view_on.png</file>
         <file>icons/light/warn_off.png</file>
@@ -52,12 +58,17 @@
         <file>icons/dark/count_on.png</file>
         <file>icons/dark/daytime_off.png</file>
         <file>icons/dark/daytime_on.png</file>
+        <file>icons/dark/down.png</file>
         <file>icons/dark/draw.png</file>
         <file>icons/dark/global_off.png</file>
         <file>icons/dark/global_on.png</file>
         <file>icons/dark/help.png</file>
         <file>icons/dark/log_off.png</file>
         <file>icons/dark/log_on.png</file>
+        <file>icons/dark/mk_lines.png</file>
+        <file>icons/dark/mk_size.png</file>
+        <file>icons/dark/mk_speed.png</file>
+        <file>icons/dark/mk_time.png</file>
         <file>icons/dark/refresh.png</file>
         <file>icons/dark/relational_off.png</file>
         <file>icons/dark/relational_on.png</file>
@@ -65,10 +76,30 @@
         <file>icons/dark/show_file.png</file>
         <file>icons/dark/speed_off.png</file>
         <file>icons/dark/speed_on.png</file>
+        <file>icons/dark/up.png</file>
         <file>icons/dark/view_off.png</file>
         <file>icons/dark/view_on.png</file>
         <file>icons/dark/warn_off.png</file>
         <file>icons/dark/warn_on.png</file>
+        <file>icons/midtone/down.png</file>
+        <file>icons/midtone/up.png</file>
+        <file>icons/midtone/save.png</file>
+        <file>icons/light/checkbox_checked.png</file>
+        <file>icons/light/checkbox_semichecked.png</file>
+        <file>icons/light/checkbox_unchecked.png</file>
+        <file>icons/light/radiobutton_checked.png</file>
+        <file>icons/light/radiobutton_unchecked.png</file>
+        <file>icons/dark/checkbox_checked.png</file>
+        <file>icons/dark/checkbox_semichecked.png</file>
+        <file>icons/dark/checkbox_unchecked.png</file>
+        <file>icons/dark/radiobutton_checked.png</file>
+        <file>icons/dark/radiobutton_unchecked.png</file>
+        <file>icons/light/spinbox_add.png</file>
+        <file>icons/light/spinbox_sub.png</file>
+        <file>icons/dark/spinbox_add.png</file>
+        <file>icons/dark/spinbox_sub.png</file>
+        <file>icons/midtone/spinbox_add.png</file>
+        <file>icons/midtone/spinbox_sub.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/en.png</file>
@@ -79,11 +110,11 @@
     <qresource prefix="/games">
         <file>games/o.png</file>
         <file>games/x.png</file>
+        <file>games/water.png</file>
+        <file>games/food.png</file>
+        <file>games/head.png</file>
         <file>games/body_c.png</file>
         <file>games/body_s.png</file>
-        <file>games/head.png</file>
         <file>games/tail.png</file>
-        <file>games/food.png</file>
-        <file>games/water.png</file>
     </qresource>
 </RCC>
