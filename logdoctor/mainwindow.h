@@ -76,6 +76,10 @@ private slots:
     /////////////////
     //// CRAPLOG ////
 
+    void on_button_Logs_Down_clicked();
+
+    void on_button_Logs_Up_clicked();
+
     void refreshLogsList();
 
     void runCraplog();
@@ -477,7 +481,7 @@ private slots:
 
     void menu_actionCheckUpdates_triggered();
 
-    //// TOOLS ////
+    //// GAMES ////
 
     void menu_actionCrissCross_triggered();
 
@@ -563,6 +567,7 @@ private:
     void detectIconsTheme();
     void updateUiIcons();
     void updateUiTheme();
+    void updateUiFonts();
     const std::vector<QChart::ChartTheme> CHARTS_THEMES = {
         QChart::ChartTheme::ChartThemeLight,
         QChart::ChartTheme::ChartThemeDark,
