@@ -710,8 +710,8 @@ private:
     ///////////////////
     //// CRAPGAMES ////
     ///////////////////
-    CrissCross* crisscross = new CrissCross( QPalette() );
-    Snake* snake = new Snake( QPalette(), QFont() );
+    CrissCross* crisscross = new CrissCross( 0 );
+    Snake* snake = new Snake( 0, QFont() );
 
 };
 #endif // MAINWINDOW_H
