@@ -2,15 +2,20 @@
 #include "crisscross.h"
 #include "ui_crisscross.h"
 
+#include "games/games.h"
+
 #include <QMessageBox>
 
 
-CrissCross::CrissCross( const QPalette& style, QWidget* parent ) :
+CrissCross::CrissCross( const int& theme_id, QWidget* parent ) :
     QWidget(parent),
     ui(new Ui::CrissCross)
 {
     this->ui->setupUi(this);
-    this->setPalette( style );
+
+    QString stylesheet = "";
+    GameSec::crisscrossStyleSheet( stylesheet, theme_id );
+    this->setStyleSheet( stylesheet );
 
     // verify that one player is human and the other is not
     if ( !(p1_human^p2_human)  ) {

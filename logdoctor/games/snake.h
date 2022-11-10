@@ -20,7 +20,7 @@ class Snake : public QWidget
     Q_OBJECT
 
 public:
-    explicit Snake( const QPalette& style, const QFont& term_font, QWidget* parent=nullptr );
+    explicit Snake( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
     ~Snake();
 
 private slots:
