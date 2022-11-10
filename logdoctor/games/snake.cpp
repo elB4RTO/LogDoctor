@@ -2,22 +2,28 @@
 #include "snake.h"
 #include "ui_snake.h"
 
+#include "games/games.h"
+
 #include <QMessageBox>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
 
-Snake:: Snake(const QPalette& style, const QFont& term_font, QWidget* parent ) :
+Snake::Snake( const int& theme_id, const QFont& term_font, QWidget* parent ) :
     QWidget(parent),
     ui(new Ui::Snake)
 {
     this->ui->setupUi(this);
 
-    this->setPalette( style );
+    QString stylesheet = "";
+    GameSec::snakeStyleSheet( stylesheet, theme_id );
+    this->setStyleSheet( stylesheet );
+
     QFont font = QFont( term_font );
     font.setPointSize( 64 );
     this->ui->button_Play->setFont( font );
 
+    // create the field
     this->field_scene = new QGraphicsScene( this );
     this->field_scene->setSceneRect( 0,0, 544, 544 );
     this->field_scene->setBackgroundBrush( Qt::black );
