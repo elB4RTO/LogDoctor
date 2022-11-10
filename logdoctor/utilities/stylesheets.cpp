@@ -42,6 +42,9 @@ void StyleSec::styleAsh( QString& ss , const QString& theme )
         "QTabWidget {"
         "   selection-background-color: rgb( 32, 32, 32 );"
         "}"
+        "QTabWidget::tab-bar {"
+        "   alignment: left;"
+        "}"
         "QTabBar {"
         "   background-color: transparent;"
         "}"
@@ -571,7 +574,8 @@ void StyleSec::styleAsh( QString& ss , const QString& theme )
         //// CONFIGS ////
         // outer tabs
         "QTabWidget#ConfTabs QTabBar::tab {"
-        "   margin-bottom: 4px;"
+        "   margin-top: 3px;"
+        "   margin-bottom: 1px;"
         "   padding: 8px 6px;"
         "   border: 1px solid rgb( 96, 96, 96 );"
         "   border-left: 4px solid rgb( 96, 96, 96 );"
