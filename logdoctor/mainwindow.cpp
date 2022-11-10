@@ -1942,7 +1942,7 @@ void MainWindow::menu_actionCrissCross_triggered()
 
     } else {
         delete this->crisscross;
-        this->crisscross = new CrissCross( this->palette() );
+        this->crisscross = new CrissCross( this->window_theme_id );
         this->crisscross->show();
     }
 }
@@ -1954,7 +1954,7 @@ void MainWindow::menu_actionSnake_triggered()
 
     } else {
         delete this->snake;
-        this->snake = new Snake( this->palette(), this->FONTS.at("script") );
+        this->snake = new Snake( this->window_theme_id, this->FONTS.at("script") );
         this->snake->show();
     }
 }

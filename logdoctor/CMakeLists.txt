@@ -103,6 +103,9 @@ set(PROJECT_SOURCES
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
 
+    games/games.h
+    games/games.cpp
+
     games/crisscross.ui
     games/crisscross.h
     games/crisscross.cpp
