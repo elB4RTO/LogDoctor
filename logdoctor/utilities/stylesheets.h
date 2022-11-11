@@ -1,7 +1,9 @@
-#ifndef STYLESEC_H
-#define STYLESEC_H
+#ifndef STYLESHEETS_H
+#define STYLESHEETS_H
 
 #include <QString>
+
+#include <unordered_map>
 
 
 class StyleSec
@@ -13,10 +15,7 @@ public:
 
 private:
 
-    static void styleAsh( QString& ss, const QString& theme );
-    void styleCandy( QString& ss, const QString& theme );
-    void styleHerb( QString& ss, const QString& theme );
-    void stylePowder( QString& ss, const QString& theme );
+    static void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString> &style, const QString& theme );
 };
 
-#endif // STYLESEC_H
+#endif // STYLESHEETS_H
