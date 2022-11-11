@@ -1156,8 +1156,10 @@ void MainWindow::updateUiFonts()
     const QFont &small_font = this->FONTS.at( "main_small" );
     const QFont &font = this->FONTS.at( "main" );
     const QFont &big_font = this->FONTS.at( "main_big" );
-    QFont menu_font = this->FONTS.at( "main" );
+    QFont menu_font = this->FONTS.at( "main_small" );
     menu_font.setPointSizeF( this->font_size_small+1.5 );
+    QFont header_font = this->FONTS.at( "main_small" );
+    header_font.setPointSizeF( this->font_size_small+2 );
     // menu
     this->ui->menuLanguage->setFont( menu_font );
     this->ui->actionEnglish->setFont( menu_font );
@@ -1178,6 +1180,8 @@ void MainWindow::updateUiFonts()
     this->ui->button_LogFiles_Iis->setFont( font );
     this->ui->checkBox_LogFiles_CheckAll->setFont( small_font );
     this->ui->listLogFiles->setFont( font );
+    this->ui->listLogFiles->headerItem()->setFont( 0, header_font );
+    this->ui->listLogFiles->headerItem()->setFont( 1, header_font );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
     // log files parse
     this->ui->label_MakeStats_Size->setFont( font );
@@ -1197,6 +1201,7 @@ void MainWindow::updateUiFonts()
     this->ui->checkBox_StatsWarn_Hour->setFont( font );
     this->ui->box_StatsWarn_Hour->setFont( font );
     this->ui->table_StatsWarn->setFont( font );
+    this->ui->table_StatsWarn->horizontalHeader()->setFont( header_font );
     // stats speed
     this->ui->box_StatsSpeed_WebServer->setFont( font );
     this->ui->label_StatsSpeed_Year->setFont( font );
@@ -1217,6 +1222,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_StatsSpeed_Response->setFont( font );
     this->ui->inLine_StatsSpeed_Response->setFont( font );
     this->ui->table_StatsSpeed->setFont( font );
+    this->ui->table_StatsSpeed->horizontalHeader()->setFont( header_font );
     // stats count
     this->ui->box_StatsCount_WebServer->setFont( font );
     this->ui->label_StatsCount_Year->setFont( font );
@@ -1235,6 +1241,7 @@ void MainWindow::updateUiFonts()
     this->ui->button_StatsCount_UserAgent->setFont( font );
     this->ui->button_StatsCount_Client->setFont( font );
     this->ui->table_StatsCount->setFont( font );
+    this->ui->table_StatsCount->horizontalHeader()->setFont( header_font );
     // stats day
     this->ui->box_StatsDay_WebServer->setFont( font );
     this->ui->label_StatsDay_From->setFont( font );
