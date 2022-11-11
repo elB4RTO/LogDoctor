@@ -16,8 +16,6 @@ public:
 
     static const std::unordered_map<std::string, QColor> getColors();
     static const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes();
-
-    static const QPalette getPalette( const int& theme );
 };
 
 #endif // COLORS_H
