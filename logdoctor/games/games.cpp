@@ -61,6 +61,18 @@ void GameSec::crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
             };
             break;
         case 4:
+            style = {
+                {"window_base",
+                    "rgb( 170, 161, 137 )"},
+                {"tiles_base_hover",
+                    "rgb( 130, 121, 97 )"},
+                {"tiles_border_hover",
+                    "rgb( 140, 131, 107 )"},
+                {"lines_base",
+                    "rgb( 60, 51, 27 )"},
+                {"lines_border",
+                    "rgb( 170, 161, 137 )"}
+            };
             break;
         default:
             throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(theme_id), true );
@@ -212,6 +224,30 @@ void GameSec::snakeStyleSheet( QString& stylesheet, const int& theme_id )
             };
             break;
         case 4:
+            style = {
+                {"window_base_primary",
+                    "rgb( 170, 161, 137 )"},
+                {"window_base_secondary",
+                    "rgb( 230, 221, 197 )"},
+                {"window_border",
+                    "rgb( 80, 71, 47 )"},
+                {"play_button_base",
+                    "rgb( 130, 121, 97 )"},
+                {"play_button_base_hover",
+                    "rgb( 140, 131, 107 )"},
+                {"play_button_border",
+                    "rgb( 90, 81, 57 )"},
+                {"play_button_border_hover",
+                    "rgb( 80, 71, 47 )"},
+                {"score_frame_base",
+                    "rgb( 210, 201, 177 )"},
+                {"score_frame_border",
+                    "rgb( 170, 161, 137 )"},
+                {"score_text",
+                    "rgb( 30, 21, 0 )"},
+                {"score_base",
+                    "rgb( 230, 221, 197 )"}
+            };
             break;
         default:
             throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(theme_id), true );
