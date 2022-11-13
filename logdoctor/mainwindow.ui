@@ -2773,7 +2773,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>14</x>
+                    <x>0</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -6172,7 +6172,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <string>Theme to use for the window</string>
                      </property>
                      <property name="text">
-                      <string>Icons set</string>
+                      <string>Icons</string>
                      </property>
                     </widget>
                    </item>
@@ -8441,7 +8441,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9445,7 +9445,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -10527,7 +10527,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>

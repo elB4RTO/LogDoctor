@@ -187,7 +187,7 @@ void Crapup::versionCheck( const float& v )
                 // new version available
                 this->ui->label_Title->setText( Crapup::tr("New version available") );
                 this->ui->label_Message->setText( Crapup::tr(
-                    "A new version available!\n"
+                    "A new version is available!\n"
                     "Please visit LogDoctor's git repository and follow the instruction about how to update" ) );
             } else if ( version == v ) {
                 // same version
