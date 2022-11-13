@@ -245,6 +245,7 @@ MainWindow::~MainWindow()
     delete this->craphelp;
     delete this->crapnote;
     delete this->crapinfo;
+    delete this->crapup;
     delete this->crisscross;
     delete this->snake;
 }
@@ -1929,6 +1930,7 @@ void MainWindow::menu_actionInfos_triggered()
     version_ = version_.substr( 0, cut+3 );
     delete this->crapinfo;
     this->crapinfo = new Crapinfo(
+        this->window_theme_id,
         QString::fromStdString( version_ ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->logdoc_path ),
@@ -1938,7 +1940,17 @@ void MainWindow::menu_actionInfos_triggered()
 
 void MainWindow::menu_actionCheckUpdates_triggered()
 {
-    this->crapup.versionCheck( this->version, this->dialogs_level );
+    if ( this->crapup->isVisible() ) {
+        this->crapup->activateWindow();
+
+    } else {
+        delete this->crapup;
+        this->crapup = new Crapup(
+            this->window_theme_id,
+            this->icons_theme );
+        this->crapup->show();
+        this->crapup->versionCheck( 1.0 );
+    }
 }
 
 // play a game
