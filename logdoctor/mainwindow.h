@@ -692,7 +692,7 @@ private:
     ////////////////
     //// CRAPUP ////
     ////////////////
-    Crapup crapup;
+    Crapup *crapup = new Crapup(0,"");
 
 
     //////////////////
@@ -704,7 +704,7 @@ private:
     //////////////////
     //// CRAPINFO ////
     //////////////////
-    Crapinfo* crapinfo = new Crapinfo("","","","");
+    Crapinfo* crapinfo = new Crapinfo(0,"","","","");
 
 
     ///////////////////
