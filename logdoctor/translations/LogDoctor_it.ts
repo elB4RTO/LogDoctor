@@ -60,6 +60,85 @@
     </message>
 </context>
 <context>
+    <name>Crapup</name>
+    <message>
+        <source>Checking for updates</source>
+        <translation>Controllo degli aggiornamenti</translation>
+    </message>
+    <message>
+        <source>Failed to establish a connection</source>
+        <translation>Fallimento nello stabilire una connessione</translation>
+    </message>
+    <message>
+        <source>Connection error, please try again later</source>
+        <translation>Errore di connessione, per favore riprova più tardi</translation>
+    </message>
+    <message>
+        <source>Connection timed out</source>
+        <translation>Connessione scaduta</translation>
+    </message>
+    <message>
+        <source>New version available</source>
+        <translation>Nuova versione disponibile</translation>
+    </message>
+    <message>
+        <source>No update found</source>
+        <translation>Nessun aggiornamento disponibile</translation>
+    </message>
+    <message>
+        <source>LogDoctor is up-to-date</source>
+        <translation>LogDoctor è aggiornato</translation>
+    </message>
+    <message>
+        <source>:/</source>
+        <translation>:/</translation>
+    </message>
+    <message>
+        <source>You&apos;re running a version from the future!
+Your version is beyond the current upstream version
+Are you running the original LogDoctor?
+Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
+        <translation>Stai usando una versione proveniente dal futuro!
+La tua versione è maggiore di quella online
+Sei sicuro di avere la versione originale di LogDoctor?
+È consigliato visitare il repository di LogDoctor e scaricalo di nuovo</translation>
+    </message>
+    <message>
+        <source>Version check failed</source>
+        <translation>Controllo della versione fallito</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+initial version mark not found</source>
+        <translation>È avvenuto un errore durante l&apos;analisi:
+marcatore iniziale non trovato</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+final version mark not found</source>
+        <translation>È avvenuto un errore durante l&apos;analisi:
+marcatore finale non trovato</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+malformed version</source>
+        <translation>È avvenuto un errore durante l&apos;analisi:
+versione malformata</translation>
+    </message>
+    <message>
+        <source>An error occured while comparing:
+malformed upstream version</source>
+        <translation>È avvenuto un errore durante la comparazione:
+versione upstream malformata</translation>
+    </message>
+    <message>
+        <source>A new version is available!
+Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
+        <translation>È disponibile una nuova versione!
+Visita il repository di LogDoctor e segui le istruzioni su come aggiornare</translation>
+    </message>
+</context>
+<context>
     <name>CrissCross</name>
     <message>
         <source>You beated me!</source>
@@ -192,18 +271,6 @@ Continuare?</translation>
     <message>
         <source>Configuration file not found</source>
         <translation>File di configurazione non trovato</translation>
-    </message>
-    <message>
-        <source>Version check</source>
-        <translation>Controllo della versione</translation>
-    </message>
-    <message>
-        <source>Version check failed</source>
-        <translation>Controllo della versione fallito</translation>
-    </message>
-    <message>
-        <source>Failed to establish a connection</source>
-        <translation>Fallimento nello stabilire una connessione</translation>
     </message>
     <message>
         <source>Failed to retrieve the help file</source>
@@ -350,60 +417,6 @@ Continuare?</translation>
         <translation>Configurazione attuale non salvata</translation>
     </message>
     <message>
-        <source>Failed to fetch the upstream version</source>
-        <translation>Fallimento nel recuperare la versione upstream</translation>
-    </message>
-    <message>
-        <source>An error occured while trying to establish a connection with</source>
-        <translation>Errore nello stabilire una connessione con</translation>
-    </message>
-    <message>
-        <source>An error occured while establishing a connection with any of the hosts</source>
-        <translation>Errore nello stabilire una connessione con ognuno degli host</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-version mark not found</source>
-        <translation>È avvenuto un errore durante l&apos;analisi:
-marcatura della versione non trovata</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-malformed version</source>
-        <translation>È avvenuto un errore durante l&apos;analisi:
-versione mal formata</translation>
-    </message>
-    <message>
-        <source>A new version available!
-
-Please visit LogDoctor&apos;s git repository
-and follow the instruction about how to update</source>
-        <translation>È disponibile una nuova versione!
-
-Visita il repository di LogDoctor
-e segui le istruzioni su come aggiornare</translation>
-    </message>
-    <message>
-        <source>LogDoctor is up-to-date</source>
-        <translation>LogDoctor è aggiornato</translation>
-    </message>
-    <message>
-        <source>You&apos;re running a version from the future!
-
-Your version is beyond the current upstream version
-
-Are you running the original LogDoctor?
-If you think so, you may be a victim of a malware
-Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
-        <translation>La tua versione arriva dal futuro!
-
-La tua versione è maggiore di quella online
-
-Sei sicuro di avere la versione originale di LogDoctor?
-Se pensi che sia così, potresti essere la vittima di un malware
-È consigliato visitare il repository di LogDoctor e scaricalo di nuovo</translation>
-    </message>
-    <message>
         <source>An error occured while getting the help file</source>
         <translation>Errore nel recuperare il file di aiuto</translation>
     </message>
@@ -544,12 +557,6 @@ e può portare ad avere dati incorretti</translation>
         <translation>Per favore segnala questo problema</translation>
     </message>
     <message>
-        <source>Please check your internet connection and retry
-If this error persists, please report this issue</source>
-        <translation>Ricontrolla la tua connessione e riprova
-Se l&apos;errore persiste, per favore segnala questo problema</translation>
-    </message>
-    <message>
         <source>Please remove the conflict and retry</source>
         <translation>Per favore rimuovi il conflitto e riprova</translation>
     </message>
@@ -671,27 +678,9 @@ please follow the instruction on the repository page</source>
         <translation>Se desideri avere questa lingua in LogDoctor,
 per favore segui le istruzioni nella pagina del repository</translation>
     </message>
-    <message>
-        <source>An error occured while comparing:
-version lesser than 0</source>
-        <translation>È avvenuto un errore durante il confronto:
-la versione è minore di 0</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Parse and store logs</source>
-        <translation>Esamina ed immagazzina i log</translation>
-    </message>
-    <message>
-        <source>Log Files</source>
-        <translation>File di Log</translation>
-    </message>
-    <message>
-        <source>Select which log files to use</source>
-        <translation>Seleziona i file da utilizzare</translation>
-    </message>
     <message>
         <source>Parse logs from the Apache2 web server</source>
         <translation>Esamina i log del web server Apache2</translation>
@@ -725,10 +714,6 @@ la versione è minore di 0</translation>
         <translation>Ricarica la lista</translation>
     </message>
     <message>
-        <source>Parse the selected files to make statistics</source>
-        <translation>Esamina i file selezionati per creare statistiche</translation>
-    </message>
-    <message>
         <source>Total size of the parsed data</source>
         <translation>Dimensione totale analizzata</translation>
     </message>
@@ -751,14 +736,6 @@ la versione è minore di 0</translation>
     <message>
         <source>Average speed, in parsed data size per second</source>
         <translation>Velocità media, in dimensione analizzata per secondo</translation>
-    </message>
-    <message>
-        <source>View statistics about stored logs</source>
-        <translation>Guarda le statistiche sui log immagazzinati</translation>
-    </message>
-    <message>
-        <source>View the log lines marked as Warning</source>
-        <translation>Guarda le linee marcate come Avvertimento</translation>
     </message>
     <message>
         <source>Draw the chart</source>
@@ -833,12 +810,6 @@ la versione è minore di 0</translation>
         <translation>Dimensione in Bytes del contenuto servito, solitamente include si aheader che dati</translation>
     </message>
     <message>
-        <source>View the Time Taken to serve the content, with a time gap of 1 second.
-If more than 1 request if found for the same time, the mean value is used.</source>
-        <translation>Visualizza il Tempo Impiegato per servire i contenuti, in unità di tempo da 1 secondo.
-Se ci sono più richieste nello stesso secondo, verrà usata la media dei valori.</translation>
-    </message>
-    <message>
         <source>Protocol:</source>
         <translation>Protocollo:</translation>
     </message>
@@ -889,12 +860,6 @@ Se ci sono più richieste nello stesso secondo, verrà usata la media dei valori
     <message>
         <source>Value of the field</source>
         <translation>Valore del campo</translation>
-    </message>
-    <message>
-        <source>Time of day perspective with a 10 minutes gap for every hour.
-Counts of the elements for a single date, mean value of the counts for a period.</source>
-        <translation>Prospettiva della giornata con intervalli di 10 minuti per ogni ora.
-Conteggio degli elementi per una singola data, media dei valori per un periodo.</translation>
     </message>
     <message>
         <source>From:</source>
@@ -975,10 +940,6 @@ Conteggio degli elementi per una singola data, media dei valori per un periodo.<
     <message>
         <source>Total work</source>
         <translation>Lavoro totale</translation>
-    </message>
-    <message>
-        <source>Configure LogDoctor</source>
-        <translation>Configura LogDoctor</translation>
     </message>
     <message>
         <source>General</source>
@@ -1246,12 +1207,6 @@ Conteggio degli elementi per una singola data, media dei valori per un periodo.<
         <translation>Applica la stringa corrente</translation>
     </message>
     <message>
-        <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as &apos;DISCARDED&apos;</source>
-        <translation>Genera una linea di log dalla stringa salvata, come esempio per controllare che sia stata applicata correttamente.
-I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</translation>
-    </message>
-    <message>
         <source>Generate sample</source>
         <translation>Genera esempio</translation>
     </message>
@@ -1338,10 +1293,6 @@ I campi marcati come &apos;DISCARDED&apos; sono stati applicati correttamente, m
         <translation>Attrezzi</translation>
     </message>
     <message>
-        <source>Block-note</source>
-        <translation>Blocco note</translation>
-    </message>
-    <message>
         <source>Check updates</source>
         <translation>Controlla aggiornamenti</translation>
     </message>
@@ -1390,26 +1341,8 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
 Per i numeri, usa &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; per dichiarare cosa usare</translation>
     </message>
     <message>
-        <source>Start Parsing</source>
-        <translation>Analizza</translation>
-    </message>
-    <message>
         <source>The URL which redirected the Client to the requested page</source>
         <translation>L&apos;URL da cui è stato redirezionato il Cliente verso la pagina richiesta</translation>
-    </message>
-    <message>
-        <source>Group and count identical elements of a field in a single date</source>
-        <translation>Raggruppa e conteggia gli elementi identici per un campo in una singola data</translation>
-    </message>
-    <message>
-        <source>Relational chart for two elements: how many times a value is found in the same line with the other.
-Time of day counts for a single date, entire days counts in a period.</source>
-        <translation>Grafico relazionale tra due elementi: quante volte un valore viene trovato nella stessa linea di un altro.
-Conto negli orari del giorno per una singola data, o totali delle giornate per un periodo.</translation>
-    </message>
-    <message>
-        <source>Global overview</source>
-        <translation>Panoramica globale</translation>
     </message>
     <message>
         <source>Remember the window&apos;s position and size</source>
@@ -1490,6 +1423,24 @@ Conto negli orari del giorno per una singola data, o totali delle giornate per u
     <message>
         <source>Play Snake</source>
         <translation>Gioca a Snake</translation>
+    </message>
+    <message>
+        <source>Auto (Default)</source>
+        <translation>Auto (Default)</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Chiaro</translation>
+    </message>
+    <message>
+        <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
+Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</source>
+        <translation>Genera una linea di log dalla stringa salvata, come esempio per controllare che sia stata applicata correttamente.
+I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation>Icone</translation>
     </message>
 </context>
 <context>
