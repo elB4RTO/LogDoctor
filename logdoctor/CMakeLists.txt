@@ -92,6 +92,7 @@ set(PROJECT_SOURCES
     modules/craphelp/craphelp.h
     modules/craphelp/craphelp.cpp
 
+    modules/crapup/crapup.ui
     modules/crapup/crapup.h
     modules/crapup/crapup.cpp
 
