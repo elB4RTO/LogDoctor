@@ -60,6 +60,85 @@
     </message>
 </context>
 <context>
+    <name>Crapup</name>
+    <message>
+        <source>Checking for updates</source>
+        <translation>Checking for updates</translation>
+    </message>
+    <message>
+        <source>Failed to establish a connection</source>
+        <translation>Failed to establish a connection</translation>
+    </message>
+    <message>
+        <source>Connection error, please try again later</source>
+        <translation>Connection error, please try again later</translation>
+    </message>
+    <message>
+        <source>Connection timed out</source>
+        <translation>Connection timed out</translation>
+    </message>
+    <message>
+        <source>New version available</source>
+        <translation>New version available</translation>
+    </message>
+    <message>
+        <source>No update found</source>
+        <translation>No update found</translation>
+    </message>
+    <message>
+        <source>LogDoctor is up-to-date</source>
+        <translation>No update found</translation>
+    </message>
+    <message>
+        <source>:/</source>
+        <translation>:/</translation>
+    </message>
+    <message>
+        <source>You&apos;re running a version from the future!
+Your version is beyond the current upstream version
+Are you running the original LogDoctor?
+Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
+        <translation>You&apos;re running a version from the future!
+Your version is beyond the current upstream version
+Are you running the original LogDoctor?
+Please visit the LogDoctor&apos;s repository and get a fresh version of it</translation>
+    </message>
+    <message>
+        <source>Version check failed</source>
+        <translation>Version check failed</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+initial version mark not found</source>
+        <translation>An error occured while parsing:
+initial version mark not found</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+final version mark not found</source>
+        <translation>An error occured while parsing:
+final version mark not found</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+malformed version</source>
+        <translation>An error occured while parsing:
+malformed version</translation>
+    </message>
+    <message>
+        <source>An error occured while comparing:
+malformed upstream version</source>
+        <translation>An error occured while comparing:
+malformed upstream version</translation>
+    </message>
+    <message>
+        <source>A new version is available!
+Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
+        <translation>A new version is available!
+Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</translation>
+    </message>
+</context>
+<context>
     <name>CrissCross</name>
     <message>
         <source>You beated me!</source>
@@ -192,18 +271,6 @@ Continue?</translation>
     <message>
         <source>Configuration file not found</source>
         <translation>Configuration file not found</translation>
-    </message>
-    <message>
-        <source>Version check</source>
-        <translation>Version check</translation>
-    </message>
-    <message>
-        <source>Version check failed</source>
-        <translation>Version check failed</translation>
-    </message>
-    <message>
-        <source>Failed to establish a connection</source>
-        <translation>Failed to establish a connection</translation>
     </message>
     <message>
         <source>Failed to retrieve the help file</source>
@@ -350,60 +417,6 @@ Continue?</translation>
         <translation>Current configuration not saved</translation>
     </message>
     <message>
-        <source>Failed to fetch the upstream version</source>
-        <translation>Failed to fetch the upstream version</translation>
-    </message>
-    <message>
-        <source>An error occured while trying to establish a connection with</source>
-        <translation>An error occured while trying to establish a connection with</translation>
-    </message>
-    <message>
-        <source>An error occured while establishing a connection with any of the hosts</source>
-        <translation>An error occured while establishing a connection with any of the hosts</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-version mark not found</source>
-        <translation>An error occured while parsing:
-version mark not found</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-malformed version</source>
-        <translation>An error occured while parsing:
-malformed version</translation>
-    </message>
-    <message>
-        <source>A new version available!
-
-Please visit LogDoctor&apos;s git repository
-and follow the instruction about how to update</source>
-        <translation>A new version available!
-
-Please visit LogDoctor&apos;s git repository
-and follow the instruction about how to update</translation>
-    </message>
-    <message>
-        <source>LogDoctor is up-to-date</source>
-        <translation>LogDoctor is up-to-date</translation>
-    </message>
-    <message>
-        <source>You&apos;re running a version from the future!
-
-Your version is beyond the current upstream version
-
-Are you running the original LogDoctor?
-If you think so, you may be a victim of a malware
-Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
-        <translation>You&apos;re running a version from the future!
-
-Your version is beyond the current upstream version
-
-Are you running the original LogDoctor?
-If you think so, you may be a victim of a malware
-Please visit the LogDoctor&apos;s repository and get a fresh version of it</translation>
-    </message>
-    <message>
         <source>An error occured while getting the help file</source>
         <translation>An error occured while getting the help file</translation>
     </message>
@@ -544,12 +557,6 @@ and possibly leading to store incorrect data</translation>
         <translation>Please report this issue</translation>
     </message>
     <message>
-        <source>Please check your internet connection and retry
-If this error persists, please report this issue</source>
-        <translation>Please check your internet connection and retry
-If this error persists, please report this issue</translation>
-    </message>
-    <message>
         <source>Please remove the conflict and retry</source>
         <translation>Please remove the conflict and retry</translation>
     </message>
@@ -671,27 +678,9 @@ please follow the instruction on the repository page</source>
         <translation>If you&apos;d like to have this locale in LogDoctor,
 please follow the instruction on the repository page</translation>
     </message>
-    <message>
-        <source>An error occured while comparing:
-version lesser than 0</source>
-        <translation>An error occured while comparing:
-version lesser than 0</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Parse and store logs</source>
-        <translation>Parse and store logs</translation>
-    </message>
-    <message>
-        <source>Log Files</source>
-        <translation>Log Files</translation>
-    </message>
-    <message>
-        <source>Select which log files to use</source>
-        <translation>Select which log files to use</translation>
-    </message>
     <message>
         <source>Parse logs from the Apache2 web server</source>
         <translation>Parse logs from the Apache2 web server</translation>
@@ -725,10 +714,6 @@ version lesser than 0</translation>
         <translation>Refresh the list</translation>
     </message>
     <message>
-        <source>Parse the selected files to make statistics</source>
-        <translation>Parse the selected files to make statistics</translation>
-    </message>
-    <message>
         <source>Total size of the parsed data</source>
         <translation>Total size of the parsed data</translation>
     </message>
@@ -751,14 +736,6 @@ version lesser than 0</translation>
     <message>
         <source>Average speed, in parsed data size per second</source>
         <translation>Average speed, in parsed data size per second</translation>
-    </message>
-    <message>
-        <source>View statistics about stored logs</source>
-        <translation>View statistics about stored logs</translation>
-    </message>
-    <message>
-        <source>View the log lines marked as Warning</source>
-        <translation>View the log lines marked as Warning</translation>
     </message>
     <message>
         <source>Draw the chart</source>
@@ -833,12 +810,6 @@ version lesser than 0</translation>
         <translation>Size in Bytes of the served content, usually includes header and data</translation>
     </message>
     <message>
-        <source>View the Time Taken to serve the content, with a time gap of 1 second.
-If more than 1 request if found for the same time, the mean value is used.</source>
-        <translation>View the Time Taken to serve the content, with a time gap of 1 second.
-If more than 1 request if found for the same time, the mean value is used.</translation>
-    </message>
-    <message>
         <source>Protocol:</source>
         <translation>Protocol:</translation>
     </message>
@@ -889,12 +860,6 @@ If more than 1 request if found for the same time, the mean value is used.</tran
     <message>
         <source>Value of the field</source>
         <translation>Value of the field</translation>
-    </message>
-    <message>
-        <source>Time of day perspective with a 10 minutes gap for every hour.
-Counts of the elements for a single date, mean value of the counts for a period.</source>
-        <translation>Time of day perspective with a 10 minutes gap for every hour.
-Counts of the elements for a single date, mean value of the counts for a period.</translation>
     </message>
     <message>
         <source>From:</source>
@@ -975,10 +940,6 @@ Counts of the elements for a single date, mean value of the counts for a period.
     <message>
         <source>Total work</source>
         <translation>Total work</translation>
-    </message>
-    <message>
-        <source>Configure LogDoctor</source>
-        <translation>Configure LogDoctor</translation>
     </message>
     <message>
         <source>General</source>
@@ -1245,12 +1206,6 @@ Counts of the elements for a single date, mean value of the counts for a period.
         <translation>Apply the current string</translation>
     </message>
     <message>
-        <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as &apos;DISCARDED&apos;</source>
-        <translation>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will apear as &apos;DISCARDED&apos;</translation>
-    </message>
-    <message>
         <source>Generate sample</source>
         <translation>Generate sample</translation>
     </message>
@@ -1337,10 +1292,6 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation>Tools</translation>
     </message>
     <message>
-        <source>Block-note</source>
-        <translation>Block-note</translation>
-    </message>
-    <message>
         <source>Check updates</source>
         <translation>Check updates</translation>
     </message>
@@ -1389,26 +1340,8 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
 With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</translation>
     </message>
     <message>
-        <source>Start Parsing</source>
-        <translation>Start Parsing</translation>
-    </message>
-    <message>
         <source>The URL which redirected the Client to the requested page</source>
         <translation>The URL which redirected the Client to the requested page</translation>
-    </message>
-    <message>
-        <source>Group and count identical elements of a field in a single date</source>
-        <translation>Group and count identical elements of a field in a single date</translation>
-    </message>
-    <message>
-        <source>Relational chart for two elements: how many times a value is found in the same line with the other.
-Time of day counts for a single date, entire days counts in a period.</source>
-        <translation>Relational chart for two elements: how many times a value is found in the same line with the other.
-Time of day counts for a single date, entire days counts in a period.</translation>
-    </message>
-    <message>
-        <source>Global overview</source>
-        <translation>Global overview</translation>
     </message>
     <message>
         <source>Remember the window&apos;s position and size</source>
@@ -1489,6 +1422,24 @@ Time of day counts for a single date, entire days counts in a period.</translati
     <message>
         <source>Play Snake</source>
         <translation>Play Snake</translation>
+    </message>
+    <message>
+        <source>Auto (Default)</source>
+        <translation>Auto (Default)</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Light</translation>
+    </message>
+    <message>
+        <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
+Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</source>
+        <translation>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
+Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</translation>
+    </message>
+    <message>
+        <source>Icons</source>
+        <translation>Icons</translation>
     </message>
 </context>
 <context>
