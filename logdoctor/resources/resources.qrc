@@ -23,6 +23,10 @@
         <file>icons/dialogs/info.png</file>
         <file>icons/dialogs/quest.png</file>
         <file>icons/dialogs/warn.png</file>
+        <file>icons/light/checkbox_checked.png</file>
+        <file>icons/light/checkbox_semichecked.png</file>
+        <file>icons/light/checkbox_unchecked.png</file>
+        <file>icons/light/checking.png</file>
         <file>icons/light/conf_off.png</file>
         <file>icons/light/conf_on.png</file>
         <file>icons/light/count_off.png</file>
@@ -40,6 +44,8 @@
         <file>icons/light/mk_size.png</file>
         <file>icons/light/mk_speed.png</file>
         <file>icons/light/mk_time.png</file>
+        <file>icons/light/radiobutton_checked.png</file>
+        <file>icons/light/radiobutton_unchecked.png</file>
         <file>icons/light/refresh.png</file>
         <file>icons/light/relational_off.png</file>
         <file>icons/light/relational_on.png</file>
@@ -47,11 +53,17 @@
         <file>icons/light/show_file.png</file>
         <file>icons/light/speed_off.png</file>
         <file>icons/light/speed_on.png</file>
+        <file>icons/light/spinbox_add.png</file>
+        <file>icons/light/spinbox_sub.png</file>
         <file>icons/light/up.png</file>
         <file>icons/light/view_off.png</file>
         <file>icons/light/view_on.png</file>
         <file>icons/light/warn_off.png</file>
         <file>icons/light/warn_on.png</file>
+        <file>icons/dark/checkbox_checked.png</file>
+        <file>icons/dark/checkbox_semichecked.png</file>
+        <file>icons/dark/checkbox_unchecked.png</file>
+        <file>icons/dark/checking.png</file>
         <file>icons/dark/conf_off.png</file>
         <file>icons/dark/conf_on.png</file>
         <file>icons/dark/count_off.png</file>
@@ -69,6 +81,8 @@
         <file>icons/dark/mk_size.png</file>
         <file>icons/dark/mk_speed.png</file>
         <file>icons/dark/mk_time.png</file>
+        <file>icons/dark/radiobutton_checked.png</file>
+        <file>icons/dark/radiobutton_unchecked.png</file>
         <file>icons/dark/refresh.png</file>
         <file>icons/dark/relational_off.png</file>
         <file>icons/dark/relational_on.png</file>
@@ -76,6 +90,8 @@
         <file>icons/dark/show_file.png</file>
         <file>icons/dark/speed_off.png</file>
         <file>icons/dark/speed_on.png</file>
+        <file>icons/dark/spinbox_add.png</file>
+        <file>icons/dark/spinbox_sub.png</file>
         <file>icons/dark/up.png</file>
         <file>icons/dark/view_off.png</file>
         <file>icons/dark/view_on.png</file>
@@ -84,20 +100,6 @@
         <file>icons/midtone/down.png</file>
         <file>icons/midtone/up.png</file>
         <file>icons/midtone/save.png</file>
-        <file>icons/light/checkbox_checked.png</file>
-        <file>icons/light/checkbox_semichecked.png</file>
-        <file>icons/light/checkbox_unchecked.png</file>
-        <file>icons/light/radiobutton_checked.png</file>
-        <file>icons/light/radiobutton_unchecked.png</file>
-        <file>icons/dark/checkbox_checked.png</file>
-        <file>icons/dark/checkbox_semichecked.png</file>
-        <file>icons/dark/checkbox_unchecked.png</file>
-        <file>icons/dark/radiobutton_checked.png</file>
-        <file>icons/dark/radiobutton_unchecked.png</file>
-        <file>icons/light/spinbox_add.png</file>
-        <file>icons/light/spinbox_sub.png</file>
-        <file>icons/dark/spinbox_add.png</file>
-        <file>icons/dark/spinbox_sub.png</file>
         <file>icons/midtone/spinbox_add.png</file>
         <file>icons/midtone/spinbox_sub.png</file>
     </qresource>
