@@ -589,8 +589,11 @@ void Snake::checkCollision()
 
     } else if ( this->snakeInTile( x, y ) ) {
         // collision with another part of the snake
-        this->game_over = true;
-        this->game_over_msg = Snake::tr("You ate yourself!");
+        if ( this->snake.back().x != x || this->snake.back().y != y ) {
+            // not the tail
+            this->game_over = true;
+            this->game_over_msg = Snake::tr("You ate yourself!");
+        }
 
     } else if ( x == this->food.x && y == this->food.y ) {
         // will eat
