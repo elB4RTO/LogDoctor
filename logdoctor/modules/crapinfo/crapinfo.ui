@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string notr="true">LogDoctor - Info</string>
+   <string notr="true">LogDoctor - Infos</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources/resources.qrc">
@@ -26,19 +26,34 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <property name="tabSpacing">
+      <number>4</number>
+     </property>
      <widget class="QWidget" name="page_LogDoc">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>835</width>
-        <height>517</height>
+        <height>521</height>
        </rect>
       </property>
       <attribute name="label">
        <string notr="true">LogDoctor</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QScrollArea" name="scrollArea_LogDoc">
          <property name="frameShape">
@@ -52,8 +67,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>817</width>
-            <height>499</height>
+            <width>835</width>
+            <height>521</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
@@ -216,6 +231,18 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="inLine_Links_Github">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>24</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <italic>true</italic>
@@ -243,6 +270,18 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="inLine_Links_Disroot">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>24</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <italic>true</italic>
@@ -270,6 +309,18 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="inLine_Links_Gitlab">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>24</height>
+                    </size>
+                   </property>
                    <property name="font">
                     <font>
                      <italic>true</italic>
@@ -352,13 +403,25 @@
         <x>0</x>
         <y>0</y>
         <width>835</width>
-        <height>517</height>
+        <height>521</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Paths</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QFrame" name="frame_Paths_Paths">
          <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -414,13 +477,25 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>797</width>
+               <width>815</width>
                <height>58</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
                <widget class="QLineEdit" name="inLine_ExecPath">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
                 <property name="acceptDrops">
                  <bool>false</bool>
                 </property>
@@ -507,13 +582,25 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>797</width>
+               <width>815</width>
                <height>58</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
                <widget class="QLineEdit" name="inLine_ConfPath">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
                 <property name="acceptDrops">
                  <bool>false</bool>
                 </property>
@@ -600,13 +687,25 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>797</width>
+               <width>815</width>
                <height>58</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
                <widget class="QLineEdit" name="inLine_DataPath">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>24</height>
+                 </size>
+                </property>
                 <property name="acceptDrops">
                  <bool>false</bool>
                 </property>
