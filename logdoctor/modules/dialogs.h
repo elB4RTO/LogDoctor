@@ -29,13 +29,6 @@ public:
     static void errConfDirNotWritable( const QString& dir, QWidget *parent=nullptr );
     static void errFailedApplyingConfigs( const QString& msg="", QWidget *parent=nullptr );
 
-    // update
-    static void errVersionCheckFailed( const int& err_code, QWidget *parent=nullptr );
-    static void warnConnectionFailed( const QString& link, const QString& err_msg, QWidget *parent=nullptr );
-    static void msgNewVersion( QWidget *parent=nullptr );
-    static void msgSameVersion( QWidget *parent=nullptr );
-    static void warnFutureVersion( QWidget *parent=nullptr );
-
     // help
     static void errHelpFailed( const QString& link, const QString& msg="", QWidget *parent=nullptr );
     static void errHelpNotFound( const QString& link, QWidget *parent=nullptr );
