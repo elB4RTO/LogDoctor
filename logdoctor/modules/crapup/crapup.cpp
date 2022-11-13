@@ -179,6 +179,7 @@ void Crapup::versionCheck( const float& v )
             default:
                 throw GenericException("Unexpected err_code in VersionCheck: "+std::to_string(err));
                 break;
+        }
 
     } else {
         if ( successful ) {
