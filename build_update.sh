@@ -9,19 +9,19 @@ cd "$docdir"
 
 # Check cmake availability
 if [[ $(which cmake) =~ ^/ ]]
-	then
-		$()
-	else
-		echo "Error: Cmake is not installed"
-		exit
-	fi
+then
+	$()
+else
+	echo "Error: Cmake is not installed"
+	exit
+fi
 
 # Check the existence of a previous executable file
 if [ ! -e /usr/bin/logdoctor ]
-	then
-		echo "Warning: no previous installation detected, please run the installation script instead"
-		exit
-	fi
+then
+	echo "Warning: no previous installation detected, please run the installation script instead"
+	exit
+fi
 
 # Start the compilation process
 echo "Starting compilation process"
@@ -32,24 +32,23 @@ mkdir build && cd build
 # Prepare the cmake files
 cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel
 if [[ "$?" != "0" ]]
-	then
-		# an error occured during preparation
-		echo "Error: failed to prepare cmake files"
-		exit
-	fi
+then
+	# an error occured during preparation
+	echo "Error: failed to prepare cmake files"
+	exit
+fi
 
 # Build the project
 cmake --build ./ --target all
 if [[ "$?" == "0" ]]
-	then
-		# compiled succesfully
-		echo "Done compiling"
-		mv LogDoctor logdoctor
-	else
-		# an error occured during compilation
-		echo "Error: failed to compile"
-		exit
-	fi
+then
+	# compiled succesfully
+	mv LogDoctor logdoctor
+else
+	# an error occured during compilation
+	echo "Error: failed to compile"
+	exit
+fi
 
 # Compilation finished
 wait
@@ -61,46 +60,46 @@ cd ../installation_stuff/
 
 
 if [ ! -e ~/.local/share/LogDoctor ]
+then
+	mkdir -p ~/.local/share/LogDoctor
+	if [[ "$?" != "0" ]]
 	then
-		mkdir -p ~/.local/share/LogDoctor
-		if [[ "$?" != "0" ]]
-			then
-				echo "Error: failed to create directory: ~/.local/share/LogDoctor"
-				exit
-	fi
-cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
-if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to copy LogDoctor's data"
+		echo "Error: failed to create directory: ~/.local/share/LogDoctor"
 		exit
 	fi
+fi
+cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
+if [[ "$?" != "0" ]]
+then
+	echo "Error: failed to copy LogDoctor's data"
+	exit
+fi
 
 
 cp --no-preserve=all ./LogDoctor.desktop ~/.local/share/applications/
 if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to create a menu entry"
-		exit
-	fi
+then
+	echo "Error: failed to create a menu entry"
+	exit
+fi
 
 
 sudo cp --no-preserve=all ./logdoctor.svg /usr/share/icons
 if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to copy LogDoctor's icon"
-		exit
-	fi
+then
+	echo "Error: failed to copy LogDoctor's icon"
+	exit
+fi
 
 
 cd ../build
-cp --no-preserve=all ./logdoctor ./logdoctor.copy
-chmod 755 ./logdoctor.copy
-sudo mv ./logdoctor.copy /usr/bin/logdoctor
+chmod 755 ./logdoctor
+sudo mv ./logdoctor /usr/bin/
 if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to copy the executable"
-		exit
-	fi
+then
+	echo "Error: failed to copy the executable"
+	exit
+fi
 
 
 # Update finished
