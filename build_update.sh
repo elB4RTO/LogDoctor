@@ -27,7 +27,7 @@ fi
 echo -e "\nStarting compilation process\n"
 
 # Make a build folder
-if [ -d build ]
+if [ -e build ]
 then
 	rm -r build
 fi
@@ -72,6 +72,15 @@ then
 		exit
 	fi
 fi
+for res in $(ls ./logdocdata)
+do
+	rm -r ~/.local/share/LogDoctor/$res
+	if [[ "$?" != "0" ]]
+	then
+		echo -e "\nError: failed to remove old resources: ~/.local/share/LogDoctor/$res"
+		exit
+	fi
+done
 cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
 if [[ "$?" != "0" ]]
 then
