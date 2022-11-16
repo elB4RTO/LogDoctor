@@ -4,23 +4,27 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>LogDoctor</string>
+	<key>CFBundleDisplayName</key>
+	<string>LogDoctor</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.logdoctor.LogDoctor</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.00</string>
+	<key>CFBundleVersion</key>
+	<string>2.00</string>
 	<key>CFBundleExecutable</key>
 	<string>LogDoctor</string>
 	<key>CFBundleIconFile</key>
 	<string>LogDoctor</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleDisplayName</key>
-	<string>LogDoctor</string>
-	<key>CFBundleName</key>
-	<string>LogDoctor</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.00.0</string>
-	<key>CFBundleVersion</key>
-	<string>1.00.0</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
 </dict>
 </plist>
