@@ -9,6 +9,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <unordered_map> // leave this for OSX
 
 
 Crapup::Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent ) :
