@@ -26,7 +26,7 @@ then
 		read agree
 		case "$agree"
 		in
-			"y" | "Y")
+			"y" | "Y" | [yY][eE][sS])
 				printf "\n"
 				break
 			;;
@@ -41,7 +41,7 @@ fi
 echo -e "\nStarting compilation process\n"
 
 # Make a build folder
-if [ -d build ]
+if [ -e build ]
 then
 	rm -r build
 fi
@@ -88,7 +88,7 @@ then
 			read agree
 			case "$agree"
 			in
-				"y" | "Y")
+				"y" | "Y" | [yY][eE][sS])
 					printf "\n"
 					cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
 					if [[ "$?" != "0" ]]
@@ -99,8 +99,11 @@ then
 					fi
 					break
 				;;
-				*)
+				"n" | "N" | [nN][oO])
 					break
+				;;
+				*)
+					echo "Invalid answer"
 				;;
 			esac
 		done
@@ -130,6 +133,15 @@ then
 		exit
 	fi
 fi
+for res in $(ls ./logdocdata)
+do
+	rm -r ~/.local/share/LogDoctor/$res
+	if [[ "$?" != "0" ]]
+	then
+		echo -e "\nError: failed to remove old resources: ~/.local/share/LogDoctor/$res"
+		exit
+	fi
+done
 cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
 if [[ "$?" != "0" ]]
 then
