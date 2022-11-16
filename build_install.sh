@@ -12,7 +12,7 @@ if [[ $(which cmake) =~ ^/ ]]
 then
 	$()
 else
-	echo "Error: Cmake is not installed"
+	echo -e "\nError: Cmake is not installed"
 	exit
 fi
 
@@ -21,7 +21,7 @@ if [ -e /usr/bin/logdoctor ]
 then
 	while true;
 	do
-		echo "Warning: the file /usr/bin/logdoctor already exists"
+		echo -e "\nWarning: the file /usr/bin/logdoctor already exists"
 		printf "If you choose to continue, the actual file will be overwritten\nContinue? [y/n] : "
 		read agree
 		case "$agree"
@@ -38,7 +38,7 @@ then
 fi
 
 # Start the compilation process
-echo "Starting compilation process"
+echo -e "\nStarting compilation process\n"
 
 # Make a build folder
 if [ -d build ]
@@ -52,7 +52,7 @@ cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel
 if [[ "$?" != "0" ]]
 then
 	# an error occured during preparation
-	echo "Error: failed to prepare cmake files"
+	echo -e "\nError: failed to prepare cmake files"
 	exit
 fi
 
@@ -61,20 +61,19 @@ cmake --build ./ --target all
 if [[ "$?" == "0" ]]
 then
 	# compiled succesfully
-	echo "Done compiling"
 	mv LogDoctor logdoctor
 else
 	# an error occured during compilation
-	echo "Error: failed to compile"
+	echo -e "\nError: failed to compile"
 	exit
 fi
 
 # Compilation finished
 wait
-echo "Compilation finished"
+echo -e "\nCompilation finished"
 
 # Start installing LogDoctor
-echo "Starting installation process"
+echo -e "\nStarting installation process"
 cd ../installation_stuff/
 
 if [ -e ~/.config/LogDoctor ]
@@ -84,7 +83,7 @@ then
 		# A configuration file already exists
 		while true;
 		do
-			echo "Warning: a configuration file already exists"
+			echo -e "\nWarning: a configuration file already exists"
 			printf "If you choose 'YES' the current file will be overwritten\nIf you choose 'NO' the current file will be kept\nOverwrite? [y/n] : "
 			read agree
 			case "$agree"
@@ -95,7 +94,7 @@ then
 					if [[ "$?" != "0" ]]
 					then
 						# an error occured during compilation
-						echo "Error: failed to copy configuration file"
+						echo -e "\nError: failed to copy configuration file"
 						exit
 					fi
 					break
@@ -110,13 +109,13 @@ else
 	mkdir -p ~/.config/LogDoctor
 	if [[ "$?" != "0" ]]
 	then
-		echo "Error: failed to create directory: ~/.config/LogDoctor"
+		echo -e "\nError: failed to create directory: ~/.config/LogDoctor"
 		exit
 	fi
 	cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
 	if [[ "$?" != "0" ]]
 	then
-		echo "Error: failed to copy configuration file"
+		echo -e "\nError: failed to copy configuration file"
 		exit
 	fi
 fi
@@ -127,14 +126,14 @@ then
 	mkdir -p ~/.local/share/LogDoctor
 	if [[ "$?" != "0" ]]
 	then
-		echo "Error: failed to create directory: ~/.local/share/LogDoctor"
+		echo -e "\nError: failed to create directory: ~/.local/share/LogDoctor"
 		exit
 	fi
 fi
 cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
 if [[ "$?" != "0" ]]
 then
-	echo "Error: failed to copy LogDoctor's data"
+	echo -e "\nError: failed to copy LogDoctor's data"
 	exit
 fi
 
@@ -142,7 +141,7 @@ fi
 cp --no-preserve=all ./LogDoctor.desktop ~/.local/share/applications/
 if [[ "$?" != "0" ]]
 then
-	echo "Error: failed to create a menu entry"
+	echo -e "\nError: failed to create a menu entry"
 	exit
 fi
 
@@ -150,7 +149,7 @@ fi
 sudo cp --no-preserve=all ./logdoctor.svg /usr/share/icons
 if [[ "$?" != "0" ]]
 then
-	echo "Error: failed to copy LogDoctor's icon"
+	echo -e "\nError: failed to copy LogDoctor's icon"
 	exit
 fi
 
@@ -160,11 +159,11 @@ chmod 755 ./logdoctor
 sudo mv ./logdoctor /usr/bin/
 if [[ "$?" != "0" ]]
 then
-	echo "Error: failed to copy the executable"
+	echo -e "\nError: failed to copy the executable"
 	exit
 fi
 
 
 # Installation finished
-echo "Installation finished"
+echo -e "\nInstallation finished"
 cd "$actual_path"
