@@ -8,43 +8,68 @@
 #include "modules/craplog/modules/formats.h"
 
 
+//! LogOps
+/*!
+    Operations for the logs
+*/
 class LogOps
 {
 public:
     LogOps();
 
-    // log file types
+    //! Enumerates log file types
+    /*!
+        File types used to decide whether a file should be considered valid or not
+        \see defineFileType()
+    */
     enum LogType {
-        Failed    = -1,
-        Discarded =  0,
-        Access    =  1
+        Failed    = -1, //!< Failed to determine the type
+        Discarded =  0, //!< Not a valid file, will be discarded
+        Access    =  1  //!< Valid access logs file type
     };
 
-    // define if really access and/or error logs
+    //! Defines the type of a file
+    /*!
+        \param lines A list of (randomly picked) lines from the file to examine
+        \param format The logs format to use to determine if the file is valid or not
+        \return The resulting file type
+        \see LogType, deepTypeCheck(), FormatOps::LogsFormat
+    */
     LogType defineFileType(
-        const std::string& name,
         const std::vector<std::string>& lines,
         const FormatOps::LogsFormat& format );
 
-    // remove commented lines
+    //! Removes commented lines from the given list
+    /*!
+        \param lines The lines to clean
+    */
     void cleanLines(
         std::vector<std::string>& lines );
 
-    // parse log lines to get data
+    //! Parses log lines to extract data
+    /*!
+        \param data The data collection which will hold the data
+        \param lines The list of lines to parse
+        \param format The logs format to use
+        \throw LogParserException
+        \see parseLine(), Craplog::parseLogLines(), FormatOps::LogsFormat
+    */
     void parseLines(
         std::vector<std::unordered_map<int, std::string>>& data,
         const std::vector<std::string>& lines,
         const FormatOps::LogsFormat& format );
 
+    //! Resets the performances data
     void resetPerfData();
+
     // share perf data with craplog
-    const unsigned getTotalSize(),
-                   getParsedSize(),
-                   getParsedLines();
+    const unsigned getTotalSize();   //!< Returns the total size of the logs lines. \see total_size
+    const unsigned getParsedSize();  //!< Returns the parsed logs size. \see parsed_size
+    const unsigned getParsedLines(); //!< Returns the number of parsed log lines. \see parsed_lines
 
 private:
 
-    // from fields to IDs
+    // Map to convert log fields to field IDs
     const std::unordered_map<std::string, int> field2id = {
         // date-time
         {"date_time_year",     1},
@@ -93,17 +118,33 @@ private:
         {"cookie",             22}
     };
 
+    //! Parse the given line using the given format
+    /*!
+        \param line The log line to check
+        \param format The logs format to use
+        \return Whether the line respects the format or not
+        \see defineFileType(), FormatOps::LogsFormat
+    */
     bool deepTypeCheck(
         const std::string& line,
         const FormatOps::LogsFormat& format );
 
-    // job related
+    //! Parses a line to extract data
+    /*!
+        \param line The log line to parse
+        \param format The logs format to use
+        \return A data collection item
+        \throw LogParserException
+        \see parseLines(), Craplog::data_collection, FormatOps::LogsFormat
+    */
     const std::unordered_map<int, std::string> parseLine(
         const std::string& line,
-        const FormatOps::LogsFormat& format
-        );
+        const FormatOps::LogsFormat& format );
+
     // temporary vars
-    unsigned total_size=0, parsed_size=0, parsed_lines=0;
+    unsigned total_size=0;   //!< Total size of the parsed logs. \see getTotalSize()
+    unsigned parsed_size=0;  //!< Size of the parsed logs. \see getParsedSize()
+    unsigned parsed_lines=0; //!< Number of parsed logs lines. \see getParsedLines()
 
 
 };

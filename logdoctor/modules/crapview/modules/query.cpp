@@ -81,7 +81,7 @@ const int DbQuery::getMonthsCount( const QString& from_year, const QString& from
         to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->getMonthNumber( to_month ) ;
     } catch (...) {
         // failed to convert to integers
-        throw DateTimeException( "Failed to convert from string to int" ); // leave un-catched
+        throw DateTimeException( "Failed to convert Month from string to int" ); // leave un-catched
     }
     return this->getMonthsCount( from_year_, from_month_, to_year_, to_month_ );
 }
@@ -121,7 +121,7 @@ const int DbQuery::getMonthNumber( const QString& month_str )
 }
 
 
-const int DbQuery::getLogFieldID ( const QString& field_str )
+/*const int DbQuery::getLogFieldID ( const QString& field_str )
 {
     int f=0;
     for ( const auto& [id,str] : this->MONTHS ) {
@@ -131,7 +131,7 @@ const int DbQuery::getLogFieldID ( const QString& field_str )
         }
     }
     return f;
-}
+}*/
 
 const QString DbQuery::getDbField( const QString& tr_fld )
 {
