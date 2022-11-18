@@ -4,6 +4,10 @@
 #include <QString>
 
 
+//! GameSec
+/*!
+    Utilities for the games
+*/
 class GameSec
 {
 public:

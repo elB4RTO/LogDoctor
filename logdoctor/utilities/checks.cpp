@@ -77,7 +77,7 @@ int CheckSec::checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name
     }
 }
 
-bool CheckSec::newStatsDatabase( QSqlDatabase& db, const std::string& db_path, const QString& db_name, const std::vector<QString>& ws_names )
+bool CheckSec::newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
 {
     bool successful = true;
     // create the database
@@ -129,12 +129,14 @@ bool CheckSec::newStatsDatabase( QSqlDatabase& db, const std::string& db_path, c
         // inform about creation
         if ( successful ) {
             DialogSec::msgDatabaseCreated( db_name );
+        } else {
+            DialogSec::errDatabaseFailedCreating( db_name );
         }
     }
     return successful;
 }
 
-bool CheckSec::checkStatsDatabase( const std::string& db_path )
+bool CheckSec::checkCollectionDatabase( const std::string& db_path )
 {
     bool make_new=false, ok=true;
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
@@ -298,7 +300,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
             }*/
         }
         if ( ok ) {
-            ok = CheckSec::newStatsDatabase( db, db_path, db_name, ws_names );
+            ok = CheckSec::newCollectionDatabase( db, db_name, ws_names );
         }
     }
 
@@ -308,7 +310,7 @@ bool CheckSec::checkStatsDatabase( const std::string& db_path )
 
 
 
-bool CheckSec::newHashesDatabase( QSqlDatabase& db, const std::string& db_path, const QString& db_name, const std::vector<QString>& ws_names )
+bool CheckSec::newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
 {
     bool successful = true;
     // create the database
@@ -342,6 +344,8 @@ bool CheckSec::newHashesDatabase( QSqlDatabase& db, const std::string& db_path, 
         // inform about creation
         if ( successful ) {
             DialogSec::msgDatabaseCreated( db_name );
+        } else {
+            DialogSec::errDatabaseFailedCreating( db_name );
         }
     }
     return successful;
@@ -479,7 +483,7 @@ bool CheckSec::checkHashesDatabase( const std::string& db_path )
             }*/
         }
         if ( ok ) {
-            ok = CheckSec::newHashesDatabase( db, db_path, db_name, ws_names );
+            ok = CheckSec::newHashesDatabase( db, db_name, ws_names );
         }
     }
 

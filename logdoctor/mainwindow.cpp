@@ -1595,7 +1595,7 @@ void MainWindow::makeInitialChecks()
 
     if ( ok ) {
         // statistics' database
-        if ( ! CheckSec::checkStatsDatabase( this->db_data_path + "/collection.db" ) ) {
+        if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/collection.db" ) ) {
             // checks failed, abort
             ok = false;
         } else {
@@ -1662,7 +1662,7 @@ const bool& MainWindow::checkDataDB()
         const std::string path = this->db_data_path + "/collection.db";
         bool ok = IOutils::checkFile( path, true );
         if ( ! ok ) {
-            ok = CheckSec::checkStatsDatabase( path );
+            ok = CheckSec::checkCollectionDatabase( path );
             // update ui stuff
             if ( ! ok ) {
                 // checks failed
@@ -1933,8 +1933,8 @@ void MainWindow::menu_actionInfos_triggered()
         this->window_theme_id,
         QString::fromStdString( version_ ),
         QString::fromStdString( this->resolvePath( "./" ) ),
-        QString::fromStdString( this->logdoc_path ),
-        QString::fromStdString( this->configs_path ) );
+        QString::fromStdString( this->configs_path ),
+        QString::fromStdString( this->logdoc_path ) );
     this->crapinfo->show();
 }
 
@@ -2708,7 +2708,7 @@ void MainWindow::craplogFinished()
 {
     // update the perf data one last time, just in case
     this->update_MakeStats_labels();
-    this->craplog.makeCharts(
+    this->craplog.makeChart(
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->chart_MakeStats_Size );
     if ( this->craplog.editedDatabase() ) {

@@ -92,9 +92,9 @@ const QString Crapview::printableTime( const int& hour, const int& minute, const
 const QString Crapview::printableWarn( const int& value )
 {
     if ( value == 0 ) {
-        return TR::tr("FALSE");
+        return TR::tr( BOOLS__FALSE.c_str() );
     } else {
-        return TR::tr("TRUE");
+        return TR::tr( BOOLS__TRUE.c_str() );
     }
 }
 
@@ -102,8 +102,8 @@ const QString Crapview::printableWarn( const int& value )
 const QString Crapview::parseBooleanFilter( const QString& filter_str )
 {
     QString aux = filter_str;
-    aux = aux.replace( TR::tr("TRUE"), "1", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( TR::tr("FALSE"),"0", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( TR::tr(BOOLS__TRUE.c_str()), "1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( TR::tr(BOOLS__FALSE.c_str()),"0", Qt::CaseSensitivity::CaseInsensitive );
     return this->parseNumericFilter( aux );
 }
 
@@ -288,10 +288,10 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server )
     std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
     for ( int i=0; i<table->rowCount(); i++ ) {
         QTableWidgetItem* item = table->item( i, 0 );
-        if ( item->checkState() == Qt::CheckState::Checked && item->text() == TR::tr("FALSE") ) {
+        if ( item->checkState() == Qt::CheckState::Checked && item->text() == TR::tr( BOOLS__FALSE.c_str() ) ) {
             // remove warning
             updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 1 ) );
-        } else if (item->checkState() == Qt::CheckState::Unchecked && item->text() == TR::tr("TRUE") ) {
+        } else if (item->checkState() == Qt::CheckState::Unchecked && item->text() == TR::tr( BOOLS__TRUE.c_str() ) ) {
             // add warning
             updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 0 ) );
         }

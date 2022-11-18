@@ -519,7 +519,7 @@ void Craplog::scanLogsDir()
             }
 
             LogOps::LogType log_type = this->logOps.defineFileType(
-                name.toStdString(), content, this->logs_formats.at( this->current_WS ) );
+                content, this->logs_formats.at( this->current_WS ) );
             content.clear();
             if ( log_type == LogOps::LogType::Failed ) {
                 // failed to get the log type, do not append
@@ -700,33 +700,33 @@ const bool& Craplog::editedDatabase()
 }
 
 // performances
-const unsigned& Craplog::getPerfSize()
+const unsigned int &Craplog::getPerfSize()
 {
     return this->perf_size;
 }
-void Craplog::sumPerfSize( const unsigned& size )
+/*void Craplog::sumPerfSize( const unsigned& size )
 {
     this->perf_size   += size;
     this->parsed_size += size;
-}
-const unsigned& Craplog::getTotalSize()
+}*/
+const unsigned int &Craplog::getTotalSize()
 {
     return this->total_size;
 }
-const unsigned& Craplog::getParsedSize()
+/*const unsigned int &Craplog::getParsedSize()
 {
     return this->parsed_size;
-}
-const unsigned& Craplog::getParsedLines()
+}*/
+const unsigned int &Craplog::getParsedLines()
 {
     return this->parsed_lines;
 }
 
-void Craplog::sumWarningsSize( const unsigned& size )
+void Craplog::sumWarningsSize( const unsigned int& size )
 {
     this->warnlisted_size += size;
 }
-void Craplog::sumBlacklistededSize( const unsigned& size )
+void Craplog::sumBlacklistededSize( const unsigned int& size )
 {
     this->blacklisted_size += size;
 }
@@ -878,7 +878,7 @@ const bool Craplog::checkStuff()
         }
 
         // check if the statistics' database is fune
-        if ( ! CheckSec::checkStatsDatabase( this->db_stats_path ) ) {
+        if ( ! CheckSec::checkCollectionDatabase( this->db_stats_path ) ) {
             // checks failed, abort
             this->proceed = false;
             break;
@@ -1071,7 +1071,7 @@ void Craplog::storeLogLines()
 }
 
 
-const QString Craplog::printableSize( const unsigned& bytes )
+const QString Craplog::printableSize( const unsigned int& bytes )
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -1116,7 +1116,7 @@ const QString Craplog::printableSize( const unsigned& bytes )
 }
 
 
-void Craplog::makeCharts( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
+void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
 {
     const QString
         size_chart_name        = TR::tr("Logs Size Breakdown"),

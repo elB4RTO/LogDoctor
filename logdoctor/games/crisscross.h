@@ -10,13 +10,18 @@ namespace Ui {
     class CrissCross;
 }
 
+//! CrissCross
+/*!
+    Player vs AI criss-cross game
+*/
 class CrissCross : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit CrissCross( const int& theme_id, QWidget* parent=nullptr );
+    CrissCross( const int& theme_id, QWidget* parent=nullptr );
     ~CrissCross();
+
 
 private slots:
     void on_button_NW_clicked();
@@ -36,6 +41,7 @@ private slots:
     void on_button_S_clicked();
 
     void on_button_SE_clicked();
+
 
 private:
     Ui::CrissCross *ui;
@@ -78,19 +84,51 @@ private:
     };
 
 
-    // game methods
+    //////////////
+    //// GAME ////
+
+    //! Ends the current turn
     void endTurn();
+
+    //! Switches to the next turn
     void nextTurn();
+
+    //! Checks whether it's the human player turn or not
     const bool isPlayerTurn();
 
+
+    //! Checks whether somebody won or not
     const bool checkVictory();
+
+    //! Checks whether the game is draw or not
     const bool gameDraw();
+
+    //! Someone won, process the victory
     void victory();
+
+    //! The match is over but nobody won, the game is draw
     void draw();
 
+
+    ////////////
+    //// AI ////
+
+    //! Main function for the AI to play its turn
     void AI_playTurn();
+
+    //! Updates the weights of the tiles
+    /*!
+        \see AI_playTurn();
+    */
     void AI_updateWeights();
+
+    //! Makes the choice depending on the weights
+    /*!
+        \return The tile to select
+        \see AI_playTurn();
+    */
     const unsigned int AI_makeChoice();
+
 };
 
 #endif // CRISSCROSS_H

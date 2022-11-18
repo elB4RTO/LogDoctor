@@ -7,7 +7,7 @@
 /////////////////////////
 //// DONUT BREAKDOWN ////
 /////////////////////////
-MainSlice::MainSlice(QPieSeries *breakdownSeries, QObject *parent)
+MainSlice::MainSlice( QPieSeries* breakdownSeries, QObject* parent )
     : QPieSlice(parent),
       m_breakdownSeries(breakdownSeries)
 {
@@ -20,7 +20,7 @@ QPieSeries *MainSlice::breakdownSeries() const
     return this->m_breakdownSeries;
 }
 
-void MainSlice::setName(QString name)
+void MainSlice::setName( QString name )
 {
     this->m_name = name;
 }
@@ -39,7 +39,7 @@ void MainSlice::updateLabel()
 
 
 
-DonutBreakdown::DonutBreakdown( QGraphicsItem *parent, Qt::WindowFlags wFlags )
+DonutBreakdown::DonutBreakdown( QGraphicsItem* parent, Qt::WindowFlags wFlags )
     : QChart(QChart::ChartTypeCartesian, parent, wFlags)
 {
     // create the series for main center pie
@@ -50,7 +50,7 @@ DonutBreakdown::DonutBreakdown( QGraphicsItem *parent, Qt::WindowFlags wFlags )
 
 
 
-void DonutBreakdown::addBreakdownSeries( QPieSeries *breakdownSeries, const QColor& color, const QFont& font )
+void DonutBreakdown::addBreakdownSeries( QPieSeries* breakdownSeries, const QColor& color, const QFont& font )
 {
     // add breakdown series as a slice to center pie
     MainSlice *mainSlice = new MainSlice(breakdownSeries);
