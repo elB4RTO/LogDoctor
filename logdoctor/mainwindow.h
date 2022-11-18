@@ -32,27 +32,38 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
+//! MainWindow
+/*!
+    The parent window
+*/
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent=nullptr);
+
+    MainWindow( QWidget* parent=nullptr );
     ~MainWindow();
+
     void closeEvent( QCloseEvent *event );
 
-    //void operator()( int a );
 
 private slots:
-    // custom
+
+    ////////////////
+    //// CUSTOM ////
+
     void wait_ActiveWindow();
 
     void update_Craplog_PerfData();
 
     void check_CraplogLLT_Finished();
 
+
     //////////////
     //// TABS ////
+
     void on_button_Tab_Log_clicked();
 
     void on_button_Tab_View_clicked();
@@ -60,6 +71,7 @@ private slots:
     void on_button_Tab_Conf_clicked();
 
     //// STATS ////
+
     void on_button_Tab_StatsWarn_clicked();
 
     void on_button_Tab_StatsSpeed_clicked();
@@ -72,7 +84,7 @@ private slots:
 
     void on_button_Tab_StatsGlob_clicked();
 
-    // Qt's
+
     /////////////////
     //// CRAPLOG ////
 
@@ -101,6 +113,7 @@ private slots:
     void on_button_LogFiles_Iis_clicked();
 
     void on_button_MakeStats_Start_clicked();
+
 
     //////////////////
     //// CRAPVIEW ////
@@ -224,6 +237,7 @@ private slots:
     void on_button_StatsGlob_Nginx_clicked();
 
     void on_button_StatsGlob_Iis_clicked();
+
 
     /////////////////
     //// CRAPSET ////
@@ -458,6 +472,7 @@ private slots:
 
     void on_button_ConfIis_Blacklist_Down_clicked();
 
+
     ///////////////
     //// MENU ////
 
@@ -487,6 +502,7 @@ private slots:
 
     void menu_actionSnake_triggered();
 
+
 private:
     Ui::MainWindow *ui;
 
@@ -497,8 +513,12 @@ private:
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
     const QString wsFromIndex( const int& index );
 
-    // operating system
+
+    //////////////////////////
+    //// OPERATING SYSTEM ////
+
     const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );
+
     // 1: linux, 2:windows, 3:mac
     #if defined( Q_OS_DARWIN )
         // Darwin-based systems: macOS, iOS, watchOS and tvOS.
@@ -519,155 +539,277 @@ private:
         #error "System not supported"
     #endif
 
+
+    //! Defines OS specific stuff
     void defineOSspec();
-    /*std::string logdoc_path;
-    std::string configs_path;*/
 
 
     ////////////////////////
     //// CONFIGURATIONS ////
     ////////////////////////
+
+    //! Reads the configurations file and apply the resulting configuration
     void readConfigs();
+
+    //! Writes the current configuration on file
     void writeConfigs();
+
+    //! Converts a list of items to a string
+    /*!
+        \param list The list to stringify
+        \param user_agents Whether to apply the special rule to parse user-agents lists or not
+        \return The resulting string
+        \see writeConfigs()
+    */
+    const std::string list2string( const std::vector<std::string>& list, const bool& user_agent=false );
+
+    //! Retrieves a list of items from the given string
+    /*!
+        \param list The list to stringify
+        \param user_agents Whether to apply the special rule to parse user-agents lists or not
+        \return The resulting list
+        \see readConfigs()
+    */
+    const std::vector<std::string> string2list( const std::string& string, const bool& user_agent=false );
+
     // string to bool and vice versa
     const std::unordered_map<std::string, bool> s2b = { {"true",true}, {"false",false} };
     const std::unordered_map<bool, std::string> b2s = { {true,"true"}, {false,"false"} };
-    // language
+
+
+    //////////////////
+    //// LANGUAGE ////
+
     QTranslator translator;
+
     std::string language = "en";
+
+    //! Translates the UI to the selected language
     void updateUiLanguage();
-    // window geometry
+
+
+    /////////////////////////
+    //// WINDOW GEOMETRY ////
+
+    //! Converts the window's geometry to string
+    /*!
+        \see writeConfigs()
+    */
     const std::string geometryToString();
+
+    //! Retrieves the window geometry from the given string
+    /*!
+        \see readConfigs()
+    */
     void geometryFromString( const std::string& geometry );
+
+
+    /////////////////
+    //// GENERAL ////
+
     // quantoty of informational dialogs to display
     int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
+
     // default web server
     int default_ws = 11;
-    // list to string and vice versa
-    const std::string list2string( const std::vector<std::string>& list, const bool& user_agent=false );
-    const std::vector<std::string> string2list( const std::string& string, const bool& user_agent=false );
 
-    ////////////////
-    //// CHECKS ////
-    bool initiating = true,
-         db_ok = true;
-    void makeInitialChecks();
-    const bool& checkDataDB();
 
     //////////////////
     //// GRAPHICS ////
     //////////////////
+
     // remember window position and sizes
     bool remember_window = true;
+
     // themes
-    int window_theme_id = 0,
-        charts_theme_id = 0,
-        icons_theme_id  = 0;
+    int window_theme_id = 0;
+    int charts_theme_id = 0;
+    int icons_theme_id  = 0;
+
     QString icons_theme;
+
+    //! Auto-detects the icon-set to use depending on the current window theme
     void detectIconsTheme();
+
+    //! Updates the icons on the window
     void updateUiIcons();
+
+    //! Updates the window theme
     void updateUiTheme();
+
+    //! Updates the fonts on the window
     void updateUiFonts();
+
     const std::vector<QChart::ChartTheme> CHARTS_THEMES = {
         QChart::ChartTheme::ChartThemeLight,
         QChart::ChartTheme::ChartThemeDark,
         QChart::ChartTheme::ChartThemeBrownSand,
         QChart::ChartTheme::ChartThemeBlueCerulean
     };
+
     // color schemes
     std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
+
+    // colors
     std::unordered_map<std::string, QColor> COLORS;
+
     // fonts
     std::unordered_map<std::string, QFont>  FONTS;
-    int font_size       = 13,
-        font_size_big   = 16,
-        font_size_small = 10;
+
+    int font_size       = 13;
+    int font_size_big   = 16;
+    int font_size_small = 10;
+
     // base font families, to build fonts from
-    QString main_font_family,
-            alternative_font_family,
-            script_font_family;
+    QString main_font_family;
+    QString alternative_font_family;
+    QString script_font_family;
 
 
     /////////////////////
     //// GENERAL USE ////
     /////////////////////
-    // get a printable size, from Bytes to the best fit
-    const QString printableSize(  const int& bytes ),
-                  printableSpeed( const int& bytes, const int& secs ),
-                  printableTime(  const int& seconds );
-    // resolve a path
+
+    //! Printable size, including suffix
+    const QString printableSize( const int& bytes );
+
+    //! Printable time, including suffix(es)
+    const QString printableTime( const int& seconds );
+
+    //! Printable speed, namely printable size over printable time
+    const QString printableSpeed( const int& bytes, const int& secs );
+
+
+    //! Resolves the given path and returns the canonical path
     const std::string resolvePath( const std::string& path );
+
+    //! Returns the parent folder of the given path
     const std::string basePath( const std::string& path );
+
+
+    ////////////////
+    //// CHECKS ////
+    ////////////////
+
+    bool initiating = true;
+
+    bool db_ok = true;
+
+    //! Makes the initial integrity checks
+    void makeInitialChecks();
+
+    //! Checks the integrity of the logs data collection database
+    const bool& checkDataDB();
+
 
     ///////////////////
     //// DATABASES ////
     ///////////////////
+
     bool db_edited = false;
+
     bool db_do_backup = true;
+
     unsigned db_backups_number = 3;
+
+    //! Backs-up the logs data collection database
     void backupDatabase();
-    std::string db_data_path,
-                db_hashes_path;
+
+    std::string db_data_path;
+    std::string db_hashes_path;
+
     // actions when working on a db
     bool db_working = false;
+
+    //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool& state );
+
 
     //////////////////
     //// CRAPTABS ////
     //////////////////
+
     void switchMainTab( const int& new_index );
 
 
     /////////////////
     //// CRAPLOG ////
     /////////////////
+
     Craplog craplog;
+
     QTimer* craplog_timer = new QTimer();
     QTimer* waiter_timer;
+
     std::chrono::system_clock::time_point waiter_timer_start;
     std::chrono::system_clock::duration waiter_timer_elapsed;
+
+    //! The logs parser started working
     void craplogStarted();
+
+    //! The logs parser finished working
     void craplogFinished();
+
     void checkMakeStats_Makable();
+
 
     //////////////
     //// LOGS ////
-    // web servers related
+
     bool loading_LogsList = false;
-    void disableAllButtons_LogFiles_WS(),
-         enableAllButtons_LogFiles_WS();
-    // logs list related
+
+    void disableAllButtons_LogFiles_WS();
+    void enableAllButtons_LogFiles_WS();
+
     bool hide_used_files = false;
     bool refreshing_list = false;
-    // text browser related
+
+
+    //////////////////////
+    //// TEXT BROWSER ////
+
     TextBrowser TB;
+
 
     //////////////////////////
     //// LOGS PERFORMANCE ////
-    void update_MakeStats_labels(),
-         update_MakeStats_graphs(),
-         reset_MakeStats_labels();
+
+    void update_MakeStats_labels();
+
+    void update_MakeStats_graphs();
+
+    void reset_MakeStats_labels();
 
 
     //////////////////
     //// CRAPVIEW ////
     //////////////////
+
     Crapview crapview;
+
     QTimer *crapview_timer = new QTimer();
+
     // change tab
     void switchStatsTab( const int& new_index );
-    // refresh dates: query a new collection from the db and apply to the tabs
+
+    //! Queries the available dates from the db and apply to the tabs
+    /*!
+        \see Crapview::refreshDates()
+    */
     void refreshStatsDates();
+
     // check if drawing conditions are met
     void checkStatsWarnDrawable();
     void checkStatsSpeedDrawable();
     void checkStatsCountDrawable();
     void checkStatsDayDrawable();
     void checkStatsRelatDrawable();
+
     // count
     QString count_fld;
     void startCountDrawing();
     void resetStatsCountButtons();
+
     // globals
     QString glob_ws;
     void globalsButtonClicked();
@@ -677,40 +819,50 @@ private:
     /////////////////
     //// CRAPSET ////
     /////////////////
+
     void refreshTextBrowserPreview();
+
     void refreshChartsPreview();
+
     const int getIisLogsModule();
 
 
     //////////////////
     //// CRAPHELP ////
     //////////////////
+
     Craphelp* craphelp = new Craphelp();
+
     void showHelp( const std::string& file_name );
 
 
     ////////////////
     //// CRAPUP ////
     ////////////////
+
     Crapup *crapup = new Crapup(0,"");
 
 
     //////////////////
     //// CRAPNOTE ////
     //////////////////
+
     Crapnote* crapnote = new Crapnote();
 
 
     //////////////////
     //// CRAPINFO ////
     //////////////////
+
     Crapinfo* crapinfo = new Crapinfo(0,"","","","");
 
 
     ///////////////////
     //// CRAPGAMES ////
     ///////////////////
+
     CrissCross* crisscross = new CrissCross( 0 );
+
     Snake* snake = new Snake( 0, QFont() );
 
 };

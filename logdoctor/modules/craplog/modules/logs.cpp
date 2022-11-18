@@ -13,11 +13,11 @@ LogOps::LogOps()
 }
 
 
-LogOps::LogType LogOps::defineFileType( const std::string& name, const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
+LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
 {
     if ( lines.size() == 0 ) {
         // empty content
-        return this->LogType::Failed;
+        return LogOps::LogType::Failed;
     }
 
     int n_access=0, n_other=0;

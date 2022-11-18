@@ -9,12 +9,19 @@
 #include <unordered_map>
 
 
+//! ColorSec
+/*!
+    Utilities for the colors
+*/
 class ColorSec
 {
 public:
     ColorSec();
 
+    //! Provides a map with pre-made colors
     static const std::unordered_map<std::string, QColor> getColors();
+
+    //! Provides a map with pre-made color-schemes for the TextBrowser
     static const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes();
 };
 

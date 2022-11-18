@@ -8,43 +8,139 @@
 #include <unordered_map>
 
 
+//! FormatOps
+/*!
+    Operations for the logs formats
+*/
 class FormatOps
 {
 public:
     FormatOps();
 
-    // logs formats
+    //! Structure which holds informations about a log format
     struct LogsFormat {
-        std::string string;
-        std::string initial;
-        std::string final;
-        std::vector<std::string> separators;
-        std::vector<std::string> fields;
-        int new_lines;
+        std::string string;                  //!< The logs format string
+        std::string initial;                 //!< The initial separator
+        std::string final;                   //!< The final separator
+        std::vector<std::string> separators; //!< The separators in the middle
+        std::vector<std::string> fields;     //!< The fields
+        int new_lines;                       //!< The number of new lines
     };
 
-    const LogsFormat processApacheFormatString( const std::string& formatted_string );
-    const LogsFormat processNginxFormatString( const std::string& formatted_string );
-    const LogsFormat processIisFormatString( const std::string& formatted_string, const int& log_module );
 
+    //! Processes the given string to extrapolate the format for Apache2
+    /*!
+        \param format_string The format string to process
+        \return The logs format
+        \throw LogFormatException
+        \see LogsFormat
+    */
+    const LogsFormat processApacheFormatString( const std::string& format_string );
+
+    //! Processes the given string to extrapolate the format for Nginx
+    /*!
+        \param format_string The format string to process
+        \return The logs format
+        \throw LogFormatException
+        \see LogsFormat
+    */
+    const LogsFormat processNginxFormatString( const std::string& format_string );
+
+    //! Processes the given string to extrapolate the format for the IIS
+    /*!
+        \param format_string The format string to process
+        \param log_module The ID of the log module to use
+        \return The logs format
+        \throw LogFormatException
+        \see LogsFormat
+    */
+    const LogsFormat processIisFormatString( const std::string& format_string, const int& log_module );
+
+
+    /////////////////
+    //// SAMPLES ////
+
+    //! Returns a log line sample based on the given format
+    /*!
+        \param log_format The logs format to use to build the sample
+        \return The sample line
+        \see LogsFormat, Craplog::getLogsFormatSample()
+    */
     const QString getApacheLogSample( const LogsFormat& log_format );
+
+    //! Returns a log line sample based on the given format
+    /*!
+        \param log_format The logs format to use to build the sample
+        \return The sample line
+        \see LogsFormat, Craplog::getLogsFormatSample()
+    */
     const QString getNginxLogSample( const LogsFormat& log_format );
+
+    //! Returns a log line sample based on the given format
+    /*!
+        \param log_format The logs format to use to build the sample
+        \return The sample line
+        \see LogsFormat, Craplog::getLogsFormatSample()
+    */
     const QString getIisLogSample( const LogsFormat& log_format );
+
 
 private:
 
+    //! Parses the escapes (backslashes) and returns the resulting string
+    /*!
+        Used to obtain the same result as on Apache2
+        \param string The string to parse
+        \param strftime Whether to apply the strftime special rule when parsing or not
+        \return The resulting string
+        \throw LogFormatException
+        \see processApacheFormatString()
+    */
     const std::string parseApacheEscapes( const std::string& string, const bool& strftime=false );
+
+    //! Parses the escapes (backslashes) and returns the resulting string
+    /*!
+        Used to obtain the same result as on Nginx
+        \param string The string to parse
+        \return The resulting string
+        \throw LogFormatException
+        \see processNginxFormatString()
+    */
     const std::string parseNginxEscapes( const std::string& string );
 
+    //! Conuts how many new lines are there in the format
+    /*!
+        Used to join log lines which refer to the same log line
+        \param initial The initial separator
+        \param final The final separator
+        \param separators The separators in the middle
+        \return The number of new lines in a single log line
+        \see LogsFormat, processApacheFormatString(), processNginxFormatString()
+    */
     const int countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators );
 
+    //! Finds the end of a Nginx log field
+    /*!
+        \param string The format string
+        \param start The starting point of the field in the string
+        \return The ending poin of the field in the string
+        \see processNginxFormatString()
+    */
     const size_t findNginxFieldEnd( const std::string& string, const int& start );
+
+    //! Checks whether the format string contains invalid characters or not
+    /*!
+        \param string The format string
+        \throw LogFormatException
+        \see processIisFormatString
+    */
     void checkIisString( const std::string& string );
 
 
     /////////////////
     //// APACHE2 ////
-    // access logs fields formats
+
+    //!< Access logs fields formats
     const std::unordered_map<std::string, std::string> APACHE_ALF = {
         {"h",  "client"},
         {"t",  "date_time_ncsa"},
@@ -79,7 +175,7 @@ private:
         {"V",  "NONE"},
         {"X",  "NONE"} };
 
-    // composed items
+    //!< Composed access logs fields formats
     const std::unordered_map<std::string, std::unordered_map<std::string, std::string>> APACHE_ALF_V = {
         {"a", { {"c",          "client"}}},
         {"h", { {"c",          "client"}}},
@@ -147,7 +243,7 @@ private:
         {"^ti", {}},
         {"^to", {}} };
 
-    // access logs fields formats samples
+    // Access logs fields formats samples
     const std::unordered_map<std::string, QString> APACHE_ALF_SAMPLES = {
         {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_epoch_s",     "<b><span style=\"color:#00cc6f\">946771199</span></b>"},
@@ -187,7 +283,8 @@ private:
 
     ///////////////
     //// NGINX ////
-    // access logs fields formats (only the ones considered)
+
+    //!< Access logs fields formats
     const std::unordered_map<std::string, std::string> NGINX_ALF = {
         {"remote_addr",        "client"},
         {"realip_remote_addr", "client"},
@@ -313,7 +410,7 @@ private:
         {"upstream_response_time",    "NONE"},
         {"upstream_status",           "NONE"} };
 
-    // nginx logs fields formats samples
+    // Access logs fields formats samples
     const std::unordered_map<std::string, QString> NGINX_ALF_SAMPLES = {
         {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_epoch_s.ms",  "<b><span style=\"color:#00cc6f\">946771199.000</span></b>"},
@@ -339,7 +436,8 @@ private:
 
     /////////////
     //// IIS ////
-    // access logs fields formats
+
+    //!< Access logs fields formats
     const std::unordered_map<std::string, std::string> IIS_ALF = {
         {"date",             "date_time_utc_d"},
         {"time",             "date_time_utc_t"},
@@ -366,7 +464,7 @@ private:
         {"sc-win32-status",   "NONE"},
         {"streamid",          "NONE"} };
 
-    // access logs fields formats samples
+    // Access logs fields formats samples
     const std::unordered_map<std::string, QString> IIS_ALF_SAMPLES = {
         {"NONE",               "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_ncsa",     "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
