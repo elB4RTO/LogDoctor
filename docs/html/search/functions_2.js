@@ -30,7 +30,7 @@ var searchData=
   ['cleardates_27',['clearDates',['../classCrapview.html#ae0eb083eea7e2bef76345242da41bf69',1,'Crapview']]],
   ['closeevent_28',['closeEvent',['../classCrapup.html#a8640095eb315d653897d01b4e9162119',1,'Crapup']]],
   ['collectperfdata_29',['collectPerfData',['../classCraplog.html#a71c27b249a2d7e1a376c5c93d154f903',1,'Craplog']]],
-  ['contains_30',['contains',['../classStringOps.html#a3017639b683ae6b1555a19ac8ba9c7aa',1,'StringOps::contains()'],['../classVecOps.html#ad283d57b9541a8fff62569306cd60caa',1,'VecOps::contains()']]],
+  ['contains_30',['contains',['../classStringOps.html#a3017639b683ae6b1555a19ac8ba9c7aa',1,'StringOps::contains()'],['../classVecOps.html#a591f42b19a9f4638bae861fc9a4045a0',1,'VecOps::contains()']]],
   ['convertmonth_31',['convertMonth',['../classDateTimeOps.html#adb479373277de1df7e77392bffbe9c01',1,'DateTimeOps']]],
   ['count_32',['count',['../classStringOps.html#a0ea46e71674e5201b3e3050fc721ee57',1,'StringOps']]],
   ['countnewlines_33',['countNewLines',['../classFormatOps.html#aec634128bb1ded97288c43c569591a6a',1,'FormatOps']]],

@@ -32,7 +32,7 @@ var searchData=
   ['closeevent_29',['closeEvent',['../classCrapup.html#a8640095eb315d653897d01b4e9162119',1,'Crapup']]],
   ['collectperfdata_30',['collectPerfData',['../classCraplog.html#a71c27b249a2d7e1a376c5c93d154f903',1,'Craplog']]],
   ['colorsec_31',['ColorSec',['../classColorSec.html',1,'']]],
-  ['contains_32',['contains',['../structCraplog_1_1LogName.html#a64fc39be93c9b1338ace87443ed597f3',1,'Craplog::LogName::contains()'],['../classStringOps.html#a3017639b683ae6b1555a19ac8ba9c7aa',1,'StringOps::contains()'],['../classVecOps.html#ad283d57b9541a8fff62569306cd60caa',1,'VecOps::contains()']]],
+  ['contains_32',['contains',['../structCraplog_1_1LogName.html#a64fc39be93c9b1338ace87443ed597f3',1,'Craplog::LogName::contains()'],['../classStringOps.html#a3017639b683ae6b1555a19ac8ba9c7aa',1,'StringOps::contains()'],['../classVecOps.html#a591f42b19a9f4638bae861fc9a4045a0',1,'VecOps::contains()']]],
   ['convertmonth_33',['convertMonth',['../classDateTimeOps.html#adb479373277de1df7e77392bffbe9c01',1,'DateTimeOps']]],
   ['count_34',['count',['../classStringOps.html#a0ea46e71674e5201b3e3050fc721ee57',1,'StringOps']]],
   ['countnewlines_35',['countNewLines',['../classFormatOps.html#aec634128bb1ded97288c43c569591a6a',1,'FormatOps']]],
