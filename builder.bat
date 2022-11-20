@@ -277,6 +277,15 @@ IF ERRORLEVEL 1 (
 	EXIT /B 1
 )
 
+:: Deploy the static libraries
+IF EXIST LogDoctor rmdir /S /Q LogDoctor
+mkdir LogDoctor
+move LogDoctor.exe LogDoctor\
+SET prefix_path=%prefix_path:/=\%
+"%prefix_path%\bin\windeployqt.exe" LogDoctor\
+copy /V /Y "%prefix_path%\bin\libstdc++-6.dll" LogDoctor\
+copy /V /Y "%prefix_path%\bin\libwinpthread-1.dll" LogDoctor\
+copy /V /Y "%prefix_path%\bin\libgcc_s_seh-1.dll" LogDoctor\
 
 :: Compilation finished
 ECHO:
