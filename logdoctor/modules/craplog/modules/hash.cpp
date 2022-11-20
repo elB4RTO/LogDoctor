@@ -145,7 +145,7 @@ bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const st
 {
     bool successful = true;
     try {
-        if( ! VecOps::contains( this->hashes.at( web_server_id ), hash ) ) {
+        if( ! VecOps<std::string>::contains( this->hashes.at( web_server_id ), hash ) ) {
             this->hashes.at( web_server_id ).push_back( hash );
             // insert tnto the database
             QString stmt = QString("INSERT INTO %1 ( hash ) VALUES ( '%2' );")

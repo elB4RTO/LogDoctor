@@ -163,7 +163,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
                 for( int i=0 ; i<n_lines ; i++ ) {
                     while (true) {
                         index = rand() % max;
-                        if ( VecOps::contains( picked_indexes, index ) ) {
+                        if ( VecOps<int>::contains( picked_indexes, index ) ) {
                             continue;
                         }
                         break;
@@ -180,7 +180,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
                 }
                 // add the first and last lines, to double check for file integrity
                 for ( const int& index : std::vector<int>({0,max-1}) ) {
-                    if ( ! VecOps::contains( picked_indexes, index ) ) {
+                    if ( ! VecOps<int>::contains( picked_indexes, index ) ) {
                         line = aux_lines.at( index );
                         if ( strip_lines ) {
                             line = StringOps::strip( line );
