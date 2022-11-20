@@ -2,16 +2,18 @@
 #include "vectors.h"
 
 
-VecOps::VecOps()
+template <typename T>
+VecOps<T>::VecOps()
 {
 
 }
 
 
-const bool VecOps::contains( const std::vector<int>& list, const int& flag )
+template <typename T>
+const bool VecOps<T>::contains(const std::vector<T>& list, const T& flag )
 {
     bool result = false;
-    for ( const int& item : list ) {
+    for ( const T& item : list ) {
         if ( item == flag ) {
             result = true;
             break;
@@ -21,14 +23,5 @@ const bool VecOps::contains( const std::vector<int>& list, const int& flag )
 }
 
 
-const bool VecOps::contains( const std::vector<std::string>& list, const std::string& flag )
-{
-    bool result = false;
-    for ( const std::string& item : list ) {
-        if ( item == flag ) {
-            result = true;
-            break;
-        }
-    }
-    return result;
-}
+template class VecOps<int>;
+template class VecOps<std::string>;
