@@ -162,10 +162,10 @@ fi
 cp -r ./osx_bundle/* ../build/LogDoctor.app/Contents/
 if [ -e /Applications/LogDoctor.app ]
 then
-	rm -r /Applications/LogDoctor.app
+	sudo rm -r /Applications/LogDoctor.app
 	if [[ "$?" != "0" ]]
 	then
-		echo "Error: failed to remove old app bundle: /Applications/LogDoctor.app"
+		echo "Error: failed to remove old bundle: /Applications/LogDoctor.app"
 		exit
 	fi
 fi
