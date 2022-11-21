@@ -15,7 +15,7 @@ class VecOps
 public:
     VecOps();
 
-    //! Checks if a vector of integers contains an element
+    //! Checks if a vector contains an element
     /*!
         \param list The target vector
         \param flag The element to search for
