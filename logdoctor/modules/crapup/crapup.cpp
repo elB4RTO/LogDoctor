@@ -99,7 +99,7 @@ void Crapup::versionCheck( const float& v )
         QNetworkRequest request;
         request.setRawHeader( "User-Agent", ua );
         request.setUrl( QUrl( URL.c_str() ) );
-        request.setTransferTimeout( 15'000 );
+        request.setTransferTimeout( this->timeout_msec );
         this->reply = networkMgr.get( request );
 
         // reply waiter loop
@@ -108,7 +108,7 @@ void Crapup::versionCheck( const float& v )
         connect(this, SIGNAL(abortRequest()), &wait_reply, SLOT(quit()));
 
         // make the request
-        this->request_timer->start( 16'000 );
+        this->request_timer->start( this->timeout_msec+1000 );
         wait_reply.exec();
 
         // request is over, in a way or another

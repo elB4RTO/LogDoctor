@@ -75,6 +75,8 @@ private:
 
     QTimer* request_timer = nullptr;
 
+    const int timeout_msec = 15000;
+
     QNetworkReply* reply = nullptr;
 
     //! Deletes the reply in a safe way
