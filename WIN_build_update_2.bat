@@ -80,29 +80,6 @@ IF ERRORLEVEL 1 (
 	EXIT /B 1
 )
 
-IF NOT EXIST "%exec_path%\licenses" GOTO :step4
-
-rmdir /S /Q "%exec_path%\licenses"
-IF ERRORLEVEL 1 (
-	ECHO:
-	ECHO Error: failed to remove old licenses
-	cd "%actual_path%"
-	PAUSE
-	EXIT /B 1
-)
-
-:step4
-
-xcopy /E /I /V /Y installation_stuff\logdocdata\licenses "%exec_path%\licenses"
-IF ERRORLEVEL 1 (
-	ECHO:
-	ECHO Error: failed to copy licenses
-	cd "%actual_path%"
-	PAUSE
-	EXIT /B 1
-)
-
-
 
 :: Update finished
 ECHO:
