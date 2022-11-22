@@ -673,6 +673,7 @@ void StyleSec::makeStyleSheet( QString& ss, const std::unordered_map<std::string
         // frames
         "QFrame,"
         "QWidget {"
+        "   border: 0px;"
         "   background-color: transparent;"
         "}"
         // tab widgets
