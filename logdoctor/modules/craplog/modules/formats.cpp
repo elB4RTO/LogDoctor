@@ -190,7 +190,7 @@ const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int&
 void FormatOps::checkIisString( const std::string& string )
 {
     for ( const char& chr : string ) {
-        if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == '(' || chr == ')') ) {
+        if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == ',' || chr == ':' || chr == '(' || chr == ')' || chr == '[' || chr == ']') ) {
             // unwanted character
             const std::string c( 1, chr );
             throw LogFormatException( "Unexpected character found: "+c );
