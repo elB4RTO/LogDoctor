@@ -110,13 +110,18 @@
         <file>flags/it.png</file>
     </qresource>
     <qresource prefix="/games">
-        <file>games/o.png</file>
-        <file>games/x.png</file>
-        <file>games/water.png</file>
-        <file>games/food.png</file>
-        <file>games/head.png</file>
-        <file>games/body_c.png</file>
-        <file>games/body_s.png</file>
-        <file>games/tail.png</file>
+        <file>games/crisscross/o.png</file>
+        <file>games/crisscross/x.png</file>
+        <file>games/snake/body_c.png</file>
+        <file>games/snake/body_c_.png</file>
+        <file>games/snake/body_s.png</file>
+        <file>games/snake/body_s_.png</file>
+        <file>games/snake/egg.png</file>
+        <file>games/snake/head.png</file>
+        <file>games/snake/head_.png</file>
+        <file>games/snake/rat.png</file>
+        <file>games/snake/tail.png</file>
+        <file>games/snake/tail_.png</file>
+        <file>games/snake/water.png</file>
     </qresource>
 </RCC>
