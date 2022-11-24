@@ -66,8 +66,8 @@ private:
     QPushButton* board_buttons[9];
 
     const QIcon icons[2] = {
-        QIcon(":/games/games/o.png"),
-        QIcon(":/games/games/x.png")
+        QIcon(":/games/games/crisscross/o.png"),
+        QIcon(":/games/games/crisscross/x.png")
     };
 
     const unsigned int sequences[8][3] = {
