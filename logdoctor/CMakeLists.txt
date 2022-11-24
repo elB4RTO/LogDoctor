@@ -107,13 +107,17 @@ set(PROJECT_SOURCES
     games/games.h
     games/games.cpp
 
-    games/crisscross.ui
-    games/crisscross.h
-    games/crisscross.cpp
+    games/crisscross/crisscross.ui
+    games/crisscross/game.h
+    games/crisscross/game.cpp
 
-    games/snake.ui
-    games/snake.h
-    games/snake.cpp
+    games/snake/snake.ui
+    games/snake/game.h
+    games/snake/game.cpp
+    games/snake/snake.h
+    games/snake/snake.cpp
+    games/snake/food.h
+    games/snake/food.cpp
 
     resources/resources.qrc
     ${TS_FILES}
