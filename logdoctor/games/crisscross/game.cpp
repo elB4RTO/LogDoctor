@@ -1,5 +1,5 @@
 
-#include "crisscross.h"
+#include "game.h"
 #include "ui_crisscross.h"
 
 #include "games/games.h"
