@@ -301,10 +301,6 @@ Continuare?</translation>
         <translation>Lettura fallita</translation>
     </message>
     <message>
-        <source>Failed writing</source>
-        <translation>Scrittura fallita</translation>
-    </message>
-    <message>
         <source>Not a folder</source>
         <translation>Non è una cartella</translation>
     </message>
@@ -443,10 +439,6 @@ Continuare?</translation>
     <message>
         <source>An error accured while reading the file</source>
         <translation>Errore nella lettura del file</translation>
-    </message>
-    <message>
-        <source>An error accured while writing the file</source>
-        <translation>Errore nella scrittura del file</translation>
     </message>
     <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
@@ -1465,16 +1457,63 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
         <translation>GIOCA</translation>
     </message>
     <message>
+        <source>Classic</source>
+        <translation>Classico</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation>Caccia</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation>Battaglia</translation>
+    </message>
+</context>
+<context>
+    <name>SnakeGame</name>
+    <message>
         <source>Game Over</source>
         <translation>Game Over</translation>
+    </message>
+    <message>
+        <source>Your adversary fell in the water!</source>
+        <translation>Il tuo avversario è caduto nell&apos;acqua!</translation>
     </message>
     <message>
         <source>You fell in the water!</source>
         <translation>Sei caduto nell&apos;acqua!</translation>
     </message>
     <message>
+        <source>YOU LOST!</source>
+        <translation>HAI PERSO!</translation>
+    </message>
+    <message>
         <source>You ate yourself!</source>
         <translation>Ti sei mangiato da solo!</translation>
+    </message>
+    <message>
+        <source>You ate your adversary!</source>
+        <translation>Hai mangiato il tuo avversario!</translation>
+    </message>
+    <message>
+        <source>You ate each other!</source>
+        <translation>Vi siete mangiati a vicenda!</translation>
+    </message>
+    <message>
+        <source>MATCH IS DRAW!</source>
+        <translation>PAREGGIO!</translation>
+    </message>
+    <message>
+        <source>YOU WON!</source>
+        <translation>HAI VINTO!</translation>
+    </message>
+    <message>
+        <source>Your adversary ate itself!</source>
+        <translation>Il tuo avversario si è mangiato da solo!</translation>
+    </message>
+    <message>
+        <source>Your adversary ate you!</source>
+        <translation>Il tuo avversario ti ha mangiato!</translation>
     </message>
 </context>
 <context>

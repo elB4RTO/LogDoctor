@@ -75,54 +75,54 @@
 <context>
     <name>Crapup</name>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="26"/>
+        <location filename="../modules/crapup/crapup.cpp" line="27"/>
         <source>Checking for updates</source>
         <translation type="unfinished">Vérification des mises à jour</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="169"/>
+        <location filename="../modules/crapup/crapup.cpp" line="170"/>
         <source>Failed to establish a connection</source>
         <translation type="unfinished">Échec de l&apos;établissement d&apos;une connexion</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="172"/>
+        <location filename="../modules/crapup/crapup.cpp" line="173"/>
         <source>Connection error, please try again later</source>
         <translation type="unfinished">Erreur de connexion, veuillez réessayer plus tard</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="176"/>
+        <location filename="../modules/crapup/crapup.cpp" line="177"/>
         <source>Connection timed out</source>
         <translation type="unfinished">La connexion a expiré</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="188"/>
+        <location filename="../modules/crapup/crapup.cpp" line="190"/>
         <source>New version available</source>
         <translation type="unfinished">Nouvelle version disponible</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="189"/>
+        <location filename="../modules/crapup/crapup.cpp" line="191"/>
         <source>A new version is available!
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
         <translation type="unfinished">Une nouvelle version est disponible!
 Veuillez visiter le référentiel git de LogDoctor et suivez les instructions sur la façon de mettre à jour</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="194"/>
+        <location filename="../modules/crapup/crapup.cpp" line="196"/>
         <source>No update found</source>
         <translation type="unfinished">Aucune mise à jour trouvée</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="195"/>
+        <location filename="../modules/crapup/crapup.cpp" line="197"/>
         <source>LogDoctor is up-to-date</source>
         <translation type="unfinished">LogDoctor est à jour</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="199"/>
+        <location filename="../modules/crapup/crapup.cpp" line="201"/>
         <source>:/</source>
         <translation type="unfinished">:/</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="200"/>
+        <location filename="../modules/crapup/crapup.cpp" line="202"/>
         <source>You&apos;re running a version from the future!
 Your version is beyond the current upstream version
 Are you running the original LogDoctor?
@@ -133,33 +133,33 @@ Utilisez-vous le LogDoctor d&apos;origine?
 Veuillez visiter le référentiel de LogDoctor et en obtenir une nouvelle version</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="213"/>
+        <location filename="../modules/crapup/crapup.cpp" line="215"/>
         <source>Version check failed</source>
         <translation type="unfinished">La vérification de la version a échoué</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="216"/>
+        <location filename="../modules/crapup/crapup.cpp" line="218"/>
         <source>An error occured while parsing:
 initial version mark not found</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 marqueur initial pas trouvé</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="221"/>
+        <location filename="../modules/crapup/crapup.cpp" line="223"/>
         <source>An error occured while parsing:
 final version mark not found</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 marqueur final pas trouvé</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="226"/>
+        <location filename="../modules/crapup/crapup.cpp" line="228"/>
         <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 version malformée</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="231"/>
+        <location filename="../modules/crapup/crapup.cpp" line="233"/>
         <source>An error occured while comparing:
 malformed upstream version</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la comparaison:
@@ -169,27 +169,27 @@ version online malformée</translation>
 <context>
     <name>CrissCross</name>
     <message>
-        <location filename="../games/crisscross.cpp" line="235"/>
+        <location filename="../games/crisscross/game.cpp" line="235"/>
         <source>You beated me!</source>
         <translation type="unfinished">Tu m&apos;as battu!</translation>
     </message>
     <message>
-        <location filename="../games/crisscross.cpp" line="238"/>
+        <location filename="../games/crisscross/game.cpp" line="238"/>
         <source>This time you lost!</source>
         <translation type="unfinished">Cette fois, vous avez perdu!</translation>
     </message>
     <message>
-        <location filename="../games/crisscross.cpp" line="242"/>
+        <location filename="../games/crisscross/game.cpp" line="242"/>
         <source>Victory</source>
         <translation type="unfinished">Victoire</translation>
     </message>
     <message>
-        <location filename="../games/crisscross.cpp" line="273"/>
+        <location filename="../games/crisscross/game.cpp" line="273"/>
         <source>Draw</source>
         <translation type="unfinished">Nul</translation>
     </message>
     <message>
-        <location filename="../games/crisscross.cpp" line="274"/>
+        <location filename="../games/crisscross/game.cpp" line="274"/>
         <source>Nice match</source>
         <translation type="unfinished">Bon match</translation>
     </message>
@@ -295,7 +295,6 @@ version online malformée</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="533"/>
-        <location filename="../modules/dialogs.cpp" line="562"/>
         <source>Discard it and continue, or Abort all and exit?</source>
         <translation type="unfinished">Jetez-le et continuez, ou tout Abandonner et quitter?</translation>
     </message>
@@ -331,7 +330,6 @@ Continue?</source>
 Continuer?</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="662"/>
         <location filename="../modules/dialogs.cpp" line="678"/>
         <source>An error occured</source>
         <translation type="unfinished">Une erreur s&apos;est produite</translation>
@@ -394,18 +392,12 @@ Continuer?</translation>
         <translation type="unfinished">Échec de la lecture</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="478"/>
-        <source>Failed writing</source>
-        <translation type="unfinished">Échec de l&apos;écriture</translation>
-    </message>
-    <message>
         <location filename="../modules/dialogs.cpp" line="631"/>
         <source>Not a folder</source>
         <translation type="unfinished">Pas un dossier</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="547"/>
-        <location filename="../modules/dialogs.cpp" line="558"/>
         <source>Directory not found</source>
         <translation type="unfinished">Dossier introuvable</translation>
     </message>
@@ -634,18 +626,12 @@ Veuillez le corriger et réessayer</translation>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la lecture du fichier</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="480"/>
-        <source>An error accured while writing the file</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;écriture du fichier</translation>
-    </message>
-    <message>
         <location filename="../modules/dialogs.cpp" line="633"/>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished">Le chemin était censé pointer vers un dossier, mais ce n&apos;est pas le cas</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="549"/>
-        <location filename="../modules/dialogs.cpp" line="560"/>
         <source>The directory does not exists</source>
         <translation type="unfinished">Le dossier n&apos;existe pas</translation>
     </message>
@@ -775,7 +761,6 @@ et pouvant conduire à stocker des données incorrectes</translation>
     <message>
         <location filename="../modules/dialogs.cpp" line="347"/>
         <location filename="../modules/dialogs.cpp" line="507"/>
-        <location filename="../modules/dialogs.cpp" line="659"/>
         <location filename="../modules/dialogs.cpp" line="675"/>
         <source>Please report this issue</source>
         <translation type="unfinished">S&apos;il vous plaît signaler ce problème</translation>
@@ -822,7 +807,6 @@ merci de signaler ce problème</translation>
     <message>
         <location filename="../modules/dialogs.cpp" line="53"/>
         <location filename="../modules/dialogs.cpp" line="470"/>
-        <location filename="../modules/dialogs.cpp" line="482"/>
         <location filename="../modules/dialogs.cpp" line="495"/>
         <location filename="../modules/dialogs.cpp" line="519"/>
         <source>Skipping</source>
@@ -893,1093 +877,1093 @@ Abandon</translation>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.ui" line="308"/>
-        <location filename="../mainwindow.ui" line="4465"/>
+        <location filename="../mainwindow.ui" line="305"/>
+        <location filename="../mainwindow.ui" line="4396"/>
         <source>Parse logs from the Apache2 web server</source>
         <translation type="unfinished">Analyser les journaux du serveur web Apache2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="347"/>
-        <location filename="../mainwindow.ui" line="4504"/>
+        <location filename="../mainwindow.ui" line="344"/>
+        <location filename="../mainwindow.ui" line="4435"/>
         <source>Parse logs from the Nginx web server</source>
         <translation type="unfinished">Analyser les journaux du serveur web Nginx</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="386"/>
-        <location filename="../mainwindow.ui" line="4543"/>
+        <location filename="../mainwindow.ui" line="383"/>
+        <location filename="../mainwindow.ui" line="4474"/>
         <source>Parse logs from the Microsoft IIS web server</source>
         <translation type="unfinished">Analyser les journaux du serveur web Microsoft IIS</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="457"/>
+        <location filename="../mainwindow.ui" line="454"/>
         <source>All</source>
         <translation type="unfinished">Tout</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="501"/>
+        <location filename="../mainwindow.ui" line="498"/>
         <source>Inspect a log file</source>
         <translation type="unfinished">Inspecter un fichier journal</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="559"/>
+        <location filename="../mainwindow.ui" line="556"/>
         <source>Name</source>
         <translation type="unfinished">Nom</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="569"/>
+        <location filename="../mainwindow.ui" line="566"/>
         <source>Size</source>
         <translation type="unfinished">Taille</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="609"/>
+        <location filename="../mainwindow.ui" line="606"/>
         <source>Refresh the list</source>
         <translation type="unfinished">Rafraîchir la liste</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="906"/>
+        <location filename="../mainwindow.ui" line="903"/>
         <source>Total size of the parsed data</source>
         <translation type="unfinished">Taille totale des données analysées</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1003"/>
+        <location filename="../mainwindow.ui" line="1000"/>
         <source>Total number of parsed lines</source>
         <translation type="unfinished">Nombre total de lignes analysées</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1115"/>
+        <location filename="../mainwindow.ui" line="1112"/>
         <source>Start parsing the selected files</source>
         <translation type="unfinished">Commencer à analyser les fichiers sélectionnés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1118"/>
+        <location filename="../mainwindow.ui" line="1115"/>
         <source>START</source>
         <translation type="unfinished">START</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1150"/>
+        <location filename="../mainwindow.ui" line="1147"/>
         <source>Time elapsed since the start</source>
         <translation type="unfinished">Temps écoulé depuis le début</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1247"/>
+        <location filename="../mainwindow.ui" line="1244"/>
         <source>Average speed, in parsed data size per second</source>
         <translation type="unfinished">Vitesse moyenne, en taille de données analysées par seconde</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1422"/>
-        <location filename="../mainwindow.ui" line="3712"/>
-        <location filename="../mainwindow.ui" line="4151"/>
+        <location filename="../mainwindow.ui" line="1419"/>
+        <location filename="../mainwindow.ui" line="3661"/>
+        <location filename="../mainwindow.ui" line="4082"/>
         <source>Draw the chart</source>
         <translation type="unfinished">Dessinez le graphique</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1456"/>
+        <location filename="../mainwindow.ui" line="1453"/>
         <source>Web Server</source>
         <translation type="unfinished">Web Server</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1480"/>
-        <location filename="../mainwindow.ui" line="2057"/>
-        <location filename="../mainwindow.ui" line="3110"/>
-        <location filename="../mainwindow.ui" line="3765"/>
-        <location filename="../mainwindow.ui" line="3857"/>
+        <location filename="../mainwindow.ui" line="1477"/>
+        <location filename="../mainwindow.ui" line="2042"/>
+        <location filename="../mainwindow.ui" line="3086"/>
+        <location filename="../mainwindow.ui" line="3714"/>
+        <location filename="../mainwindow.ui" line="3806"/>
         <source>Select a Web Server</source>
         <translation type="unfinished">Sélectionnez un Web Server</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1529"/>
-        <location filename="../mainwindow.ui" line="2188"/>
-        <location filename="../mainwindow.ui" line="3232"/>
-        <location filename="../mainwindow.ui" line="3457"/>
-        <location filename="../mainwindow.ui" line="3938"/>
-        <location filename="../mainwindow.ui" line="3944"/>
-        <location filename="../mainwindow.ui" line="4055"/>
-        <location filename="../mainwindow.ui" line="4061"/>
+        <location filename="../mainwindow.ui" line="1526"/>
+        <location filename="../mainwindow.ui" line="2164"/>
+        <location filename="../mainwindow.ui" line="3202"/>
+        <location filename="../mainwindow.ui" line="3418"/>
+        <location filename="../mainwindow.ui" line="3887"/>
+        <location filename="../mainwindow.ui" line="3890"/>
+        <location filename="../mainwindow.ui" line="3995"/>
+        <location filename="../mainwindow.ui" line="3998"/>
         <source>Year</source>
         <translation type="unfinished">An</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1544"/>
-        <location filename="../mainwindow.ui" line="2203"/>
-        <location filename="../mainwindow.ui" line="3271"/>
-        <location filename="../mainwindow.ui" line="3355"/>
-        <location filename="../mainwindow.ui" line="3968"/>
-        <location filename="../mainwindow.ui" line="3974"/>
-        <location filename="../mainwindow.ui" line="4085"/>
-        <location filename="../mainwindow.ui" line="4091"/>
+        <location filename="../mainwindow.ui" line="1541"/>
+        <location filename="../mainwindow.ui" line="2179"/>
+        <location filename="../mainwindow.ui" line="3238"/>
+        <location filename="../mainwindow.ui" line="3322"/>
+        <location filename="../mainwindow.ui" line="3914"/>
+        <location filename="../mainwindow.ui" line="3917"/>
+        <location filename="../mainwindow.ui" line="4022"/>
+        <location filename="../mainwindow.ui" line="4025"/>
         <source>Month</source>
         <translation type="unfinished">Mois</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1559"/>
-        <location filename="../mainwindow.ui" line="2218"/>
-        <location filename="../mainwindow.ui" line="3217"/>
-        <location filename="../mainwindow.ui" line="3370"/>
-        <location filename="../mainwindow.ui" line="3998"/>
-        <location filename="../mainwindow.ui" line="4004"/>
-        <location filename="../mainwindow.ui" line="4115"/>
-        <location filename="../mainwindow.ui" line="4121"/>
+        <location filename="../mainwindow.ui" line="1556"/>
+        <location filename="../mainwindow.ui" line="2194"/>
+        <location filename="../mainwindow.ui" line="3187"/>
+        <location filename="../mainwindow.ui" line="3337"/>
+        <location filename="../mainwindow.ui" line="3941"/>
+        <location filename="../mainwindow.ui" line="3944"/>
+        <location filename="../mainwindow.ui" line="4049"/>
+        <location filename="../mainwindow.ui" line="4052"/>
         <source>Day</source>
         <translation type="unfinished">Jour</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1590"/>
+        <location filename="../mainwindow.ui" line="1587"/>
         <source>Hour</source>
         <translation type="unfinished">Heure</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1747"/>
+        <location filename="../mainwindow.ui" line="1732"/>
         <source>Update the database with current Warning States</source>
         <translation type="unfinished">Mettre à jour le database avec les états d&apos;avertissement actuels</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1800"/>
+        <location filename="../mainwindow.ui" line="1785"/>
         <source>Log line marked as Warning</source>
         <translation type="unfinished">Ligne de journal marquée comme Avertissement</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1811"/>
+        <location filename="../mainwindow.ui" line="1796"/>
         <source>Date when the request arrived (YYYY-MM-DD)</source>
         <translation type="unfinished">Date d&apos;arrivée de la demande (AAAA-MM-JJ)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1822"/>
-        <location filename="../mainwindow.ui" line="2334"/>
+        <location filename="../mainwindow.ui" line="1807"/>
+        <location filename="../mainwindow.ui" line="2310"/>
         <source>Time when the request arrived (hh:mm:ss)</source>
         <translation type="unfinished">Heure d&apos;arrivée de la demande (hh:mm:ss)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1833"/>
-        <location filename="../mainwindow.ui" line="2312"/>
-        <location filename="../mainwindow.ui" line="2424"/>
-        <location filename="../mainwindow.ui" line="2812"/>
+        <location filename="../mainwindow.ui" line="1818"/>
+        <location filename="../mainwindow.ui" line="2288"/>
+        <location filename="../mainwindow.ui" line="2400"/>
+        <location filename="../mainwindow.ui" line="2788"/>
         <source>Protocol of the request</source>
         <translation type="unfinished">Protocole de la demande</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1844"/>
-        <location filename="../mainwindow.ui" line="2301"/>
-        <location filename="../mainwindow.ui" line="2443"/>
-        <location filename="../mainwindow.ui" line="2845"/>
+        <location filename="../mainwindow.ui" line="1829"/>
+        <location filename="../mainwindow.ui" line="2277"/>
+        <location filename="../mainwindow.ui" line="2419"/>
+        <location filename="../mainwindow.ui" line="2821"/>
         <source>Method of the request</source>
         <translation type="unfinished">Méthode de la demande</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1855"/>
-        <location filename="../mainwindow.ui" line="2279"/>
-        <location filename="../mainwindow.ui" line="2578"/>
-        <location filename="../mainwindow.ui" line="2878"/>
+        <location filename="../mainwindow.ui" line="1840"/>
+        <location filename="../mainwindow.ui" line="2255"/>
+        <location filename="../mainwindow.ui" line="2554"/>
+        <location filename="../mainwindow.ui" line="2854"/>
         <source>URI of the requested page</source>
         <translation type="unfinished">URL de la page demandée</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1877"/>
-        <location filename="../mainwindow.ui" line="2323"/>
-        <location filename="../mainwindow.ui" line="2514"/>
-        <location filename="../mainwindow.ui" line="2944"/>
+        <location filename="../mainwindow.ui" line="1862"/>
+        <location filename="../mainwindow.ui" line="2299"/>
+        <location filename="../mainwindow.ui" line="2490"/>
+        <location filename="../mainwindow.ui" line="2920"/>
         <source>Response code from the server</source>
         <translation type="unfinished">Code de résponse du serveur</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1921"/>
-        <location filename="../mainwindow.ui" line="3076"/>
+        <location filename="../mainwindow.ui" line="1906"/>
+        <location filename="../mainwindow.ui" line="3052"/>
         <source>IP address of the Client which made the request</source>
         <translation type="unfinished">Addresse IP du client qui a fait la demande</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1932"/>
+        <location filename="../mainwindow.ui" line="1917"/>
         <source>Size ib Bytes of the request, usually includes header and data</source>
         <translation type="unfinished">Taille en Octets de la demande, comprend généralement header et données</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1943"/>
+        <location filename="../mainwindow.ui" line="1928"/>
         <source>Size in Bytes of the served content, usually includes header and data</source>
         <translation type="unfinished">Taille en Octets du contenu servi, comprend généralement header et données</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2427"/>
+        <location filename="../mainwindow.ui" line="2403"/>
         <source>Protocol:</source>
         <translation type="unfinished">Protocole:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2446"/>
+        <location filename="../mainwindow.ui" line="2422"/>
         <source>Method:</source>
         <translation type="unfinished">Méthode:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2517"/>
+        <location filename="../mainwindow.ui" line="2493"/>
         <source>Response:</source>
         <translation type="unfinished">Réponse:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2536"/>
+        <location filename="../mainwindow.ui" line="2512"/>
         <source>Query:</source>
         <translation type="unfinished">Query:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2581"/>
+        <location filename="../mainwindow.ui" line="2557"/>
         <source>URI:</source>
         <translation type="unfinished">URI:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2639"/>
+        <location filename="../mainwindow.ui" line="2615"/>
         <source>Filters</source>
         <translation type="unfinished">Filtres</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1866"/>
-        <location filename="../mainwindow.ui" line="2290"/>
-        <location filename="../mainwindow.ui" line="2533"/>
-        <location filename="../mainwindow.ui" line="2911"/>
+        <location filename="../mainwindow.ui" line="1851"/>
+        <location filename="../mainwindow.ui" line="2266"/>
+        <location filename="../mainwindow.ui" line="2509"/>
+        <location filename="../mainwindow.ui" line="2887"/>
         <source>Query carried along with the URI</source>
         <translation type="unfinished">Query transportée avec l&apos;URI</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1899"/>
-        <location filename="../mainwindow.ui" line="3010"/>
+        <location filename="../mainwindow.ui" line="1884"/>
+        <location filename="../mainwindow.ui" line="2986"/>
         <source>Cookie used for the request</source>
         <translation type="unfinished">Cookie utilisé pour la requête</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1910"/>
-        <location filename="../mainwindow.ui" line="3043"/>
+        <location filename="../mainwindow.ui" line="1895"/>
+        <location filename="../mainwindow.ui" line="3019"/>
         <source>User-agent of the client which made the request</source>
         <translation type="unfinished">User-agent du client qui a fait la demande</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2702"/>
+        <location filename="../mainwindow.ui" line="2678"/>
         <source>Count</source>
         <translation type="unfinished">Compter</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1888"/>
-        <location filename="../mainwindow.ui" line="2977"/>
+        <location filename="../mainwindow.ui" line="1873"/>
+        <location filename="../mainwindow.ui" line="2953"/>
         <source>The URL which redirected the Client to the requested page</source>
         <translation type="unfinished">L&apos;URL qui a redirigé le Client vers la page demandée</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2705"/>
+        <location filename="../mainwindow.ui" line="2681"/>
         <source>Number of occurrences</source>
         <translation type="unfinished">Nombre d&apos;occurrences</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2713"/>
+        <location filename="../mainwindow.ui" line="2689"/>
         <source>Item</source>
         <translation type="unfinished">Article</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2716"/>
+        <location filename="../mainwindow.ui" line="2692"/>
         <source>Value of the field</source>
         <translation type="unfinished">Valeur du champ</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3385"/>
-        <location filename="../mainwindow.ui" line="3905"/>
+        <location filename="../mainwindow.ui" line="3352"/>
+        <location filename="../mainwindow.ui" line="3854"/>
         <source>From:</source>
         <translation type="unfinished">De:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3523"/>
-        <location filename="../mainwindow.ui" line="4028"/>
+        <location filename="../mainwindow.ui" line="3478"/>
+        <location filename="../mainwindow.ui" line="3968"/>
         <source>To:</source>
         <translation type="unfinished">À:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3633"/>
-        <location filename="../mainwindow.ui" line="4303"/>
-        <location filename="../mainwindow.ui" line="4345"/>
+        <location filename="../mainwindow.ui" line="3582"/>
+        <location filename="../mainwindow.ui" line="4234"/>
+        <location filename="../mainwindow.ui" line="4276"/>
         <source>Field:</source>
         <translation type="unfinished">Champ:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3660"/>
-        <location filename="../mainwindow.ui" line="4236"/>
-        <location filename="../mainwindow.ui" line="4285"/>
+        <location filename="../mainwindow.ui" line="3609"/>
+        <location filename="../mainwindow.ui" line="4167"/>
+        <location filename="../mainwindow.ui" line="4216"/>
         <source>Select a log field to view</source>
         <translation type="unfinished">Sélectionnez un champ de journal à afficher</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3672"/>
-        <location filename="../mainwindow.ui" line="4184"/>
-        <location filename="../mainwindow.ui" line="4324"/>
+        <location filename="../mainwindow.ui" line="3621"/>
+        <location filename="../mainwindow.ui" line="4115"/>
+        <location filename="../mainwindow.ui" line="4255"/>
         <source>Filter:</source>
         <translation type="unfinished">Filtre:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4654"/>
+        <location filename="../mainwindow.ui" line="4585"/>
         <source>Protocol</source>
         <translation type="unfinished">Protocole</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4717"/>
+        <location filename="../mainwindow.ui" line="4648"/>
         <source>Method</source>
         <translation type="unfinished">Méthode</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4793"/>
+        <location filename="../mainwindow.ui" line="4724"/>
         <source>URI</source>
         <translation type="unfinished">URI</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4848"/>
+        <location filename="../mainwindow.ui" line="4779"/>
         <source>User-agent</source>
         <translation type="unfinished">User-agent</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4925"/>
+        <location filename="../mainwindow.ui" line="4856"/>
         <source>Most recurrent</source>
         <translation type="unfinished">Le plus récurrent</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4989"/>
+        <location filename="../mainwindow.ui" line="4920"/>
         <source>Date ever</source>
         <translation type="unfinished">Date de tous les temps</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5058"/>
+        <location filename="../mainwindow.ui" line="4989"/>
         <source>Day of the week</source>
         <translation type="unfinished">Jour de la semaine</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5127"/>
+        <location filename="../mainwindow.ui" line="5058"/>
         <source>Hour of the day</source>
         <translation type="unfinished">Heure du jour</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="4950"/>
+        <location filename="../mainwindow.ui" line="4881"/>
         <source>Most trafficked</source>
         <translation type="unfinished">Plus trafiqué</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="454"/>
+        <location filename="../mainwindow.ui" line="451"/>
         <source>Select/deselect all the files</source>
         <translation type="unfinished">Sélectionnez/désélectionnez tous les fichiers</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5251"/>
-        <location filename="../mainwindow.ui" line="5612"/>
+        <location filename="../mainwindow.ui" line="5182"/>
+        <location filename="../mainwindow.ui" line="5543"/>
         <source>Time taken</source>
         <translation type="unfinished">Temps pris</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5320"/>
-        <location filename="../mainwindow.ui" line="5509"/>
+        <location filename="../mainwindow.ui" line="5251"/>
+        <location filename="../mainwindow.ui" line="5440"/>
         <source>Bytes sent</source>
         <translation type="unfinished">Octets envoyés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5389"/>
+        <location filename="../mainwindow.ui" line="5320"/>
         <source>Bytes received</source>
         <translation type="unfinished">Octets reçus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5466"/>
+        <location filename="../mainwindow.ui" line="5397"/>
         <source>Mean/Max performances</source>
         <translation type="unfinished">Performances moyennes/maxi</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5564"/>
+        <location filename="../mainwindow.ui" line="5495"/>
         <source>Requests received</source>
         <translation type="unfinished">Demandes reçues</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5668"/>
+        <location filename="../mainwindow.ui" line="5599"/>
         <source>Total work</source>
         <translation type="unfinished">Travail total</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5917"/>
-        <location filename="../mainwindow.ui" line="6473"/>
+        <location filename="../mainwindow.ui" line="5848"/>
+        <location filename="../mainwindow.ui" line="6404"/>
         <source>General</source>
         <translation type="unfinished">Général</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5920"/>
+        <location filename="../mainwindow.ui" line="5851"/>
         <source>General settings</source>
         <translation type="unfinished">Réglages généraux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5947"/>
+        <location filename="../mainwindow.ui" line="5878"/>
         <source>Window</source>
         <translation type="unfinished">Fenêtre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6022"/>
-        <location filename="../mainwindow.ui" line="7707"/>
-        <location filename="../mainwindow.ui" line="7888"/>
-        <location filename="../mainwindow.ui" line="7937"/>
-        <location filename="../mainwindow.ui" line="8017"/>
-        <location filename="../mainwindow.ui" line="8066"/>
+        <location filename="../mainwindow.ui" line="5953"/>
+        <location filename="../mainwindow.ui" line="7638"/>
+        <location filename="../mainwindow.ui" line="7819"/>
+        <location filename="../mainwindow.ui" line="7868"/>
+        <location filename="../mainwindow.ui" line="7948"/>
+        <location filename="../mainwindow.ui" line="7997"/>
         <source>Remember window&apos;s position and size</source>
         <translation type="unfinished">Se souvenir de la position et de la taille de la fenêtre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6025"/>
+        <location filename="../mainwindow.ui" line="5956"/>
         <source>Geometry</source>
         <translation type="unfinished">Apparence</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6055"/>
-        <location filename="../mainwindow.ui" line="6172"/>
+        <location filename="../mainwindow.ui" line="5986"/>
+        <location filename="../mainwindow.ui" line="6103"/>
         <source>Theme to use for the window</source>
         <translation type="unfinished">Thème à utiliser pour la fenêtre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6058"/>
-        <location filename="../mainwindow.ui" line="7163"/>
+        <location filename="../mainwindow.ui" line="5989"/>
+        <location filename="../mainwindow.ui" line="7094"/>
         <source>Theme</source>
         <translation type="unfinished">Thème</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6108"/>
+        <location filename="../mainwindow.ui" line="6039"/>
         <source>None (System)</source>
         <translation type="unfinished">Aucun (Système)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6235"/>
-        <location filename="../mainwindow.ui" line="7112"/>
+        <location filename="../mainwindow.ui" line="6166"/>
+        <location filename="../mainwindow.ui" line="7043"/>
         <source>Dark</source>
         <translation type="unfinished">Sombre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6273"/>
+        <location filename="../mainwindow.ui" line="6204"/>
         <source>Dialogs</source>
         <translation type="unfinished">Dialogues</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6118"/>
+        <location filename="../mainwindow.ui" line="6049"/>
         <source>Candy</source>
         <translation type="unfinished">Bonbon</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6123"/>
+        <location filename="../mainwindow.ui" line="6054"/>
         <source>Herb</source>
         <translation type="unfinished">Herbe</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6128"/>
+        <location filename="../mainwindow.ui" line="6059"/>
         <source>Powder</source>
         <translation type="unfinished">Poudre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6225"/>
+        <location filename="../mainwindow.ui" line="6156"/>
         <source>Auto (Default)</source>
         <translation type="unfinished">Auto (Défaut)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6230"/>
+        <location filename="../mainwindow.ui" line="6161"/>
         <source>Light</source>
         <translation type="unfinished">Clair</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6308"/>
+        <location filename="../mainwindow.ui" line="6239"/>
         <source>Dialogs level</source>
         <translation type="unfinished">Niveau dialogue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6348"/>
+        <location filename="../mainwindow.ui" line="6279"/>
         <source>Reduced quantity of dialog messages shown</source>
         <translation type="unfinished">Quantité réduite de messages de dialogue affichés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6351"/>
+        <location filename="../mainwindow.ui" line="6282"/>
         <source>Essential</source>
         <translation type="unfinished">Essentiel</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6378"/>
+        <location filename="../mainwindow.ui" line="6309"/>
         <source>Normal quantity of dialog messages shown</source>
         <translation type="unfinished">Quantité normale de messages de dialogue affichés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6381"/>
+        <location filename="../mainwindow.ui" line="6312"/>
         <source>Normal</source>
         <translation type="unfinished">Normal</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6411"/>
+        <location filename="../mainwindow.ui" line="6342"/>
         <source>Explanatory</source>
         <translation type="unfinished">Explicatif</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6550"/>
+        <location filename="../mainwindow.ui" line="6481"/>
         <source>Logs parser</source>
         <translation type="unfinished">Analyseur de journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6611"/>
+        <location filename="../mainwindow.ui" line="6542"/>
         <source>Statistics viewer</source>
         <translation type="unfinished">Visualiseur de statistiques</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6672"/>
+        <location filename="../mainwindow.ui" line="6603"/>
         <source>TextBrowser</source>
         <translation type="unfinished">TextBrowser</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6769"/>
+        <location filename="../mainwindow.ui" line="6700"/>
         <source>Font to use for the Text Browser</source>
         <translation type="unfinished">Font à utiliser pour le Text Browser</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6772"/>
+        <location filename="../mainwindow.ui" line="6703"/>
         <source>Font</source>
         <translation type="unfinished">Font</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6824"/>
+        <location filename="../mainwindow.ui" line="6755"/>
         <source>Double-spaced lines</source>
         <translation type="unfinished">Lignes à double interligne</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6827"/>
+        <location filename="../mainwindow.ui" line="6758"/>
         <source>Use wide lines</source>
         <translation type="unfinished">Utilisez des lignes larges</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6851"/>
+        <location filename="../mainwindow.ui" line="6782"/>
         <source>Define the spacing between lines</source>
         <translation type="unfinished">Définir l&apos;espacement entre les lignes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6854"/>
+        <location filename="../mainwindow.ui" line="6785"/>
         <source>Lines spacing</source>
         <translation type="unfinished">Interligne</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6891"/>
+        <location filename="../mainwindow.ui" line="6822"/>
         <source>None</source>
         <translation type="unfinished">Aucun</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6944"/>
+        <location filename="../mainwindow.ui" line="6875"/>
         <source>Color scheme to use for the Text Browser</source>
         <translation type="unfinished">Jeu de couleurs à utiliser pour le Text Browser</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6947"/>
+        <location filename="../mainwindow.ui" line="6878"/>
         <source>Color scheme</source>
         <translation type="unfinished">Schéma de couleur</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7012"/>
+        <location filename="../mainwindow.ui" line="6943"/>
         <source>The appearance of the Text Browser with the current settings</source>
         <translation type="unfinished">L&apos;apparence du Text Browser avec les paramètres actuels</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7015"/>
-        <location filename="../mainwindow.ui" line="7212"/>
+        <location filename="../mainwindow.ui" line="6946"/>
+        <location filename="../mainwindow.ui" line="7143"/>
         <source>Preview</source>
         <translation type="unfinished">Aperçu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7058"/>
+        <location filename="../mainwindow.ui" line="6989"/>
         <source>Charts</source>
         <translation type="unfinished">Graphiques</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7107"/>
+        <location filename="../mainwindow.ui" line="7038"/>
         <source>Default (Light)</source>
         <translation type="unfinished">Par défaut (lDégager)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7117"/>
+        <location filename="../mainwindow.ui" line="7048"/>
         <source>Sand</source>
         <translation type="unfinished">Sable</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7122"/>
+        <location filename="../mainwindow.ui" line="7053"/>
         <source>Cerulean</source>
         <translation type="unfinished">Azuré</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7160"/>
+        <location filename="../mainwindow.ui" line="7091"/>
         <source>Theme to use for the Charts</source>
         <translation type="unfinished">Thème à utiliser pour les Graphiques</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7233"/>
+        <location filename="../mainwindow.ui" line="7164"/>
         <source>Databases</source>
         <translation type="unfinished">Databases</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7265"/>
-        <location filename="../mainwindow.ui" line="7354"/>
-        <location filename="../mainwindow.ui" line="8251"/>
-        <location filename="../mainwindow.ui" line="9255"/>
-        <location filename="../mainwindow.ui" line="10278"/>
+        <location filename="../mainwindow.ui" line="7196"/>
+        <location filename="../mainwindow.ui" line="7285"/>
+        <location filename="../mainwindow.ui" line="8182"/>
+        <location filename="../mainwindow.ui" line="9186"/>
+        <location filename="../mainwindow.ui" line="10209"/>
         <source>Apply the current path</source>
         <translation type="unfinished">Appliquer le chemin actuel</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7284"/>
+        <location filename="../mainwindow.ui" line="7215"/>
         <source>Path where the logs data collection database is located</source>
         <translation type="unfinished">Chemin où se trouve le database de collecte de données de journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7287"/>
+        <location filename="../mainwindow.ui" line="7218"/>
         <source>Logs data</source>
         <translation type="unfinished">Données de journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7315"/>
-        <location filename="../mainwindow.ui" line="7404"/>
-        <location filename="../mainwindow.ui" line="8212"/>
-        <location filename="../mainwindow.ui" line="9216"/>
-        <location filename="../mainwindow.ui" line="10239"/>
+        <location filename="../mainwindow.ui" line="7246"/>
+        <location filename="../mainwindow.ui" line="7335"/>
+        <location filename="../mainwindow.ui" line="8143"/>
+        <location filename="../mainwindow.ui" line="9147"/>
+        <location filename="../mainwindow.ui" line="10170"/>
         <source>The given path doen&apos;t exists, or doesn&apos;t point to a folder</source>
         <translation type="unfinished">Le chemin donné n&apos;existe pas ou ne pointe pas vers un dossier</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7373"/>
+        <location filename="../mainwindow.ui" line="7304"/>
         <source>Path where the used files hashes database is located</source>
         <translation type="unfinished">Chemin où se trouve le database de hachage des fichiers utilisés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7376"/>
+        <location filename="../mainwindow.ui" line="7307"/>
         <source>Used files</source>
         <translation type="unfinished">Archivos usados</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7448"/>
-        <location filename="../mainwindow.ui" line="7510"/>
+        <location filename="../mainwindow.ui" line="7379"/>
+        <location filename="../mainwindow.ui" line="7441"/>
         <source>Insert the base path only, file name excluded</source>
         <translation type="unfinished">Insérez le chemin de base uniquement, nom de fichier exclu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7488"/>
+        <location filename="../mainwindow.ui" line="7419"/>
         <source>Path for the database files</source>
         <translation type="unfinished">Chemin des fichiers de laìe database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7491"/>
-        <location filename="../mainwindow.ui" line="8166"/>
-        <location filename="../mainwindow.ui" line="9170"/>
-        <location filename="../mainwindow.ui" line="10174"/>
+        <location filename="../mainwindow.ui" line="7422"/>
+        <location filename="../mainwindow.ui" line="8097"/>
+        <location filename="../mainwindow.ui" line="9101"/>
+        <location filename="../mainwindow.ui" line="10105"/>
         <source>Paths</source>
         <translation type="unfinished">Chemins</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7559"/>
+        <location filename="../mainwindow.ui" line="7490"/>
         <source>Backup options for the Logs Data database</source>
         <translation type="unfinished">Options de sauvegarde pour le database de données de journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7562"/>
+        <location filename="../mainwindow.ui" line="7493"/>
         <source>Backups</source>
         <translation type="unfinished">Sauvegardes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7585"/>
+        <location filename="../mainwindow.ui" line="7516"/>
         <source>A new backup is made when closing LogDoctor after having succesfully edited the database</source>
         <translation type="unfinished">Une nouvelle sauvegarde est effectuée à la fermeture de LogDoctor après avoir édité avec succès le database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7588"/>
+        <location filename="../mainwindow.ui" line="7519"/>
         <source>Backup the Logs Data database and keep</source>
         <translation type="unfinished">Sauvegardez le database de données de journaux et conservez</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7651"/>
+        <location filename="../mainwindow.ui" line="7582"/>
         <source>Logs</source>
         <translation type="unfinished">Journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7654"/>
+        <location filename="../mainwindow.ui" line="7585"/>
         <source>Logs related settings</source>
         <translation type="unfinished">Paramètres liés aux journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7681"/>
+        <location filename="../mainwindow.ui" line="7612"/>
         <source>Defaults</source>
         <translation type="unfinished">Défaut</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7710"/>
+        <location filename="../mainwindow.ui" line="7641"/>
         <source>Default WebServer</source>
         <translation type="unfinished">Serveur Web par défaut</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7825"/>
+        <location filename="../mainwindow.ui" line="7756"/>
         <source>Control</source>
         <translation type="unfinished">Control</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7828"/>
+        <location filename="../mainwindow.ui" line="7759"/>
         <source>Options about the log files usage control</source>
         <translation type="unfinished">Options concernant le contrôle de l&apos;utilisation des fichiers journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7891"/>
+        <location filename="../mainwindow.ui" line="7822"/>
         <source>Usage control</source>
         <translation type="unfinished">Contrôle de l&apos;utilisation</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="7940"/>
+        <location filename="../mainwindow.ui" line="7871"/>
         <source>Hide already used files</source>
         <translation type="unfinished">Masquer les fichiers déjà utilisés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8020"/>
+        <location filename="../mainwindow.ui" line="7951"/>
         <source>Size warnings</source>
         <translation type="unfinished">Avertissements de taille</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8069"/>
+        <location filename="../mainwindow.ui" line="8000"/>
         <source>Warn me when using files with a size exceeding:</source>
         <translation type="unfinished">M&apos;avertir lors de l&apos;utilisation de fichiers dont la taille dépasse&#xa0;:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8414"/>
-        <location filename="../mainwindow.ui" line="9418"/>
-        <location filename="../mainwindow.ui" line="10500"/>
+        <location filename="../mainwindow.ui" line="8345"/>
+        <location filename="../mainwindow.ui" line="9349"/>
+        <location filename="../mainwindow.ui" line="10431"/>
         <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
 Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</source>
         <translation type="unfinished">Générez un exemple de ligne de journal à partir de la chaîne actuellement enregistrée, pour vérifier si elle est correctement formatée.
 Tout champ non pris en compte par LogDoctor apparaîtra comme &apos;DISCARDED&apos;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11397"/>
+        <location filename="../mainwindow.ui" line="11328"/>
         <source>CrissCross</source>
         <translation type="unfinished">CrissCross</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11400"/>
+        <location filename="../mainwindow.ui" line="11331"/>
         <source>Play CrissCross</source>
         <translation type="unfinished">Jouer au CrissCross</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11405"/>
+        <location filename="../mainwindow.ui" line="11336"/>
         <source>Snake</source>
         <translation type="unfinished">Snake</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11408"/>
+        <location filename="../mainwindow.ui" line="11339"/>
         <source>Play Snake</source>
         <translation type="unfinished">Jouer au Snake</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="311"/>
-        <location filename="../mainwindow.ui" line="1487"/>
-        <location filename="../mainwindow.ui" line="2064"/>
-        <location filename="../mainwindow.ui" line="3117"/>
-        <location filename="../mainwindow.ui" line="3772"/>
-        <location filename="../mainwindow.ui" line="3864"/>
-        <location filename="../mainwindow.ui" line="4468"/>
-        <location filename="../mainwindow.ui" line="8148"/>
+        <location filename="../mainwindow.ui" line="308"/>
+        <location filename="../mainwindow.ui" line="1484"/>
+        <location filename="../mainwindow.ui" line="2049"/>
+        <location filename="../mainwindow.ui" line="3093"/>
+        <location filename="../mainwindow.ui" line="3721"/>
+        <location filename="../mainwindow.ui" line="3813"/>
+        <location filename="../mainwindow.ui" line="4399"/>
+        <location filename="../mainwindow.ui" line="8079"/>
         <source>Apache2</source>
         <translation type="unfinished">Apache2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="1954"/>
-        <location filename="../mainwindow.ui" line="2268"/>
+        <location filename="../mainwindow.ui" line="1939"/>
+        <location filename="../mainwindow.ui" line="2244"/>
         <source>Time taken by the server to serve the content, in milliseconds</source>
         <translation type="unfinished">Temps mis par le serveur pour servir le contenu, en millisecondes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2385"/>
-        <location filename="../mainwindow.ui" line="2412"/>
-        <location filename="../mainwindow.ui" line="2501"/>
-        <location filename="../mainwindow.ui" line="2563"/>
+        <location filename="../mainwindow.ui" line="2361"/>
+        <location filename="../mainwindow.ui" line="2388"/>
+        <location filename="../mainwindow.ui" line="2477"/>
+        <location filename="../mainwindow.ui" line="2539"/>
         <source>Only use lines in which the field is starting with this string</source>
         <translation type="unfinished">Utilisez uniquement les lignes dans lesquelles le champ commence par cette chaîne</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="2473"/>
+        <location filename="../mainwindow.ui" line="2449"/>
         <source>Only use lines in which the field is matching this statement.
 Use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
         <translation type="unfinished">Utilisez uniquement les lignes dans lesquelles le champ correspond à cette instruction.
 Utilisez &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; ou &apos;&gt;&apos; pour déclarer quoi utiliser</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="3604"/>
-        <location filename="../mainwindow.ui" line="4211"/>
-        <location filename="../mainwindow.ui" line="4260"/>
+        <location filename="../mainwindow.ui" line="3553"/>
+        <location filename="../mainwindow.ui" line="4142"/>
+        <location filename="../mainwindow.ui" line="4191"/>
         <source>With strings, only the lines in which the field is starting with this string will be used.
 With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
         <translation type="unfinished">Avec les chaînes, seules les lignes dans lesquelles le champ commence par cette chaîne seront utilisées.
 Avec des nombres, utilisez &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; ou &apos;&gt;&apos; pour déclarer ce qu&apos;il faut utiliser</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5995"/>
+        <location filename="../mainwindow.ui" line="5926"/>
         <source>Remember the window&apos;s position and size</source>
         <translation type="unfinished">Rappelez-vous la position et la taille de la fenêtre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="5998"/>
+        <location filename="../mainwindow.ui" line="5929"/>
         <source>Remember position and size</source>
         <translation type="unfinished">Rappelez-vous la position et la taille</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6113"/>
+        <location filename="../mainwindow.ui" line="6044"/>
         <source>Ash</source>
         <translation type="unfinished">Cendre</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6175"/>
+        <location filename="../mainwindow.ui" line="6106"/>
         <source>Icons</source>
         <translation type="unfinished">Icônes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6305"/>
+        <location filename="../mainwindow.ui" line="6236"/>
         <source>Define the quantity of dialog mesages shown</source>
         <translation type="unfinished">Définir la quantité de messages de dialogue affichés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6408"/>
+        <location filename="../mainwindow.ui" line="6339"/>
         <source>Augmented quantity of dialog messages shown</source>
         <translation type="unfinished">Quantité augmentée de messages de dialogue affichés</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6470"/>
+        <location filename="../mainwindow.ui" line="6401"/>
         <source>Dialogs from the main processes</source>
         <translation type="unfinished">Dialogues des principaux processus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6547"/>
+        <location filename="../mainwindow.ui" line="6478"/>
         <source>Dialogs emitted when parsing logs</source>
         <translation type="unfinished">Boîtes de dialogue émises lors de l&apos;analyse des journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="6608"/>
+        <location filename="../mainwindow.ui" line="6539"/>
         <source>Dialogs emitted when viewing statistics</source>
         <translation type="unfinished">Dialogues émis lors de la consultation des statistiques</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8151"/>
+        <location filename="../mainwindow.ui" line="8082"/>
         <source>Configure Apache2 specific options</source>
         <translation type="unfinished">Configurer les options spécifiques à Apache2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8276"/>
-        <location filename="../mainwindow.ui" line="9280"/>
-        <location filename="../mainwindow.ui" line="10201"/>
+        <location filename="../mainwindow.ui" line="8207"/>
+        <location filename="../mainwindow.ui" line="9211"/>
+        <location filename="../mainwindow.ui" line="10132"/>
         <source>Logs folder</source>
         <translation type="unfinished">Dossier journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8324"/>
-        <location filename="../mainwindow.ui" line="9328"/>
-        <location filename="../mainwindow.ui" line="10410"/>
+        <location filename="../mainwindow.ui" line="8255"/>
+        <location filename="../mainwindow.ui" line="9259"/>
+        <location filename="../mainwindow.ui" line="10341"/>
         <source>Logs format string</source>
         <translation type="unfinished">Chaîne de format des journaux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8327"/>
-        <location filename="../mainwindow.ui" line="9331"/>
-        <location filename="../mainwindow.ui" line="10413"/>
+        <location filename="../mainwindow.ui" line="8258"/>
+        <location filename="../mainwindow.ui" line="9262"/>
+        <location filename="../mainwindow.ui" line="10344"/>
         <source>Format string</source>
         <translation type="unfinished">Chaîne de format</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8346"/>
-        <location filename="../mainwindow.ui" line="9350"/>
-        <location filename="../mainwindow.ui" line="10432"/>
+        <location filename="../mainwindow.ui" line="8277"/>
+        <location filename="../mainwindow.ui" line="9281"/>
+        <location filename="../mainwindow.ui" line="10363"/>
         <source>Insert the format string you&apos;re using</source>
         <translation type="unfinished">Insérez la chaîne de format que vous utilisez</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8376"/>
-        <location filename="../mainwindow.ui" line="9380"/>
-        <location filename="../mainwindow.ui" line="10462"/>
+        <location filename="../mainwindow.ui" line="8307"/>
+        <location filename="../mainwindow.ui" line="9311"/>
+        <location filename="../mainwindow.ui" line="10393"/>
         <source>Apply the current string</source>
         <translation type="unfinished">Appliquer la chaîne actuelle</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8418"/>
-        <location filename="../mainwindow.ui" line="9422"/>
-        <location filename="../mainwindow.ui" line="10504"/>
+        <location filename="../mainwindow.ui" line="8349"/>
+        <location filename="../mainwindow.ui" line="9353"/>
+        <location filename="../mainwindow.ui" line="10435"/>
         <source>Generate sample</source>
         <translation type="unfinished">Générer un échantillon</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8469"/>
-        <location filename="../mainwindow.ui" line="9473"/>
-        <location filename="../mainwindow.ui" line="10555"/>
+        <location filename="../mainwindow.ui" line="8400"/>
+        <location filename="../mainwindow.ui" line="9404"/>
+        <location filename="../mainwindow.ui" line="10486"/>
         <source>Please check the correctness of this line.
 Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not considered by LogDoctor</source>
         <translation type="unfinished">Veuillez vérifier l&apos;exactitude de cette ligne.
 Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement, mais ne sont pas pris en compte par LogDoctor</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8564"/>
-        <location filename="../mainwindow.ui" line="9568"/>
-        <location filename="../mainwindow.ui" line="10650"/>
+        <location filename="../mainwindow.ui" line="8495"/>
+        <location filename="../mainwindow.ui" line="9499"/>
+        <location filename="../mainwindow.ui" line="10581"/>
         <source>Open an help window</source>
         <translation type="unfinished">Ouvrir une fenêtre d&apos;aide</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8570"/>
-        <location filename="../mainwindow.ui" line="9574"/>
-        <location filename="../mainwindow.ui" line="10656"/>
+        <location filename="../mainwindow.ui" line="8501"/>
+        <location filename="../mainwindow.ui" line="9505"/>
+        <location filename="../mainwindow.ui" line="10587"/>
         <source>Help</source>
         <translation type="unfinished">Aider</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8592"/>
-        <location filename="../mainwindow.ui" line="9596"/>
-        <location filename="../mainwindow.ui" line="10678"/>
+        <location filename="../mainwindow.ui" line="8523"/>
+        <location filename="../mainwindow.ui" line="9527"/>
+        <location filename="../mainwindow.ui" line="10609"/>
         <source>Warnlists</source>
         <translation type="unfinished">Warnlists</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8612"/>
-        <location filename="../mainwindow.ui" line="8890"/>
-        <location filename="../mainwindow.ui" line="9616"/>
-        <location filename="../mainwindow.ui" line="9894"/>
-        <location filename="../mainwindow.ui" line="10698"/>
-        <location filename="../mainwindow.ui" line="10976"/>
+        <location filename="../mainwindow.ui" line="8543"/>
+        <location filename="../mainwindow.ui" line="8821"/>
+        <location filename="../mainwindow.ui" line="9547"/>
+        <location filename="../mainwindow.ui" line="9825"/>
+        <location filename="../mainwindow.ui" line="10629"/>
+        <location filename="../mainwindow.ui" line="10907"/>
         <source>Select a log field</source>
         <translation type="unfinished">Sélectionnez un champ de journal</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8635"/>
-        <location filename="../mainwindow.ui" line="9639"/>
-        <location filename="../mainwindow.ui" line="10721"/>
+        <location filename="../mainwindow.ui" line="8566"/>
+        <location filename="../mainwindow.ui" line="9570"/>
+        <location filename="../mainwindow.ui" line="10652"/>
         <source>Use warnlist for this field</source>
         <translation type="unfinished">Utiliser la Liste d&apos;Avertissement pour ce champ</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8665"/>
+        <location filename="../mainwindow.ui" line="8596"/>
         <source>Add the current line to the list</source>
         <translation type="unfinished">Ajouter la ligne actuelle à la liste</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8728"/>
+        <location filename="../mainwindow.ui" line="8659"/>
         <source>Remove the selected item from the list</source>
         <translation type="unfinished">Supprimer l&apos;élément sélectionné de la liste</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8782"/>
-        <location filename="../mainwindow.ui" line="8829"/>
-        <location filename="../mainwindow.ui" line="9060"/>
-        <location filename="../mainwindow.ui" line="9107"/>
-        <location filename="../mainwindow.ui" line="9786"/>
-        <location filename="../mainwindow.ui" line="9833"/>
-        <location filename="../mainwindow.ui" line="10064"/>
-        <location filename="../mainwindow.ui" line="10111"/>
-        <location filename="../mainwindow.ui" line="10868"/>
-        <location filename="../mainwindow.ui" line="10915"/>
-        <location filename="../mainwindow.ui" line="11146"/>
-        <location filename="../mainwindow.ui" line="11193"/>
+        <location filename="../mainwindow.ui" line="8713"/>
+        <location filename="../mainwindow.ui" line="8760"/>
+        <location filename="../mainwindow.ui" line="8991"/>
+        <location filename="../mainwindow.ui" line="9038"/>
+        <location filename="../mainwindow.ui" line="9717"/>
+        <location filename="../mainwindow.ui" line="9764"/>
+        <location filename="../mainwindow.ui" line="9995"/>
+        <location filename="../mainwindow.ui" line="10042"/>
+        <location filename="../mainwindow.ui" line="10799"/>
+        <location filename="../mainwindow.ui" line="10846"/>
+        <location filename="../mainwindow.ui" line="11077"/>
+        <location filename="../mainwindow.ui" line="11124"/>
         <source>Move the selected item down</source>
         <translation type="unfinished">Déplacer l&apos;élément sélectionné vers le bas</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8870"/>
-        <location filename="../mainwindow.ui" line="9874"/>
-        <location filename="../mainwindow.ui" line="10956"/>
+        <location filename="../mainwindow.ui" line="8801"/>
+        <location filename="../mainwindow.ui" line="9805"/>
+        <location filename="../mainwindow.ui" line="10887"/>
         <source>Blacklists</source>
         <translation type="unfinished">Blacklists</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8913"/>
-        <location filename="../mainwindow.ui" line="9917"/>
-        <location filename="../mainwindow.ui" line="10999"/>
+        <location filename="../mainwindow.ui" line="8844"/>
+        <location filename="../mainwindow.ui" line="9848"/>
+        <location filename="../mainwindow.ui" line="10930"/>
         <source>Use blacklist for this field</source>
         <translation type="unfinished">Utiliser la Liste Noire pour ce champ</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8943"/>
-        <location filename="../mainwindow.ui" line="9669"/>
-        <location filename="../mainwindow.ui" line="9947"/>
-        <location filename="../mainwindow.ui" line="10751"/>
-        <location filename="../mainwindow.ui" line="11029"/>
+        <location filename="../mainwindow.ui" line="8874"/>
+        <location filename="../mainwindow.ui" line="9600"/>
+        <location filename="../mainwindow.ui" line="9878"/>
+        <location filename="../mainwindow.ui" line="10682"/>
+        <location filename="../mainwindow.ui" line="10960"/>
         <source>Add line</source>
         <translation type="unfinished">Ajouter une ligne</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="9006"/>
-        <location filename="../mainwindow.ui" line="9732"/>
-        <location filename="../mainwindow.ui" line="10010"/>
-        <location filename="../mainwindow.ui" line="10814"/>
-        <location filename="../mainwindow.ui" line="11092"/>
+        <location filename="../mainwindow.ui" line="8937"/>
+        <location filename="../mainwindow.ui" line="9663"/>
+        <location filename="../mainwindow.ui" line="9941"/>
+        <location filename="../mainwindow.ui" line="10745"/>
+        <location filename="../mainwindow.ui" line="11023"/>
         <source>Remove selection</source>
         <translation type="unfinished">Supprimer la sélection</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="350"/>
-        <location filename="../mainwindow.ui" line="1492"/>
-        <location filename="../mainwindow.ui" line="2069"/>
-        <location filename="../mainwindow.ui" line="3122"/>
-        <location filename="../mainwindow.ui" line="3777"/>
-        <location filename="../mainwindow.ui" line="3869"/>
-        <location filename="../mainwindow.ui" line="4507"/>
-        <location filename="../mainwindow.ui" line="9152"/>
+        <location filename="../mainwindow.ui" line="347"/>
+        <location filename="../mainwindow.ui" line="1489"/>
+        <location filename="../mainwindow.ui" line="2054"/>
+        <location filename="../mainwindow.ui" line="3098"/>
+        <location filename="../mainwindow.ui" line="3726"/>
+        <location filename="../mainwindow.ui" line="3818"/>
+        <location filename="../mainwindow.ui" line="4438"/>
+        <location filename="../mainwindow.ui" line="9083"/>
         <source>Nginx</source>
         <translation type="unfinished">Nginx</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="9155"/>
+        <location filename="../mainwindow.ui" line="9086"/>
         <source>Configure Nginx specific options</source>
         <translation type="unfinished">Configurer les options spécifiques à Nginx</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="389"/>
-        <location filename="../mainwindow.ui" line="1497"/>
-        <location filename="../mainwindow.ui" line="2074"/>
-        <location filename="../mainwindow.ui" line="3127"/>
-        <location filename="../mainwindow.ui" line="3782"/>
-        <location filename="../mainwindow.ui" line="3874"/>
-        <location filename="../mainwindow.ui" line="4546"/>
-        <location filename="../mainwindow.ui" line="10156"/>
+        <location filename="../mainwindow.ui" line="386"/>
+        <location filename="../mainwindow.ui" line="1494"/>
+        <location filename="../mainwindow.ui" line="2059"/>
+        <location filename="../mainwindow.ui" line="3103"/>
+        <location filename="../mainwindow.ui" line="3731"/>
+        <location filename="../mainwindow.ui" line="3823"/>
+        <location filename="../mainwindow.ui" line="4477"/>
+        <location filename="../mainwindow.ui" line="10087"/>
         <source>IIS</source>
         <translation type="unfinished">IIS</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="8303"/>
-        <location filename="../mainwindow.ui" line="9307"/>
-        <location filename="../mainwindow.ui" line="10311"/>
+        <location filename="../mainwindow.ui" line="8234"/>
+        <location filename="../mainwindow.ui" line="9238"/>
+        <location filename="../mainwindow.ui" line="10242"/>
         <source>Format</source>
         <translation type="unfinished">Format</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="10159"/>
+        <location filename="../mainwindow.ui" line="10090"/>
         <source>Configure IIS specific options</source>
         <translation type="unfinished">Configurer les options spécifiques à IIS</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11264"/>
+        <location filename="../mainwindow.ui" line="11195"/>
         <source>Language</source>
         <translation type="unfinished">Langue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11278"/>
+        <location filename="../mainwindow.ui" line="11209"/>
         <source>Utilities</source>
         <translation type="unfinished">Utilitaires</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11290"/>
+        <location filename="../mainwindow.ui" line="11221"/>
         <source>Tools</source>
         <translation type="unfinished">Outils</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11301"/>
+        <location filename="../mainwindow.ui" line="11232"/>
         <source>Games</source>
         <translation type="unfinished">Jeux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11376"/>
+        <location filename="../mainwindow.ui" line="11307"/>
         <source>Check updates</source>
         <translation type="unfinished">Vérifier les mises à jour</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11379"/>
+        <location filename="../mainwindow.ui" line="11310"/>
         <source>Perform a version-check</source>
         <translation type="unfinished">Effectuer une vérification de version</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11384"/>
+        <location filename="../mainwindow.ui" line="11315"/>
         <source>Infos</source>
         <translation type="unfinished">Infos</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11389"/>
+        <location filename="../mainwindow.ui" line="11320"/>
         <source>BlockNote</source>
         <translation type="unfinished">Bloc Notes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11392"/>
+        <location filename="../mainwindow.ui" line="11323"/>
         <source>Open a block-note like window to write temporary text</source>
         <translation type="unfinished">Ouvrir une fenêtre de type bloc-note pour écrire un texte temporaire</translation>
     </message>
@@ -2038,24 +2022,86 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
 <context>
     <name>Snake</name>
     <message>
-        <location filename="../games/snake.ui" line="149"/>
+        <location filename="../games/snake/snake.ui" line="162"/>
         <source>PLAY</source>
         <translation type="unfinished">JOUER</translation>
     </message>
     <message>
-        <location filename="../games/snake.cpp" line="150"/>
+        <location filename="../games/snake/snake.ui" line="214"/>
+        <source>Classic</source>
+        <translation type="unfinished">Classique</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/snake.ui" line="219"/>
+        <source>Hunt</source>
+        <translation type="unfinished">Chasse</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/snake.ui" line="224"/>
+        <source>Battle</source>
+        <translation type="unfinished">Bataille</translation>
+    </message>
+</context>
+<context>
+    <name>SnakeGame</name>
+    <message>
+        <location filename="../games/snake/game.cpp" line="233"/>
         <source>Game Over</source>
         <translation type="unfinished">Game Over</translation>
     </message>
     <message>
-        <location filename="../games/snake.cpp" line="588"/>
+        <location filename="../games/snake/game.cpp" line="375"/>
+        <source>Your adversary fell in the water!</source>
+        <translation type="unfinished">Votre adversaire est tombé dans l&apos;eau!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="375"/>
+        <location filename="../games/snake/game.cpp" line="384"/>
+        <location filename="../games/snake/game.cpp" line="396"/>
+        <source>YOU WON!</source>
+        <translation type="unfinished">TU AS GAGNÉ!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="376"/>
         <source>You fell in the water!</source>
         <translation type="unfinished">Tu es tombé dans l&apos;eau!</translation>
     </message>
     <message>
-        <location filename="../games/snake.cpp" line="595"/>
+        <location filename="../games/snake/game.cpp" line="376"/>
+        <location filename="../games/snake/game.cpp" line="385"/>
+        <location filename="../games/snake/game.cpp" line="397"/>
+        <source>YOU LOST!</source>
+        <translation type="unfinished">TU AS PERDU!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="384"/>
+        <source>Your adversary ate itself!</source>
+        <translation type="unfinished">Votre adversaire s&apos;est mangé!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="396"/>
+        <source>Your adversary ate you!</source>
+        <translation type="unfinished">Votre adversaire vous a mangé!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="385"/>
         <source>You ate yourself!</source>
         <translation type="unfinished">Vous vous êtes mangé!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="397"/>
+        <source>You ate your adversary!</source>
+        <translation type="unfinished">Vous avez mangé votre adversaire!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="400"/>
+        <source>You ate each other!</source>
+        <translation type="unfinished">Vous vous êtes mangés réciproquement!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="400"/>
+        <source>MATCH IS DRAW!</source>
+        <translation type="unfinished">CRAVATE!</translation>
     </message>
 </context>
 <context>
@@ -2086,18 +2132,12 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <translation type="unfinished">Exclu</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="95"/>
-        <location filename="../modules/crapview/crapview.cpp" line="106"/>
-        <location filename="../modules/crapview/crapview.cpp" line="291"/>
-        <location filename="../modules/shared.h" line="15"/>
+        <location filename="../modules/shared.h" line="19"/>
         <source>FALSE</source>
         <translation type="unfinished">FAUX</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="97"/>
-        <location filename="../modules/crapview/crapview.cpp" line="105"/>
-        <location filename="../modules/crapview/crapview.cpp" line="294"/>
-        <location filename="../modules/shared.h" line="16"/>
+        <location filename="../modules/shared.h" line="20"/>
         <source>TRUE</source>
         <translation type="unfinished">VRAI</translation>
     </message>
@@ -2135,217 +2175,217 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <translation type="unfinished">à</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="104"/>
+        <location filename="../modules/crapview/modules/query.h" line="243"/>
         <source>Unexpected WebServer</source>
         <translation type="unfinished">WebServer inattendu</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="105"/>
+        <location filename="../modules/crapview/modules/query.h" line="244"/>
         <source>An error occured while processing</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors du traitement</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="106"/>
+        <location filename="../modules/crapview/modules/query.h" line="245"/>
         <source>An error occured while processing dates</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors du traitement des dates</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="107"/>
+        <location filename="../modules/crapview/modules/query.h" line="246"/>
         <source>An error occured while parsing %1 from the database</source>
         <translation type="unfinished">Erreur lors du traitement de &apos;%1&apos; dans la database</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="108"/>
+        <location filename="../modules/crapview/modules/query.h" line="247"/>
         <source>Years</source>
         <translation>Ans</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="109"/>
+        <location filename="../modules/crapview/modules/query.h" line="248"/>
         <source>Months</source>
         <translation>Mois</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="110"/>
+        <location filename="../modules/crapview/modules/query.h" line="249"/>
         <source>Days</source>
         <translation>Journées</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="111"/>
+        <location filename="../modules/crapview/modules/query.h" line="250"/>
         <source>Value responsible for the error</source>
         <translation type="unfinished">Valeur responsable de l&apos;erreur</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="112"/>
+        <location filename="../modules/crapview/modules/query.h" line="251"/>
         <source>Database table name</source>
         <translation type="unfinished">Nom de la table de la base de données</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="18"/>
+        <location filename="../modules/shared.h" line="22"/>
         <source>Date</source>
         <translation type="unfinished">Date</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="19"/>
+        <location filename="../modules/shared.h" line="23"/>
         <source>Time</source>
         <translation type="unfinished">Temps</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="21"/>
+        <location filename="../modules/shared.h" line="25"/>
         <source>Warning</source>
         <translation type="unfinished">Avertissement</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="22"/>
+        <location filename="../modules/shared.h" line="26"/>
         <source>Protocol</source>
         <translation type="unfinished">Protocole</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="23"/>
+        <location filename="../modules/shared.h" line="27"/>
         <source>Method</source>
         <translation type="unfinished">Méthode</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="24"/>
+        <location filename="../modules/shared.h" line="28"/>
         <source>URI</source>
         <translation type="unfinished">URI</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="25"/>
+        <location filename="../modules/shared.h" line="29"/>
         <source>Query</source>
         <translation type="unfinished">Query</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="26"/>
+        <location filename="../modules/shared.h" line="30"/>
         <source>Response code</source>
         <translation type="unfinished">Code de réponse</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="27"/>
+        <location filename="../modules/shared.h" line="31"/>
         <source>Time taken</source>
         <translation type="unfinished">Temps pris</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="28"/>
+        <location filename="../modules/shared.h" line="32"/>
         <source>Bytes sent</source>
         <translation type="unfinished">Octets envoyés</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="29"/>
+        <location filename="../modules/shared.h" line="33"/>
         <source>Bytes received</source>
         <translation type="unfinished">Octets reçus</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="30"/>
+        <location filename="../modules/shared.h" line="34"/>
         <source>Referrer</source>
         <translation type="unfinished">Référent</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="31"/>
+        <location filename="../modules/shared.h" line="35"/>
         <source>Cookie</source>
         <translation type="unfinished">Cookie</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="32"/>
+        <location filename="../modules/shared.h" line="36"/>
         <source>Client</source>
         <translation type="unfinished">Client</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="33"/>
+        <location filename="../modules/shared.h" line="37"/>
         <source>User-agent</source>
         <translation type="unfinished">User-agent</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="35"/>
+        <location filename="../modules/shared.h" line="39"/>
         <source>January</source>
         <translation type="unfinished">Janvier</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="36"/>
+        <location filename="../modules/shared.h" line="40"/>
         <source>February</source>
         <translation type="unfinished">Février</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="37"/>
+        <location filename="../modules/shared.h" line="41"/>
         <source>March</source>
         <translation type="unfinished">Mars</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="38"/>
+        <location filename="../modules/shared.h" line="42"/>
         <source>April</source>
         <translation type="unfinished">Avril</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="39"/>
+        <location filename="../modules/shared.h" line="43"/>
         <source>May</source>
         <translation type="unfinished">Peut</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="40"/>
+        <location filename="../modules/shared.h" line="44"/>
         <source>June</source>
         <translation type="unfinished">Juin</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="41"/>
+        <location filename="../modules/shared.h" line="45"/>
         <source>July</source>
         <translation type="unfinished">Juillet</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="42"/>
+        <location filename="../modules/shared.h" line="46"/>
         <source>August</source>
         <translation type="unfinished">Août</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="43"/>
+        <location filename="../modules/shared.h" line="47"/>
         <source>September</source>
         <translation type="unfinished">Septembre</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="44"/>
+        <location filename="../modules/shared.h" line="48"/>
         <source>October</source>
         <translation type="unfinished">Octobre</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="45"/>
+        <location filename="../modules/shared.h" line="49"/>
         <source>November</source>
         <translation type="unfinished">Novembre</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="46"/>
+        <location filename="../modules/shared.h" line="50"/>
         <source>December</source>
         <translation type="unfinished">Décembre</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="48"/>
+        <location filename="../modules/shared.h" line="52"/>
         <source>Sunday</source>
         <translation type="unfinished">Dimanche</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="49"/>
+        <location filename="../modules/shared.h" line="53"/>
         <source>Monday</source>
         <translation type="unfinished">Lundi</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="50"/>
+        <location filename="../modules/shared.h" line="54"/>
         <source>Tuesday</source>
         <translation type="unfinished">Mardi</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="51"/>
+        <location filename="../modules/shared.h" line="55"/>
         <source>Wednesday</source>
         <translation type="unfinished">Mercredi</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="52"/>
+        <location filename="../modules/shared.h" line="56"/>
         <source>Thursday</source>
         <translation type="unfinished">Jeudi</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="53"/>
+        <location filename="../modules/shared.h" line="57"/>
         <source>Friday</source>
         <translation type="unfinished">Vendredi</translation>
     </message>
     <message>
-        <location filename="../modules/shared.h" line="54"/>
+        <location filename="../modules/shared.h" line="58"/>
         <source>Saturday</source>
         <translation type="unfinished">Samedi</translation>
     </message>
