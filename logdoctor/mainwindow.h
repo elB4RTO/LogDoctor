@@ -24,8 +24,8 @@
 
 #include "tools/crapnote/crapnote.h"
 
-#include "games/crisscross.h"
-#include "games/snake.h"
+#include "games/crisscross/game.h"
+#include "games/snake/game.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -863,7 +863,7 @@ private:
 
     CrissCross* crisscross = new CrissCross( 0 );
 
-    Snake* snake = new Snake( 0, QFont() );
+    SnakeGame* snake = new SnakeGame( 0, QFont() );
 
 };
 #endif // MAINWINDOW_H
