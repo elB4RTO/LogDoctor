@@ -1,5 +1,8 @@
-#ifndef SNAKE_H
-#define SNAKE_H
+#ifndef SNAKE_GAME_H
+#define SNAKE_GAME_H
+
+#include "snake.h"
+#include "food.h"
 
 #include <queue>
 
@@ -8,29 +11,31 @@
 #include <QKeyEvent>
 
 #include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
 
 
 namespace Ui {
-    class Snake;
+    class SnakeGame;
 }
 
 //! Snake
 /*!
     A reproduction of the timeless classic game
 */
-class Snake : public QWidget
+class SnakeGame : public QWidget
 {
     Q_OBJECT
 
 public:
-    Snake( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
-    ~Snake();
+    SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
+    ~SnakeGame();
 
 
 private slots:
 
-    //! Starts the game
+    // Override
+    void closeEvent( QCloseEvent* event );
+
+    // Starts the game
     void on_button_Play_clicked();
 
     //! Processes the logic of the game
@@ -38,7 +43,7 @@ private slots:
 
 
 private:
-    Ui::Snake *ui;
+    Ui::SnakeGame *ui;
 
     ////////////////////
     //// KEY EVENTS ////
@@ -61,28 +66,33 @@ private:
     void processNextKeyEvent();
 
 
-    //////////////
-    //// GAME ////
-
-    bool playing = false;
-    QTimer* game_loop = new QTimer();
-    bool game_over = false;
-    QString game_over_msg;
-
-
     //////////////////
     //// GRAPHICS ////
 
     QGraphicsScene* field_scene;
 
-    QPixmap img_water = QPixmap(":/games/games/water.png");
+    QPixmap img_water = QPixmap(":/games/games/snake/water.png");
 
-    QPixmap img_food = QPixmap(":/games/games/food.png");
 
-    QPixmap img_snakeHead  = QPixmap(":/games/games/head.png");
-    QPixmap img_snakeTail  = QPixmap(":/games/games/tail.png");
-    QPixmap img_snakeBody  = QPixmap(":/games/games/body_s.png");
-    QPixmap img_snakeCurve = QPixmap(":/games/games/body_c.png");
+    //////////////
+    //// GAME ////
+
+    //! Enumerates the available game modes
+    enum GameMode {
+        Classic, //!< Classic snake game
+        Hunt,    //!< Game variant in which the food moves too
+        Battle   //!< Game variant in which you play against another snake
+    };
+
+    GameMode game_mode;
+
+    bool playing = false;
+
+    QTimer* game_loop = new QTimer();
+
+    bool game_over = false;
+
+    QString game_over_msg;
 
 
     ///////////////
@@ -91,73 +101,29 @@ private:
     //! The maximum length of the snake
     const unsigned int MAX_SNAKE_LENGTH = 64;
 
-
-    //! Enumerates the possible directions
-    enum Direction {
-        UP,   //!< Up
-        DOWN, //!< Down
-        LEFT, //!< Left
-        RIGHT //!< Right
-    };
-
-    Direction head_direction;
-
-
-    //! Instance of a part of the body of the snake
-    struct BodyPart {
-        unsigned int x;             //!< The position on the X-axis
-        unsigned int y;             //!< The position on the Y-axis
-        Direction direction;        //!< The current direction of the part
-        Direction prev_direction;   //!< The previous direction of the part
-        QGraphicsPixmapItem* image; //!< The image which graphically represents the part
-         //! Updates the position and direction of the part
-        void update( const unsigned int& new_x, const unsigned int& new_y, const Direction& new_direction ) {
-            this->x = new_x;
-            this->y = new_y;
-            this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
-            this->prev_direction = this->direction;
-            this->direction = new_direction;
-        }
-    };
-
     //! The snake
-    std::vector<BodyPart> snake;
+    Snake snake;
+    void newSnake();
 
-    //! Checks whether is there a part of the snake in the given position
-    const bool snakeInTile( const unsigned int& x, const unsigned int& y );
+    // The adversary snake
+    Snake snake_ = Snake(true);
+    void newSnake_();
 
-    //! Increases the length of the body of the snake of 1 part
-    void increaseSnakeBody( const bool& initial=false );
-
-    //! Update the position and direction of the entire snake
-    void updateSnakePosition( const bool& dry=false );
-
-    //! Checks if the head will collide with another entity
-    void checkCollision();
+    //! Checks if a snake will collide with another entity
+    void checkCollision( Snake& snake, Snake& adv_snake, const bool& is_adv );
 
 
     //////////////
     //// FOOD ////
 
-    //! Instance of the egg which will be eat by the snake
-    struct Food {
-        unsigned int x;             //!< The position on the X-axis
-        unsigned int y;             //!< The position on the Y-axis
-        QGraphicsPixmapItem* image; //!< The image which graphically represents the egg
-        //! Updates the position and direction of the part
-        void update( const unsigned int& new_x, const unsigned int& new_y ) {
-            this->x = new_x;
-            this->y = new_y;
-            this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
-        }
-    };
-
+    //! Instance of the egg/rat which will be eat by the snake
     Food food;
+    void newFood( const bool& movable );
 
-    //! Spawns the egg in a new position
-    void spawnFood();
+    bool spawn_food = false;
 
-    bool spawn_food = true;
+    unsigned int moving_countdown = 5;
+    unsigned int moving_rate = 5;
 
 
     ///////////////
@@ -168,6 +134,11 @@ private:
     //! Increases the player's score by one
     void increaseGameScore();
 
+    //! Decreases the player's score by one
+    void decreaseGameScore();
+
+    void adjustLcdDigits();
+
 };
 
-#endif // SNAKE_H
+#endif // SNAKE_GAME_H
