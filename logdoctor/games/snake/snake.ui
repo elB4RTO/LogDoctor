@@ -120,7 +120,20 @@
      </property>
      <widget class="QWidget" name="stackedPage_GameMenu">
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="1" column="1" colspan="2">
+       <item row="0" column="1" colspan="2">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>253</width>
+           <height>234</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="1" colspan="2">
         <widget class="QPushButton" name="button_Play">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -150,7 +163,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1" colspan="2">
+       <item row="4" column="1" colspan="2">
         <spacer name="verticalSpacer_4">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -163,20 +176,20 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="1" colspan="2">
-        <spacer name="verticalSpacer_3">
+       <item row="2" column="3">
+        <spacer name="horizontalSpacer_4">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>253</width>
-           <height>234</height>
+           <width>135</width>
+           <height>125</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -189,18 +202,29 @@
          </property>
         </spacer>
        </item>
-       <item row="1" column="3">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="1" column="1" colspan="2">
+        <widget class="QComboBox" name="box_GameMode">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>135</width>
-           <height>125</height>
-          </size>
-         </property>
-        </spacer>
+         <item>
+          <property name="text">
+           <string>Classic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Hunt</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Battle</string>
+          </property>
+         </item>
+        </widget>
        </item>
       </layout>
      </widget>

@@ -1,17 +1,16 @@
 
-#include "snake.h"
+#include "game.h"
 #include "ui_snake.h"
 
 #include "games/games.h"
 
 #include <QMessageBox>
-#include <QGraphicsView>
-#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
 
-Snake::Snake( const int& theme_id, const QFont& term_font, QWidget* parent ) :
+SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent ) :
     QWidget(parent),
-    ui(new Ui::Snake)
+    ui(new Ui::SnakeGame)
 {
     this->ui->setupUi(this);
 
@@ -22,6 +21,8 @@ Snake::Snake( const int& theme_id, const QFont& term_font, QWidget* parent ) :
     QFont font = QFont( term_font );
     font.setPointSize( 64 );
     this->ui->button_Play->setFont( font );
+    font.setPointSize( 12 );
+    this->ui->box_GameMode->setFont( font );
 
     // create the field
     this->field_scene = new QGraphicsScene( this );
@@ -31,66 +32,23 @@ Snake::Snake( const int& theme_id, const QFont& term_font, QWidget* parent ) :
     this->field_scene->addItem( new QGraphicsPixmapItem( this->img_water ) );
     // add the scene to the view
     this->ui->view_Field->setScene( this->field_scene );
-
-    // snake initial position
-    const unsigned int head_x = (rand()%4)+6;
-    const unsigned int head_y = (rand()%4)+6;
-    if ( head_x > 15 || head_y > 15 ) {
-        // should be unreachable
-        throw("Unexpected initial position: ("+std::to_string(head_x)+","+std::to_string(head_y)+")");
-    }
-
-    // snake initial direction
-    const int rand_d = rand()%4;
-    switch ( rand_d ) {
-        case 0:
-            this->head_direction = Direction::UP;
-            break;
-        case 1:
-            this->head_direction = Direction::DOWN;
-            break;
-        case 2:
-            this->head_direction = Direction::LEFT;
-            break;
-        case 3:
-            this->head_direction = Direction::RIGHT;
-            break;
-        default:
-            // should be unreachable
-            throw("Unexpected initial direction: "+std::to_string(rand_d));
-    }
-    this->key_events.push( rand_d );
-
-    // build the body with a head
-    this->snake.push_back(
-        { head_x, head_y,
-          this->head_direction, this->head_direction,
-          new QGraphicsPixmapItem( this->img_snakeHead ) }
-    );
-    this->field_scene->addItem( this->snake.front().image );
-    this->snake.front().update( head_x, head_y, this->head_direction );
-    // a body part
-    this->increaseSnakeBody( true );
-    // and a tail
-    this->increaseSnakeBody( true );
-    // et voila! a snake is born
-
-    // now put some food on the field for it to eat
-    this->food = Food{ 0, 0, new QGraphicsPixmapItem( this->img_food ) };
-    this->field_scene->addItem( this->food.image );
-    this->spawnFood();
-
 }
 
-Snake::~Snake()
+SnakeGame::~SnakeGame()
 {
     delete this->ui;
     delete this->field_scene;
     delete this->game_loop;
 }
 
+void SnakeGame::closeEvent( QCloseEvent* event )
+{
+    this->game_loop->stop();
+    this->playing = false;
+}
 
-void Snake::keyPressEvent( QKeyEvent* event )
+
+void SnakeGame::keyPressEvent( QKeyEvent* event )
 {
     // store the key pressed if needed
     if ( this->playing ) {
@@ -126,8 +84,29 @@ void Snake::keyPressEvent( QKeyEvent* event )
 
 //////////////
 //// MENU ////
-void Snake::on_button_Play_clicked()
+void SnakeGame::on_button_Play_clicked()
 {
+    // set-up the game
+    this->newSnake();
+    bool food_movable = false;
+    switch ( this->ui->box_GameMode->currentIndex() ) {
+        case 0:
+            this->game_mode = GameMode::Classic;
+            break;
+        case 1:
+            this->game_mode = GameMode::Hunt;
+            food_movable = true;
+            break;
+        case 2:
+            this->game_mode = GameMode::Battle;
+            this->newSnake_();
+            break;
+        default:
+            throw("Unexpected GameMode: "+std::to_string(this->ui->box_GameMode->currentIndex()));
+            break;
+    }
+    this->newFood( food_movable );
+
     // switch to game board
     this->ui->stackedWidget_GameDisplay->setCurrentIndex( 1 );
     // start playing
@@ -138,16 +117,120 @@ void Snake::on_button_Play_clicked()
 }
 
 
+void SnakeGame::newSnake()
+{
+    // snake initial position
+    const unsigned int head_x = (rand()%4)+6;
+    const unsigned int head_y = (rand()%4)+6;
+    if ( head_x > 15 || head_y > 15 ) {
+        // should be unreachable
+        throw("Unexpected initial position: ("+std::to_string(head_x)+","+std::to_string(head_y)+")");
+    }
+
+    // snake initial direction
+    const int rand_d = rand()%4;
+    switch ( rand_d ) {
+        case 0:
+            this->snake.setDirection( Direction::UP );
+            break;
+        case 1:
+            this->snake.setDirection( Direction::DOWN );
+            break;
+        case 2:
+            this->snake.setDirection( Direction::LEFT );
+            break;
+        case 3:
+            this->snake.setDirection( Direction::RIGHT );
+            break;
+        default:
+            // should be unreachable
+            throw("Unexpected initial direction: "+std::to_string(rand_d));
+    }
+    this->key_events.push( rand_d );
+
+    // build the body with a head
+    this->snake.push_back(
+        { head_x, head_y,
+          this->snake.direction(), this->snake.direction(),
+          new QGraphicsPixmapItem( this->snake.getHeadImage() ) }
+    );
+    this->field_scene->addItem( this->snake.front().image );
+    this->snake.front().update( head_x, head_y, this->snake.direction() );
+    // a body part
+    this->snake.grow( true );
+    this->field_scene->addItem( this->snake.back().image );
+    // and a tail
+    this->snake.grow( true );
+    this->field_scene->addItem( this->snake.back().image );
+}
+
+void SnakeGame::newSnake_()
+{
+    // snake initial position
+    unsigned int head_x, head_y;
+    head_x = this->snake.front().x;
+    head_y = this->snake.front().y;
+
+    // snake initial direction
+    const unsigned int rnd = (rand()%2);
+    this->snake_.setDirection( this->snake.direction() );
+    switch ( this->snake_.direction() ) {
+        case Direction::UP:
+        case Direction::DOWN:
+            if ( rnd ) {
+                head_x ++;
+            } else {
+                head_x --;
+            }
+            break;
+        case Direction::LEFT:
+        case Direction::RIGHT:
+            if ( rnd ) {
+                head_y ++;
+            } else {
+                head_y --;
+            }
+            break;
+        default:
+            // should be unreachable
+            throw("Unexpected initial direction _: "+std::to_string(this->snake_.direction()));
+    }
+
+    // build the body with a head
+    this->snake_.push_back(
+        { head_x, head_y,
+          this->snake_.direction(), this->snake_.direction(),
+          new QGraphicsPixmapItem( this->snake_.getHeadImage() ) }
+    );
+    this->field_scene->addItem( this->snake_.front().image );
+    this->snake_.front().update( head_x, head_y, this->snake_.direction() );
+    // a body part
+    this->snake_.grow( true );
+    this->field_scene->addItem( this->snake_.back().image );
+    // and a tail
+    this->snake_.grow( true );
+    this->field_scene->addItem( this->snake_.back().image );
+}
+
+void SnakeGame::newFood( const bool& movable )
+{
+    // put some food on the field for it to eat
+    this->food = Food( movable );
+    this->food.spawn( this->snake, this->snake_ );
+    this->field_scene->addItem( this->food.getImageItem() );
+}
+
+
 //////////////
 //// GAME ////
-void Snake::processGameLogic()
+void SnakeGame::processGameLogic()
 {
     if ( game_over ) {
         this->game_loop->stop();
         this->playing = false;
         QMessageBox::about(
             this,
-            Snake::tr("Game Over"),
+            SnakeGame::tr("Game Over"),
             this->game_over_msg );
     } else {
 
@@ -155,43 +238,63 @@ void Snake::processGameLogic()
         if ( this->key_events.size() > 0 ) {
             this->processNextKeyEvent();
         }
+        if ( this->game_mode == GameMode::Battle ) {
+            this->snake_.move( this->snake, this->food.X(), this->food.Y() );
+        }
         // check for a possible collision of the head
-        this->checkCollision();
+        this->checkCollision( this->snake, this->snake_, false );
+        if ( this->game_mode == GameMode::Battle ) {
+            this->checkCollision( this->snake_, this->snake, true );
+        }
+        // check for game over
         if ( ! this->game_over ) {
             // update snake position
-            this->updateSnakePosition();
+            this->snake.update();
+            if ( this->game_mode == GameMode::Battle ) {
+                this->snake_.update();
+            }
             if ( this->spawn_food ) {
-                // increase the score
-                this->increaseGameScore();
                 // spawn food in a new position
-                this->spawnFood();
+                this->food.spawn( this->snake, this->snake_ );
+                this->spawn_food = false;
+                if ( this->game_mode == GameMode::Hunt ) {
+                    this->moving_rate = 6 - ((this->snake.size()/13)+1);
+                    this->moving_countdown = this->moving_rate;
+                }
+            } else if ( this->game_mode == GameMode::Hunt ) {
+                this->moving_countdown --;
+                if ( this->moving_countdown == 0 ) {
+                    this->moving_countdown = this->moving_rate;
+                    this->food.move( this->snake );
+                }
             }
         }
     }
 }
 
-void Snake::processNextKeyEvent()
+
+void SnakeGame::processNextKeyEvent()
 {
     // update direction if needed
     switch ( this->key_events.front() ) {
         case 0: // up
-            if ( this->head_direction != Direction::DOWN ) {
-                this->head_direction = Direction::UP;
+            if ( this->snake.direction() != Direction::DOWN ) {
+                this->snake.setDirection( Direction::UP );
             }
             break;
         case 1: // down
-            if ( this->head_direction != Direction::UP ) {
-                this->head_direction = Direction::DOWN;
+            if ( this->snake.direction() != Direction::UP ) {
+                this->snake.setDirection( Direction::DOWN );
             }
             break;
         case 2: // left
-            if ( this->head_direction != Direction::RIGHT ) {
-                this->head_direction = Direction::LEFT;
+            if ( this->snake.direction() != Direction::RIGHT ) {
+                this->snake.setDirection( Direction::LEFT );
             }
             break;
         case 3: // right
-            if ( this->head_direction != Direction::LEFT ) {
-                this->head_direction = Direction::RIGHT;
+            if ( this->snake.direction() != Direction::LEFT ) {
+                this->snake.setDirection( Direction::RIGHT );
             }
             break;
     }
@@ -199,372 +302,30 @@ void Snake::processNextKeyEvent()
 }
 
 
-void Snake::increaseGameScore()
+void SnakeGame::increaseGameScore()
 {
     this->game_score ++;
+    this->adjustLcdDigits();
+}
+void SnakeGame::decreaseGameScore()
+{
+    this->game_score --;
+    this->adjustLcdDigits();
+}
+void SnakeGame::adjustLcdDigits()
+{
     this->ui->lcd_Score->setDigitCount( std::to_string(this->game_score).size() );
     this->ui->lcd_Score->display( this->game_score );
 }
 
 
-void Snake::spawnFood()
+void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_adv )
 {
-    // pick a new random position
-    unsigned int x, y;
-    while (true) {
-        x = rand() % 16;
-        y = rand() % 16;
-        // check it's actually inside the field
-        if ( x < 16 && y < 16 ) {
-            // check the tile is empty
-            if ( x != this->food.x && y != food.y ) {
-                if ( ! this->snakeInTile( x, y ) ) {
-                    break;
-                }
-            }
-        }
-    }
+    unsigned int x, y, x_, y_;
 
-    // update to new position
-    this->food.update( x, y );
-
-    // randomly rotate the image
-    int rand_ = rand()%4;
-    switch (rand_) {
-        case 1:
-            this->food.image->setPixmap(
-                this->food.image->pixmap().transformed(
-                    QTransform().rotate( 90.0 ) ) );
-            break;
-        case 2:
-            this->food.image->setPixmap(
-                this->food.image->pixmap().transformed(
-                    QTransform().rotate( 180.0 ) ) );
-            break;
-        case 3:
-            this->food.image->setPixmap(
-                this->food.image->pixmap().transformed(
-                    QTransform().rotate( -90.0 ) ) );
-            break;
-        default:
-            // do not rotate
-            break;
-    }
-
-    this->spawn_food = false;
-}
-
-
-void Snake::updateSnakePosition( const bool& dry )
-{
-    size_t i = 0,
-           max_i = this->snake.size()-1;
-    unsigned int new_x, prev_x, new_y, prev_y;
-    Direction new_direction, prev_direction, prev_body_d;
-    for ( BodyPart& bp : this->snake ) {
-        if ( ! dry ) {
-            // future position
-            if ( i == 0 ) {
-                // head doesn't follow any other part of the body
-                switch ( this->head_direction ) {
-                    case Direction::UP:
-                        new_y = bp.y - 1;
-                        new_x = bp.x;
-                        break;
-                    case Direction::DOWN:
-                        new_y = bp.y + 1;
-                        new_x = bp.x;
-                        break;
-                    case Direction::LEFT:
-                        new_x = bp.x - 1;
-                        new_y = bp.y;
-                        break;
-                    case Direction::RIGHT:
-                        new_x = bp.x + 1;
-                        new_y = bp.y;
-                        break;
-                    default:
-                        // should be unreachable
-                        throw("Unexpected direction: "+std::to_string(this->head_direction));
-                }
-                new_direction = this->head_direction;
-            } else {
-                // follow the previous part of the body
-                new_x = prev_x;
-                new_y = prev_y;
-                new_direction = prev_direction;
-            }
-            // store for the next part
-            prev_x = bp.x;
-            prev_y = bp.y;
-            prev_direction = bp.direction;
-
-            // update the body-part position
-            bp.update( new_x, new_y, new_direction );
-        }
-
-        // finally set the image to be shown
-        switch ( bp.direction ) {
-
-            case Direction::UP:
-                if ( i == 0 ) {
-                    bp.image->setPixmap(
-                        this->img_snakeHead );
-                } else if ( i == max_i ) {
-                    switch ( prev_body_d ) {
-                        case Direction::UP:
-                            bp.image->setPixmap(
-                                this->img_snakeTail );
-                            break;
-                        case Direction::LEFT:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( -90.0 ) ) );
-                            break;
-                        case Direction::RIGHT:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( 90.0 ) ) );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                } else {
-                    switch ( prev_body_d ) {
-                        case Direction::UP:
-                            bp.image->setPixmap(
-                                this->img_snakeBody );
-                            break;
-                        case Direction::LEFT:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve.transformed(
-                                    QTransform().rotate( 90.0 ) ) );
-                            break;
-                        case Direction::RIGHT:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                }
-                break;
-
-            case Direction::DOWN:
-                if ( i == 0 ) {
-                    bp.image->setPixmap(
-                        this->img_snakeHead.transformed(
-                            QTransform().rotate( 180.0 ) ) );
-                } else if ( i == max_i ) {
-                    switch ( prev_body_d ) {
-                        case Direction::DOWN:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( 180.0 ) ) );
-                            break;
-                        case Direction::LEFT:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( -90.0 ) ) );
-                            break;
-                        case Direction::RIGHT:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( 90.0 ) ) );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                } else {
-                    switch ( prev_body_d ) {
-                        case Direction::DOWN:
-                            bp.image->setPixmap(
-                                this->img_snakeBody );
-                            break;
-                        case Direction::LEFT:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve.transformed(
-                                    QTransform().rotate( 180.0 ) ) );
-                            break;
-                        case Direction::RIGHT:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve.transformed(
-                                    QTransform().rotate( -90.0 ) ) );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                }
-                break;
-
-            case Direction::LEFT:
-                if ( i == 0 ) {
-                    bp.image->setPixmap(
-                        this->img_snakeHead.transformed(
-                            QTransform().rotate( -90.0 ) ) );
-                } else if ( i == max_i ) {
-                    switch ( prev_body_d ) {
-                        case Direction::LEFT:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( -90.0 ) ) );
-                            break;
-                        case Direction::UP:
-                            bp.image->setPixmap(
-                                this->img_snakeTail );
-                            break;
-                        case Direction::DOWN:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( 180.0 ) ) );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                } else {
-                    switch ( prev_body_d ) {
-                        case Direction::LEFT:
-                            bp.image->setPixmap(
-                                this->img_snakeBody.transformed(
-                                    QTransform().rotate( -90.0 ) ) );
-                            break;
-                        case Direction::UP:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve.transformed(
-                                    QTransform().rotate( -90.0 ) ) );
-                            break;
-                        case Direction::DOWN:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                }
-                break;
-
-            case Direction::RIGHT:
-                if ( i == 0 ) {
-                    bp.image->setPixmap(
-                        this->img_snakeHead.transformed(
-                            QTransform().rotate( 90.0 ) ) );
-                } else if ( i == max_i ) {
-                    switch ( prev_body_d ) {
-                        case Direction::RIGHT:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( 90.0 ) ) );
-                            break;
-                        case Direction::UP:
-                            bp.image->setPixmap(
-                                this->img_snakeTail );
-                            break;
-                        case Direction::DOWN:
-                            bp.image->setPixmap(
-                                this->img_snakeTail.transformed(
-                                    QTransform().rotate( 180.0 ) ) );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                } else {
-                    switch ( prev_body_d ) {
-                        case Direction::RIGHT:
-                            bp.image->setPixmap(
-                                this->img_snakeBody.transformed(
-                                    QTransform().rotate( 90.0 ) ) );
-                            break;
-                        case Direction::UP:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve.transformed(
-                                    QTransform().rotate( 180.0 ) ) );
-                            break;
-                        case Direction::DOWN:
-                            bp.image->setPixmap(
-                                this->img_snakeCurve.transformed(
-                                    QTransform().rotate( 90.0 ) ) );
-                            break;
-                        default:
-                            // should be unreachable
-                            throw("Unexpected direction: "+std::to_string(prev_body_d));
-                    }
-                }
-                break;
-
-            default:
-                // should be unreachable
-                throw("Unexpected direction: "+std::to_string(bp.direction));
-        }
-        prev_body_d = bp.direction;
-        i++;
-    }
-}
-
-
-void Snake::increaseSnakeBody( const bool& initial )
-{
-    // build from the tail
-    const BodyPart& tail = this->snake.back();
-    unsigned int x = tail.x;
-    unsigned int y = tail.y;
-    const Direction d  = tail.direction;
-    const Direction ld = tail.prev_direction;
-    if ( initial ) {
-        // one tile back
-        switch ( d ) {
-            case Direction::UP:
-                y ++;
-                break;
-            case Direction::DOWN:
-                y --;
-                break;
-            case Direction::LEFT:
-                x ++;
-                break;
-            case Direction::RIGHT:
-                x --;
-                break;
-            default:
-                // should be unreachable
-                throw("Unexpected direction: "+std::to_string(d));
-        }
-    }
-    this->snake.push_back(
-        { x, y,
-          d, ld,
-          new QGraphicsPixmapItem( this->img_snakeTail ) }
-    );
-    this->updateSnakePosition( true );
-    this->snake.back().update( x, y, d );
-    this->field_scene->addItem( this->snake.back().image );
-}
-
-
-const bool Snake::snakeInTile(  const unsigned int& x, const unsigned int& y  )
-{
-    bool result = false;
-    for ( const BodyPart& bp : this->snake ) {
-        if ( bp.x == x && bp.y == y ) {
-            result = true;
-            break;
-        }
-    }
-    return result;
-}
-
-
-void Snake::checkCollision()
-{
-    unsigned int x = this->snake.front().x,
-                 y = this->snake.front().y;
-    switch ( this->head_direction ) {
+    x = snake.front().x,
+    y = snake.front().y;
+    switch ( snake.direction() ) {
         case Direction::UP:
             y--;
             break;
@@ -579,33 +340,84 @@ void Snake::checkCollision()
             break;
         default:
             // should be unreachable
-            throw("Unexpected direction: "+std::to_string(this->head_direction));
+            throw("Unexpected direction: "+std::to_string(snake.direction()));
     }
+
+    if ( adv_snake.size() > 0 ) {
+        x_ = adv_snake.front().x,
+        y_ = adv_snake.front().y;
+        switch ( adv_snake.direction() ) {
+            case Direction::UP:
+                y_--;
+                break;
+            case Direction::DOWN:
+                y_++;
+                break;
+            case Direction::LEFT:
+                x_--;
+                break;
+            case Direction::RIGHT:
+                x_++;
+                break;
+            default:
+                // should be unreachable
+                throw("Unexpected direction: "+std::to_string(adv_snake.direction()));
+        }
+    } else {
+        x_ = y_ = 16;
+    }
+
     // check the upcoming movement
     if ( x > 15 || y > 15 ) {
         // collision with the field limits
         this->game_over = true;
-        this->game_over_msg = Snake::tr("You fell in the water!");
+        this->game_over_msg = (is_adv)
+            ? SnakeGame::tr("Your adversary fell in the water!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+            : SnakeGame::tr("You fell in the water!")+"\n\n"+SnakeGame::tr("YOU LOST!");
 
-    } else if ( this->snakeInTile( x, y ) ) {
+    } else if ( snake.inTile( x, y ) ) {
         // collision with another part of the snake
-        if ( this->snake.back().x != x || this->snake.back().y != y ) {
+        if ( snake.back().x != x || snake.back().y != y ) {
             // not the tail
             this->game_over = true;
-            this->game_over_msg = Snake::tr("You ate yourself!");
+            this->game_over_msg = (is_adv)
+                ? SnakeGame::tr("You adversary ate itself!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+                : SnakeGame::tr("You ate yourself!")+"\n\n"+SnakeGame::tr("YOU LOST!");
         }
 
-    } else if ( x == this->food.x && y == this->food.y ) {
+    } else if ( adv_snake.inTile( x, y ) ) {
+        // collision with another part of the snake
+        if ( adv_snake.back().x != x || adv_snake.back().y != y ) {
+            // not the tail
+            if ( x_ != x || y_ != y ) {
+                // not the head
+                this->game_over = true;
+                this->game_over_msg = (is_adv)
+                    ? SnakeGame::tr("You adversary ate you!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+                    : SnakeGame::tr("You ate your adversary!")+"\n\n"+SnakeGame::tr("YOU LOST!");
+            } else {
+                this->game_over = true;
+                this->game_over_msg = SnakeGame::tr("You ate each other!")+"\n\n"+SnakeGame::tr("MATCH IS DRAW!");
+            }
+        }
+
+    } else if ( this->food.inTile( x, y ) ) {
         // will eat
-        if ( this->snake.size() < this->MAX_SNAKE_LENGTH ) {
+        if ( snake.size() < this->MAX_SNAKE_LENGTH ) {
             // below max size, increase the size
-            this->increaseSnakeBody();
+            snake.grow();
+            this->field_scene->addItem( snake.back().image );
         } else {
             // max size reached, increase speed
             const int interval = this->game_loop->interval();
             if ( interval > 50 ) {
                 this->game_loop->setInterval( interval - 5 );
             }
+        }
+        if ( is_adv ) {
+            this->decreaseGameScore();
+        } else {
+            this->increaseGameScore();
         }
         this->spawn_food = true;
     }
