@@ -301,10 +301,6 @@ Continue?</translation>
         <translation>Failed reading</translation>
     </message>
     <message>
-        <source>Failed writing</source>
-        <translation>Failed writing</translation>
-    </message>
-    <message>
         <source>Not a folder</source>
         <translation>Not a folder</translation>
     </message>
@@ -443,10 +439,6 @@ Continue?</translation>
     <message>
         <source>An error accured while reading the file</source>
         <translation>An error accured while reading the file</translation>
-    </message>
-    <message>
-        <source>An error accured while writing the file</source>
-        <translation>An error accured while writing the file</translation>
     </message>
     <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
@@ -1464,16 +1456,63 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
         <translation>PLAY</translation>
     </message>
     <message>
+        <source>Classic</source>
+        <translation>Classic</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation>Hunt</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation>Battle</translation>
+    </message>
+</context>
+<context>
+    <name>SnakeGame</name>
+    <message>
         <source>Game Over</source>
         <translation>Game Over</translation>
+    </message>
+    <message>
+        <source>Your adversary fell in the water!</source>
+        <translation>Your adversary fell in the water!</translation>
     </message>
     <message>
         <source>You fell in the water!</source>
         <translation>You fell in the water!</translation>
     </message>
     <message>
+        <source>YOU LOST!</source>
+        <translation>YOU LOST!</translation>
+    </message>
+    <message>
         <source>You ate yourself!</source>
         <translation>You ate yourself!</translation>
+    </message>
+    <message>
+        <source>You ate your adversary!</source>
+        <translation>You ate your adversary!</translation>
+    </message>
+    <message>
+        <source>You ate each other!</source>
+        <translation>You ate each other!</translation>
+    </message>
+    <message>
+        <source>MATCH IS DRAW!</source>
+        <translation>MATCH IS DRAW!</translation>
+    </message>
+    <message>
+        <source>YOU WON!</source>
+        <translation>YOU WON!</translation>
+    </message>
+    <message>
+        <source>Your adversary ate itself!</source>
+        <translation>Your adversary ate itself!</translation>
+    </message>
+    <message>
+        <source>Your adversary ate you!</source>
+        <translation>Your adversary ate you!</translation>
     </message>
 </context>
 <context>
