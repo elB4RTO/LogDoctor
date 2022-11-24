@@ -1973,7 +1973,7 @@ void MainWindow::menu_actionSnake_triggered()
 
     } else {
         delete this->snake;
-        this->snake = new Snake( this->window_theme_id, this->FONTS.at("script") );
+        this->snake = new SnakeGame( this->window_theme_id, this->FONTS.at("script") );
         this->snake->show();
     }
 }
