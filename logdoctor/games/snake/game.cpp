@@ -157,11 +157,11 @@ void SnakeGame::newSnake()
     this->field_scene->addItem( this->snake.front().image );
     this->snake.front().update( head_x, head_y, this->snake.direction() );
     // a body part
-    this->snake.grow( true );
-    this->field_scene->addItem( this->snake.back().image );
+    this->snake.willGrow();
+    this->snake.update( this->field_scene, true, true );
     // and a tail
-    this->snake.grow( true );
-    this->field_scene->addItem( this->snake.back().image );
+    this->snake.willGrow();
+    this->snake.update( this->field_scene, true, true );
 }
 
 void SnakeGame::newSnake_()
@@ -205,11 +205,11 @@ void SnakeGame::newSnake_()
     this->field_scene->addItem( this->snake_.front().image );
     this->snake_.front().update( head_x, head_y, this->snake_.direction() );
     // a body part
-    this->snake_.grow( true );
-    this->field_scene->addItem( this->snake_.back().image );
+    this->snake_.willGrow();
+    this->snake_.update( this->field_scene, true, true );
     // and a tail
-    this->snake_.grow( true );
-    this->field_scene->addItem( this->snake_.back().image );
+    this->snake_.willGrow();
+    this->snake_.update( this->field_scene, true, true );
 }
 
 void SnakeGame::newFood( const bool& movable )
@@ -249,12 +249,13 @@ void SnakeGame::processGameLogic()
         // check for game over
         if ( ! this->game_over ) {
             // update snake position
-            this->snake.update();
+            this->snake.update( this->field_scene );
             if ( this->game_mode == GameMode::Battle ) {
-                this->snake_.update();
+                this->snake_.update( this->field_scene );
             }
             if ( this->spawn_food ) {
-                // spawn food in a new position
+                // updae the score and spawn food in a new position
+                this->updateGameScore();
                 this->food.spawn( this->snake, this->snake_ );
                 this->spawn_food = false;
                 if ( this->game_mode == GameMode::Hunt ) {
@@ -302,18 +303,9 @@ void SnakeGame::processNextKeyEvent()
 }
 
 
-void SnakeGame::increaseGameScore()
+void SnakeGame::updateGameScore()
 {
-    this->game_score ++;
-    this->adjustLcdDigits();
-}
-void SnakeGame::decreaseGameScore()
-{
-    this->game_score --;
-    this->adjustLcdDigits();
-}
-void SnakeGame::adjustLcdDigits()
-{
+    this->game_score += this->score_step;
     this->ui->lcd_Score->setDigitCount( std::to_string(this->game_score).size() );
     this->ui->lcd_Score->display( this->game_score );
 }
@@ -372,41 +364,34 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_a
         // collision with the field limits
         this->game_over = true;
         this->game_over_msg = (is_adv)
-            ? SnakeGame::tr("Your adversary fell in the water!")+"\n\n"+SnakeGame::tr("YOU WON!")
+            ? SnakeGame::tr("Your adversary fell in the water!")+"\n\n"+SnakeGame::tr("YOU WIN!")
             : SnakeGame::tr("You fell in the water!")+"\n\n"+SnakeGame::tr("YOU LOST!");
 
     } else if ( snake.inTile( x, y ) ) {
         // collision with another part of the snake
-        if ( snake.back().x != x || snake.back().y != y ) {
-            // not the tail
-            this->game_over = true;
-            this->game_over_msg = (is_adv)
-                ? SnakeGame::tr("Your adversary ate itself!")+"\n\n"+SnakeGame::tr("YOU WON!")
-                : SnakeGame::tr("You ate yourself!")+"\n\n"+SnakeGame::tr("YOU LOST!");
-        }
+        this->game_over = true;
+        this->game_over_msg = (is_adv)
+            ? SnakeGame::tr("Your adversary ate itself!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+            : SnakeGame::tr("You ate yourself!")+"\n\n"+SnakeGame::tr("YOU LOST!");
 
     } else if ( adv_snake.inTile( x, y ) ) {
         // collision with another part of the snake
-        if ( adv_snake.back().x != x || adv_snake.back().y != y ) {
-            // not the tail
-            if ( x_ != x || y_ != y ) {
-                // not the head
-                this->game_over = true;
-                this->game_over_msg = (is_adv)
-                    ? SnakeGame::tr("Your adversary ate you!")+"\n\n"+SnakeGame::tr("YOU WON!")
-                    : SnakeGame::tr("You ate your adversary!")+"\n\n"+SnakeGame::tr("YOU LOST!");
-            } else {
-                this->game_over = true;
-                this->game_over_msg = SnakeGame::tr("You ate each other!")+"\n\n"+SnakeGame::tr("MATCH IS DRAW!");
-            }
+        if ( x_ != x || y_ != y ) {
+            // not the head
+            this->game_over = true;
+            this->game_over_msg = (is_adv)
+                ? SnakeGame::tr("Your adversary ate you!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+                : SnakeGame::tr("You ate your adversary!")+"\n\n"+SnakeGame::tr("YOU LOST!");
+        } else {
+            this->game_over = true;
+            this->game_over_msg = SnakeGame::tr("You ate each other!")+"\n\n"+SnakeGame::tr("MATCH IS DRAW!");
         }
 
     } else if ( this->food.inTile( x, y ) ) {
         // will eat
         if ( snake.size() < this->MAX_SNAKE_LENGTH ) {
-            // below max size, increase the size
-            snake.grow();
-            this->field_scene->addItem( snake.back().image );
+            // below max size, will grow
+            snake.willGrow();
         } else {
             // max size reached, increase speed
             const int interval = this->game_loop->interval();
@@ -415,9 +400,9 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_a
             }
         }
         if ( is_adv ) {
-            this->decreaseGameScore();
+            this->score_step = -1;
         } else {
-            this->increaseGameScore();
+            this->score_step = 1;
         }
         this->spawn_food = true;
     }
