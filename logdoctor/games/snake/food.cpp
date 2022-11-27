@@ -55,7 +55,7 @@ void Food::spawn( Snake& snake, Snake& snake_ )
         if ( x < 16 && y < 16 ) {
             // check the tile is empty
             if ( x != this->x && y != this->y ) {
-                if ( !(snake.inTile( x, y ) || snake_.inTile( x, y )) ) {
+                if ( !(snake.inTile( x, y, false ) || snake_.inTile( x, y, false )) ) {
                     break;
                 }
             }
