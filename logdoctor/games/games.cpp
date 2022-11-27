@@ -287,7 +287,7 @@ void GameSec::snakeStyleSheet( QString& stylesheet, const int& theme_id )
     }
     if ( theme_id != 0 ) {
         stylesheet =
-            "QWidget#Snake {"
+            "QWidget#SnakeGame {"
             "   background-color: "+style.at("window_base_primary")+";"
             "}"
             "QWidget#stackedPage_GameMenu,"
