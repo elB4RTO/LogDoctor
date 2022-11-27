@@ -14,8 +14,7 @@ var searchData=
   ['richlogsdefault_11',['richLogsDefault',['../classRichText.html#a28bf0bdd659cc7b7a58eab9e5cfad495',1,'RichText']]],
   ['richlogsfailure_12',['richLogsFailure',['../classRichText.html#a6e5fe6270e6fed0b9e7c42eafc9b4732',1,'RichText']]],
   ['richtext_13',['RichText',['../classRichText.html',1,'']]],
-  ['right_14',['RIGHT',['../classSnake.html#a17196bbf1b4636022495ef12635a68f7a7bcce9b91942351b31e124e2387546d3',1,'Snake']]],
-  ['rotateimg_15',['rotateImg',['../classCrapup.html#a334624ab394fd773b0e6063e7baf7960',1,'Crapup']]],
-  ['rstrip_16',['rstrip',['../classStringOps.html#a698efee881c6b05439f4fb5016c6c92e',1,'StringOps']]],
-  ['run_17',['run',['../classCraplog.html#a9c3081cf6cf94b454a87a4d71de3003d',1,'Craplog']]]
+  ['rotateimg_14',['rotateImg',['../classCrapup.html#a334624ab394fd773b0e6063e7baf7960',1,'Crapup']]],
+  ['rstrip_15',['rstrip',['../classStringOps.html#a698efee881c6b05439f4fb5016c6c92e',1,'StringOps']]],
+  ['run_16',['run',['../classCraplog.html#a9c3081cf6cf94b454a87a4d71de3003d',1,'Craplog']]]
 ];

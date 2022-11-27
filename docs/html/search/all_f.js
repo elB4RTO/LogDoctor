@@ -11,7 +11,7 @@ var searchData=
   ['parsenumericfilter_8',['parseNumericFilter',['../classCrapview.html#ab450412741c7af21dfec42fad5a7f20a',1,'Crapview']]],
   ['parsetextualfilter_9',['parseTextualFilter',['../classCrapview.html#ae7693a3fa2b4a402eb123af94a73d809',1,'Crapview']]],
   ['path_10',['path',['../structCraplog_1_1LogFile.html#af33e3dd4a226abe93349c085d1b938f5',1,'Craplog::LogFile']]],
-  ['prev_5fdirection_11',['prev_direction',['../structSnake_1_1BodyPart.html#a7468acf9055981fb61d9274e58b530e0',1,'Snake::BodyPart']]],
+  ['prev_5fdirection_11',['prev_direction',['../structBodyPart.html#a98303c77db6b5550e20d472075c15bc6',1,'BodyPart']]],
   ['printabledate_12',['printableDate',['../classCrapview.html#a3a73f6f5683afaaa17a3065eada4438e',1,'Crapview']]],
   ['printablesize_13',['printableSize',['../classMainWindow.html#a05a108ff2e9f3a25e2bfbae1d6ae8578',1,'MainWindow::printableSize()'],['../classCraplog.html#a34dc89787f7e104a84d01ebdeb00b074',1,'Craplog::printableSize()']]],
   ['printablespeed_14',['printableSpeed',['../classMainWindow.html#aef96785abecd1b4f0eb7b845b0e64f59',1,'MainWindow']]],
@@ -19,8 +19,8 @@ var searchData=
   ['printablewarn_16',['printableWarn',['../classCrapview.html#a2feca301352ca7bd76e199fbcaef932c',1,'Crapview']]],
   ['processapacheformatstring_17',['processApacheFormatString',['../classFormatOps.html#a9bc720b012546f34b3f844459089a29d',1,'FormatOps']]],
   ['processdatetime_18',['processDateTime',['../classDateTimeOps.html#a3e0808c8c395b0e9ea9240aa065b8967',1,'DateTimeOps']]],
-  ['processgamelogic_19',['processGameLogic',['../classSnake.html#a79f84a26be21858ca09d498e6ea45d75',1,'Snake']]],
+  ['processgamelogic_19',['processGameLogic',['../classSnakeGame.html#aeaa13da59d09abc40e25fd769fb96963',1,'SnakeGame']]],
   ['processiisformatstring_20',['processIisFormatString',['../classFormatOps.html#afc7446da6389b522922cb94c4319f4ec',1,'FormatOps']]],
-  ['processnextkeyevent_21',['processNextKeyEvent',['../classSnake.html#a8545ef580ec7706e153a70589b61cf27',1,'Snake']]],
+  ['processnextkeyevent_21',['processNextKeyEvent',['../classSnakeGame.html#a0b0c9d7567a8e352449ddc7b31e09851',1,'SnakeGame']]],
   ['processnginxformatstring_22',['processNginxFormatString',['../classFormatOps.html#a9e4c9fb02220492ce2766e830f4fedc6',1,'FormatOps']]]
 ];
