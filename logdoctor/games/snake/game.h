@@ -131,13 +131,9 @@ private:
 
     int game_score = 0;
 
-    //! Increases the player's score by one
-    void increaseGameScore();
-
-    //! Decreases the player's score by one
-    void decreaseGameScore();
-
-    void adjustLcdDigits();
+    //! Increases/Decreases the player's score by one
+    void updateGameScore();
+    int score_step = 1;
 
 };
 
