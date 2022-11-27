@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QPixmap>
+#include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 
 
@@ -42,21 +43,24 @@ public:
     QPixmap& getHeadImage();
 
     //! Checks whether is there a part of the snake in the given position
-    const bool inTile( const unsigned int& x, const unsigned int& y );
+    const bool inTile( const unsigned int& x, const unsigned int& y, const bool& avoid_tail=true );
 
-    //! Sets the new direction of the head
+    // [AI] As inTile(), without counting as much trailing BodyParts as the number of steps
+    const bool inTileMinusSteps( const unsigned int& x, const unsigned int& y, const unsigned int& steps );
+
+    //! Sets the new direction (of the head)
     void setDirection( const Direction new_direction );
 
-    //! Returns the current direction
+    //! Returns the current direction (of the head)
     const Direction& direction();
 
-    //! Increases the length of the body of the snake of 1 part
-    void grow( const bool& initial=false );
+    //! Updates the position and direction of the entire snake
+    void update( QGraphicsScene* field_scene=nullptr, const bool& dry=false, const bool& is_borning=false );
 
-    //! Update the position and direction of the entire snake
-    void update( const bool& dry=false );
+    // Schedules to grow the snake on the next update
+    void willGrow();
 
-    //! Chooses a new direction for the snake (only used by the AI)
+    // [AI] Chooses a new direction for the snake
     void move( Snake& snake, const unsigned int& food_x, const unsigned int& food_y );
 
 
@@ -74,11 +78,28 @@ private:
 
     Direction head_direction;
 
+    bool will_grow;
+
+    //! Increases the length of the body of the snake of 1 part
+    void grow( const bool& is_borning );
+
     bool adversary;
 
     //// ADVERSARY ////
 
     const unsigned int aggressiveness = 10 - (rand()%9);
+
+    // [AI] Checks which of the surrounding positions are blocked
+    const std::vector<unsigned int> checkAround( const Direction& direction, Snake& adv_snake, const unsigned int& x, const unsigned int& y );
+
+    // [AI] Checks if a direction is a closed path and should be avoided
+    const unsigned int isDeadHole( const unsigned int& start_x, const unsigned int& start_y, Direction start_direction, Snake& adv_snake, const bool& inverse=false );
+
+    // [AI] Collects data about the possible movements
+    void collectData( std::vector<float>& data, Direction& direction, Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y );
+
+    // [AI] Processes the collected data to predict the best movement
+    const Direction predictDirection( std::vector<std::vector<float>>& data, std::vector<float> weights, std::vector<Direction> classes );
 };
 
 #endif // SNAKE_H
