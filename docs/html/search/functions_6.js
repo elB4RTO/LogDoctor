@@ -51,5 +51,6 @@ var searchData=
   ['getwarningsize_48',['getWarningSize',['../classCraplog.html#af79d254595263448fead944f82db8931',1,'Craplog']]],
   ['getwarnlist_49',['getWarnlist',['../classCraplog.html#a53df5cc15fdc79c1708aaf002c2f7719',1,'Craplog']]],
   ['getwidelinesusage_50',['getWideLinesUsage',['../classTextBrowser.html#a7a62dfd67e7a58f374951272ac13defd',1,'TextBrowser']]],
-  ['getyears_51',['getYears',['../classCrapview.html#ab3081c678b102b255fa9f32a8f94e052',1,'Crapview']]]
+  ['getyears_51',['getYears',['../classCrapview.html#ab3081c678b102b255fa9f32a8f94e052',1,'Crapview']]],
+  ['grow_52',['grow',['../classSnake.html#a524fb8b522e917f620cfb401f2badabe',1,'Snake']]]
 ];

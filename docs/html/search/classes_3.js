@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['food_0',['Food',['../structSnake_1_1Food.html',1,'Snake']]],
+  ['food_0',['Food',['../classFood.html',1,'']]],
   ['formatops_1',['FormatOps',['../classFormatOps.html',1,'']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['discarded_0',['Discarded',['../classLogOps.html#aa566f381796a235007d1d27bc0b9e0f3a2655c8b603fcd3f88b92b6114e38955e',1,'LogOps']]],
-  ['down_1',['DOWN',['../classSnake.html#a17196bbf1b4636022495ef12635a68f7a552ec6394b72dab1dcc8bf47f05c8548',1,'Snake']]]
+  ['battle_0',['Battle',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea33f4c7667fa1a7bf17dee0b0cade1f7b',1,'SnakeGame']]]
 ];

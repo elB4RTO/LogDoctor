@@ -15,8 +15,8 @@ var searchData=
   ['printablewarn_12',['printableWarn',['../classCrapview.html#a2feca301352ca7bd76e199fbcaef932c',1,'Crapview']]],
   ['processapacheformatstring_13',['processApacheFormatString',['../classFormatOps.html#a9bc720b012546f34b3f844459089a29d',1,'FormatOps']]],
   ['processdatetime_14',['processDateTime',['../classDateTimeOps.html#a3e0808c8c395b0e9ea9240aa065b8967',1,'DateTimeOps']]],
-  ['processgamelogic_15',['processGameLogic',['../classSnake.html#a79f84a26be21858ca09d498e6ea45d75',1,'Snake']]],
+  ['processgamelogic_15',['processGameLogic',['../classSnakeGame.html#aeaa13da59d09abc40e25fd769fb96963',1,'SnakeGame']]],
   ['processiisformatstring_16',['processIisFormatString',['../classFormatOps.html#afc7446da6389b522922cb94c4319f4ec',1,'FormatOps']]],
-  ['processnextkeyevent_17',['processNextKeyEvent',['../classSnake.html#a8545ef580ec7706e153a70589b61cf27',1,'Snake']]],
+  ['processnextkeyevent_17',['processNextKeyEvent',['../classSnakeGame.html#a0b0c9d7567a8e352449ddc7b31e09851',1,'SnakeGame']]],
   ['processnginxformatstring_18',['processNginxFormatString',['../classFormatOps.html#a9e4c9fb02220492ce2766e830f4fedc6',1,'FormatOps']]]
 ];

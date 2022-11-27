@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['failed_0',['Failed',['../classLogOps.html#aa566f381796a235007d1d27bc0b9e0f3aefe27e6caeb020826f7fae1ffe85ee6f',1,'LogOps']]]
+  ['classic_0',['Classic',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea7fbcdf670873949c8c960b892a303e59',1,'SnakeGame']]]
 ];
