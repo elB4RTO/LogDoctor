@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['direction_0',['Direction',['../classSnake.html#a17196bbf1b4636022495ef12635a68f7',1,'Snake']]]
+  ['gamemode_0',['GameMode',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2e',1,'SnakeGame']]]
 ];

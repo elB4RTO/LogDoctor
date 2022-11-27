@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['key_5fevents_0',['key_events',['../classSnake.html#a9413878f95b13ab1f0e6ff51a9aba674',1,'Snake']]],
-  ['keypressevent_1',['keyPressEvent',['../classSnake.html#a15eef821f2cfcae3a852673910f7059e',1,'Snake']]]
+  ['key_5fevents_0',['key_events',['../classSnakeGame.html#a8be52d5a2a611f246af8631243d88663',1,'SnakeGame']]],
+  ['keypressevent_1',['keyPressEvent',['../classSnakeGame.html#a407dd2bae84d0f6572b94bb37feb87bc',1,'SnakeGame']]]
 ];

@@ -6,5 +6,6 @@ var searchData=
   ['makepreview_3',['makePreview',['../classTextBrowser.html#a5b0eb8070202317c6e04534ca417c957',1,'TextBrowser']]],
   ['makestylesheet_4',['makeStyleSheet',['../classStyleSec.html#a7deedd8236a76bdb8ba050e1fb797f11',1,'StyleSec']]],
   ['menu_5factionenglish_5ftriggered_5',['menu_actionEnglish_triggered',['../classMainWindow.html#adffe78de926642168d16bfd8a2522c29',1,'MainWindow']]],
-  ['msgdatabasecreated_6',['msgDatabaseCreated',['../classDialogSec.html#ae916458257088da13a1a2bc885d5c71d',1,'DialogSec']]]
+  ['move_6',['move',['../classFood.html#a7196aa14ad843820518dc9db03252d21',1,'Food']]],
+  ['msgdatabasecreated_7',['msgDatabaseCreated',['../classDialogSec.html#ae916458257088da13a1a2bc885d5c71d',1,'DialogSec']]]
 ];

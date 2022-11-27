@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keypressevent_0',['keyPressEvent',['../classSnake.html#a15eef821f2cfcae3a852673910f7059e',1,'Snake']]]
+  ['keypressevent_0',['keyPressEvent',['../classSnakeGame.html#a407dd2bae84d0f6572b94bb37feb87bc',1,'SnakeGame']]]
 ];

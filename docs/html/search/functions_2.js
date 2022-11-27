@@ -3,7 +3,7 @@ var searchData=
   ['calcglobals_0',['calcGlobals',['../classCrapview.html#afffae0bf9a5a9a4236e0c6f9b42a153b',1,'Crapview']]],
   ['changeiislogsbasenames_1',['changeIisLogsBaseNames',['../classCraplog.html#a5c91338a5331911ccf62a2a52dfeb1ca',1,'Craplog']]],
   ['checkcollectiondatabase_2',['checkCollectionDatabase',['../classCheckSec.html#abaeae12b56acc24ef8f600814e3f280f',1,'CheckSec']]],
-  ['checkcollision_3',['checkCollision',['../classSnake.html#a0195f5c18cc0fadf69a159c981422beb',1,'Snake']]],
+  ['checkcollision_3',['checkCollision',['../classSnakeGame.html#a3bcce74b91e7e46658e44f05bfd319a9',1,'SnakeGame']]],
   ['checkdatabasetablesnames_4',['checkDatabaseTablesNames',['../classCheckSec.html#aee7c4ae7ed7b46348be7096d5ca259c6',1,'CheckSec']]],
   ['checkdatadb_5',['checkDataDB',['../classMainWindow.html#ac0c8348e66f87495ba105f6bf29ef6fc',1,'MainWindow']]],
   ['checkdir_6',['checkDir',['../classIOutils.html#ab5d61de63617601f974e413d57342d10',1,'IOutils']]],

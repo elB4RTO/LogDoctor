@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['right_0',['RIGHT',['../classSnake.html#a17196bbf1b4636022495ef12635a68f7a7bcce9b91942351b31e124e2387546d3',1,'Snake']]]
+  ['failed_0',['Failed',['../classLogOps.html#aa566f381796a235007d1d27bc0b9e0f3aefe27e6caeb020826f7fae1ffe85ee6f',1,'LogOps']]]
 ];

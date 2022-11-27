@@ -9,10 +9,11 @@ var searchData=
   ['dialogdia_6',['DialogDia',['../classDialogDia.html#ad0be19eb57e41d754b1dcd514b447891',1,'DialogDia']]],
   ['dialogmsg_7',['DialogMsg',['../classDialogMsg.html#a440fa0b48cb5a3a0efdb8005cf44b285',1,'DialogMsg']]],
   ['digestfile_8',['digestFile',['../classHashOps.html#a413cfb68394bc237a19ebd05113dfdc1',1,'HashOps']]],
-  ['draw_9',['draw',['../classCrissCross.html#a9f957e38250d4c58f2b232620891cb47',1,'CrissCross']]],
-  ['drawcount_10',['drawCount',['../classCrapview.html#ad6063317acd5a1861d6c8c49ffa4ff7f',1,'Crapview']]],
-  ['drawday_11',['drawDay',['../classCrapview.html#a951d380f509b31ce67661084db6779be',1,'Crapview']]],
-  ['drawrelat_12',['drawRelat',['../classCrapview.html#a22dbc03eaca3f113b42dfb2e6e69d1ba',1,'Crapview']]],
-  ['drawspeed_13',['drawSpeed',['../classCrapview.html#a7f623bc856d367df467d206722d07f99',1,'Crapview']]],
-  ['drawwarn_14',['drawWarn',['../classCrapview.html#aa1dbaf577883d7b24854e40427b172f4',1,'Crapview']]]
+  ['direction_9',['direction',['../classSnake.html#a81efcf9fc2119468d5c7278eaba83f9a',1,'Snake']]],
+  ['draw_10',['draw',['../classCrissCross.html#a9f957e38250d4c58f2b232620891cb47',1,'CrissCross']]],
+  ['drawcount_11',['drawCount',['../classCrapview.html#ad6063317acd5a1861d6c8c49ffa4ff7f',1,'Crapview']]],
+  ['drawday_12',['drawDay',['../classCrapview.html#a951d380f509b31ce67661084db6779be',1,'Crapview']]],
+  ['drawrelat_13',['drawRelat',['../classCrapview.html#a22dbc03eaca3f113b42dfb2e6e69d1ba',1,'Crapview']]],
+  ['drawspeed_14',['drawSpeed',['../classCrapview.html#a7f623bc856d367df467d206722d07f99',1,'Crapview']]],
+  ['drawwarn_15',['drawWarn',['../classCrapview.html#aa1dbaf577883d7b24854e40427b172f4',1,'Crapview']]]
 ];

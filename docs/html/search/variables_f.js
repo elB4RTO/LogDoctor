@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['x',['../structSnake_1_1BodyPart.html#a169d305a1e30790525da80c90b4c83d7',1,'Snake::BodyPart::x()'],['../structSnake_1_1Food.html#a53c8fbc2e1c5bff7a7fb5bb1f4c8e7d0',1,'Snake::Food::x()']]]
+  ['x_0',['x',['../classFood.html#a327d5731323aa500756f0b56a88e6bb5',1,'Food::x()'],['../structBodyPart.html#ad028f53499627e8fed0cc33b9464949b',1,'BodyPart::x()']]]
 ];

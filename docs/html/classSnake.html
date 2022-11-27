@@ -72,20 +72,12 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#pri-types">Private Types</a> &#124;
-<a href="#pri-slots">Private Slots</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classSnake-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Snake Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><a class="el" href="classSnake.html" title="Snake.">Snake</a>.  
- <a href="classSnake.html#details">More...</a></p>
-
-<p><code>#include &lt;snake.h&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Snake:</div>
 <div class="dyncontent">
@@ -93,183 +85,35 @@ Inheritance diagram for Snake:</div>
   <img src="classSnake.png" alt=""/>
  </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSnake_1_1BodyPart.html">BodyPart</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of a part of the body of the snake.  <a href="structSnake_1_1BodyPart.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSnake_1_1Food.html">Food</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of the egg which will be eat by the snake.  <a href="structSnake_1_1Food.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
-Private Types</h2></td></tr>
-<tr class="memitem:a17196bbf1b4636022495ef12635a68f7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSnake.html#a17196bbf1b4636022495ef12635a68f7">Direction</a> { <a class="el" href="classSnake.html#a17196bbf1b4636022495ef12635a68f7a325095e4b444c7131aeb88ca33c7edf2">UP</a>
-, <a class="el" href="classSnake.html#a17196bbf1b4636022495ef12635a68f7a552ec6394b72dab1dcc8bf47f05c8548">DOWN</a>
-, <a class="el" href="classSnake.html#a17196bbf1b4636022495ef12635a68f7a81e5111ab514498d533c75dc9724f29e">LEFT</a>
-, <a class="el" href="classSnake.html#a17196bbf1b4636022495ef12635a68f7a7bcce9b91942351b31e124e2387546d3">RIGHT</a>
- }</td></tr>
-<tr class="memdesc:a17196bbf1b4636022495ef12635a68f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the possible directions.  <a href="classSnake.html#a17196bbf1b4636022495ef12635a68f7">More...</a><br /></td></tr>
-<tr class="separator:a17196bbf1b4636022495ef12635a68f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-slots" name="pri-slots"></a>
-Private Slots</h2></td></tr>
-<tr class="memitem:a854a07e4ed464244db931ae9af2dfd24"><td class="memItemLeft" align="right" valign="top"><a id="a854a07e4ed464244db931ae9af2dfd24" name="a854a07e4ed464244db931ae9af2dfd24"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>on_button_Play_clicked</b> ()</td></tr>
-<tr class="memdesc:a854a07e4ed464244db931ae9af2dfd24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the game. <br /></td></tr>
-<tr class="separator:a854a07e4ed464244db931ae9af2dfd24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79f84a26be21858ca09d498e6ea45d75"><td class="memItemLeft" align="right" valign="top"><a id="a79f84a26be21858ca09d498e6ea45d75" name="a79f84a26be21858ca09d498e6ea45d75"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>processGameLogic</b> ()</td></tr>
-<tr class="memdesc:a79f84a26be21858ca09d498e6ea45d75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the logic of the game. <br /></td></tr>
-<tr class="separator:a79f84a26be21858ca09d498e6ea45d75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a9afd044f5fa48f6d5f84dbff158d8a50"><td class="memItemLeft" align="right" valign="top"><a id="a9afd044f5fa48f6d5f84dbff158d8a50" name="a9afd044f5fa48f6d5f84dbff158d8a50"></a>
+const bool&#160;</td><td class="memItemRight" valign="bottom"><b>inTile</b> (const unsigned int &amp;x, const unsigned int &amp;y, const bool &amp;avoid_tail=true)</td></tr>
+<tr class="memdesc:a9afd044f5fa48f6d5f84dbff158d8a50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether is there a part of the snake in the given position. <br /></td></tr>
+<tr class="separator:a9afd044f5fa48f6d5f84dbff158d8a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85d3b8250d5d26e3f23915c5bc43e372"><td class="memItemLeft" align="right" valign="top"><a id="a85d3b8250d5d26e3f23915c5bc43e372" name="a85d3b8250d5d26e3f23915c5bc43e372"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDirection</b> (const Direction new_direction)</td></tr>
+<tr class="memdesc:a85d3b8250d5d26e3f23915c5bc43e372"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new direction (of the head) <br /></td></tr>
+<tr class="separator:a85d3b8250d5d26e3f23915c5bc43e372"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81efcf9fc2119468d5c7278eaba83f9a"><td class="memItemLeft" align="right" valign="top"><a id="a81efcf9fc2119468d5c7278eaba83f9a" name="a81efcf9fc2119468d5c7278eaba83f9a"></a>
+const Direction &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>direction</b> ()</td></tr>
+<tr class="memdesc:a81efcf9fc2119468d5c7278eaba83f9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current direction (of the head) <br /></td></tr>
+<tr class="separator:a81efcf9fc2119468d5c7278eaba83f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b16000f3ecd8893ccf9dd04b45656be"><td class="memItemLeft" align="right" valign="top"><a id="a4b16000f3ecd8893ccf9dd04b45656be" name="a4b16000f3ecd8893ccf9dd04b45656be"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (QGraphicsScene *field_scene=nullptr, const bool &amp;dry=false, const bool &amp;is_borning=false)</td></tr>
+<tr class="memdesc:a4b16000f3ecd8893ccf9dd04b45656be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the position and direction of the entire snake. <br /></td></tr>
+<tr class="separator:a4b16000f3ecd8893ccf9dd04b45656be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a15eef821f2cfcae3a852673910f7059e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSnake.html#a15eef821f2cfcae3a852673910f7059e">keyPressEvent</a> (QKeyEvent *event) override</td></tr>
-<tr class="memdesc:a15eef821f2cfcae3a852673910f7059e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the valid key events in a queue.  <a href="classSnake.html#a15eef821f2cfcae3a852673910f7059e">More...</a><br /></td></tr>
-<tr class="separator:a15eef821f2cfcae3a852673910f7059e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8545ef580ec7706e153a70589b61cf27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSnake.html#a8545ef580ec7706e153a70589b61cf27">processNextKeyEvent</a> ()</td></tr>
-<tr class="memdesc:a8545ef580ec7706e153a70589b61cf27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the key events in the queue.  <a href="classSnake.html#a8545ef580ec7706e153a70589b61cf27">More...</a><br /></td></tr>
-<tr class="separator:a8545ef580ec7706e153a70589b61cf27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e820e50917270f9f6fd37899b93383c"><td class="memItemLeft" align="right" valign="top"><a id="a6e820e50917270f9f6fd37899b93383c" name="a6e820e50917270f9f6fd37899b93383c"></a>
-const bool&#160;</td><td class="memItemRight" valign="bottom"><b>snakeInTile</b> (const unsigned int &amp;x, const unsigned int &amp;y)</td></tr>
-<tr class="memdesc:a6e820e50917270f9f6fd37899b93383c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether is there a part of the snake in the given position. <br /></td></tr>
-<tr class="separator:a6e820e50917270f9f6fd37899b93383c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae16fec0b0011ef9d7f0bbddfdea1b339"><td class="memItemLeft" align="right" valign="top"><a id="ae16fec0b0011ef9d7f0bbddfdea1b339" name="ae16fec0b0011ef9d7f0bbddfdea1b339"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>increaseSnakeBody</b> (const bool &amp;initial=false)</td></tr>
-<tr class="memdesc:ae16fec0b0011ef9d7f0bbddfdea1b339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increases the length of the body of the snake of 1 part. <br /></td></tr>
-<tr class="separator:ae16fec0b0011ef9d7f0bbddfdea1b339"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7136c03695500faa2fd28a7d1b8b2976"><td class="memItemLeft" align="right" valign="top"><a id="a7136c03695500faa2fd28a7d1b8b2976" name="a7136c03695500faa2fd28a7d1b8b2976"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>updateSnakePosition</b> (const bool &amp;dry=false)</td></tr>
-<tr class="memdesc:a7136c03695500faa2fd28a7d1b8b2976"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the position and direction of the entire snake. <br /></td></tr>
-<tr class="separator:a7136c03695500faa2fd28a7d1b8b2976"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0195f5c18cc0fadf69a159c981422beb"><td class="memItemLeft" align="right" valign="top"><a id="a0195f5c18cc0fadf69a159c981422beb" name="a0195f5c18cc0fadf69a159c981422beb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>checkCollision</b> ()</td></tr>
-<tr class="memdesc:a0195f5c18cc0fadf69a159c981422beb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the head will collide with another entity. <br /></td></tr>
-<tr class="separator:a0195f5c18cc0fadf69a159c981422beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37928b2dbf21b29efadc9336f8e8ace9"><td class="memItemLeft" align="right" valign="top"><a id="a37928b2dbf21b29efadc9336f8e8ace9" name="a37928b2dbf21b29efadc9336f8e8ace9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>spawnFood</b> ()</td></tr>
-<tr class="memdesc:a37928b2dbf21b29efadc9336f8e8ace9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawns the egg in a new position. <br /></td></tr>
-<tr class="separator:a37928b2dbf21b29efadc9336f8e8ace9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a831ba2865d6542891fa814e4d0dba502"><td class="memItemLeft" align="right" valign="top"><a id="a831ba2865d6542891fa814e4d0dba502" name="a831ba2865d6542891fa814e4d0dba502"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>increaseGameScore</b> ()</td></tr>
-<tr class="memdesc:a831ba2865d6542891fa814e4d0dba502"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increases the player's score by one. <br /></td></tr>
-<tr class="separator:a831ba2865d6542891fa814e4d0dba502"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
-<tr class="memitem:a9413878f95b13ab1f0e6ff51a9aba674"><td class="memItemLeft" align="right" valign="top"><a id="a9413878f95b13ab1f0e6ff51a9aba674" name="a9413878f95b13ab1f0e6ff51a9aba674"></a>
-std::queue&lt; unsigned short &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>key_events</b></td></tr>
-<tr class="memdesc:a9413878f95b13ab1f0e6ff51a9aba674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the key events. <br /></td></tr>
-<tr class="separator:a9413878f95b13ab1f0e6ff51a9aba674"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a312af76967d04154aa3f2200762f3a21"><td class="memItemLeft" align="right" valign="top"><a id="a312af76967d04154aa3f2200762f3a21" name="a312af76967d04154aa3f2200762f3a21"></a>
-const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_SNAKE_LENGTH</b> = 64</td></tr>
-<tr class="memdesc:a312af76967d04154aa3f2200762f3a21"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum length of the snake. <br /></td></tr>
-<tr class="separator:a312af76967d04154aa3f2200762f3a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4e24ce702159895da23b791ef946401"><td class="memItemLeft" align="right" valign="top"><a id="ac4e24ce702159895da23b791ef946401" name="ac4e24ce702159895da23b791ef946401"></a>
-std::vector&lt; <a class="el" href="structSnake_1_1BodyPart.html">BodyPart</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>snake</b></td></tr>
-<tr class="memdesc:ac4e24ce702159895da23b791ef946401"><td class="mdescLeft">&#160;</td><td class="mdescRight">The snake. <br /></td></tr>
-<tr class="separator:ac4e24ce702159895da23b791ef946401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a524fb8b522e917f620cfb401f2badabe"><td class="memItemLeft" align="right" valign="top"><a id="a524fb8b522e917f620cfb401f2badabe" name="a524fb8b522e917f620cfb401f2badabe"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>grow</b> (const bool &amp;is_borning)</td></tr>
+<tr class="memdesc:a524fb8b522e917f620cfb401f2badabe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increases the length of the body of the snake of 1 part. <br /></td></tr>
+<tr class="separator:a524fb8b522e917f620cfb401f2badabe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p ><a class="el" href="classSnake.html" title="Snake.">Snake</a>. </p>
-<p >A reproduction of the timeless classic game </p>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a17196bbf1b4636022495ef12635a68f7" name="a17196bbf1b4636022495ef12635a68f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17196bbf1b4636022495ef12635a68f7">&#9670;&#160;</a></span>Direction</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classSnake.html#a17196bbf1b4636022495ef12635a68f7">Snake::Direction</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Enumerates the possible directions. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a17196bbf1b4636022495ef12635a68f7a325095e4b444c7131aeb88ca33c7edf2" name="a17196bbf1b4636022495ef12635a68f7a325095e4b444c7131aeb88ca33c7edf2"></a>UP&#160;</td><td class="fielddoc"><p >Up. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a17196bbf1b4636022495ef12635a68f7a552ec6394b72dab1dcc8bf47f05c8548" name="a17196bbf1b4636022495ef12635a68f7a552ec6394b72dab1dcc8bf47f05c8548"></a>DOWN&#160;</td><td class="fielddoc"><p >Down. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a17196bbf1b4636022495ef12635a68f7a81e5111ab514498d533c75dc9724f29e" name="a17196bbf1b4636022495ef12635a68f7a81e5111ab514498d533c75dc9724f29e"></a>LEFT&#160;</td><td class="fielddoc"><p >Left. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a17196bbf1b4636022495ef12635a68f7a7bcce9b91942351b31e124e2387546d3" name="a17196bbf1b4636022495ef12635a68f7a7bcce9b91942351b31e124e2387546d3"></a>RIGHT&#160;</td><td class="fielddoc"><p >Right. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a15eef821f2cfcae3a852673910f7059e" name="a15eef821f2cfcae3a852673910f7059e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15eef821f2cfcae3a852673910f7059e">&#9670;&#160;</a></span>keyPressEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Snake::keyPressEvent </td>
-          <td>(</td>
-          <td class="paramtype">QKeyEvent *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Stores the valid key events in a queue. </p>
-<p >Valid keys are UP/DOWN/LEFT/RIGHT arrows and W/S/A/D letters </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classSnake.html#a9413878f95b13ab1f0e6ff51a9aba674" title="Stores the key events.">key_events</a>, <a class="el" href="classSnake.html#a8545ef580ec7706e153a70589b61cf27" title="Processes the key events in the queue.">processNextKeyEvent()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a8545ef580ec7706e153a70589b61cf27" name="a8545ef580ec7706e153a70589b61cf27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8545ef580ec7706e153a70589b61cf27">&#9670;&#160;</a></span>processNextKeyEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Snake::processNextKeyEvent </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Processes the key events in the queue. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSnake.html#a9413878f95b13ab1f0e6ff51a9aba674" title="Stores the key events.">key_events</a>, <a class="el" href="classSnake.html#a15eef821f2cfcae3a852673910f7059e" title="Stores the valid key events in a queue.">keyPressEvent()</a> </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>logdoctor/games/snake.h</li>
-<li>logdoctor/games/snake.cpp</li>
+<li>logdoctor/games/snake/snake.h</li>
+<li>logdoctor/games/snake/snake.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
