@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Store the actual path
-actual_path=$(pwd)
+current_path=$(pwd)
 
 # Get the path of LogDoctor-git's folder and move in
 docdir="$(dirname $(realpath $0))"
@@ -12,47 +12,44 @@ if [[ $(which cmake) =~ ^/ ]]
 then
 	$()
 else
-	echo -e "\nError: Cmake is not installed"
+	echo "$(tput setaf 1)Error:$(tput sgr0) Cmake is not installed"
 	exit
 fi
 
 # Check the existence of a previous executable file
 if [ -e /usr/bin/logdoctor ]
 then
-	while true;
-	do
-		echo -e "\nWarning: the file /usr/bin/logdoctor already exists"
-		printf "If you choose to continue, the actual file will be overwritten\nContinue? [y/n] : "
-		read agree
-		case "$agree"
-		in
-			"y" | "Y" | [yY][eE][sS])
-				printf "\n"
-				break
-			;;
-			*)
-				exit
-			;;
-		esac
-	done
+	echo "$(tput setaf 11)Warning:$(tput sgr0) a previous installation exists, please run the $(tput bold)update$(tput sgr0) script instead"
+	exit
 fi
 
 # Start the compilation process
-echo -e "\nStarting compilation process\n"
+echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Building$(tput sgr0)"
 
 # Make a build folder
 if [ -e build ]
 then
 	rm -r build
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove existing build directory"
+		exit
+	fi
 fi
-mkdir build && cd build
+mkdir build
+if [[ "$?" != "0" ]]
+then
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to create build directory"
+	exit
+fi
+cd build
 
 # Prepare the cmake files
 cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel
 if [[ "$?" != "0" ]]
 then
 	# an error occured during preparation
-	echo -e "\nError: failed to prepare cmake files"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to prepare build files"
 	exit
 fi
 
@@ -64,118 +61,83 @@ then
 	mv LogDoctor logdoctor
 else
 	# an error occured during compilation
-	echo -e "\nError: failed to compile"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to compile"
 	exit
 fi
 
 # Compilation finished
 wait
-echo -e "\nCompilation finished"
+echo "$(tput setaf 10)-->$(tput sgr0) Built succesfully"
 
 # Start installing LogDoctor
-echo -e "\nStarting installation process"
+echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Installing$(tput sgr0)"
 cd ../installation_stuff/
 
-if [ -e ~/.config/LogDoctor ]
+if [ ! -d ~/.config/LogDoctor ]
 then
-	if [ -e ~/.config/LogDoctor/logdoctor.conf ]
-	then
-		# A configuration file already exists
-		while true;
-		do
-			echo -e "\nWarning: a configuration file already exists"
-			printf "If you choose 'YES' the current file will be overwritten\nIf you choose 'NO' the current file will be kept\nOverwrite? [y/n] : "
-			read agree
-			case "$agree"
-			in
-				"y" | "Y" | [yY][eE][sS])
-					printf "\n"
-					cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
-					if [[ "$?" != "0" ]]
-					then
-						# an error occured during compilation
-						echo -e "\nError: failed to copy configuration file"
-						exit
-					fi
-					break
-				;;
-				"n" | "N" | [nN][oO])
-					break
-				;;
-				*)
-					echo "Invalid answer"
-				;;
-			esac
-		done
-	fi
-else
 	mkdir -p ~/.config/LogDoctor
 	if [[ "$?" != "0" ]]
 	then
-		echo -e "\nError: failed to create directory: ~/.config/LogDoctor"
-		exit
-	fi
-	cp --no-preserve=all ./logdoctor.conf ~/.config/LogDoctor/
-	if [[ "$?" != "0" ]]
-	then
-		echo -e "\nError: failed to copy configuration file"
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to create directory: ~/.config/LogDoctor"
 		exit
 	fi
 fi
-
-
-if [ ! -e ~/.local/share/LogDoctor ]
-then
-	mkdir -p ~/.local/share/LogDoctor
-	if [[ "$?" != "0" ]]
-	then
-		echo -e "\nError: failed to create directory: ~/.local/share/LogDoctor"
-		exit
-	fi
-fi
-for res in $(ls ./logdocdata)
-do
-	rm -r ~/.local/share/LogDoctor/$res
-	if [[ "$?" != "0" ]]
-	then
-		echo -e "\nError: failed to remove old resources: ~/.local/share/LogDoctor/$res"
-		exit
-	fi
-done
-cp -r --no-preserve=all ./logdocdata/* ~/.local/share/LogDoctor/
+chmod 644 ./logdoctor.conf
+install -DC ./logdoctor.conf -t ~/.config/LogDoctor
 if [[ "$?" != "0" ]]
 then
-	echo -e "\nError: failed to copy LogDoctor's data"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy configuration file"
 	exit
 fi
 
 
-cp --no-preserve=all ./LogDoctor.desktop ~/.local/share/applications/
+if [ ! -d /usr/share/LogDoctor ]
+then
+	sudo mkdir -p /usr/share/LogDoctor
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to create directory: /usr/share/LogDoctor"
+		exit
+	fi
+fi
+chmod 644 ./logdocdata/help/*/*
+chmod 444 ./logdocdata/licenses/*
+sudo rsync -r --delete ./logdocdata /usr/share/LogDoctor
 if [[ "$?" != "0" ]]
 then
-	echo -e "\nError: failed to create a menu entry"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
 	exit
 fi
 
 
-sudo cp --no-preserve=all ./logdoctor.svg /usr/share/icons
+chmod 644 ./logdoctor.svg
+sudo install -DC ./logdoctor.svg -t /usr/share/LogDoctor
 if [[ "$?" != "0" ]]
 then
-	echo -e "\nError: failed to copy LogDoctor's icon"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's icon"
+	exit
+fi
+
+
+chmod 644 ./LogDoctor.desktop
+sudo install -DC ./LogDoctor.desktop -t /usr/share/applications
+if [[ "$?" != "0" ]]
+then
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to create a menu entry"
 	exit
 fi
 
 
 cd ../build
 chmod 755 ./logdoctor
-sudo mv ./logdoctor /usr/bin/
+sudo install -DC ./logdoctor -t /usr/bin
 if [[ "$?" != "0" ]]
 then
-	echo -e "\nError: failed to copy the executable"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy the executable"
 	exit
 fi
 
 
 # Installation finished
-echo -e "\nInstallation finished"
-cd "$actual_path"
+echo "$(tput setaf 10)-->$(tput sgr0) $(tput bold)Installed succesfully$(tput sgr0)"
+cd "$current_path"
