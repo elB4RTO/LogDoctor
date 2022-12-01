@@ -45,9 +45,6 @@ public:
     //! Checks whether is there a part of the snake in the given position
     const bool inTile( const unsigned int& x, const unsigned int& y, const bool& avoid_tail=true );
 
-    // [AI] As inTile(), without counting as much trailing BodyParts as the number of steps
-    const bool inTileMinusSteps( const unsigned int& x, const unsigned int& y, const unsigned int& steps );
-
     //! Sets the new direction (of the head)
     void setDirection( const Direction new_direction );
 
@@ -61,7 +58,7 @@ public:
     void willGrow();
 
     // [AI] Chooses a new direction for the snake
-    void move( Snake& snake, const unsigned int& food_x, const unsigned int& food_y );
+    void move( Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y );
 
 
 private:
@@ -89,11 +86,34 @@ private:
 
     const unsigned int aggressiveness = 10 - (rand()%9);
 
+    enum Entity {
+        N, // none
+        S, // self
+        A, // adversary
+        F, // food
+    };
+
+    struct Tile {
+        Entity entity;
+        unsigned int s_index;
+    };
+
+    std::vector<std::vector<Tile>> field_map;
+
+    // [AI] Updates the map of the field
+    void updateFieldMap( Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y );
+
+    // [AI] As inTile(), but works on the field_map and only checks the adersary
+    const bool inTileAdv( const unsigned int& x, const unsigned int& y );
+
+    // [AI] Checks whether is there a snake in the tile, without counting as much trailing BodyParts as the number of steps
+    const bool inTileMinusSteps( const unsigned int& x, const unsigned int& y, const unsigned int& steps );
+
     // [AI] Checks which of the surrounding positions are blocked
-    const std::vector<unsigned int> checkAround( const Direction& direction, Snake& adv_snake, const unsigned int& x, const unsigned int& y );
+    const std::vector<unsigned int> checkAround( const Direction& direction, const unsigned int& x, const unsigned int& y );
 
     // [AI] Checks if a direction is a closed path and should be avoided
-    const unsigned int isDeadHole( const unsigned int& start_x, const unsigned int& start_y, Direction start_direction, Snake& adv_snake, const bool& inverse=false );
+    const unsigned int isDeadHole( const unsigned int& start_x, const unsigned int& start_y, Direction start_direction );
 
     // [AI] Collects data about the possible movements
     void collectData( std::vector<float>& data, Direction& direction, Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y );
