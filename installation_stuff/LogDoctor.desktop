@@ -2,9 +2,9 @@
 Type=Application
 Name=LogDoctor
 GenericName=LogDoctor
-Comment=Parse Apache2/Nginx/IIS access log files and make statistics
-Icon=logdoctor.svg
+Comment=Apache2/Nginx/IIS access logs analyzer to view dynamically generated statistics
+Icon=/usr/share/LogDoctor/logdoctor.svg
 Exec=logdoctor
 Actions=
 Categories=Utility;
-Keywords=logdoctor;apache2;nginx;iis;webserverlogs;statistics;
+Keywords=logdoctor;apache2;nginx;iis;webservers;logs;analyzer;statistics;
