@@ -139,6 +139,8 @@ bool CheckSec::newCollectionDatabase( QSqlDatabase& db, const QString& db_name, 
 bool CheckSec::checkCollectionDatabase( const std::string& db_path )
 {
     bool make_new=false, ok=true;
+    std::error_code err;
+    QString err_msg = "";
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
     const std::vector<QString> ws_names = { "apache", "nginx", "iis" };
 
@@ -291,10 +293,13 @@ bool CheckSec::checkCollectionDatabase( const std::string& db_path )
         // rename the current db file as a 'copy'
         if ( IOutils::exists( db_path ) ) {
             // a database already exists, try rename it
-            if ( ! IOutils::renameAsCopy( db_path ) ) {
+            if ( ! IOutils::renameAsCopy( db_path, err ) ) {
                 // failed to rename
                 ok = false;
-                DialogSec::errRenaming( QString::fromStdString(db_path) );
+                if ( err.value() ) {
+                    err_msg = QString::fromStdString( err.message() );
+                }
+                DialogSec::errRenaming( QString::fromStdString(db_path), err_msg );
             }/* else {
                 // renamed successfully, make new one
             }*/
@@ -354,6 +359,8 @@ bool CheckSec::newHashesDatabase( QSqlDatabase& db, const QString& db_name, cons
 bool CheckSec::checkHashesDatabase( const std::string& db_path )
 {
     bool make_new=false, ok=true;
+    std::error_code err;
+    QString err_msg = "";
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
     const std::vector<QString> ws_names = { "apache", "nginx", "iis" };
 
@@ -474,10 +481,13 @@ bool CheckSec::checkHashesDatabase( const std::string& db_path )
         // rename the current db file as a 'copy'
         if ( IOutils::exists( db_path ) ) {
             // a database already exists, try rename it
-            if ( ! IOutils::renameAsCopy( db_path ) ) {
+            if ( ! IOutils::renameAsCopy( db_path, err ) ) {
                 // failed to rename
                 ok = false;
-                DialogSec::errRenaming( QString::fromStdString(db_path) );
+                if ( err.value() ) {
+                    err_msg = QString::fromStdString( err.message() );
+                }
+                DialogSec::errRenaming( QString::fromStdString(db_path), err_msg );
             }/* else {
                 // renamed successfully, make new one
             }*/
