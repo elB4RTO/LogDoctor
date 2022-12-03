@@ -99,7 +99,7 @@ IF ERRORLEVEL 1 (
 mklink "%link_path%" "%exec_path%\LogDoctor.exe"
 
 
-copy /V /Y installation_stuff\logdoctor.svg "%exec_path%\LogDoctor.svg"
+copy /V /Y installation_stuff\LogDoctor.svg "%exec_path%\LogDoctor.svg"
 IF ERRORLEVEL 1 (
 	ECHO:
 	ECHO Error: failed to copy the icon
