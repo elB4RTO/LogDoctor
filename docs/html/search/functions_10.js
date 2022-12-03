@@ -6,7 +6,7 @@ var searchData=
   ['recalculateangles_3',['recalculateAngles',['../classDonutBreakdown.html#acd747ee2bbd23ce84eaf9d4db57938e3',1,'DonutBreakdown']]],
   ['refreshdates_4',['refreshDates',['../classCrapview.html#ac98b1cbc75604b5145b5cff36e96eb78',1,'Crapview::refreshDates()'],['../classDbQuery.html#af0b44989b67b5735e7ca93a17a250eb3',1,'DbQuery::refreshDates()']]],
   ['refreshstatsdates_5',['refreshStatsDates',['../classMainWindow.html#ac8f4c84b43d14b6dcc6cb7b5f75ce343',1,'MainWindow']]],
-  ['renameascopy_6',['renameAsCopy',['../classIOutils.html#ac696ca488dd9d1f043662f89d19f8d33',1,'IOutils']]],
+  ['renameascopy_6',['renameAsCopy',['../classIOutils.html#a8fc152ae29702c3760a4f519ceb0b62a',1,'IOutils']]],
   ['replace_7',['replace',['../classStringOps.html#a9b073c9a47d2af00d33f1f5b05c167ad',1,'StringOps']]],
   ['requesttimeout_8',['requestTimeout',['../classCrapup.html#afe79a787fc0820afbc4573ca7091d880',1,'Crapup']]],
   ['resetperfdata_9',['resetPerfData',['../classLogOps.html#a811fb8fd3c84f4980c9044c16909457f',1,'LogOps']]],
