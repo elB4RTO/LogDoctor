@@ -1160,6 +1160,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
         sizeBreakdown->setTitle("");
     }
     sizeBreakdown->legend()->setFont( fonts.at("main") );
+    sizeBreakdown->legend()->markers( ignoredSize_donut ).first()->setVisible( false );
 
     size_chart->setChart( sizeBreakdown );
     size_chart->setRenderHint( QPainter::Antialiasing );
