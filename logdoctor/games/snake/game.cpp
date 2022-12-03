@@ -364,14 +364,14 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_a
         // collision with the field limits
         this->game_over = true;
         this->game_over_msg = (is_adv)
-            ? SnakeGame::tr("Your adversary fell in the water!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+            ? SnakeGame::tr("Your adversary fell in the water!")+"\n\n"+SnakeGame::tr("YOU WON!")
             : SnakeGame::tr("You fell in the water!")+"\n\n"+SnakeGame::tr("YOU LOST!");
 
     } else if ( snake.inTile( x, y ) ) {
         // collision with another part of the snake
         this->game_over = true;
         this->game_over_msg = (is_adv)
-            ? SnakeGame::tr("Your adversary ate itself!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+            ? SnakeGame::tr("Your adversary ate itself!")+"\n\n"+SnakeGame::tr("YOU WON!")
             : SnakeGame::tr("You ate yourself!")+"\n\n"+SnakeGame::tr("YOU LOST!");
 
     } else if ( adv_snake.inTile( x, y ) ) {
@@ -380,7 +380,7 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_a
             // not the head
             this->game_over = true;
             this->game_over_msg = (is_adv)
-                ? SnakeGame::tr("Your adversary ate you!")+"\n\n"+SnakeGame::tr("YOU WIN!")
+                ? SnakeGame::tr("Your adversary ate you!")+"\n\n"+SnakeGame::tr("YOU WON!")
                 : SnakeGame::tr("You ate your adversary!")+"\n\n"+SnakeGame::tr("YOU LOST!");
         } else {
             this->game_over = true;
