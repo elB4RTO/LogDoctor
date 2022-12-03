@@ -96,10 +96,10 @@ Static Public Member Functions</h2></td></tr>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errGeneric</b> (const QString &amp;message, const bool &amp;report_msg=false, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a8315e79b58bd6bb557b5a934d5f4beba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic error message. <br /></td></tr>
 <tr class="separator:a8315e79b58bd6bb557b5a934d5f4beba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf7dd0aa0840d4b31969d78999fdfe8f"><td class="memItemLeft" align="right" valign="top"><a id="adf7dd0aa0840d4b31969d78999fdfe8f" name="adf7dd0aa0840d4b31969d78999fdfe8f"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errRenaming</b> (const QString &amp;path, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:adf7dd0aa0840d4b31969d78999fdfe8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error while renaming. <br /></td></tr>
-<tr class="separator:adf7dd0aa0840d4b31969d78999fdfe8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93804c66ed89197dceb292926fceb690"><td class="memItemLeft" align="right" valign="top"><a id="a93804c66ed89197dceb292926fceb690" name="a93804c66ed89197dceb292926fceb690"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errRenaming</b> (const QString &amp;path, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a93804c66ed89197dceb292926fceb690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error while renaming. <br /></td></tr>
+<tr class="separator:a93804c66ed89197dceb292926fceb690"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2c944dbd7d2857d6ec7b0eba8b614ae"><td class="memItemLeft" align="right" valign="top"><a id="ab2c944dbd7d2857d6ec7b0eba8b614ae" name="ab2c944dbd7d2857d6ec7b0eba8b614ae"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLangLocaleInvalid</b> (const QString &amp;locale, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:ab2c944dbd7d2857d6ec7b0eba8b614ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalid locale found. <br /></td></tr>
@@ -108,34 +108,34 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLangLocaleI
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLangNotAccepted</b> (const QString &amp;locale, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a38406ffaaed868ab75be5b7e8f35a1c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Language not supported. <br /></td></tr>
 <tr class="separator:a38406ffaaed868ab75be5b7e8f35a1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae873054703e80791706d7024d431159"><td class="memItemLeft" align="right" valign="top"><a id="aae873054703e80791706d7024d431159" name="aae873054703e80791706d7024d431159"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfFailedWriting</b> (const QString &amp;msg=&quot;&quot;, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:aae873054703e80791706d7024d431159"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to write the configurations on file. <br /></td></tr>
-<tr class="separator:aae873054703e80791706d7024d431159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dcb66d839d8a10574414d45011e1764"><td class="memItemLeft" align="right" valign="top"><a id="a2dcb66d839d8a10574414d45011e1764" name="a2dcb66d839d8a10574414d45011e1764"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfFailedWriting</b> (const QString &amp;msg, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a2dcb66d839d8a10574414d45011e1764"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to write the configurations on file. <br /></td></tr>
+<tr class="separator:a2dcb66d839d8a10574414d45011e1764"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b25c703b036517d3de43596809f1845"><td class="memItemLeft" align="right" valign="top"><a id="a3b25c703b036517d3de43596809f1845" name="a3b25c703b036517d3de43596809f1845"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>warnConfFileNotFound</b> (const QString &amp;file, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a3b25c703b036517d3de43596809f1845"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration file not found. <br /></td></tr>
 <tr class="separator:a3b25c703b036517d3de43596809f1845"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e6cf5017b89f9bb31bcffcc010a1c2"><td class="memItemLeft" align="right" valign="top"><a id="aa0e6cf5017b89f9bb31bcffcc010a1c2" name="aa0e6cf5017b89f9bb31bcffcc010a1c2"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfFileNotReadable</b> (const QString &amp;file, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:aa0e6cf5017b89f9bb31bcffcc010a1c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for the configuration file. <br /></td></tr>
-<tr class="separator:aa0e6cf5017b89f9bb31bcffcc010a1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a162f565c29d45e8235057ed871a791e8"><td class="memItemLeft" align="right" valign="top"><a id="a162f565c29d45e8235057ed871a791e8" name="a162f565c29d45e8235057ed871a791e8"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfFileNotWritable</b> (const QString &amp;file, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a162f565c29d45e8235057ed871a791e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for the configuration file. <br /></td></tr>
-<tr class="separator:a162f565c29d45e8235057ed871a791e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8454673963cd2a5f26474986bbd1b36"><td class="memItemLeft" align="right" valign="top"><a id="aa8454673963cd2a5f26474986bbd1b36" name="aa8454673963cd2a5f26474986bbd1b36"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfDirNotWritable</b> (const QString &amp;dir, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:aa8454673963cd2a5f26474986bbd1b36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for the configuration file's directory. <br /></td></tr>
-<tr class="separator:aa8454673963cd2a5f26474986bbd1b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d0574d7285edc7233c1296100998dea"><td class="memItemLeft" align="right" valign="top"><a id="a1d0574d7285edc7233c1296100998dea" name="a1d0574d7285edc7233c1296100998dea"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedApplyingConfigs</b> (const QString &amp;msg=&quot;&quot;, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a1d0574d7285edc7233c1296100998dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for the configuration file's directory. <br /></td></tr>
-<tr class="separator:a1d0574d7285edc7233c1296100998dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2eba961ce82d9eccdd24867b367d707"><td class="memItemLeft" align="right" valign="top"><a id="ad2eba961ce82d9eccdd24867b367d707" name="ad2eba961ce82d9eccdd24867b367d707"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errHelpFailed</b> (const QString &amp;link, const QString &amp;msg=&quot;&quot;, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:ad2eba961ce82d9eccdd24867b367d707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Help resource is not a file. <br /></td></tr>
-<tr class="separator:ad2eba961ce82d9eccdd24867b367d707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a40f972582a40f5c4533cc7e2b425b"><td class="memItemLeft" align="right" valign="top"><a id="ae2a40f972582a40f5c4533cc7e2b425b" name="ae2a40f972582a40f5c4533cc7e2b425b"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfFileNotReadable</b> (const QString &amp;file, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:ae2a40f972582a40f5c4533cc7e2b425b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for the configuration file. <br /></td></tr>
+<tr class="separator:ae2a40f972582a40f5c4533cc7e2b425b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c220883836ee79764e7a55813cc0cc9"><td class="memItemLeft" align="right" valign="top"><a id="a7c220883836ee79764e7a55813cc0cc9" name="a7c220883836ee79764e7a55813cc0cc9"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfFileNotWritable</b> (const QString &amp;file, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a7c220883836ee79764e7a55813cc0cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for the configuration file. <br /></td></tr>
+<tr class="separator:a7c220883836ee79764e7a55813cc0cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cfc4ee49a455ec10253c133308e5235"><td class="memItemLeft" align="right" valign="top"><a id="a2cfc4ee49a455ec10253c133308e5235" name="a2cfc4ee49a455ec10253c133308e5235"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errConfDirNotWritable</b> (const QString &amp;dir, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a2cfc4ee49a455ec10253c133308e5235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for the configuration file's directory. <br /></td></tr>
+<tr class="separator:a2cfc4ee49a455ec10253c133308e5235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a636ea87efbab1f9bb75431a48380cd39"><td class="memItemLeft" align="right" valign="top"><a id="a636ea87efbab1f9bb75431a48380cd39" name="a636ea87efbab1f9bb75431a48380cd39"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedApplyingConfigs</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a636ea87efbab1f9bb75431a48380cd39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for the configuration file's directory. <br /></td></tr>
+<tr class="separator:a636ea87efbab1f9bb75431a48380cd39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc275ca943e81edb5459da0afbe8c8c3"><td class="memItemLeft" align="right" valign="top"><a id="abc275ca943e81edb5459da0afbe8c8c3" name="abc275ca943e81edb5459da0afbe8c8c3"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errHelpFailed</b> (const QString &amp;link, const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:abc275ca943e81edb5459da0afbe8c8c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Help resource is not a file. <br /></td></tr>
+<tr class="separator:abc275ca943e81edb5459da0afbe8c8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a910d3500df728c06173056a4eac0c358"><td class="memItemLeft" align="right" valign="top"><a id="a910d3500df728c06173056a4eac0c358" name="a910d3500df728c06173056a4eac0c358"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errHelpNotFound</b> (const QString &amp;link, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a910d3500df728c06173056a4eac0c358"><td class="mdescLeft">&#160;</td><td class="mdescRight">Help file not found. <br /></td></tr>
@@ -192,18 +192,18 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>msgDatabaseCre
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedCreating</b> (const QString &amp;db_name, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a8483bdc26a89628a826e69c454a7a6cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to create a new database. <br /></td></tr>
 <tr class="separator:a8483bdc26a89628a826e69c454a7a6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e0384f6518a41606b163768881812be"><td class="memItemLeft" align="right" valign="top"><a id="a9e0384f6518a41606b163768881812be" name="a9e0384f6518a41606b163768881812be"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedOpening</b> (const QString &amp;db_name, const QString &amp;err_msg, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a9e0384f6518a41606b163768881812be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to open a database. <br /></td></tr>
-<tr class="separator:a9e0384f6518a41606b163768881812be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2240313ecf18f128a66a897d32dabfcf"><td class="memItemLeft" align="right" valign="top"><a id="a2240313ecf18f128a66a897d32dabfcf" name="a2240313ecf18f128a66a897d32dabfcf"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedExecuting</b> (const QString &amp;db_name, const QString &amp;statement=&quot;&quot;, const QString &amp;err_msg=&quot;&quot;, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a2240313ecf18f128a66a897d32dabfcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to execute a statement on a database. <br /></td></tr>
-<tr class="separator:a2240313ecf18f128a66a897d32dabfcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83a33ff0696ff3951b3320873799c57e"><td class="memItemLeft" align="right" valign="top"><a id="a83a33ff0696ff3951b3320873799c57e" name="a83a33ff0696ff3951b3320873799c57e"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedBackup</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a83a33ff0696ff3951b3320873799c57e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to backup a database. <br /></td></tr>
-<tr class="separator:a83a33ff0696ff3951b3320873799c57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adad767386ecd10161f0eabda70d6c5d5"><td class="memItemLeft" align="right" valign="top"><a id="adad767386ecd10161f0eabda70d6c5d5" name="adad767386ecd10161f0eabda70d6c5d5"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedOpening</b> (const QString &amp;db_name, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:adad767386ecd10161f0eabda70d6c5d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to open a database. <br /></td></tr>
+<tr class="separator:adad767386ecd10161f0eabda70d6c5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64cfe33e61b020676857f98618aeb944"><td class="memItemLeft" align="right" valign="top"><a id="a64cfe33e61b020676857f98618aeb944" name="a64cfe33e61b020676857f98618aeb944"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedExecuting</b> (const QString &amp;db_name, const QString &amp;statement, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a64cfe33e61b020676857f98618aeb944"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to execute a statement on a database. <br /></td></tr>
+<tr class="separator:a64cfe33e61b020676857f98618aeb944"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20a23916efa18bb1a8dd1e91250f8557"><td class="memItemLeft" align="right" valign="top"><a id="a20a23916efa18bb1a8dd1e91250f8557" name="a20a23916efa18bb1a8dd1e91250f8557"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFailedBackup</b> (const QString &amp;msg, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a20a23916efa18bb1a8dd1e91250f8557"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to backup a database. <br /></td></tr>
+<tr class="separator:a20a23916efa18bb1a8dd1e91250f8557"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15af4618bb471f4bb984a6bf1f6fcf3"><td class="memItemLeft" align="right" valign="top"><a id="aa15af4618bb471f4bb984a6bf1f6fcf3" name="aa15af4618bb471f4bb984a6bf1f6fcf3"></a>
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>choiceSelectedFileNotFound</b> (const QString &amp;file, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:aa15af4618bb471f4bb984a6bf1f6fcf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A log file which has been selected to be used is no more available. <br /></td></tr>
@@ -268,14 +268,14 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedReadF
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDirNotExists</b> (const QString &amp;dir, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a1624e24d4d7b04b5479970234368db0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A directory does not extst. <br /></td></tr>
 <tr class="separator:a1624e24d4d7b04b5479970234368db0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a547a8e4537586bfc021ed9ccf8bcf416"><td class="memItemLeft" align="right" valign="top"><a id="a547a8e4537586bfc021ed9ccf8bcf416" name="a547a8e4537586bfc021ed9ccf8bcf416"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDirNotReadable</b> (const QString &amp;dir, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a547a8e4537586bfc021ed9ccf8bcf416"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for a directory. <br /></td></tr>
-<tr class="separator:a547a8e4537586bfc021ed9ccf8bcf416"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41027064b6df47eef1a7719344e9a932"><td class="memItemLeft" align="right" valign="top"><a id="a41027064b6df47eef1a7719344e9a932" name="a41027064b6df47eef1a7719344e9a932"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDirNotWritable</b> (const QString &amp;dir, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a41027064b6df47eef1a7719344e9a932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for a directory. <br /></td></tr>
-<tr class="separator:a41027064b6df47eef1a7719344e9a932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89580421a70af819c57f480de24d8e77"><td class="memItemLeft" align="right" valign="top"><a id="a89580421a70af819c57f480de24d8e77" name="a89580421a70af819c57f480de24d8e77"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDirNotReadable</b> (const QString &amp;dir, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a89580421a70af819c57f480de24d8e77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for a directory. <br /></td></tr>
+<tr class="separator:a89580421a70af819c57f480de24d8e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24cd2a3e54b2969d4f33ba500bd7509b"><td class="memItemLeft" align="right" valign="top"><a id="a24cd2a3e54b2969d4f33ba500bd7509b" name="a24cd2a3e54b2969d4f33ba500bd7509b"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDirNotWritable</b> (const QString &amp;dir, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a24cd2a3e54b2969d4f33ba500bd7509b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for a directory. <br /></td></tr>
+<tr class="separator:a24cd2a3e54b2969d4f33ba500bd7509b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e732827bbb8e58fb863bdd47318b5b"><td class="memItemLeft" align="right" valign="top"><a id="a57e732827bbb8e58fb863bdd47318b5b" name="a57e732827bbb8e58fb863bdd47318b5b"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>warnDirNotReadable</b> (QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a57e732827bbb8e58fb863bdd47318b5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing read permission for a directory. <br /></td></tr>
@@ -284,10 +284,10 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>warnDirNotRead
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>warnDirNotWritable</b> (QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:ade3c5fd40c2b38b688bfce8a4f2bcd51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Missing write permission for a directory. <br /></td></tr>
 <tr class="separator:ade3c5fd40c2b38b688bfce8a4f2bcd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a713bd2dee69e192c100445526bdfc7df"><td class="memItemLeft" align="right" valign="top"><a id="a713bd2dee69e192c100445526bdfc7df" name="a713bd2dee69e192c100445526bdfc7df"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedMakeDir</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a713bd2dee69e192c100445526bdfc7df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to create a directory. <br /></td></tr>
-<tr class="separator:a713bd2dee69e192c100445526bdfc7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af10077a5f3ebbf3683801999d8005f9a"><td class="memItemLeft" align="right" valign="top"><a id="af10077a5f3ebbf3683801999d8005f9a" name="af10077a5f3ebbf3683801999d8005f9a"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedMakeDir</b> (const QString &amp;msg, const QString &amp;err, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:af10077a5f3ebbf3683801999d8005f9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to create a directory. <br /></td></tr>
+<tr class="separator:af10077a5f3ebbf3683801999d8005f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a489ff3ca5af28ce8baa555ef594f7632"><td class="memItemLeft" align="right" valign="top"><a id="a489ff3ca5af28ce8baa555ef594f7632" name="a489ff3ca5af28ce8baa555ef594f7632"></a>
 static const bool&#160;</td><td class="memItemRight" valign="bottom"><b>choiceDirNotDir</b> (const QString &amp;path, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a489ff3ca5af28ce8baa555ef594f7632"><td class="mdescLeft">&#160;</td><td class="mdescRight">An entry was supposed to be a directory but it's not. <br /></td></tr>

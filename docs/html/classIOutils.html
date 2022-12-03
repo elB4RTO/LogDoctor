@@ -100,12 +100,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab5d61de63617601f974e413d57342d10"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ab5d61de63617601f974e413d57342d10">checkDir</a> (const std::string &amp;path, const bool &amp;readable=false, const bool &amp;writable=false)</td></tr>
 <tr class="memdesc:ab5d61de63617601f974e413d57342d10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it.  <a href="classIOutils.html#ab5d61de63617601f974e413d57342d10">More...</a><br /></td></tr>
 <tr class="separator:ab5d61de63617601f974e413d57342d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4970cbaca60491ad610049eb9f9d1208"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a4970cbaca60491ad610049eb9f9d1208">makeDir</a> (const std::string &amp;path) noexcept(true)</td></tr>
-<tr class="memdesc:a4970cbaca60491ad610049eb9f9d1208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a directory.  <a href="classIOutils.html#a4970cbaca60491ad610049eb9f9d1208">More...</a><br /></td></tr>
-<tr class="separator:a4970cbaca60491ad610049eb9f9d1208"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac696ca488dd9d1f043662f89d19f8d33"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ac696ca488dd9d1f043662f89d19f8d33">renameAsCopy</a> (const std::string &amp;path) noexcept(true)</td></tr>
-<tr class="memdesc:ac696ca488dd9d1f043662f89d19f8d33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renames an entry with a trailing '.copy'.  <a href="classIOutils.html#ac696ca488dd9d1f043662f89d19f8d33">More...</a><br /></td></tr>
-<tr class="separator:ac696ca488dd9d1f043662f89d19f8d33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac38e61e00c839dca681d90b5c0397093"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ac38e61e00c839dca681d90b5c0397093">makeDir</a> (const std::string &amp;path, std::error_code &amp;err) noexcept(true)</td></tr>
+<tr class="memdesc:ac38e61e00c839dca681d90b5c0397093"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a directory.  <a href="classIOutils.html#ac38e61e00c839dca681d90b5c0397093">More...</a><br /></td></tr>
+<tr class="separator:ac38e61e00c839dca681d90b5c0397093"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fc152ae29702c3760a4f519ceb0b62a"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a8fc152ae29702c3760a4f519ceb0b62a">renameAsCopy</a> (const std::string &amp;path, std::error_code &amp;err) noexcept(true)</td></tr>
+<tr class="memdesc:a8fc152ae29702c3760a4f519ceb0b62a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renames an entry with a trailing '.copy'.  <a href="classIOutils.html#a8fc152ae29702c3760a4f519ceb0b62a">More...</a><br /></td></tr>
+<tr class="separator:a8fc152ae29702c3760a4f519ceb0b62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b47051acc0d9abdc4faa421e31c8f8d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a5b47051acc0d9abdc4faa421e31c8f8d">randomLines</a> (const std::string &amp;path, std::vector&lt; std::string &gt; &amp;lines, const int &amp;n_lines=16, const bool &amp;strip_lines=true)</td></tr>
 <tr class="memdesc:a5b47051acc0d9abdc4faa421e31c8f8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Randomly pick lines from a file.  <a href="classIOutils.html#a5b47051acc0d9abdc4faa421e31c8f8d">More...</a><br /></td></tr>
 <tr class="separator:a5b47051acc0d9abdc4faa421e31c8f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -331,8 +331,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4970cbaca60491ad610049eb9f9d1208" name="a4970cbaca60491ad610049eb9f9d1208"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4970cbaca60491ad610049eb9f9d1208">&#9670;&#160;</a></span>makeDir()</h2>
+<a id="ac38e61e00c839dca681d90b5c0397093" name="ac38e61e00c839dca681d90b5c0397093"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac38e61e00c839dca681d90b5c0397093">&#9670;&#160;</a></span>makeDir()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -344,8 +344,18 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">const bool IOutils::makeDir </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::error_code &amp;&#160;</td>
+          <td class="paramname"><em>err</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -470,8 +480,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac696ca488dd9d1f043662f89d19f8d33" name="ac696ca488dd9d1f043662f89d19f8d33"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac696ca488dd9d1f043662f89d19f8d33">&#9670;&#160;</a></span>renameAsCopy()</h2>
+<a id="a8fc152ae29702c3760a4f519ceb0b62a" name="a8fc152ae29702c3760a4f519ceb0b62a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fc152ae29702c3760a4f519ceb0b62a">&#9670;&#160;</a></span>renameAsCopy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -483,8 +493,18 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">const bool IOutils::renameAsCopy </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::error_code &amp;&#160;</td>
+          <td class="paramname"><em>err</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -498,6 +518,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path of the entry to rename </td></tr>
+    <tr><td class="paramname">err</td><td>Will hold the error, if any </td></tr>
   </table>
   </dd>
 </dl>
