@@ -93,8 +93,8 @@ then
 fi
 
 
-chmod 644 ./logdoctor.svg
-sudo install -DC ./logdoctor.svg -t /usr/share/LogDoctor
+chmod 644 ./LogDoctor.svg
+sudo install -DC ./LogDoctor.svg -t /usr/share/LogDoctor
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's icon"
