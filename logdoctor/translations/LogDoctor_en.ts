@@ -670,6 +670,10 @@ please follow the instruction on the repository page</source>
         <translation>If you&apos;d like to have this locale in LogDoctor,
 please follow the instruction on the repository page</translation>
     </message>
+    <message>
+        <source>Failed to create the directory</source>
+        <translation>Failed to create the directory</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -1450,25 +1454,6 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
     </message>
 </context>
 <context>
-    <name>Snake</name>
-    <message>
-        <source>PLAY</source>
-        <translation>PLAY</translation>
-    </message>
-    <message>
-        <source>Classic</source>
-        <translation>Classic</translation>
-    </message>
-    <message>
-        <source>Hunt</source>
-        <translation>Hunt</translation>
-    </message>
-    <message>
-        <source>Battle</source>
-        <translation>Battle</translation>
-    </message>
-</context>
-<context>
     <name>SnakeGame</name>
     <message>
         <source>Game Over</source>
@@ -1503,16 +1488,32 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
         <translation>MATCH IS DRAW!</translation>
     </message>
     <message>
-        <source>YOU WON!</source>
-        <translation>YOU WON!</translation>
-    </message>
-    <message>
         <source>Your adversary ate itself!</source>
         <translation>Your adversary ate itself!</translation>
     </message>
     <message>
         <source>Your adversary ate you!</source>
         <translation>Your adversary ate you!</translation>
+    </message>
+    <message>
+        <source>PLAY</source>
+        <translation>PLAY</translation>
+    </message>
+    <message>
+        <source>Classic</source>
+        <translation>Classic</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation>Hunt</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation>Battle</translation>
+    </message>
+    <message>
+        <source>YOU WON!</source>
+        <translation>YOU WON!</translation>
     </message>
 </context>
 <context>

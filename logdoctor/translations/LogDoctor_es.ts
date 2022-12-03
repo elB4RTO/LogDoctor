@@ -236,65 +236,71 @@ versión online mal formada</translation>
 <context>
     <name>DialogSec</name>
     <message>
-        <location filename="../mainwindow.cpp" line="616"/>
+        <location filename="../mainwindow.cpp" line="620"/>
         <source>An error occured while reading the configuration file</source>
         <translation type="unfinished">Error durante la lectura del archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="622"/>
+        <location filename="../mainwindow.cpp" line="626"/>
         <source>One of the lists has an invalid item</source>
         <translation type="unfinished">Una de las listas tiene un elemento no válido</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="627"/>
+        <location filename="../mainwindow.cpp" line="631"/>
         <source>An error occured while parsing configuration file&apos;s data</source>
         <translation type="unfinished">Error durante el análisis del archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="714"/>
-        <location filename="../mainwindow.cpp" line="726"/>
+        <location filename="../mainwindow.cpp" line="722"/>
+        <location filename="../mainwindow.cpp" line="735"/>
         <source>Failed to create the configuration file&apos;s directory</source>
         <translation type="unfinished">Error al crear la carpeta del archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="822"/>
+        <location filename="../mainwindow.cpp" line="832"/>
         <source>An error occured while writing the configuration file</source>
         <translation type="unfinished">Error al escribir el archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="825"/>
+        <location filename="../mainwindow.cpp" line="835"/>
         <source>An error occured while preparing the configuration file&apos;s data</source>
         <translation type="unfinished">Error al preparar los datos de los archivos de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="854"/>
-        <location filename="../mainwindow.cpp" line="867"/>
+        <location filename="../mainwindow.cpp" line="868"/>
+        <location filename="../mainwindow.cpp" line="884"/>
         <source>Failed to create the database backups&apos; directory</source>
         <translation type="unfinished">Error al crear el directorio de copias de seguridad del database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="888"/>
+        <location filename="../mainwindow.cpp" line="911"/>
         <source>Failed to copy the database file</source>
         <translation type="unfinished">Error al copiar el archivo del database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="897"/>
-        <location filename="../mainwindow.cpp" line="911"/>
+        <location filename="../mainwindow.cpp" line="925"/>
+        <location filename="../mainwindow.cpp" line="944"/>
         <source>Failed to update the backups</source>
         <translation type="unfinished">Error al actualizar las copias de seguridad</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1848"/>
+        <location filename="../mainwindow.cpp" line="1625"/>
+        <location filename="../mainwindow.cpp" line="1641"/>
+        <source>Failed to create the directory</source>
+        <translation type="unfinished">Error al crear la carpeta</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="1909"/>
         <source>unrecognized entry</source>
         <translation type="unfinished">entrada no reconocida</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2498"/>
+        <location filename="../mainwindow.cpp" line="2571"/>
         <source>Failed to read gzipped file</source>
         <translation type="unfinished">Lectura del archivo gzip no conseguida</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="533"/>
+        <location filename="../modules/dialogs.cpp" line="534"/>
         <source>Discard it and continue, or Abort all and exit?</source>
         <translation type="unfinished">¿Descartarlo y continuar, o Anular todo y salir?</translation>
     </message>
@@ -311,31 +317,31 @@ Continue?</source>
 ¿Continuar?</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="431"/>
-        <location filename="../modules/dialogs.cpp" line="445"/>
+        <location filename="../modules/dialogs.cpp" line="432"/>
+        <location filename="../modules/dialogs.cpp" line="446"/>
         <source>Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?</source>
         <translation type="unfinished">¿Ignorar la advertencia y usarlo igualmente, Descartarlo y continuar o Anular todo el proceso?</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="457"/>
+        <location filename="../modules/dialogs.cpp" line="458"/>
         <source>Proceed anyway?</source>
         <translation type="unfinished">¿Procede de todas maneras?</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="635"/>
-        <location filename="../modules/dialogs.cpp" line="647"/>
+        <location filename="../modules/dialogs.cpp" line="636"/>
+        <location filename="../modules/dialogs.cpp" line="648"/>
         <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
 Continue?</source>
         <translation type="unfinished">La entrada se renombrará con el final &apos;.copia&apos; y se creará una nueva.
 ¿Continuar?</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="678"/>
+        <location filename="../modules/dialogs.cpp" line="679"/>
         <source>An error occured</source>
         <translation type="unfinished">Ocurrió un error</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="690"/>
+        <location filename="../modules/dialogs.cpp" line="691"/>
         <source>Failed renaming</source>
         <translation type="unfinished">Renombramiento fallido</translation>
     </message>
@@ -357,21 +363,21 @@ Continue?</source>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="271"/>
-        <location filename="../modules/dialogs.cpp" line="643"/>
+        <location filename="../modules/dialogs.cpp" line="644"/>
         <source>Not a file</source>
         <translation type="unfinished">No es un archivo</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="186"/>
-        <location filename="../modules/dialogs.cpp" line="503"/>
-        <location filename="../modules/dialogs.cpp" line="529"/>
+        <location filename="../modules/dialogs.cpp" line="504"/>
+        <location filename="../modules/dialogs.cpp" line="530"/>
         <source>File not found</source>
         <translation type="unfinished">Archivo no encontrado</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="73"/>
         <location filename="../modules/dialogs.cpp" line="284"/>
-        <location filename="../modules/dialogs.cpp" line="515"/>
+        <location filename="../modules/dialogs.cpp" line="516"/>
         <source>File not readable</source>
         <translation type="unfinished">Archivo no legible</translation>
     </message>
@@ -382,40 +388,40 @@ Continue?</source>
         <translation type="unfinished">Archivo no escribible</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="491"/>
+        <location filename="../modules/dialogs.cpp" line="492"/>
         <source>File is empty</source>
         <translation type="unfinished">El archivo está vacío</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="467"/>
+        <location filename="../modules/dialogs.cpp" line="468"/>
         <source>Failed reading</source>
         <translation type="unfinished">Lectura fallida</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="631"/>
+        <location filename="../modules/dialogs.cpp" line="632"/>
         <source>Not a folder</source>
         <translation type="unfinished">No es una carpeta</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="547"/>
+        <location filename="../modules/dialogs.cpp" line="548"/>
         <source>Directory not found</source>
         <translation type="unfinished">Carpeta no encontrada</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="572"/>
-        <location filename="../modules/dialogs.cpp" line="583"/>
+        <location filename="../modules/dialogs.cpp" line="573"/>
+        <location filename="../modules/dialogs.cpp" line="584"/>
         <source>Directory not readable</source>
         <translation type="unfinished">Carpeta no legible</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="97"/>
-        <location filename="../modules/dialogs.cpp" line="594"/>
-        <location filename="../modules/dialogs.cpp" line="605"/>
+        <location filename="../modules/dialogs.cpp" line="595"/>
+        <location filename="../modules/dialogs.cpp" line="606"/>
         <source>Directory not writable</source>
         <translation type="unfinished">Carpeta no escribible</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="616"/>
+        <location filename="../modules/dialogs.cpp" line="617"/>
         <source>Failed creating directory</source>
         <translation type="unfinished">Creación de la carpeta fallida</translation>
     </message>
@@ -477,12 +483,12 @@ por favor sigue las instrucciones en la página del repositorio</translation>
         <translation type="unfinished">Tipo de datos inesperado</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="344"/>
+        <location filename="../modules/dialogs.cpp" line="345"/>
         <source>Failed to backup database</source>
         <translation type="unfinished">Error al respaldar el database</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="361"/>
+        <location filename="../modules/dialogs.cpp" line="362"/>
         <source>Please check that no error is thrown by your WebServer
 If it gets accepted, please check the presence of a typo here
 If everything is fine, please report this issue</source>
@@ -491,44 +497,44 @@ Si la acepta, verifique la presencia de un error tipográfico aquí
 Si todo está bien, por favor notifica este problema</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="401"/>
+        <location filename="../modules/dialogs.cpp" line="402"/>
         <source>An error occured while parsing logs</source>
         <translation type="unfinished">Error durante el análisis de los registros</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="415"/>
+        <location filename="../modules/dialogs.cpp" line="416"/>
         <source>Failed defining type</source>
         <translation type="unfinished">Error al definir el tipo</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="369"/>
+        <location filename="../modules/dialogs.cpp" line="370"/>
         <source>Log format error</source>
         <translation type="unfinished">Error de formato de registro</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="379"/>
-        <location filename="../modules/dialogs.cpp" line="390"/>
+        <location filename="../modules/dialogs.cpp" line="380"/>
+        <location filename="../modules/dialogs.cpp" line="391"/>
         <source>Misconfigured log format</source>
         <translation type="unfinished">Formato de registro mal configurado</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="360"/>
+        <location filename="../modules/dialogs.cpp" line="361"/>
         <source>Invalid log format string</source>
         <translation type="unfinished">Cadena de formato de registro no válida</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="427"/>
+        <location filename="../modules/dialogs.cpp" line="428"/>
         <source>File already used</source>
         <translation type="unfinished">Archivo ya usado</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="441"/>
-        <location filename="../modules/dialogs.cpp" line="453"/>
+        <location filename="../modules/dialogs.cpp" line="442"/>
+        <location filename="../modules/dialogs.cpp" line="454"/>
         <source>File exceeds warning size</source>
         <translation type="unfinished">El archivo excede el tamaño de advertencia</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="692"/>
+        <location filename="../modules/dialogs.cpp" line="693"/>
         <source>An error occured while renaming</source>
         <translation type="unfinished">Error al renombrar</translation>
     </message>
@@ -591,20 +597,20 @@ Corrígela y vuelve a intentarlo</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="274"/>
-        <location filename="../modules/dialogs.cpp" line="645"/>
+        <location filename="../modules/dialogs.cpp" line="646"/>
         <source>The path was supposed to point to a file, but it doesn&apos;t</source>
         <translation type="unfinished">La ruta debería apuntar a un archivo, pero no lo hace</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="140"/>
-        <location filename="../modules/dialogs.cpp" line="505"/>
+        <location filename="../modules/dialogs.cpp" line="506"/>
         <source>Unable to retrieve the file</source>
         <translation type="unfinished">Falla en el recuperar el archivo</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="76"/>
         <location filename="../modules/dialogs.cpp" line="148"/>
-        <location filename="../modules/dialogs.cpp" line="517"/>
+        <location filename="../modules/dialogs.cpp" line="518"/>
         <source>The file is not readable</source>
         <translation type="unfinished">El archivo no es legible</translation>
     </message>
@@ -614,37 +620,37 @@ Corrígela y vuelve a intentarlo</translation>
         <translation type="unfinished">El archivo no es escribible</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="493"/>
+        <location filename="../modules/dialogs.cpp" line="494"/>
         <source>The file is blank</source>
         <translation type="unfinished">El archivo está vacío</translation>
     </message>
     <message>
         <location filename="../modules/craplog/craplog.cpp" line="943"/>
         <location filename="../modules/craplog/modules/hash.cpp" line="108"/>
-        <location filename="../modules/dialogs.cpp" line="469"/>
+        <location filename="../modules/dialogs.cpp" line="470"/>
         <source>An error accured while reading the file</source>
         <translation type="unfinished">Error en la lectura del archivo</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="633"/>
+        <location filename="../modules/dialogs.cpp" line="634"/>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished">La ruta debería apuntar a una carpeta, pero no lo hace</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="549"/>
+        <location filename="../modules/dialogs.cpp" line="550"/>
         <source>The directory does not exists</source>
         <translation type="unfinished">La carpeta no existe</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="574"/>
-        <location filename="../modules/dialogs.cpp" line="585"/>
+        <location filename="../modules/dialogs.cpp" line="575"/>
+        <location filename="../modules/dialogs.cpp" line="586"/>
         <source>The directory is not readable</source>
         <translation type="unfinished">La carpeta no es legible</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="100"/>
-        <location filename="../modules/dialogs.cpp" line="596"/>
-        <location filename="../modules/dialogs.cpp" line="607"/>
+        <location filename="../modules/dialogs.cpp" line="597"/>
+        <location filename="../modules/dialogs.cpp" line="608"/>
         <source>The directory is not writable</source>
         <translation type="unfinished">La carpeta no es escribible</translation>
     </message>
@@ -715,42 +721,42 @@ Corrígela y vuelve a intentarlo</translation>
         <translation type="unfinished">Una columna tiene un tipo de datos inesperado</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="531"/>
+        <location filename="../modules/dialogs.cpp" line="532"/>
         <source>Failed to retrieve the selected file</source>
         <translation type="unfinished">Error al recuperar el archivo seleccionado</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="429"/>
+        <location filename="../modules/dialogs.cpp" line="430"/>
         <source>The file has probably been used already</source>
         <translation type="unfinished">El archivo probablemente ya se ha utilizado</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="443"/>
-        <location filename="../modules/dialogs.cpp" line="455"/>
+        <location filename="../modules/dialogs.cpp" line="444"/>
+        <location filename="../modules/dialogs.cpp" line="456"/>
         <source>The file&apos;s size exceeds the warning size</source>
         <translation type="unfinished">El tamaño del archivo excede el de la advertencia</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="417"/>
+        <location filename="../modules/dialogs.cpp" line="418"/>
         <source>Failed to determine the log type</source>
         <translation type="unfinished">Falla al determinar el tipo de registro</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="371"/>
+        <location filename="../modules/dialogs.cpp" line="372"/>
         <source>The log format has not been set, or is invalid
 Please add a valid one in the configurations</source>
         <translation type="unfinished">El formato de registro no se ha establecido, o es invalido
 Por favor añade uno valido en la configuración</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="381"/>
+        <location filename="../modules/dialogs.cpp" line="382"/>
         <source>No log field has been set in the current logs format,
 making it useless to parse logs</source>
         <translation type="unfinished">No se ha establecido ningún campo de registro en el formato actual,
 por lo tanto es inútil analizar algunos archivos</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="392"/>
+        <location filename="../modules/dialogs.cpp" line="393"/>
         <source>A separator is missing between one or more fields,
 making it hard to establish net bounds,
 and possibly leading to store incorrect data</source>
@@ -759,9 +765,9 @@ esto dificulta establecer límites netos,
 y puede llevar a almacenar datos incorrectos</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="347"/>
-        <location filename="../modules/dialogs.cpp" line="507"/>
-        <location filename="../modules/dialogs.cpp" line="675"/>
+        <location filename="../modules/dialogs.cpp" line="348"/>
+        <location filename="../modules/dialogs.cpp" line="508"/>
+        <location filename="../modules/dialogs.cpp" line="676"/>
         <source>Please report this issue</source>
         <translation type="unfinished">Por favor notifica este problema</translation>
     </message>
@@ -771,17 +777,17 @@ y puede llevar a almacenar datos incorrectos</translation>
         <translation type="unfinished">Elimina el conflicto y vuelve a intentarlo</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="586"/>
-        <location filename="../modules/dialogs.cpp" line="608"/>
+        <location filename="../modules/dialogs.cpp" line="587"/>
+        <location filename="../modules/dialogs.cpp" line="609"/>
         <source>Please set the proper permissions before to start</source>
         <translation type="unfinished">Establezca los permisos adecuados antes de comenzar</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="288"/>
         <location filename="../modules/dialogs.cpp" line="300"/>
-        <location filename="../modules/dialogs.cpp" line="576"/>
-        <location filename="../modules/dialogs.cpp" line="598"/>
-        <location filename="../modules/dialogs.cpp" line="619"/>
+        <location filename="../modules/dialogs.cpp" line="577"/>
+        <location filename="../modules/dialogs.cpp" line="599"/>
+        <location filename="../modules/dialogs.cpp" line="620"/>
         <source>Please set the proper permissions and retry
 If this error persists, please report this issue</source>
         <translation type="unfinished">Establezca los permisos adecuados y vuelva a intentarlo
@@ -795,20 +801,20 @@ please report this issue</source>
 por favor notifica este problema</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="382"/>
+        <location filename="../modules/dialogs.cpp" line="383"/>
         <source>Please set up a format which contains at least one field</source>
         <translation type="unfinished">Configure un formato que contenga al menos un campo</translation>
     </message>
     <message>
-        <location filename="../modules/dialogs.cpp" line="393"/>
+        <location filename="../modules/dialogs.cpp" line="394"/>
         <source>Please set up a format which contains separators between fields</source>
         <translation type="unfinished">Configura un formato que contenga un separador entre cada campo</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="53"/>
-        <location filename="../modules/dialogs.cpp" line="470"/>
-        <location filename="../modules/dialogs.cpp" line="495"/>
-        <location filename="../modules/dialogs.cpp" line="519"/>
+        <location filename="../modules/dialogs.cpp" line="471"/>
+        <location filename="../modules/dialogs.cpp" line="496"/>
+        <location filename="../modules/dialogs.cpp" line="520"/>
         <source>Skipping</source>
         <translation type="unfinished">Saltado</translation>
     </message>
@@ -818,8 +824,8 @@ por favor notifica este problema</translation>
         <location filename="../modules/dialogs.cpp" line="178"/>
         <location filename="../modules/dialogs.cpp" line="312"/>
         <location filename="../modules/dialogs.cpp" line="324"/>
-        <location filename="../modules/dialogs.cpp" line="336"/>
-        <location filename="../modules/dialogs.cpp" line="694"/>
+        <location filename="../modules/dialogs.cpp" line="337"/>
+        <location filename="../modules/dialogs.cpp" line="695"/>
         <source>Aborting</source>
         <translation type="unfinished">Anulado</translation>
     </message>
@@ -836,13 +842,13 @@ por favor notifica este problema</translation>
         <translation type="unfinished">Error al analizar la cadena de formato</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2449"/>
+        <location filename="../mainwindow.cpp" line="2522"/>
         <location filename="../modules/craplog/craplog.cpp" line="849"/>
         <source>Size of the file</source>
         <translation type="unfinished">Tamaño del archivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2459"/>
+        <location filename="../mainwindow.cpp" line="2532"/>
         <location filename="../modules/craplog/craplog.cpp" line="859"/>
         <source>Warning size parameter</source>
         <translation type="unfinished">Parámetro de advertencia del tamaño</translation>
@@ -1968,35 +1974,35 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
         <translation type="unfinished">Abra una ventana similar a una nota de bloque para escribir texto temporal</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="458"/>
-        <location filename="../mainwindow.cpp" line="466"/>
-        <location filename="../mainwindow.cpp" line="474"/>
-        <location filename="../mainwindow.cpp" line="482"/>
-        <location filename="../mainwindow.cpp" line="506"/>
-        <location filename="../mainwindow.cpp" line="514"/>
-        <location filename="../mainwindow.cpp" line="522"/>
-        <location filename="../mainwindow.cpp" line="530"/>
-        <location filename="../mainwindow.cpp" line="567"/>
-        <location filename="../mainwindow.cpp" line="575"/>
-        <location filename="../mainwindow.cpp" line="583"/>
-        <location filename="../mainwindow.cpp" line="591"/>
+        <location filename="../mainwindow.cpp" line="462"/>
+        <location filename="../mainwindow.cpp" line="470"/>
+        <location filename="../mainwindow.cpp" line="478"/>
+        <location filename="../mainwindow.cpp" line="486"/>
+        <location filename="../mainwindow.cpp" line="510"/>
+        <location filename="../mainwindow.cpp" line="518"/>
+        <location filename="../mainwindow.cpp" line="526"/>
+        <location filename="../mainwindow.cpp" line="534"/>
+        <location filename="../mainwindow.cpp" line="571"/>
+        <location filename="../mainwindow.cpp" line="579"/>
+        <location filename="../mainwindow.cpp" line="587"/>
+        <location filename="../mainwindow.cpp" line="595"/>
         <source>warnlist</source>
         <translation type="unfinished">warnlists</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="490"/>
-        <location filename="../mainwindow.cpp" line="538"/>
-        <location filename="../mainwindow.cpp" line="599"/>
+        <location filename="../mainwindow.cpp" line="494"/>
+        <location filename="../mainwindow.cpp" line="542"/>
+        <location filename="../mainwindow.cpp" line="603"/>
         <source>blacklist</source>
         <translation type="unfinished">blacklist</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4025"/>
+        <location filename="../mainwindow.cpp" line="4102"/>
         <source>copy</source>
         <translation type="unfinished">copia</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4027"/>
+        <location filename="../mainwindow.cpp" line="4104"/>
         <source>copies</source>
         <translation type="unfinished">copias</translation>
     </message>
@@ -2020,7 +2026,66 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
     </message>
 </context>
 <context>
-    <name>Snake</name>
+    <name>SnakeGame</name>
+    <message>
+        <location filename="../games/snake/game.cpp" line="233"/>
+        <source>Game Over</source>
+        <translation type="unfinished">Game Over</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="367"/>
+        <source>Your adversary fell in the water!</source>
+        <translation type="unfinished">¡Tu adversario cayó en el agua!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="367"/>
+        <location filename="../games/snake/game.cpp" line="374"/>
+        <location filename="../games/snake/game.cpp" line="383"/>
+        <source>YOU WON!</source>
+        <translation type="unfinished">¡GANASTE!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="368"/>
+        <source>You fell in the water!</source>
+        <translation type="unfinished">¡Te caíste en la agua!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="368"/>
+        <location filename="../games/snake/game.cpp" line="375"/>
+        <location filename="../games/snake/game.cpp" line="384"/>
+        <source>YOU LOST!</source>
+        <translation type="unfinished">¡PERDISTE!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="374"/>
+        <source>Your adversary ate itself!</source>
+        <translation type="unfinished">¡Tu adversario se comió a sí mismo!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="383"/>
+        <source>Your adversary ate you!</source>
+        <translation type="unfinished">¡Tu adversario te comió!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="375"/>
+        <source>You ate yourself!</source>
+        <translation type="unfinished">¡Te comiste a ti mismo!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="384"/>
+        <source>You ate your adversary!</source>
+        <translation type="unfinished">¡Comiste a tu adversario!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="387"/>
+        <source>You ate each other!</source>
+        <translation type="unfinished">¡Se comieron el uno al otro!</translation>
+    </message>
+    <message>
+        <location filename="../games/snake/game.cpp" line="387"/>
+        <source>MATCH IS DRAW!</source>
+        <translation type="unfinished">¡CORBATA!</translation>
+    </message>
     <message>
         <location filename="../games/snake/snake.ui" line="162"/>
         <source>PLAY</source>
@@ -2040,68 +2105,6 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
         <location filename="../games/snake/snake.ui" line="224"/>
         <source>Battle</source>
         <translation type="unfinished">Batalla</translation>
-    </message>
-</context>
-<context>
-    <name>SnakeGame</name>
-    <message>
-        <location filename="../games/snake/game.cpp" line="233"/>
-        <source>Game Over</source>
-        <translation type="unfinished">Game Over</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="375"/>
-        <source>Your adversary fell in the water!</source>
-        <translation type="unfinished">¡Tu adversario cayó en el agua!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="375"/>
-        <location filename="../games/snake/game.cpp" line="384"/>
-        <location filename="../games/snake/game.cpp" line="396"/>
-        <source>YOU WON!</source>
-        <translation type="unfinished">¡GANASTE!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="376"/>
-        <source>You fell in the water!</source>
-        <translation type="unfinished">¡Te caíste en la agua!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="376"/>
-        <location filename="../games/snake/game.cpp" line="385"/>
-        <location filename="../games/snake/game.cpp" line="397"/>
-        <source>YOU LOST!</source>
-        <translation type="unfinished">¡PERDISTE!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="384"/>
-        <source>Your adversary ate itself!</source>
-        <translation type="unfinished">¡Tu adversario se comió a sí mismo!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="396"/>
-        <source>Your adversary ate you!</source>
-        <translation type="unfinished">¡Tu adversario te comió!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="385"/>
-        <source>You ate yourself!</source>
-        <translation type="unfinished">¡Te comiste a ti mismo!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="397"/>
-        <source>You ate your adversary!</source>
-        <translation type="unfinished">¡Comiste a tu adversario!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="400"/>
-        <source>You ate each other!</source>
-        <translation type="unfinished">¡Se comieron el uno al otro!</translation>
-    </message>
-    <message>
-        <location filename="../games/snake/game.cpp" line="400"/>
-        <source>MATCH IS DRAW!</source>
-        <translation type="unfinished">¡CORBATA!</translation>
     </message>
 </context>
 <context>
@@ -2142,35 +2145,35 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
         <translation type="unfinished">VERDADERO</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="431"/>
+        <location filename="../modules/crapview/crapview.cpp" line="432"/>
         <source>Log Lines Marked as Warning</source>
         <translation type="unfinished">Líneas Marcadas como Advertencia</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="589"/>
+        <location filename="../modules/crapview/crapview.cpp" line="591"/>
         <source>Time Taken to Serve Requests</source>
         <translation type="unfinished">Tiempo Necesario para Atender las Solicitudes</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="659"/>
+        <location filename="../modules/crapview/crapview.cpp" line="664"/>
         <source>Others</source>
         <translation type="unfinished">Otros</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="763"/>
-        <location filename="../modules/crapview/crapview.cpp" line="879"/>
+        <location filename="../modules/crapview/crapview.cpp" line="769"/>
+        <location filename="../modules/crapview/crapview.cpp" line="888"/>
         <source>Time of Day Count</source>
         <translation type="unfinished">Recuento de la Hora del Día</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="704"/>
-        <location filename="../modules/crapview/crapview.cpp" line="850"/>
+        <location filename="../modules/crapview/crapview.cpp" line="710"/>
+        <location filename="../modules/crapview/crapview.cpp" line="859"/>
         <source>from</source>
         <translation type="unfinished">de</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="706"/>
-        <location filename="../modules/crapview/crapview.cpp" line="852"/>
+        <location filename="../modules/crapview/crapview.cpp" line="712"/>
+        <location filename="../modules/crapview/crapview.cpp" line="861"/>
         <source>to</source>
         <translation type="unfinished">a</translation>
     </message>
