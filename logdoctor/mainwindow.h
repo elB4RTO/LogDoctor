@@ -534,7 +534,7 @@ private:
         // Unix-like systems: Linux, BSD and SysV
         const unsigned int OS = 1;
         const std::string configs_path = this->home_path + "/.config/LogDoctor/logdoctor.conf";
-        const std::string logdoc_path  = this->home_path + "/.local/share/LogDoctor";
+        const std::string logdoc_path  = "/usr/share/LogDoctor";
     #else
         #error "System not supported"
     #endif

@@ -303,38 +303,42 @@ void MainWindow::defineOSspec()
 
 void MainWindow::readConfigs()
 {
-    std::error_code err;
     bool proceed = true;
+    std::error_code err;
+    QString err_msg = "";
     // check the file
     if ( IOutils::exists( this->configs_path ) ) {
         if ( IOutils::checkFile( this->configs_path ) ) {
             if ( ! IOutils::checkFile( this->configs_path, true ) ) {
-                // file not readable
-                try {
-                    std::filesystem::permissions( this->configs_path,
-                                                  std::filesystem::perms::owner_read,
-                                                  std::filesystem::perm_options::add,
-                                                  err );
-                } catch (...) {
+                // file not readable, try to assign permissions
+                std::filesystem::permissions( this->configs_path,
+                                              std::filesystem::perms::owner_read,
+                                              std::filesystem::perm_options::add,
+                                              err );
+                if ( err.value() ) {
                     proceed = false;
                     QString file = "";
                     if ( this->dialogs_level > 0 ) {
                         file = QString::fromStdString( this->configs_path );
+                        err_msg = QString::fromStdString( err.message() );
                     }
-                    DialogSec::errConfFileNotReadable( file );
+                    DialogSec::errConfFileNotReadable( file, err_msg );
                 }
             }
         } else {
             // the given path doesn't point to a file
             proceed = DialogSec::choiceFileNotFile( QString::fromStdString( this->configs_path ) );
             if ( proceed ) {
-                proceed = IOutils::renameAsCopy( this->configs_path );
+                proceed = IOutils::renameAsCopy( this->configs_path, err );
                 if ( ! proceed ) {
                     QString path = "";
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
+                        if ( err.value() ) {
+                            err_msg = QString::fromStdString( err.message() );
+                        }
                     }
-                    DialogSec::errRenaming( QString::fromStdString( this->configs_path ) );
+                    DialogSec::errRenaming( QString::fromStdString( this->configs_path ), err_msg );
                 }
             }
         }
@@ -349,7 +353,7 @@ void MainWindow::readConfigs()
     }
 
     if ( proceed ) {
-        QString err_msg, aux_err_msg;
+        QString err_msg="", aux_err_msg;
         std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
@@ -637,24 +641,24 @@ void MainWindow::writeConfigs()
 {
     std::error_code err;
     bool proceed=true, msg_shown=false;
-    QString msg;
+    QString msg="", err_msg="";
     // check the file first
     if ( IOutils::exists( this->configs_path ) ) {
         if ( IOutils::checkFile( this->configs_path ) ) {
             if ( ! IOutils::checkFile( this->configs_path, false, true ) ) {
-                // file not writable
-                try {
-                    std::filesystem::permissions( this->configs_path,
-                                                  std::filesystem::perms::owner_write,
-                                                  std::filesystem::perm_options::add,
-                                                  err );
-                } catch (...) {
+                // file not writable, try to assign permissions
+                std::filesystem::permissions( this->configs_path,
+                                              std::filesystem::perms::owner_write,
+                                              std::filesystem::perm_options::add,
+                                              err );
+                if ( err.value() ) {
                     proceed = false;
                     QString file = "";
                     if ( this->dialogs_level > 0 ) {
                         file = QString::fromStdString( this->configs_path );
+                        err_msg = QString::fromStdString( err.message() );
                     }
-                    DialogSec::errConfFileNotWritable( file );
+                    DialogSec::errConfFileNotWritable( file, err_msg );
                     msg_shown = true;
                 }
             }
@@ -662,13 +666,16 @@ void MainWindow::writeConfigs()
             // the given path doesn't point to a file
             proceed = DialogSec::choiceFileNotFile( QString::fromStdString( this->configs_path ) );
             if ( proceed ) {
-                proceed = IOutils::renameAsCopy( this->configs_path );
+                proceed = IOutils::renameAsCopy( this->configs_path, err );
                 if ( ! proceed ) {
                     QString path = "";
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
+                        if ( err.value() ) {
+                            err_msg = QString::fromStdString( err.message() );
+                        }
                     }
-                    DialogSec::errRenaming( path );
+                    DialogSec::errRenaming( path, err_msg );
                     msg_shown = true;
                 }
             }
@@ -679,19 +686,19 @@ void MainWindow::writeConfigs()
         if ( IOutils::exists( base_path ) ) {
             if ( IOutils::isDir( base_path ) ) {
                 if ( ! IOutils::checkDir( base_path, false, true ) ) {
-                    // directory not writable
-                    try {
-                        std::filesystem::permissions( base_path,
-                                                      std::filesystem::perms::owner_write,
-                                                      std::filesystem::perm_options::add,
-                                                      err );
-                    } catch (...) {
+                    // directory not writable, try to assign permissions
+                    std::filesystem::permissions( base_path,
+                                                  std::filesystem::perms::owner_write,
+                                                  std::filesystem::perm_options::add,
+                                                  err );
+                    if ( err.value() ) {
                         proceed = false;
                         QString file = "";
                         if ( this->dialogs_level > 0 ) {
                             file = QString::fromStdString( base_path );
+                            err_msg = QString::fromStdString( err.message() );
                         }
-                        DialogSec::errConfDirNotWritable( file );
+                        DialogSec::errConfDirNotWritable( file, err_msg );
                         msg_shown = true;
                     }
                 }
@@ -699,21 +706,23 @@ void MainWindow::writeConfigs()
                 // not a directory
                 proceed = DialogSec::choiceDirNotDir( QString::fromStdString( base_path ) );
                 if ( proceed ) {
-                    proceed = IOutils::renameAsCopy( base_path );
+                    proceed = IOutils::renameAsCopy( base_path, err );
                     if ( ! proceed ) {
                         QString path = "";
                         if ( this->dialogs_level > 0 ) {
                             path = QString::fromStdString( base_path );
+                            err_msg = QString::fromStdString( err.message() );
                         }
-                        DialogSec::errRenaming( path );
+                        DialogSec::errRenaming( path, err_msg );
                         msg_shown = true;
                     } else {
                         // make the new folder
-                        proceed = IOutils::makeDir( base_path );
+                        proceed = IOutils::makeDir( base_path, err );
                         if ( ! proceed ) {
                             msg = DialogSec::tr("Failed to create the configuration file's directory");
                             if ( this->dialogs_level > 0 ) {
                                 msg += ":\n"+QString::fromStdString( base_path );
+                                err_msg = QString::fromStdString( err.message() );
                             }
                         }
                     }
@@ -721,17 +730,18 @@ void MainWindow::writeConfigs()
             }
         } else {
             // the folder does not exist too
-            proceed = IOutils::makeDir( base_path );
+            proceed = IOutils::makeDir( base_path, err );
             if ( ! proceed ) {
                 msg = DialogSec::tr("Failed to create the configuration file's directory");
                 if ( this->dialogs_level > 0 ) {
                     msg += ":\n"+QString::fromStdString( base_path );
+                    err_msg = QString::fromStdString( err.message() );
                 }
             }
         }
     }
     if ( !proceed && !msg_shown ) {
-        DialogSec::errConfFailedWriting( msg );
+        DialogSec::errConfFailedWriting( msg, err_msg );
     }
 
     if ( proceed ) {
@@ -830,45 +840,55 @@ void MainWindow::writeConfigs()
 
 void MainWindow::backupDatabase()
 {
-    std::error_code err;
     bool proceed = true;
+    std::error_code err;
+    QString err_msg = "";
     if ( IOutils::checkFile( this->db_data_path+"/collection.db" ) ) {
         // db exists and is a file
-        const std::string path = this->logdoc_path+"/backups";
+        const std::string path = this->db_data_path+"/backups";
         if ( std::filesystem::exists( path ) ) {
             if ( !std::filesystem::is_directory( path, err ) ) {
                 // exists but it's not a directory, rename as copy and make a new one
                 proceed = DialogSec::choiceDirNotDir( QString::fromStdString( path ) );
                 if ( proceed ) {
-                    proceed = IOutils::renameAsCopy( path );
+                    proceed = IOutils::renameAsCopy( path, err );
                     if ( ! proceed ) {
                         QString p = "";
                         if ( this->dialogs_level > 0 ) {
                             p = QString::fromStdString( path );
+                            if ( err.value() ) {
+                                err_msg = QString::fromStdString( err.message() );
+                            }
                         }
-                        DialogSec::errRenaming( p );
+                        DialogSec::errRenaming( p, err_msg );
                     } else {
                         // sucesfully renamed, make the new one
-                        proceed = IOutils::makeDir( path );
+                        proceed = IOutils::makeDir( path, err );
                         if ( ! proceed ) {
                             QString msg = DialogSec::tr("Failed to create the database backups' directory");
                             if ( this->dialogs_level > 0 ) {
                                 msg += ":\n"+QString::fromStdString( path );
+                                if ( err.value() ) {
+                                    err_msg = QString::fromStdString( err.message() );
+                                }
                             }
-                            DialogSec::errFailedMakeDir( msg );
+                            DialogSec::errFailedMakeDir( msg, err_msg );
                         }
                     }
                 }
             }
         } else {
             // backups directory doesn't exists, make it
-            proceed = IOutils::makeDir( path );
+            proceed = IOutils::makeDir( path, err );
             if ( ! proceed ) {
                 QString msg = DialogSec::tr("Failed to create the database backups' directory");
                 if ( this->dialogs_level > 0 ) {
                     msg += ":\n"+QString::fromStdString( path );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
                 }
-                DialogSec::errFailedMakeDir( msg );
+                DialogSec::errFailedMakeDir( msg, err_msg );
             }
         }
 
@@ -880,35 +900,48 @@ void MainWindow::backupDatabase()
         // copy the database to a new file
         proceed = std::filesystem::copy_file(
             this->db_data_path+"/collection.db",
-            this->logdoc_path+"/backups/collection.db.0",
+            this->db_data_path+"/backups/collection.db.0",
             std::filesystem::copy_options::update_existing,
             err );
         if ( ! proceed ) {
             // failed to copy
-            DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ) );
+            if ( err.value() ) {
+                err_msg = QString::fromStdString( err.message() );
+            }
+            DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ), err_msg );
         } else {
             // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
             std::string path, new_path;
-            path = this->logdoc_path+"/backups/collection.db."+std::to_string(this->db_backups_number);
+            path = this->db_data_path+"/backups/collection.db."+std::to_string(this->db_backups_number);
             if ( std::filesystem::exists( path ) ) {
                 std::ignore = std::filesystem::remove_all( path, err );
-                proceed = ! std::filesystem::exists( path );
+                if ( err.value() ) {
+                    err_msg = QString::fromStdString( err.message() );
+                    proceed = false;
+                } else {
+                    proceed = ! std::filesystem::exists( path );
+                }
                 if ( ! proceed ) {
-                    DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ) );
+                    DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
                 }
             }
             if ( proceed ) {
                 // cascade rename
                 for ( int n=this->db_backups_number-1; n>=0; n-- ) {
-                    path = this->logdoc_path+"/backups/collection.db."+std::to_string( n );
+                    path = this->db_data_path+"/backups/collection.db."+std::to_string( n );
                     if ( std::filesystem::exists( path ) ) {
-                        new_path = this->logdoc_path+"/backups/collection.db."+std::to_string( n+1 );
+                        new_path = this->db_data_path+"/backups/collection.db."+std::to_string( n+1 );
                         std::filesystem::rename( path, new_path, err );
-                        proceed = ! std::filesystem::exists( path );
+                        if ( err.value() ) {
+                            err_msg = QString::fromStdString( err.message() );
+                            proceed = false;
+                        } else {
+                            proceed = ! std::filesystem::exists( path );
+                        }
                     }
                     if ( ! proceed ) {
                         // seems it failed to rename
-                        DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ) );
+                        DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
                         break;
                     }
                 }
@@ -1530,8 +1563,9 @@ void MainWindow::wait_ActiveWindow()
 }
 void MainWindow::makeInitialChecks()
 {
-    std::error_code err;
     bool ok = true;
+    std::error_code err;
+    QString err_msg = "";
     // check that the sqlite plugin is available
     if ( ! QSqlDatabase::drivers().contains("QSQLITE") ) {
         // checks failed, abort
@@ -1545,26 +1579,28 @@ void MainWindow::makeInitialChecks()
             if ( IOutils::exists( path ) ) {
                 if ( IOutils::isDir( path ) ) {
                     if ( ! IOutils::checkDir( path, true ) ) {
-                        try {
-                            std::filesystem::permissions( path,
-                                                          std::filesystem::perms::owner_read,
-                                                          std::filesystem::perm_options::add,
-                                                          err );
-                        } catch (...) {
+                        // directory not readable, try to assign permissions
+                        std::filesystem::permissions( path,
+                                                      std::filesystem::perms::owner_read,
+                                                      std::filesystem::perm_options::add,
+                                                      err );
+                        if ( err.value() ) {
                             ok = false;
-                            DialogSec::errDirNotReadable( QString::fromStdString( path ) );
+                            err_msg = QString::fromStdString( err.message() );
+                            DialogSec::errDirNotReadable( QString::fromStdString( path ), err_msg );
                         }
                     }
                     if ( ok ) {
                         if ( ! IOutils::checkDir( path, false, true ) ) {
-                            try {
-                                std::filesystem::permissions( path,
-                                                              std::filesystem::perms::owner_write,
-                                                              std::filesystem::perm_options::add,
-                                                              err );
-                            } catch (...) {
+                            // directory not writable, try to assign permissions
+                            std::filesystem::permissions( path,
+                                                          std::filesystem::perms::owner_write,
+                                                          std::filesystem::perm_options::add,
+                                                          err );
+                            if ( err.value() ) {
                                 ok = false;
-                                DialogSec::errDirNotWritable( QString::fromStdString( path ) );
+                                err_msg = QString::fromStdString( err.message() );
+                                DialogSec::errDirNotWritable( QString::fromStdString( path ), err_msg );
                             }
                         }
                     }
@@ -1573,19 +1609,44 @@ void MainWindow::makeInitialChecks()
                     // not a directory, rename as copy a make a new one
                     ok = DialogSec::choiceDirNotDir( QString::fromStdString( path ) );
                     if ( ok ) {
-                        ok = IOutils::renameAsCopy( path );
+                        ok = IOutils::renameAsCopy( path, err );
                         if ( ! ok ) {
                             QString p = "";
                             if ( this->dialogs_level > 0 ) {
                                 p = QString::fromStdString( path );
+                                if ( err.value() ) {
+                                    err_msg = QString::fromStdString( err.message() );
+                                }
                             }
-                            DialogSec::errRenaming( p );
+                            DialogSec::errRenaming( p, err_msg );
+                        } else {
+                            ok = IOutils::makeDir( path, err );
+                            if ( ! ok ) {
+                                QString msg = DialogSec::tr("Failed to create the directory");
+                                if ( this->dialogs_level > 0 ) {
+                                    msg += ":\n"+QString::fromStdString( path );
+                                    if ( err.value() ) {
+                                        err_msg = QString::fromStdString( err.message() );
+                                    }
+                                }
+                                DialogSec::errFailedMakeDir( msg, err_msg );
+                            }
                         }
                     }
                 }
 
             } else {
-                ok = IOutils::makeDir( path );
+                ok = IOutils::makeDir( path, err );
+                if ( ! ok ) {
+                    QString msg = DialogSec::tr("Failed to create the directory");
+                    if ( this->dialogs_level > 0 ) {
+                        msg += ":\n"+QString::fromStdString( path );
+                        if ( err.value() ) {
+                            err_msg = QString::fromStdString( err.message() );
+                        }
+                    }
+                    DialogSec::errFailedMakeDir( msg, err_msg );
+                }
             }
             if ( ! ok ) {
                 break;
@@ -2233,14 +2294,26 @@ void MainWindow::on_button_Logs_Up_clicked()
 // check
 void MainWindow::checkMakeStats_Makable()
 {
-    if ( this->db_working
-      || this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Unchecked ) {
-        // none checked or db is busy
-        this->ui->button_MakeStats_Start->setEnabled( false );
-    } else {
-        // at least one is checked
-        this->ui->button_MakeStats_Start->setEnabled( true );
+    bool state = false;
+    if ( ! this->db_working ) {
+        // db is not busy
+        if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
+            // all checked
+            state = true;
+        } else if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::PartiallyChecked ) {
+            // at least one should be checked
+            QTreeWidgetItemIterator i(this->ui->listLogFiles);
+            while ( *i ) {
+                if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
+                    // an entry is checked
+                    state = true;
+                    break;
+                }
+                ++i;
+            }
+        }
     }
+    this->ui->button_MakeStats_Start->setEnabled( state );
 }
 
 
@@ -3857,7 +3930,7 @@ void MainWindow::refreshChartsPreview()
     bars_1->setColor( col );
     QBarSet *bars_2 = new QBarSet( "" );
     bars_2->setColor( col );
-    QBarSet *bars_3 = new QBarSet( "Infoes" );
+    QBarSet *bars_3 = new QBarSet( "" );
     bars_3->setColor( col );
     QBarSet *bars_4 = new QBarSet( "" );
     bars_4->setColor( col );
@@ -3894,7 +3967,6 @@ void MainWindow::refreshChartsPreview()
     t_chart->addSeries( bars );
     t_chart->setTitle( "Sample preview" );
     t_chart->setTitleFont( this->FONTS.at("main") );
-    t_chart->legend()->setFont( this->FONTS.at("main_small") );
     t_chart->setAnimationOptions( QChart::SeriesAnimations );
 
     QStringList categories;
@@ -3904,6 +3976,8 @@ void MainWindow::refreshChartsPreview()
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     axisX->append( categories );
     axisX->setLabelsFont( this->FONTS.at( "main_small" ) );
+    axisX->setTitleText( "Infoes" );
+    axisX->setTitleFont( this->FONTS.at("main_small") );
     t_chart->addAxis( axisX, Qt::AlignBottom );
     bars->attachAxis( axisX );
 
@@ -3914,8 +3988,9 @@ void MainWindow::refreshChartsPreview()
     t_chart->addAxis( axisY, Qt::AlignLeft );
     bars->attachAxis( axisY) ;
 
-    t_chart->legend()->setVisible( true );
-    t_chart->legend()->setAlignment( Qt::AlignBottom );
+    t_chart->legend()->setVisible( false );
+    /*t_chart->legend()->setFont( this->FONTS.at("main_small") );
+    t_chart->legend()->setAlignment( Qt::AlignBottom );*/
 
     this->ui->chart_ConfCharts_Preview->setChart( t_chart );
     this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
@@ -3964,6 +4039,7 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
         this->crapview.setDbPath( path );
         this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( path ) );
     }
+    this->ui->inLine_ConfDatabases_Data_Path->setFocus();
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
 }
 
@@ -4006,6 +4082,7 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
         this->craplog.setHashesDatabasePath( path );
         this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( path ) );
     }
+    this->ui->inLine_ConfDatabases_Hashes_Path->setFocus();
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
 }
 
