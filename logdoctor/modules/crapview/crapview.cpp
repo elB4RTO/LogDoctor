@@ -316,6 +316,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         std::vector<std::vector<QBarSet*>> sets;
 
         // build the bars and the table upon data
+        QString date;
         QColor warn_col = QColor( 255, 140, 0, 255 );
         int norm_count, warn_count, sum_count, max_count=0, aux;
         if ( hour.size() == 0 ) {
@@ -358,7 +359,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
                     }
                 }
             }
-            sets.at( 2 ).at( 1 )->setLabel( this->printableDate( year, this->getMonthNumber( month ), day ) );
+            date = this->printableDate( year, this->getMonthNumber( month ), day );
         } else {
             // 1 hour
             for ( int i=0; i<10; i++ ) {
@@ -399,7 +400,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
                     }
                 }
             }
-            sets.at( 4 ).at( 1 )->setLabel( this->printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour );
+            date = this->printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour;
         }
         table->verticalHeader()->setVisible( false );
 
@@ -430,10 +431,10 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         }
         b_chart->setTitle( TR::tr( "Log Lines Marked as Warning" ) );
         b_chart->setTitleFont( fonts.at("main") );
-        //b_chart->legend()->setVisible( false );
-        b_chart->legend()->setFont( fonts.at("main_small") );
+        b_chart->legend()->setVisible( false );
+        /*b_chart->legend()->setFont( fonts.at("main_small") );
         b_chart->legend()->setAlignment( Qt::AlignBottom );
-        //b_chart->setAnimationOptions( QChart::SeriesAnimations );
+        b_chart->setAnimationOptions( QChart::SeriesAnimations );*/
 
         // craft the X-axis labels
         QStringList categories;
@@ -448,6 +449,8 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         QBarCategoryAxis *axisX = new QBarCategoryAxis();
         axisX->append( categories );
         axisX->setLabelsFont( fonts.at( "main_small" ) );
+        axisX->setTitleText( date );
+        axisX->setTitleFont( fonts.at("main_small") );
         b_chart->addAxis( axisX, Qt::AlignBottom );
         for ( auto *s : b_series ) {
             s->attachAxis( axisX );
@@ -456,7 +459,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         // set-up the count values axis (Y)
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_count < 16 ) ? max_count : 16 );
+        axisY->setTickCount( ( max_count < 8 ) ? max_count : 8 );
         axisY->setRange( 0, max_count );
         axisY->setLabelsFont( fonts.at( "main_small" ) );
         b_chart->addAxis( axisY, Qt::AlignLeft );
@@ -489,7 +492,6 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
 
         // draw the speed chart
         QLineSeries *line = new QLineSeries();
-        line->setName( this->printableDate( year, this->getMonthNumber(month), day ));
 
         // build the line upon data
         int i=0, max_i=items.size(), max_t=0, aux;
@@ -588,21 +590,24 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         l_chart->addSeries( line_ );
         l_chart->setTitle( TR::tr( "Time Taken to Serve Requests" ) );
         l_chart->setTitleFont( fonts.at("main") );
-        l_chart->legend()->setFont( fonts.at( "main_small" ) );
-        l_chart->legend()->setAlignment( Qt::AlignBottom );
+        /*l_chart->legend()->setFont( fonts.at( "main_small" ) );
+        l_chart->legend()->setAlignment( Qt::AlignBottom );*/
+        l_chart->legend()->setVisible( false );
 
         // set-up the date-time axis (X)
         QDateTimeAxis *axisX = new QDateTimeAxis();
         axisX->setLabelsFont( fonts.at( "main_small" ) );
         axisX->setFormat( "hh:mm" );
         axisX->setTickCount( 25 );
+        axisX->setTitleText( this->printableDate( year, this->getMonthNumber(month), day ) );
+        axisX->setTitleFont( fonts.at( "main_small" ) );
         l_chart->addAxis( axisX, Qt::AlignBottom );
         line->attachAxis( axisX );
 
         // set-up the count values axis (Y)
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_t < 16 ) ? max_t : 16 );
+        axisY->setTickCount( ( max_t < 8 ) ? max_t : 8 );
         if ( max_t == 1 ) {
             max_t = 0;
         }
@@ -691,6 +696,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         std::unordered_map<int, std::unordered_map<int, int>> &items = std::get<1>(result);
 
         // draw the chart
+        QString date;
         QColor col = Qt::GlobalColor::darkGreen;
         QBarSet *b_10 = new QBarSet( "" );
         b_10->setColor( col );
@@ -698,13 +704,13 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         b_20->setColor( col );
         QBarSet *b_30 = new QBarSet( "" );
         if ( to_year.size() == 0 || to_month.size() == 0 || to_day.size() == 0 ) {
-            b_30->setLabel( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ) );
+            date = this->printableDate( from_year, this->getMonthNumber(from_month), from_day );
         } else {
-            b_30->setLabel( QString("%1 %2 %3 %4")
+            date = QString("%1 %2 %3 %4")
                 .arg( TR::tr( "from" ),
                       this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
                       TR::tr( "to" ),
-                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day ) ));
+                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day ) );
         }
         b_30->setColor( col );
         QBarSet *b_40 = new QBarSet( "" );
@@ -762,10 +768,10 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         b_chart->addSeries( bars );
         b_chart->setTitle( QString("%1: %2").arg( TR::tr( "Time of Day Count" ), field ) );
         b_chart->setTitleFont( fonts.at("main") );
-        b_chart->legend()->setFont( fonts.at("main_small") );
-        //b_chart->legend()->setVisible( true );
+        b_chart->legend()->setVisible( false );
+        /*b_chart->legend()->setFont( fonts.at("main_small") );
         b_chart->legend()->setAlignment( Qt::AlignBottom );
-        //b_chart->setAnimationOptions( QChart::SeriesAnimations );
+        b_chart->setAnimationOptions( QChart::SeriesAnimations );*/
 
         // craft the X-axis labels
         QStringList categories;
@@ -776,13 +782,15 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         QBarCategoryAxis *axisX = new QBarCategoryAxis();
         axisX->append( categories );
         axisX->setLabelsFont( fonts.at( "main_small" ) );
+        axisX->setTitleText( date );
+        axisX->setTitleFont( fonts.at("main_small") );
         b_chart->addAxis( axisX, Qt::AlignBottom );
         bars->attachAxis( axisX );
 
         // set-up the count values axis (Y)
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_count < 16 ) ? max_count : 16 );
+        axisY->setTickCount( ( max_count < 8 ) ? max_count : 8 );
         axisY->setRange( 0, max_count );
         axisY->setLabelsFont( fonts.at( "main_small" ) );
         b_chart->addAxis( axisY, Qt::AlignLeft );
@@ -842,15 +850,16 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         }
 
         // build the area
+        QString date;
         QAreaSeries *area  = new QAreaSeries( line );
         if ( ! period ) {
-            area->setName( this->printableDate( from_year, this->getMonthNumber(from_month), from_day ));
+            date = this->printableDate( from_year, this->getMonthNumber(from_month), from_day );
         } else {
-            area->setName(QString("%1 %2 %3 %4")
+            date = QString("%1 %2 %3 %4")
                 .arg( TR::tr( "from" ),
                       this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
                       TR::tr( "to" ),
-                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day )) );
+                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day ));
         }
 
         // color the area
@@ -878,8 +887,9 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         a_chart->addSeries( area_ );
         a_chart->setTitle( QString("%1: %2 -> %3").arg( TR::tr( "Time of Day Count" ), field_1, field_2) );
         a_chart->setTitleFont( fonts.at("main") );
-        a_chart->legend()->setFont( fonts.at( "main_small" ) );
-        a_chart->legend()->setAlignment( Qt::AlignBottom );
+        a_chart->legend()->setVisible( false );
+        /*a_chart->legend()->setFont( fonts.at( "main_small" ) );
+        a_chart->legend()->setAlignment( Qt::AlignBottom );*/
 
         // set-up the date-time axis (X)
         QDateTimeAxis *axisX = new QDateTimeAxis();
@@ -897,13 +907,15 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
             axisX->setFormat( "hh:mm" );
             axisX->setTickCount( 25 );
         }
+        axisX->setTitleText( date );
+        axisX->setTitleFont( fonts.at("main_small") );
         a_chart->addAxis( axisX, Qt::AlignBottom );
         area->attachAxis( axisX );
 
         // set-up the count values axis (Y)
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_count < 16 ) ? max_count : 16 );
+        axisY->setTickCount( ( max_count < 8 ) ? max_count : 8 );
         axisY->setRange( 0, max_count );
         axisY->setLabelsFont( fonts.at( "main_small" ) );
         a_chart->addAxis( axisY, Qt::AlignLeft );
