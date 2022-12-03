@@ -670,6 +670,10 @@ please follow the instruction on the repository page</source>
         <translation>Se desideri avere questa lingua in LogDoctor,
 per favore segui le istruzioni nella pagina del repository</translation>
     </message>
+    <message>
+        <source>Failed to create the directory</source>
+        <translation>Creazione della cartella non riuscita</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -1451,25 +1455,6 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
     </message>
 </context>
 <context>
-    <name>Snake</name>
-    <message>
-        <source>PLAY</source>
-        <translation>GIOCA</translation>
-    </message>
-    <message>
-        <source>Classic</source>
-        <translation>Classico</translation>
-    </message>
-    <message>
-        <source>Hunt</source>
-        <translation>Caccia</translation>
-    </message>
-    <message>
-        <source>Battle</source>
-        <translation>Battaglia</translation>
-    </message>
-</context>
-<context>
     <name>SnakeGame</name>
     <message>
         <source>Game Over</source>
@@ -1504,16 +1489,32 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
         <translation>PAREGGIO!</translation>
     </message>
     <message>
-        <source>YOU WON!</source>
-        <translation>HAI VINTO!</translation>
-    </message>
-    <message>
         <source>Your adversary ate itself!</source>
         <translation>Il tuo avversario si è mangiato da solo!</translation>
     </message>
     <message>
         <source>Your adversary ate you!</source>
         <translation>Il tuo avversario ti ha mangiato!</translation>
+    </message>
+    <message>
+        <source>PLAY</source>
+        <translation>GIOCA</translation>
+    </message>
+    <message>
+        <source>Classic</source>
+        <translation>Classico</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation>Caccia</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation>Battaglia</translation>
+    </message>
+    <message>
+        <source>YOU WON!</source>
+        <translation>HAI VINTO!</translation>
     </message>
 </context>
 <context>
