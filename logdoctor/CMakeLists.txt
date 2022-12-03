@@ -190,15 +190,15 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(LogDoctor)
 endif()
 
+
+# Flatpak
 if(UNIX AND NOT APPLE)
-    file(RENAME
-        ${CMAKE_BINARY_DIR}/LogDoctor
-        ${CMAKE_BINARY_DIR}/logdoctor
-    )
-    install(FILES
-        ${CMAKE_BINARY_DIR}/logdoctor
-            PERMISSIONS OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, WORLD_READ
-            DESTINATION /usr/bin
+    install(TARGETS
+        LogDoctor
+            RUNTIME DESTINATION /usr/bin
+            CONFIGURATIONS Release
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
+            RENAME logdoctor
     )
 
     install(FILES
@@ -206,8 +206,8 @@ if(UNIX AND NOT APPLE)
             DESTINATION /usr/share/applications
     )
 
-    file(MAKE_DIRECTORY
-        /usr/share/LogDoctor
+    install(DIRECTORY
+        DESTINATION /usr/share/LogDoctor
     )
     install(FILES
         ${CMAKE_SOURCE_DIR}/installation_stuff/LogDoctor.svg
