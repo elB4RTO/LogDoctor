@@ -189,3 +189,36 @@ endif()
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(LogDoctor)
 endif()
+
+if(UNIX AND NOT APPLE)
+    file(RENAME
+        ${CMAKE_BINARY_DIR}/LogDoctor
+        ${CMAKE_BINARY_DIR}/logdoctor
+    )
+    install(FILES
+        ${CMAKE_BINARY_DIR}/logdoctor
+            PERMISSIONS OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, WORLD_READ
+            DESTINATION /usr/bin
+    )
+
+    install(FILES
+        ${CMAKE_SOURCE_DIR}/installation_stuff/LogDoctor.desktop
+            DESTINATION /usr/share/applications
+    )
+
+    file(MAKE_DIRECTORY
+        /usr/share/LogDoctor
+    )
+    install(FILES
+        ${CMAKE_SOURCE_DIR}/installation_stuff/LogDoctor.svg
+            DESTINATION /usr/share/LogDoctor
+    )
+    install(DIRECTORY
+        ${CMAKE_SOURCE_DIR}/installation_stuff/logdoctata/help
+            DESTINATION /usr/share/LogDoctor
+    )
+    install(DIRECTORY
+        ${CMAKE_SOURCE_DIR}/installation_stuff/logdoctata/licenses
+            DESTINATION /usr/share/LogDoctor
+    )
+endif()
