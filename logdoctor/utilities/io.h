@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 
 
 //! IOUtils
@@ -58,14 +59,15 @@ public:
         \param path The path of the new entry
         \return Wheter the operation was successful or not
     */
-    static const bool makeDir( const std::string& path ) noexcept(true);
+    static const bool makeDir( const std::string& path, std::error_code& err ) noexcept(true);
 
     //! Renames an entry with a trailing '.copy'
     /*!
         \param path The path of the entry to rename
+        \param err Will hold the error, if any
         \return Wheter the operation was successful or not
     */
-    static const bool renameAsCopy( const std::string& path ) noexcept(true);
+    static const bool renameAsCopy( const std::string& path, std::error_code& err ) noexcept(true);
 
     //! Randomly pick lines from a file
     /*!
