@@ -15,7 +15,7 @@ DialogSec::DialogSec()
 //////////////////
 //// LANGUAGE ////
 //////////////////
-void DialogSec::errLangLocaleInvalid( const QString& locale, QWidget *parent )
+void DialogSec::errLangLocaleInvalid( const QString& locale, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Invalid locale"),
@@ -26,7 +26,7 @@ void DialogSec::errLangLocaleInvalid( const QString& locale, QWidget *parent )
         "", 2, parent );
     std::ignore = dialog.exec();
 }
-void DialogSec::errLangNotAccepted( const QString& locale, QWidget *parent )
+void DialogSec::errLangNotAccepted( const QString& locale, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Invalid locale"),
@@ -43,7 +43,7 @@ void DialogSec::errLangNotAccepted( const QString& locale, QWidget *parent )
 ///////////////////////
 //// CONFIGURATION ////
 ///////////////////////
-void DialogSec::warnConfFileNotFound( const QString& file, QWidget *parent )
+void DialogSec::warnConfFileNotFound( const QString& file, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Configuration file not found"),
@@ -55,7 +55,7 @@ void DialogSec::warnConfFileNotFound( const QString& file, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errConfFailedWriting( const QString& msg, QWidget *parent )
+void DialogSec::errConfFailedWriting( const QString& msg, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed to write the configuration file"),
@@ -63,11 +63,11 @@ void DialogSec::errConfFailedWriting( const QString& msg, QWidget *parent )
             DialogSec::tr("An error occured while handling the configuration file"),
             (msg=="") ? msg : ":\n"+msg,
             DialogSec::tr("Current configuration not saved") ),
-        "", 1, parent );
+        err, 1, parent );
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errConfFileNotReadable( const QString& file, QWidget *parent )
+void DialogSec::errConfFileNotReadable( const QString& file, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File not readable"),
@@ -75,10 +75,10 @@ void DialogSec::errConfFileNotReadable( const QString& file, QWidget *parent )
             DialogSec::tr("An error occured while handling the configuration file"),
             DialogSec::tr("The file is not readable"),
             (file=="") ? file : ":\n"+file ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
-void DialogSec::errConfFileNotWritable( const QString& file, QWidget *parent )
+void DialogSec::errConfFileNotWritable( const QString& file, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File not writable"),
@@ -86,12 +86,12 @@ void DialogSec::errConfFileNotWritable( const QString& file, QWidget *parent )
             DialogSec::tr("An error occured while handling the configuration file"),
             DialogSec::tr("The file is not writable"),
             (file=="") ? file : ":\n"+file ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
 
 
-void DialogSec::errConfDirNotWritable( const QString& dir, QWidget *parent )
+void DialogSec::errConfDirNotWritable( const QString& dir, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Directory not writable"),
@@ -99,12 +99,12 @@ void DialogSec::errConfDirNotWritable( const QString& dir, QWidget *parent )
             DialogSec::tr("An error occured while handling the configuration file"),
             DialogSec::tr("The directory is not writable"),
             (dir=="") ? dir : ":\n"+dir ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
 
 
-void DialogSec::errFailedApplyingConfigs( const QString& msg, QWidget *parent )
+void DialogSec::errFailedApplyingConfigs( const QString& msg, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed applying configuration"),
@@ -120,7 +120,7 @@ void DialogSec::errFailedApplyingConfigs( const QString& msg, QWidget *parent )
 //////////////
 //// HELP ////
 //////////////
-void DialogSec::errHelpFailed( const QString& link, const QString& msg, QWidget *parent )
+void DialogSec::errHelpFailed( const QString& link, const QString& msg, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed to retrieve the help file"),
@@ -133,7 +133,7 @@ void DialogSec::errHelpFailed( const QString& link, const QString& msg, QWidget 
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errHelpNotFound( const QString& link, QWidget *parent )
+void DialogSec::errHelpNotFound( const QString& link, QWidget* parent )
 {
     DialogSec::errHelpFailed(
         link,
@@ -141,7 +141,7 @@ void DialogSec::errHelpNotFound( const QString& link, QWidget *parent )
         parent );
 }
 
-void DialogSec::errHelpNotReadable( const QString& link, QWidget *parent )
+void DialogSec::errHelpNotReadable( const QString& link, QWidget* parent )
 {
     DialogSec::errHelpFailed(
         link,
@@ -154,7 +154,7 @@ void DialogSec::errHelpNotReadable( const QString& link, QWidget *parent )
 //////////////////////////
 //// WARN/BLACK LISTS ////
 //////////////////////////
-void DialogSec::warnInvalidItemBW( QWidget *parent )
+void DialogSec::warnInvalidItemBW( QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Invalid string"),
@@ -168,7 +168,7 @@ void DialogSec::warnInvalidItemBW( QWidget *parent )
 //////////////////
 //// DATABASE ////
 //////////////////
-void DialogSec::errSqlDriverNotFound( const QString& driver, QWidget *parent )
+void DialogSec::errSqlDriverNotFound( const QString& driver, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("QSql driver not found"),
@@ -180,7 +180,7 @@ void DialogSec::errSqlDriverNotFound( const QString& driver, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-const bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget *parent )
+const bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget* parent )
 {
     DialogBool dialog = DialogBool(
         DialogSec::tr("File not found"),
@@ -193,7 +193,7 @@ const bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget *p
     return choice;
 }
 
-const bool DialogSec::choiceDatabaseWrongTable(const QString& db_name, const QString& table_name, QWidget *parent )
+const bool DialogSec::choiceDatabaseWrongTable(const QString& db_name, const QString& table_name, QWidget* parent )
 {
     QString msg = QString("%1:\n%2 -> %3").arg(
         DialogSec::tr("The database contains an unexpected table"),
@@ -203,7 +203,7 @@ const bool DialogSec::choiceDatabaseWrongTable(const QString& db_name, const QSt
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseMissingTable( const QString& db_name, const QString& table_name, QWidget *parent )
+const bool DialogSec::choiceDatabaseMissingTable( const QString& db_name, const QString& table_name, QWidget* parent )
 {
     QString msg = QString("%1:\n%2 -> %3").arg(
         DialogSec::tr("It seems that the database is missing a table"),
@@ -213,7 +213,7 @@ const bool DialogSec::choiceDatabaseMissingTable( const QString& db_name, const 
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseWrongColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget *parent )
+const bool DialogSec::choiceDatabaseWrongColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent )
 {
     QString msg = QString("%1:\n%2 -> %3 -> %4").arg(
         DialogSec::tr("The database contains an unexpected column"),
@@ -223,7 +223,7 @@ const bool DialogSec::choiceDatabaseWrongColumn( const QString& db_name, const Q
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseMissingColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget *parent )
+const bool DialogSec::choiceDatabaseMissingColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent )
 {
     QString msg = QString("%1:\n%2 -> %3 -> %4").arg(
         DialogSec::tr("It seems that the table is missing a column"),
@@ -233,7 +233,7 @@ const bool DialogSec::choiceDatabaseMissingColumn( const QString& db_name, const
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget *parent )
+const bool DialogSec::choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget* parent )
 {
     QString msg = QString("%1:\n%2 -> %3 -> %4 -> %5").arg(
         DialogSec::tr("A column has an unexpected data-type"),
@@ -243,7 +243,7 @@ const bool DialogSec::choiceDatabaseWrongDataType( const QString& db_name, const
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& msg, QWidget *parent )
+const bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent )
 {
     DialogBool dialog = DialogBool(
         title,
@@ -254,7 +254,7 @@ const bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& 
     const bool choice = dialog.exec();
     return choice;
 }
-void DialogSec::msgDatabaseCreated( const QString& db_name, QWidget *parent )
+void DialogSec::msgDatabaseCreated( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Database created"),
@@ -265,7 +265,7 @@ void DialogSec::msgDatabaseCreated( const QString& db_name, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseNotFile( const QString& db_name, QWidget *parent )
+void DialogSec::errDatabaseNotFile( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Not a file"),
@@ -278,7 +278,7 @@ void DialogSec::errDatabaseNotFile( const QString& db_name, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseNotReadable( const QString& db_name, QWidget *parent )
+void DialogSec::errDatabaseNotReadable( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File not readable"),
@@ -290,7 +290,7 @@ void DialogSec::errDatabaseNotReadable( const QString& db_name, QWidget *parent 
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseNotWritable( const QString& db_name, QWidget *parent )
+void DialogSec::errDatabaseNotWritable( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File not writable"),
@@ -302,7 +302,7 @@ void DialogSec::errDatabaseNotWritable( const QString& db_name, QWidget *parent 
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseFailedCreating( const QString& db_name, QWidget *parent )
+void DialogSec::errDatabaseFailedCreating( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed creating database"),
@@ -314,7 +314,7 @@ void DialogSec::errDatabaseFailedCreating( const QString& db_name, QWidget *pare
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseFailedOpening( const QString& db_name, const QString &err_msg, QWidget *parent )
+void DialogSec::errDatabaseFailedOpening( const QString& db_name, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed opening database"),
@@ -322,30 +322,31 @@ void DialogSec::errDatabaseFailedOpening( const QString& db_name, const QString 
             DialogSec::tr("An error occured while opening the database"),
             db_name,
             DialogSec::tr("Aborting") ),
-        err_msg, 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseFailedExecuting( const QString& db_name, const QString& statement, const QString& err_msg, QWidget *parent )
+void DialogSec::errDatabaseFailedExecuting( const QString& db_name, const QString& statement, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed executing on database"),
-        QString("%1:\n%2\n\n%3").arg(
+        QString("%1:\n%2%3\n\n%4").arg(
             DialogSec::tr("An error occured while executing a statement on the database"),
             db_name,
+            (statement.size()>0) ? "\n"+statement : "",
             DialogSec::tr("Aborting") ),
-        err_msg, 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseFailedBackup( const QString& msg, QWidget *parent )
+void DialogSec::errDatabaseFailedBackup( const QString& msg, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed to backup database"),
         QString("%1\n\n%2").arg(
             msg,
             DialogSec::tr("Please report this issue") ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
 
@@ -354,7 +355,7 @@ void DialogSec::errDatabaseFailedBackup( const QString& msg, QWidget *parent )
 /////////////////////
 //// LOGS FORMAT ////
 /////////////////////
-void DialogSec::errInvalidLogFormatString( const QString& msg, QWidget *parent )
+void DialogSec::errInvalidLogFormatString( const QString& msg, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Invalid log format string"),
@@ -363,7 +364,7 @@ void DialogSec::errInvalidLogFormatString( const QString& msg, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errLogFormatNotSet( QWidget *parent )
+void DialogSec::errLogFormatNotSet( QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Log format error"),
@@ -373,7 +374,7 @@ void DialogSec::errLogFormatNotSet( QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errLogFormatNoFields( QWidget *parent )
+void DialogSec::errLogFormatNoFields( QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Misconfigured log format"),
@@ -384,7 +385,7 @@ void DialogSec::errLogFormatNoFields( QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errLogFormatNoSeparators( QWidget *parent )
+void DialogSec::errLogFormatNoSeparators( QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Misconfigured log format"),
@@ -395,7 +396,7 @@ void DialogSec::errLogFormatNoSeparators( QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errFailedParsingLogs( const QString& message, QWidget *parent )
+void DialogSec::errFailedParsingLogs( const QString& message, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("An error occured while parsing logs"),
@@ -409,7 +410,7 @@ void DialogSec::errFailedParsingLogs( const QString& message, QWidget *parent )
 ///////////////////
 //// LOG FILES ////
 ///////////////////
-void DialogSec::errFailedDefiningLogType( const QString& file, QWidget *parent )
+void DialogSec::errFailedDefiningLogType( const QString& file, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed defining type"),
@@ -421,7 +422,7 @@ void DialogSec::errFailedDefiningLogType( const QString& file, QWidget *parent )
 }
 
 
-const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget *parent )
+const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent )
 {
     DialogDia dialog = DialogDia(
         DialogSec::tr("File already used"),
@@ -435,7 +436,7 @@ const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget *parent 
 }
 
 
-const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget *parent )
+const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
 {
     DialogDia dialog = DialogDia(
         DialogSec::tr("File exceeds warning size"),
@@ -447,7 +448,7 @@ const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget *parent 
     const int choice = dialog.exec();
     return choice;
 }
-const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget *parent )
+const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget* parent )
 {
     DialogBool dialog = DialogBool(
         DialogSec::tr("File exceeds warning size"),
@@ -461,7 +462,7 @@ const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget *paren
 }
 
 
-void DialogSec::errFailedReadFile( const QString& file , const bool& skipping, QWidget *parent )
+void DialogSec::errFailedReadFile( const QString& file , const bool& skipping, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed reading"),
@@ -472,7 +473,7 @@ void DialogSec::errFailedReadFile( const QString& file , const bool& skipping, Q
     std::ignore = dialog.exec();
 }
 
-/*void DialogSec::errFailedWriteFile( const QString& file , const bool& skipping, QWidget *parent )
+/*void DialogSec::errFailedWriteFile( const QString& file , const bool& skipping, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed writing"),
@@ -485,7 +486,7 @@ void DialogSec::errFailedReadFile( const QString& file , const bool& skipping, Q
 }*/
 
 
-void DialogSec::warnEmptyFile( const QString& file, QWidget *parent )
+void DialogSec::warnEmptyFile( const QString& file, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File is empty"),
@@ -497,7 +498,7 @@ void DialogSec::warnEmptyFile( const QString& file, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errFileNotFound( const QString& file , const bool& report, QWidget *parent )
+void DialogSec::errFileNotFound( const QString& file , const bool& report, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File not found"),
@@ -509,7 +510,7 @@ void DialogSec::errFileNotFound( const QString& file , const bool& report, QWidg
     std::ignore = dialog.exec();
 }
 
-void DialogSec::warnFileNotReadable( const QString& file, QWidget *parent )
+void DialogSec::warnFileNotReadable( const QString& file, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("File not readable"),
@@ -523,7 +524,7 @@ void DialogSec::warnFileNotReadable( const QString& file, QWidget *parent )
 
 
 
-const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget *parent )
+const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* parent )
 {
     DialogDia dialog = DialogDia(
         DialogSec::tr("File not found"),
@@ -541,7 +542,7 @@ const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget *p
 /////////////////////
 //// PERMISSIONS ////
 /////////////////////
-void DialogSec::errDirNotExists( const QString& dir, QWidget *parent )
+void DialogSec::errDirNotExists( const QString& dir, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Directory not found"),
@@ -552,7 +553,7 @@ void DialogSec::errDirNotExists( const QString& dir, QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-/*const int DialogSec::choiceDirNotExists( const QString& dir, QWidget *parent )
+/*const int DialogSec::choiceDirNotExists( const QString& dir, QWidget* parent )
 {
     DialogDia dialog = DialogDia(
         DialogSec::tr("Directory not found"),
@@ -566,7 +567,7 @@ void DialogSec::errDirNotExists( const QString& dir, QWidget *parent )
 }*/
 
 
-void DialogSec::errDirNotReadable( const QString& dir, QWidget *parent )
+void DialogSec::errDirNotReadable( const QString& dir, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Directory not readable"),
@@ -574,10 +575,10 @@ void DialogSec::errDirNotReadable( const QString& dir, QWidget *parent )
             DialogSec::tr("The directory is not readable"),
             dir,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
-void DialogSec::warnDirNotReadable( QWidget *parent )
+void DialogSec::warnDirNotReadable( QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Directory not readable"),
@@ -588,7 +589,7 @@ void DialogSec::warnDirNotReadable( QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDirNotWritable( const QString& dir, QWidget *parent )
+void DialogSec::errDirNotWritable( const QString& dir, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Directory not writable"),
@@ -596,10 +597,10 @@ void DialogSec::errDirNotWritable( const QString& dir, QWidget *parent )
             DialogSec::tr("The directory is not writable"),
             dir,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
-void DialogSec::warnDirNotWritable( QWidget *parent )
+void DialogSec::warnDirNotWritable( QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Directory not writable"),
@@ -610,14 +611,14 @@ void DialogSec::warnDirNotWritable( QWidget *parent )
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errFailedMakeDir( const QString& msg, QWidget *parent )
+void DialogSec::errFailedMakeDir( const QString& msg, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed creating directory"),
         QString("%1\n\n%2").arg(
             msg,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }
 
@@ -625,7 +626,7 @@ void DialogSec::errFailedMakeDir( const QString& msg, QWidget *parent )
 //////////////////
 //// GENERICS ////
 //////////////////
-const bool DialogSec::choiceDirNotDir( const QString& path, QWidget *parent )
+const bool DialogSec::choiceDirNotDir( const QString& path, QWidget* parent )
 {
     DialogBool dialog = DialogBool(
         DialogSec::tr("Not a folder"),
@@ -637,7 +638,7 @@ const bool DialogSec::choiceDirNotDir( const QString& path, QWidget *parent )
     const bool choice = dialog.exec();
     return choice;
 }
-const bool DialogSec::choiceFileNotFile( const QString& path, QWidget *parent )
+const bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
 {
     DialogBool dialog = DialogBool(
         DialogSec::tr("Not a file"),
@@ -652,7 +653,7 @@ const bool DialogSec::choiceFileNotFile( const QString& path, QWidget *parent )
 
 
 
-/*void DialogSec::warnGeneric( const QString& msg, const bool& report_msg, QWidget *parent )
+/*void DialogSec::warnGeneric( const QString& msg, const bool& report_msg, QWidget* parent )
 {
     QString footer = "";
     if ( report_msg ) {
@@ -668,7 +669,7 @@ const bool DialogSec::choiceFileNotFile( const QString& path, QWidget *parent )
 
 
 
-void DialogSec::errGeneric( const QString& msg, const bool& report_msg, QWidget *parent )
+void DialogSec::errGeneric( const QString& msg, const bool& report_msg, QWidget* parent )
 {
     QString footer = "";
     if ( report_msg ) {
@@ -684,7 +685,7 @@ void DialogSec::errGeneric( const QString& msg, const bool& report_msg, QWidget 
 
 
 
-void DialogSec::errRenaming( const QString& path, QWidget *parent )
+void DialogSec::errRenaming( const QString& path, const QString& err, QWidget* parent )
 {
     DialogMsg dialog = DialogMsg(
         DialogSec::tr("Failed renaming"),
@@ -692,6 +693,6 @@ void DialogSec::errRenaming( const QString& path, QWidget *parent )
             DialogSec::tr("An error occured while renaming"),
             path,
             DialogSec::tr("Aborting") ),
-        "", 2, parent );
+        err, 2, parent );
     std::ignore = dialog.exec();
 }

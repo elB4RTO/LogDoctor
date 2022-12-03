@@ -8,7 +8,6 @@
 #include "utilities/vectors.h"
 
 #include <fstream>
-#include <filesystem>
 
 
 IOutils::IOutils()
@@ -90,11 +89,14 @@ const bool IOutils::checkDir( const std::string& path, const bool& readable, con
 
 
 // create a directory
-const bool IOutils::makeDir( const std::string& path ) noexcept(true)
+const bool IOutils::makeDir( const std::string& path, std::error_code& err ) noexcept(true)
 {
     bool result = true;
     try {
-        result = std::filesystem::create_directory( path );
+        result = std::filesystem::create_directory( path, err );
+        if ( err.value() ) {
+            result = false;
+        }
     } catch (...) {
         result = false;
     }
@@ -103,7 +105,7 @@ const bool IOutils::makeDir( const std::string& path ) noexcept(true)
 
 
 // rename an entry with a trailing '.copy'
-const bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
+const bool IOutils::renameAsCopy( const std::string& path, std::error_code& err ) noexcept(true)
 {
     bool result = true;
     try {
@@ -116,7 +118,10 @@ const bool IOutils::renameAsCopy( const std::string& path ) noexcept(true)
                 break;
             }
         }
-        std::filesystem::rename( path, new_path );
+        std::filesystem::rename( path, new_path, err );
+        if ( err.value() ) {
+            result = false;
+        }
     } catch (...) {
         result = false;
     }
