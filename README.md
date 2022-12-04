@@ -2,7 +2,7 @@
 
 Parse Apache2 / Nginx / IIS logs to make statistics
 
-![badge-version](https://img.shields.io/badge/version-2.00-fff)
+![badge-version](https://img.shields.io/badge/version-2.01-fff)
 ![badge-c++](https://img.shields.io/badge/C%2B%2B-17-blue)
 ![badge-qt](https://img.shields.io/badge/Qt-5.15-blue)
 ![badge-linux](https://img.shields.io/badge/Linux-supported-brightgreen)
