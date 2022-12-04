@@ -33,7 +33,7 @@ public:
 private slots:
 
     // Override
-    void closeEvent( QCloseEvent* event );
+    void closeEvent( QCloseEvent* event ) override;
 
     // Starts the game
     void on_button_Play_clicked();
