@@ -85,11 +85,21 @@ then
 fi
 chmod 644 ./logdocdata/help/*/*
 chmod 444 ./logdocdata/licenses/*
-sudo rsync -r --delete ./logdocdata /usr/share/LogDoctor
-if [[ "$?" != "0" ]]
+if [[ $(which rsync) =~ ^/ ]]
 then
-	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
-	exit
+	sudo rsync -r --delete ./logdocdata /usr/share/LogDoctor
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
+		exit
+	fi
+else
+	cp -r ./logdocdata/{help,licenses} /usr/share/LogDoctor
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
+		exit
+	fi
 fi
 
 
