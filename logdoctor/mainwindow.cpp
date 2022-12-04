@@ -269,14 +269,13 @@ void MainWindow::closeEvent( QCloseEvent *event )
 // os definition
 void MainWindow::defineOSspec()
 {
-    /*const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );*/
     switch ( this->OS ) {
         case 1:
             // unix-like
             /*this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
             this->logdoc_path    = home_path + "/.local/share/LogDoctor";*/
-            this->db_data_path   = this->logdoc_path;
-            this->db_hashes_path = this->logdoc_path;
+            this->db_data_path   = this->home_path + "/.local/share/LogDoctor";
+            this->db_hashes_path = this->home_path + "/.local/share/LogDoctor";
             break;
 
         case 2:
@@ -1575,7 +1574,7 @@ void MainWindow::makeInitialChecks()
 
     if ( ok ) {
         // check LogDoctor's folders paths
-        for ( const std::string& path : std::vector<std::string>({this->basePath(this->configs_path), this->logdoc_path}) ) {
+        for ( const std::string& path : std::vector<std::string>({this->basePath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path}) ) {
             if ( IOutils::exists( path ) ) {
                 if ( IOutils::isDir( path ) ) {
                     if ( ! IOutils::checkDir( path, true ) ) {
