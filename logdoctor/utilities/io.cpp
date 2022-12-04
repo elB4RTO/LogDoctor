@@ -93,7 +93,7 @@ const bool IOutils::makeDir( const std::string& path, std::error_code& err ) noe
 {
     bool result = true;
     try {
-        result = std::filesystem::create_directory( path, err );
+        result = std::filesystem::create_directories( path, err );
         if ( err.value() ) {
             result = false;
         }
