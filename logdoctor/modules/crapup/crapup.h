@@ -48,7 +48,7 @@ signals:
 private slots:
 
     //! Override
-    void closeEvent( QCloseEvent* event );
+    void closeEvent( QCloseEvent* event ) override;
 
     //! Called when a request's times out
     /*!

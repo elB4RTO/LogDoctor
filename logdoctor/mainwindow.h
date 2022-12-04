@@ -46,10 +46,11 @@ public:
     MainWindow( QWidget* parent=nullptr );
     ~MainWindow();
 
-    void closeEvent( QCloseEvent *event );
-
 
 private slots:
+
+    void closeEvent( QCloseEvent *event ) override;
+
 
     ////////////////
     //// CUSTOM ////
