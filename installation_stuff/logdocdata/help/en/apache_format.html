@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en_US">
+  <head>
+    <meta charset="utf-8">
+    <title>LogDoctor - Help</title>
+    <style type="text/css">
+      body {
+        color: $TEXT$;
+        font-size: 19px;
+        background-color: $BG$;
+      }
+      h1 {
+        color: $H1$;
+      }
+      h2 {
+        color: $BG$;
+        background-color: $H1$;
+      }
+      h3 {
+        color: $H3$;
+      }
+      th,td {
+        padding: 20px;
+      }
+      code {
+        color: $CODE$;
+        font-size: 17px;
+        padding-left:16px
+      }
+      i {
+        color: $IT$;
+      }
+      a {
+        color: $LINK$;
+      }
+    </style>
+  </head>
+  <body>
+
+    <br>
+    <h1 align="center">Apache2</h1>
+    <br>
+    <br>
+    <br>
+    <h2 align="center"><br>Access logs format string</h2>
+    <br>
+    <h3><br>Configuration file</h3>
+    <br>
+    <p>The configuration file should be located at:</p><br>
+      <code>/etc/apache2/apache2.conf</code>
+    <br>
+    <p>The line to configure access logs is the one starting with "<b>LogFormat</b>" followed by the list of fields codes.</p>
+    <br>
+    <br>
+    <br>
+    <h3>Common logs formats</h3>
+    <br>
+    <p>Most commonly used format strings are:</p>
+    <br>
+    <ul>
+      <li style="padding-bottom:10px">Common log format <i>(CLF)</i></li><br>
+        <code>LogFormat "%h %l %u %t \"%r\" %>s %O" common</code><br>
+      <br>
+      <li style="padding-bottom:10px">Combined log format <i>(NCSA standard)</i></li><br>
+        <code>LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-agent}i\"" combined</code>
+    </ul>
+    <br>
+    <br>
+    <br>
+    <h3>Suggested logs formats</h3>
+    <br>
+    <p>A suggested format string, to allow using the complete set of functionalities of LogDoctor, is:</p><br>
+      <code>LogFormat "%{%F %T}t %H %m %U %q %&gt;s %I %O %D \"%{Referer}i\" \"%{Cookie}i\" \"%{User-agent}i\" %{c}h" combined</code>
+    <br>
+    <p>The string above should be preferred, but alternatives can be used as well, like:</p><br>
+      <code>LogFormat "%{sec}t \"%r\" %q %&lt;s %I %O %D \"%{Referer}i\" \"%{Cookie}i\" \"%{User-agent}i\" %h" combined</code>
+    <br>
+    <br>
+    <br>
+    <h3>Note on custom format strings</h3>
+    <br>
+    <p>If you're using your own custom string, please keep in mind that parsing is not magic. When you define your own string, think about which characters can be there in a field and use separators accordingly to not conflict with the field itself.<br>
+    As an example: an URI (<i>%U</i>) can't contain whitespaces, so it is safe to use a space to separe this field by the previous and next one. Instead, the User-Agent (*%{User-agent}i*) may contain spaces, as well as parenthesis, brackets, dashes, etc, so it's better to pick an appropriate separator (double-quotes are a good choice, since they get escaped while logging).</p>
+    <br>
+    <br>
+    <br>
+    <h3>Note on control-characters</h3>
+    <br>
+    <p>Although Apache2 does support some control-characters (<i>aka</i> escape sequences), it is reccomended to <b>not use them</b> inside format strings.<br>
+    In particular, the <i>carriage return</i> will most-likely overwrite previous fields data, making it very difficult to understand where the current field ends (specially for fields like URIs, queries, user-agents, etc) and nearly impossible to retrieve the overwritten data, which will lead in having a wasted database, un-realistic statistics and/or crashes during execution.<br>
+    About the <i>new line</i> character, it has no sense to use it, if not for testing purposes. The same is true for the <i>horizontal tab</i>, for which is better to use a simple whitespace instead.<br>
+    The only control-characters supported by Apache2 are <b>\n</b>, <b>\t</b> and <b>\r</b>. Any other character will be ignored and treated as text.</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h2 align="center"><br>Access logs format fields</h2>
+    <br>
+    <h3><br>Fields considered by LogDoctor</h3>
+    <br>
+    <p>Only the following fields will be considered, meaning that only these fields' data will be stored and used for the statistics.</p>
+    <br>
+    <table border="1" width="100%">
+      <tr><th style="width:150px">Code</th><th>Informations</th></tr>
+      <tr>
+        <td align="center">%%</td>
+        <td>The percent sign character, will result in a single percent sign and treated as normal text (from both Apache and LogDoctor).</td>
+      </tr>
+      <tr>
+        <td align="center">%t</td>
+        <td>Time the request was received, in the format <i>[DD/Mon/YYYY:hh:mm:ss ±TZ]</i>. The last number <i>(TZ)</i> indicates the timezone offset from GMT.</td>
+      </tr>
+      <tr>
+        <td align="center">%{<i>FORMAT</i>}t</td>
+        <td>Time the request was received, in the form given by FORMAT, which should be in an extended <b>strftime</b> format.<br>
+        The following format tokens are supported (by LogDoctor, any other than the following will be discarded, even if valid):
+        <br>
+        <table border="1" style="padding:16px">
+          <tr><th style="width:100px; padding:10px">Format</th><th style="padding:10px">Description</th></tr>
+          <tr><td align="center" style="padding:10px">sec</td><td style="padding:10px">time since epoch, in seconds</td></tr>
+          <tr><td align="center" style="padding:10px">msec</td><td style="padding:10px">time since epoch, in milliseconds</td></tr>
+          <tr><td align="center" style="padding:10px">usec</td><td style="padding:10px">time since epoch, in microseconds</td></tr>
+          <tr><td align="center" style="padding:10px">%b</td><td style="padding:10px">month name, abbreviated (same as <i>%h</i>)</td></tr>
+          <tr><td align="center" style="padding:10px">%B</td><td style="padding:10px">month name</td></tr>
+          <tr><td align="center" style="padding:10px">%c</td><td style="padding:10px">date and time representation</td></tr>
+          <tr><td align="center" style="padding:10px">%d</td><td style="padding:10px">day number, zero padded</td></tr>
+          <tr><td align="center" style="padding:10px">%D</td><td style="padding:10px">date, in the form of <i>MM/DD/YY</i></td></tr>
+          <tr><td align="center" style="padding:10px">%e</td><td style="padding:10px">day number, space padded</td></tr>
+          <tr><td align="center" style="padding:10px">%F</td><td style="padding:10px">date, in the form of <i>YYYY/MM/DD</i></td></tr>
+          <tr><td align="center" style="padding:10px">%h</td><td style="padding:10px">month name, abbreviated (same as <i>%b</i>)</td></tr>
+          <tr><td align="center" style="padding:10px">%H</td><td style="padding:10px">hour, in <i>24h</i> format, zero padded</td></tr>
+          <tr><td align="center" style="padding:10px">%m</td><td style="padding:10px">month number, zero padded</td></tr>
+          <tr><td align="center" style="padding:10px">%M</td><td style="padding:10px">minute</td></tr>
+          <tr><td align="center" style="padding:10px">%r</td><td style="padding:10px">time if the day, in <i>12h</i> format, in the form of <i>HH:MM:SS AM/PM</i></td></tr>
+          <tr><td align="center" style="padding:10px">%R</td><td style="padding:10px">time of the day, in <i>HH:MM</i> format</td></tr>
+          <tr><td align="center" style="padding:10px">%S</td><td style="padding:10px">second</td></tr>
+          <tr><td align="center" style="padding:10px">%T</td><td style="padding:10px">ISO 8601 time, in the form of <i>HH:MM:SS</i></td></tr>
+          <tr><td align="center" style="padding:10px">%x</td><td style="padding:10px">date representation</td></tr>
+          <tr><td align="center" style="padding:10px">%X</td><td style="padding:10px">time representation</td></tr>
+          <tr><td align="center" style="padding:10px">%y</td><td style="padding:10px">year, last two digits <i>(YY)</i></td></tr>
+          <tr><td align="center" style="padding:10px">%Y</td><td style="padding:10px">year</td></tr>
+        </table>
+        <br>
+        <br>
+        <i>Note:</i> time formats <i>sec</i>, <i>msec</i> and <i>usec</i> can't be mixed together or with other formats.
+      </tr>
+      <tr>
+        <td align="center">%r</td>
+        <td>First line of request, equivalent to: <i>%m %U?%q %H</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">%H</td>
+        <td>The request protocol <i>(HTTP/v, HTTPS/v)</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">%m</td>
+        <td>The request method <i>(GET, POST, HEAD, ...)</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">%U</td>
+        <td>The URI path requested, not including any query string.</td>
+      </tr>
+      <tr>
+        <td align="center">%q</td>
+        <td>Query string (if any).</td>
+      </tr>
+      <tr>
+        <td align="center">%s</td>
+        <td>HTTP Status code at the beginning of the request (exclude redirections statuses).</td>
+      </tr>
+      <tr>
+        <td align="center">%>s</td>
+        <td>Final HTTP Status code (in case requests have been internally redirected).</td>
+      </tr>
+      <tr>
+        <td align="center">%I</td>
+        <td>Bytes received, including request and headers (you need to enable mod_logio to use this).</td>
+      </tr>
+      <tr>
+        <td align="center">%O</td>
+        <td>Bytes sent, including headers (you need to enable mod_logio to use this).</td>
+      </tr>
+      <tr>
+        <td align="center">%T</td>
+        <td>The time taken to serve the request, in seconds.</td>
+      </tr>
+      <tr>
+        <td align="center">%{<i>UNIT</i>}T</td>
+        <td>The time taken to serve the request, in a time unit given by UNIT (only available in 2.4.13 and later).<br>
+        Valid units are:
+        <br>
+          <table border="1" style="padding:16px">
+            <tr><th style="width:100px; padding:10px">Unit</th><th style="padding:10px">Description</th></tr>
+            <tr><td align="center" style="padding:10px">s</td><td style="padding:10px">seconds</td></tr>
+            <tr><td align="center" style="padding:10px">ms</td><td style="padding:10px">milliseconds</td></tr>
+            <tr><td align="center" style="padding:10px">us</td><td style="padding:10px">microseconds</td></tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">%D</td>
+        <td>The time taken to serve the request, in milliseconds.</td>
+      </tr>
+      <tr>
+        <td align="center">%h</td>
+        <td>IP Address of the client (remote hostname).</td>
+      </tr>
+      <tr>
+        <td align="center">%{c}h</td>
+        <td>Like %h, but always reports on the hostname of the underlying TCP connection and not any modifications to the remote hostname by modules like mod_remoteip.</td>
+      </tr>
+      <tr>
+        <td align="center">%{<i>VARNAME</i>}i</td>
+        <td>The contents of VARNAME: header line(s) in the request sent to the server.<br>
+        Supported varnames (by LogDoctor) are:
+        <br>
+          <table border="1" style="padding:16px">
+            <tr><th style="width:150px; padding:10px">VarName</th><th style="padding:10px">Description</th></tr>
+            <tr><td align="center" style="padding:10px">Cookie</td><td style="padding:10px">cookie of the request</td></tr>
+            <tr><td align="center" style="padding:10px">Referer</td><td style="padding:10px">referrer host</td></tr>
+            <tr><td align="center" style="padding:10px">User-agent</td><td style="padding:10px">web-browser or bot identification string</td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <h3>Fields discarded by LogDoctor</h3>
+    <br>
+    <p>Any field than the ones above won't be considered by LogDoctor.<br>
+    When generating a <i>log sample</i>, these fields will appear as '<b>DISCARDED</b>'.<br>
+    If you aint using logs for any other purpose, please remove unnecessary fields to make the process faster and reduce the possibility of errors.</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h3>References</h3>
+    <br>
+    <ul>
+      <li>Complete list of Apache2 access logs formats:<br>
+        <a>https://httpd.apache.org/docs/2.4/mod/mod_log_config.html</a></li><br>
+      <li>Complete list of strftime formats:<br>
+        <a>https://cplusplus.com/reference/ctime/strftime/</a></li>
+    </ul>
+    <br>
+    <br>
+    <br>
+  </body>
+</html>

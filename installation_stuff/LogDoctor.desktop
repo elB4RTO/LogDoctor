@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=LogDoctor
+GenericName=LogDoctor
+Comment=Apache2/Nginx/IIS access logs analyzer to view dynamically generated statistics
+Icon=/usr/share/LogDoctor/LogDoctor.svg
+Exec=logdoctor
+Actions=
+Categories=Utility;
+Keywords=logdoctor;apache2;nginx;iis;webservers;logs;analyzer;statistics;
