@@ -8,10 +8,9 @@ docdir="$(dirname $(realpath $0))"
 cd "$docdir"
 
 # Check cmake availability
-if [[ $(which cmake) =~ ^/ ]]
+which cmake &> /dev/null
+if [[ "$?" != "0" ]]
 then
-	$()
-else
 	echo "$(tput setaf 1)Error:$(tput sgr0) Cmake is not installed"
 	exit
 fi
@@ -102,7 +101,8 @@ then
 fi
 chmod 644 ./logdocdata/help/*/*
 chmod 444 ./logdocdata/licenses/*
-if [[ $(which rsync) =~ ^/ ]]
+which rsync &> /dev/null
+if [[ "$?" == "0" ]]
 then
 	sudo rsync -r --delete ./logdocdata /usr/share/LogDoctor
 	if [[ "$?" != "0" ]]
@@ -111,7 +111,7 @@ then
 		exit
 	fi
 else
-	cp -r ./logdocdata/{help,licenses} /usr/share/LogDoctor
+	sudo cp -r ./logdocdata/{help,licenses} /usr/share/LogDoctor
 	if [[ "$?" != "0" ]]
 	then
 		echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
