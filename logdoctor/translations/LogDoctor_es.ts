@@ -236,66 +236,66 @@ versión online mal formada</translation>
 <context>
     <name>DialogSec</name>
     <message>
-        <location filename="../mainwindow.cpp" line="620"/>
+        <location filename="../mainwindow.cpp" line="619"/>
         <source>An error occured while reading the configuration file</source>
         <translation type="unfinished">Error durante la lectura del archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="626"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>One of the lists has an invalid item</source>
         <translation type="unfinished">Una de las listas tiene un elemento no válido</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="631"/>
+        <location filename="../mainwindow.cpp" line="630"/>
         <source>An error occured while parsing configuration file&apos;s data</source>
         <translation type="unfinished">Error durante el análisis del archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="722"/>
-        <location filename="../mainwindow.cpp" line="735"/>
+        <location filename="../mainwindow.cpp" line="721"/>
+        <location filename="../mainwindow.cpp" line="734"/>
         <source>Failed to create the configuration file&apos;s directory</source>
         <translation type="unfinished">Error al crear la carpeta del archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="832"/>
+        <location filename="../mainwindow.cpp" line="831"/>
         <source>An error occured while writing the configuration file</source>
         <translation type="unfinished">Error al escribir el archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="835"/>
+        <location filename="../mainwindow.cpp" line="834"/>
         <source>An error occured while preparing the configuration file&apos;s data</source>
         <translation type="unfinished">Error al preparar los datos de los archivos de configuración</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="868"/>
-        <location filename="../mainwindow.cpp" line="884"/>
+        <location filename="../mainwindow.cpp" line="867"/>
+        <location filename="../mainwindow.cpp" line="883"/>
         <source>Failed to create the database backups&apos; directory</source>
         <translation type="unfinished">Error al crear el directorio de copias de seguridad del database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="911"/>
+        <location filename="../mainwindow.cpp" line="910"/>
         <source>Failed to copy the database file</source>
         <translation type="unfinished">Error al copiar el archivo del database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="925"/>
-        <location filename="../mainwindow.cpp" line="944"/>
+        <location filename="../mainwindow.cpp" line="924"/>
+        <location filename="../mainwindow.cpp" line="943"/>
         <source>Failed to update the backups</source>
         <translation type="unfinished">Error al actualizar las copias de seguridad</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1625"/>
-        <location filename="../mainwindow.cpp" line="1641"/>
+        <location filename="../mainwindow.cpp" line="1624"/>
+        <location filename="../mainwindow.cpp" line="1640"/>
         <source>Failed to create the directory</source>
         <translation type="unfinished">Error al crear la carpeta</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1909"/>
+        <location filename="../mainwindow.cpp" line="1908"/>
         <source>unrecognized entry</source>
         <translation type="unfinished">entrada no reconocida</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2571"/>
+        <location filename="../mainwindow.cpp" line="2570"/>
         <source>Failed to read gzipped file</source>
         <translation type="unfinished">Lectura del archivo gzip no conseguida</translation>
     </message>
@@ -842,13 +842,13 @@ por favor notifica este problema</translation>
         <translation type="unfinished">Error al analizar la cadena de formato</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2522"/>
+        <location filename="../mainwindow.cpp" line="2521"/>
         <location filename="../modules/craplog/craplog.cpp" line="849"/>
         <source>Size of the file</source>
         <translation type="unfinished">Tamaño del archivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2532"/>
+        <location filename="../mainwindow.cpp" line="2531"/>
         <location filename="../modules/craplog/craplog.cpp" line="859"/>
         <source>Warning size parameter</source>
         <translation type="unfinished">Parámetro de advertencia del tamaño</translation>
@@ -1974,35 +1974,35 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
         <translation type="unfinished">Abra una ventana similar a una nota de bloque para escribir texto temporal</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="462"/>
-        <location filename="../mainwindow.cpp" line="470"/>
-        <location filename="../mainwindow.cpp" line="478"/>
-        <location filename="../mainwindow.cpp" line="486"/>
-        <location filename="../mainwindow.cpp" line="510"/>
-        <location filename="../mainwindow.cpp" line="518"/>
-        <location filename="../mainwindow.cpp" line="526"/>
-        <location filename="../mainwindow.cpp" line="534"/>
-        <location filename="../mainwindow.cpp" line="571"/>
-        <location filename="../mainwindow.cpp" line="579"/>
-        <location filename="../mainwindow.cpp" line="587"/>
-        <location filename="../mainwindow.cpp" line="595"/>
+        <location filename="../mainwindow.cpp" line="461"/>
+        <location filename="../mainwindow.cpp" line="469"/>
+        <location filename="../mainwindow.cpp" line="477"/>
+        <location filename="../mainwindow.cpp" line="485"/>
+        <location filename="../mainwindow.cpp" line="509"/>
+        <location filename="../mainwindow.cpp" line="517"/>
+        <location filename="../mainwindow.cpp" line="525"/>
+        <location filename="../mainwindow.cpp" line="533"/>
+        <location filename="../mainwindow.cpp" line="570"/>
+        <location filename="../mainwindow.cpp" line="578"/>
+        <location filename="../mainwindow.cpp" line="586"/>
+        <location filename="../mainwindow.cpp" line="594"/>
         <source>warnlist</source>
         <translation type="unfinished">warnlists</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="494"/>
-        <location filename="../mainwindow.cpp" line="542"/>
-        <location filename="../mainwindow.cpp" line="603"/>
+        <location filename="../mainwindow.cpp" line="493"/>
+        <location filename="../mainwindow.cpp" line="541"/>
+        <location filename="../mainwindow.cpp" line="602"/>
         <source>blacklist</source>
         <translation type="unfinished">blacklist</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4102"/>
+        <location filename="../mainwindow.cpp" line="4101"/>
         <source>copy</source>
         <translation type="unfinished">copia</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4104"/>
+        <location filename="../mainwindow.cpp" line="4103"/>
         <source>copies</source>
         <translation type="unfinished">copias</translation>
     </message>
@@ -2028,61 +2028,61 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
 <context>
     <name>SnakeGame</name>
     <message>
-        <location filename="../games/snake/game.cpp" line="233"/>
+        <location filename="../games/snake/game.cpp" line="241"/>
         <source>Game Over</source>
         <translation type="unfinished">Game Over</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="367"/>
+        <location filename="../games/snake/game.cpp" line="375"/>
         <source>Your adversary fell in the water!</source>
         <translation type="unfinished">¡Tu adversario cayó en el agua!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="367"/>
-        <location filename="../games/snake/game.cpp" line="374"/>
-        <location filename="../games/snake/game.cpp" line="383"/>
+        <location filename="../games/snake/game.cpp" line="375"/>
+        <location filename="../games/snake/game.cpp" line="382"/>
+        <location filename="../games/snake/game.cpp" line="391"/>
         <source>YOU WON!</source>
         <translation type="unfinished">¡GANASTE!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="368"/>
+        <location filename="../games/snake/game.cpp" line="376"/>
         <source>You fell in the water!</source>
         <translation type="unfinished">¡Te caíste en la agua!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="368"/>
-        <location filename="../games/snake/game.cpp" line="375"/>
-        <location filename="../games/snake/game.cpp" line="384"/>
+        <location filename="../games/snake/game.cpp" line="376"/>
+        <location filename="../games/snake/game.cpp" line="383"/>
+        <location filename="../games/snake/game.cpp" line="392"/>
         <source>YOU LOST!</source>
         <translation type="unfinished">¡PERDISTE!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="374"/>
+        <location filename="../games/snake/game.cpp" line="382"/>
         <source>Your adversary ate itself!</source>
         <translation type="unfinished">¡Tu adversario se comió a sí mismo!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="383"/>
+        <location filename="../games/snake/game.cpp" line="391"/>
         <source>Your adversary ate you!</source>
         <translation type="unfinished">¡Tu adversario te comió!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="375"/>
+        <location filename="../games/snake/game.cpp" line="383"/>
         <source>You ate yourself!</source>
         <translation type="unfinished">¡Te comiste a ti mismo!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="384"/>
+        <location filename="../games/snake/game.cpp" line="392"/>
         <source>You ate your adversary!</source>
         <translation type="unfinished">¡Comiste a tu adversario!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="387"/>
+        <location filename="../games/snake/game.cpp" line="395"/>
         <source>You ate each other!</source>
         <translation type="unfinished">¡Se comieron el uno al otro!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="387"/>
+        <location filename="../games/snake/game.cpp" line="395"/>
         <source>MATCH IS DRAW!</source>
         <translation type="unfinished">¡CORBATA!</translation>
     </message>
