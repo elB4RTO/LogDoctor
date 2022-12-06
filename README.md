@@ -76,12 +76,13 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 ### Requirements / Dependencies
 
-- **From source**:
-  - C++ 17
-  - Cmake
-  - Qt5 *(Framework 5.15+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From binary**:
-  - None
+  - C++ 17
+  - Qt5 *(Framework 5.15+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
+- **From source**:
+  - *all the above*
+  - Cmake
+  - g++ / gcc / clang<br/><br/>
 
 <br/>
 
@@ -97,26 +98,50 @@ LogDoctor has been forked from [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 ### Usage with installation
 
-- **From source**
-  - Download and unzip this repo
-    <br/>*or*<br/>
-    `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
-  - Step inside inside "*LogDoctor-main*"
-    <br/>*or*<br/>
-    `cd LogDoctor`<br/><br/>
-  - Run the installation script
-    - Linux/BSD:
-      - `chmod +x ./build_install.sh`
-      - `./build_install.sh`
-    - Windows:
-      - run `WIN_build_install_1.bat` as normal user
-      - right-click on `WIN_build_install_2.bat` and select **Run as Administrator**
-    - Mac OS:
-      - `chmod +x ./MAC_build_install.sh`
-      - `./MAC_build_install.sh`<br/><br/>
-- **From binary**
-  - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
-  - Run the installation executable, or the installation script if you prefer it<br/><br/>
+#### From source
+
+- Download and unzip this repo
+  <br/>*or*<br/>
+  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+- Step inside inside "*LogDoctor-main*"
+  <br/>*or*<br/>
+  `cd LogDoctor`<br/><br/>
+- Run the installation script
+  - Linux/BSD:
+    - `chmod +x ./build_install.sh`
+    - `./build_install.sh`
+  - Windows:
+    - run `WIN_build_install_1.bat` as normal user
+    - right-click on `WIN_build_install_2.bat` and select **Run as Administrator**
+  - Mac OS:
+    - `chmod +x ./MAC_build_install.sh`
+    - `./MAC_build_install.sh`<br/><br/>
+
+#### From package
+
+**Arch-based distributions**
+
+- Pre-made package:
+  - `wget https://github.com/elB4RTO/LogDoctor/archive/refs/tags/logdoctor-<VERSION>-x86_64.pkg.tar.zst`
+  - `sudo pacman -U logdoctor-<VERSION>-x86_64.pkg.tar.zst`<br/><br/>
+- From the AUR:
+  - Using **yay**:
+    - `yay -S logdoctor`<br/>
+  - Manually:
+    - `git clone https://aur.archlinux.org/logdoctor.git`
+    - `cd logdoctor`
+    - `makepkg -sci`<br/><br/>
+
+**Debian-based distributions**
+
+- Pre-made package:
+  - `wget https://github.com/elB4RTO/LogDoctor/archive/refs/tags/logdoctor_<VERSION>_amd64.deb`
+  - `sudo apt install ./logdoctor_<VERSION>_amd64.deb`<br/><br/>
+
+#### From binary
+
+- Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
+- Run the installation executable, or the installation script if you prefer it<br/><br/>
 
 <br/>
 
@@ -177,26 +202,33 @@ To check for updates, open the menu `Utilities`→`Version check`.
 
 At the moment of writing, the only supported method is the manual update.
 
-- **From source**
-  - Download and unzip this repo
-    <br/>*or*<br/>
-    `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
-  - Step inside inside "*LogDoctor-main*"
-    <br/>*or*<br/>
-    `cd LogDoctor`<br/><br/>
-  - Run the update script
-    - Linux/BSD:
-      - `chmod +x ./build_update.sh`
-      - `./build_update.sh`
-    - Windows:
-      - run `WIN_build_update_1.bat` as normal user
-      - right-click on `WIN_build_update_2.bat` and select **Run as Administrator**
-    - Mac OS:
-      - `chmod +x ./MAC_build_update.sh`
-      - `./MAC_build_update.sh`<br/><br/>
-- **From binary**
-  - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)<br/>
-  - Run the update script
+#### From source
+
+- Download and unzip this repo
+  <br/>*or*<br/>
+  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+- Step inside inside "*LogDoctor-main*"
+  <br/>*or*<br/>
+  `cd LogDoctor`<br/><br/>
+- Run the update script
+  - Linux/BSD:
+    - `chmod +x ./build_update.sh`
+    - `./build_update.sh`
+  - Windows:
+    - run `WIN_build_update_1.bat` as normal user
+    - right-click on `WIN_build_update_2.bat` and select **Run as Administrator**
+  - Mac OS:
+    - `chmod +x ./MAC_build_update.sh`
+    - `./MAC_build_update.sh`<br/><br/>
+
+#### From package
+
+Follow the same process as for installing
+
+#### From binary
+
+- Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)<br/>
+- Run the update script
 
 <br/><br/><br/>
 
