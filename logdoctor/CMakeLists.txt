@@ -191,7 +191,7 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 
-# Flatpak
+# Deb/Flatpak
 if(UNIX AND NOT APPLE)
     install(TARGETS
         LogDoctor
@@ -214,11 +214,11 @@ if(UNIX AND NOT APPLE)
             DESTINATION /usr/share/LogDoctor
     )
     install(DIRECTORY
-        ${CMAKE_SOURCE_DIR}/installation_stuff/logdoctata/help
+        ${CMAKE_SOURCE_DIR}/installation_stuff/logdocdata/help
             DESTINATION /usr/share/LogDoctor
     )
     install(DIRECTORY
-        ${CMAKE_SOURCE_DIR}/installation_stuff/logdoctata/licenses
+        ${CMAKE_SOURCE_DIR}/installation_stuff/logdocdata/licenses
             DESTINATION /usr/share/LogDoctor
     )
 endif()
