@@ -92,7 +92,6 @@ void Food::spawn( Snake& snake, Snake& snake_ )
 
 void Food::move( Snake& snake )
 {
-    Direction move_direction;
     int move_up    = 0,
         move_down  = 0,
         move_left  = 0,
@@ -115,22 +114,22 @@ void Food::move( Snake& snake )
     }
 
     // check the snake
-    if ( ! snake.inTile( this->x, this->y-1 ) ) {
+    if ( ! snake.inTile( this->x, this->y-1, false ) ) {
         move_up += 100;
     } else {
         move_up -= 100;
     }
-    if ( ! snake.inTile( this->x, this->y+1 ) ) {
+    if ( ! snake.inTile( this->x, this->y+1, false ) ) {
         move_down += 100;
     } else {
         move_down -= 100;
     }
-    if ( ! snake.inTile( this->x-1, this->y ) ) {
+    if ( ! snake.inTile( this->x-1, this->y, false ) ) {
         move_left += 100;
     } else {
         move_left -= 100;
     }
-    if ( ! snake.inTile( this->x+1, this->y ) ) {
+    if ( ! snake.inTile( this->x+1, this->y, false ) ) {
         move_right += 100;
     } else {
         move_right -= 100;
