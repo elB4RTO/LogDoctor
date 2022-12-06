@@ -55,25 +55,33 @@ void SnakeGame::keyPressEvent( QKeyEvent* event )
         switch ( event->key() ) {
             case Qt::Key_Up:
             case Qt::Key_W:
-                if ( this->key_events.back() != 0 ) {
+                if ( this->key_events.empty() ) { // leave me here
+                    this->key_events.push( 0 );
+                } else if ( this->key_events.back() != 0 ) {
                     this->key_events.push( 0 );
                 }
                 break;
             case Qt::Key_Down:
             case Qt::Key_S:
-                if ( this->key_events.back() != 1 ) {
+                if ( this->key_events.empty() ) {
+                    this->key_events.push( 1 );
+                } else if ( this->key_events.back() != 1 ) {
                     this->key_events.push( 1 );
                 }
                 break;
             case Qt::Key_Left:
             case Qt::Key_A:
-                if ( this->key_events.back() != 2 ) {
+                if ( this->key_events.empty() ) {
+                    this->key_events.push( 2 );
+                } else if ( this->key_events.back() != 2 ) {
                     this->key_events.push( 2 );
                 }
                 break;
             case Qt::Key_Right:
             case Qt::Key_D:
-                if ( this->key_events.back() != 3 ) {
+                if ( this->key_events.empty() ) {
+                    this->key_events.push( 3 );
+                } else if ( this->key_events.back() != 3 ) {
                     this->key_events.push( 3 );
                 }
                 break;
@@ -235,7 +243,7 @@ void SnakeGame::processGameLogic()
     } else {
 
 
-        if ( this->key_events.size() > 0 ) {
+        if ( !this->key_events.empty() ) {
             this->processNextKeyEvent();
         }
         if ( this->game_mode == GameMode::Battle ) {
