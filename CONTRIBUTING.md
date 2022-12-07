@@ -22,7 +22,7 @@ If you want to contribute to LogDoctor, please follow these steps:
 
   - **Improve** it with your ideas
 
-  - Submit a **Pull Request** to the origin branch, namely `elB4RTO/devel`
+  - Submit a **Pull Request** to the origin branch, namely `elB4RTO/LogDoctor:devel`
 
 <br/>
 
@@ -36,16 +36,16 @@ When submitting a PR, please follow the template.
 
 You have two ways of doing it:
 
-  - while forking:
-    - **uncheck** the "*Only copy the main branch*" option
+- while forking:
+  - **uncheck** the "*Only copy the main branch*" option
 
-  *or*
+*or*
      
-  - alternatively, you can do it afterwards:
-    - step in your copy of the repository
-    - select `branches` or click on `main` and select "*View all branches*"
-    - tap `New branch`
-    - insert the name you please and select `elB4RTO/devel` as branch source
+- alternatively, you can do it afterwards:
+  - step in your fork of the repository
+  - select `branches` or click on `main` and select "*View all branches*"
+  - tap `New branch`
+  - insert the name you please and select `elB4RTO/LogDoctor` as repository and `devel` as branch
 
 <br/>
 
