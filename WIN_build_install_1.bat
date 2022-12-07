@@ -13,6 +13,13 @@ IF "%logdocdir:~-1%"=="/" SET logdocdir=%logdocdir:~0,-1%
 cd %logdocdir%
 
 
+:: Check for a previous installation
+IF EXIST "C:\Program Files\LogDoctor" (
+	ECHO Warning: a previous installation exists, please run the 'update' scripts instead
+	EXIT /B 0
+)
+
+
 :: Call the builder
 IF NOT EXIST "builder.bat" (
 	ECHO:
