@@ -7,19 +7,19 @@ current_path=$(pwd)
 docdir="$(dirname $(realpath $0))"
 cd "$docdir"
 
+# Check the existence of a previous executable file
+if [ -e /usr/bin/logdoctor ]
+then
+	echo "$(tput setaf 11)Warning:$(tput sgr0) a previous installation exists, please run the $(tput bold)update$(tput sgr0) script instead"
+	exit 0
+fi
+
 # Check cmake availability
 which cmake &> /dev/null
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) Cmake is not installed"
-	exit
-fi
-
-# Check the existence of a previous executable file
-if [ -e /usr/bin/logdoctor ]
-then
-	echo "$(tput setaf 11)Warning:$(tput sgr0) a previous installation exists, please run the $(tput bold)update$(tput sgr0) script instead"
-	exit
+	exit 1
 fi
 
 # Start the compilation process
@@ -32,14 +32,14 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove existing build directory"
-		exit
+		exit 1
 	fi
 fi
 mkdir build
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to create build directory"
-	exit
+	exit 1
 fi
 cd build
 
@@ -49,7 +49,7 @@ if [[ "$?" != "0" ]]
 then
 	# an error occured during preparation
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to prepare build files"
-	exit
+	exit 1
 fi
 
 # Build the project
@@ -61,7 +61,7 @@ then
 else
 	# an error occured during compilation
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to compile"
-	exit
+	exit 1
 fi
 
 # Compilation finished
@@ -78,7 +78,7 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "$(tput setaf 1)Error:$(tput sgr0) failed to create directory: ~/.config/LogDoctor"
-		exit
+		exit 1
 	fi
 fi
 chmod 644 ./logdoctor.conf
@@ -86,7 +86,7 @@ install -DC ./logdoctor.conf -t ~/.config/LogDoctor
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy configuration file"
-	exit
+	exit 1
 fi
 
 
@@ -96,7 +96,7 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "$(tput setaf 1)Error:$(tput sgr0) failed to create directory: /usr/share/LogDoctor"
-		exit
+		exit 1
 	fi
 fi
 chmod 644 ./logdocdata/help/*/*
@@ -108,14 +108,14 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
-		exit
+		exit 1
 	fi
 else
 	sudo cp -r ./logdocdata/{help,licenses} /usr/share/LogDoctor
 	if [[ "$?" != "0" ]]
 	then
 		echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's data"
-		exit
+		exit 1
 	fi
 fi
 
@@ -125,7 +125,7 @@ sudo install -DC ./LogDoctor.svg -t /usr/share/LogDoctor
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy LogDoctor's icon"
-	exit
+	exit 1
 fi
 
 
@@ -134,7 +134,7 @@ sudo install -DC ./LogDoctor.desktop -t /usr/share/applications
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to create a menu entry"
-	exit
+	exit 1
 fi
 
 
@@ -144,7 +144,7 @@ sudo install -DC ./logdoctor -t /usr/bin
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy the executable"
-	exit
+	exit 1
 fi
 
 

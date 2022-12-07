@@ -7,43 +7,29 @@ actual_path=$(pwd)
 docdir="$(dirname $0)"
 cd "$docdir"
 
-# Check CMake availability
-if [[ $(which cmake) =~ ^/ ]]
-then
-	$()
-else
-	echo "Error: Cmake not found in PATH, please add it or compilation won't socceed"
-	exit
-fi
-
-# Check Qt availability
-if [[ $(which qmake) =~ ^/ ]]
-then
-	$()
-else
-	echo "Error: Qt-clang not found in PATH, please add it or compilation won't socceed"
-	exit
-fi
-
 # Check the existence of a previous executable file
 if [ -e /Applications/LogDoctor.app ]
 then
-	while true;
-	do
-		echo "Warning: the path /Applications/LogDoctor.app already exists"
-		printf "If you choose to continue, the actual content will be overwritten\nContinue? [y/n] : "
-		read agree
-		case "$agree"
-		in
-			"y" | "Y" | [yY][eE][sS])
-				printf "\n"
-				break
-			;;
-			*)
-				exit
-			;;
-		esac
-	done
+	echo "Warning: a previous installation exists, please run the 'update' script instead"
+	exit 0
+fi
+
+# Check CMake availability
+which cmake &> /dev/null
+if [[ "$?" != "0" ]]
+then
+	echo "Error: Cmake not found in PATH, please add it or compilation won't socceed"
+	echo "Tip: PATH+=:/path/of/CMake/bin"
+	exit 1
+fi
+
+# Check Qt availability
+which qmake &> /dev/null
+if [[ "$?" != "0" ]]
+then
+	echo "Error: Qt-clang not found in PATH, please add it or compilation won't socceed"
+	echo "Tip: PATH+=:/path/of/Qt/bins"
+	exit 1
 fi
 
 # Start the compilation process
@@ -62,7 +48,7 @@ if [[ "$?" != "0" ]]
 then
 	# an error occured during preparation
 	echo "Error: failed to prepare cmake files"
-	exit
+	exit 1
 fi
 
 # Build the project
@@ -74,7 +60,7 @@ then
 else
 	# an error occured during compilation
 	echo "Error: failed to compile"
-	exit
+	exit 1
 fi
 
 # Compilation finished
@@ -104,7 +90,7 @@ then
 					then
 						# an error occured during compilation
 						echo "Error: failed to copy configuration file"
-						exit
+						exit 1
 					fi
 					break
 				;;
@@ -122,13 +108,13 @@ else
 	if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to create directory: ~/Lybrary/Preferences/LogDoctor"
-		exit
+		exit 1
 	fi
 	cp ./logdoctor.conf ~/Lybrary/Preferences/LogDoctor/
 	if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to copy configuration file"
-		exit
+		exit 1
 	fi
 fi
 
@@ -139,7 +125,7 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to create directory: ~/Lybrary/Application Support/LogDoctor"
-		exit
+		exit 1
 	fi
 fi
 if [ ! -e ~/"Lybrary/Application Support/LogDoctor/help" ]
@@ -148,14 +134,14 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to remove old resources: ~/Lybrary/Application Support/LogDoctor/help"
-		exit
+		exit 1
 	fi
 fi
 cp -r ./logdocdata/help ~/"Lybrary/Application Support/LogDoctor/"
 if [[ "$?" != "0" ]]
 then
 	echo "Error: failed to copy LogDoctor's data"
-	exit
+	exit 1
 fi
 
 
@@ -166,14 +152,14 @@ then
 	if [[ "$?" != "0" ]]
 	then
 		echo "Error: failed to remove old bundle: /Applications/LogDoctor.app"
-		exit
+		exit 1
 	fi
 fi
 sudo mv ../build/LogDoctor.app /Applications/
 if [[ "$?" != "0" ]]
 then
 	echo "Error: failed to copy the executable"
-	exit
+	exit 1
 fi
 
 
