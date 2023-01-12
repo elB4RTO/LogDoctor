@@ -4539,7 +4539,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>317</width>
+                      <width>173</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4895,7 +4895,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>317</width>
+                      <width>157</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -5150,7 +5150,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>429</width>
+                      <width>145</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -5415,7 +5415,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>429</width>
+                      <width>173</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -8372,7 +8372,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>718</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -11194,10 +11194,12 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <property name="title">
      <string>Language</string>
     </property>
-    <addaction name="actionEnglish"/>
-    <addaction name="actionEspanol"/>
-    <addaction name="actionFrancais"/>
-    <addaction name="actionItaliano"/>
+    <addaction name="actionEnglishGb"/>
+    <addaction name="actionEspanolEs"/>
+    <addaction name="actionFrancaisFr"/>
+    <addaction name="actionItalianoIt"/>
+    <addaction name="actionPortuguesBr"/>
+    <addaction name="actionJapaneseJp"/>
    </widget>
    <widget class="QMenu" name="menuUtilities">
     <property name="font">
@@ -11239,7 +11241,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    <addaction name="menuUtilities"/>
    <addaction name="menuGames"/>
   </widget>
-  <action name="actionEnglish">
+  <action name="actionEnglishGb">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -11248,7 +11250,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
    <property name="icon">
     <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/en.png</normaloff>:/flags/flags/en.png</iconset>
+     <normaloff>:/flags/flags/gb.png</normaloff>:/flags/flags/gb.png</iconset>
    </property>
    <property name="text">
     <string notr="true">English</string>
@@ -11257,7 +11259,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <string notr="true">English</string>
    </property>
   </action>
-  <action name="actionEspanol">
+  <action name="actionEspanolEs">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -11272,7 +11274,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <string notr="true">Español</string>
    </property>
   </action>
-  <action name="actionFrancais">
+  <action name="actionFrancaisFr">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -11287,7 +11289,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <string notr="true">Francais</string>
    </property>
   </action>
-  <action name="actionItaliano">
+  <action name="actionItalianoIt">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -11337,6 +11339,30 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
    <property name="toolTip">
     <string>Play Snake</string>
+   </property>
+  </action>
+  <action name="actionJapaneseJp">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/flags/flags/jp.png</normaloff>:/flags/flags/jp.png</iconset>
+   </property>
+   <property name="text">
+    <string notr="true">日本語</string>
+   </property>
+  </action>
+  <action name="actionPortuguesBr">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/flags/flags/br.png</normaloff>:/flags/flags/br.png</iconset>
+   </property>
+   <property name="text">
+    <string notr="true">Português</string>
    </property>
   </action>
  </widget>
