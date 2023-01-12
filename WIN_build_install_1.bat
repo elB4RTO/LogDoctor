@@ -16,6 +16,8 @@ cd %logdocdir%
 :: Check for a previous installation
 IF EXIST "C:\Program Files\LogDoctor" (
 	ECHO Warning: a previous installation exists, please run the 'update' scripts instead
+	cd "%actual_path%"
+	PAUSE
 	EXIT /B 0
 )
 

@@ -128,7 +128,7 @@ then
 		exit 1
 	fi
 fi
-if [ ! -e ~/"Lybrary/Application Support/LogDoctor/help" ]
+if [ -e ~/"Lybrary/Application Support/LogDoctor/help" ]
 then
 	rm -r ~/"Lybrary/Application Support/LogDoctor/help"
 	if [[ "$?" != "0" ]]
@@ -145,20 +145,20 @@ then
 fi
 
 
-cp -r ./osx_bundle/* ../build/LogDoctor.app/Contents/
+cp -r ./osx_bundle/{bin,doc,Resources,info.plist} ../build/LogDoctor.app/Contents/
 if [ -e /Applications/LogDoctor.app ]
 then
 	sudo rm -r /Applications/LogDoctor.app
 	if [[ "$?" != "0" ]]
 	then
-		echo "Error: failed to remove old bundle: /Applications/LogDoctor.app"
+		echo "Error: failed to remove old app bundle: /Applications/LogDoctor.app"
 		exit 1
 	fi
 fi
 sudo mv ../build/LogDoctor.app /Applications/
 if [[ "$?" != "0" ]]
 then
-	echo "Error: failed to copy the executable"
+	echo "Error: failed to copy the app bundle"
 	exit 1
 fi
 
