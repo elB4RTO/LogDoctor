@@ -1,14 +1,19 @@
-# LogDoctor
+<h1 align="center">LogDoctor</h1>
 
-Parse Apache2 / Nginx / IIS logs to make statistics
+<p align="center">Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
 
-![badge-version](https://img.shields.io/badge/version-2.01-fff)
-![badge-c++](https://img.shields.io/badge/C%2B%2B-17-blue)
-![badge-qt](https://img.shields.io/badge/Qt-5.15-blue)
-![badge-linux](https://img.shields.io/badge/Linux-supported-brightgreen)
-![badge-bsd](https://img.shields.io/badge/BSD-supported-brightgreen)
-![badge-windows](https://img.shields.io/badge/Windows-supported-brightgreen)
-![badge-macosx](https://img.shields.io/badge/Mac%20OS%20X-supported-brightgreen)
+<div align="center">
+  <img src="https://img.shields.io/badge/version-2.01-fff"/>
+  <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
+  <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
+  <br/>
+  <img src="https://img.shields.io/badge/Linux-supported-brightgreen"/>
+  <img src="https://img.shields.io/badge/BSD-supported-brightgreen"/>
+  <img src="https://img.shields.io/badge/Windows-supported-brightgreen"/>
+  <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-brightgreen"/>
+  <br/>
+  <h2>🇬🇧 🇪🇸 🇫🇷 🇮🇹 🇯🇵 🇧🇷</h2>
+</div>
 
 <br/><br/>
 
@@ -518,6 +523,10 @@ LogDoctor is available in:
 
 - 🇫🇷 **French** (90%, *wanna [contribute](#translations)?*)
 
+- 🇧🇷 **Portuguese** [**Brazil**] (90%, *wanna [contribute](#translations)?*)
+
+- 🇯🇵 **Japanese** (90%, *wanna [contribute](#translations)?*)
+
 <br/><br/>
 
 ## Contributions
@@ -536,11 +545,15 @@ If you want to contribute to the translation, please read the [Translation Guide
 
 Current translations under developement:
 
-- Italian: **90%**
+- `it_IT` : **90%**
 
-- Spanish: **90%** *(auditor needed)*
+- `es_ES` : **90%** *(auditor needed)*
 
-- French: **90%** *(auditor needed)*
+- `fr_FR` : **90%** *(auditor needed)*
+
+- `pt_BR` : **90%** *(auditor needed)*
+
+- `ja_JP` : **90%** *(auditor needed)*
 
 If you have a request for a missing language or you're willing to contribute, please refer to [this issue](https://github.com/elB4RTO/LogDoctor/issues/10).
 
