@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 2.01 LANGUAGES CXX)
+project(LogDoctor VERSION 2.02 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -16,10 +16,12 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTo
 
 
 set(TS_FILES
-    translations/LogDoctor_en.ts
-    translations/LogDoctor_es.ts
-    translations/LogDoctor_fr.ts
-    translations/LogDoctor_it.ts
+    translations/LogDoctor_en_GB.ts
+    translations/LogDoctor_es_ES.ts
+    translations/LogDoctor_fr_FR.ts
+    translations/LogDoctor_it_IT.ts
+    translations/LogDoctor_ja_JP.ts
+    translations/LogDoctor_pt_BR.ts
 )
 
 
@@ -190,6 +192,14 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(LogDoctor)
 endif()
 
+
+# CTest
+enable_testing()
+
+add_test(
+  NAME it_works
+  COMMAND LogDoctor
+)
 
 # Deb/Flatpak
 if(UNIX AND NOT APPLE)

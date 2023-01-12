@@ -479,13 +479,17 @@ private slots:
 
     //// LANGUAGE ////
 
-    void menu_actionEnglish_triggered();
+    void menu_actionEnglishGb_triggered();
 
-    void menu_actionEspanol_triggered();
+    void menu_actionEspanolEs_triggered();
 
-    void menu_actionFrancais_triggered();
+    void menu_actionFrancaisFr_triggered();
 
-    void menu_actionItaliano_triggered();
+    void menu_actionItalianoIt_triggered();
+
+    void menu_actionJapaneseJp_triggered();
+
+    void menu_actionPortuguesBr_triggered();
 
     //// TOOLS ////
 
@@ -583,7 +587,7 @@ private:
 
     QTranslator translator;
 
-    std::string language = "en";
+    std::string language = "en_GB";
 
     //! Translates the UI to the selected language
     void updateUiLanguage();
