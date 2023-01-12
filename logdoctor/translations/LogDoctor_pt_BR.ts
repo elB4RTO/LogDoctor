@@ -236,66 +236,66 @@ versão online mal formada</translation>
 <context>
     <name>DialogSec</name>
     <message>
-        <location filename="../mainwindow.cpp" line="619"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>An error occured while reading the configuration file</source>
         <translation type="unfinished">Erro durante a leitura do arquivo de configuração</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="625"/>
+        <location filename="../mainwindow.cpp" line="631"/>
         <source>One of the lists has an invalid item</source>
         <translation type="unfinished">Uma das listas possui um elemento inválido</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="630"/>
+        <location filename="../mainwindow.cpp" line="636"/>
         <source>An error occured while parsing configuration file&apos;s data</source>
         <translation type="unfinished">Erro durante a análise do arquivo de configuração</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="721"/>
-        <location filename="../mainwindow.cpp" line="734"/>
+        <location filename="../mainwindow.cpp" line="727"/>
+        <location filename="../mainwindow.cpp" line="740"/>
         <source>Failed to create the configuration file&apos;s directory</source>
         <translation type="unfinished">Erro ao criar diretório do arquivo de configuração</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="831"/>
+        <location filename="../mainwindow.cpp" line="837"/>
         <source>An error occured while writing the configuration file</source>
         <translation type="unfinished">Erro ao escrever o arquivo de configuração</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="834"/>
+        <location filename="../mainwindow.cpp" line="840"/>
         <source>An error occured while preparing the configuration file&apos;s data</source>
         <translation type="unfinished">Erro ao preparar os dados do arquivo de configuração</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="867"/>
-        <location filename="../mainwindow.cpp" line="883"/>
+        <location filename="../mainwindow.cpp" line="873"/>
+        <location filename="../mainwindow.cpp" line="889"/>
         <source>Failed to create the database backups&apos; directory</source>
         <translation type="unfinished">Erro ao criar backup do banco de dados</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="910"/>
+        <location filename="../mainwindow.cpp" line="916"/>
         <source>Failed to copy the database file</source>
         <translation type="unfinished">Erro ao copiar arquivos do banco de dados</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="924"/>
-        <location filename="../mainwindow.cpp" line="943"/>
+        <location filename="../mainwindow.cpp" line="930"/>
+        <location filename="../mainwindow.cpp" line="949"/>
         <source>Failed to update the backups</source>
         <translation type="unfinished">Erro ao atualizar backup</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1624"/>
-        <location filename="../mainwindow.cpp" line="1640"/>
+        <location filename="../mainwindow.cpp" line="1632"/>
+        <location filename="../mainwindow.cpp" line="1648"/>
         <source>Failed to create the directory</source>
         <translation type="unfinished">Erro ao criar diretório</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1908"/>
+        <location filename="../mainwindow.cpp" line="1916"/>
         <source>unrecognized entry</source>
         <translation type="unfinished">Entrada não reconhecida</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2570"/>
+        <location filename="../mainwindow.cpp" line="2607"/>
         <source>Failed to read gzipped file</source>
         <translation type="unfinished">Falha na leitura do arquivo gzip</translation>
     </message>
@@ -842,13 +842,13 @@ por favor reporte este problema</translation>
         <translation type="unfinished">Erro ao analisar string de formato</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2521"/>
+        <location filename="../mainwindow.cpp" line="2558"/>
         <location filename="../modules/craplog/craplog.cpp" line="849"/>
         <source>Size of the file</source>
         <translation type="unfinished">Tamanho do arquivo</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2531"/>
+        <location filename="../mainwindow.cpp" line="2568"/>
         <location filename="../modules/craplog/craplog.cpp" line="859"/>
         <source>Warning size parameter</source>
         <translation type="unfinished">Parâmetro de aviso do tamanho</translation>
@@ -1342,6 +1342,14 @@ Abortado</translation>
         <translation type="unfinished">Doce</translation>
     </message>
     <message>
+        <location filename="../mainwindow.ui" line="3553"/>
+        <location filename="../mainwindow.ui" line="4142"/>
+        <location filename="../mainwindow.ui" line="4191"/>
+        <source>With strings, only the lines in which the field is starting with this string will be used.
+With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../mainwindow.ui" line="6054"/>
         <source>Herb</source>
         <translation type="unfinished">Erva</translation>
@@ -1629,22 +1637,22 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</sour
 Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&apos;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11328"/>
+        <location filename="../mainwindow.ui" line="11330"/>
         <source>CrissCross</source>
         <translation type="unfinished">Cruzado</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11331"/>
+        <location filename="../mainwindow.ui" line="11333"/>
         <source>Play CrissCross</source>
         <translation type="unfinished">Jogar a Cruzada</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11336"/>
+        <location filename="../mainwindow.ui" line="11338"/>
         <source>Snake</source>
         <translation type="unfinished">Cobra</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11339"/>
+        <location filename="../mainwindow.ui" line="11341"/>
         <source>Play Snake</source>
         <translation type="unfinished">Jogar a Cobra</translation>
     </message>
@@ -1680,15 +1688,6 @@ Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&a
 Use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
         <translation type="unfinished">Use apenas linhas onde o campo corresponda a esta declaração.
 Use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&apos; para declarar qué usar</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="3553"/>
-        <location filename="../mainwindow.ui" line="4142"/>
-        <location filename="../mainwindow.ui" line="4191"/>
-        <source>Com strings, serão utilizadas apenas as linhas em que o campo está iniciando com esta string.
-        Com números, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
-        <translation type="unfinished">Con cadenas, solo se utilizarán las líneas en las que el campo comienza con esta cadena.
-Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&apos; para declarar qué usar</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="5926"/>
@@ -1934,75 +1933,75 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <translation type="unfinished">Língua</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11209"/>
+        <location filename="../mainwindow.ui" line="11211"/>
         <source>Utilities</source>
         <translation type="unfinished">Utilidades</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11221"/>
+        <location filename="../mainwindow.ui" line="11223"/>
         <source>Tools</source>
         <translation type="unfinished">Instrumentos</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11232"/>
+        <location filename="../mainwindow.ui" line="11234"/>
         <source>Games</source>
         <translation type="unfinished">Jogos</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11307"/>
+        <location filename="../mainwindow.ui" line="11309"/>
         <source>Check updates</source>
         <translation type="unfinished">Verificar atualizações</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11310"/>
+        <location filename="../mainwindow.ui" line="11312"/>
         <source>Perform a version-check</source>
         <translation type="unfinished">Execute uma verificação de versão</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11315"/>
+        <location filename="../mainwindow.ui" line="11317"/>
         <source>Infos</source>
         <translation type="unfinished">Informação</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11320"/>
+        <location filename="../mainwindow.ui" line="11322"/>
         <source>BlockNote</source>
         <translation type="unfinished">Bloco de Notas</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11323"/>
+        <location filename="../mainwindow.ui" line="11325"/>
         <source>Open a block-note like window to write temporary text</source>
         <translation type="unfinished">Abra uma janela semelhante a uma nota de bloco para escrever um texto temporário</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="461"/>
-        <location filename="../mainwindow.cpp" line="469"/>
-        <location filename="../mainwindow.cpp" line="477"/>
-        <location filename="../mainwindow.cpp" line="485"/>
-        <location filename="../mainwindow.cpp" line="509"/>
-        <location filename="../mainwindow.cpp" line="517"/>
-        <location filename="../mainwindow.cpp" line="525"/>
-        <location filename="../mainwindow.cpp" line="533"/>
-        <location filename="../mainwindow.cpp" line="570"/>
-        <location filename="../mainwindow.cpp" line="578"/>
-        <location filename="../mainwindow.cpp" line="586"/>
-        <location filename="../mainwindow.cpp" line="594"/>
+        <location filename="../mainwindow.cpp" line="467"/>
+        <location filename="../mainwindow.cpp" line="475"/>
+        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="../mainwindow.cpp" line="491"/>
+        <location filename="../mainwindow.cpp" line="515"/>
+        <location filename="../mainwindow.cpp" line="523"/>
+        <location filename="../mainwindow.cpp" line="531"/>
+        <location filename="../mainwindow.cpp" line="539"/>
+        <location filename="../mainwindow.cpp" line="576"/>
+        <location filename="../mainwindow.cpp" line="584"/>
+        <location filename="../mainwindow.cpp" line="592"/>
+        <location filename="../mainwindow.cpp" line="600"/>
         <source>warnlist</source>
         <translation type="unfinished">listas de avisos</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="493"/>
-        <location filename="../mainwindow.cpp" line="541"/>
-        <location filename="../mainwindow.cpp" line="602"/>
+        <location filename="../mainwindow.cpp" line="499"/>
+        <location filename="../mainwindow.cpp" line="547"/>
+        <location filename="../mainwindow.cpp" line="608"/>
         <source>blacklist</source>
         <translation type="unfinished">lista negra</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4101"/>
+        <location filename="../mainwindow.cpp" line="4138"/>
         <source>copy</source>
         <translation type="unfinished">copia</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4103"/>
+        <location filename="../mainwindow.cpp" line="4140"/>
         <source>copies</source>
         <translation type="unfinished">copias</translation>
     </message>

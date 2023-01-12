@@ -3,12 +3,12 @@
         <file>logo/logdoctor.svg</file>
     </qresource>
     <qresource prefix="/translations">
-        <file alias="en_EN">translations/LogDoctor_en_EN.qm</file>
         <file alias="es_ES">translations/LogDoctor_es_ES.qm</file>
         <file alias="fr_FR">translations/LogDoctor_fr_FR.qm</file>
         <file alias="it_IT">translations/LogDoctor_it_IT.qm</file>
         <file alias="ja_JP">translations/LogDoctor_ja_JP.qm</file>
         <file alias="pt_BR">translations/LogDoctor_pt_BR.qm</file>
+        <file alias="en_GB">translations/LogDoctor_en_GB.qm</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="3270">fonts/3270.ttf</file>
@@ -106,12 +106,12 @@
         <file>icons/midtone/spinbox_sub.png</file>
     </qresource>
     <qresource prefix="/flags">
-        <file>flags/en.png</file>
         <file>flags/es.png</file>
         <file>flags/fr.png</file>
         <file>flags/it.png</file>
         <file>flags/br.png</file>
         <file>flags/jp.png</file>
+        <file>flags/gb.png</file>
     </qresource>
     <qresource prefix="/games">
         <file>games/crisscross/o.png</file>

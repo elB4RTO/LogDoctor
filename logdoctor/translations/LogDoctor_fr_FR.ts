@@ -236,66 +236,66 @@ version online malformée</translation>
 <context>
     <name>DialogSec</name>
     <message>
-        <location filename="../mainwindow.cpp" line="619"/>
+        <location filename="../mainwindow.cpp" line="625"/>
         <source>An error occured while reading the configuration file</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la lecture du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="625"/>
+        <location filename="../mainwindow.cpp" line="631"/>
         <source>One of the lists has an invalid item</source>
         <translation type="unfinished">L&apos;une des listes contient un élément non valide</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="630"/>
+        <location filename="../mainwindow.cpp" line="636"/>
         <source>An error occured while parsing configuration file&apos;s data</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse des données du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="721"/>
-        <location filename="../mainwindow.cpp" line="734"/>
+        <location filename="../mainwindow.cpp" line="727"/>
+        <location filename="../mainwindow.cpp" line="740"/>
         <source>Failed to create the configuration file&apos;s directory</source>
         <translation type="unfinished">Échec de la création du répertoire du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="831"/>
+        <location filename="../mainwindow.cpp" line="837"/>
         <source>An error occured while writing the configuration file</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;écriture du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="834"/>
+        <location filename="../mainwindow.cpp" line="840"/>
         <source>An error occured while preparing the configuration file&apos;s data</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la préparation des données des fichiers de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="867"/>
-        <location filename="../mainwindow.cpp" line="883"/>
+        <location filename="../mainwindow.cpp" line="873"/>
+        <location filename="../mainwindow.cpp" line="889"/>
         <source>Failed to create the database backups&apos; directory</source>
         <translation type="unfinished">Echec de la création du répertoire des sauvegardes de le database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="910"/>
+        <location filename="../mainwindow.cpp" line="916"/>
         <source>Failed to copy the database file</source>
         <translation type="unfinished">Impossible de copier le fichier de database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="924"/>
-        <location filename="../mainwindow.cpp" line="943"/>
+        <location filename="../mainwindow.cpp" line="930"/>
+        <location filename="../mainwindow.cpp" line="949"/>
         <source>Failed to update the backups</source>
         <translation type="unfinished">Échec de la mise à jour des sauvegardes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1624"/>
-        <location filename="../mainwindow.cpp" line="1640"/>
+        <location filename="../mainwindow.cpp" line="1632"/>
+        <location filename="../mainwindow.cpp" line="1648"/>
         <source>Failed to create the directory</source>
         <translation type="unfinished">Échec de la création du répertoire</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1908"/>
+        <location filename="../mainwindow.cpp" line="1916"/>
         <source>unrecognized entry</source>
         <translation type="unfinished">entrée non reconnue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2570"/>
+        <location filename="../mainwindow.cpp" line="2607"/>
         <source>Failed to read gzipped file</source>
         <translation type="unfinished">Impossible de lire le fichier gzippé</translation>
     </message>
@@ -842,13 +842,13 @@ merci de signaler ce problème</translation>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse de la chaîne de format</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2521"/>
+        <location filename="../mainwindow.cpp" line="2558"/>
         <location filename="../modules/craplog/craplog.cpp" line="849"/>
         <source>Size of the file</source>
         <translation type="unfinished">Taille du fichier</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2531"/>
+        <location filename="../mainwindow.cpp" line="2568"/>
         <location filename="../modules/craplog/craplog.cpp" line="859"/>
         <source>Warning size parameter</source>
         <translation type="unfinished">Paramètre de taille d&apos;avertissement</translation>
@@ -1629,22 +1629,22 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</sour
 Tout champ non pris en compte par LogDoctor apparaîtra comme &apos;DISCARDED&apos;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11328"/>
+        <location filename="../mainwindow.ui" line="11330"/>
         <source>CrissCross</source>
         <translation type="unfinished">CrissCross</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11331"/>
+        <location filename="../mainwindow.ui" line="11333"/>
         <source>Play CrissCross</source>
         <translation type="unfinished">Jouer au CrissCross</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11336"/>
+        <location filename="../mainwindow.ui" line="11338"/>
         <source>Snake</source>
         <translation type="unfinished">Snake</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11339"/>
+        <location filename="../mainwindow.ui" line="11341"/>
         <source>Play Snake</source>
         <translation type="unfinished">Jouer au Snake</translation>
     </message>
@@ -1934,75 +1934,75 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <translation type="unfinished">Langue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11209"/>
+        <location filename="../mainwindow.ui" line="11211"/>
         <source>Utilities</source>
         <translation type="unfinished">Utilitaires</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11221"/>
+        <location filename="../mainwindow.ui" line="11223"/>
         <source>Tools</source>
         <translation type="unfinished">Outils</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11232"/>
+        <location filename="../mainwindow.ui" line="11234"/>
         <source>Games</source>
         <translation type="unfinished">Jeux</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11307"/>
+        <location filename="../mainwindow.ui" line="11309"/>
         <source>Check updates</source>
         <translation type="unfinished">Vérifier les mises à jour</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11310"/>
+        <location filename="../mainwindow.ui" line="11312"/>
         <source>Perform a version-check</source>
         <translation type="unfinished">Effectuer une vérification de version</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11315"/>
+        <location filename="../mainwindow.ui" line="11317"/>
         <source>Infos</source>
         <translation type="unfinished">Infos</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11320"/>
+        <location filename="../mainwindow.ui" line="11322"/>
         <source>BlockNote</source>
         <translation type="unfinished">Bloc Notes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="11323"/>
+        <location filename="../mainwindow.ui" line="11325"/>
         <source>Open a block-note like window to write temporary text</source>
         <translation type="unfinished">Ouvrir une fenêtre de type bloc-note pour écrire un texte temporaire</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="461"/>
-        <location filename="../mainwindow.cpp" line="469"/>
-        <location filename="../mainwindow.cpp" line="477"/>
-        <location filename="../mainwindow.cpp" line="485"/>
-        <location filename="../mainwindow.cpp" line="509"/>
-        <location filename="../mainwindow.cpp" line="517"/>
-        <location filename="../mainwindow.cpp" line="525"/>
-        <location filename="../mainwindow.cpp" line="533"/>
-        <location filename="../mainwindow.cpp" line="570"/>
-        <location filename="../mainwindow.cpp" line="578"/>
-        <location filename="../mainwindow.cpp" line="586"/>
-        <location filename="../mainwindow.cpp" line="594"/>
+        <location filename="../mainwindow.cpp" line="467"/>
+        <location filename="../mainwindow.cpp" line="475"/>
+        <location filename="../mainwindow.cpp" line="483"/>
+        <location filename="../mainwindow.cpp" line="491"/>
+        <location filename="../mainwindow.cpp" line="515"/>
+        <location filename="../mainwindow.cpp" line="523"/>
+        <location filename="../mainwindow.cpp" line="531"/>
+        <location filename="../mainwindow.cpp" line="539"/>
+        <location filename="../mainwindow.cpp" line="576"/>
+        <location filename="../mainwindow.cpp" line="584"/>
+        <location filename="../mainwindow.cpp" line="592"/>
+        <location filename="../mainwindow.cpp" line="600"/>
         <source>warnlist</source>
         <translation type="unfinished">warnlist</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="493"/>
-        <location filename="../mainwindow.cpp" line="541"/>
-        <location filename="../mainwindow.cpp" line="602"/>
+        <location filename="../mainwindow.cpp" line="499"/>
+        <location filename="../mainwindow.cpp" line="547"/>
+        <location filename="../mainwindow.cpp" line="608"/>
         <source>blacklist</source>
         <translation type="unfinished">blacklist</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4101"/>
+        <location filename="../mainwindow.cpp" line="4138"/>
         <source>copy</source>
         <translation type="unfinished">copie</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4103"/>
+        <location filename="../mainwindow.cpp" line="4140"/>
         <source>copies</source>
         <translation type="unfinished">copies</translation>
     </message>
