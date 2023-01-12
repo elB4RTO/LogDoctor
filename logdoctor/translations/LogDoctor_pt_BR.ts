@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_ES">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>Crapinfo</name>
     <message>
         <location filename="../modules/crapinfo/crapinfo.ui" line="161"/>
         <source>Version</source>
-        <translation>versão</translation>
+        <translation type="unfinished">Versão</translation>
     </message>
     <message>
         <location filename="../modules/crapinfo/crapinfo.ui" line="188"/>
         <source>Currently installed version of the software</source>
-        <translation type="unfinished">versão do software atualmente instalada</translation>
+        <translation type="unfinished">Versão do software atualmente instalada</translation>
     </message>
     <message>
         <location filename="../modules/crapinfo/crapinfo.ui" line="225"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../modules/crapinfo/crapinfo.ui" line="410"/>
         <source>Paths</source>
-        <translation type="unfinished">rotas</translation>
+        <translation type="unfinished">Rotas</translation>
     </message>
     <message>
         <location filename="../modules/crapinfo/crapinfo.ui" line="448"/>
@@ -354,7 +354,7 @@ Continue?</source>
     <message>
         <location filename="../modules/dialogs.cpp" line="49"/>
         <source>Configuration file not found</source>
-        <translation type="unfinished">arquivo de configuração não encontrado</translation>
+        <translation type="unfinished">Arquivo de configuração não encontrado</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="126"/>
@@ -753,7 +753,7 @@ Por favor, tente um formato valido na configuração</translation>
         <source>No log field has been set in the current logs format,
 making it useless to parse logs</source>
         <translation type="unfinished">Nenhum campo de registro foi definido no formato atual,
-        portanto é inútil analisar alguns arquivos</translation>
+portanto é inútil analisar alguns arquivos</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="393"/>
@@ -761,8 +761,8 @@ making it useless to parse logs</source>
 making it hard to establish net bounds,
 and possibly leading to store incorrect data</source>
         <translation type="unfinished">Falta um separador entre um ou mais campos,
-        isso torna difícil definir limites líquidos,
-        e pode levar ao armazenamento de dados incorretos</translation>
+isso torna difícil definir limites líquidos,
+e pode levar ao armazenamento de dados incorretos</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="348"/>
@@ -791,14 +791,14 @@ and possibly leading to store incorrect data</source>
         <source>Please set the proper permissions and retry
 If this error persists, please report this issue</source>
         <translation type="unfinished">Defina as permissões adequadas e tente novamente
-        Se o erro persistir, por favor reporte este problema</translation>
+Se o erro persistir, por favor reporte este problema</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="25"/>
         <source>If you haven&apos;t manually edited the configuration file,
 please report this issue</source>
         <translation type="unfinished">Se você não editou manualmente o arquivo de configuração,
-        por favor reporte este problema</translation>
+por favor reporte este problema</translation>
     </message>
     <message>
         <location filename="../modules/dialogs.cpp" line="383"/>
@@ -1030,13 +1030,13 @@ Abortado</translation>
     <message>
         <location filename="../mainwindow.ui" line="1796"/>
         <source>Date when the request arrived (YYYY-MM-DD)</source>
-        <translation type="unfinished">Data em que o pedido chegou(AAAA-MM-DD)</translation>
+        <translation type="unfinished">Data em que o pedido chegou (AAAA-MM-DD)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="1807"/>
         <location filename="../mainwindow.ui" line="2310"/>
         <source>Time when the request arrived (hh:mm:ss)</source>
-        <translation type="unfinished">Hora em que o pedido chegou(hh:mm:ss)</translation>
+        <translation type="unfinished">Hora em que o pedido chegou (hh:mm:ss)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="1818"/>
@@ -1523,7 +1523,7 @@ Abortado</translation>
     <message>
         <location filename="../mainwindow.ui" line="7304"/>
         <source>Path where the used files hashes database is located</source>
-        <translation type="unfinished">quebrado onde está localizado o banco de dados hash dos arquivos usados</translation>
+        <translation type="unfinished">Quebrado onde está localizado o banco de dados hash dos arquivos usados</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="7307"/>
@@ -1547,7 +1547,7 @@ Abortado</translation>
         <location filename="../mainwindow.ui" line="9101"/>
         <location filename="../mainwindow.ui" line="10105"/>
         <source>Paths</source>
-        <translation type="unfinished">rotas</translation>
+        <translation type="unfinished">Rotas</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="7490"/>
@@ -1626,7 +1626,7 @@ Abortado</translation>
         <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
 Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</source>
         <translation type="unfinished">Gere uma linha de log de amostra a partir da string atualmente salva, para verificar se ela está formatada corretamente.
-        Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&apos;</translation>
+Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&apos;</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="11328"/>
@@ -1636,7 +1636,7 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</sour
     <message>
         <location filename="../mainwindow.ui" line="11331"/>
         <source>Play CrissCross</source>
-        <translation type="unfinished">Jogar a cruzada</translation>
+        <translation type="unfinished">Jogar a Cruzada</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="11336"/>
@@ -1646,7 +1646,7 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</sour
     <message>
         <location filename="../mainwindow.ui" line="11339"/>
         <source>Play Snake</source>
-        <translation type="unfinished">Jogar a cobra</translation>
+        <translation type="unfinished">Jogar a Cobra</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="308"/>
@@ -1787,9 +1787,9 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
         <location filename="../mainwindow.ui" line="9404"/>
         <location filename="../mainwindow.ui" line="10486"/>
         <source>Please check the correctness of this line.
-        Campos marcados como &apos;DISCARDED&apos;foram analisados ​​corretamente, mas não são considerados pelo LogDoctor</source>
+Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not considered by LogDoctor</source>
         <translation type="unfinished">Por favor, verifique a precisão desta linha.
-        Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o LogDoctor não os leva em consideração</translation>
+Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o LogDoctor não os leva em consideração</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="8495"/>
@@ -1987,14 +1987,14 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
         <location filename="../mainwindow.cpp" line="586"/>
         <location filename="../mainwindow.cpp" line="594"/>
         <source>warnlist</source>
-        <translation type="unfinished">Listas de avisos</translation>
+        <translation type="unfinished">listas de avisos</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="493"/>
         <location filename="../mainwindow.cpp" line="541"/>
         <location filename="../mainwindow.cpp" line="602"/>
         <source>blacklist</source>
-        <translation type="unfinished">Lista Negra</translation>
+        <translation type="unfinished">lista negra</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="4101"/>
@@ -2042,7 +2042,7 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
         <location filename="../games/snake/game.cpp" line="382"/>
         <location filename="../games/snake/game.cpp" line="391"/>
         <source>YOU WON!</source>
-        <translation type="unfinished">Ganhou!</translation>
+        <translation type="unfinished">GANHOU!</translation>
     </message>
     <message>
         <location filename="../games/snake/game.cpp" line="376"/>
@@ -2054,7 +2054,7 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
         <location filename="../games/snake/game.cpp" line="383"/>
         <location filename="../games/snake/game.cpp" line="392"/>
         <source>YOU LOST!</source>
-        <translation type="unfinished">Perdeu!</translation>
+        <translation type="unfinished">PERDEU!</translation>
     </message>
     <message>
         <location filename="../games/snake/game.cpp" line="382"/>
@@ -2084,12 +2084,12 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
     <message>
         <location filename="../games/snake/game.cpp" line="395"/>
         <source>MATCH IS DRAW!</source>
-        <translation type="unfinished">Empate!</translation>
+        <translation type="unfinished">EMPATE!</translation>
     </message>
     <message>
         <location filename="../games/snake/snake.ui" line="162"/>
         <source>PLAY</source>
-        <translation type="unfinished">Jogar</translation>
+        <translation type="unfinished">JOGAR</translation>
     </message>
     <message>
         <location filename="../games/snake/snake.ui" line="214"/>
@@ -2112,7 +2112,7 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
     <message>
         <location filename="../modules/craplog/craplog.cpp" line="1122"/>
         <source>Logs Size Breakdown</source>
-        <translation type="unfinished">Divisão do tamanho do registro</translation>
+        <translation type="unfinished">Divisão do Tamanho do Registro</translation>
     </message>
     <message>
         <location filename="../modules/craplog/craplog.cpp" line="1123"/>
@@ -2152,7 +2152,7 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
     <message>
         <location filename="../modules/crapview/crapview.cpp" line="591"/>
         <source>Time Taken to Serve Requests</source>
-        <translation type="unfinished">Tempo necessário para atender às solicitações</translation>
+        <translation type="unfinished">Tempo Necessário para Atender às Solicitações</translation>
     </message>
     <message>
         <location filename="../modules/crapview/crapview.cpp" line="664"/>
@@ -2163,7 +2163,7 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
         <location filename="../modules/crapview/crapview.cpp" line="769"/>
         <location filename="../modules/crapview/crapview.cpp" line="888"/>
         <source>Time of Day Count</source>
-        <translation type="unfinished">Contagem de horas do dia</translation>
+        <translation type="unfinished">Contagem de Horas do Dia</translation>
     </message>
     <message>
         <location filename="../modules/crapview/crapview.cpp" line="710"/>

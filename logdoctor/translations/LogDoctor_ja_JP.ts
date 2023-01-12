@@ -230,7 +230,7 @@ LogDoctor の git リポジトリにアクセスし、更新方法に関する�
     </message>
     <message>
         <source>Failed to read gzipped file</source>
-        <translation type="unfinished">gzip されたファイルの読み取りに失敗しました</translation>
+        <translation type="unfinished">Gzip されたファイルの読み取りに失敗しました</translation>
     </message>
     <message>
         <source>Discard it and continue, or Abort all and exit?</source>
@@ -598,7 +598,7 @@ please report this issue</source>
     </message>
     <message>
         <source>An error accured while reading the gzipped file</source>
-        <translation type="unfinished">gzip ファイルの読み取り中にエラーが発生しました</translation>
+        <translation type="unfinished">Gzip ファイルの読み取り中にエラーが発生しました</translation>
     </message>
     <message>
         <source>Something failed while handling the file</source>
@@ -612,7 +612,9 @@ please report this issue</source>
         <source>An error occured while working on the database
 
 Aborting</source>
-        <translation type="unfinished">データベースの作業中にエラーが発生しました 中止中</translation>
+        <translation type="unfinished">データベースの作業中にエラーが発生しました
+
+中止中</translation>
     </message>
     <message>
         <source>One of the lists has an invalid item</source>
@@ -993,7 +995,7 @@ please follow the instruction on the repository page</source>
     </message>
     <message>
         <source>Explanatory</source>
-        <translation type="unfinished">Explanatory説明的</translation>
+        <translation type="unfinished">説明的</translation>
     </message>
     <message>
         <source>Logs parser</source>
@@ -1065,7 +1067,7 @@ please follow the instruction on the repository page</source>
     </message>
     <message>
         <source>Cerulean</source>
-        <translation>Cerulean</translation>
+        <translation type="unfinished">セルリアン</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>
@@ -1121,7 +1123,7 @@ please follow the instruction on the repository page</source>
     </message>
     <message>
         <source>A new backup is made when closing LogDoctor after having succesfully edited the database</source>
-        <translation type="unfinished">A new backup is made when closing LogDoctor after having succesfully edited the database</translation>
+        <translation type="unfinished">データベースを正常に編集した後に LogDoctor を閉じると、新しいバックアップが作成されます</translation>
     </message>
     <message>
         <source>Backup the Logs Data database and keep</source>
@@ -1239,7 +1241,7 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
     </message>
     <message>
         <source>Blacklists</source>
-        <translation>Blacklists</translation>
+        <translation type="unfinished">ブラックリスト</translation>
     </message>
     <message>
         <source>Use blacklist for this field</source>
@@ -1279,7 +1281,7 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished">Toolsツール</translation>
+        <translation type="unfinished">ツール</translation>
     </message>
     <message>
         <source>Check updates</source>
@@ -1295,7 +1297,7 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
     </message>
     <message>
         <source>BlockNote</source>
-        <translation>BlockNote</translation>
+        <translation type="unfinished">ブロックノート</translation>
     </message>
     <message>
         <source>Open a block-note like window to write temporary text</source>
@@ -1387,7 +1389,7 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
     </message>
     <message>
         <source>blacklist</source>
-        <translation>blacklist</translation>
+        <translation type="unfinished">ブラックリスト</translation>
     </message>
     <message>
         <source>Ash</source>
@@ -1424,9 +1426,8 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
     <message>
         <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
 Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</source>
-        <translation type="unfinished">Generate a sample log line from the cur現在保存されている文字列からサンプル ログ行を生成し、正しくフォーマットされているかどうかを確認します。
-LogDoctor によって考慮されないフィールドは、「DISCARDED」として表示されます。rently saved string, to check if it gets formatted correctly.
-Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</translation>
+        <translation type="unfinished">現在保存されている文字列からサンプル ログ行を生成し、正しくフォーマットされているかどうかを確認します。
+LogDoctor によって考慮されないフィールドは、「DISCARDED」として表示されます</translation>
     </message>
     <message>
         <source>Icons</source>
@@ -1551,7 +1552,7 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
     </message>
     <message>
         <source>Others</source>
-        <translation type="unfinished">10月</translation>
+        <translation type="unfinished">他人</translation>
     </message>
     <message>
         <source>Time of Day Count</source>
@@ -1671,7 +1672,7 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
     </message>
     <message>
         <source>March</source>
-        <translation type="unfinished">行進</translation>
+        <translation type="unfinished">3月</translation>
     </message>
     <message>
         <source>April</source>
