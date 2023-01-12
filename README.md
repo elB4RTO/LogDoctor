@@ -1,8 +1,7 @@
-<h1 align="center">LogDoctor</h1>
-
-<p align="center">Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
-
 <div align="center">
+  <h1>LogDoctor</h1>
+  <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
+  <br/>
   <img src="https://img.shields.io/badge/version-2.02-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
   <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
@@ -11,7 +10,7 @@
   <img src="https://img.shields.io/badge/BSD-supported-brightgreen"/>
   <img src="https://img.shields.io/badge/Windows-supported-brightgreen"/>
   <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-brightgreen"/>
-  <br/>
+ 
   <h2>🇬🇧 🇪🇸 🇫🇷 🇮🇹 🇯🇵 🇧🇷</h2>
 </div>
 
