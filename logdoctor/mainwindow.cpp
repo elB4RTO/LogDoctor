@@ -85,10 +85,12 @@ MainWindow::MainWindow(QWidget *parent)
     //////////////
     //// MENU ////
     // languages
-    connect( this->ui->actionEnglish,  &QAction::triggered, this, &MainWindow::menu_actionEnglish_triggered  );
-    connect( this->ui->actionEspanol,  &QAction::triggered, this, &MainWindow::menu_actionEspanol_triggered  );
-    connect( this->ui->actionFrancais, &QAction::triggered, this, &MainWindow::menu_actionFrancais_triggered );
-    connect( this->ui->actionItaliano, &QAction::triggered, this, &MainWindow::menu_actionItaliano_triggered );
+    connect( this->ui->actionEnglishGb,   &QAction::triggered, this, &MainWindow::menu_actionEnglishGb_triggered   );
+    connect( this->ui->actionEspanolEs,   &QAction::triggered, this, &MainWindow::menu_actionEspanolEs_triggered   );
+    connect( this->ui->actionFrancaisFr,  &QAction::triggered, this, &MainWindow::menu_actionFrancaisFr_triggered  );
+    connect( this->ui->actionItalianoIt,  &QAction::triggered, this, &MainWindow::menu_actionItalianoIt_triggered  );
+    connect( this->ui->actionJapaneseJp,  &QAction::triggered, this, &MainWindow::menu_actionJapaneseJp_triggered  );
+    connect( this->ui->actionPortuguesBr, &QAction::triggered, this, &MainWindow::menu_actionPortuguesBr_triggered );
     // tools
     connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
     // utilities
@@ -112,14 +114,18 @@ MainWindow::MainWindow(QWidget *parent)
     this->switchStatsTab( 0 );
 
     // language menu
-    if ( this->language != "en" ) {
-        this->ui->actionEnglish->setChecked( false );
-        if ( language == "es" ) {
-            this->ui->actionEspanol->setChecked( true );
-        } else if ( language == "fr" ) {
-            this->ui->actionFrancais->setChecked( true );
-        } else if ( language == "it" ) {
-            this->ui->actionItaliano->setChecked( true );
+    if ( this->language != "en_GB" ) {
+        this->ui->actionEnglishGb->setChecked( false );
+        if ( language == "es_ES" ) {
+            this->ui->actionEspanolEs->setChecked( true );
+        } else if ( language == "fr_FR" ) {
+            this->ui->actionFrancaisFr->setChecked( true );
+        } else if ( language == "it_IT" ) {
+            this->ui->actionItalianoIt->setChecked( true );
+        } else if ( language == "ja_JP" ) {
+            this->ui->actionJapaneseJp->setChecked( true );
+        } else if ( language == "pt_BR" ) {
+            this->ui->actionPortuguesBr->setChecked( true );
         }
     }
 
@@ -386,11 +392,11 @@ void MainWindow::readConfigs()
                 }
 
                 if ( var == "Language" ) {
-                    if ( val.size() > 2 ) {
+                    if ( val.size() != 5 ) {
                         // not a valid locale, keep the default
                         DialogSec::errLangLocaleInvalid( QString::fromStdString( val ) );
                     } else {
-                        if ( val == "en" || val == "es" || val == "fr" || val == "it" ) {
+                        if ( val == "en_GB" || val == "es_ES" || val == "fr_FR" || val == "it_IT" || val == "ja_JP" || val == "pt_BR" ) {
                             this->language = val;
                         } else {
                             DialogSec::errLangNotAccepted( QString::fromStdString( val ) );
@@ -1195,10 +1201,12 @@ void MainWindow::updateUiFonts()
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
     this->ui->menuLanguage->setFont( menu_font );
-    this->ui->actionEnglish->setFont( menu_font );
-    this->ui->actionEspanol->setFont( menu_font );
-    this->ui->actionFrancais->setFont( menu_font );
-    this->ui->actionItaliano->setFont( menu_font );
+    this->ui->actionEnglishGb->setFont( menu_font );
+    this->ui->actionEspanolEs->setFont( menu_font );
+    this->ui->actionFrancaisFr->setFont( menu_font );
+    this->ui->actionItalianoIt->setFont( menu_font );
+    this->ui->actionJapaneseJp->setFont( menu_font );
+    this->ui->actionPortuguesBr->setFont( menu_font );
     this->ui->menuTools->setFont( menu_font );
     this->ui->actionBlockNote->setFont( menu_font );
     this->ui->menuUtilities->setFont( menu_font );
@@ -1924,41 +1932,70 @@ void MainWindow::showHelp( const std::string& file_name )
 //// MENU ////
 /// //////////
 // switch language
-void MainWindow::menu_actionEnglish_triggered()
+void MainWindow::menu_actionEnglishGb_triggered()
 {
-    this->ui->actionEnglish->setChecked(   true );
-    this->ui->actionEspanol->setChecked(  false );
-    this->ui->actionFrancais->setChecked( false );
-    this->ui->actionItaliano->setChecked( false );
-    this->language = "en";
+    this->ui->actionEnglishGb->setChecked(    true );
+    this->ui->actionEspanolEs->setChecked(   false );
+    this->ui->actionFrancaisFr->setChecked(  false );
+    this->ui->actionItalianoIt->setChecked(  false );
+    this->ui->actionJapaneseJp->setChecked(  false );
+    this->ui->actionPortuguesBr->setChecked( false );
+    this->language = "en_GB";
     this->updateUiLanguage();
 }
-void MainWindow::menu_actionEspanol_triggered()
+void MainWindow::menu_actionEspanolEs_triggered()
 {
-    this->ui->actionEnglish->setChecked(  false );
-    this->ui->actionEspanol->setChecked(   true );
-    this->ui->actionFrancais->setChecked( false );
-    this->ui->actionItaliano->setChecked( false );
-    this->language = "es";
+    this->ui->actionEnglishGb->setChecked(   false );
+    this->ui->actionEspanolEs->setChecked(    true );
+    this->ui->actionFrancaisFr->setChecked(  false );
+    this->ui->actionItalianoIt->setChecked(  false );
+    this->ui->actionJapaneseJp->setChecked(  false );
+    this->ui->actionPortuguesBr->setChecked( false );
+    this->language = "es_ES";
     this->updateUiLanguage();
 }
-void MainWindow::menu_actionFrancais_triggered()
+void MainWindow::menu_actionFrancaisFr_triggered()
 {
-    this->ui->actionEnglish->setChecked(  false );
-    this->ui->actionEspanol->setChecked(  false );
-    this->ui->actionFrancais->setChecked(  true );
-    this->ui->actionItaliano->setChecked( false );
-    this->language = "fr";
+    this->ui->actionEnglishGb->setChecked(   false );
+    this->ui->actionEspanolEs->setChecked(   false );
+    this->ui->actionFrancaisFr->setChecked(   true );
+    this->ui->actionItalianoIt->setChecked(  false );
+    this->ui->actionJapaneseJp->setChecked(  false );
+    this->ui->actionPortuguesBr->setChecked( false );
+    this->language = "fr_FR";
     this->updateUiLanguage();
 }
-void MainWindow::menu_actionItaliano_triggered()
+void MainWindow::menu_actionItalianoIt_triggered()
 {
-
-    this->ui->actionEnglish->setChecked(  false );
-    this->ui->actionEspanol->setChecked(  false );
-    this->ui->actionFrancais->setChecked( false );
-    this->ui->actionItaliano->setChecked(  true );
-    this->language = "it";
+    this->ui->actionEnglishGb->setChecked(   false );
+    this->ui->actionEspanolEs->setChecked(   false );
+    this->ui->actionFrancaisFr->setChecked(  false );
+    this->ui->actionItalianoIt->setChecked(   true );
+    this->ui->actionJapaneseJp->setChecked(  false );
+    this->ui->actionPortuguesBr->setChecked( false );
+    this->language = "it_IT";
+    this->updateUiLanguage();
+}
+void MainWindow::menu_actionJapaneseJp_triggered()
+{
+    this->ui->actionEnglishGb->setChecked(   false );
+    this->ui->actionEspanolEs->setChecked(   false );
+    this->ui->actionFrancaisFr->setChecked(  false );
+    this->ui->actionItalianoIt->setChecked(  false );
+    this->ui->actionJapaneseJp->setChecked(   true );
+    this->ui->actionPortuguesBr->setChecked( false );
+    this->language = "ja_JP";
+    this->updateUiLanguage();
+}
+void MainWindow::menu_actionPortuguesBr_triggered()
+{
+    this->ui->actionEnglishGb->setChecked(   false );
+    this->ui->actionEspanolEs->setChecked(   false );
+    this->ui->actionFrancaisFr->setChecked(  false );
+    this->ui->actionItalianoIt->setChecked(  false );
+    this->ui->actionJapaneseJp->setChecked(  false );
+    this->ui->actionPortuguesBr->setChecked(  true );
+    this->language = "pt_BR";
     this->updateUiLanguage();
 }
 
