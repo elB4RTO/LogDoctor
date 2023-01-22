@@ -2965,6 +2965,7 @@ void MainWindow::on_button_StatsWarn_Draw_clicked()
 }
 void MainWindow::drawStatsWarn()
 {
+    this->ui->table_StatsWarn->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
@@ -3064,6 +3065,7 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
 }
 void MainWindow::drawStatsSpeed()
 {
+    this->ui->table_StatsSpeed->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsSpeed->setRowCount(0);
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
@@ -3280,6 +3282,7 @@ void MainWindow::on_button_StatsCount_Client_clicked()
 
 void MainWindow::drawStatsCount()
 {
+    this->ui->table_StatsCount->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
