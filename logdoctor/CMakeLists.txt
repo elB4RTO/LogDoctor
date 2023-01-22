@@ -39,6 +39,8 @@ set(PROJECT_SOURCES
     utilities/gzip.cpp
     utilities/io.h
     utilities/io.cpp
+    utilities/result.h
+    utilities/result.cpp
     utilities/rtf.h
     utilities/rtf.cpp
     utilities/strings.h
