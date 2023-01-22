@@ -2,6 +2,7 @@
 #define QUERY_H
 
 #include "modules/shared.h"
+#include "utilities/result.h"
 
 #include <QString>
 
@@ -70,7 +71,7 @@ public:
     /*!
         \param result Tuple which will hold the result of the operation and the data
     */
-    void refreshDates( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>& result );
+    void refreshDates( Result<stats_dates_t>& result );
 
 
     //! Updates the database applying the changes made in the Warnings statistics table
@@ -92,7 +93,7 @@ public:
         \param hour_ The hour
     */
     void getWarnCounts(
-        std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>>& result,
+        Result<stats_warn_items_t>& result,
         const QString& web_server,
         const QString& year_,
         const QString& month_,
@@ -114,7 +115,7 @@ public:
         \param response_f The filter for the Response field
     */
     void getSpeedData(
-            std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result,
+            Result<stats_speed_items_t>& result,
             const QString& web_server,
             const QString& year_,
             const QString& month_,
@@ -136,7 +137,7 @@ public:
         \param log_field The log field
     */
     void getItemsCount(
-        std::tuple<bool, std::vector<std::tuple<QString, int>>>& result,
+        Result<stats_count_items_t>& result,
         const QString& web_server,
         const QString& year,
         const QString& month,
@@ -158,7 +159,7 @@ public:
         \param field_filter The filter to apply
     */
     void getDaytimeCounts(
-        std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>>& result,
+        Result<stats_day_items_t>& result,
         const QString& web_server,
         const QString& from_year_, const QString& from_month_, const QString& from_day_,
         const QString& to_year_,   const QString& to_month_,   const QString& to_day_,
@@ -180,7 +181,7 @@ public:
         \see getRelationalCountsPeriod()
     */
     void getRelationalCountsDay(
-        std::tuple<bool, std::vector<std::tuple<long long, int>>>& result,
+        Result<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& year_,        const QString& month_,         const QString& day_,
         const QString& log_field_1_, const QString& field_filter_1,
@@ -204,7 +205,7 @@ public:
         \see getRelationalCountsDay()
     */
     void getRelationalCountsPeriod(
-        std::tuple<bool, std::vector<std::tuple<long long, int>>>& result,
+        Result<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& from_year_,   const QString& from_month_,    const QString& from_day_,
         const QString& to_year_,     const QString& to_month_,      const QString& to_day_,

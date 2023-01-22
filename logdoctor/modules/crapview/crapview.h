@@ -40,21 +40,21 @@ public:
     //! Parses a filter for a database field with boolean type
     /*!
         \param field_str The given filter
-        \return The resulting filter to apply at the query
+        \return The resulting filter to apply to the query
     */
     const QString parseBooleanFilter( const QString& filter_str );
 
     //! Parses a filter for a log field with integer type
     /*!
         \param field_str The given filter
-        \return The resulting filter to apply at the query
+        \return The resulting filter to apply to the query
     */
     const QString parseNumericFilter( const QString& filter_str );
 
     //! Parses a filter for a log field with text type
     /*!
         \param field_str The given filter
-        \return The resulting filter to apply at the query
+        \return The resulting filter to apply to the query
     */
     const QString parseTextualFilter( const QString& filter_str );
 
@@ -286,8 +286,9 @@ private:
     DbQuery dbQuery;
 
     // collection of available dates
-    // { web_server_id : { year : { month_str : [ days ] } } }
-    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates;
+    // db_dates_t = std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
+    // { web_server_id : { year : { month : [ days ] } } }
+    stats_dates_t dates;
 
     // collection of available fields, for tabs which needs them
     // { tab : [ fields ] }
@@ -342,7 +343,7 @@ private:
 
     // convert log fields to log fields IDs
     const QHash<QString, int> LogFields_s2i = {
-            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)), 0},
+            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
             {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
             {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
             {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},

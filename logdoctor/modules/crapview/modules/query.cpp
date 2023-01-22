@@ -148,11 +148,12 @@ const QString DbQuery::getDbField( const QString& tr_fld )
 
 
 // get a fresh map of available dates
-void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> &result)
+void DbQuery::refreshDates( Result<stats_dates_t>& result )
 {
     bool successful = true;
-    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates = {
-        {11, {}}, {12, {}}, {13, {}} };
+    stats_dates_t dates = { // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
+        {11, {}}, {12, {}}, {13, {}}
+    };
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -290,7 +291,7 @@ void DbQuery::refreshDates(std::tuple<bool, std::unordered_map<int, std::unorder
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, dates );
+    result = Result( successful, dates );
 }
 
 
@@ -348,10 +349,10 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 
 
 // get daytime values for the warnings
-void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> &result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ )
+void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ )
 {
     bool successful = true;
-    std::vector<std::vector<std::vector<std::vector<QString>>>> items;
+    stats_warn_items_t items; // std::vector<std::vector<std::vector<std::vector<QString>>>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -487,15 +488,15 @@ void DbQuery::getWarnCounts( std::tuple<bool, std::vector<std::vector<std::vecto
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, items );
+    result = Result( successful, items );
 }
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f )
+void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f )
 {
     bool successful = true;
-    std::vector<std::tuple<long long, std::vector<QString>>> data;
+    stats_speed_items_t data; // std::vector<std::tuple<long long, std::vector<QString>>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -764,12 +765,12 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
                                 prev_second = second;
                                 second = aux_second;
                             }
-                            tt = query.value(3).toString();
-                            ur = query.value(4).toString();
-                            qr = query.value(5).toString();
-                            mt = query.value(6).toString();
-                            pt = query.value(7).toString();
-                            rs = query.value(8).toString();
+                            tt = query.value(3).toString(); // time taken
+                            ur = query.value(4).toString(); // uri
+                            qr = query.value(5).toString(); // query
+                            mt = query.value(6).toString(); // method
+                            pt = query.value(7).toString(); // protocol
+                            rs = query.value(8).toString(); // response
                         }
                         // last one, append the prev
                         h=hour; m=minute; s=second-1;
@@ -841,17 +842,17 @@ void DbQuery::getSpeedData(std::tuple<bool, std::vector<std::tuple<long long, st
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, data );
+    result = Result( successful, data );
 }
 
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, int>>>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field )
+void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field )
 {
     bool successful = true;
     QHash<QString, int> aux_items;
-    std::vector<std::tuple<QString, int>> items;
+    stats_count_items_t items; // std::vector<std::tuple<QString, int>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -943,16 +944,16 @@ void DbQuery::getItemsCount( std::tuple<bool, std::vector<std::tuple<QString, in
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, items );
+    result = Result( successful, items );
 }
 
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter )
+void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter )
 {
     bool successful = true;
-    std::unordered_map<int, std::unordered_map<int, int>> data = {
+    stats_day_items_t data = { // std::unordered_map<int, std::unordered_map<int, int>>
         {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {2,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {3,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {4,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {5,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
@@ -1199,16 +1200,16 @@ void DbQuery::getDaytimeCounts( std::tuple<bool, std::unordered_map<int, std::un
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, data );
+    result = Result( successful, data );
 }
 
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
 {
     bool successful = true;
-    std::vector<std::tuple<long long, int>> data;
+    stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -1448,15 +1449,15 @@ void DbQuery::getRelationalCountsDay(std::tuple<bool, std::vector<std::tuple<lon
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, data );
+    result = Result( successful, data );
 }
 
 
 
-void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<long long, int>>> &result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
 {
     bool successful = true;
-    std::vector<std::tuple<long long, int>> data;
+    stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -1839,7 +1840,7 @@ void DbQuery::getRelationalCountsPeriod(std::tuple<bool, std::vector<std::tuple<
     if ( db.isOpen() ) {
         db.close();
     }
-    result = std::make_tuple( successful, data );
+    result = Result( successful, data );
 }
 
 
