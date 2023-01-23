@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <mutex>
 
 #include "modules/craplog/modules/formats.h"
 
@@ -16,6 +17,14 @@ class LogOps
 {
 public:
     explicit LogOps();
+
+
+    //! Receives the mutex to be shared with Craplog
+    /*!
+        \param craplog_mutex The mutex from Craplog
+    */
+    void setMutex( std::mutex* craplog_mutex=nullptr );
+
 
     //! Enumerates log file types
     /*!
@@ -66,9 +75,9 @@ public:
     void resetPerfData();
 
     // share perf data with craplog
-    const unsigned getTotalSize() const;   //!< Returns the total size of the logs lines. \see total_size
-    const unsigned getParsedSize() const;  //!< Returns the parsed logs size. \see parsed_size
-    const unsigned getParsedLines() const; //!< Returns the number of parsed log lines. \see parsed_lines
+    const unsigned getTotalSize();   //!< Returns the total size of the logs lines. \see total_size
+    const unsigned getParsedSize();  //!< Returns the parsed logs size. \see parsed_size
+    const unsigned getParsedLines(); //!< Returns the number of parsed log lines. \see parsed_lines
 
 private:
 
@@ -145,6 +154,9 @@ private:
         const std::string& line,
         const FormatOps::LogsFormat& format
     );
+
+    // a mutex shared with craplog
+    std::mutex* mutex = nullptr;
 
     // temporary vars
     unsigned total_size=0;   //!< Total size of the parsed logs. \see getTotalSize()

@@ -27,6 +27,8 @@ Craplog::Craplog()
     ////////////////////////
     //// INITIALIZATION ////
     ////////////////////////
+    // shared mutex
+    this->logOps.setMutex( &this->mutex );
     // blacklists / whitelists
     for ( int i=this->APACHE_ID; i<=this->IIS_ID; i++ ) {
         this->warnlists.emplace(  i, std::unordered_map<int, BWlist>() );
@@ -665,6 +667,7 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
 //// WORKK ////
 void Craplog::startWorking()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     this->working = true;
     this->parsing = true;
     this->proceed = true;
@@ -683,15 +686,18 @@ void Craplog::startWorking()
 }
 void Craplog::stopWorking()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     this->working = false;
     this->parsing = false;
 }
-const bool& Craplog::isWorking() const
+const bool& Craplog::isWorking()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     return this->working;
 }
-const bool& Craplog::isParsing() const
+const bool& Craplog::isParsing()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsing;
 }
 const bool& Craplog::editedDatabase() const
@@ -700,39 +706,45 @@ const bool& Craplog::editedDatabase() const
 }
 
 // performances
-const unsigned int &Craplog::getPerfSize() const
+const unsigned &Craplog::getPerfSize()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     return this->perf_size;
 }
 /*void Craplog::sumPerfSize( const unsigned& size )
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     this->perf_size   += size;
     this->parsed_size += size;
 }*/
-const unsigned int &Craplog::getTotalSize() const
+const unsigned &Craplog::getTotalSize()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     return this->total_size;
 }
-/*const unsigned int &Craplog::getParsedSize()
+/*const unsigned &Craplog::getParsedSize()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }*/
-const unsigned int &Craplog::getParsedLines() const
+const unsigned &Craplog::getParsedLines()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
 }
 
-void Craplog::sumWarningsSize( const unsigned int& size )
+void Craplog::sumWarningsSize( const unsigned& size )
 {
     this->warnlisted_size += size;
 }
-void Craplog::sumBlacklistededSize( const unsigned int& size )
+void Craplog::sumBlacklistededSize( const unsigned& size )
 {
     this->blacklisted_size += size;
 }
 
 void Craplog::collectPerfData()
 {
+    std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = this->logOps.getParsedSize();
     this->parsed_lines = this->logOps.getParsedLines();
     this->perf_size    = this->parsed_size;
@@ -1071,7 +1083,7 @@ void Craplog::storeLogLines()
 }
 
 
-const QString Craplog::printableSize( const unsigned int& bytes ) const
+const QString Craplog::printableSize( const unsigned& bytes ) const
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;

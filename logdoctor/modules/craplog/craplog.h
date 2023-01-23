@@ -410,10 +410,10 @@ public:
     void clearDataCollection();
 
     //! Returns whether the process is still running or not
-    const bool& isWorking() const;
+    const bool& isWorking();
 
     //! Returns whether the process is still parsing or not
-    const bool& isParsing() const;
+    const bool& isParsing();
 
 
     //////////////////////
@@ -434,13 +434,13 @@ public:
     /*void sumPerfSize( const unsigned& size );*/
 
     //! Returns the size to be displayed in the main window
-    const unsigned int& getPerfSize() const;
+    const unsigned int& getPerfSize();
 
     //! Returns the total logs size
-    const unsigned int& getTotalSize() const;
+    const unsigned int& getTotalSize();
 
     //! Returns the parsed logs lines
-    const unsigned int& getParsedLines() const;
+    const unsigned int& getParsedLines();
 
     /*const unsigned int& getParsedSize();*/
 
@@ -485,6 +485,7 @@ private:
     bool working = false;
     bool parsing = false;
     bool proceed = false;
+    std::mutex mutex;
 
     //! Sets the working state
     /*!

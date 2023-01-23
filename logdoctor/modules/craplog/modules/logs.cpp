@@ -13,6 +13,12 @@ LogOps::LogOps()
 }
 
 
+void LogOps::setMutex( std::mutex* craplog_mutex )
+{
+    this->mutex = craplog_mutex;
+}
+
+
 const LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format ) const
 {
     if ( lines.size() == 0 ) {
@@ -255,7 +261,10 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
             }
 
             // process the field
-            this->parsed_size += fld_str.size();
+            {
+                std::unique_lock<std::mutex> lock( *this->mutex );
+                this->parsed_size += fld_str.size();
+            }
 
             if ( fld_str != "" ) {
                 int fld_id = this->field2id.at(fld);
@@ -410,9 +419,11 @@ const std::unordered_map<int, std::string> LogOps::parseLine( const std::string&
 
     // set the default warning mark ( 0=false ) to default status
     data.emplace( 99, "0" );
-
-    this->total_size += line_size;
-    this->parsed_lines ++;
+    {
+        std::unique_lock<std::mutex> lock( *this->mutex );
+        this->total_size += line_size;
+        this->parsed_lines ++;
+    }
 
     return data;
 }
@@ -451,15 +462,18 @@ void LogOps::resetPerfData()
     this->parsed_size  = 0;
     this->parsed_lines = 0;
 }
-const unsigned LogOps::getTotalSize() const
+const unsigned LogOps::getTotalSize()
 {
+    std::unique_lock<std::mutex> lock( *this->mutex );
     return this->total_size;
 }
-const unsigned LogOps::getParsedSize() const
+const unsigned LogOps::getParsedSize()
 {
+    std::unique_lock<std::mutex> lock( *this->mutex );
     return this->parsed_size;
 }
-const unsigned LogOps::getParsedLines() const
+const unsigned LogOps::getParsedLines()
 {
+    std::unique_lock<std::mutex> lock( *this->mutex );
     return this->parsed_lines;
 }
