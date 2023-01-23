@@ -49,17 +49,15 @@ public:
 
 private slots:
 
+    ///////////////////
+    //// OVERRIDES ////
     void closeEvent( QCloseEvent *event ) override;
 
 
-    ////////////////
-    //// CUSTOM ////
+    //////////////
+    //// INIT ////
 
-    void wait_ActiveWindow();
-
-    void update_Craplog_PerfData();
-
-    void check_CraplogLLT_Finished();
+    void waitActiveWindow(); // CUSTOM
 
 
     //////////////
@@ -93,9 +91,15 @@ private slots:
 
     void on_button_Logs_Up_clicked();
 
-    void refreshLogsList();
+    void refreshLogsList(); // CUSTOM
 
-    void runCraplog();
+    void checkRefreshFinished(); // CUSTOM
+
+    void runCraplog(); // CUSTOM
+
+    void checkCraplogFinished(); // CUSTOM
+
+    void afterCraplogFinished(); // CUSTOM
 
     void on_button_LogFiles_ViewFile_clicked();
 
@@ -119,17 +123,17 @@ private slots:
     //////////////////
     //// CRAPVIEW ////
 
-    void drawStatsWarn();
+    void drawStatsWarn(); // CUSTOM
 
-    void drawStatsSpeed();
+    void drawStatsSpeed(); // CUSTOM
 
-    void drawStatsCount();
+    void drawStatsCount(); // CUSTOM
 
-    void drawStatsDay();
+    void drawStatsDay(); // CUSTOM
 
-    void drawStatsRelat();
+    void drawStatsRelat(); // CUSTOM
 
-    void makeStatsGlobals();
+    void drawStatsGlobals(); // CUSTOM
 
     //// WARNINGS ////
 
@@ -729,6 +733,8 @@ private:
     //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool state );
 
+    const bool dbUsable();
+
 
     //////////////////
     //// CRAPTABS ////
@@ -779,11 +785,11 @@ private:
     //////////////////////////
     //// LOGS PERFORMANCE ////
 
-    void update_MakeStats_labels();
+    void updatePerfsLabels(); // CUSTOM
 
-    void update_MakeStats_graphs();
+    /*void update_MakeStats_graphs(); // CUSTOM*/
 
-    void reset_MakeStats_labels();
+    void resetPerfsLabels(); // CUSTOM
 
 
     //////////////////

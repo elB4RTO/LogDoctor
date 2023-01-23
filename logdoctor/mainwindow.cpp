@@ -224,7 +224,6 @@ MainWindow::MainWindow(QWidget *parent)
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
         this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
     }
 
 
@@ -238,7 +237,7 @@ MainWindow::MainWindow(QWidget *parent)
     //// START ////
     // get a fresh list of LogFiles
     this->waiter_timer = new QTimer(this);
-    connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
+    connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::waitActiveWindow);
     this->waiter_timer->start(250);
 }
 
@@ -1559,7 +1558,7 @@ void MainWindow::updateUiLanguage()
 //////////////////////////
 //// INTEGRITY CHECKS ////
 //////////////////////////
-void MainWindow::wait_ActiveWindow()
+void MainWindow::waitActiveWindow()
 {
     if ( ! this->isActiveWindow() ) {
         QCoreApplication::processEvents( QEventLoop::AllEvents, 250 );
@@ -1725,11 +1724,13 @@ void MainWindow::makeInitialChecks()
 
 const bool MainWindow::checkDataDB()
 {
+    bool ok = false;
     if ( ! this->initiating ) { // avoid recursions
         // check the db
         const std::string path = this->db_data_path + "/collection.db";
-        bool ok = IOutils::checkFile( path, true );
+        ok = IOutils::checkFile( path, true );
         if ( ! ok ) {
+            // database file not found, make a new one
             ok = CheckSec::checkCollectionDatabase( path );
             // update ui stuff
             if ( ! ok ) {
@@ -1755,7 +1756,7 @@ const bool MainWindow::checkDataDB()
             this->db_ok = ok;
         }
     }
-    return this->db_ok;
+    return ok;
 }
 
 
@@ -2310,6 +2311,15 @@ void MainWindow::setDbWorkingState( const bool state )
     }
 }
 
+const bool MainWindow::dbUsable()
+{
+    bool ok = false;
+    if ( !this->db_working ) {
+        ok = this->checkDataDB();
+    }
+    return ok;
+}
+
 
 //////////////
 //// LOGS ////
@@ -2331,7 +2341,7 @@ void MainWindow::on_button_Logs_Up_clicked()
 void MainWindow::checkMakeStats_Makable()
 {
     bool state = false;
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         // db is not busy
         if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
             // all checked
@@ -2364,11 +2374,12 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
         // set the WebServer
         this->craplog.setCurrentWSID( 11 );
         // reset the log files viewer
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
+        {
+            QString rich_text;
+            RichText::richLogsDefault( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -2384,11 +2395,12 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
         // set the WebServer
         this->craplog.setCurrentWSID( 12 );
         // reset the log files viewer
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
+        {
+            QString rich_text;
+            RichText::richLogsDefault( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -2404,11 +2416,12 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
         // set the WebServer
         this->craplog.setCurrentWSID( 13 );
         // reset the log files viewer
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
+        {
+            QString rich_text;
+            RichText::richLogsDefault( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -2431,12 +2444,12 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
     delete this->craplog_timer;
     this->craplog_timer = new QTimer(this);
     this->craplog_timer->setSingleShot( true );
-    connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(refreshLogsList()));
+    connect(this->craplog_timer, &QTimer::timeout, this, &MainWindow::refreshLogsList);
     this->craplog_timer->start(250);
     // periodically check if thread finished
     delete this->waiter_timer;
     this->waiter_timer = new QTimer(this);
-    connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(check_CraplogLLT_Finished()));
+    connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::checkRefreshFinished);
     this->waiter_timer->start(250);
 }
 
@@ -2485,7 +2498,7 @@ void MainWindow::refreshLogsList()
     }
     refreshing_list = false;
 }
-void MainWindow::check_CraplogLLT_Finished()
+void MainWindow::checkRefreshFinished()
 {
     if ( ! this->refreshing_list ) {
         this->waiter_timer->stop();
@@ -2626,9 +2639,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     format, this->TB );
                 this->ui->textLogFiles->setText( rich_content );
                 this->ui->textLogFiles->setFont( this->TB.getFont() );
-                rich_content.clear();
             }
-            content.clear();
         }
         if ( ! proceed ) {
             // failed
@@ -2636,7 +2647,6 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             RichText::richLogsFailure( rich_text );
             this->ui->textLogFiles->setText( rich_text );
             this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-            rich_text.clear();
         }
     }
 }
@@ -2671,7 +2681,7 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 
 void MainWindow::on_button_MakeStats_Start_clicked()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         bool proceed = true;
         // check that the format has been set
         const FormatOps::LogsFormat& lf = this->craplog.getLogsFormat( this->craplog.getCurrentWSID() );
@@ -2728,13 +2738,13 @@ void MainWindow::on_button_MakeStats_Start_clicked()
                 // periodically update perfs
                 delete this->waiter_timer;
                 this->waiter_timer = new QTimer(this);
-                connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
+                connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::checkCraplogFinished);
                 // run craplog as thread
                 this->waiter_timer_start = std::chrono::system_clock::now();
                 delete this->craplog_timer;
                 this->craplog_timer = new QTimer(this);
                 this->craplog_timer->setSingleShot( true );
-                connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(runCraplog()));
+                connect(this->craplog_timer, &QTimer::timeout, this, &MainWindow::runCraplog);
                 // start processing
                 this->waiter_timer->start(250);
                 this->craplog_timer->start(100);
@@ -2749,7 +2759,7 @@ void MainWindow::runCraplog()
     this->craplog.run();
 }
 
-void MainWindow::reset_MakeStats_labels()
+void MainWindow::resetPerfsLabels()
 {
     // reset to default
     this->ui->label_MakeStats_Size->setText( "0 B" );
@@ -2759,7 +2769,7 @@ void MainWindow::reset_MakeStats_labels()
     this->ui->label_MakeStats_Speed->setText( "0 B/s" );
 }
 
-void MainWindow::update_MakeStats_labels()
+void MainWindow::updatePerfsLabels()
 {
     // update values
     unsigned size;
@@ -2782,10 +2792,10 @@ void MainWindow::update_MakeStats_labels()
     this->ui->label_MakeStats_Speed->setText( this->printableSpeed( size, secs ));
 }
 
-void MainWindow::update_Craplog_PerfData()
+void MainWindow::checkCraplogFinished()
 {
     // craplog is running as thread, update the values meanwhile
-    this->update_MakeStats_labels();
+    this->updatePerfsLabels();
     // check if Craplog has finished working
     if ( ! this->craplog.isWorking() ) {
         this->waiter_timer->stop();
@@ -2796,7 +2806,7 @@ void MainWindow::update_Craplog_PerfData()
 void MainWindow::craplogStarted()
 {
     // reset perfs
-    this->reset_MakeStats_labels();
+    this->resetPerfsLabels();
     this->craplog.logOps.resetPerfData();
     // disable the LogFiles section
     this->ui->stacked_Logs_Pages->setEnabled(false);
@@ -2816,7 +2826,7 @@ void MainWindow::craplogStarted()
 void MainWindow::craplogFinished()
 {
     // update the perf data one last time, just in case
-    this->update_MakeStats_labels();
+    this->updatePerfsLabels();
     this->craplog.makeChart(
         this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
         this->ui->chart_MakeStats_Size );
@@ -2826,12 +2836,21 @@ void MainWindow::craplogFinished()
     }
     if ( this->craplog.getTotalSize() == 0 ) {
         // no data
-        this->reset_MakeStats_labels();
+        this->resetPerfsLabels();
     }
     // clean up temp vars
     this->craplog.clearDataCollection();
     this->craplog.logOps.resetPerfData();
+    // refresh the logs section
+    delete this->craplog_timer;
+    this->craplog_timer = new QTimer(this);
+    this->craplog_timer->setSingleShot( true );
+    connect(this->craplog_timer, &QTimer::timeout, this, &MainWindow::afterCraplogFinished);
+    this->craplog_timer->start(1000);
+}
 
+void MainWindow::afterCraplogFinished()
+{
     // refresh the logs list
     this->on_button_LogFiles_RefreshList_clicked();
     // enable the LogFiles section
@@ -2868,7 +2887,7 @@ void MainWindow::refreshStatsDates()
 //// WARN ////
 void MainWindow::checkStatsWarnDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
           && this->ui->box_StatsWarn_Month->currentIndex() >= 0
           && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
@@ -2885,13 +2904,11 @@ void MainWindow::checkStatsWarnDrawable()
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsWarn_Year->clear();
-        if ( index != -1 ) {
-            this->ui->box_StatsWarn_Year->addItems(
-                this->crapview.getYears( this->wsFromIndex( index ) ));
-            this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
-        }
+    this->ui->box_StatsWarn_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsWarn_Year->addItems(
+            this->crapview.getYears( this->wsFromIndex( index ) ));
+        this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
     }
     this->checkStatsWarnDrawable();
 }
@@ -2954,12 +2971,12 @@ void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsWarn()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsWarn);
         this->crapview_timer->start(250);
     }
 }
@@ -2992,7 +3009,7 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
 //// SPEED ////
 void MainWindow::checkStatsSpeedDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
@@ -3009,13 +3026,11 @@ void MainWindow::checkStatsSpeedDrawable()
 
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsSpeed_Year->clear();
-        if ( index != -1 ) {
-            this->ui->box_StatsSpeed_Year->addItems(
-                this->crapview.getYears( this->wsFromIndex( index ) ) );
-            this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
-        }
+    this->ui->box_StatsSpeed_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsSpeed_Year->addItems(
+            this->crapview.getYears( this->wsFromIndex( index ) ) );
+        this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -3054,12 +3069,12 @@ void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsSpeed()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsSpeed);
         this->crapview_timer->start(250);
     }
 }
@@ -3088,7 +3103,7 @@ void MainWindow::drawStatsSpeed()
 //// COUNT ////
 void MainWindow::checkStatsCountDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         if ( this->ui->box_StatsCount_Year->currentIndex() >= 0
           && this->ui->box_StatsCount_Month->currentIndex() >= 0
           && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
@@ -3105,14 +3120,12 @@ void MainWindow::checkStatsCountDrawable()
 
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsCount_Year->clear();
-        if ( index != -1 ) {
-            this->ui->box_StatsCount_Year->addItems(
-                this->crapview.getYears( this->wsFromIndex( index ) ));
-            this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
-            this->resetStatsCountButtons();
-        }
+    this->ui->box_StatsCount_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsCount_Year->addItems(
+            this->crapview.getYears( this->wsFromIndex( index ) ));
+        this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
+        this->resetStatsCountButtons();
     }
     this->checkStatsCountDrawable();
 }
@@ -3186,97 +3199,97 @@ void MainWindow::makeStatsCount()
     delete this->crapview_timer;
     this->crapview_timer = new QTimer(this);
     this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
+    connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsCount);
     this->crapview_timer->start(250);
 }
 
 void MainWindow::on_button_StatsCount_Protocol_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->ui->button_StatsCount_Protocol->setFlat( false );
         this->count_fld = this->ui->button_StatsCount_Protocol->text();
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Method_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Method->text();
         this->ui->button_StatsCount_Method->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Uri_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Uri->text();
         this->ui->button_StatsCount_Uri->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Query_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Query->text();
         this->ui->button_StatsCount_Query->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Response_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Response->text();
         this->ui->button_StatsCount_Response->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Referrer_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Referrer->text();
         this->ui->button_StatsCount_Referrer->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Cookie_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Cookie->text();
         this->ui->button_StatsCount_Cookie->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_UserAgent_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_UserAgent->text();
         this->ui->button_StatsCount_UserAgent->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Client_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Client->text();
         this->ui->button_StatsCount_Client->setFlat( false );
-        makeStatsCount();
+        this->makeStatsCount();
     }
 }
 
@@ -3300,7 +3313,7 @@ void MainWindow::drawStatsCount()
 //// DAY ////
 void MainWindow::checkStatsDayDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         bool aux = true;
         // secondary date (period)
         if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
@@ -3352,7 +3365,7 @@ void MainWindow::checkStatsDayDrawable()
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->ui->box_StatsDay_LogsField->clear();
         this->ui->box_StatsDay_FromYear->clear();
         this->ui->box_StatsDay_ToYear->clear();
@@ -3369,7 +3382,6 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
                 this->ui->box_StatsDay_ToYear->addItems( years );
                 this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
             }
-            years.clear();
         }
     }
     this->checkStatsDayDrawable();
@@ -3469,12 +3481,12 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsDay()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsDay);
         this->crapview_timer->start(250);
     }
 }
@@ -3509,7 +3521,7 @@ void MainWindow::drawStatsDay()
 //// RELATIONAL ////
 void MainWindow::checkStatsRelatDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         bool aux = true;
         if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
           && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
@@ -3558,7 +3570,7 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->ui->box_StatsRelat_LogsField_1->clear();
         this->ui->box_StatsRelat_LogsField_2->clear();
         if ( index != -1 ) {
@@ -3578,7 +3590,6 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
             this->ui->box_StatsRelat_ToYear->clear();
             this->ui->box_StatsRelat_ToYear->addItems( years );
             this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
-            years.clear();
         }
     }
     this->checkStatsRelatDrawable();
@@ -3663,12 +3674,12 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsRelat()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsRelat);
         this->crapview_timer->start(250);
     }
 }
@@ -3712,9 +3723,9 @@ void MainWindow::drawStatsRelat()
 ////////////////
 //// GLOBAL ////
 //
-void MainWindow::makeStatsGlobals()
+void MainWindow::drawStatsGlobals()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         std::vector<std::tuple<QString,QString>> recur_list;
         std::vector<std::tuple<QString,QString>> traffic_list;
         std::vector<std::tuple<QString,QString>> perf_list;
@@ -3778,8 +3789,6 @@ void MainWindow::makeStatsGlobals()
         } else {
             this->resetStatsGlob();
         }
-        recur_list.clear(); traffic_list.clear();
-        perf_list.clear();  work_list.clear();
 
     } else {
         this->resetStatsGlob();
@@ -3834,13 +3843,13 @@ void MainWindow::makeStatsGlob()
     delete this->crapview_timer;
     this->crapview_timer = new QTimer(this);
     this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(makeStatsGlobals()));
+    connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsGlobals);
     this->crapview_timer->start(250);
 }
 
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->glob_ws = "apache";
         this->makeStatsGlob();
     }
@@ -3849,7 +3858,7 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->glob_ws = "nginx";
         this->makeStatsGlob();
     }
@@ -3858,7 +3867,7 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->glob_ws = "iis";
         this->makeStatsGlob();
     }
