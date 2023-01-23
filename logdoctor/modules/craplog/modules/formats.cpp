@@ -12,7 +12,7 @@ FormatOps::FormatOps()
 
 
 // count the new lines
-const int FormatOps::countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators )
+const int FormatOps::countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const
 {
     int nl = 0;
     nl += StringOps::count( initial, "\n" );
@@ -25,7 +25,7 @@ const int FormatOps::countNewLines( const std::string& initial, const std::strin
 
 
 // process escapes like apache
-const std::string FormatOps::parseApacheEscapes( const std::string& string , const bool& strftime )
+const std::string FormatOps::parseApacheEscapes( const std::string& string , const bool strftime ) const
 {
     int i = 0,
         max = string.size()-1;
@@ -122,7 +122,7 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
 }
 
 // process escapes like nginx
-const std::string FormatOps::parseNginxEscapes( const std::string& string )
+const std::string FormatOps::parseNginxEscapes( const std::string& string ) const
 {
     int i = 0,
         max = string.size()-1;
@@ -169,7 +169,7 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string )
 }
 
 // find where the field ends
-const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int& start )
+const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int start ) const
 {
     size_t stop=start;
     const int max=string.size()-1;
@@ -187,7 +187,7 @@ const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int&
 }
 
 // check the given format string for unwanted characters
-void FormatOps::checkIisString( const std::string& string )
+void FormatOps::checkIisString( const std::string& string ) const
 {
     for ( const char& chr : string ) {
         if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == ',' || chr == ':' || chr == '(' || chr == ')' || chr == '[' || chr == ']') ) {
@@ -200,7 +200,7 @@ void FormatOps::checkIisString( const std::string& string )
 
 
 
-const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str )
+const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) const
 {
     const auto &f_map   = this->APACHE_ALF;
     const auto &f_map_v = this->APACHE_ALF_V;
@@ -482,7 +482,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
 }
 // sample
-const QString FormatOps::getApacheLogSample( const LogsFormat& log_format )
+const QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
 {
     QString sample = "";
     const std::unordered_map<std::string, QString>& map = this->APACHE_ALF_SAMPLES;
@@ -505,7 +505,7 @@ const QString FormatOps::getApacheLogSample( const LogsFormat& log_format )
 
 
 
-const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::string& f_str )
+const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
 {
     const auto& f_map  = this->NGINX_ALF;
 
@@ -583,7 +583,7 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         };
 }
 // sample
-const QString FormatOps::getNginxLogSample( const LogsFormat& log_format )
+const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 {
     QString sample = "";
     const std::unordered_map<std::string, QString>& map = this->NGINX_ALF_SAMPLES;
@@ -606,7 +606,7 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format )
 
 
 
-const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod )
+const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
 {
     this->checkIisString( f_str );
     std::string initial="", final="";
@@ -683,7 +683,7 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
         };
 }
 // sample
-const QString FormatOps::getIisLogSample( const LogsFormat& log_format )
+const QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
 {
     QString sample = "";
     const std::unordered_map<std::string, QString>& map = this->IIS_ALF_SAMPLES;

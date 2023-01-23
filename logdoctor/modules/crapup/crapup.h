@@ -19,6 +19,7 @@ namespace Ui {
 class Crapup : public QWidget
 {
     Q_OBJECT
+
 public:
 
     //! Class constructor
@@ -27,7 +28,7 @@ public:
         \param icons theme The theme of the icons
         \param parent The parent Widget
     */
-    Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent=nullptr );
+    explicit Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent=nullptr );
     ~Crapup();
 
 
@@ -36,7 +37,7 @@ public:
         \param current_version The running version of LogDoctor
         \throw GenericException
     */
-    void versionCheck( const float& current_version );
+    void versionCheck( const float current_version );
 
 
 signals:
@@ -69,7 +70,7 @@ private:
 
     QTimer* img_timer = nullptr;
 
-    void getStyleSheet( QString& stylesheet, const int& theme_id );
+    void getStyleSheet( QString& stylesheet, const int& theme_id ) const;
 
     bool request_aborted;
 

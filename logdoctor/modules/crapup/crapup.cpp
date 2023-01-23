@@ -59,7 +59,7 @@ void Crapup::closeEvent( QCloseEvent* event )
 }
 
 
-void Crapup::versionCheck( const float& v )
+void Crapup::versionCheck( const float v )
 {
     bool successful = false;
     float version = -1;
@@ -278,7 +278,7 @@ void Crapup::rotateImg()
 }
 
 
-void Crapup::getStyleSheet( QString& stylesheet, const int& theme_id )
+void Crapup::getStyleSheet( QString& stylesheet, const int& theme_id ) const
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {

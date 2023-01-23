@@ -8,7 +8,7 @@ StringOps::StringOps()
 }
 
 
-const int StringOps::count(const std::string& str, const std::string& flag, const bool& consecutives )
+const int StringOps::count( const std::string& str, const std::string& flag, const bool consecutives )
 {
     size_t start=0, aux_start=0, count=0;
     while (true) {

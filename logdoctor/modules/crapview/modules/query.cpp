@@ -18,7 +18,7 @@ DbQuery::DbQuery()
 
 }
 
-void DbQuery::setDialogLevel(const int& new_level )
+void DbQuery::setDialogLevel(const int new_level )
 {
     this->dialog_level = new_level;
 }
@@ -30,7 +30,7 @@ void DbQuery::setDbPath( const std::string& path )
 }
 
 
-const int DbQuery::getMinuteGap( const int& minute , const int& gap )
+const int DbQuery::getMinuteGap( const int minute, const int gap ) const
 {
     int m = -1;
     if ( minute < 0 || minute >= 60 ) {
@@ -48,7 +48,7 @@ const int DbQuery::getMinuteGap( const int& minute , const int& gap )
     return m;
 }
 
-const int DbQuery::getMonthDays( const int& year, const int& month )
+const int DbQuery::getMonthDays( const int year, const int month ) const
 {
     int n_days;
     switch (month) {
@@ -71,7 +71,7 @@ const int DbQuery::getMonthDays( const int& year, const int& month )
     return n_days;
 }
 
-const int DbQuery::getMonthsCount( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month )
+const int DbQuery::getMonthsCount( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month ) const
 {
     int from_year_, from_month_, to_year_, to_month_;
     try {
@@ -86,7 +86,7 @@ const int DbQuery::getMonthsCount( const QString& from_year, const QString& from
     return this->getMonthsCount( from_year_, from_month_, to_year_, to_month_ );
 }
 
-const int DbQuery::getMonthsCount( const int& from_year, const int& from_month, const int& to_year, const int& to_month )
+const int DbQuery::getMonthsCount( const int& from_year, const int& from_month, const int& to_year, const int& to_month ) const
 {
     int n_months = 0;
     if ( from_year == to_year ) {
@@ -108,7 +108,7 @@ const int DbQuery::getMonthsCount( const int& from_year, const int& from_month, 
 }
 
 
-const int DbQuery::getMonthNumber( const QString& month_str )
+const int DbQuery::getMonthNumber( const QString& month_str ) const
 {
     int m=0;
     for ( const auto& [num,str] : this->MONTHS ) {
@@ -133,7 +133,7 @@ const int DbQuery::getMonthNumber( const QString& month_str )
     return f;
 }*/
 
-const QString DbQuery::getDbField( const QString& tr_fld )
+const QString DbQuery::getDbField( const QString& tr_fld ) const
 {
     QString f;
     for ( const auto& [id,str] : this->FIELDS ) {
@@ -296,7 +296,7 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
 
 
 // update the values for the warnings
-void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::tuple<int, int>>& updates )
+void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::tuple<int, int>>& updates ) const
 {
     bool successful = true;
 
@@ -349,7 +349,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 
 
 // get daytime values for the warnings
-void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ )
+void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
 {
     bool successful = true;
     stats_warn_items_t items; // std::vector<std::vector<std::vector<std::vector<QString>>>>
@@ -493,7 +493,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f )
+void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f ) const
 {
     bool successful = true;
     stats_speed_items_t data; // std::vector<std::tuple<long long, std::vector<QString>>>
@@ -848,7 +848,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field )
+void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field ) const
 {
     bool successful = true;
     QHash<QString, int> aux_items;
@@ -950,7 +950,7 @@ void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString&
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter )
+void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter ) const
 {
     bool successful = true;
     stats_day_items_t data = { // std::unordered_map<int, std::unordered_map<int, int>>
@@ -1206,7 +1206,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
 {
     bool successful = true;
     stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
@@ -1454,7 +1454,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
 
 
 
-void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 )
+void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
 {
     bool successful = true;
     stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
@@ -1845,7 +1845,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
 
 
 
-const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, int>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count )
+const bool DbQuery::getGlobalCounts( const QString& web_server, const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, int>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
 {
     bool successful = true;
 

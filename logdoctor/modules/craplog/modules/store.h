@@ -11,7 +11,7 @@
 class StoreOps
 {
 public:
-    StoreOps();
+    explicit StoreOps();
 
     //! Stores the data collection in the logs Collection database
     /*!

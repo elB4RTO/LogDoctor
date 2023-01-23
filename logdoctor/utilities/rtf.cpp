@@ -18,9 +18,10 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     // enrich the text
     rich_content.clear();
     rich_content.reserve( content.size() );
-    rich_content += QString("<!DOCTYPE html><html><head></head><body");
+    rich_content += "<!DOCTYPE html><html><head></head><body";
     if ( color_scheme > 0 ) {
-        rich_content += " style=\"background:" + colors.at("background") + "; color:" + colors.at("text") + "\"";
+        rich_content += QString(" style=\"background:%1; color:%2\"")
+            .arg( colors.at("background"), colors.at("text") );
     }
     rich_content += ">";
     if ( wide_lines == true ) {
@@ -41,7 +42,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             if ( wide_lines == true ) {
                 rich_line += "<br/>";
             }
-            rich_content.push_back( rich_line );
+            rich_content.append( rich_line );
             continue;
         }
         i = 0;
@@ -203,10 +204,10 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
         if ( wide_lines == true ) {
             rich_line += "<br/>";
         }
-        rich_content.push_back( rich_line );
+        rich_content+= rich_line;
     }
     lines.clear();
-    rich_content.push_back("</body></html>");
+    rich_content += "</body></html>";
 }
 
 

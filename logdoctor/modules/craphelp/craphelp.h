@@ -28,12 +28,12 @@ public:
         \param font The font to be used
         \param color_scheme_id The ID of the color-scheme to be used
     */
-    void helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id );
+    void helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id ) const;
 
 private:
     Ui::Craphelp *ui;
 
-    const std::unordered_map<std::string, QString> getColorScheme( const int& scheme_id );
+    const std::unordered_map<std::string, QString> getColorScheme( const int& scheme_id ) const;
 };
 
 #endif // CRAPHELP_H

@@ -12,7 +12,7 @@
 */
 class GenericException : public std::exception {
 public:
-    GenericException( const std::string& msg , const bool& to_sys=false );
+    explicit GenericException( const std::string& msg, const bool to_sys=false );
     const QString& what();
 
 private:
@@ -26,7 +26,7 @@ private:
 */
 class WebServerException : public std::exception {
 public:
-    WebServerException( const std::string& msg );
+    explicit WebServerException( const std::string& msg );
     /*const QString& what();
 
 private:
@@ -40,7 +40,7 @@ private:
 */
 class LogFormatException : public std::exception {
 public:
-    LogFormatException( const std::string& msg );
+    explicit LogFormatException( const std::string& msg );
     const QString& what();
 
 private:
@@ -54,7 +54,7 @@ private:
 */
 class LogParserException : public std::exception {
 public:
-    LogParserException( const std::string& txt, const std::string& val );
+    explicit LogParserException( const std::string& txt, const std::string& val );
     const QString& what();
 
 private:
@@ -68,7 +68,7 @@ private:
 */
 class DateTimeException : public std::exception {
 public:
-    DateTimeException( const std::string& msg );
+    explicit DateTimeException( const std::string& msg );
     /*const QString& what();
 
 private:
@@ -82,7 +82,7 @@ private:
 */
 class BWlistException : public std::exception {
 public:
-    BWlistException( const std::string& msg );
+    explicit BWlistException( const std::string& msg );
     /*const QString& what();
 
 private:

@@ -319,7 +319,7 @@ void SnakeGame::updateGameScore()
 }
 
 
-void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_adv )
+void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_adv )
 {
     unsigned int x, y, x_, y_;
 

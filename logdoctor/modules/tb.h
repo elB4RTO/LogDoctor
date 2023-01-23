@@ -14,28 +14,28 @@
 class TextBrowser
 {
 public:
-    TextBrowser();
+    explicit TextBrowser();
 
 
     /////////////////
     //// GETTERS ////
 
     //! Returns whether the wide lines option is set to be used or not
-    const bool& getWideLinesUsage();
+    const bool& getWideLinesUsage() const;
 
     //! Returns the ID of the color scheme in use
-    const int&  getColorSchemeID();
+    const int& getColorSchemeID() const;
 
     //! Returns the color scheme in use
-    const std::unordered_map<std::string, QString>& getColorScheme();
+    const std::unordered_map<std::string, QString>& getColorScheme() const;
 
     /*const int& getFontSize();*/
 
     //! Returns the family of the font in use
-    const QString& getFontFamily();
+    const QString& getFontFamily() const;
 
     //! Returns the font in use
-    const QFont& getFont();
+    const QFont& getFont() const;
 
 
     /////////////////
@@ -61,7 +61,7 @@ public:
     /*!
         \param content Will hold the preview string
     */
-    void makePreview( QString& content );
+    void makePreview( QString& content ) const;
 
 
 private:

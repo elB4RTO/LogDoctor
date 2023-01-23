@@ -13,7 +13,7 @@
 class StyleSec
 {
 public:
-    StyleSec();
+    explicit StyleSec();
 
     //! Provides the requested stylesheet
     /*!
@@ -21,7 +21,7 @@ public:
         \param icons_theme The theme selected for the Icons
         \param theme_id The theme selected for the Window
     */
-    static void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int& theme_id );
+    static void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id );
 
 private:
 

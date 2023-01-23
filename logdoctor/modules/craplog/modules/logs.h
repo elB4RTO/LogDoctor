@@ -15,7 +15,7 @@
 class LogOps
 {
 public:
-    LogOps();
+    explicit LogOps();
 
     //! Enumerates log file types
     /*!
@@ -35,16 +35,18 @@ public:
         \return The resulting file type
         \see LogType, deepTypeCheck(), FormatOps::LogsFormat
     */
-    LogType defineFileType(
+    const LogType defineFileType(
         const std::vector<std::string>& lines,
-        const FormatOps::LogsFormat& format );
+        const FormatOps::LogsFormat& format
+    ) const;
 
     //! Removes commented lines from the given list
     /*!
         \param lines The lines to clean
     */
     void cleanLines(
-        std::vector<std::string>& lines );
+        std::vector<std::string>& lines
+    ) const;
 
     //! Parses log lines to extract data
     /*!
@@ -57,15 +59,16 @@ public:
     void parseLines(
         std::vector<std::unordered_map<int, std::string>>& data,
         const std::vector<std::string>& lines,
-        const FormatOps::LogsFormat& format );
+        const FormatOps::LogsFormat& format
+    );
 
     //! Resets the performances data
     void resetPerfData();
 
     // share perf data with craplog
-    const unsigned getTotalSize();   //!< Returns the total size of the logs lines. \see total_size
-    const unsigned getParsedSize();  //!< Returns the parsed logs size. \see parsed_size
-    const unsigned getParsedLines(); //!< Returns the number of parsed log lines. \see parsed_lines
+    const unsigned getTotalSize() const;   //!< Returns the total size of the logs lines. \see total_size
+    const unsigned getParsedSize() const;  //!< Returns the parsed logs size. \see parsed_size
+    const unsigned getParsedLines() const; //!< Returns the number of parsed log lines. \see parsed_lines
 
 private:
 
@@ -125,9 +128,10 @@ private:
         \return Whether the line respects the format or not
         \see defineFileType(), FormatOps::LogsFormat
     */
-    bool deepTypeCheck(
+    const bool deepTypeCheck(
         const std::string& line,
-        const FormatOps::LogsFormat& format );
+        const FormatOps::LogsFormat& format
+    ) const;
 
     //! Parses a line to extract data
     /*!
@@ -139,7 +143,8 @@ private:
     */
     const std::unordered_map<int, std::string> parseLine(
         const std::string& line,
-        const FormatOps::LogsFormat& format );
+        const FormatOps::LogsFormat& format
+    );
 
     // temporary vars
     unsigned total_size=0;   //!< Total size of the parsed logs. \see getTotalSize()

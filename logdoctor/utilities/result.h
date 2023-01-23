@@ -16,10 +16,10 @@ template <typename T>
 class Result
 {
 public:
-    Result();
-    Result( const bool ok, const T& data );
+    explicit Result();
+    explicit Result( const bool ok, const T& data );
 
-    explicit operator bool();
+    explicit operator bool() const;
 
     /*
     //! Checks if the operation was successful
@@ -30,7 +30,7 @@ public:
     */
 
     //! Returns the data
-    const T& getData();
+    const T& getData() const;
 
 private:
 

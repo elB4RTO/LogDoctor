@@ -27,13 +27,13 @@ public:
         \param logdoc_path The path of the additional resources folder
         \param parent The parent Widget
     */
-    Crapinfo( const int& window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget* parent=nullptr );
+    explicit Crapinfo( const int& window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget* parent=nullptr );
     ~Crapinfo();
 
 private:
     Ui::Crapinfo *ui;
 
-    void getStyleSheet( QString& stylesheet, const int& theme_id );
+    void getStyleSheet( QString& stylesheet, const int& theme_id ) const;
 };
 
 #endif // CRAPINFO_H

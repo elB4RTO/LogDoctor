@@ -13,7 +13,7 @@
 class IOutils
 {
 public:
-    IOutils();
+    explicit IOutils();
 
     //! Checks the existence of a file/folder
     /*!

@@ -2,7 +2,7 @@
 #include "snake.h"
 
 
-Snake::Snake( const bool& is_adversary )
+Snake::Snake( const bool is_adversary )
 {
     this->will_grow = false;
     this->adversary = is_adversary;
@@ -18,7 +18,7 @@ Snake::Snake( const bool& is_adversary )
 }
 
 
-QPixmap& Snake::getHeadImage()
+const QPixmap& Snake::getHeadImage() const
 {
     if ( this->adversary ) {
         return this->img_snakeHead_;
@@ -28,7 +28,7 @@ QPixmap& Snake::getHeadImage()
 }
 
 
-const bool Snake::inTile( const unsigned int& x, const unsigned int& y , const bool& avoid_tail )
+const bool Snake::inTile( const unsigned int x, const unsigned int y , const bool avoid_tail ) const
 {
     bool result = false;
     if ( this->size() > 0 ) {
@@ -56,7 +56,7 @@ void Snake::setDirection( const Direction new_direction )
 {
     this->head_direction = new_direction;
 }
-const Direction& Snake::direction()
+const Direction& Snake::direction() const
 {
     return this->head_direction;
 }
@@ -65,7 +65,7 @@ void Snake::willGrow()
 {
     this->will_grow = true;
 }
-void Snake::grow( const bool& is_borning )
+void Snake::grow( const bool is_borning )
 {
     // build from the tail
     const BodyPart& tail = this->back();
@@ -103,7 +103,7 @@ void Snake::grow( const bool& is_borning )
 }
 
 
-void Snake::update( QGraphicsScene* field_scene, const bool& dry , const bool& is_borning )
+void Snake::update( QGraphicsScene* field_scene, const bool dry , const bool is_borning )
 {
     // grow if planned
     if ( this->will_grow ) {
@@ -367,7 +367,7 @@ void Snake::update( QGraphicsScene* field_scene, const bool& dry , const bool& i
 }
 
 
-void Snake::move( Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y )
+void Snake::move( const Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y )
 {
     std::vector<Direction> classes = {
         Direction::UP,
@@ -404,7 +404,7 @@ void Snake::move( Snake& adv_snake, const unsigned int& food_x, const unsigned i
 }
 
 
-const Direction Snake::predictDirection( std::vector<std::vector<float>>& data, std::vector<float> weights , std::vector<Direction> classes )
+const Direction Snake::predictDirection( const std::vector<std::vector<float>>& data, const std::vector<float>& weights, const std::vector<Direction>& classes ) const
 {
     float results[] = { 1.0, 1.0, 1.0, 1.0 };
     bool keep_current = false;
@@ -412,7 +412,7 @@ const Direction Snake::predictDirection( std::vector<std::vector<float>>& data, 
 
     // process data
     for ( int i=0; i<4; i++ ) {
-        std::vector<float>& d = data.at(i);
+        const std::vector<float>& d = data.at(i);
         float& r = results[i];
         for ( int j=0; j<7; j++ ) {
             r += d.at(j) * weights.at(j);
@@ -461,7 +461,7 @@ const Direction Snake::predictDirection( std::vector<std::vector<float>>& data, 
 }
 
 
-void Snake::collectData( std::vector<float>& data, Direction& direction, Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y )
+void Snake::collectData( std::vector<float>& data, Direction& direction, const Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y ) const
 {
     unsigned int
         blocked_way        = 0,
@@ -722,7 +722,7 @@ void Snake::collectData( std::vector<float>& data, Direction& direction, Snake& 
 }
 
 
-void Snake::updateFieldMap( Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y )
+void Snake::updateFieldMap( const Snake& adv_snake, const unsigned int& food_x, const unsigned int& food_y )
 {
     // reset to default state
     for ( size_t x=0; x<16; x++ ) {
@@ -753,7 +753,7 @@ void Snake::updateFieldMap( Snake& adv_snake, const unsigned int& food_x, const 
 }
 
 
-const bool Snake::inTileAdv(const unsigned int& x, const unsigned int& y )
+const bool Snake::inTileAdv(const unsigned int x, const unsigned int y ) const
 {
     bool result = false;
     if ( x < 16 && y < 16 ) {
@@ -766,7 +766,7 @@ const bool Snake::inTileAdv(const unsigned int& x, const unsigned int& y )
     return result;
 }
 
-const bool Snake::inTileMinusSteps(const unsigned int& x, const unsigned int& y, const unsigned int& steps )
+const bool Snake::inTileMinusSteps(const unsigned int x, const unsigned int y, const unsigned int steps ) const
 {
     bool result = false;
     switch ( this->field_map.at(x).at(y).entity ) {
@@ -781,7 +781,7 @@ const bool Snake::inTileMinusSteps(const unsigned int& x, const unsigned int& y,
 }
 
 
-const std::vector<unsigned int> Snake::checkAround( const Direction& direction, const unsigned int& x, const unsigned int& y )
+const std::vector<unsigned int> Snake::checkAround( const Direction& direction, const unsigned int& x, const unsigned int& y ) const
 {
     std::vector<unsigned int> around = {
         0, 0, 0,
@@ -851,7 +851,7 @@ const std::vector<unsigned int> Snake::checkAround( const Direction& direction, 
 }
 
 
-const unsigned int Snake::isDeadHole( const unsigned int& start_x, const unsigned int& start_y, Direction start_direction )
+const unsigned int Snake::isDeadHole( const unsigned int& start_x, const unsigned int& start_y, Direction start_direction ) const
 {
     bool result=false, check=false, check_clockwise=false;
     int front_step, front_check, side_check;

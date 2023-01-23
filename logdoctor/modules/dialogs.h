@@ -15,7 +15,7 @@ class DialogSec : public QObject
     Q_OBJECT
 
 public:
-    DialogSec();
+    explicit DialogSec();
 
     /////////////////
     //// GENERIC ////

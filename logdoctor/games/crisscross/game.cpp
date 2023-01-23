@@ -244,7 +244,7 @@ void CrissCross::victory()
 }
 
 
-const bool CrissCross::gameDraw()
+const bool CrissCross::gameDraw() const
 {
     bool result = false;
     unsigned int empty_tiles = 9;
@@ -319,7 +319,7 @@ void CrissCross::AI_updateWeights()
 
 }
 
-const unsigned int CrissCross::AI_makeChoice()
+const unsigned int CrissCross::AI_makeChoice() const
 {
     // get a list of the heaviest tiles
     std::vector<unsigned int> moves;

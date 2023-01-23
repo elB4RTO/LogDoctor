@@ -11,7 +11,7 @@
 class GZutils
 {
 public:
-    GZutils();
+    explicit GZutils();
 
     //! Reads a GZipped file
     /*!

@@ -4,7 +4,7 @@
 
 #include "modules/exceptions.h"
 
-#include <unordered_map> // leave this for OSX
+#include <unordered_map> // leave this here for OSX
 
 #include <QFontDatabase>
 
@@ -47,7 +47,7 @@ Crapinfo::~Crapinfo()
 }
 
 
-void Crapinfo::getStyleSheet( QString& stylesheet, const int& theme_id )
+void Crapinfo::getStyleSheet( QString& stylesheet, const int& theme_id ) const
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {

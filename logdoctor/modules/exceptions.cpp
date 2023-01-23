@@ -6,7 +6,7 @@
 
 /////////////////
 //// GENERIC ////
-GenericException::GenericException( const std::string& msg, const bool& to_sys )
+GenericException::GenericException( const std::string& msg, const bool to_sys )
 {
     if ( to_sys ) { // when sys, leave un-catched
         std::cout << "LogDoctor: Exception: " << msg << std::endl;
@@ -23,7 +23,7 @@ const QString& GenericException::what()
 
 ////////////////////
 //// WEB SERVER ////
-WebServerException::WebServerException(const std::string& msg ) // leave un-catched
+WebServerException::WebServerException( const std::string& msg ) // leave un-catched
 {
     std::cout << "LogDoctor: WebServerException: " << msg << std::endl;
     std::cerr << "LogDoctor: WebServerException: " << msg << std::endl;
@@ -37,7 +37,7 @@ WebServerException::WebServerException(const std::string& msg ) // leave un-catc
 
 ////////////////////
 //// LOG FORMAT ////
-LogFormatException::LogFormatException(const std::string& msg )
+LogFormatException::LogFormatException( const std::string& msg )
 {
     std::cout << "LogDoctor: LogFormatException: " << msg << std::endl;
     std::cerr << "LogDoctor: LogFormatException: " << msg << std::endl;
@@ -67,7 +67,7 @@ const QString& LogParserException::what()
 
 ///////////////////
 //// DATE-TIME ////
-DateTimeException::DateTimeException(const std::string& msg ) // leave un-catched
+DateTimeException::DateTimeException( const std::string& msg ) // leave un-catched
 {
     std::cout << "LogDoctor: DateTimeException: " << msg << std::endl;
     std::cerr << "LogDoctor: DateTimeException: " << msg << std::endl;

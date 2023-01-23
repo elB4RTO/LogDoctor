@@ -12,11 +12,11 @@ Crapview::Crapview()
 }
 
 
-const int& Crapview::getDialogsLevel()
+const int& Crapview::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
-void Crapview::setDialogsLevel( const int& new_level )
+void Crapview::setDialogsLevel( const int new_level )
 {
     this->dialogs_level = new_level;
 }
@@ -28,7 +28,7 @@ void Crapview::setDbPath( const std::string& path )
 }
 
 
-const QString Crapview::printableDate( const QString& year, const int& month, const QString& day )
+const QString Crapview::printableDate( const QString& year, const int month, const QString& day ) const
 {
     QString date = QString("%1-").arg( year );
     if ( month < 10 ) {
@@ -45,7 +45,7 @@ const QString Crapview::printableDate( const QString& year, const int& month, co
 }
 
 
-const QString Crapview::printableDate( const int& year, const int& month, const int& day )
+const QString Crapview::printableDate( const int year, const int month, const int day ) const
 {
     QString date;
     if ( year < 10 ) {
@@ -67,7 +67,7 @@ const QString Crapview::printableDate( const int& year, const int& month, const 
 }
 
 
-const QString Crapview::printableTime( const int& hour, const int& minute, const int& second )
+const QString Crapview::printableTime( const int hour, const int minute, const int second ) const
 {
     QString time;
     if ( hour < 10 ) {
@@ -89,7 +89,7 @@ const QString Crapview::printableTime( const int& hour, const int& minute, const
 }
 
 
-const QString Crapview::printableWarn( const int& value )
+const QString Crapview::printableWarn( const int value ) const
 {
     if ( value == 0 ) {
         return TR::tr( BOOLS__FALSE.c_str() );
@@ -99,16 +99,18 @@ const QString Crapview::printableWarn( const int& value )
 }
 
 
-const QString Crapview::parseBooleanFilter( const QString& filter_str )
+const QString Crapview::parseBooleanFilter( const QString& filter_str ) const
 {
     QString aux = filter_str;
-    aux = aux.replace( TR::tr(BOOLS__TRUE.c_str()), "1", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( TR::tr(BOOLS__FALSE.c_str()),"0", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "NOT TRUE",  "!= 1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "NOT FALSE", "!= 0", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "TRUE",  "1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "FALSE", "0", Qt::CaseSensitivity::CaseInsensitive );
     return this->parseNumericFilter( aux );
 }
 
 
-const QString Crapview::parseNumericFilter( const QString& filter_str )
+const QString Crapview::parseNumericFilter( const QString& filter_str ) const
 {
     QString final_str = "";
     if ( filter_str.size() > 0 ) {
@@ -157,7 +159,7 @@ const QString Crapview::parseNumericFilter( const QString& filter_str )
 }
 
 
-const QString Crapview::parseTextualFilter( const QString& filter_str )
+const QString Crapview::parseTextualFilter( const QString& filter_str ) const
 {
     QString aux = filter_str;
     if ( filter_str.size() > 0 ) {
@@ -188,12 +190,12 @@ void Crapview::clearDates()
     this->dates.clear();
 }
 
-const QString Crapview::getLogFieldString ( const int& field_id )
+const QString Crapview::getLogFieldString ( const int field_id ) const
 {
     return TR::tr( this->dbQuery.FIELDS.at( field_id ).c_str() );
 }
 
-const int Crapview::getLogFieldID ( const QString& field_str )
+const int Crapview::getLogFieldID ( const QString& field_str ) const
 {
     int f=0;
     for ( const auto& [id,str] : this->dbQuery.FIELDS ) {
@@ -206,7 +208,7 @@ const int Crapview::getLogFieldID ( const QString& field_str )
 }
 
 
-const int Crapview::getMonthNumber( const QString& month_str )
+const int Crapview::getMonthNumber( const QString& month_str ) const
 {
     int m=0;
     for ( const auto& [num,str] : this->dbQuery.MONTHS ) {
@@ -220,7 +222,7 @@ const int Crapview::getMonthNumber( const QString& month_str )
 
 
 
-const QStringList Crapview::getYears( const QString& web_server )
+const QStringList Crapview::getYears( const QString& web_server ) const
 {
     QStringList years;
     if ( this->dates.size() > 0 ) {
@@ -233,7 +235,7 @@ const QStringList Crapview::getYears( const QString& web_server )
     }
     return years;
 }
-const QStringList Crapview::getMonths( const QString& web_server, const QString& year )
+const QStringList Crapview::getMonths( const QString& web_server, const QString& year ) const
 {
     QStringList months;
     if ( this->dates.size() > 0 ) {
@@ -249,7 +251,7 @@ const QStringList Crapview::getMonths( const QString& web_server, const QString&
     }
     return months;
 }
-const QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month )
+const QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month ) const
 {
     QStringList days;
     if ( this->dates.size() > 0 ) {
@@ -268,12 +270,12 @@ const QStringList Crapview::getDays( const QString& web_server, const QString& y
     }
     return days;
 }
-const QStringList Crapview::getHours()
+const QStringList Crapview::getHours() const
 {
     return QStringList({"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 }
 
-const QStringList Crapview::getFields( const std::string& tab )
+const QStringList Crapview::getFields( const std::string& tab ) const
 {
     QStringList list;
     for ( const auto& field : this->fields.at( tab ) ) {
@@ -286,7 +288,7 @@ const QStringList Crapview::getFields( const std::string& tab )
 ////////////////
 //// CHARTS ////
 ////////////////
-void Crapview::updateWarn( QTableWidget* table , const QString& web_server )
+void Crapview::updateWarn( QTableWidget* table , const QString& web_server ) const
 {
     std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
     for ( int i=0; i<table->rowCount(); i++ ) {
@@ -300,10 +302,9 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server )
         }
     }
     this->dbQuery.updateWarnings( web_server, updates );
-    updates.clear();
 }
 
-void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour )
+void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour ) const
 {
     Result<stats_warn_items_t> result;
     this->dbQuery.getWarnCounts(
@@ -488,7 +489,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
 
 
 
-void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response )
+void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response ) const
 {
     Result<stats_speed_items_t> result;
     this->dbQuery.getSpeedData(
@@ -637,7 +638,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 
 
-void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field )
+void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field ) const
 {
     Result<stats_count_items_t> result;
     this->dbQuery.getItemsCount(
@@ -694,7 +695,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 
 
-void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter )
+void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter ) const
 {
     Result<stats_day_items_t> result;
     this->dbQuery.getDaytimeCounts(
@@ -817,7 +818,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
 
 
 
-void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 )
+void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 ) const
 {
     bool period = true;
     Result<stats_relat_items_t> result;
@@ -940,7 +941,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
 
 
 // calculate global informations
-const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server )
+const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server ) const
 {
     bool result = false;
 

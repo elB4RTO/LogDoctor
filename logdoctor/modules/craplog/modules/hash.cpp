@@ -24,7 +24,7 @@ void HashOps::setDialogLevel( const int& new_level )
 
 
 // reads the database holding the already used hashes
-bool HashOps::loadUsedHashesLists( const std::string& db_path )
+const bool HashOps::loadUsedHashesLists( const std::string& db_path )
 {
     bool successful = true;
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
@@ -74,7 +74,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path )
 
 
 // returns the hash
-std::string HashOps::digestFile( const std::string& file_path )
+void HashOps::digestFile( const std::string& file_path, std::string& hash ) const
 {
     std::string content;
     try {
@@ -122,12 +122,12 @@ std::string HashOps::digestFile( const std::string& file_path )
     content.clear();
     uint8_t * digest = sha.digest();
     // return the hex digest
-    return SHA256::toString(digest);
+    hash.append( SHA256::toString(digest) );
 }
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( const std::string &file_hash, const int& web_server_id)
+const bool HashOps::hasBeenUsed( const std::string &file_hash, const int& web_server_id) const
 {
     bool found = false;
     for ( const std::string &hash : this->hashes.at( web_server_id ) ) {
@@ -141,7 +141,7 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const int& web_server_i
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id )
+const bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id )
 {
     bool successful = true;
     try {
@@ -174,7 +174,7 @@ bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const st
 }
 
 
-bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string> &hashes, const int& web_server_id )
+const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string> &hashes, const int& web_server_id )
 {
     bool proceed = true;
 

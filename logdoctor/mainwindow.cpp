@@ -407,7 +407,7 @@ void MainWindow::readConfigs()
                     this->remember_window = this->s2b.at( val );
 
                 } else if ( var == "Geometry" ) {
-                    this->geometryFromString( val );
+                    this->setGeometryFromString( val );
 
                 } else if ( var == "WindowTheme" ) {
                     this->window_theme_id = std::stoi( val );
@@ -687,7 +687,7 @@ void MainWindow::writeConfigs()
         }
     } else {
         // file does not exists, check if at least the folder exists
-        const std::string base_path = this->basePath( this->configs_path );
+        const std::string base_path = this->parentPath( this->configs_path );
         if ( IOutils::exists( base_path ) ) {
             if ( IOutils::isDir( base_path ) ) {
                 if ( ! IOutils::checkDir( base_path, false, true ) ) {
@@ -843,7 +843,7 @@ void MainWindow::writeConfigs()
 }
 
 
-void MainWindow::backupDatabase()
+void MainWindow::backupDatabase() const
 {
     bool proceed = true;
     std::error_code err;
@@ -956,7 +956,7 @@ void MainWindow::backupDatabase()
 }
 
 
-const std::string MainWindow::geometryToString()
+const std::string MainWindow::geometryToString() const
 {
     QRect geometry = this->geometry();
     std::string string = "";
@@ -971,7 +971,7 @@ const std::string MainWindow::geometryToString()
     string += this->b2s.at( this->isMaximized() );
     return string;
 }
-void MainWindow::geometryFromString( const std::string& geometry )
+void MainWindow::setGeometryFromString( const std::string& geometry )
 {
     std::vector<std::string> aux;
     StringOps::splitrip( aux, geometry, "," );
@@ -984,7 +984,7 @@ void MainWindow::geometryFromString( const std::string& geometry )
 }
 
 
-const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool& user_agent )
+const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
 {
     std::string string;
     if ( user_agent ) {
@@ -998,7 +998,7 @@ const std::string MainWindow::list2string( const std::vector<std::string>& list,
     }
     return string;
 }
-const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool& user_agent )
+const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
 {
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, " " );
@@ -1582,7 +1582,7 @@ void MainWindow::makeInitialChecks()
 
     if ( ok ) {
         // check LogDoctor's folders paths
-        for ( const std::string& path : std::vector<std::string>({this->basePath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path}) ) {
+        for ( const std::string& path : std::vector<std::string>({this->parentPath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path}) ) {
             if ( IOutils::exists( path ) ) {
                 if ( IOutils::isDir( path ) ) {
                     if ( ! IOutils::checkDir( path, true ) ) {
@@ -1723,7 +1723,7 @@ void MainWindow::makeInitialChecks()
 }
 
 
-const bool& MainWindow::checkDataDB()
+const bool MainWindow::checkDataDB()
 {
     if ( ! this->initiating ) { // avoid recursions
         // check the db
@@ -1762,7 +1762,7 @@ const bool& MainWindow::checkDataDB()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
-const QString MainWindow::wsFromIndex( const int& index )
+const QString MainWindow::wsFromIndex(const int index ) const
 {
     switch (index) {
     case 0:
@@ -1776,7 +1776,7 @@ const QString MainWindow::wsFromIndex( const int& index )
     }
 }
 
-const std::string MainWindow::resolvePath( const std::string& path )
+const std::string MainWindow::resolvePath( const std::string& path ) const
 {
     std::string p;
     try {
@@ -1786,14 +1786,14 @@ const std::string MainWindow::resolvePath( const std::string& path )
     }
     return p;
 }
-const std::string MainWindow::basePath( const std::string& path )
+const std::string MainWindow::parentPath( const std::string& path ) const
 {
     const int stop = path.rfind( '/' );
     return path.substr( 0, stop );
 }
 
 // printable size with suffix and limited decimals
-const QString MainWindow::printableSize( const int& bytes )
+const QString MainWindow::printableSize( const int bytes ) const
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -1832,7 +1832,7 @@ const QString MainWindow::printableSize( const int& bytes )
 }
 
 // printable speed with suffix and limited decimals
-const QString MainWindow::printableSpeed( const int& bytes, const int& secs_ )
+const QString MainWindow::printableSpeed( const int bytes, const int secs_ ) const
 {
     std::string speed_str, speed_sfx=" B/s";
     int secs = secs_;
@@ -1874,7 +1874,7 @@ const QString MainWindow::printableSpeed( const int& bytes, const int& secs_ )
     return QString::fromStdString( speed_str.substr(0, cut_index ) + speed_sfx );
 }
 
-const QString MainWindow::printableTime( const int& secs_ )
+const QString MainWindow::printableTime( const int secs_ ) const
 {
     int secs = secs_;
     int mins = secs / 60;
@@ -2046,7 +2046,7 @@ void MainWindow::menu_actionCheckUpdates_triggered()
             this->window_theme_id,
             this->icons_theme );
         this->crapup->show();
-        this->crapup->versionCheck( 1.0 );
+        this->crapup->versionCheck( this->version );
     }
 }
 
@@ -2080,7 +2080,7 @@ void MainWindow::menu_actionSnake_triggered()
 //////////////
 //// TABS ////
 //////////////
-void MainWindow::switchMainTab( const int& new_index )
+void MainWindow::switchMainTab( const int new_index )
 {
     const int old_index = this->ui->stacked_Tabs_Pages->currentIndex();
     // turn off the old icon
@@ -2152,7 +2152,7 @@ void MainWindow::on_button_Tab_Conf_clicked()
 
 
 //// STATS ////
-void MainWindow::switchStatsTab( const int& new_index )
+void MainWindow::switchStatsTab( const int new_index )
 {
     const int old_index = this->ui->stacked_Stats_Pages->currentIndex();
     // turn off the old icon
@@ -2278,7 +2278,7 @@ void MainWindow::on_button_Tab_StatsGlob_clicked()
 ////////////
 //// DB ////
 ////////////
-void MainWindow::setDbWorkingState( const bool& state )
+void MainWindow::setDbWorkingState( const bool state )
 {
     this->db_working = state;
     if ( ! state ) {
@@ -3180,7 +3180,7 @@ void MainWindow::resetStatsCountButtons()
     }
 }
 
-void MainWindow::startCountDrawing()
+void MainWindow::makeStatsCount()
 {
     this->setDbWorkingState( true );
     delete this->crapview_timer;
@@ -3196,7 +3196,7 @@ void MainWindow::on_button_StatsCount_Protocol_clicked()
         this->resetStatsCountButtons();
         this->ui->button_StatsCount_Protocol->setFlat( false );
         this->count_fld = this->ui->button_StatsCount_Protocol->text();
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3206,7 +3206,7 @@ void MainWindow::on_button_StatsCount_Method_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Method->text();
         this->ui->button_StatsCount_Method->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3216,7 +3216,7 @@ void MainWindow::on_button_StatsCount_Uri_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Uri->text();
         this->ui->button_StatsCount_Uri->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3226,7 +3226,7 @@ void MainWindow::on_button_StatsCount_Query_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Query->text();
         this->ui->button_StatsCount_Query->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3236,7 +3236,7 @@ void MainWindow::on_button_StatsCount_Response_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Response->text();
         this->ui->button_StatsCount_Response->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3246,7 +3246,7 @@ void MainWindow::on_button_StatsCount_Referrer_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Referrer->text();
         this->ui->button_StatsCount_Referrer->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3256,7 +3256,7 @@ void MainWindow::on_button_StatsCount_Cookie_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Cookie->text();
         this->ui->button_StatsCount_Cookie->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3266,7 +3266,7 @@ void MainWindow::on_button_StatsCount_UserAgent_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_UserAgent->text();
         this->ui->button_StatsCount_UserAgent->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3276,7 +3276,7 @@ void MainWindow::on_button_StatsCount_Client_clicked()
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Client->text();
         this->ui->button_StatsCount_Client->setFlat( false );
-        startCountDrawing();
+        makeStatsCount();
     }
 }
 
@@ -3776,19 +3776,19 @@ void MainWindow::makeStatsGlobals()
             }
 
         } else {
-            this->resetStatsGlobals();
+            this->resetStatsGlob();
         }
         recur_list.clear(); traffic_list.clear();
         perf_list.clear();  work_list.clear();
 
     } else {
-        this->resetStatsGlobals();
+        this->resetStatsGlob();
     }
     // restore
     this->setDbWorkingState( false );
 }
 
-void MainWindow::resetStatsGlobals()
+void MainWindow::resetStatsGlob()
 {
     this->ui->label_StatsGlob_Recur_Protocol_String->setText( "-" );
     this->ui->label_StatsGlob_Recur_Protocol_Count->setText( "0" );
@@ -3828,7 +3828,7 @@ void MainWindow::resetStatsGlobals()
 
 
 
-void MainWindow::globalsButtonClicked()
+void MainWindow::makeStatsGlob()
 {
     this->setDbWorkingState( true );
     delete this->crapview_timer;
@@ -3842,7 +3842,7 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
     if ( this->checkDataDB() ) {
         this->glob_ws = "apache";
-        this->globalsButtonClicked();
+        this->makeStatsGlob();
     }
 }
 
@@ -3851,7 +3851,7 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
     if ( this->checkDataDB() ) {
         this->glob_ws = "nginx";
-        this->globalsButtonClicked();
+        this->makeStatsGlob();
     }
 }
 
@@ -3860,7 +3860,7 @@ void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
     if ( this->checkDataDB() ) {
         this->glob_ws = "iis";
-        this->globalsButtonClicked();
+        this->makeStatsGlob();
     }
 }
 
@@ -4931,7 +4931,7 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 }
 
 // formats
-const int MainWindow::getIisLogsModule()
+const int MainWindow::getIisLogsModule() const
 {
     int module = 0;
     if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {

@@ -12,7 +12,7 @@
 class DateTimeOps
 {
 public:
-    DateTimeOps();
+    explicit DateTimeOps();
 
     //! Returns a standardized list of items representing the given date and time
     /*!

@@ -12,7 +12,7 @@
 class StringOps
 {
 public:
-    StringOps();
+    explicit StringOps();
 
 
     //! Count the occurrences of the given sequence in the given string
@@ -20,7 +20,7 @@ public:
         \param str The target string
         \return The number of occurrences
     */
-    static const int count( const std::string& str, const std::string& flag, const bool& consecutives=true );
+    static const int count( const std::string& str, const std::string& flag, const bool consecutives=true );
 
     //! Checks whether a string only contains numeric characters
     /*!

@@ -19,7 +19,7 @@ class CrissCross : public QWidget
     Q_OBJECT
 
 public:
-    CrissCross( const int& theme_id, QWidget* parent=nullptr );
+    explicit CrissCross( const int& theme_id, QWidget* parent=nullptr );
     ~CrissCross();
 
 
@@ -101,7 +101,7 @@ private:
     const bool checkVictory();
 
     //! Checks whether the game is draw or not
-    const bool gameDraw();
+    const bool gameDraw() const;
 
     //! Someone won, process the victory
     void victory();
@@ -127,7 +127,7 @@ private:
         \return The tile to select
         \see AI_playTurn();
     */
-    const unsigned int AI_makeChoice();
+    const unsigned int AI_makeChoice() const;
 
 };
 

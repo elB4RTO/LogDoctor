@@ -82,7 +82,7 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-const int& Craplog::getDialogsLevel()
+const int& Craplog::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
@@ -92,11 +92,11 @@ void Craplog::setDialogsLevel( const int& new_level )
     this->hashOps.setDialogLevel( new_level );
 }
 
-const std::string& Craplog::getStatsDatabasePath()
+const std::string& Craplog::getStatsDatabasePath() const
 {
     return this->db_stats_path;
 }
-const std::string& Craplog::getHashesDatabasePath()
+const std::string& Craplog::getHashesDatabasePath() const
 {
     return this->db_hashes_path;
 }
@@ -110,7 +110,7 @@ void Craplog::setHashesDatabasePath( const std::string& path )
     this->db_hashes_path = path + "/hashes.db";
 }
 
-const long& Craplog::getWarningSize()
+const long& Craplog::getWarningSize() const
 {
     return this->warning_size;
 }
@@ -123,11 +123,11 @@ void Craplog::setWarningSize(const long& new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id )
+const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
-const bool& Craplog::isWarnlistUsed( const int& web_server_id, const int& log_field_id )
+const bool& Craplog::isWarnlistUsed( const int& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
@@ -141,11 +141,11 @@ void Craplog::setWarnlistUsed( const int& web_server_id, const int& log_field_id
     this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
 }
 
-const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id, const int& log_field_id )
+const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).list;
 }
-const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id )
+const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).list;
 }
@@ -259,7 +259,7 @@ const int Craplog::warnlistMoveDown( const int& web_server_id, const int& log_fi
     return i;
 }
 
-const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item )
+const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
 {
     std::string sanitized_item;
     switch ( log_field_id ) {
@@ -298,13 +298,13 @@ const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::s
 /////////////////
 //// FORMATS ////
 // get the logs format string
-const std::string& Craplog::getLogsFormatString( const int& web_server_id )
+const std::string& Craplog::getLogsFormatString( const int& web_server_id ) const
 {
     return this->logs_format_strings.at( web_server_id );
 }
 
 // get the logs format
-const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id )
+const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id ) const
 {
     return this->logs_formats.at( web_server_id );
 }
@@ -363,7 +363,7 @@ const bool Craplog::setIisLogFormat( const std::string& format_string, const int
     return success;
 }
 
-const QString Craplog::getLogsFormatSample( const int& web_server_id )
+const QString Craplog::getLogsFormatSample( const int& web_server_id ) const
 {
     QString sample;
     if ( web_server_id == this->APACHE_ID ) {
@@ -387,7 +387,7 @@ void Craplog::setCurrentWSID( const int& web_server_id )
     this->setCurrentLogFormat();
 }
 
-const int& Craplog::getCurrentWSID()
+const int& Craplog::getCurrentWSID() const
 {
     return this->current_WS;
 }
@@ -399,7 +399,7 @@ void Craplog::setCurrentLogFormat()
 }
 
 // get the current access logs format
-const FormatOps::LogsFormat& Craplog::getCurrentLogFormat()
+const FormatOps::LogsFormat& Craplog::getCurrentLogFormat() const
 {
     return this->current_LF;
 }
@@ -407,7 +407,7 @@ const FormatOps::LogsFormat& Craplog::getCurrentLogFormat()
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const int& web_server )
+const std::string& Craplog::getLogsPath( const int& web_server ) const
 {
     return this->logs_paths.at( web_server );
 }
@@ -420,12 +420,12 @@ void Craplog::setLogsPath( const int& web_server, const std::string& new_path )
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-const int Craplog::getLogsListSize() {
+const int Craplog::getLogsListSize() const {
     return this->logs_list.size();
 }
 
 // return the list. rescan if fresh is true
-const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool& fresh )
+const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
 {
     if ( fresh ) {
         this->scanLogsDir();
@@ -435,7 +435,7 @@ const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool& fresh )
 
 
 // return the path of the file matching the given name
-const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
+const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
@@ -518,7 +518,7 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            LogOps::LogType log_type = this->logOps.defineFileType(
+            const LogOps::LogType log_type = this->logOps.defineFileType(
                 content, this->logs_formats.at( this->current_WS ) );
             content.clear();
             if ( log_type == LogOps::LogType::Failed ) {
@@ -537,7 +537,7 @@ void Craplog::scanLogsDir()
 
             std::string hash;
             try {
-                hash = this->hashOps.digestFile( path );
+                this->hashOps.digestFile( path, hash );
             } catch ( GenericException& e ) {
                 // failed to digest
                 DialogSec::errGeneric( e.what() );
@@ -573,7 +573,7 @@ void Craplog::changeIisLogsBaseNames( const int& module_id )
             throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
     }
 }
-const bool Craplog::isFileNameValid( const std::string& name )
+const bool Craplog::isFileNameValid( const std::string& name ) const
 {
     bool valid = true;
     if ( this->logs_base_names.at( this->current_WS ).starts != "" ) {
@@ -686,21 +686,21 @@ void Craplog::stopWorking()
     this->working = false;
     this->parsing = false;
 }
-const bool& Craplog::isWorking()
+const bool& Craplog::isWorking() const
 {
     return this->working;
 }
-const bool& Craplog::isParsing()
+const bool& Craplog::isParsing() const
 {
     return this->parsing;
 }
-const bool& Craplog::editedDatabase()
+const bool& Craplog::editedDatabase() const
 {
     return this->db_edited;
 }
 
 // performances
-const unsigned int &Craplog::getPerfSize()
+const unsigned int &Craplog::getPerfSize() const
 {
     return this->perf_size;
 }
@@ -709,7 +709,7 @@ const unsigned int &Craplog::getPerfSize()
     this->perf_size   += size;
     this->parsed_size += size;
 }*/
-const unsigned int &Craplog::getTotalSize()
+const unsigned int &Craplog::getTotalSize() const
 {
     return this->total_size;
 }
@@ -717,7 +717,7 @@ const unsigned int &Craplog::getTotalSize()
 {
     return this->parsed_size;
 }*/
-const unsigned int &Craplog::getParsedLines()
+const unsigned int &Craplog::getParsedLines() const
 {
     return this->parsed_lines;
 }
@@ -965,7 +965,7 @@ void Craplog::joinLogLines()
 
 void Craplog::parseLogLines()
 {
-    if ( this-> proceed && this->logs_lines.size() > 0 ) {
+    if ( this->proceed && this->logs_lines.size() > 0 ) {
         this->logOps.parseLines(
             this->data_collection,
             this->logs_lines,
@@ -1071,7 +1071,7 @@ void Craplog::storeLogLines()
 }
 
 
-const QString Craplog::printableSize( const unsigned int& bytes )
+const QString Craplog::printableSize( const unsigned int& bytes ) const
 {
     std::string size_str, size_sfx=" B";
     float size = (float)bytes;
@@ -1116,7 +1116,7 @@ const QString Craplog::printableSize( const unsigned int& bytes )
 }
 
 
-void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
+void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart ) const
 {
     const QString
         size_chart_name        = TR::tr("Logs Size Breakdown"),

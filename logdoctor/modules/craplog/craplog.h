@@ -19,7 +19,7 @@
 class Craplog
 {
 public:
-    Craplog();
+    explicit Craplog();
 
     //! Main work method
     /*!
@@ -33,7 +33,7 @@ public:
     //// DIALOGS ////
 
     //! Returns the Dialogs level
-    const int& getDialogsLevel();
+    const int& getDialogsLevel() const;
 
     //! Sets the new Dialogs level
     void setDialogsLevel( const int& new_level );
@@ -42,10 +42,10 @@ public:
     //// DATABASES ////
 
     //! Returns the path of the logs Collection database
-    const std::string& getStatsDatabasePath();
+    const std::string& getStatsDatabasePath() const;
 
     //! Returns the path of the log files' Hashes database
-    const std::string& getHashesDatabasePath();
+    const std::string& getHashesDatabasePath() const;
 
     //! Sets the new path for the logs Collection database
     /*!
@@ -73,14 +73,14 @@ public:
     /*!
         \return The Web Server ID
     */
-    const int& getCurrentWSID();
+    const int& getCurrentWSID() const;
 
     //! Returns the currently used LogsFormat
     /*!
         \return The LogsFormat
         \see FormatOps::LogsFormat
     */
-    const FormatOps::LogsFormat& getCurrentLogFormat();
+    const FormatOps::LogsFormat& getCurrentLogFormat() const;
 
 
     ////////////////////
@@ -91,14 +91,17 @@ public:
         \param web_server The ID of the Web Server
         \return The path of the logs' folder
     */
-    const std::string& getLogsPath( const int& web_server );
+    const std::string& getLogsPath( const int& web_server ) const;
 
     //! Sets a new path for the given Web Server to search the logs in
     /*!
         \param web_server The ID of the Web Server
         \param new_path The new path
     */
-    void setLogsPath( const int& web_server, const std::string& new_path );
+    void setLogsPath(
+        const int& web_server,
+        const std::string& new_path
+    );
 
 
     ///////////////////
@@ -120,7 +123,7 @@ public:
         \return Wheter it does respect the criterions or not
         \see LogName
     */
-    const bool isFileNameValid( const std::string& name );
+    const bool isFileNameValid( const std::string& name ) const;
 
 
     ///////////////////
@@ -132,14 +135,14 @@ public:
         \return The list of log files
         \see LogFile, logs_list, scanLogsDir()
     */
-    const std::vector<LogFile>& getLogsList( const bool& fresh=false );
+    const std::vector<LogFile>& getLogsList( const bool fresh=false );
 
     //! Returns the amount of log files in the list
     /*!
         \return The number of files actually in the list
         \see logs_list
     */
-    const int getLogsListSize();
+    const int getLogsListSize() const;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -148,7 +151,7 @@ public:
         \throw GenericException
         \see LogFile, logs_list
     */
-    const LogFile& getLogFileItem( const QString& file_name );
+    const LogFile& getLogFileItem( const QString& file_name ) const;
 
     /*const std::string& getLogFilePath( const QString& file_name );*/
 
@@ -195,7 +198,7 @@ public:
         \return The format string
         \see FormatOps::LogsFormat
     */
-    const std::string& getLogsFormatString( const int& web_server_id );
+    const std::string& getLogsFormatString( const int& web_server_id ) const;
 
     //! Returns the LogsFormat currently set for the given Web Server
     /*!
@@ -203,7 +206,7 @@ public:
         \return The LogsFormat instance
         \see FormatOps::LogsFormat
     */
-    const FormatOps::LogsFormat& getLogsFormat( const int& web_server_id );
+    const FormatOps::LogsFormat& getLogsFormat( const int& web_server_id ) const;
 
     //! Returns a sample log line for the given Web Server using the relative LogsFormat
     /*!
@@ -212,7 +215,7 @@ public:
         \throw WebServerException
         \see FormatOps::getApacheLogSample(), FormatOps::getNginxLogSample(), FormatOps::getIisLogSample()
     */
-    const QString getLogsFormatSample( const int& web_server_id );
+    const QString getLogsFormatSample( const int& web_server_id ) const;
 
 
 
@@ -220,7 +223,7 @@ public:
     //// WARNING SIZE ////
 
     //! Returns the currently set warning size for the log files
-    const long& getWarningSize();
+    const long& getWarningSize() const;
 
     //! Sets the new warning size for the log files
     void setWarningSize( const long& new_size );
@@ -251,7 +254,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isBlacklistUsed( const int& web_server_id, const int& log_field_id );
+    const bool& isBlacklistUsed( const int& web_server_id, const int& log_field_id ) const;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
@@ -260,7 +263,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isWarnlistUsed( const int& web_server_id, const int& log_field_id );
+    const bool& isWarnlistUsed( const int& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative blacklist to be used or not
     /*!
@@ -287,7 +290,7 @@ public:
         \return The list of items in the given blacklist
         \see BWlist
     */
-    const std::vector<std::string>& getBlacklist( const int& web_server_id, const int& log_field_id );
+    const std::vector<std::string>& getBlacklist( const int& web_server_id, const int& log_field_id ) const;
 
     //! Returns the relative items list
     /*!
@@ -296,7 +299,7 @@ public:
         \return The list of items in the givenwarnlist
         \see BWlist
     */
-    const std::vector<std::string>& getWarnlist( const int& web_server_id, const int& log_field_id );
+    const std::vector<std::string>& getWarnlist( const int& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative items list
     /*!
@@ -393,7 +396,7 @@ public:
     //// WORK ////
 
     //! Returns whether the database has been edited or not during the process
-    const bool& editedDatabase();
+    const bool& editedDatabase() const;
 
     //! Various checks to be made before starting a new process
     /*!
@@ -407,10 +410,10 @@ public:
     void clearDataCollection();
 
     //! Returns whether the process is still running or not
-    const bool& isWorking();
+    const bool& isWorking() const;
 
     //! Returns whether the process is still parsing or not
-    const bool& isParsing();
+    const bool& isParsing() const;
 
 
     //////////////////////
@@ -431,13 +434,13 @@ public:
     /*void sumPerfSize( const unsigned& size );*/
 
     //! Returns the size to be displayed in the main window
-    const unsigned int& getPerfSize();
+    const unsigned int& getPerfSize() const;
 
     //! Returns the total logs size
-    const unsigned int& getTotalSize();
+    const unsigned int& getTotalSize() const;
 
     //! Returns the parsed logs lines
-    const unsigned int& getParsedLines();
+    const unsigned int& getParsedLines() const;
 
     /*const unsigned int& getParsedSize();*/
 
@@ -448,7 +451,7 @@ public:
         \param size_chart The widget which will display the chart
         \see DonutBreakdown
     */
-    void makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart );
+    void makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart ) const;
 
 
 
@@ -513,7 +516,7 @@ private:
         \return The string to be displayed
         \see makeChart()
     */
-    const QString printableSize( const unsigned int& bytes );
+    const QString printableSize( const unsigned int& bytes ) const;
 
     ////////////////////
     //// LOGS ITEMS ////
@@ -582,7 +585,7 @@ private:
         \throw BWlistException, GenericException
         \see BWlist
     */
-    const std::string sanitizeBWitem( const int& log_field_id, const std::string& new_item );
+    const std::string sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const;
 
 
     ////////////////////

@@ -11,23 +11,23 @@ Food::Food( const bool& can_move )
 }
 
 
-const unsigned int& Food::X()
+const unsigned int& Food::X() const
 {
     return this->x;
 }
-const unsigned int& Food::Y()
+const unsigned int& Food::Y() const
 {
     return this->y;
 }
 
 
-QGraphicsPixmapItem* Food::getImageItem()
+QGraphicsPixmapItem* Food::getImageItem() const
 {
     return this->image;
 }
 
 
-const bool Food::inTile(  const unsigned int& x, const unsigned int& y  )
+const bool Food::inTile(  const unsigned int x, const unsigned int y  ) const
 {
     if ( this->x == x && this->y == y ) {
         return true;
@@ -37,14 +37,14 @@ const bool Food::inTile(  const unsigned int& x, const unsigned int& y  )
 }
 
 
-void Food::update( const unsigned int& new_x, const unsigned int& new_y ) {
+void Food::update( const unsigned int new_x, const unsigned int new_y ) {
     this->x = new_x;
     this->y = new_y;
     this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
 }
 
 
-void Food::spawn( Snake& snake, Snake& snake_ )
+void Food::spawn( const Snake& snake, const Snake& snake_ )
 {
     // pick a new random position
     unsigned int x, y;
@@ -90,7 +90,7 @@ void Food::spawn( Snake& snake, Snake& snake_ )
 }
 
 
-void Food::move( Snake& snake )
+void Food::move( const Snake& snake )
 {
     int move_up    = 0,
         move_down  = 0,

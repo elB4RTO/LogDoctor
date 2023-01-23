@@ -17,7 +17,7 @@ Result<T>::Result( const bool ok, const T& data )
 }
 
 template <typename T>
-Result<T>::operator bool()
+Result<T>::operator bool() const
 {
     return this->result;
 }
@@ -37,7 +37,7 @@ const bool Result<T>::isErr()
 */
 
 template <typename T>
-const T& Result<T>::getData()
+const T& Result<T>::getData() const
 {
     if ( this->result ) {
         return this->data;

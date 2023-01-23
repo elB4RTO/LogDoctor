@@ -1996,12 +1996,12 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <translation type="unfinished">lista negra</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4138"/>
+        <location filename="../mainwindow.cpp" line="4141"/>
         <source>copy</source>
         <translation type="unfinished">copia</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4140"/>
+        <location filename="../mainwindow.cpp" line="4143"/>
         <source>copies</source>
         <translation type="unfinished">copias</translation>
     </message>
@@ -2009,17 +2009,17 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
 <context>
     <name>RichText</name>
     <message>
-        <location filename="../utilities/rtf.cpp" line="218"/>
+        <location filename="../utilities/rtf.cpp" line="219"/>
         <source>Select a file from the list</source>
         <translation type="unfinished">Selecione um arquivo da lista</translation>
     </message>
     <message>
-        <location filename="../utilities/rtf.cpp" line="219"/>
+        <location filename="../utilities/rtf.cpp" line="220"/>
         <source>to inspect its content</source>
         <translation type="unfinished">para inspecionar seu conteúdo</translation>
     </message>
     <message>
-        <location filename="../utilities/rtf.cpp" line="227"/>
+        <location filename="../utilities/rtf.cpp" line="228"/>
         <source>Failed to read</source>
         <translation type="unfinished">Falha em ler</translation>
     </message>
@@ -2144,80 +2144,80 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <translation type="unfinished">VERDADEIRO</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="432"/>
+        <location filename="../modules/crapview/crapview.cpp" line="446"/>
         <source>Log Lines Marked as Warning</source>
         <translation type="unfinished">Linhas Marcadas como Aviso</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="591"/>
+        <location filename="../modules/crapview/crapview.cpp" line="605"/>
         <source>Time Taken to Serve Requests</source>
         <translation type="unfinished">Tempo Necessário para Atender às Solicitações</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="664"/>
+        <location filename="../modules/crapview/crapview.cpp" line="678"/>
         <source>Others</source>
         <translation type="unfinished">Outros</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="769"/>
-        <location filename="../modules/crapview/crapview.cpp" line="888"/>
+        <location filename="../modules/crapview/crapview.cpp" line="783"/>
+        <location filename="../modules/crapview/crapview.cpp" line="900"/>
         <source>Time of Day Count</source>
         <translation type="unfinished">Contagem de Horas do Dia</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="710"/>
-        <location filename="../modules/crapview/crapview.cpp" line="859"/>
+        <location filename="../modules/crapview/crapview.cpp" line="724"/>
+        <location filename="../modules/crapview/crapview.cpp" line="871"/>
         <source>from</source>
         <translation type="unfinished">de</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/crapview.cpp" line="712"/>
-        <location filename="../modules/crapview/crapview.cpp" line="861"/>
+        <location filename="../modules/crapview/crapview.cpp" line="726"/>
+        <location filename="../modules/crapview/crapview.cpp" line="873"/>
         <source>to</source>
         <translation type="unfinished">a</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="243"/>
+        <location filename="../modules/crapview/modules/query.h" line="253"/>
         <source>Unexpected WebServer</source>
         <translation type="unfinished">Servidor Web inesperado</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="244"/>
+        <location filename="../modules/crapview/modules/query.h" line="254"/>
         <source>An error occured while processing</source>
         <translation type="unfinished">Ocorreu um erro durante o processamento</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="245"/>
+        <location filename="../modules/crapview/modules/query.h" line="255"/>
         <source>An error occured while processing dates</source>
         <translation type="unfinished">Ocorreu um erro ao processar as datas</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="246"/>
+        <location filename="../modules/crapview/modules/query.h" line="256"/>
         <source>An error occured while parsing %1 from the database</source>
         <translation type="unfinished">Ocorreu um erro ao processar %1 na base de dados</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="247"/>
+        <location filename="../modules/crapview/modules/query.h" line="257"/>
         <source>Years</source>
         <translation>Anos</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="248"/>
+        <location filename="../modules/crapview/modules/query.h" line="258"/>
         <source>Months</source>
         <translation>Meses</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="249"/>
+        <location filename="../modules/crapview/modules/query.h" line="259"/>
         <source>Days</source>
         <translation>Dias</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="250"/>
+        <location filename="../modules/crapview/modules/query.h" line="260"/>
         <source>Value responsible for the error</source>
         <translation type="unfinished">Valor responsável pelo erro</translation>
     </message>
     <message>
-        <location filename="../modules/crapview/modules/query.h" line="251"/>
+        <location filename="../modules/crapview/modules/query.h" line="261"/>
         <source>Database table name</source>
         <translation type="unfinished">Nome da tabela do banco de dados</translation>
     </message>

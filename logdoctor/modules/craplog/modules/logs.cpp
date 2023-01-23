@@ -13,7 +13,7 @@ LogOps::LogOps()
 }
 
 
-LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format )
+const LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format ) const
 {
     if ( lines.size() == 0 ) {
         // empty content
@@ -24,7 +24,7 @@ LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, c
     LogOps::LogType log_type;
 
     // real type assignment
-    log_type = this->LogType::Failed;
+    log_type = LogOps::LogType::Failed;
     for ( const std::string& line : lines ) {
         // scan
         if ( this->deepTypeCheck( line, format ) ) {
@@ -48,7 +48,7 @@ LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, c
 }
 
 
-bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat& format )
+const bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat& format ) const
 {
     int n_sep_found=0, n_blank_sep=0,
         n_sep = format.separators.size();
@@ -138,7 +138,7 @@ bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat
 }
 
 
-void LogOps::cleanLines( std::vector<std::string> &lines )
+void LogOps::cleanLines( std::vector<std::string>& lines ) const
 {
     std::vector<std::string> aux;
     for ( const std::string& line : lines ) {
@@ -147,7 +147,7 @@ void LogOps::cleanLines( std::vector<std::string> &lines )
             aux.push_back( line );
         }
     }
-    lines = aux;
+    lines = std::move( aux );
 }
 
 
@@ -451,15 +451,15 @@ void LogOps::resetPerfData()
     this->parsed_size  = 0;
     this->parsed_lines = 0;
 }
-const unsigned LogOps::getTotalSize()
+const unsigned LogOps::getTotalSize() const
 {
     return this->total_size;
 }
-const unsigned LogOps::getParsedSize()
+const unsigned LogOps::getParsedSize() const
 {
     return this->parsed_size;
 }
-const unsigned LogOps::getParsedLines()
+const unsigned LogOps::getParsedLines() const
 {
     return this->parsed_lines;
 }
