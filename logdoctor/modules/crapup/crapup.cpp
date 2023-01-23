@@ -66,7 +66,7 @@ void Crapup::versionCheck( const float v )
     int err = 1;
 
     this->img_timer = new QTimer(this);
-    connect(this->img_timer, SIGNAL(timeout()), this, SLOT(rotateImg()));
+    connect(this->img_timer, &QTimer::timeout, this, &Crapup::rotateImg);
     this->img_timer->start(100);
 
     QByteArray ua = QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+" (version check)");
@@ -93,7 +93,7 @@ void Crapup::versionCheck( const float v )
         }
         this->request_timer = new QTimer(this);
         this->request_timer->setSingleShot( true );
-        connect(this->request_timer, SIGNAL(timeout()), this, SLOT(requestTimeout()));
+        connect(this->request_timer, &QTimer::timeout, this, &Crapup::requestTimeout);
 
         // set the URL and make the request
         QNetworkRequest request;
