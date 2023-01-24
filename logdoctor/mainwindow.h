@@ -731,7 +731,7 @@ private:
     bool db_working = false;
 
     //! Called when a member begins/ends performing operations on the database
-    void setDbWorkingState( const bool state );
+    void setDbWorkingState( const bool working );
 
     const bool dbUsable();
 

@@ -1718,6 +1718,12 @@ void MainWindow::makeInitialChecks()
                 throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
         }
         this->initiating = false;
+        // effectively check if draw buttons can be enabled
+        this->checkStatsWarnDrawable();
+        this->checkStatsSpeedDrawable();
+        this->checkStatsCountDrawable();
+        this->checkStatsDayDrawable();
+        this->checkStatsRelatDrawable();
     }
 }
 
@@ -2279,10 +2285,10 @@ void MainWindow::on_button_Tab_StatsGlob_clicked()
 ////////////
 //// DB ////
 ////////////
-void MainWindow::setDbWorkingState( const bool state )
+void MainWindow::setDbWorkingState( const bool working )
 {
-    this->db_working = state;
-    if ( ! state ) {
+    this->db_working = working;
+    if ( ! working ) {
         this->checkMakeStats_Makable();
         if ( this->ui->table_StatsWarn->rowCount() > 0 ) {
             this->ui->button_StatsWarn_Update->setEnabled( true );
@@ -2293,20 +2299,20 @@ void MainWindow::setDbWorkingState( const bool state )
         this->checkStatsDayDrawable();
         this->checkStatsRelatDrawable();
         this->ui->button_StatsGlob_Apache->setEnabled( true );
-        this->ui->button_StatsGlob_Nginx->setEnabled( true );
-        this->ui->button_StatsGlob_Iis->setEnabled( true );
+        this->ui->button_StatsGlob_Nginx->setEnabled(  true );
+        this->ui->button_StatsGlob_Iis->setEnabled(    true );
         this->ui->page_Tab_Conf->setEnabled( true );
     } else {
-        this->ui->button_MakeStats_Start->setEnabled( false );
+        this->ui->button_MakeStats_Start->setEnabled(  false );
         this->ui->button_StatsWarn_Update->setEnabled( false );
-        this->ui->button_StatsWarn_Draw->setEnabled( false );
-        this->ui->scrollArea_StatsCount->setEnabled( false );
-        this->ui->button_StatsSpeed_Draw->setEnabled( false );
-        this->ui->button_StatsDay_Draw->setEnabled( false );
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        this->ui->button_StatsWarn_Draw->setEnabled(   false );
+        this->ui->scrollArea_StatsCount->setEnabled(   false );
+        this->ui->button_StatsSpeed_Draw->setEnabled(  false );
+        this->ui->button_StatsDay_Draw->setEnabled(    false );
+        this->ui->button_StatsRelat_Draw->setEnabled(  false );
         this->ui->button_StatsGlob_Apache->setEnabled( false );
-        this->ui->button_StatsGlob_Nginx->setEnabled( false );
-        this->ui->button_StatsGlob_Iis->setEnabled( false );
+        this->ui->button_StatsGlob_Nginx->setEnabled(  false );
+        this->ui->button_StatsGlob_Iis->setEnabled(    false );
         this->ui->page_Tab_Conf->setEnabled( false );
     }
 }
@@ -2898,7 +2904,8 @@ void MainWindow::checkStatsWarnDrawable()
             this->ui->button_StatsWarn_Draw->setEnabled( false );
         }
     } else {
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        // db busy
+        this->ui->button_StatsWarn_Draw->setEnabled( false );
     }
 }
 
@@ -3020,7 +3027,8 @@ void MainWindow::checkStatsSpeedDrawable()
             this->ui->button_StatsSpeed_Draw->setEnabled( false );
         }
     } else {
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        // db busy
+        this->ui->button_StatsSpeed_Draw->setEnabled( false );
     }
 }
 
@@ -3114,7 +3122,8 @@ void MainWindow::checkStatsCountDrawable()
             this->ui->scrollArea_StatsCount->setEnabled( false );
         }
     } else {
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        // db busy
+        this->ui->scrollArea_StatsCount->setEnabled( false );
     }
 }
 
@@ -3359,29 +3368,27 @@ void MainWindow::checkStatsDayDrawable()
 
     } else {
         // db busy
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        this->ui->button_StatsDay_Draw->setEnabled( false );
     }
 }
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    if ( this->dbUsable() ) {
-        this->ui->box_StatsDay_LogsField->clear();
-        this->ui->box_StatsDay_FromYear->clear();
-        this->ui->box_StatsDay_ToYear->clear();
-        if ( index != -1 ) {
-            // refresh fields
-            this->ui->box_StatsDay_LogsField->addItems(
-                this->crapview.getFields( "Daytime" ));
-            this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
-            // refresh dates
-            QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
-            this->ui->box_StatsDay_FromYear->addItems( years );
-            this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
-            if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
-                this->ui->box_StatsDay_ToYear->addItems( years );
-                this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
-            }
+    this->ui->box_StatsDay_LogsField->clear();
+    this->ui->box_StatsDay_FromYear->clear();
+    this->ui->box_StatsDay_ToYear->clear();
+    if ( index != -1 ) {
+        // refresh fields
+        this->ui->box_StatsDay_LogsField->addItems(
+            this->crapview.getFields( "Daytime" ));
+        this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
+        // refresh dates
+        QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
+        this->ui->box_StatsDay_FromYear->addItems( years );
+        this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
+        if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
+            this->ui->box_StatsDay_ToYear->addItems( years );
+            this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
         }
     }
     this->checkStatsDayDrawable();
@@ -3570,27 +3577,27 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    if ( this->dbUsable() ) {
-        this->ui->box_StatsRelat_LogsField_1->clear();
-        this->ui->box_StatsRelat_LogsField_2->clear();
-        if ( index != -1 ) {
-            // refresh fields
-            QStringList fields = this->crapview.getFields( "Relational" );
-            this->ui->box_StatsRelat_LogsField_1->addItems( fields );
-            this->ui->box_StatsRelat_LogsField_2->addItems( fields );
-            this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
-            this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
-            // refresh dates
-            QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
-            // from
-            this->ui->box_StatsRelat_FromYear->clear();
-            this->ui->box_StatsRelat_FromYear->addItems( years );
-            this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
-            // to
-            this->ui->box_StatsRelat_ToYear->clear();
-            this->ui->box_StatsRelat_ToYear->addItems( years );
-            this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
-        }
+    this->ui->box_StatsRelat_LogsField_1->clear();
+    this->ui->box_StatsRelat_LogsField_2->clear();
+    this->ui->box_StatsRelat_FromYear->clear();
+    this->ui->box_StatsRelat_ToYear->clear();
+    if ( index != -1 ) {
+        // refresh fields
+        QStringList fields = this->crapview.getFields( "Relational" );
+        this->ui->box_StatsRelat_LogsField_1->addItems( fields );
+        this->ui->box_StatsRelat_LogsField_2->addItems( fields );
+        this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
+        this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
+        // refresh dates
+        QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
+        // from
+        this->ui->box_StatsRelat_FromYear->clear();
+        this->ui->box_StatsRelat_FromYear->addItems( years );
+        this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
+        // to
+        this->ui->box_StatsRelat_ToYear->clear();
+        this->ui->box_StatsRelat_ToYear->addItems( years );
+        this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
     }
     this->checkStatsRelatDrawable();
 }
