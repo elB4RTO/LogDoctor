@@ -1042,7 +1042,8 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                             .arg( log_field.replace("'","''") );
                     } else {
                         // filter
-                        if ( log_field == "response"
+                        if ( log_field == "warning"
+                          || log_field == "response"
                           || log_field == "time_taken"
                           || log_field == "bytes_sent"
                           || log_field == "bytes_received" ) {
@@ -1526,7 +1527,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                 // apply a filter if present
                 if ( field_filter_1.size() > 0 ) {
                     QString filter = field_filter_1;
-                    if ( log_field_1 == "response"
+                    if ( log_field_1 == "warning"
+                      || log_field_1 == "response"
                       || log_field_1 == "time_taken"
                       || log_field_1 == "bytes_sent"
                       || log_field_1 == "bytes_received" ) {
@@ -1551,7 +1553,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                 // apply a filter if present
                 if ( field_filter_2.size() > 0 ) {
                     QString filter = field_filter_2;
-                    if ( log_field_2 == "response"
+                    if ( log_field_2 == "warning"
+                      || log_field_2 == "response"
                       || log_field_2 == "time_taken"
                       || log_field_2 == "bytes_sent"
                       || log_field_2 == "bytes_received" ) {
