@@ -94,7 +94,7 @@ then
 fi
 
 
-cp ./osx_bundle/{bin,doc,Resources,info.plist} ../build/LogDoctor.app/Contents/
+cp -r ./osx_bundle/{bin,doc,Resources,info.plist} ../build/LogDoctor.app/Contents/
 sudo rm -r /Applications/LogDoctor.app
 if [[ "$?" != "0" ]]
 then
