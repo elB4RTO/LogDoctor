@@ -39,6 +39,8 @@ set(PROJECT_SOURCES
     utilities/gzip.cpp
     utilities/io.h
     utilities/io.cpp
+    utilities/printables.h
+    utilities/printables.cpp
     utilities/result.h
     utilities/result.cpp
     utilities/rtf.h
@@ -84,8 +86,8 @@ set(PROJECT_SOURCES
     modules/craplog/modules/logs.cpp
     modules/craplog/modules/sha256.h
     modules/craplog/modules/sha256.cpp
-    modules/craplog/modules/store.h
-    modules/craplog/modules/store.cpp
+    modules/craplog/modules/worker.h
+    modules/craplog/modules/worker.cpp
 
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
