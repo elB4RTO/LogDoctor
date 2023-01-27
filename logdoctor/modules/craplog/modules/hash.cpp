@@ -179,12 +179,7 @@ const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vec
     bool proceed = true;
 
     const QString db_name = QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) );
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
     if ( ! db.open() ) {
