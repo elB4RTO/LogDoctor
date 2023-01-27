@@ -208,7 +208,7 @@
        <locale language="English" country="UnitedStates"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_Tab_Log">
        <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -1613,6 +1613,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="1" column="1">
@@ -1634,6 +1637,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="1" column="2">
@@ -1654,6 +1660,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -1684,6 +1693,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">*</string>
                     </property>
                    </widget>
                   </item>
@@ -2109,6 +2121,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="2" column="0">
@@ -2130,6 +2145,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="2" column="1">
@@ -2150,6 +2168,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3153,6 +3174,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="2" column="1">
@@ -3173,6 +3197,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3224,6 +3251,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3378,6 +3408,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="1" column="1">
@@ -3404,6 +3437,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3441,6 +3477,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="2" column="2">
@@ -3464,6 +3503,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3501,6 +3543,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                       <pointsize>13</pointsize>
                      </font>
                     </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="1" column="2">
@@ -3521,6 +3566,9 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <font>
                       <pointsize>13</pointsize>
                      </font>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3887,7 +3935,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <string>Year</string>
                     </property>
                     <property name="placeholderText">
-                     <string>Year</string>
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3914,7 +3962,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <string>Month</string>
                     </property>
                     <property name="placeholderText">
-                     <string>Month</string>
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3941,7 +3989,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <string>Day</string>
                     </property>
                     <property name="placeholderText">
-                     <string>Day</string>
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -3995,7 +4043,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <string>Year</string>
                     </property>
                     <property name="placeholderText">
-                     <string>Year</string>
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -4022,7 +4070,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <string>Month</string>
                     </property>
                     <property name="placeholderText">
-                     <string>Month</string>
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -4049,7 +4097,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <string>Day</string>
                     </property>
                     <property name="placeholderText">
-                     <string>Day</string>
+                     <string notr="true">-</string>
                     </property>
                    </widget>
                   </item>
@@ -8372,7 +8420,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9376,7 +9424,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -10458,7 +10506,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>62</width>
+                            <width>98</width>
                             <height>54</height>
                            </rect>
                           </property>
