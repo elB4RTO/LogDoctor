@@ -520,7 +520,7 @@ private:
     Ui::MainWindow *ui;
 
     // current version of LogDoctor
-    const float version = 2.02;
+    const float version = 2.03;
 
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
