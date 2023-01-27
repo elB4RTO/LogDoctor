@@ -9,6 +9,8 @@ class Food
 {
 public:
     explicit Food( const bool& can_move=false );
+    explicit Food( const Food& other );
+    const Food& operator =( const Food& other );
 
     //! Returns the position on the X-axis
     const unsigned int& X() const;
@@ -47,7 +49,7 @@ private:
     unsigned int y;
 
     //!< The image which graphically represents the food
-    QGraphicsPixmapItem* image;
+    QGraphicsPixmapItem* image = nullptr;
 };
 
 #endif // FOOD_H
