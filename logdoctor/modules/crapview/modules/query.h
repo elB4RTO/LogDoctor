@@ -6,6 +6,7 @@
 
 #include <QString>
 
+#include <map>
 #include <vector>
 #include <unordered_map>
 
@@ -60,7 +61,7 @@ public:
         \return The number of months in the period
         \throw DateTimeException
     */
-    const int getMonthsCount(
+    const int countMonths(
         const QString& from_year,
         const QString& from_month,
         const QString& to_year,
@@ -237,8 +238,8 @@ public:
     */
     const bool getGlobalCounts(
         const QString& web_server,
-        const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates,
-        std::vector<std::unordered_map<QString, int>>& recurs,
+        const std::map<int, std::map<int, std::vector<int>>>& dates,
+        std::vector<std::unordered_map<QString, unsigned>>& recurs,
         std::tuple<QString, int>& traf_date,
         std::unordered_map<int, double>& traf_day,
         std::unordered_map<int, double>& traf_hour,
@@ -320,6 +321,20 @@ private:
     const int getMonthNumber( const QString& month_str ) const;
 
 
+    //! Returns the number of days in a given period
+    /*!
+        \param from_year The initial year
+        \param from_month The initial month
+        \param from_day The initial day
+        \param to_year The final Year
+        \param to_month The final month
+        \param to_day The final day
+        \return The number of days
+        \throw DateTimeException
+    */
+    const int countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day ) const;
+
+
     //! Returns the number of months in a given period
     /*!
         \param from_year The initial year
@@ -328,7 +343,7 @@ private:
         \param to_month The final month
         \return The number of months in the period
     */
-    const int getMonthsCount(
+    const int countMonths(
         const int& from_year, const int& from_month,
         const int& to_year,   const int& to_month
     ) const;
