@@ -2,7 +2,7 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-2.02-fff"/>
+  <img src="https://img.shields.io/badge/version-2.03-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
   <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
   <br/>
