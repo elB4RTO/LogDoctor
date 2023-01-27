@@ -14,8 +14,10 @@
 /*!
     Performs operations related to the visualization of the statistics
 */
-class Crapview
+class Crapview : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit Crapview();
 
@@ -284,6 +286,11 @@ public:
     ) const;
 
 
+private slots:
+
+    void sliceClicked( QtCharts::QPieSlice* slice );
+
+
 private:
 
     // quantity of information to display throught dialogs
@@ -307,49 +314,6 @@ private:
         {"Relational", {
             this->dbQuery.FIELDS.at(0),this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(15),this->dbQuery.FIELDS.at(16),this->dbQuery.FIELDS.at(17),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} }
     };
-
-
-    //! Returns a string of the given date in the format YYYY-MM-DD
-    /*!
-        \overload const QString printableDate(const int& year, const int& month, const int& day)
-        \param year The year
-        \param month The month
-        \param day The day
-        \return The printable date
-    */
-    const QString printableDate(
-        const QString& year, const int month, const QString& day
-    ) const;
-
-    //! Returns a string of the given date in the format YYYY-MM-DD
-    /*!
-        \param year The year
-        \param month The month
-        \param day The day
-        \return The printable date
-    */
-    const QString printableDate(
-        const int year, const int month, const int day
-    ) const;
-
-    //! Returns a string of the given time in the format HH:MM:SS
-    /*!
-        \param hour The hour
-        \param minut The minute
-        \param second The second
-        \return The printable time
-    */
-    const QString printableTime(
-        const int hour, const int minute, const int second
-    ) const;
-
-    //! Returns a string corresponding to the given value
-    /*!
-        Used to convert numeric booleans [0,1] to string [FALSE,TRUE]
-        \param value The value to convert
-        \return The corresponding printable string
-    */
-    const QString printableWarn( const int value ) const;
 
 
     // converr Web Servers names to  Web Server IDs
