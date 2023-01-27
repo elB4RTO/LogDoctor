@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QTreeWidget>
 #include <QChartView>
+#include <QThread>
 
 #include "utilities/strings.h"
 
@@ -45,6 +46,11 @@ public:
 
     explicit MainWindow( QWidget* parent=nullptr );
     ~MainWindow();
+
+
+signals:
+
+    void runCraplog();
 
 
 private slots:
@@ -87,19 +93,17 @@ private slots:
     /////////////////
     //// CRAPLOG ////
 
+    void refreshLogsList(); // CUSTOM
+
+    void updatePerfsLabels(); // CUSTOM
+
+    void craplogFinished(); // CUSTOM
+
+    void afterCraplogFinished(); // CUSTOM
+
     void on_button_Logs_Down_clicked();
 
     void on_button_Logs_Up_clicked();
-
-    void refreshLogsList(); // CUSTOM
-
-    void checkRefreshFinished(); // CUSTOM
-
-    void runCraplog(); // CUSTOM
-
-    void checkCraplogFinished(); // CUSTOM
-
-    void afterCraplogFinished(); // CUSTOM
 
     void on_button_LogFiles_ViewFile_clicked();
 
@@ -679,14 +683,9 @@ private:
     //// GENERAL USE ////
     /////////////////////
 
-    //! Printable size, including suffix
-    const QString printableSize( const int bytes ) const;
-
-    //! Printable time, including suffix(es)
-    const QString printableTime( const int seconds ) const;
-
-    //! Printable speed, namely printable size over printable time
-    const QString printableSpeed( const int bytes, const int secs ) const;
+    QTimer* waiter_timer;
+    std::chrono::system_clock::time_point waiter_timer_start;
+    std::chrono::system_clock::duration   waiter_timer_elapsed;
 
 
     //! Resolves the given path and returns the canonical path
@@ -749,17 +748,7 @@ private:
 
     Craplog craplog;
 
-    QTimer* craplog_timer = new QTimer();
-    QTimer* waiter_timer;
-
-    std::chrono::system_clock::time_point waiter_timer_start;
-    std::chrono::system_clock::duration waiter_timer_elapsed;
-
-    //! The logs parser started working
     void craplogStarted();
-
-    //! The logs parser finished working
-    void craplogFinished();
 
     void checkMakeStats_Makable();
 
@@ -785,11 +774,9 @@ private:
     //////////////////////////
     //// LOGS PERFORMANCE ////
 
-    void updatePerfsLabels(); // CUSTOM
+    void resetPerfsLabels();
 
-    /*void update_MakeStats_graphs(); // CUSTOM*/
-
-    void resetPerfsLabels(); // CUSTOM
+    bool force_updating_labels = false;
 
 
     //////////////////

@@ -6,6 +6,7 @@
 #include "utilities/colors.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
+#include "utilities/printables.h"
 #include "utilities/rtf.h"
 #include "utilities/stylesheets.h"
 
@@ -105,6 +106,12 @@ MainWindow::MainWindow(QWidget *parent)
     //// CONFIGS ////
     this->defineOSspec();
     this->readConfigs();
+
+
+    /////////////////
+    //// CRAPLOG ////
+    connect(this, &MainWindow::runCraplog, &this->craplog, &Craplog::startWorking);
+    connect(&this->craplog, &Craplog::finishedWorking, this, &MainWindow::craplogFinished);
 
 
     ///////////////////
@@ -245,7 +252,6 @@ MainWindow::~MainWindow()
 {
     delete this->ui;
     delete this->waiter_timer;
-    delete this->craplog_timer;
     delete this->crapview_timer;
     delete this->craphelp;
     delete this->crapnote;
@@ -357,7 +363,8 @@ void MainWindow::readConfigs()
     }
 
     if ( proceed ) {
-        QString err_msg="", aux_err_msg;
+        err_msg.clear();
+        QString aux_err_msg;
         std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
@@ -987,13 +994,16 @@ const std::string MainWindow::list2string( const std::vector<std::string>& list,
 {
     std::string string;
     if ( user_agent ) {
-        for ( const std::string& str : list ) {
-            string += StringOps::replace( str, " ", "%@#" ) + " ";
-        }
+        string = std::accumulate(
+            list.begin(), list.end(), string,
+            [](auto& s, auto str)->std::string&
+            { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
+
     } else {
-        for ( const std::string& str : list ) {
-            string += str + " ";
-        }
+        string = std::accumulate(
+            list.begin(), list.end(), string,
+            [](auto& s, auto str)->std::string&
+            { return s += str + " "; } );
     }
     return string;
 }
@@ -1002,13 +1012,11 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, " " );
     if ( user_agent ) {
-        for ( const std::string& str : aux ) {
-            list.push_back( StringOps::replace( str, "%@#", " " ) );
-        }
+        std::transform( aux.cbegin(), aux.cend(),
+                        std::back_inserter( list ),
+                        [](auto str){ return StringOps::replace( str, "%@#", " " ); } );
     } else {
-        for ( const std::string& str : aux ) {
-            list.push_back( str );
-        }
+        list = std::move( aux );
     }
     return list;
 }
@@ -1799,105 +1807,14 @@ const std::string MainWindow::parentPath( const std::string& path ) const
     return path.substr( 0, stop );
 }
 
-// printable size with suffix and limited decimals
-const QString MainWindow::printableSize( const int bytes ) const
-{
-    std::string size_str, size_sfx=" B";
-    float size = (float)bytes;
-    if (size > 1024) {
-        size /= 1024;
-        size_sfx = " KiB";
-        if (size > 1024) {
-            size /= 1024;
-            size_sfx = " MiB";
-        }
-    }
-    // cut decimals depending on how big the floor is
-    size_str = std::to_string( size );
-    int cut_index = size_str.find('.')+1;
-    if ( cut_index == 0 ) {
-            cut_index = size_str.find(',')+1;
-    }
-    int n_decimals = 3;
-    if ( size >= 100 ) {
-        n_decimals = 2;
-        if ( size >= 1000 ) {
-            n_decimals = 1;
-            if ( size >= 10000 ) {
-                n_decimals = 0;
-                cut_index --;
-            }
-        }
-    }
-    if ( cut_index >= 1 ) {
-        cut_index += n_decimals;
-        if ( cut_index > size_str.size()-1 ) {
-            cut_index = size_str.size()-1;
-        }
-    }
-    return QString::fromStdString( size_str.substr(0, cut_index ) + size_sfx );
-}
-
-// printable speed with suffix and limited decimals
-const QString MainWindow::printableSpeed( const int bytes, const int secs_ ) const
-{
-    std::string speed_str, speed_sfx=" B/s";
-    int secs = secs_;
-    if ( secs == 0 ) {
-        secs = 1;
-    }
-    float speed = (float)bytes / (float)secs;
-    if (speed > 1024) {
-        speed /= 1024;
-        speed_sfx = " KiB/s";
-        if (speed > 1024) {
-            speed /= 1024;
-            speed_sfx = " MiB/s";
-        }
-    }
-    // cut decimals depending on how big the floor is
-    speed_str = std::to_string( speed );
-    int cut_index = speed_str.find('.')+1;
-    if ( cut_index == 0 ) {
-            cut_index = speed_str.find(',')+1;
-    }
-    int n_decimals = 3;
-    if ( speed >= 100 ) {
-        n_decimals = 2;
-        if ( speed >= 1000 ) {
-            n_decimals = 1;
-            if ( speed >= 10000 ) {
-                n_decimals = 0;
-                cut_index --;
-            }
-        }
-    }
-    if ( cut_index >= 1 ) {
-        cut_index += n_decimals;
-        if ( cut_index > speed_str.size()-1 ) {
-            cut_index = speed_str.size()-1;
-        }
-    }
-    return QString::fromStdString( speed_str.substr(0, cut_index ) + speed_sfx );
-}
-
-const QString MainWindow::printableTime( const int secs_ ) const
-{
-    int secs = secs_;
-    int mins = secs / 60;
-    secs = secs - (mins*60);
-    std::string mins_str = (mins<10) ? "0"+std::to_string(mins) : std::to_string(mins);
-    std::string secs_str = (secs<10) ? "0"+std::to_string(secs) : std::to_string(secs);
-    return QString::fromStdString( mins_str +":"+ secs_str );
-}
-
 
 //////////////
 //// HELP ////
 //////////////
 void MainWindow::showHelp( const std::string& file_name )
 {
-    const std::string link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
+    bool fallback = false;
+    const QString link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
     const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+file_name+".html";
     if ( IOutils::exists( path ) ) {
         if ( IOutils::isFile( path ) ) {
@@ -1916,15 +1833,32 @@ void MainWindow::showHelp( const std::string& file_name )
                 }
             } else {
                 // resource not readable
-                DialogSec::errHelpNotReadable( QString::fromStdString( link ) );
+                DialogSec::errHelpNotReadable( link );
+                fallback = true;
             }
         } else {
             // resource is not a file
-            DialogSec::errHelpFailed( QString::fromStdString( link ), DialogSec::tr("unrecognized entry") );
+            DialogSec::errHelpFailed( link, DialogSec::tr("Unrecognized entry") );
+            fallback = true;
         }
     } else {
         // resource not found
-        DialogSec::errHelpNotFound( QString::fromStdString( link ) );
+        DialogSec::errHelpNotFound( link );
+        fallback = true;
+    }
+    if ( fallback ) {
+        // help file not found for the current locale, fallback to the default version
+        delete this->craphelp;
+        this->craphelp = new Craphelp();
+        this->craphelp->helpLogsFormatDefault(
+            file_name,
+            this->TB.getFont(),
+            this->TB.getColorSchemeID() );
+        if ( this->isMaximized() ) {
+            this->craphelp->showMaximized();
+        } else {
+            this->craphelp->show();
+        }
     }
 }
 
@@ -2023,19 +1957,10 @@ void MainWindow::menu_actionBlockNote_triggered()
 
 void MainWindow::menu_actionInfos_triggered()
 {
-    std::string version_ = std::to_string( this->version );
-    size_t cut = version_.find('.');
-    if ( cut == std::string::npos ) {
-        cut = version_.find(',');
-        if ( cut == std::string::npos ) {
-            cut = version_.size()-3;
-        }
-    }
-    version_ = version_.substr( 0, cut+3 );
     delete this->crapinfo;
     this->crapinfo = new Crapinfo(
         this->window_theme_id,
-        QString::fromStdString( version_ ),
+        QString::number( this->version ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->configs_path ),
         QString::fromStdString( this->logdoc_path ) );
@@ -2372,13 +2297,13 @@ void MainWindow::checkMakeStats_Makable()
 // switch to apache web server
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 11 ) {
+    if ( this->craplog.getCurrentWSID() != this->APACHE_ID ) {
         // flat/unflat
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( 11 );
+        this->craplog.setCurrentWSID( this->APACHE_ID );
         // reset the log files viewer
         {
             QString rich_text;
@@ -2393,13 +2318,13 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
 // switch to nginx web server
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 12 ) {
+    if ( this->craplog.getCurrentWSID() != this->NGINX_ID ) {
         // flat/unflat
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( 12 );
+        this->craplog.setCurrentWSID( this->NGINX_ID );
         // reset the log files viewer
         {
             QString rich_text;
@@ -2414,13 +2339,13 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
 // switch to iis web server
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 13 ) {
+    if ( this->craplog.getCurrentWSID() != this->IIS_ID ) {
         // flat/unflat
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( 13 );
+        this->craplog.setCurrentWSID( this->IIS_ID );
         // reset the log files viewer
         {
             QString rich_text;
@@ -2436,27 +2361,25 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
 // refresh the log files list
 void MainWindow::on_button_LogFiles_RefreshList_clicked()
 {
-    // clear the current tree
-    this->ui->listLogFiles->clear();
-    this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
-    // disable elements
-    this->ui->button_LogFiles_RefreshList->setEnabled( false );
-    this->ui->button_LogFiles_ViewFile->setEnabled( false );
-    this->ui->button_LogFiles_Apache->setEnabled( false );
-    this->ui->button_LogFiles_Nginx->setEnabled( false );
-    this->ui->button_LogFiles_Iis->setEnabled( false );
-    // start refreshing as thread
-    this->refreshing_list = true;
-    delete this->craplog_timer;
-    this->craplog_timer = new QTimer(this);
-    this->craplog_timer->setSingleShot( true );
-    connect(this->craplog_timer, &QTimer::timeout, this, &MainWindow::refreshLogsList);
-    this->craplog_timer->start(250);
-    // periodically check if thread finished
-    delete this->waiter_timer;
-    this->waiter_timer = new QTimer(this);
-    connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::checkRefreshFinished);
-    this->waiter_timer->start(250);
+    if ( ! this->refreshing_list ) {
+        this->refreshing_list = true;
+        // clear the current tree
+        this->ui->listLogFiles->clear();
+        this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
+        // disable elements
+        this->ui->button_LogFiles_RefreshList->setEnabled( false );
+        this->ui->button_LogFiles_ViewFile->setEnabled( false );
+        this->ui->button_LogFiles_Apache->setEnabled( false );
+        this->ui->button_LogFiles_Nginx->setEnabled( false );
+        this->ui->button_LogFiles_Iis->setEnabled( false );
+        // start refreshing as thread
+        delete this->waiter_timer;
+        this->waiter_timer = new QTimer(this);
+        this->waiter_timer->setSingleShot( true );
+        connect( this->waiter_timer, &QTimer::timeout,
+                 this, &MainWindow::refreshLogsList);
+        this->waiter_timer->start(250);
+    }
 }
 
 void MainWindow::refreshLogsList()
@@ -2488,7 +2411,7 @@ void MainWindow::refreshLogsList()
         // set the name
         item->setText( 0, log_file.name );
         // set the size
-        item->setText( 1, this->printableSize( log_file.size ) );
+        item->setText( 1, PrintSec::printableSize( log_file.size ) );
         item->setFont( 1, this->FONTS.at("main_italic") );
         // append the item (on top, forced)
         item->setCheckState(0, Qt::CheckState::Unchecked );
@@ -2502,19 +2425,13 @@ void MainWindow::refreshLogsList()
         this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
         this->ui->checkBox_LogFiles_CheckAll->setEnabled( false );
     }
-    refreshing_list = false;
-}
-void MainWindow::checkRefreshFinished()
-{
-    if ( ! this->refreshing_list ) {
-        this->waiter_timer->stop();
-        // back to normal state
-        this->ui->button_LogFiles_RefreshList->setEnabled( true );
-        this->ui->button_LogFiles_ViewFile->setEnabled( true );
-        this->ui->button_LogFiles_Apache->setEnabled( true );
-        this->ui->button_LogFiles_Nginx->setEnabled( true );
-        this->ui->button_LogFiles_Iis->setEnabled( true );
-    }
+    // refresh finished, back to normal state
+    this->ui->button_LogFiles_RefreshList->setEnabled( true );
+    this->ui->button_LogFiles_ViewFile->setEnabled( true );
+    this->ui->button_LogFiles_Apache->setEnabled( true );
+    this->ui->button_LogFiles_Nginx->setEnabled( true );
+    this->ui->button_LogFiles_Iis->setEnabled( true );
+    this->refreshing_list = false;
 }
 
 
@@ -2559,32 +2476,19 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         // check the size
         if ( proceed ) {
-            const long warn_size = this->craplog.getWarningSize();
-            if ( warn_size >= 0 ) {
+            const unsigned warn_size = this->craplog.getWarningSize();
+            if ( warn_size > 0 ) {
                 if ( item.size > warn_size ) {
                     // exceeds the warning size
-                    QString size_str, msg = item.name;
+                    QString msg = item.name;
                     if ( this->dialogs_level >= 1 ) {
-                        std::string size_sfx=" B";
-                        float size = (float)item.size;
-                        if (size > 1024) {
-                            size /= 1024; size_sfx = " KiB";
-                            if (size > 1024) {
-                                size /= 1024; size_sfx = " MiB";
-                            }
-                        }
-                        size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                        msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Size of the file"), size_str, size_sfx.c_str() );
+                        msg += QString("\n\n%1:\n%2").arg(
+                            DialogSec::tr("Size of the file"),
+                            PrintSec::printableSize( item.size ) );
                         if ( this->dialogs_level == 2 ) {
-                            size = (float)warn_size;
-                            if (size > 1024) {
-                                size /= 1024; size_sfx = " KiB";
-                                if (size > 1024) {
-                                    size /= 1024; size_sfx = " MiB";
-                                }
-                            }
-                            size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                            msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Warning size parameter"), size_str, size_sfx.c_str() );
+                            msg += QString("\n\n%1:\n%2").arg(
+                                DialogSec::tr("Warning size parameter"),
+                                PrintSec::printableSize( warn_size ) );
                         }
                     }
                     // ask the user what to do
@@ -2744,25 +2648,19 @@ void MainWindow::on_button_MakeStats_Start_clicked()
                 // periodically update perfs
                 delete this->waiter_timer;
                 this->waiter_timer = new QTimer(this);
-                connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::checkCraplogFinished);
-                // run craplog as thread
-                this->waiter_timer_start = std::chrono::system_clock::now();
-                delete this->craplog_timer;
-                this->craplog_timer = new QTimer(this);
-                this->craplog_timer->setSingleShot( true );
-                connect(this->craplog_timer, &QTimer::timeout, this, &MainWindow::runCraplog);
+                this->waiter_timer->setInterval(250);
+                this->waiter_timer->setTimerType( Qt::PreciseTimer );
+                connect( this->waiter_timer, &QTimer::timeout,
+                         this, &MainWindow::updatePerfsLabels );
                 // start processing
-                this->waiter_timer->start(250);
-                this->craplog_timer->start(100);
+                this->waiter_timer_start = std::chrono::system_clock::now();
+                this->waiter_timer->start();
+                emit runCraplog();
             } else {
                 this->craplogFinished();
             }
         }
     }
-}
-void MainWindow::runCraplog()
-{
-    this->craplog.run();
 }
 
 void MainWindow::resetPerfsLabels()
@@ -2778,42 +2676,24 @@ void MainWindow::resetPerfsLabels()
 void MainWindow::updatePerfsLabels()
 {
     // update values
-    unsigned size;
-    long secs;
-    // size and lines
-    if ( this->craplog.isParsing() ) {
-        this->craplog.collectPerfData();
+    if ( this->craplog.isParsing() || this->force_updating_labels ) {
+        const unsigned size = this->craplog.getParsedSize();
+        this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
+        this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
+        this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
     }
-    size = this->craplog.getTotalSize();
-    //size = this->craplog.getParsedSize();
-    this->ui->label_MakeStats_Size->setText( this->printableSize( size ) );
-    this->ui->label_MakeStats_Lines->setText( QString::fromStdString(std::to_string(this->craplog.getParsedLines())) );
     // time and speed
     this->waiter_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         this->waiter_timer_start - std::chrono::system_clock::now()
     );
-    size = this->craplog.getPerfSize();
-    secs = this->waiter_timer_elapsed.count() / -1000000000;
-    this->ui->label_MakeStats_Time->setText( this->printableTime( secs ));
-    this->ui->label_MakeStats_Speed->setText( this->printableSpeed( size, secs ));
-}
-
-void MainWindow::checkCraplogFinished()
-{
-    // craplog is running as thread, update the values meanwhile
-    this->updatePerfsLabels();
-    // check if Craplog has finished working
-    if ( ! this->craplog.isWorking() ) {
-        this->waiter_timer->stop();
-        this->craplogFinished();
-    }
+    const unsigned secs = this->waiter_timer_elapsed.count() / -1000000000;
+    this->ui->label_MakeStats_Time->setText( PrintSec::printableTime( secs ));
 }
 
 void MainWindow::craplogStarted()
 {
     // reset perfs
     this->resetPerfsLabels();
-    this->craplog.logOps.resetPerfData();
     // disable the LogFiles section
     this->ui->stacked_Logs_Pages->setEnabled(false);
     // disable things which needs database access
@@ -2831,36 +2711,31 @@ void MainWindow::craplogStarted()
 
 void MainWindow::craplogFinished()
 {
-    // update the perf data one last time, just in case
-    this->updatePerfsLabels();
-    this->craplog.makeChart(
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->chart_MakeStats_Size );
-    if ( this->craplog.editedDatabase() ) {
-        // craplog succeeded
-        this->db_edited = true;
+    if ( this->waiter_timer->isActive() ) {
+        this->waiter_timer->stop();
+        this->force_updating_labels = true;
+        this->updatePerfsLabels();
+        this->force_updating_labels = false;
+        // draw the chart
+        this->craplog.makeChart(
+            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->chart_MakeStats_Size );
+        this->db_edited = this->craplog.editedDatabase();
+        // refresh the logs section
+        delete this->waiter_timer;
+        this->waiter_timer = new QTimer(this);
+        this->waiter_timer->setSingleShot( true );
+        connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::afterCraplogFinished);
+        this->waiter_timer->start(1000);
+    } else {
+        this->afterCraplogFinished();
     }
-    if ( this->craplog.getTotalSize() == 0 ) {
-        // no data
-        this->resetPerfsLabels();
-    }
-    // clean up temp vars
-    this->craplog.clearDataCollection();
-    this->craplog.logOps.resetPerfData();
-    // refresh the logs section
-    delete this->craplog_timer;
-    this->craplog_timer = new QTimer(this);
-    this->craplog_timer->setSingleShot( true );
-    connect(this->craplog_timer, &QTimer::timeout, this, &MainWindow::afterCraplogFinished);
-    this->craplog_timer->start(1000);
 }
 
 void MainWindow::afterCraplogFinished()
 {
-    // refresh the logs list
-    this->on_button_LogFiles_RefreshList_clicked();
     // enable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled( true );
+    this->ui->stacked_Logs_Pages->setEnabled(   true );
     // enable all labels (needed only the first time each session)
     this->ui->icon_MakeStats_Size->setEnabled(  true );
     this->ui->icon_MakeStats_Lines->setEnabled( true );
@@ -2868,8 +2743,12 @@ void MainWindow::afterCraplogFinished()
     this->ui->icon_MakeStats_Speed->setEnabled( true );
     // enable back
     this->setDbWorkingState( false );
-    // get a fresh collection of available stats dates
-    this->refreshStatsDates();
+    if ( this->craplog.editedDatabase() ) {
+        // refresh the logs list
+        this->on_button_LogFiles_RefreshList_clicked();
+        // get a fresh collection of available stats dates
+        this->refreshStatsDates();
+    }
 }
 
 
@@ -3729,78 +3608,73 @@ void MainWindow::drawStatsRelat()
 
 ////////////////
 //// GLOBAL ////
-//
+
 void MainWindow::drawStatsGlobals()
 {
-    if ( this->dbUsable() ) {
-        std::vector<std::tuple<QString,QString>> recur_list;
-        std::vector<std::tuple<QString,QString>> traffic_list;
-        std::vector<std::tuple<QString,QString>> perf_list;
-        std::vector<QString> work_list;
+    std::vector<std::tuple<QString,QString>> recur_list;
+    std::vector<std::tuple<QString,QString>> traffic_list;
+    std::vector<std::tuple<QString,QString>> perf_list;
+    std::vector<QString> work_list;
 
-        const bool result = this->crapview.calcGlobals(
-            recur_list, traffic_list, perf_list, work_list,
-            this->glob_ws );
+    const bool result = this->crapview.calcGlobals(
+        recur_list, traffic_list, perf_list, work_list,
+        this->glob_ws );
 
-        if ( result ) {
-            this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
-            this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
-            this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
-            this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
-            this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
-            this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
-            this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
-            this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
+    if ( result ) {
+        this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
+        this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
+        this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
+        this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
+        this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
+        this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
+        this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
+        this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
 
-            this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
-            this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
-            this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
-            this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
-            this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
-            this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
+        this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
+        this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
+        this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
+        this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
+        this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
+        this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
 
-            this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
-            this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
-            this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
-            this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
-            this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
-            this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
+        this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
+        this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
+        this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
+        this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
+        this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
+        this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
 
-            this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
-            this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
-            this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
+        this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
+        this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
+        this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
 
-            if ( this->glob_ws == "apache" ) {
-                if ( this->ui->button_StatsGlob_Apache->isFlat() ) {
-                    // un-flat
-                    this->ui->button_StatsGlob_Apache->setFlat( false );
-                    this->ui->button_StatsGlob_Nginx->setFlat( true );
-                    this->ui->button_StatsGlob_Iis->setFlat( true );
-                }
-            } else if ( this->glob_ws == "nginx" ) {
-                if ( this->ui->button_StatsGlob_Nginx->isFlat() ) {
-                    // un-flat
-                    this->ui->button_StatsGlob_Nginx->setFlat( false );
-                    this->ui->button_StatsGlob_Apache->setFlat( true );
-                    this->ui->button_StatsGlob_Iis->setFlat( true );
-                }
-            } else if ( this->glob_ws == "iis" ) {
-                if ( this->ui->button_StatsGlob_Iis->isFlat() ) {
-                    // un-flat
-                    this->ui->button_StatsGlob_Iis->setFlat( false );
-                    this->ui->button_StatsGlob_Apache->setFlat( true );
-                    this->ui->button_StatsGlob_Nginx->setFlat( true );
-                }
+        if ( this->glob_ws == "apache" ) {
+            if ( this->ui->button_StatsGlob_Apache->isFlat() ) {
+                // un-flat
+                this->ui->button_StatsGlob_Apache->setFlat( false );
+                this->ui->button_StatsGlob_Nginx->setFlat( true );
+                this->ui->button_StatsGlob_Iis->setFlat( true );
             }
-
-        } else {
-            this->resetStatsGlob();
+        } else if ( this->glob_ws == "nginx" ) {
+            if ( this->ui->button_StatsGlob_Nginx->isFlat() ) {
+                // un-flat
+                this->ui->button_StatsGlob_Nginx->setFlat( false );
+                this->ui->button_StatsGlob_Apache->setFlat( true );
+                this->ui->button_StatsGlob_Iis->setFlat( true );
+            }
+        } else if ( this->glob_ws == "iis" ) {
+            if ( this->ui->button_StatsGlob_Iis->isFlat() ) {
+                // un-flat
+                this->ui->button_StatsGlob_Iis->setFlat( false );
+                this->ui->button_StatsGlob_Apache->setFlat( true );
+                this->ui->button_StatsGlob_Nginx->setFlat( true );
+            }
         }
 
     } else {
         this->resetStatsGlob();
     }
-    // restore
+    // restore db state
     this->setDbWorkingState( false );
 }
 
@@ -4966,6 +4840,9 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setEnabled( true );
             this->ui->inLine_ConfIis_Format_String->setFocus();
+            if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->on_button_LogFiles_RefreshList_clicked();
+            }
         }
     }
 }
@@ -4980,6 +4857,9 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
+            if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->on_button_LogFiles_RefreshList_clicked();
+            }
         }
     }
 }
@@ -4994,6 +4874,9 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
+            if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->on_button_LogFiles_RefreshList_clicked();
+            }
         }
     }
 }
