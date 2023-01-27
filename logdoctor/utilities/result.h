@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 #include <tuple>
+#include <map>
 
 
 //! Result
@@ -41,11 +42,11 @@ private:
 
 
 // data types
-typedef std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> stats_dates_t;
+typedef std::map<int, std::map<int, std::map<int, std::vector<int>>>> stats_dates_t;
 typedef std::vector<std::vector<std::vector<std::vector<QString>>>> stats_warn_items_t;
 typedef std::vector<std::tuple<long long, std::vector<QString>>> stats_speed_items_t;
 typedef std::unordered_map<int, std::unordered_map<int, int>> stats_day_items_t;
 typedef std::vector<std::tuple<long long, int>> stats_relat_items_t;
-typedef std::vector<std::tuple<QString, int>> stats_count_items_t;
+typedef std::map<unsigned, QString> stats_count_items_t;
 
 #endif // RESULT_H
