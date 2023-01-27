@@ -12,9 +12,9 @@ FormatOps::FormatOps()
 
 
 // count the new lines
-const int FormatOps::countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const
+const unsigned FormatOps::countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const
 {
-    int nl = 0;
+    unsigned nl = 0;
     nl += StringOps::count( initial, "\n" );
     nl += StringOps::count( final, "\n" );
     for ( const std::string& sep : separators ) {
@@ -616,7 +616,7 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
             // IIS logging module
             final = ",";
             separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
-            fields = {"client","NONE","date_time_MDYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
+            fields = {"client","NONE","date_time_MDYYYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
             break;
         case 1:
             // NCSA logging module

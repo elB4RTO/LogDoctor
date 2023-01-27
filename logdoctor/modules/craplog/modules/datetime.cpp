@@ -113,10 +113,10 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
         // convert to seconds
         if ( aux == "us" ) {
             // from microseconds
-            datetime = datetime.substr( 0, datetime.size()-6 );
+            datetime.resize( datetime.size()-6 );
         } else if ( aux == "ms" ) {
             // from milliseconds
-            datetime = datetime.substr( 0, datetime.size()-3 );
+            datetime.resize( datetime.size()-3 );
         } else if ( aux == "s.ms" ) {
             // from seconds.milliseconds
             datetime = std::to_string( std::stoi( datetime ) );
@@ -140,11 +140,13 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
             day    = datetime.substr( 8, 2 );
 
         } else if ( format == "MMDDYY" ) {
+            int y = std::stoi( datetime.substr( 6, 2 ) );
             month  = datetime.substr( 0, 2 );
             day    = datetime.substr( 3, 2 );
-            year   = "20" + datetime.substr( 6, 2 );
+            year   = (y<70) ? "20" : "19";
+            year  += std::to_string( y );
 
-        } else if ( format == "MDYY" ) {
+        } else if ( format == "MDYYYY" ) {
             int aux_;
             if ( datetime.at(2) == '/' ) {
                 month = datetime.substr( 0, 2 );
@@ -158,21 +160,23 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
                 aux_ += 3;
             } else {
                 day = "0" + datetime.substr( aux_, 1 );
-                aux_ = +2;
+                aux_ += 2;
             }
-            year = "20" + datetime.substr( aux_ );
+            year = datetime.substr( aux_ );
 
         } else if ( StringOps::startsWith( format, "year" ) ) {
             year = datetime;
             if ( format == "year_short" ) {
-                year = "20" + year;
+                int y = std::stoi( year );
+                year  = (y<70) ? "20" : "19";
+                year += year;
             }
 
         } else if ( StringOps::startsWith( format, "month" ) ) {
             if ( format.size() <= 5 ) {
                 month = datetime;
             } else {
-                datetime = datetime.substr( 0, 3 ); // may be the full name
+                datetime.resize( 3 ); // may be the full name
                 month = DateTimeOps::convertMonth( datetime );
             }
 

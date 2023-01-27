@@ -79,9 +79,9 @@ void TextBrowser::makePreview( QString& content ) const
                   this->color_scheme.at("text") );
     }
     content += ">";
-    if ( this->wide_lines ) {
+    /*if ( this->wide_lines ) {
         content += "<br/>";
-    }
+    }*/
     for ( int i=0; i<32; i++ ) {
         content += "<p>";
 
@@ -166,7 +166,7 @@ void TextBrowser::makePreview( QString& content ) const
         content += "</b>";
 
         content += "</p>";
-        if ( this->wide_lines ) {
+        if ( this->wide_lines && i < 31 ) {
             content += "<br/>";
         }
     }

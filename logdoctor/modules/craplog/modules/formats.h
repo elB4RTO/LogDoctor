@@ -24,7 +24,7 @@ public:
         std::string final;                   //!< The final separator
         std::vector<std::string> separators; //!< The separators in the middle
         std::vector<std::string> fields;     //!< The fields
-        int new_lines;                       //!< The number of new lines
+        unsigned new_lines;                  //!< The number of new lines
     };
 
 
@@ -117,7 +117,7 @@ private:
         \return The number of new lines in a single log line
         \see LogsFormat, processApacheFormatString(), processNginxFormatString()
     */
-    const int countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const;
+    const unsigned countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const;
 
     //! Finds the end of a Nginx log field
     /*!
@@ -437,7 +437,7 @@ private:
     /////////////
     //// IIS ////
 
-    //!< Access logs fields formats
+    //!< Access logs fields formats (W3C)
     const std::unordered_map<std::string, std::string> IIS_ALF = {
         {"date",             "date_time_utc_d"},
         {"time",             "date_time_utc_t"},
@@ -468,7 +468,7 @@ private:
     const std::unordered_map<std::string, QString> IIS_ALF_SAMPLES = {
         {"NONE",               "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_ncsa",     "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
-        {"date_time_MDYY",     "<b><span style=\"color:#00cc6f\">1/1/00</span></b>"},
+        {"date_time_MDYYYY",   "<b><span style=\"color:#00cc6f\">1/1/2000</span></b>"},
         {"date_time_utc_d",    "<b><span style=\"color:#00cc6f\">2000-01-01</span></b>"},
         {"date_time_utc_t",    "<b><span style=\"color:#00cc6f\">23:59:59</span></b>"},
         {"request_full",       "<b><span style=\"color:#00cc6f\">GET /index.php?query=x HTTP/1.1</span></b>"},

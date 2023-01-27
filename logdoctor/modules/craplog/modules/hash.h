@@ -28,7 +28,6 @@ public:
     /*!
         \param db_path The path of the log files' Hashes database
         \return Whether the operation has been successful or not
-        \see hashes
     */
     const bool loadUsedHashesLists( const std::string& db_path );
 
@@ -46,7 +45,6 @@ public:
         \param file_hash The sha256 hash to compare
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the hash is already in the list or not
-        \see hashes
     */
     const bool hasBeenUsed( const std::string& file_hash, const int& web_server_id ) const;
 
@@ -56,7 +54,6 @@ public:
         \param hashes The list of hashes to insert
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the operation has been successful or not
-        \see insertUsedHash()
     */
     const bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const int& web_server_id );
 
