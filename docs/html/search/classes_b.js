@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['textbrowser_0',['TextBrowser',['../classTextBrowser.html',1,'']]],
-  ['tile_1',['Tile',['../structSnake_1_1Tile.html',1,'Snake']]],
-  ['tr_2',['TR',['../classTR.html',1,'']]]
+  ['sha256_0',['SHA256',['../classSHA256.html',1,'']]],
+  ['snake_1',['Snake',['../classSnake.html',1,'']]],
+  ['snakegame_2',['SnakeGame',['../classSnakeGame.html',1,'']]],
+  ['stringops_3',['StringOps',['../classStringOps.html',1,'']]],
+  ['stylesec_4',['StyleSec',['../classStyleSec.html',1,'']]]
 ];

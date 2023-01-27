@@ -9,11 +9,9 @@ var searchData=
   ['renameascopy_6',['renameAsCopy',['../classIOutils.html#a8fc152ae29702c3760a4f519ceb0b62a',1,'IOutils']]],
   ['replace_7',['replace',['../classStringOps.html#a9b073c9a47d2af00d33f1f5b05c167ad',1,'StringOps']]],
   ['requesttimeout_8',['requestTimeout',['../classCrapup.html#afe79a787fc0820afbc4573ca7091d880',1,'Crapup']]],
-  ['resetperfdata_9',['resetPerfData',['../classLogOps.html#a811fb8fd3c84f4980c9044c16909457f',1,'LogOps']]],
-  ['resolvepath_10',['resolvePath',['../classMainWindow.html#a0ef3bd8e892ddb8a70696c56e35bd79e',1,'MainWindow']]],
-  ['richlogsdefault_11',['richLogsDefault',['../classRichText.html#a28bf0bdd659cc7b7a58eab9e5cfad495',1,'RichText']]],
-  ['richlogsfailure_12',['richLogsFailure',['../classRichText.html#a6e5fe6270e6fed0b9e7c42eafc9b4732',1,'RichText']]],
-  ['rotateimg_13',['rotateImg',['../classCrapup.html#a334624ab394fd773b0e6063e7baf7960',1,'Crapup']]],
-  ['rstrip_14',['rstrip',['../classStringOps.html#a698efee881c6b05439f4fb5016c6c92e',1,'StringOps']]],
-  ['run_15',['run',['../classCraplog.html#a9c3081cf6cf94b454a87a4d71de3003d',1,'Craplog']]]
+  ['resolvepath_9',['resolvePath',['../classMainWindow.html#ac6b8f59207ec8145f3453991a239ca14',1,'MainWindow']]],
+  ['richlogsdefault_10',['richLogsDefault',['../classRichText.html#a28bf0bdd659cc7b7a58eab9e5cfad495',1,'RichText']]],
+  ['richlogsfailure_11',['richLogsFailure',['../classRichText.html#a6e5fe6270e6fed0b9e7c42eafc9b4732',1,'RichText']]],
+  ['rotateimg_12',['rotateImg',['../classCrapup.html#a334624ab394fd773b0e6063e7baf7960',1,'Crapup']]],
+  ['rstrip_13',['rstrip',['../classStringOps.html#a698efee881c6b05439f4fb5016c6c92e',1,'StringOps']]]
 ];
