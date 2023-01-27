@@ -22,6 +22,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Install Qt5
+      uses: jurplel/install-qt-action@v3
+      with:
+        host: ${{ matrix.os }}
+        version: '5.15.2'
+        modules: 'qtcharts'
+        archives: 'qtbase'
+        tools: 'tools_qtcreator,qt.tools.qtcreator'
+        setup-python: 'false'
+
+    - name: Configure Qt
+      env:
+        QT_VERSION: '5.15.2'
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
