@@ -12,8 +12,6 @@ env:
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ${{matrix.os}}
     strategy:
@@ -34,8 +32,8 @@ jobs:
         target: 'desktop'
         version: '${{env.QT_VERSION}}'
         modules: 'qtcharts'
-        archives: 'qtbase'
-        tools: 'tools_qtcreator,qt.tools.qtcreator'
+        archives: 'qtbase qttranslations'
+        tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
 
