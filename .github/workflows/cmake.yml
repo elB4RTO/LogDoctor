@@ -41,22 +41,20 @@ jobs:
         
       
     - name: Check paths (WIN)
+      if: runner.os == 'Windows'
       run: |
         ls D:/a/LogDoctor/Qt/5.15.2
 
 
     - name: Configure CMake (NIX)
       if: runner.os != 'Windows'
-      env:
-        CMAKE_PREFIX_PATH: 'D:/a/LogDoctor/Qt/5.15.2/win64_msvc2019_64'
       run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: |
-        echo "D:/a/LogDoctor/Qt/Tools/CMake_64/bin" >> $GITHUB_PATH
-        echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin" >> $GITHUB_PATH
-        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      env:
+        CMAKE_PREFIX_PATH: 'D:/a/LogDoctor/Qt/5.15.2/win64_msvc2019_64/lib/cmake'
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
 
     - name: Build (NIX)
