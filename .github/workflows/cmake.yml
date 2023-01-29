@@ -43,19 +43,23 @@ jobs:
         install-deps: 'true'
         setup-python: 'false'
     
-    - name: Check availability of binaries
+    - name: Check paths
       if: runner.os == 'Windows'
       run: |
         echo "---------------- WORKSPACE"
         ls ${{github.workspace}}
+        echo "---------------- QT5 DIR"
+        echo "${{env.Qt5_Dir}}"
         echo "---------------- QT"
-        ls ${{github.workspace}}\Qt
+        ls ${{github.workspace}}\..\Qt
         echo "---------------- QT 5.15.2"
-        ls ${{github.workspace}}\Qt\${{env.QT_VERSION}}
+        ls ${{github.workspace}}\..\Qt\${{env.QT_VERSION}}
         echo "---------------- MINGW 81_64"
-        ls ${{github.workspace}}\Qt\${{env.QT_VERSION}}\mingw81_64
+        ls ${{github.workspace}}\..\Qt\${{env.QT_VERSION}}\mingw81_64
         echo "---------------- MINGW 81_64 BIN"
-        ls ${{github.workspace}}\Qt\${{env.QT_VERSION}}\mingw81_64\bin
+        ls ${{github.workspace}}\..\Qt\${{env.QT_VERSION}}\mingw81_64\bin
+        echo "---------------- QT5 DIR"
+        echo "${{env.GITHUB_PATH}}"
 
 
     - name: Configure CMake
@@ -66,7 +70,7 @@ jobs:
       if: runner.os == 'Windows'
       env:
         CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}\Qt\${{env.QT_VERSION}}\mingw81_64\bin\gcc.exe"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=${{env.Qt5_Dir}}\mingw81_64\bin\gcc.exe"
 
 
     - name: Build
