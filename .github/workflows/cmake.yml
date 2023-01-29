@@ -13,14 +13,14 @@ env:
 jobs:
   build:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ${{matrix.os}}
+    runs-on: '${{matrix.config.os}}'
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
+        config:
+          - { os: ubuntu-latest,  arch: gcc_64        }
+          - { os: windows-latest, arch: win64_mingw81 }
+          - { os: macos-latest,   arch: clang_64      }
 
     steps:
     - name: Get LogDoctor
@@ -29,26 +29,13 @@ jobs:
     
     - name: Get CMake
       uses: lukka/get-cmake@latest
-    
+
     
     - name: Install Qt5
-      if: runner.os != 'Windows'
       uses: jurplel/install-qt-action@v3
       with:
         target: 'desktop'
-        version: '${{env.QT_VERSION}}'
-        modules: 'qtcharts'
-        archives: 'icu qtbase qttools qttranslations'
-        tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator tools_qtcreator_gui,qt.tools.qtcreator_gui'
-        install-deps: 'true'
-        setup-python: 'false'
-    
-    - name: Install Qt5
-      if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
-      with:
-        target: 'desktop'
-        arch: 'win64_mingw81'
+        arch: '${{matrix.config.arch}}'
         version: '${{env.QT_VERSION}}'
         modules: 'qtcharts'
         archives: 'icu qtbase qttools qttranslations'
@@ -63,7 +50,7 @@ jobs:
 
     - name: Configure CMake
       if: runner.os == 'Windows'
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}\Qt\${{env.QT_VERSION}}\mingw810_64\bin\gcc.exe"
 
 
     - name: Build
