@@ -17,15 +17,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: windows-latest #[ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
     - name: Get LogDoctor
       uses: actions/checkout@v3
-    
-    
-    #- name: Get CMake
-    #  uses: lukka/get-cmake@latest
 
     
     - name: Install Qt5
@@ -43,7 +39,9 @@ jobs:
     - name: Check paths (WIN)
       if: runner.os == 'Windows'
       run: |
-        ls D:/a/LogDoctor/Qt/5.15.2
+        ls D:/a/LogDoctor/Qt/5.15.2/msvc2019_64
+        ls D:/a/LogDoctor/Qt/5.15.2/msvc2019_64/lib
+        ls D:/a/LogDoctor/Qt/5.15.2/msvc2019_64/lib/cmake
 
 
     - name: Configure CMake (NIX)
@@ -53,7 +51,7 @@ jobs:
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
       env:
-        CMAKE_PREFIX_PATH: 'D:/a/LogDoctor/Qt/5.15.2/win64_msvc2019_64/lib/cmake'
+        CMAKE_PREFIX_PATH: 'D:/a/LogDoctor/Qt/5.15.2/msvc2019_64/lib/cmake'
       run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
 
