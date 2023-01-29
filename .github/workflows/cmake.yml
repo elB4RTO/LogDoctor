@@ -39,17 +39,17 @@ jobs:
         version: '${{env.QT_VERSION}}'
         modules: 'qtcharts'
         archives: 'icu qtbase qttools qttranslations'
-        tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator tools_qtcreator_gui,qt.tools.qtcreator_gui'
+        tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
     
     - name: Check paths
       if: runner.os == 'Windows'
       run: |
-        ls ${{env.Qt5_Dir}}\..
-        ls ${{env.Qt5_Dir}}\..\Tools
-        ls ${{env.Qt5_Dir}}\..\Tools\mingw810_64
-        ls ${{env.Qt5_Dir}}\..\Tools\mingw810_64\bin
+        ls ${{env.Qt5_Dir}}\..\..
+        ls ${{env.Qt5_Dir}}\..\..\Tools
+        ls ${{env.Qt5_Dir}}\..\..\Tools\mingw810_64
+        ls ${{env.Qt5_Dir}}\..\..\Tools\mingw810_64\bin
         echo "$PATH"
         echo "$GITHUB_PATH"
 
