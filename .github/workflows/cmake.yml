@@ -38,10 +38,17 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
+        
+      
+    - name: Check paths (WIN)
+      run: |
+        ls D:/a/LogDoctor/Qt/5.15.2
 
 
     - name: Configure CMake (NIX)
       if: runner.os != 'Windows'
+      env:
+        CMAKE_PREFIX_PATH: 'D:/a/LogDoctor/Qt/5.15.2/win64_msvc2019_64'
       run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Configure CMake (WIN)
@@ -52,11 +59,11 @@ jobs:
         cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
 
-    - name: Build
+    - name: Build (NIX)
       if: runner.os != 'Windows'
       run: cmake --build ${{github.workspace}}/build --target all
 
-    - name: Build
+    - name: Build (WIN)
       if: runner.os == 'Windows'
       run: cmake --build ${{github.workspace}}/build --target ALL_BUILD 
 
