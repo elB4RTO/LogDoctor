@@ -30,10 +30,9 @@ jobs:
     - name: Get CMake
       uses: lukka/get-cmake@latest
       
-    - name: Set up GCC
-      uses: egor-tensin/setup-gcc@v1
+    - name: Set up MinGW
+      uses: egor-tensin/setup-mingw@v2
       with:
-        version: latest
         platform: x64
 
     
@@ -58,13 +57,13 @@ jobs:
       if: runner.os == 'Windows'
       env:
         CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=gcc
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++
 
     - name: Configure CMake (W g++)
       if: runner.os == 'Windows' && failure()
       env:
         CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=gcc
 
     - name: Configure CMake (W)
       if: runner.os == 'Windows' && failure()
