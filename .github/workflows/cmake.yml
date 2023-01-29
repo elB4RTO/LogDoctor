@@ -30,7 +30,8 @@ jobs:
     - name: Get CMake
       uses: lukka/get-cmake@latest
       
-    - name: Set up MinGW
+    - name: Set up MinGW (WIN)
+      if: runner.os == 'Windows'
       uses: egor-tensin/setup-mingw@v2
       with:
         platform: x64
@@ -49,27 +50,13 @@ jobs:
         setup-python: 'false'
 
 
-    - name: Configure CMake
+    - name: Configure CMake (NIX)
       if: runner.os != 'Windows'
       run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: Configure CMake (W gcc)
+    - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      env:
-        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++
-
-    - name: Configure CMake (W g++)
-      if: runner.os == 'Windows' && failure()
-      env:
-        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=gcc
-
-    - name: Configure CMake (W)
-      if: runner.os == 'Windows' && failure()
-      env:
-        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++ -DCMAKE_PREFIX_PATH:STRING=${{env.Qt5_Dir}};${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin
 
 
     - name: Build
