@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-latest
           - windows-latest
           - macos-latest
 
@@ -44,7 +44,12 @@ jobs:
 
 
     - name: Configure CMake
+      if: runner.os != 'Windows'
       run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      if: runner.os == 'Windows'
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom"
 
 
     - name: Build
@@ -53,7 +58,7 @@ jobs:
 
     - name: Build
       if: runner.os == 'Windows'
-      run: cmake --build ${{github.workspace}}/build --target ALL_BUILD
+      run: cmake --build ${{github.workspace}}/build --target ALL_BUILD 
 
     #- name: Test
     #  working-directory: ${{github.workspace}}/build
