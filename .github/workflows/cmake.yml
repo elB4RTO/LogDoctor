@@ -42,6 +42,20 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator tools_qtcreator_gui,qt.tools.qtcreator_gui'
         install-deps: 'true'
         setup-python: 'false'
+    
+    - name: Check availability of binaries
+      if: runner.os == 'Windows'
+      run: |
+        echo "---------------- WORKSPACE"
+        ls ${{github.workspace}}
+        echo "---------------- QT"
+        ls ${{github.workspace}}\Qt
+        echo "---------------- QT 5.15.2"
+        ls ${{github.workspace}}\Qt\${{env.QT_VERSION}}
+        echo "---------------- MINGW 81_64"
+        ls ${{github.workspace}}\Qt\${{env.QT_VERSION}}\mingw81_64
+        echo "---------------- MINGW 81_64 BIN"
+        ls ${{github.workspace}}\Qt\${{env.QT_VERSION}}\mingw81_64\bin
 
 
     - name: Configure CMake
