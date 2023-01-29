@@ -13,35 +13,25 @@ env:
 jobs:
   build:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: '${{matrix.config.os}}'
+    runs-on: '${{matrix.os}}'
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - { os: ubuntu-latest,  arch: gcc_64        }
-          - { os: windows-latest, arch: win64_mingw81 }
-          - { os: macos-latest,   arch: clang_64      }
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
     - name: Get LogDoctor
       uses: actions/checkout@v3
     
     
-    - name: Get CMake
-      uses: lukka/get-cmake@latest
-      
-    - name: Set up MinGW (WIN)
-      if: runner.os == 'Windows'
-      uses: egor-tensin/setup-mingw@v2
-      with:
-        platform: x64
+    #- name: Get CMake
+    #  uses: lukka/get-cmake@latest
 
     
     - name: Install Qt5
       uses: jurplel/install-qt-action@v3
       with:
         target: 'desktop'
-        arch: '${{matrix.config.arch}}'
         version: '${{env.QT_VERSION}}'
         modules: 'qtcharts'
         archives: 'icu qtbase qttools qttranslations'
@@ -57,9 +47,9 @@ jobs:
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
       run: |
-        echo "$GITHUB_PATH"
-        echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom" >> $GITHUB_PATH
-        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++
+        echo "D:/a/LogDoctor/Qt/Tools/CMake_64/bin" >> $GITHUB_PATH
+        echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin" >> $GITHUB_PATH
+        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
 
     - name: Build
