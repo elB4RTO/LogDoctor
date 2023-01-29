@@ -46,12 +46,9 @@ jobs:
     - name: Check paths
       if: runner.os == 'Windows'
       run: |
-        ls ${{env.Qt5_Dir}}\..\..
-        ls ${{env.Qt5_Dir}}\..\..\Tools
-        ls ${{env.Qt5_Dir}}\..\..\Tools\CMake_64\bin
-        ls ${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin
-        echo "$PATH"
-        echo "$GITHUB_PATH"
+        ls ${{env.Qt5_Dir}}\..\..\..
+        ls ${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin\clang
+        ls ${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin\jom
 
 
     - name: Configure CMake
