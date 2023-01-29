@@ -29,6 +29,12 @@ jobs:
     
     - name: Get CMake
       uses: lukka/get-cmake@latest
+      
+    - name: Set up GCC
+      uses: egor-tensin/setup-gcc@v1
+      with:
+        version: latest
+        platform: x64
 
     
     - name: Install Qt5
@@ -42,24 +48,29 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
-    
-    - name: Check paths
-      if: runner.os == 'Windows'
-      run: |
-        ls ${{env.Qt5_Dir}}\..\..\..
-        ls ${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin\clang
-        ls ${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin\jom
 
 
     - name: Configure CMake
       if: runner.os != 'Windows'
       run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: Configure CMake
+    - name: Configure CMake (W gcc)
       if: runner.os == 'Windows'
       env:
         CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=${{env.Qt5_Dir}}\Tools\mingw810_64\bin\gcc.exe"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=gcc
+
+    - name: Configure CMake (W g++)
+      if: runner.os == 'Windows' && failure()
+      env:
+        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++
+
+    - name: Configure CMake (W)
+      if: runner.os == 'Windows' && failure()
+      env:
+        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom
 
 
     - name: Build
