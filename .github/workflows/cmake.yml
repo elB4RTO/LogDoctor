@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest ] #[ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
     - name: Get LogDoctor
@@ -34,14 +34,6 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
-        
-      
-    - name: Check paths (WIN)
-      if: runner.os == 'Windows'
-      run: |
-        ls D:/a/LogDoctor/Qt/5.15.2/msvc2019_64
-        ls D:/a/LogDoctor/Qt/5.15.2/msvc2019_64/lib
-        ls D:/a/LogDoctor/Qt/5.15.2/msvc2019_64/lib/cmake
 
 
     - name: Configure CMake (NIX)
@@ -50,8 +42,6 @@ jobs:
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      env:
-        CMAKE_PREFIX_PATH: 'D:/a/LogDoctor/Qt/5.15.2/msvc2019_64/lib/cmake'
       run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
 
@@ -62,6 +52,10 @@ jobs:
     - name: Build (WIN)
       if: runner.os == 'Windows'
       run: cmake --build ${{github.workspace}}/build --target ALL_BUILD 
+
+    - name: '#!? (WIN)'
+      if: runner.os == 'Windows' && failure()
+      run: echo "O Windows, Windows, wherefore art thou Windows?"
 
     #- name: Test
     #  working-directory: ${{github.workspace}}/build
