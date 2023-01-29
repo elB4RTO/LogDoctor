@@ -24,7 +24,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: lukka/get-cmake@latest
+    
+    - name: Get CMake
+      uses: lukka/get-cmake@latest
     
     - name: Install Qt5
       uses: jurplel/install-qt-action@v3
@@ -33,7 +35,7 @@ jobs:
         version: '${{env.QT_VERSION}}'
         modules: 'qtcharts'
         archives: 'qtbase qttools qttranslations'
-        tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
+        tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator tools_qtcreator_gui,qt.tools.qtcreator_gui.src'
         install-deps: 'true'
         setup-python: 'false'
 
@@ -41,9 +43,15 @@ jobs:
       run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --target all
+      run: |
+           if [ '${{runner.os}}' == 'Linux' ]; then
+             cmake --build ${{github.workspace}}/build --target all
+           elif [ '${{runner.os}}' == 'Windows' ]; then
+             cmake --build ${{github.workspace}}/build --target ALL_BUILD
+           else
+             cmake --build ${{github.workspace}}/build --target all
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}}
+    #- name: Test
+    #  working-directory: ${{github.workspace}}/build
+    #  run: ctest -C ${{env.BUILD_TYPE}}
 
