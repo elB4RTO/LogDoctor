@@ -37,7 +37,7 @@ jobs:
         target: 'desktop'
         version: '${{env.QT_VERSION}}'
         modules: 'qtcharts'
-        archives: 'qtbase qttools qttranslations'
+        archives: 'icu qtbase qttools qttranslations'
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator tools_qtcreator_gui,qt.tools.qtcreator_gui'
         install-deps: 'true'
         setup-python: 'false'
