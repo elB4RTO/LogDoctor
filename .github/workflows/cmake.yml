@@ -56,7 +56,10 @@ jobs:
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++ -DCMAKE_PREFIX_PATH:STRING=${{env.Qt5_Dir}};${{env.Qt5_Dir}}\..\..\Tools\QtCreator\bin
+      run: |
+        echo "$HOME"
+        echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin" >> $GITHUB_PATH
+        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} "-DCMAKE_GENERATOR=NMake Makefiles JOM" -DCMAKE_MAKE_PROGRAM=jom -DCMAKE_CXX_COMPILER=g++
 
 
     - name: Build
