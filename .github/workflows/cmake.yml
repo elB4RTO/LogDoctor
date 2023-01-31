@@ -56,7 +56,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         ls D:/a/LogDoctor/Qt/Tools/CMake_64
-        ls D:/a/LogDoctor/Qt/Tools/CMake_64r/bin
+        ls D:/a/LogDoctor/Qt/Tools/CMake_64/bin
         ls D:/a/LogDoctor/Qt/Tools/QtCreator
         ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin
         ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
