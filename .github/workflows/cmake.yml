@@ -47,15 +47,14 @@ jobs:
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
       run: |
-        ls D:/a/LogDoctor/Qt
-        ls D:/a/LogDoctor/Qt/5.15.2
-        ls D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib
-        ls D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake
+        echo '$GITHUB_PATH'
+        ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin
+        ls D:/a/LogDoctor/Qt/5.15.2/mingw81_64/bin
         ls D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5
         echo "D:/a/LogDoctor/Qt/Tools/CMake_64/bin" >> $GITHUB_PATH
         echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin" >> $GITHUB_PATH
         echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom" >> $GITHUB_PATH
-        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=gcc" "-DQT_DIR:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib"
+        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/bin/g++.exe" "-DCMAKE_PREFIX_PATH:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64" "-DQT_DIR:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5"
 
 
     - name: Build (NIX)
