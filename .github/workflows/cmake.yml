@@ -38,6 +38,14 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
+    
+    
+    - name: Append PATHs (WIN)
+      if: runner.os == 'Windows'
+      uses: myci-actions/export-env-var-powershell@<version>
+      with:
+        name: PATH
+        value: $env:PATH;D:/a/LogDoctor/Qt/Tools/CMake_64/bin;D:/a/LogDoctor/Qt/Tools/QtCreator/bin;D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
 
 
     - name: Configure CMake (NIX)
@@ -47,13 +55,11 @@ jobs:
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
       run: |
-        echo '$GITHUB_PATH'
+        ls D:/a/LogDoctor/Qt/Tools/CMake_64r
+        ls D:/a/LogDoctor/Qt/Tools/CMake_64r/bin
+        ls D:/a/LogDoctor/Qt/Tools/QtCreator
         ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin
-        ls D:/a/LogDoctor/Qt/5.15.2/mingw81_64/bin
-        ls D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5
-        echo "D:/a/LogDoctor/Qt/Tools/CMake_64/bin" >> $GITHUB_PATH
-        echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin" >> $GITHUB_PATH
-        echo "D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom" >> $GITHUB_PATH
+        ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
         cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe" "-DCMAKE_PREFIX_PATH:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64" "-DQT_DIR:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5"
 
 
