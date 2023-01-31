@@ -54,20 +54,12 @@ jobs:
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe" "-DCMAKE_PREFIX_PATH:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64" "-DQT_DIR:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe"
 
 
-    - name: Build (NIX)
+    - name: Build
       if: runner.os != 'Windows'
       run: cmake --build ${{github.workspace}}/build --target all
-
-    - name: Build (WIN)
-      if: runner.os == 'Windows'
-      run: cmake --build ${{github.workspace}}/build --target all
-
-    - name: '#!? (WIN)'
-      if: runner.os == 'Windows' && failure()
-      run: echo "O Windows, Windows, wherefore art thou Windows?"
 
     #- name: Test
     #  working-directory: ${{github.workspace}}/build
