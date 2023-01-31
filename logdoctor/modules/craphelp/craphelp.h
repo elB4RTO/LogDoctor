@@ -28,12 +28,25 @@ public:
         \param font The font to be used
         \param color_scheme_id The ID of the color-scheme to be used
     */
-    void helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id );
+    void helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id ) const;
+
+    //! Provides help about log formats
+    /*!
+        Shows the built-in default version in case the file
+        for the currently selected locale was not found or unreadable
+        \param font The font to be used
+        \param color_scheme_id The ID of the color-scheme to be used
+    */
+    void helpLogsFormatDefault( const std::string& path, const QFont& font, const int& color_scheme_id ) const;
 
 private:
     Ui::Craphelp *ui;
 
-    const std::unordered_map<std::string, QString> getColorScheme( const int& scheme_id );
+    const std::unordered_map<std::string, QString> getColorScheme( const int& scheme_id ) const;
+
+    void defaultApacheFormat( std::string& str ) const;
+    void defaultNginxFormat( std::string& str ) const;
+    void defaultIisFormat( std::string& str ) const;
 };
 
 #endif // CRAPHELP_H

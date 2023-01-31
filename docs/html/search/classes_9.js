@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['richtext_0',['RichText',['../classRichText.html',1,'']]]
+  ['printsec_0',['PrintSec',['../classPrintSec.html',1,'']]]
 ];

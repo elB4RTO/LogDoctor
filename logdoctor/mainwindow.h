@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QTreeWidget>
 #include <QChartView>
+#include <QThread>
 
 #include "utilities/strings.h"
 
@@ -43,23 +44,26 @@ class MainWindow : public QMainWindow
 
 public:
 
-    MainWindow( QWidget* parent=nullptr );
+    explicit MainWindow( QWidget* parent=nullptr );
     ~MainWindow();
+
+
+signals:
+
+    void runCraplog();
 
 
 private slots:
 
+    ///////////////////
+    //// OVERRIDES ////
     void closeEvent( QCloseEvent *event ) override;
 
 
-    ////////////////
-    //// CUSTOM ////
+    //////////////
+    //// INIT ////
 
-    void wait_ActiveWindow();
-
-    void update_Craplog_PerfData();
-
-    void check_CraplogLLT_Finished();
+    void waitActiveWindow(); // CUSTOM
 
 
     //////////////
@@ -89,13 +93,17 @@ private slots:
     /////////////////
     //// CRAPLOG ////
 
+    void refreshLogsList(); // CUSTOM
+
+    void updatePerfsLabels(); // CUSTOM
+
+    void craplogFinished(); // CUSTOM
+
+    void afterCraplogFinished(); // CUSTOM
+
     void on_button_Logs_Down_clicked();
 
     void on_button_Logs_Up_clicked();
-
-    void refreshLogsList();
-
-    void runCraplog();
 
     void on_button_LogFiles_ViewFile_clicked();
 
@@ -119,17 +127,17 @@ private slots:
     //////////////////
     //// CRAPVIEW ////
 
-    void drawStatsWarn();
+    void drawStatsWarn(); // CUSTOM
 
-    void drawStatsSpeed();
+    void drawStatsSpeed(); // CUSTOM
 
-    void drawStatsCount();
+    void drawStatsCount(); // CUSTOM
 
-    void drawStatsDay();
+    void drawStatsDay(); // CUSTOM
 
-    void drawStatsRelat();
+    void drawStatsRelat(); // CUSTOM
 
-    void makeStatsGlobals();
+    void drawStatsGlobals(); // CUSTOM
 
     //// WARNINGS ////
 
@@ -512,11 +520,11 @@ private:
     Ui::MainWindow *ui;
 
     // current version of LogDoctor
-    const float version = 2.01;
+    const float version = 2.03;
 
     // web servers ID constants
     const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
-    const QString wsFromIndex( const int& index );
+    const QString wsFromIndex( const int index ) const;
 
 
     //////////////////////////
@@ -566,7 +574,7 @@ private:
         \return The resulting string
         \see writeConfigs()
     */
-    const std::string list2string( const std::vector<std::string>& list, const bool& user_agent=false );
+    const std::string list2string( const std::vector<std::string>& list, const bool user_agent=false ) const;
 
     //! Retrieves a list of items from the given string
     /*!
@@ -575,7 +583,7 @@ private:
         \return The resulting list
         \see readConfigs()
     */
-    const std::vector<std::string> string2list( const std::string& string, const bool& user_agent=false );
+    const std::vector<std::string> string2list( const std::string& string, const bool user_agent=false ) const;
 
     // string to bool and vice versa
     const std::unordered_map<std::string, bool> s2b = { {"true",true}, {"false",false} };
@@ -600,13 +608,13 @@ private:
     /*!
         \see writeConfigs()
     */
-    const std::string geometryToString();
+    const std::string geometryToString() const;
 
     //! Retrieves the window geometry from the given string
     /*!
         \see readConfigs()
     */
-    void geometryFromString( const std::string& geometry );
+    void setGeometryFromString( const std::string& geometry );
 
 
     /////////////////
@@ -675,21 +683,16 @@ private:
     //// GENERAL USE ////
     /////////////////////
 
-    //! Printable size, including suffix
-    const QString printableSize( const int& bytes );
-
-    //! Printable time, including suffix(es)
-    const QString printableTime( const int& seconds );
-
-    //! Printable speed, namely printable size over printable time
-    const QString printableSpeed( const int& bytes, const int& secs );
+    QTimer* waiter_timer;
+    std::chrono::system_clock::time_point waiter_timer_start;
+    std::chrono::system_clock::duration   waiter_timer_elapsed;
 
 
     //! Resolves the given path and returns the canonical path
-    const std::string resolvePath( const std::string& path );
+    const std::string resolvePath( const std::string& path ) const;
 
     //! Returns the parent folder of the given path
-    const std::string basePath( const std::string& path );
+    const std::string parentPath( const std::string& path ) const;
 
 
     ////////////////
@@ -704,7 +707,7 @@ private:
     void makeInitialChecks();
 
     //! Checks the integrity of the logs data collection database
-    const bool& checkDataDB();
+    const bool checkDataDB();
 
 
     ///////////////////
@@ -718,7 +721,7 @@ private:
     unsigned db_backups_number = 3;
 
     //! Backs-up the logs data collection database
-    void backupDatabase();
+    void backupDatabase() const;
 
     std::string db_data_path;
     std::string db_hashes_path;
@@ -727,14 +730,16 @@ private:
     bool db_working = false;
 
     //! Called when a member begins/ends performing operations on the database
-    void setDbWorkingState( const bool& state );
+    void setDbWorkingState( const bool working );
+
+    const bool dbUsable();
 
 
     //////////////////
     //// CRAPTABS ////
     //////////////////
 
-    void switchMainTab( const int& new_index );
+    void switchMainTab( const int new_index );
 
 
     /////////////////
@@ -743,17 +748,7 @@ private:
 
     Craplog craplog;
 
-    QTimer* craplog_timer = new QTimer();
-    QTimer* waiter_timer;
-
-    std::chrono::system_clock::time_point waiter_timer_start;
-    std::chrono::system_clock::duration waiter_timer_elapsed;
-
-    //! The logs parser started working
     void craplogStarted();
-
-    //! The logs parser finished working
-    void craplogFinished();
 
     void checkMakeStats_Makable();
 
@@ -779,11 +774,9 @@ private:
     //////////////////////////
     //// LOGS PERFORMANCE ////
 
-    void update_MakeStats_labels();
+    void resetPerfsLabels();
 
-    void update_MakeStats_graphs();
-
-    void reset_MakeStats_labels();
+    bool force_updating_labels = false;
 
 
     //////////////////
@@ -795,7 +788,7 @@ private:
     QTimer *crapview_timer = new QTimer();
 
     // change tab
-    void switchStatsTab( const int& new_index );
+    void switchStatsTab( const int new_index );
 
     //! Queries the available dates from the db and apply to the tabs
     /*!
@@ -812,13 +805,13 @@ private:
 
     // count
     QString count_fld;
-    void startCountDrawing();
+    void makeStatsCount();
     void resetStatsCountButtons();
 
     // globals
     QString glob_ws;
-    void globalsButtonClicked();
-    void resetStatsGlobals();
+    void makeStatsGlob();
+    void resetStatsGlob();
 
 
     /////////////////
@@ -829,7 +822,7 @@ private:
 
     void refreshChartsPreview();
 
-    const int getIisLogsModule();
+    const int getIisLogsModule() const;
 
 
     //////////////////

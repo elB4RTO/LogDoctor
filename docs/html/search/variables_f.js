@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['x',['../classFood.html#a327d5731323aa500756f0b56a88e6bb5',1,'Food::x()'],['../structBodyPart.html#ad028f53499627e8fed0cc33b9464949b',1,'BodyPart::x()']]]
+  ['y_0',['y',['../classFood.html#a5dcfa7ef89ddcf8fd089ef99e7d6044f',1,'Food::y()'],['../structBodyPart.html#aa6c8fd72d59c9d20fa1943eac0ca8074',1,'BodyPart::y()']]]
 ];

@@ -73,7 +73,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classCrapview-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Crapview Class Reference</div></div>
 </div><!--header-->
@@ -83,42 +82,44 @@ $(function() {
  <a href="classCrapview.html#details">More...</a></p>
 
 <p><code>#include &lt;crapview.h&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Crapview:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classCrapview.png" alt=""/>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9c117a07b9eb26532156e82d7852725b"><td class="memItemLeft" align="right" valign="top"><a id="a9c117a07b9eb26532156e82d7852725b" name="a9c117a07b9eb26532156e82d7852725b"></a>
-const int &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getDialogsLevel</b> ()</td></tr>
-<tr class="memdesc:a9c117a07b9eb26532156e82d7852725b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Dialogs level. <br /></td></tr>
-<tr class="separator:a9c117a07b9eb26532156e82d7852725b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ac24f2e8a291e94a3db9ff26c0508d0"><td class="memItemLeft" align="right" valign="top"><a id="a9ac24f2e8a291e94a3db9ff26c0508d0" name="a9ac24f2e8a291e94a3db9ff26c0508d0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogsLevel</b> (const int &amp;new_level)</td></tr>
-<tr class="memdesc:a9ac24f2e8a291e94a3db9ff26c0508d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new Dialogs level. <br /></td></tr>
-<tr class="separator:a9ac24f2e8a291e94a3db9ff26c0508d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03482b379d82a9252893c2460197c2ca"><td class="memItemLeft" align="right" valign="top"><a id="a03482b379d82a9252893c2460197c2ca" name="a03482b379d82a9252893c2460197c2ca"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setChartsTheme</b> (const int &amp;new_theme_id)</td></tr>
-<tr class="memdesc:a03482b379d82a9252893c2460197c2ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new charts theme to use. <br /></td></tr>
-<tr class="separator:a03482b379d82a9252893c2460197c2ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4e3a69cda20dbac38fe3c00116a6481"><td class="memItemLeft" align="right" valign="top"><a id="af4e3a69cda20dbac38fe3c00116a6481" name="af4e3a69cda20dbac38fe3c00116a6481"></a>
+const int &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getDialogsLevel</b> () const</td></tr>
+<tr class="memdesc:af4e3a69cda20dbac38fe3c00116a6481"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Dialogs level. <br /></td></tr>
+<tr class="separator:af4e3a69cda20dbac38fe3c00116a6481"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6926fe7c37e2f407e3846d0308546558"><td class="memItemLeft" align="right" valign="top"><a id="a6926fe7c37e2f407e3846d0308546558" name="a6926fe7c37e2f407e3846d0308546558"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogsLevel</b> (const int new_level)</td></tr>
+<tr class="memdesc:a6926fe7c37e2f407e3846d0308546558"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new Dialogs level. <br /></td></tr>
+<tr class="separator:a6926fe7c37e2f407e3846d0308546558"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4f0e1215a892983b1c75f268bb1d60d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ac4f0e1215a892983b1c75f268bb1d60d">setDbPath</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:ac4f0e1215a892983b1c75f268bb1d60d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new path for the logs Collection database.  <a href="classCrapview.html#ac4f0e1215a892983b1c75f268bb1d60d">More...</a><br /></td></tr>
 <tr class="separator:ac4f0e1215a892983b1c75f268bb1d60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7fe41edd00d1754ade13c095ad20b82"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa7fe41edd00d1754ade13c095ad20b82">parseBooleanFilter</a> (const QString &amp;filter_str)</td></tr>
-<tr class="memdesc:aa7fe41edd00d1754ade13c095ad20b82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a filter for a database field with boolean type.  <a href="classCrapview.html#aa7fe41edd00d1754ade13c095ad20b82">More...</a><br /></td></tr>
-<tr class="separator:aa7fe41edd00d1754ade13c095ad20b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab450412741c7af21dfec42fad5a7f20a"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ab450412741c7af21dfec42fad5a7f20a">parseNumericFilter</a> (const QString &amp;filter_str)</td></tr>
-<tr class="memdesc:ab450412741c7af21dfec42fad5a7f20a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a filter for a log field with integer type.  <a href="classCrapview.html#ab450412741c7af21dfec42fad5a7f20a">More...</a><br /></td></tr>
-<tr class="separator:ab450412741c7af21dfec42fad5a7f20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7693a3fa2b4a402eb123af94a73d809"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ae7693a3fa2b4a402eb123af94a73d809">parseTextualFilter</a> (const QString &amp;filter_str)</td></tr>
-<tr class="memdesc:ae7693a3fa2b4a402eb123af94a73d809"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a filter for a log field with text type.  <a href="classCrapview.html#ae7693a3fa2b4a402eb123af94a73d809">More...</a><br /></td></tr>
-<tr class="separator:ae7693a3fa2b4a402eb123af94a73d809"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4aa28144e1d1a8f7954e0a3c6d3f9d1"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ab4aa28144e1d1a8f7954e0a3c6d3f9d1">getLogFieldString</a> (const int &amp;field_id)</td></tr>
-<tr class="memdesc:ab4aa28144e1d1a8f7954e0a3c6d3f9d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the printable log field corresponding to the given ID.  <a href="classCrapview.html#ab4aa28144e1d1a8f7954e0a3c6d3f9d1">More...</a><br /></td></tr>
-<tr class="separator:ab4aa28144e1d1a8f7954e0a3c6d3f9d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2907f88ba82158c8c58f54383b4a7c2a"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a2907f88ba82158c8c58f54383b4a7c2a">getLogFieldID</a> (const QString &amp;field_str)</td></tr>
-<tr class="memdesc:a2907f88ba82158c8c58f54383b4a7c2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the log field ID corresponding to the given printable field.  <a href="classCrapview.html#a2907f88ba82158c8c58f54383b4a7c2a">More...</a><br /></td></tr>
-<tr class="separator:a2907f88ba82158c8c58f54383b4a7c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af156af64d1cb47d1c0fe1bacc3745974"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#af156af64d1cb47d1c0fe1bacc3745974">getMonthNumber</a> (const QString &amp;month_str)</td></tr>
-<tr class="memdesc:af156af64d1cb47d1c0fe1bacc3745974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the month number corresponding to the given printable month.  <a href="classCrapview.html#af156af64d1cb47d1c0fe1bacc3745974">More...</a><br /></td></tr>
-<tr class="separator:af156af64d1cb47d1c0fe1bacc3745974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad18f037747f3d5f067f437b7bb5d7398"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad18f037747f3d5f067f437b7bb5d7398">parseBooleanFilter</a> (const QString &amp;filter_str) const</td></tr>
+<tr class="memdesc:ad18f037747f3d5f067f437b7bb5d7398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a filter for a database field with boolean type.  <a href="classCrapview.html#ad18f037747f3d5f067f437b7bb5d7398">More...</a><br /></td></tr>
+<tr class="separator:ad18f037747f3d5f067f437b7bb5d7398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd01bf9ef479f765f7495dd5cf7b86ec"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#afd01bf9ef479f765f7495dd5cf7b86ec">parseNumericFilter</a> (const QString &amp;filter_str) const</td></tr>
+<tr class="memdesc:afd01bf9ef479f765f7495dd5cf7b86ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a filter for a log field with integer type.  <a href="classCrapview.html#afd01bf9ef479f765f7495dd5cf7b86ec">More...</a><br /></td></tr>
+<tr class="separator:afd01bf9ef479f765f7495dd5cf7b86ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5df4350740a5d4ebea00e9ded5f95c98"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a5df4350740a5d4ebea00e9ded5f95c98">parseTextualFilter</a> (const QString &amp;filter_str) const</td></tr>
+<tr class="memdesc:a5df4350740a5d4ebea00e9ded5f95c98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a filter for a log field with text type.  <a href="classCrapview.html#a5df4350740a5d4ebea00e9ded5f95c98">More...</a><br /></td></tr>
+<tr class="separator:a5df4350740a5d4ebea00e9ded5f95c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e08d53c5ee688dd546f5b2642c50d7a"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a0e08d53c5ee688dd546f5b2642c50d7a">getLogFieldString</a> (const int field_id) const</td></tr>
+<tr class="memdesc:a0e08d53c5ee688dd546f5b2642c50d7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the printable log field corresponding to the given ID.  <a href="classCrapview.html#a0e08d53c5ee688dd546f5b2642c50d7a">More...</a><br /></td></tr>
+<tr class="separator:a0e08d53c5ee688dd546f5b2642c50d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad64e3c54db4991cb57d65596b109e427"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad64e3c54db4991cb57d65596b109e427">getLogFieldID</a> (const QString &amp;field_str) const</td></tr>
+<tr class="memdesc:ad64e3c54db4991cb57d65596b109e427"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the log field ID corresponding to the given printable field.  <a href="classCrapview.html#ad64e3c54db4991cb57d65596b109e427">More...</a><br /></td></tr>
+<tr class="separator:ad64e3c54db4991cb57d65596b109e427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cfb73153496431dfd3e771c5d501af4"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a6cfb73153496431dfd3e771c5d501af4">getMonthNumber</a> (const QString &amp;month_str) const</td></tr>
+<tr class="memdesc:a6cfb73153496431dfd3e771c5d501af4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the month number corresponding to the given printable month.  <a href="classCrapview.html#a6cfb73153496431dfd3e771c5d501af4">More...</a><br /></td></tr>
+<tr class="separator:a6cfb73153496431dfd3e771c5d501af4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac98b1cbc75604b5145b5cff36e96eb78"><td class="memItemLeft" align="right" valign="top"><a id="ac98b1cbc75604b5145b5cff36e96eb78" name="ac98b1cbc75604b5145b5cff36e96eb78"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshDates</b> ()</td></tr>
 <tr class="memdesc:ac98b1cbc75604b5145b5cff36e96eb78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes the list of the dates which are available in the database. <br /></td></tr>
@@ -127,61 +128,49 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>refreshDates</b> ()</
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td></tr>
 <tr class="memdesc:ae0eb083eea7e2bef76345242da41bf69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases the list of available dates. <br /></td></tr>
 <tr class="separator:ae0eb083eea7e2bef76345242da41bf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3081c678b102b255fa9f32a8f94e052"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ab3081c678b102b255fa9f32a8f94e052">getYears</a> (const QString &amp;web_server)</td></tr>
-<tr class="memdesc:ab3081c678b102b255fa9f32a8f94e052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available years, for the given web server.  <a href="classCrapview.html#ab3081c678b102b255fa9f32a8f94e052">More...</a><br /></td></tr>
-<tr class="separator:ab3081c678b102b255fa9f32a8f94e052"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8518f26e3769580bbd3439e094b221a"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa8518f26e3769580bbd3439e094b221a">getMonths</a> (const QString &amp;web_server, const QString &amp;year)</td></tr>
-<tr class="memdesc:aa8518f26e3769580bbd3439e094b221a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available months in the given year, for the given web server.  <a href="classCrapview.html#aa8518f26e3769580bbd3439e094b221a">More...</a><br /></td></tr>
-<tr class="separator:aa8518f26e3769580bbd3439e094b221a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad03099fd23d33fbd0f7ef5fcc1c67bde"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad03099fd23d33fbd0f7ef5fcc1c67bde">getDays</a> (const QString &amp;web_server, const QString &amp;year, const QString &amp;month)</td></tr>
-<tr class="memdesc:ad03099fd23d33fbd0f7ef5fcc1c67bde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available days in the given month and year, for the given web server.  <a href="classCrapview.html#ad03099fd23d33fbd0f7ef5fcc1c67bde">More...</a><br /></td></tr>
-<tr class="separator:ad03099fd23d33fbd0f7ef5fcc1c67bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6eb1887779aaa5f7c2aa95911e832b8"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad6eb1887779aaa5f7c2aa95911e832b8">getHours</a> ()</td></tr>
-<tr class="memdesc:ad6eb1887779aaa5f7c2aa95911e832b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the hours of the day.  <a href="classCrapview.html#ad6eb1887779aaa5f7c2aa95911e832b8">More...</a><br /></td></tr>
-<tr class="separator:ad6eb1887779aaa5f7c2aa95911e832b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b565e2994fc2f5c7379898fb39c7f15"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a9b565e2994fc2f5c7379898fb39c7f15">getFields</a> (const std::string &amp;tab)</td></tr>
-<tr class="memdesc:a9b565e2994fc2f5c7379898fb39c7f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of the fields for the given tab.  <a href="classCrapview.html#a9b565e2994fc2f5c7379898fb39c7f15">More...</a><br /></td></tr>
-<tr class="separator:a9b565e2994fc2f5c7379898fb39c7f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34be04ee1861a56aad782cc6f5e71118"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a34be04ee1861a56aad782cc6f5e71118">updateWarn</a> (QTableWidget *table, const QString &amp;web_server)</td></tr>
-<tr class="memdesc:a34be04ee1861a56aad782cc6f5e71118"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the database applying the changes which have been made to the table.  <a href="classCrapview.html#a34be04ee1861a56aad782cc6f5e71118">More...</a><br /></td></tr>
-<tr class="separator:a34be04ee1861a56aad782cc6f5e71118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1dbaf577883d7b24854e40427b172f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa1dbaf577883d7b24854e40427b172f4">drawWarn</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;hour)</td></tr>
-<tr class="memdesc:aa1dbaf577883d7b24854e40427b172f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Warnings stats.  <a href="classCrapview.html#aa1dbaf577883d7b24854e40427b172f4">More...</a><br /></td></tr>
-<tr class="separator:aa1dbaf577883d7b24854e40427b172f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f623bc856d367df467d206722d07f99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a7f623bc856d367df467d206722d07f99">drawSpeed</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;protocol, const QString &amp;method, const QString &amp;uri, const QString &amp;query, const QString &amp;response)</td></tr>
-<tr class="memdesc:a7f623bc856d367df467d206722d07f99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Speed stats.  <a href="classCrapview.html#a7f623bc856d367df467d206722d07f99">More...</a><br /></td></tr>
-<tr class="separator:a7f623bc856d367df467d206722d07f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6063317acd5a1861d6c8c49ffa4ff7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad6063317acd5a1861d6c8c49ffa4ff7f">drawCount</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;field)</td></tr>
-<tr class="memdesc:ad6063317acd5a1861d6c8c49ffa4ff7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Counts stats.  <a href="classCrapview.html#ad6063317acd5a1861d6c8c49ffa4ff7f">More...</a><br /></td></tr>
-<tr class="separator:ad6063317acd5a1861d6c8c49ffa4ff7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a951d380f509b31ce67661084db6779be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a951d380f509b31ce67661084db6779be">drawDay</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field, const QString &amp;filter)</td></tr>
-<tr class="memdesc:a951d380f509b31ce67661084db6779be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Daytime stats.  <a href="classCrapview.html#a951d380f509b31ce67661084db6779be">More...</a><br /></td></tr>
-<tr class="separator:a951d380f509b31ce67661084db6779be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22dbc03eaca3f113b42dfb2e6e69d1ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a22dbc03eaca3f113b42dfb2e6e69d1ba">drawRelat</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field_1, const QString &amp;filter_1, const QString &amp;field_2, const QString &amp;filter_2)</td></tr>
-<tr class="memdesc:a22dbc03eaca3f113b42dfb2e6e69d1ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Relational stats.  <a href="classCrapview.html#a22dbc03eaca3f113b42dfb2e6e69d1ba">More...</a><br /></td></tr>
-<tr class="separator:a22dbc03eaca3f113b42dfb2e6e69d1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afffae0bf9a5a9a4236e0c6f9b42a153b"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#afffae0bf9a5a9a4236e0c6f9b42a153b">calcGlobals</a> (std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;recur_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;traffic_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;perf_list, std::vector&lt; QString &gt; &amp;work_list, const QString &amp;web_server)</td></tr>
-<tr class="memdesc:afffae0bf9a5a9a4236e0c6f9b42a153b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data to fill the Globals stats.  <a href="classCrapview.html#afffae0bf9a5a9a4236e0c6f9b42a153b">More...</a><br /></td></tr>
-<tr class="separator:afffae0bf9a5a9a4236e0c6f9b42a153b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a3a73f6f5683afaaa17a3065eada4438e"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a3a73f6f5683afaaa17a3065eada4438e">printableDate</a> (const int &amp;year, const int &amp;month, const int &amp;day)</td></tr>
-<tr class="memdesc:a3a73f6f5683afaaa17a3065eada4438e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a string of the given date in the format YYY-MM-DD.  <a href="classCrapview.html#a3a73f6f5683afaaa17a3065eada4438e">More...</a><br /></td></tr>
-<tr class="separator:a3a73f6f5683afaaa17a3065eada4438e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af77a399adbd69a9bfd26e42c31e71324"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#af77a399adbd69a9bfd26e42c31e71324">printableTime</a> (const int &amp;hour, const int &amp;minute, const int &amp;second)</td></tr>
-<tr class="memdesc:af77a399adbd69a9bfd26e42c31e71324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a string of the given time in the format HH:MM:SS.  <a href="classCrapview.html#af77a399adbd69a9bfd26e42c31e71324">More...</a><br /></td></tr>
-<tr class="separator:af77a399adbd69a9bfd26e42c31e71324"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2feca301352ca7bd76e199fbcaef932c"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a2feca301352ca7bd76e199fbcaef932c">printableWarn</a> (const int &amp;value)</td></tr>
-<tr class="memdesc:a2feca301352ca7bd76e199fbcaef932c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a string corresponding to the given value.  <a href="classCrapview.html#a2feca301352ca7bd76e199fbcaef932c">More...</a><br /></td></tr>
-<tr class="separator:a2feca301352ca7bd76e199fbcaef932c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a611cd7a9aaaa445cfb6b774815a533b8"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a611cd7a9aaaa445cfb6b774815a533b8">getYears</a> (const QString &amp;web_server) const</td></tr>
+<tr class="memdesc:a611cd7a9aaaa445cfb6b774815a533b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available years, for the given web server.  <a href="classCrapview.html#a611cd7a9aaaa445cfb6b774815a533b8">More...</a><br /></td></tr>
+<tr class="separator:a611cd7a9aaaa445cfb6b774815a533b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f3fcee062ad231dc97f3f4ee31aa554"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a1f3fcee062ad231dc97f3f4ee31aa554">getMonths</a> (const QString &amp;web_server, const QString &amp;year) const</td></tr>
+<tr class="memdesc:a1f3fcee062ad231dc97f3f4ee31aa554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available months in the given year, for the given web server.  <a href="classCrapview.html#a1f3fcee062ad231dc97f3f4ee31aa554">More...</a><br /></td></tr>
+<tr class="separator:a1f3fcee062ad231dc97f3f4ee31aa554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad236d47a166473dd80b3580cef6b2fe4"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad236d47a166473dd80b3580cef6b2fe4">getDays</a> (const QString &amp;web_server, const QString &amp;year, const QString &amp;month) const</td></tr>
+<tr class="memdesc:ad236d47a166473dd80b3580cef6b2fe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available days in the given month and year, for the given web server.  <a href="classCrapview.html#ad236d47a166473dd80b3580cef6b2fe4">More...</a><br /></td></tr>
+<tr class="separator:ad236d47a166473dd80b3580cef6b2fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83012f76f0e2da594a0bc8ecaf691fe5"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a83012f76f0e2da594a0bc8ecaf691fe5">getHours</a> () const</td></tr>
+<tr class="memdesc:a83012f76f0e2da594a0bc8ecaf691fe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the hours of the day.  <a href="classCrapview.html#a83012f76f0e2da594a0bc8ecaf691fe5">More...</a><br /></td></tr>
+<tr class="separator:a83012f76f0e2da594a0bc8ecaf691fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e2766b9ecf695a6f6af6b90eeecd37"><td class="memItemLeft" align="right" valign="top">const QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa5e2766b9ecf695a6f6af6b90eeecd37">getFields</a> (const std::string &amp;tab) const</td></tr>
+<tr class="memdesc:aa5e2766b9ecf695a6f6af6b90eeecd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of the fields for the given tab.  <a href="classCrapview.html#aa5e2766b9ecf695a6f6af6b90eeecd37">More...</a><br /></td></tr>
+<tr class="separator:aa5e2766b9ecf695a6f6af6b90eeecd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5936b20a36eb7293eb1ab7dffd5a28cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a5936b20a36eb7293eb1ab7dffd5a28cf">updateWarn</a> (QTableWidget *table, const QString &amp;web_server) const</td></tr>
+<tr class="memdesc:a5936b20a36eb7293eb1ab7dffd5a28cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the database applying the changes which have been made to the table.  <a href="classCrapview.html#a5936b20a36eb7293eb1ab7dffd5a28cf">More...</a><br /></td></tr>
+<tr class="separator:a5936b20a36eb7293eb1ab7dffd5a28cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad42db4ec8e6cf016ede35de8d1efa8a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad42db4ec8e6cf016ede35de8d1efa8a4">drawWarn</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;hour) const</td></tr>
+<tr class="memdesc:ad42db4ec8e6cf016ede35de8d1efa8a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Warnings stats.  <a href="classCrapview.html#ad42db4ec8e6cf016ede35de8d1efa8a4">More...</a><br /></td></tr>
+<tr class="separator:ad42db4ec8e6cf016ede35de8d1efa8a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8049b143b29c3ee2e6b63b21247be46f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a8049b143b29c3ee2e6b63b21247be46f">drawSpeed</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;protocol, const QString &amp;method, const QString &amp;uri, const QString &amp;query, const QString &amp;response) const</td></tr>
+<tr class="memdesc:a8049b143b29c3ee2e6b63b21247be46f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Speed stats.  <a href="classCrapview.html#a8049b143b29c3ee2e6b63b21247be46f">More...</a><br /></td></tr>
+<tr class="separator:a8049b143b29c3ee2e6b63b21247be46f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d66f792d38416b3dd70bdcd7128e8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a10d66f792d38416b3dd70bdcd7128e8a">drawCount</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;field) const</td></tr>
+<tr class="memdesc:a10d66f792d38416b3dd70bdcd7128e8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Counts stats.  <a href="classCrapview.html#a10d66f792d38416b3dd70bdcd7128e8a">More...</a><br /></td></tr>
+<tr class="separator:a10d66f792d38416b3dd70bdcd7128e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8ef798ee899b3758148966cce81fada"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa8ef798ee899b3758148966cce81fada">drawDay</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field, const QString &amp;filter) const</td></tr>
+<tr class="memdesc:aa8ef798ee899b3758148966cce81fada"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Daytime stats.  <a href="classCrapview.html#aa8ef798ee899b3758148966cce81fada">More...</a><br /></td></tr>
+<tr class="separator:aa8ef798ee899b3758148966cce81fada"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90a97649d7b14c6e81770055c6b640c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a90a97649d7b14c6e81770055c6b640c0">drawRelat</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field_1, const QString &amp;filter_1, const QString &amp;field_2, const QString &amp;filter_2) const</td></tr>
+<tr class="memdesc:a90a97649d7b14c6e81770055c6b640c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Relational stats.  <a href="classCrapview.html#a90a97649d7b14c6e81770055c6b640c0">More...</a><br /></td></tr>
+<tr class="separator:a90a97649d7b14c6e81770055c6b640c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfd79f3e98097fd7127620b25a664d2d"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#abfd79f3e98097fd7127620b25a664d2d">calcGlobals</a> (std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;recur_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;traffic_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;perf_list, std::vector&lt; QString &gt; &amp;work_list, const QString &amp;web_server) const</td></tr>
+<tr class="memdesc:abfd79f3e98097fd7127620b25a664d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data to fill the Globals stats.  <a href="classCrapview.html#abfd79f3e98097fd7127620b25a664d2d">More...</a><br /></td></tr>
+<tr class="separator:abfd79f3e98097fd7127620b25a664d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classCrapview.html" title="Crapview.">Crapview</a>. </p>
 <p >Performs operations related to the visualization of the statistics </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="afffae0bf9a5a9a4236e0c6f9b42a153b" name="afffae0bf9a5a9a4236e0c6f9b42a153b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afffae0bf9a5a9a4236e0c6f9b42a153b">&#9670;&#160;</a></span>calcGlobals()</h2>
+<a id="abfd79f3e98097fd7127620b25a664d2d" name="abfd79f3e98097fd7127620b25a664d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfd79f3e98097fd7127620b25a664d2d">&#9670;&#160;</a></span>calcGlobals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,7 +208,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -239,8 +228,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad6063317acd5a1861d6c8c49ffa4ff7f" name="ad6063317acd5a1861d6c8c49ffa4ff7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6063317acd5a1861d6c8c49ffa4ff7f">&#9670;&#160;</a></span>drawCount()</h2>
+<a id="a10d66f792d38416b3dd70bdcd7128e8a" name="a10d66f792d38416b3dd70bdcd7128e8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10d66f792d38416b3dd70bdcd7128e8a">&#9670;&#160;</a></span>drawCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,7 +291,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -325,8 +314,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a951d380f509b31ce67661084db6779be" name="a951d380f509b31ce67661084db6779be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a951d380f509b31ce67661084db6779be">&#9670;&#160;</a></span>drawDay()</h2>
+<a id="aa8ef798ee899b3758148966cce81fada" name="aa8ef798ee899b3758148966cce81fada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8ef798ee899b3758148966cce81fada">&#9670;&#160;</a></span>drawDay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -406,7 +395,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -432,8 +421,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a22dbc03eaca3f113b42dfb2e6e69d1ba" name="a22dbc03eaca3f113b42dfb2e6e69d1ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22dbc03eaca3f113b42dfb2e6e69d1ba">&#9670;&#160;</a></span>drawRelat()</h2>
+<a id="a90a97649d7b14c6e81770055c6b640c0" name="a90a97649d7b14c6e81770055c6b640c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90a97649d7b14c6e81770055c6b640c0">&#9670;&#160;</a></span>drawRelat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -525,7 +514,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -553,8 +542,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7f623bc856d367df467d206722d07f99" name="a7f623bc856d367df467d206722d07f99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f623bc856d367df467d206722d07f99">&#9670;&#160;</a></span>drawSpeed()</h2>
+<a id="a8049b143b29c3ee2e6b63b21247be46f" name="a8049b143b29c3ee2e6b63b21247be46f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8049b143b29c3ee2e6b63b21247be46f">&#9670;&#160;</a></span>drawSpeed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -640,7 +629,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -667,8 +656,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa1dbaf577883d7b24854e40427b172f4" name="aa1dbaf577883d7b24854e40427b172f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1dbaf577883d7b24854e40427b172f4">&#9670;&#160;</a></span>drawWarn()</h2>
+<a id="ad42db4ec8e6cf016ede35de8d1efa8a4" name="ad42db4ec8e6cf016ede35de8d1efa8a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad42db4ec8e6cf016ede35de8d1efa8a4">&#9670;&#160;</a></span>drawWarn()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -730,7 +719,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -753,8 +742,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad03099fd23d33fbd0f7ef5fcc1c67bde" name="ad03099fd23d33fbd0f7ef5fcc1c67bde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad03099fd23d33fbd0f7ef5fcc1c67bde">&#9670;&#160;</a></span>getDays()</h2>
+<a id="ad236d47a166473dd80b3580cef6b2fe4" name="ad236d47a166473dd80b3580cef6b2fe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad236d47a166473dd80b3580cef6b2fe4">&#9670;&#160;</a></span>getDays()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -780,7 +769,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -798,8 +787,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9b565e2994fc2f5c7379898fb39c7f15" name="a9b565e2994fc2f5c7379898fb39c7f15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b565e2994fc2f5c7379898fb39c7f15">&#9670;&#160;</a></span>getFields()</h2>
+<a id="aa5e2766b9ecf695a6f6af6b90eeecd37" name="aa5e2766b9ecf695a6f6af6b90eeecd37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5e2766b9ecf695a6f6af6b90eeecd37">&#9670;&#160;</a></span>getFields()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -809,7 +798,7 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>tab</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -825,8 +814,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad6eb1887779aaa5f7c2aa95911e832b8" name="ad6eb1887779aaa5f7c2aa95911e832b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6eb1887779aaa5f7c2aa95911e832b8">&#9670;&#160;</a></span>getHours()</h2>
+<a id="a83012f76f0e2da594a0bc8ecaf691fe5" name="a83012f76f0e2da594a0bc8ecaf691fe5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83012f76f0e2da594a0bc8ecaf691fe5">&#9670;&#160;</a></span>getHours()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -835,7 +824,7 @@ Private Member Functions</h2></td></tr>
           <td class="memname">const QStringList Crapview::getHours </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -845,8 +834,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2907f88ba82158c8c58f54383b4a7c2a" name="a2907f88ba82158c8c58f54383b4a7c2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2907f88ba82158c8c58f54383b4a7c2a">&#9670;&#160;</a></span>getLogFieldID()</h2>
+<a id="ad64e3c54db4991cb57d65596b109e427" name="ad64e3c54db4991cb57d65596b109e427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad64e3c54db4991cb57d65596b109e427">&#9670;&#160;</a></span>getLogFieldID()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -856,7 +845,7 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>field_str</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -872,8 +861,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab4aa28144e1d1a8f7954e0a3c6d3f9d1" name="ab4aa28144e1d1a8f7954e0a3c6d3f9d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4aa28144e1d1a8f7954e0a3c6d3f9d1">&#9670;&#160;</a></span>getLogFieldString()</h2>
+<a id="a0e08d53c5ee688dd546f5b2642c50d7a" name="a0e08d53c5ee688dd546f5b2642c50d7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e08d53c5ee688dd546f5b2642c50d7a">&#9670;&#160;</a></span>getLogFieldString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -881,9 +870,9 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">const QString Crapview::getLogFieldString </td>
           <td>(</td>
-          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>field_id</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -899,8 +888,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af156af64d1cb47d1c0fe1bacc3745974" name="af156af64d1cb47d1c0fe1bacc3745974"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af156af64d1cb47d1c0fe1bacc3745974">&#9670;&#160;</a></span>getMonthNumber()</h2>
+<a id="a6cfb73153496431dfd3e771c5d501af4" name="a6cfb73153496431dfd3e771c5d501af4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cfb73153496431dfd3e771c5d501af4">&#9670;&#160;</a></span>getMonthNumber()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -910,7 +899,7 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>month_str</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -926,8 +915,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa8518f26e3769580bbd3439e094b221a" name="aa8518f26e3769580bbd3439e094b221a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8518f26e3769580bbd3439e094b221a">&#9670;&#160;</a></span>getMonths()</h2>
+<a id="a1f3fcee062ad231dc97f3f4ee31aa554" name="a1f3fcee062ad231dc97f3f4ee31aa554"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f3fcee062ad231dc97f3f4ee31aa554">&#9670;&#160;</a></span>getMonths()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -947,7 +936,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -964,8 +953,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab3081c678b102b255fa9f32a8f94e052" name="ab3081c678b102b255fa9f32a8f94e052"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3081c678b102b255fa9f32a8f94e052">&#9670;&#160;</a></span>getYears()</h2>
+<a id="a611cd7a9aaaa445cfb6b774815a533b8" name="a611cd7a9aaaa445cfb6b774815a533b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a611cd7a9aaaa445cfb6b774815a533b8">&#9670;&#160;</a></span>getYears()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -975,7 +964,7 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>web_server</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -991,8 +980,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa7fe41edd00d1754ade13c095ad20b82" name="aa7fe41edd00d1754ade13c095ad20b82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7fe41edd00d1754ade13c095ad20b82">&#9670;&#160;</a></span>parseBooleanFilter()</h2>
+<a id="ad18f037747f3d5f067f437b7bb5d7398" name="ad18f037747f3d5f067f437b7bb5d7398"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad18f037747f3d5f067f437b7bb5d7398">&#9670;&#160;</a></span>parseBooleanFilter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1002,24 +991,24 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>filter_str</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Parses a filter for a database field with boolean type. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p >Boolean filters are not locale-dependant, meaning that English syntax must be used (TRUE,FALSE) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">field_str</td><td>The given filter </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The resulting filter to apply at the query </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting filter to apply to the query </dd></dl>
 
 </div>
 </div>
-<a id="ab450412741c7af21dfec42fad5a7f20a" name="ab450412741c7af21dfec42fad5a7f20a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab450412741c7af21dfec42fad5a7f20a">&#9670;&#160;</a></span>parseNumericFilter()</h2>
+<a id="afd01bf9ef479f765f7495dd5cf7b86ec" name="afd01bf9ef479f765f7495dd5cf7b86ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd01bf9ef479f765f7495dd5cf7b86ec">&#9670;&#160;</a></span>parseNumericFilter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1029,7 +1018,7 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>filter_str</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1041,12 +1030,12 @@ Private Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The resulting filter to apply at the query </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting filter to apply to the query </dd></dl>
 
 </div>
 </div>
-<a id="ae7693a3fa2b4a402eb123af94a73d809" name="ae7693a3fa2b4a402eb123af94a73d809"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7693a3fa2b4a402eb123af94a73d809">&#9670;&#160;</a></span>parseTextualFilter()</h2>
+<a id="a5df4350740a5d4ebea00e9ded5f95c98" name="a5df4350740a5d4ebea00e9ded5f95c98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5df4350740a5d4ebea00e9ded5f95c98">&#9670;&#160;</a></span>parseTextualFilter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1056,7 +1045,7 @@ Private Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>filter_str</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1068,158 +1057,7 @@ Private Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The resulting filter to apply at the query </dd></dl>
-
-</div>
-</div>
-<a id="a3a73f6f5683afaaa17a3065eada4438e" name="a3a73f6f5683afaaa17a3065eada4438e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a73f6f5683afaaa17a3065eada4438e">&#9670;&#160;</a></span>printableDate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const QString Crapview::printableDate </td>
-          <td>(</td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>year</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>month</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>day</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns a string of the given date in the format YYY-MM-DD. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">year</td><td>The year </td></tr>
-    <tr><td class="paramname">month</td><td>The month </td></tr>
-    <tr><td class="paramname">day</td><td>The day </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The printable date</dd></dl>
-<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">year</td><td>The year </td></tr>
-    <tr><td class="paramname">month</td><td>The month </td></tr>
-    <tr><td class="paramname">day</td><td>The day </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The printable date </dd></dl>
-
-</div>
-</div>
-<a id="af77a399adbd69a9bfd26e42c31e71324" name="af77a399adbd69a9bfd26e42c31e71324"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af77a399adbd69a9bfd26e42c31e71324">&#9670;&#160;</a></span>printableTime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const QString Crapview::printableTime </td>
-          <td>(</td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>hour</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>minute</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>second</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns a string of the given time in the format HH:MM:SS. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">hour</td><td>The hour </td></tr>
-    <tr><td class="paramname">minut</td><td>The minute </td></tr>
-    <tr><td class="paramname">second</td><td>The second </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The printable time </dd></dl>
-
-</div>
-</div>
-<a id="a2feca301352ca7bd76e199fbcaef932c" name="a2feca301352ca7bd76e199fbcaef932c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2feca301352ca7bd76e199fbcaef932c">&#9670;&#160;</a></span>printableWarn()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const QString Crapview::printableWarn </td>
-          <td>(</td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns a string corresponding to the given value. </p>
-<p >Used to convert numeric booleans [0,1] to string [FALSE,TRUE] </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">value</td><td>The value to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The corresponding printable string </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting filter to apply to the query </dd></dl>
 
 </div>
 </div>
@@ -1244,8 +1082,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a34be04ee1861a56aad782cc6f5e71118" name="a34be04ee1861a56aad782cc6f5e71118"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34be04ee1861a56aad782cc6f5e71118">&#9670;&#160;</a></span>updateWarn()</h2>
+<a id="a5936b20a36eb7293eb1ab7dffd5a28cf" name="a5936b20a36eb7293eb1ab7dffd5a28cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5936b20a36eb7293eb1ab7dffd5a28cf">&#9670;&#160;</a></span>updateWarn()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1265,7 +1103,7 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">

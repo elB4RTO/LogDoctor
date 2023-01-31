@@ -2,9 +2,11 @@
 #define QUERY_H
 
 #include "modules/shared.h"
+#include "utilities/result.h"
 
 #include <QString>
 
+#include <map>
 #include <vector>
 #include <unordered_map>
 
@@ -12,7 +14,7 @@
 class DbQuery
 {
 public:
-    DbQuery();
+    explicit DbQuery();
 
     // convert log fields IDs to log fields
     const std::unordered_map<int, std::string> FIELDS = {
@@ -38,7 +40,7 @@ public:
 
 
     //! Returns the Dialogs level
-    void setDialogLevel( const int& new_level );
+    void setDialogLevel( const int new_level );
 
 
     //! Sets the path for the logs Collection database
@@ -59,18 +61,19 @@ public:
         \return The number of months in the period
         \throw DateTimeException
     */
-    const int getMonthsCount(
+    const int countMonths(
         const QString& from_year,
         const QString& from_month,
         const QString& to_year,
-        const QString& to_month );
+        const QString& to_month
+    ) const;
 
 
     //! Refreshes the dates which are available in the database
     /*!
         \param result Tuple which will hold the result of the operation and the data
     */
-    void refreshDates( std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>>& result );
+    void refreshDates( Result<stats_dates_t>& result );
 
 
     //! Updates the database applying the changes made in the Warnings statistics table
@@ -80,7 +83,8 @@ public:
     */
     void updateWarnings(
         const QString& web_server,
-        const std::vector<std::tuple<int, int>>& updates );
+        const std::vector<std::tuple<int, int>>& updates
+    ) const;
 
     //! Retrieves the data needed for the Warnings statistics
     /*!
@@ -92,12 +96,13 @@ public:
         \param hour_ The hour
     */
     void getWarnCounts(
-        std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>>& result,
+        Result<stats_warn_items_t>& result,
         const QString& web_server,
         const QString& year_,
         const QString& month_,
         const QString& day_,
-        const QString& hour_ );
+        const QString& hour_
+    ) const;
 
 
     //! Retrieves the data needed for the Speed statistics
@@ -114,16 +119,17 @@ public:
         \param response_f The filter for the Response field
     */
     void getSpeedData(
-            std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>>& result,
-            const QString& web_server,
-            const QString& year_,
-            const QString& month_,
-            const QString& day_,
-            const QString& protocol_f,
-            const QString& method_f,
-            const QString& uri_f,
-            const QString& query_f,
-            const QString& response_f );
+        Result<stats_speed_items_t>& result,
+        const QString& web_server,
+        const QString& year_,
+        const QString& month_,
+        const QString& day_,
+        const QString& protocol_f,
+        const QString& method_f,
+        const QString& uri_f,
+        const QString& query_f,
+        const QString& response_f
+    ) const;
 
 
     //! Retrieves the data needed for the Counts statistics
@@ -136,12 +142,13 @@ public:
         \param log_field The log field
     */
     void getItemsCount(
-        std::tuple<bool, std::vector<std::tuple<QString, int>>>& result,
+        Result<stats_count_items_t>& result,
         const QString& web_server,
         const QString& year,
         const QString& month,
         const QString& day,
-        const QString& log_field );
+        const QString& log_field
+    ) const;
 
 
     //! Retrieves the data needed for the Daytime statistics
@@ -158,11 +165,12 @@ public:
         \param field_filter The filter to apply
     */
     void getDaytimeCounts(
-        std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>>& result,
+        Result<stats_day_items_t>& result,
         const QString& web_server,
         const QString& from_year_, const QString& from_month_, const QString& from_day_,
         const QString& to_year_,   const QString& to_month_,   const QString& to_day_,
-        const QString& log_field_, const QString& field_filter );
+        const QString& log_field_, const QString& field_filter
+    ) const;
 
 
     //! Retrieves the data needed for the Relationsl statistics
@@ -180,11 +188,12 @@ public:
         \see getRelationalCountsPeriod()
     */
     void getRelationalCountsDay(
-        std::tuple<bool, std::vector<std::tuple<long long, int>>>& result,
+        Result<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& year_,        const QString& month_,         const QString& day_,
         const QString& log_field_1_, const QString& field_filter_1,
-        const QString& log_field_2_, const QString& field_filter_2 );
+        const QString& log_field_2_, const QString& field_filter_2
+    ) const;
 
     //! Retrieves the data needed for the Relational statistics
     /*!
@@ -204,12 +213,13 @@ public:
         \see getRelationalCountsDay()
     */
     void getRelationalCountsPeriod(
-        std::tuple<bool, std::vector<std::tuple<long long, int>>>& result,
+        Result<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& from_year_,   const QString& from_month_,    const QString& from_day_,
         const QString& to_year_,     const QString& to_month_,      const QString& to_day_,
         const QString& log_field_1_, const QString& field_filter_1,
-        const QString& log_field_2_, const QString& field_filter_2 );
+        const QString& log_field_2_, const QString& field_filter_2
+    ) const;
 
 
     //! Retrieves the data needed for the Global statistics
@@ -228,15 +238,16 @@ public:
     */
     const bool getGlobalCounts(
         const QString& web_server,
-        const std::unordered_map<int, std::unordered_map<int, std::vector<int>>>& dates,
-        std::vector<std::unordered_map<QString, int>>& recurs,
+        const std::map<int, std::map<int, std::vector<int>>>& dates,
+        std::vector<std::unordered_map<QString, unsigned>>& recurs,
         std::tuple<QString, int>& traf_date,
         std::unordered_map<int, double>& traf_day,
         std::unordered_map<int, double>& traf_hour,
         std::vector<long long>& perf_time,
         std::vector<long long>& perf_sent,
         std::vector<long long>& perf_receiv,
-        long& req_count );
+        long& req_count
+    ) const;
 
 private:
 
@@ -258,27 +269,27 @@ private:
 
     // convert log fields to database fields
     const std::unordered_map<std::string, QString> LogFields_to_DbFields = {
-            {this->FIELDS.at( 0), "warning"},
-            {this->FIELDS.at(10), "protocol"},
-            {this->FIELDS.at(11), "method"},
-            {this->FIELDS.at(12), "uri"},
-            {this->FIELDS.at(13), "query"},
-            {this->FIELDS.at(14), "response"},
-            {this->FIELDS.at(15), "time_taken"},
-            {this->FIELDS.at(16), "bytes_sent"},
-            {this->FIELDS.at(17), "bytes_received"},
-            {this->FIELDS.at(18), "referrer"},
-            {this->FIELDS.at(20), "client"},
-            {this->FIELDS.at(21), "user_agent"},
-            {this->FIELDS.at(22), "cookie"}
-        };
+        {this->FIELDS.at( 0), "warning"},
+        {this->FIELDS.at(10), "protocol"},
+        {this->FIELDS.at(11), "method"},
+        {this->FIELDS.at(12), "uri"},
+        {this->FIELDS.at(13), "query"},
+        {this->FIELDS.at(14), "response"},
+        {this->FIELDS.at(15), "time_taken"},
+        {this->FIELDS.at(16), "bytes_sent"},
+        {this->FIELDS.at(17), "bytes_received"},
+        {this->FIELDS.at(18), "referrer"},
+        {this->FIELDS.at(20), "client"},
+        {this->FIELDS.at(21), "user_agent"},
+        {this->FIELDS.at(22), "cookie"}
+    };
 
     //! Returns the database field corresponding to the relative log field
     /*!
         \param tr_fld The log field, hendles translated text
         \return The database field
     */
-    const QString getDbField( const QString& tr_fld );
+    const QString getDbField( const QString& tr_fld ) const;
 
     /*const int getLogFieldID ( const QString& field_str );*/
 
@@ -290,7 +301,7 @@ private:
         \return The gap index
         \throw DateTimeException
     */
-    const int getMinuteGap( const int& minute, const int& gap=10 );
+    const int getMinuteGap( const int minute, const int gap=10 ) const;
 
 
     //! Returns the number of days for a given month
@@ -300,14 +311,28 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    const int getMonthDays( const int& year, const int& month );
+    const int getMonthDays( const int year, const int month ) const;
 
     //! Returns the month number in the year
     /*!
         \param month_str The month
         \return The month number
     */
-    const int getMonthNumber( const QString& month_str );
+    const int getMonthNumber( const QString& month_str ) const;
+
+
+    //! Returns the number of days in a given period
+    /*!
+        \param from_year The initial year
+        \param from_month The initial month
+        \param from_day The initial day
+        \param to_year The final Year
+        \param to_month The final month
+        \param to_day The final day
+        \return The number of days
+        \throw DateTimeException
+    */
+    const int countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day ) const;
 
 
     //! Returns the number of months in a given period
@@ -318,9 +343,10 @@ private:
         \param to_month The final month
         \return The number of months in the period
     */
-    const int getMonthsCount(
+    const int countMonths(
         const int& from_year, const int& from_month,
-        const int& to_year,   const int& to_month );
+        const int& to_year,   const int& to_month
+    ) const;
 };
 
 #endif // QUERY_H

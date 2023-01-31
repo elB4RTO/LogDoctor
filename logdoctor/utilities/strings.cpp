@@ -1,6 +1,8 @@
 
 #include "strings.h"
 
+#include <algorithm>
+
 
 StringOps::StringOps()
 {
@@ -8,7 +10,7 @@ StringOps::StringOps()
 }
 
 
-const int StringOps::count(const std::string& str, const std::string& flag, const bool& consecutives )
+const int StringOps::count( const std::string& str, const std::string& flag, const bool consecutives )
 {
     size_t start=0, aux_start=0, count=0;
     while (true) {
@@ -373,17 +375,17 @@ const std::string StringOps::replace( const std::string& str, const std::string&
 const std::string StringOps::toUpper( const std::string& str )
 {
     std::string up = "";
-    for ( const unsigned char& ch : str ) {
-        up.push_back( (char)std::toupper( ch ) );
-    }
+    std::transform( str.cbegin(), str.cend(),
+                    std::back_inserter( up ),
+                    [](char c){ return std::toupper( c ); } );
     return up;
 }
 
 const std::string StringOps::toLower( const std::string& str )
 {
     std::string low = "";
-    for ( const unsigned char& ch : str ) {
-        low.push_back( (char)std::tolower( ch ) );
-    }
+    std::transform( str.cbegin(), str.cend(),
+                    std::back_inserter( low ),
+                    [](char c){ return std::toupper( c ); } );
     return low;
 }

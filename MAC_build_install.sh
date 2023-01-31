@@ -32,6 +32,7 @@ then
 	exit 1
 fi
 
+
 # Start the compilation process
 echo "Starting compilation process"
 
@@ -66,6 +67,7 @@ fi
 # Compilation finished
 wait
 echo "Compilation finished"
+
 
 # Start installing LogDoctor
 echo "Starting installation process"

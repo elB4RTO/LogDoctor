@@ -6,6 +6,7 @@
 #include "utilities/colors.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
+#include "utilities/printables.h"
 #include "utilities/rtf.h"
 #include "utilities/stylesheets.h"
 
@@ -105,6 +106,12 @@ MainWindow::MainWindow(QWidget *parent)
     //// CONFIGS ////
     this->defineOSspec();
     this->readConfigs();
+
+
+    /////////////////
+    //// CRAPLOG ////
+    connect(this, &MainWindow::runCraplog, &this->craplog, &Craplog::startWorking);
+    connect(&this->craplog, &Craplog::finishedWorking, this, &MainWindow::craplogFinished);
 
 
     ///////////////////
@@ -224,7 +231,6 @@ MainWindow::MainWindow(QWidget *parent)
         RichText::richLogsDefault( rich_text );
         this->ui->textLogFiles->setText( rich_text );
         this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
     }
 
 
@@ -238,7 +244,7 @@ MainWindow::MainWindow(QWidget *parent)
     //// START ////
     // get a fresh list of LogFiles
     this->waiter_timer = new QTimer(this);
-    connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(wait_ActiveWindow()));
+    connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::waitActiveWindow);
     this->waiter_timer->start(250);
 }
 
@@ -246,7 +252,6 @@ MainWindow::~MainWindow()
 {
     delete this->ui;
     delete this->waiter_timer;
-    delete this->craplog_timer;
     delete this->crapview_timer;
     delete this->craphelp;
     delete this->crapnote;
@@ -358,7 +363,8 @@ void MainWindow::readConfigs()
     }
 
     if ( proceed ) {
-        QString err_msg="", aux_err_msg;
+        err_msg.clear();
+        QString aux_err_msg;
         std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
@@ -407,7 +413,7 @@ void MainWindow::readConfigs()
                     this->remember_window = this->s2b.at( val );
 
                 } else if ( var == "Geometry" ) {
-                    this->geometryFromString( val );
+                    this->setGeometryFromString( val );
 
                 } else if ( var == "WindowTheme" ) {
                     this->window_theme_id = std::stoi( val );
@@ -687,7 +693,7 @@ void MainWindow::writeConfigs()
         }
     } else {
         // file does not exists, check if at least the folder exists
-        const std::string base_path = this->basePath( this->configs_path );
+        const std::string base_path = this->parentPath( this->configs_path );
         if ( IOutils::exists( base_path ) ) {
             if ( IOutils::isDir( base_path ) ) {
                 if ( ! IOutils::checkDir( base_path, false, true ) ) {
@@ -843,7 +849,7 @@ void MainWindow::writeConfigs()
 }
 
 
-void MainWindow::backupDatabase()
+void MainWindow::backupDatabase() const
 {
     bool proceed = true;
     std::error_code err;
@@ -956,7 +962,7 @@ void MainWindow::backupDatabase()
 }
 
 
-const std::string MainWindow::geometryToString()
+const std::string MainWindow::geometryToString() const
 {
     QRect geometry = this->geometry();
     std::string string = "";
@@ -971,7 +977,7 @@ const std::string MainWindow::geometryToString()
     string += this->b2s.at( this->isMaximized() );
     return string;
 }
-void MainWindow::geometryFromString( const std::string& geometry )
+void MainWindow::setGeometryFromString( const std::string& geometry )
 {
     std::vector<std::string> aux;
     StringOps::splitrip( aux, geometry, "," );
@@ -984,32 +990,33 @@ void MainWindow::geometryFromString( const std::string& geometry )
 }
 
 
-const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool& user_agent )
+const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
 {
     std::string string;
     if ( user_agent ) {
-        for ( const std::string& str : list ) {
-            string += StringOps::replace( str, " ", "%@#" ) + " ";
-        }
+        string = std::accumulate(
+            list.begin(), list.end(), string,
+            [](auto& s, auto str)->std::string&
+            { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
+
     } else {
-        for ( const std::string& str : list ) {
-            string += str + " ";
-        }
+        string = std::accumulate(
+            list.begin(), list.end(), string,
+            [](auto& s, auto str)->std::string&
+            { return s += str + " "; } );
     }
     return string;
 }
-const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool& user_agent )
+const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
 {
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, " " );
     if ( user_agent ) {
-        for ( const std::string& str : aux ) {
-            list.push_back( StringOps::replace( str, "%@#", " " ) );
-        }
+        std::transform( aux.cbegin(), aux.cend(),
+                        std::back_inserter( list ),
+                        [](auto str){ return StringOps::replace( str, "%@#", " " ); } );
     } else {
-        for ( const std::string& str : aux ) {
-            list.push_back( str );
-        }
+        list = std::move( aux );
     }
     return list;
 }
@@ -1559,7 +1566,7 @@ void MainWindow::updateUiLanguage()
 //////////////////////////
 //// INTEGRITY CHECKS ////
 //////////////////////////
-void MainWindow::wait_ActiveWindow()
+void MainWindow::waitActiveWindow()
 {
     if ( ! this->isActiveWindow() ) {
         QCoreApplication::processEvents( QEventLoop::AllEvents, 250 );
@@ -1582,7 +1589,7 @@ void MainWindow::makeInitialChecks()
 
     if ( ok ) {
         // check LogDoctor's folders paths
-        for ( const std::string& path : std::vector<std::string>({this->basePath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path}) ) {
+        for ( const std::string& path : std::vector<std::string>({this->parentPath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path}) ) {
             if ( IOutils::exists( path ) ) {
                 if ( IOutils::isDir( path ) ) {
                     if ( ! IOutils::checkDir( path, true ) ) {
@@ -1719,17 +1726,25 @@ void MainWindow::makeInitialChecks()
                 throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
         }
         this->initiating = false;
+        // effectively check if draw buttons can be enabled
+        this->checkStatsWarnDrawable();
+        this->checkStatsSpeedDrawable();
+        this->checkStatsCountDrawable();
+        this->checkStatsDayDrawable();
+        this->checkStatsRelatDrawable();
     }
 }
 
 
-const bool& MainWindow::checkDataDB()
+const bool MainWindow::checkDataDB()
 {
+    bool ok = false;
     if ( ! this->initiating ) { // avoid recursions
         // check the db
         const std::string path = this->db_data_path + "/collection.db";
-        bool ok = IOutils::checkFile( path, true );
+        ok = IOutils::checkFile( path, true );
         if ( ! ok ) {
+            // database file not found, make a new one
             ok = CheckSec::checkCollectionDatabase( path );
             // update ui stuff
             if ( ! ok ) {
@@ -1755,14 +1770,14 @@ const bool& MainWindow::checkDataDB()
             this->db_ok = ok;
         }
     }
-    return this->db_ok;
+    return ok;
 }
 
 
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
-const QString MainWindow::wsFromIndex( const int& index )
+const QString MainWindow::wsFromIndex(const int index ) const
 {
     switch (index) {
     case 0:
@@ -1776,7 +1791,7 @@ const QString MainWindow::wsFromIndex( const int& index )
     }
 }
 
-const std::string MainWindow::resolvePath( const std::string& path )
+const std::string MainWindow::resolvePath( const std::string& path ) const
 {
     std::string p;
     try {
@@ -1786,102 +1801,10 @@ const std::string MainWindow::resolvePath( const std::string& path )
     }
     return p;
 }
-const std::string MainWindow::basePath( const std::string& path )
+const std::string MainWindow::parentPath( const std::string& path ) const
 {
     const int stop = path.rfind( '/' );
     return path.substr( 0, stop );
-}
-
-// printable size with suffix and limited decimals
-const QString MainWindow::printableSize( const int& bytes )
-{
-    std::string size_str, size_sfx=" B";
-    float size = (float)bytes;
-    if (size > 1024) {
-        size /= 1024;
-        size_sfx = " KiB";
-        if (size > 1024) {
-            size /= 1024;
-            size_sfx = " MiB";
-        }
-    }
-    // cut decimals depending on how big the floor is
-    size_str = std::to_string( size );
-    int cut_index = size_str.find('.')+1;
-    if ( cut_index == 0 ) {
-            cut_index = size_str.find(',')+1;
-    }
-    int n_decimals = 3;
-    if ( size >= 100 ) {
-        n_decimals = 2;
-        if ( size >= 1000 ) {
-            n_decimals = 1;
-            if ( size >= 10000 ) {
-                n_decimals = 0;
-                cut_index --;
-            }
-        }
-    }
-    if ( cut_index >= 1 ) {
-        cut_index += n_decimals;
-        if ( cut_index > size_str.size()-1 ) {
-            cut_index = size_str.size()-1;
-        }
-    }
-    return QString::fromStdString( size_str.substr(0, cut_index ) + size_sfx );
-}
-
-// printable speed with suffix and limited decimals
-const QString MainWindow::printableSpeed( const int& bytes, const int& secs_ )
-{
-    std::string speed_str, speed_sfx=" B/s";
-    int secs = secs_;
-    if ( secs == 0 ) {
-        secs = 1;
-    }
-    float speed = (float)bytes / (float)secs;
-    if (speed > 1024) {
-        speed /= 1024;
-        speed_sfx = " KiB/s";
-        if (speed > 1024) {
-            speed /= 1024;
-            speed_sfx = " MiB/s";
-        }
-    }
-    // cut decimals depending on how big the floor is
-    speed_str = std::to_string( speed );
-    int cut_index = speed_str.find('.')+1;
-    if ( cut_index == 0 ) {
-            cut_index = speed_str.find(',')+1;
-    }
-    int n_decimals = 3;
-    if ( speed >= 100 ) {
-        n_decimals = 2;
-        if ( speed >= 1000 ) {
-            n_decimals = 1;
-            if ( speed >= 10000 ) {
-                n_decimals = 0;
-                cut_index --;
-            }
-        }
-    }
-    if ( cut_index >= 1 ) {
-        cut_index += n_decimals;
-        if ( cut_index > speed_str.size()-1 ) {
-            cut_index = speed_str.size()-1;
-        }
-    }
-    return QString::fromStdString( speed_str.substr(0, cut_index ) + speed_sfx );
-}
-
-const QString MainWindow::printableTime( const int& secs_ )
-{
-    int secs = secs_;
-    int mins = secs / 60;
-    secs = secs - (mins*60);
-    std::string mins_str = (mins<10) ? "0"+std::to_string(mins) : std::to_string(mins);
-    std::string secs_str = (secs<10) ? "0"+std::to_string(secs) : std::to_string(secs);
-    return QString::fromStdString( mins_str +":"+ secs_str );
 }
 
 
@@ -1890,7 +1813,8 @@ const QString MainWindow::printableTime( const int& secs_ )
 //////////////
 void MainWindow::showHelp( const std::string& file_name )
 {
-    const std::string link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
+    bool fallback = false;
+    const QString link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
     const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+file_name+".html";
     if ( IOutils::exists( path ) ) {
         if ( IOutils::isFile( path ) ) {
@@ -1909,15 +1833,32 @@ void MainWindow::showHelp( const std::string& file_name )
                 }
             } else {
                 // resource not readable
-                DialogSec::errHelpNotReadable( QString::fromStdString( link ) );
+                DialogSec::errHelpNotReadable( link );
+                fallback = true;
             }
         } else {
             // resource is not a file
-            DialogSec::errHelpFailed( QString::fromStdString( link ), DialogSec::tr("unrecognized entry") );
+            DialogSec::errHelpFailed( link, DialogSec::tr("Unrecognized entry") );
+            fallback = true;
         }
     } else {
         // resource not found
-        DialogSec::errHelpNotFound( QString::fromStdString( link ) );
+        DialogSec::errHelpNotFound( link );
+        fallback = true;
+    }
+    if ( fallback ) {
+        // help file not found for the current locale, fallback to the default version
+        delete this->craphelp;
+        this->craphelp = new Craphelp();
+        this->craphelp->helpLogsFormatDefault(
+            file_name,
+            this->TB.getFont(),
+            this->TB.getColorSchemeID() );
+        if ( this->isMaximized() ) {
+            this->craphelp->showMaximized();
+        } else {
+            this->craphelp->show();
+        }
     }
 }
 
@@ -2016,19 +1957,10 @@ void MainWindow::menu_actionBlockNote_triggered()
 
 void MainWindow::menu_actionInfos_triggered()
 {
-    std::string version_ = std::to_string( this->version );
-    size_t cut = version_.find('.');
-    if ( cut == std::string::npos ) {
-        cut = version_.find(',');
-        if ( cut == std::string::npos ) {
-            cut = version_.size()-3;
-        }
-    }
-    version_ = version_.substr( 0, cut+3 );
     delete this->crapinfo;
     this->crapinfo = new Crapinfo(
         this->window_theme_id,
-        QString::fromStdString( version_ ),
+        QString::number( this->version ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->configs_path ),
         QString::fromStdString( this->logdoc_path ) );
@@ -2046,7 +1978,7 @@ void MainWindow::menu_actionCheckUpdates_triggered()
             this->window_theme_id,
             this->icons_theme );
         this->crapup->show();
-        this->crapup->versionCheck( 1.0 );
+        this->crapup->versionCheck( this->version );
     }
 }
 
@@ -2080,7 +2012,7 @@ void MainWindow::menu_actionSnake_triggered()
 //////////////
 //// TABS ////
 //////////////
-void MainWindow::switchMainTab( const int& new_index )
+void MainWindow::switchMainTab( const int new_index )
 {
     const int old_index = this->ui->stacked_Tabs_Pages->currentIndex();
     // turn off the old icon
@@ -2152,7 +2084,7 @@ void MainWindow::on_button_Tab_Conf_clicked()
 
 
 //// STATS ////
-void MainWindow::switchStatsTab( const int& new_index )
+void MainWindow::switchStatsTab( const int new_index )
 {
     const int old_index = this->ui->stacked_Stats_Pages->currentIndex();
     // turn off the old icon
@@ -2278,10 +2210,10 @@ void MainWindow::on_button_Tab_StatsGlob_clicked()
 ////////////
 //// DB ////
 ////////////
-void MainWindow::setDbWorkingState( const bool& state )
+void MainWindow::setDbWorkingState( const bool working )
 {
-    this->db_working = state;
-    if ( ! state ) {
+    this->db_working = working;
+    if ( ! working ) {
         this->checkMakeStats_Makable();
         if ( this->ui->table_StatsWarn->rowCount() > 0 ) {
             this->ui->button_StatsWarn_Update->setEnabled( true );
@@ -2292,22 +2224,31 @@ void MainWindow::setDbWorkingState( const bool& state )
         this->checkStatsDayDrawable();
         this->checkStatsRelatDrawable();
         this->ui->button_StatsGlob_Apache->setEnabled( true );
-        this->ui->button_StatsGlob_Nginx->setEnabled( true );
-        this->ui->button_StatsGlob_Iis->setEnabled( true );
+        this->ui->button_StatsGlob_Nginx->setEnabled(  true );
+        this->ui->button_StatsGlob_Iis->setEnabled(    true );
         this->ui->page_Tab_Conf->setEnabled( true );
     } else {
-        this->ui->button_MakeStats_Start->setEnabled( false );
+        this->ui->button_MakeStats_Start->setEnabled(  false );
         this->ui->button_StatsWarn_Update->setEnabled( false );
-        this->ui->button_StatsWarn_Draw->setEnabled( false );
-        this->ui->scrollArea_StatsCount->setEnabled( false );
-        this->ui->button_StatsSpeed_Draw->setEnabled( false );
-        this->ui->button_StatsDay_Draw->setEnabled( false );
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        this->ui->button_StatsWarn_Draw->setEnabled(   false );
+        this->ui->scrollArea_StatsCount->setEnabled(   false );
+        this->ui->button_StatsSpeed_Draw->setEnabled(  false );
+        this->ui->button_StatsDay_Draw->setEnabled(    false );
+        this->ui->button_StatsRelat_Draw->setEnabled(  false );
         this->ui->button_StatsGlob_Apache->setEnabled( false );
-        this->ui->button_StatsGlob_Nginx->setEnabled( false );
-        this->ui->button_StatsGlob_Iis->setEnabled( false );
+        this->ui->button_StatsGlob_Nginx->setEnabled(  false );
+        this->ui->button_StatsGlob_Iis->setEnabled(    false );
         this->ui->page_Tab_Conf->setEnabled( false );
     }
+}
+
+const bool MainWindow::dbUsable()
+{
+    bool ok = false;
+    if ( !this->db_working ) {
+        ok = this->checkDataDB();
+    }
+    return ok;
 }
 
 
@@ -2331,7 +2272,7 @@ void MainWindow::on_button_Logs_Up_clicked()
 void MainWindow::checkMakeStats_Makable()
 {
     bool state = false;
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         // db is not busy
         if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
             // all checked
@@ -2356,19 +2297,20 @@ void MainWindow::checkMakeStats_Makable()
 // switch to apache web server
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 11 ) {
+    if ( this->craplog.getCurrentWSID() != this->APACHE_ID ) {
         // flat/unflat
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( 11 );
+        this->craplog.setCurrentWSID( this->APACHE_ID );
         // reset the log files viewer
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
+        {
+            QString rich_text;
+            RichText::richLogsDefault( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -2376,19 +2318,20 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
 // switch to nginx web server
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 12 ) {
+    if ( this->craplog.getCurrentWSID() != this->NGINX_ID ) {
         // flat/unflat
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( 12 );
+        this->craplog.setCurrentWSID( this->NGINX_ID );
         // reset the log files viewer
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
+        {
+            QString rich_text;
+            RichText::richLogsDefault( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -2396,19 +2339,20 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
 // switch to iis web server
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != 13 ) {
+    if ( this->craplog.getCurrentWSID() != this->IIS_ID ) {
         // flat/unflat
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( 13 );
+        this->craplog.setCurrentWSID( this->IIS_ID );
         // reset the log files viewer
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-        rich_text.clear();
+        {
+            QString rich_text;
+            RichText::richLogsDefault( rich_text );
+            this->ui->textLogFiles->setText( rich_text );
+            this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+        }
         // load the list
         this->on_button_LogFiles_RefreshList_clicked();
     }
@@ -2417,27 +2361,25 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
 // refresh the log files list
 void MainWindow::on_button_LogFiles_RefreshList_clicked()
 {
-    // clear the current tree
-    this->ui->listLogFiles->clear();
-    this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
-    // disable elements
-    this->ui->button_LogFiles_RefreshList->setEnabled( false );
-    this->ui->button_LogFiles_ViewFile->setEnabled( false );
-    this->ui->button_LogFiles_Apache->setEnabled( false );
-    this->ui->button_LogFiles_Nginx->setEnabled( false );
-    this->ui->button_LogFiles_Iis->setEnabled( false );
-    // start refreshing as thread
-    this->refreshing_list = true;
-    delete this->craplog_timer;
-    this->craplog_timer = new QTimer(this);
-    this->craplog_timer->setSingleShot( true );
-    connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(refreshLogsList()));
-    this->craplog_timer->start(250);
-    // periodically check if thread finished
-    delete this->waiter_timer;
-    this->waiter_timer = new QTimer(this);
-    connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(check_CraplogLLT_Finished()));
-    this->waiter_timer->start(250);
+    if ( ! this->refreshing_list ) {
+        this->refreshing_list = true;
+        // clear the current tree
+        this->ui->listLogFiles->clear();
+        this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
+        // disable elements
+        this->ui->button_LogFiles_RefreshList->setEnabled( false );
+        this->ui->button_LogFiles_ViewFile->setEnabled( false );
+        this->ui->button_LogFiles_Apache->setEnabled( false );
+        this->ui->button_LogFiles_Nginx->setEnabled( false );
+        this->ui->button_LogFiles_Iis->setEnabled( false );
+        // start refreshing as thread
+        delete this->waiter_timer;
+        this->waiter_timer = new QTimer(this);
+        this->waiter_timer->setSingleShot( true );
+        connect( this->waiter_timer, &QTimer::timeout,
+                 this, &MainWindow::refreshLogsList);
+        this->waiter_timer->start(250);
+    }
 }
 
 void MainWindow::refreshLogsList()
@@ -2469,7 +2411,7 @@ void MainWindow::refreshLogsList()
         // set the name
         item->setText( 0, log_file.name );
         // set the size
-        item->setText( 1, this->printableSize( log_file.size ) );
+        item->setText( 1, PrintSec::printableSize( log_file.size ) );
         item->setFont( 1, this->FONTS.at("main_italic") );
         // append the item (on top, forced)
         item->setCheckState(0, Qt::CheckState::Unchecked );
@@ -2483,19 +2425,13 @@ void MainWindow::refreshLogsList()
         this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
         this->ui->checkBox_LogFiles_CheckAll->setEnabled( false );
     }
-    refreshing_list = false;
-}
-void MainWindow::check_CraplogLLT_Finished()
-{
-    if ( ! this->refreshing_list ) {
-        this->waiter_timer->stop();
-        // back to normal state
-        this->ui->button_LogFiles_RefreshList->setEnabled( true );
-        this->ui->button_LogFiles_ViewFile->setEnabled( true );
-        this->ui->button_LogFiles_Apache->setEnabled( true );
-        this->ui->button_LogFiles_Nginx->setEnabled( true );
-        this->ui->button_LogFiles_Iis->setEnabled( true );
-    }
+    // refresh finished, back to normal state
+    this->ui->button_LogFiles_RefreshList->setEnabled( true );
+    this->ui->button_LogFiles_ViewFile->setEnabled( true );
+    this->ui->button_LogFiles_Apache->setEnabled( true );
+    this->ui->button_LogFiles_Nginx->setEnabled( true );
+    this->ui->button_LogFiles_Iis->setEnabled( true );
+    this->refreshing_list = false;
 }
 
 
@@ -2540,32 +2476,19 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         // check the size
         if ( proceed ) {
-            const long warn_size = this->craplog.getWarningSize();
-            if ( warn_size >= 0 ) {
+            const unsigned warn_size = this->craplog.getWarningSize();
+            if ( warn_size > 0 ) {
                 if ( item.size > warn_size ) {
                     // exceeds the warning size
-                    QString size_str, msg = item.name;
+                    QString msg = item.name;
                     if ( this->dialogs_level >= 1 ) {
-                        std::string size_sfx=" B";
-                        float size = (float)item.size;
-                        if (size > 1024) {
-                            size /= 1024; size_sfx = " KiB";
-                            if (size > 1024) {
-                                size /= 1024; size_sfx = " MiB";
-                            }
-                        }
-                        size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                        msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Size of the file"), size_str, size_sfx.c_str() );
+                        msg += QString("\n\n%1:\n%2").arg(
+                            DialogSec::tr("Size of the file"),
+                            PrintSec::printableSize( item.size ) );
                         if ( this->dialogs_level == 2 ) {
-                            size = (float)warn_size;
-                            if (size > 1024) {
-                                size /= 1024; size_sfx = " KiB";
-                                if (size > 1024) {
-                                    size /= 1024; size_sfx = " MiB";
-                                }
-                            }
-                            size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                            msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Warning size parameter"), size_str, size_sfx.c_str() );
+                            msg += QString("\n\n%1:\n%2").arg(
+                                DialogSec::tr("Warning size parameter"),
+                                PrintSec::printableSize( warn_size ) );
                         }
                     }
                     // ask the user what to do
@@ -2626,9 +2549,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     format, this->TB );
                 this->ui->textLogFiles->setText( rich_content );
                 this->ui->textLogFiles->setFont( this->TB.getFont() );
-                rich_content.clear();
             }
-            content.clear();
         }
         if ( ! proceed ) {
             // failed
@@ -2636,7 +2557,6 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             RichText::richLogsFailure( rich_text );
             this->ui->textLogFiles->setText( rich_text );
             this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-            rich_text.clear();
         }
     }
 }
@@ -2671,7 +2591,7 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 
 void MainWindow::on_button_MakeStats_Start_clicked()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         bool proceed = true;
         // check that the format has been set
         const FormatOps::LogsFormat& lf = this->craplog.getLogsFormat( this->craplog.getCurrentWSID() );
@@ -2728,28 +2648,22 @@ void MainWindow::on_button_MakeStats_Start_clicked()
                 // periodically update perfs
                 delete this->waiter_timer;
                 this->waiter_timer = new QTimer(this);
-                connect(this->waiter_timer, SIGNAL(timeout()), this, SLOT(update_Craplog_PerfData()));
-                // run craplog as thread
-                this->waiter_timer_start = std::chrono::system_clock::now();
-                delete this->craplog_timer;
-                this->craplog_timer = new QTimer(this);
-                this->craplog_timer->setSingleShot( true );
-                connect(this->craplog_timer, SIGNAL(timeout()), this, SLOT(runCraplog()));
+                this->waiter_timer->setInterval(250);
+                this->waiter_timer->setTimerType( Qt::PreciseTimer );
+                connect( this->waiter_timer, &QTimer::timeout,
+                         this, &MainWindow::updatePerfsLabels );
                 // start processing
-                this->waiter_timer->start(250);
-                this->craplog_timer->start(100);
+                this->waiter_timer_start = std::chrono::system_clock::now();
+                this->waiter_timer->start();
+                emit runCraplog();
             } else {
                 this->craplogFinished();
             }
         }
     }
 }
-void MainWindow::runCraplog()
-{
-    this->craplog.run();
-}
 
-void MainWindow::reset_MakeStats_labels()
+void MainWindow::resetPerfsLabels()
 {
     // reset to default
     this->ui->label_MakeStats_Size->setText( "0 B" );
@@ -2759,45 +2673,27 @@ void MainWindow::reset_MakeStats_labels()
     this->ui->label_MakeStats_Speed->setText( "0 B/s" );
 }
 
-void MainWindow::update_MakeStats_labels()
+void MainWindow::updatePerfsLabels()
 {
     // update values
-    unsigned size;
-    long secs;
-    // size and lines
-    if ( this->craplog.isParsing() ) {
-        this->craplog.collectPerfData();
+    if ( this->craplog.isParsing() || this->force_updating_labels ) {
+        const unsigned size = this->craplog.getParsedSize();
+        this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
+        this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
+        this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
     }
-    size = this->craplog.getTotalSize();
-    //size = this->craplog.getParsedSize();
-    this->ui->label_MakeStats_Size->setText( this->printableSize( size ) );
-    this->ui->label_MakeStats_Lines->setText( QString::fromStdString(std::to_string(this->craplog.getParsedLines())) );
     // time and speed
     this->waiter_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         this->waiter_timer_start - std::chrono::system_clock::now()
     );
-    size = this->craplog.getPerfSize();
-    secs = this->waiter_timer_elapsed.count() / -1000000000;
-    this->ui->label_MakeStats_Time->setText( this->printableTime( secs ));
-    this->ui->label_MakeStats_Speed->setText( this->printableSpeed( size, secs ));
-}
-
-void MainWindow::update_Craplog_PerfData()
-{
-    // craplog is running as thread, update the values meanwhile
-    this->update_MakeStats_labels();
-    // check if Craplog has finished working
-    if ( ! this->craplog.isWorking() ) {
-        this->waiter_timer->stop();
-        this->craplogFinished();
-    }
+    const unsigned secs = this->waiter_timer_elapsed.count() / -1000000000;
+    this->ui->label_MakeStats_Time->setText( PrintSec::printableTime( secs ));
 }
 
 void MainWindow::craplogStarted()
 {
     // reset perfs
-    this->reset_MakeStats_labels();
-    this->craplog.logOps.resetPerfData();
+    this->resetPerfsLabels();
     // disable the LogFiles section
     this->ui->stacked_Logs_Pages->setEnabled(false);
     // disable things which needs database access
@@ -2815,27 +2711,31 @@ void MainWindow::craplogStarted()
 
 void MainWindow::craplogFinished()
 {
-    // update the perf data one last time, just in case
-    this->update_MakeStats_labels();
-    this->craplog.makeChart(
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
-        this->ui->chart_MakeStats_Size );
-    if ( this->craplog.editedDatabase() ) {
-        // craplog succeeded
-        this->db_edited = true;
+    if ( this->waiter_timer->isActive() ) {
+        this->waiter_timer->stop();
+        this->force_updating_labels = true;
+        this->updatePerfsLabels();
+        this->force_updating_labels = false;
+        // draw the chart
+        this->craplog.makeChart(
+            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->chart_MakeStats_Size );
+        this->db_edited = this->craplog.editedDatabase();
+        // refresh the logs section
+        delete this->waiter_timer;
+        this->waiter_timer = new QTimer(this);
+        this->waiter_timer->setSingleShot( true );
+        connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::afterCraplogFinished);
+        this->waiter_timer->start(1000);
+    } else {
+        this->afterCraplogFinished();
     }
-    if ( this->craplog.getTotalSize() == 0 ) {
-        // no data
-        this->reset_MakeStats_labels();
-    }
-    // clean up temp vars
-    this->craplog.clearDataCollection();
-    this->craplog.logOps.resetPerfData();
+}
 
-    // refresh the logs list
-    this->on_button_LogFiles_RefreshList_clicked();
+void MainWindow::afterCraplogFinished()
+{
     // enable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled( true );
+    this->ui->stacked_Logs_Pages->setEnabled(   true );
     // enable all labels (needed only the first time each session)
     this->ui->icon_MakeStats_Size->setEnabled(  true );
     this->ui->icon_MakeStats_Lines->setEnabled( true );
@@ -2843,8 +2743,12 @@ void MainWindow::craplogFinished()
     this->ui->icon_MakeStats_Speed->setEnabled( true );
     // enable back
     this->setDbWorkingState( false );
-    // get a fresh collection of available stats dates
-    this->refreshStatsDates();
+    if ( this->craplog.editedDatabase() ) {
+        // refresh the logs list
+        this->on_button_LogFiles_RefreshList_clicked();
+        // get a fresh collection of available stats dates
+        this->refreshStatsDates();
+    }
 }
 
 
@@ -2868,7 +2772,7 @@ void MainWindow::refreshStatsDates()
 //// WARN ////
 void MainWindow::checkStatsWarnDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
           && this->ui->box_StatsWarn_Month->currentIndex() >= 0
           && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
@@ -2879,19 +2783,18 @@ void MainWindow::checkStatsWarnDrawable()
             this->ui->button_StatsWarn_Draw->setEnabled( false );
         }
     } else {
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        // db busy
+        this->ui->button_StatsWarn_Draw->setEnabled( false );
     }
 }
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsWarn_Year->clear();
-        if ( index != -1 ) {
-            this->ui->box_StatsWarn_Year->addItems(
-                this->crapview.getYears( this->wsFromIndex( index ) ));
-            this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
-        }
+    this->ui->box_StatsWarn_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsWarn_Year->addItems(
+            this->crapview.getYears( this->wsFromIndex( index ) ));
+        this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
     }
     this->checkStatsWarnDrawable();
 }
@@ -2954,17 +2857,18 @@ void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsWarn()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsWarn);
         this->crapview_timer->start(250);
     }
 }
 void MainWindow::drawStatsWarn()
 {
+    this->ui->table_StatsWarn->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
@@ -2991,7 +2895,7 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
 //// SPEED ////
 void MainWindow::checkStatsSpeedDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
@@ -3002,19 +2906,18 @@ void MainWindow::checkStatsSpeedDrawable()
             this->ui->button_StatsSpeed_Draw->setEnabled( false );
         }
     } else {
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        // db busy
+        this->ui->button_StatsSpeed_Draw->setEnabled( false );
     }
 }
 
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsSpeed_Year->clear();
-        if ( index != -1 ) {
-            this->ui->box_StatsSpeed_Year->addItems(
-                this->crapview.getYears( this->wsFromIndex( index ) ) );
-            this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
-        }
+    this->ui->box_StatsSpeed_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsSpeed_Year->addItems(
+            this->crapview.getYears( this->wsFromIndex( index ) ) );
+        this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -3053,17 +2956,18 @@ void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsSpeed()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsSpeed);
         this->crapview_timer->start(250);
     }
 }
 void MainWindow::drawStatsSpeed()
 {
+    this->ui->table_StatsSpeed->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsSpeed->setRowCount(0);
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
@@ -3086,7 +2990,7 @@ void MainWindow::drawStatsSpeed()
 //// COUNT ////
 void MainWindow::checkStatsCountDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         if ( this->ui->box_StatsCount_Year->currentIndex() >= 0
           && this->ui->box_StatsCount_Month->currentIndex() >= 0
           && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
@@ -3097,20 +3001,19 @@ void MainWindow::checkStatsCountDrawable()
             this->ui->scrollArea_StatsCount->setEnabled( false );
         }
     } else {
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        // db busy
+        this->ui->scrollArea_StatsCount->setEnabled( false );
     }
 }
 
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsCount_Year->clear();
-        if ( index != -1 ) {
-            this->ui->box_StatsCount_Year->addItems(
-                this->crapview.getYears( this->wsFromIndex( index ) ));
-            this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
-            this->resetStatsCountButtons();
-        }
+    this->ui->box_StatsCount_Year->clear();
+    if ( index != -1 ) {
+        this->ui->box_StatsCount_Year->addItems(
+            this->crapview.getYears( this->wsFromIndex( index ) ));
+        this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
+        this->resetStatsCountButtons();
     }
     this->checkStatsCountDrawable();
 }
@@ -3178,108 +3081,109 @@ void MainWindow::resetStatsCountButtons()
     }
 }
 
-void MainWindow::startCountDrawing()
+void MainWindow::makeStatsCount()
 {
     this->setDbWorkingState( true );
     delete this->crapview_timer;
     this->crapview_timer = new QTimer(this);
     this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsCount()));
+    connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsCount);
     this->crapview_timer->start(250);
 }
 
 void MainWindow::on_button_StatsCount_Protocol_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->ui->button_StatsCount_Protocol->setFlat( false );
         this->count_fld = this->ui->button_StatsCount_Protocol->text();
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Method_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Method->text();
         this->ui->button_StatsCount_Method->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Uri_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Uri->text();
         this->ui->button_StatsCount_Uri->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Query_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Query->text();
         this->ui->button_StatsCount_Query->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Response_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Response->text();
         this->ui->button_StatsCount_Response->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Referrer_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Referrer->text();
         this->ui->button_StatsCount_Referrer->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Cookie_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Cookie->text();
         this->ui->button_StatsCount_Cookie->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_UserAgent_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_UserAgent->text();
         this->ui->button_StatsCount_UserAgent->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::on_button_StatsCount_Client_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Client->text();
         this->ui->button_StatsCount_Client->setFlat( false );
-        startCountDrawing();
+        this->makeStatsCount();
     }
 }
 
 void MainWindow::drawStatsCount()
 {
+    this->ui->table_StatsCount->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
@@ -3297,7 +3201,7 @@ void MainWindow::drawStatsCount()
 //// DAY ////
 void MainWindow::checkStatsDayDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         bool aux = true;
         // secondary date (period)
         if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
@@ -3343,30 +3247,27 @@ void MainWindow::checkStatsDayDrawable()
 
     } else {
         // db busy
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        this->ui->button_StatsDay_Draw->setEnabled( false );
     }
 }
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsDay_LogsField->clear();
-        this->ui->box_StatsDay_FromYear->clear();
-        this->ui->box_StatsDay_ToYear->clear();
-        if ( index != -1 ) {
-            // refresh fields
-            this->ui->box_StatsDay_LogsField->addItems(
-                this->crapview.getFields( "Daytime" ));
-            this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
-            // refresh dates
-            QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
-            this->ui->box_StatsDay_FromYear->addItems( years );
-            this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
-            if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
-                this->ui->box_StatsDay_ToYear->addItems( years );
-                this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
-            }
-            years.clear();
+    this->ui->box_StatsDay_LogsField->clear();
+    this->ui->box_StatsDay_FromYear->clear();
+    this->ui->box_StatsDay_ToYear->clear();
+    if ( index != -1 ) {
+        // refresh fields
+        this->ui->box_StatsDay_LogsField->addItems(
+            this->crapview.getFields( "Daytime" ));
+        this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
+        // refresh dates
+        QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
+        this->ui->box_StatsDay_FromYear->addItems( years );
+        this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
+        if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
+            this->ui->box_StatsDay_ToYear->addItems( years );
+            this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
         }
     }
     this->checkStatsDayDrawable();
@@ -3466,12 +3367,12 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsDay()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsDay);
         this->crapview_timer->start(250);
     }
 }
@@ -3506,7 +3407,7 @@ void MainWindow::drawStatsDay()
 //// RELATIONAL ////
 void MainWindow::checkStatsRelatDrawable()
 {
-    if ( ! this->db_working ) {
+    if ( this->dbUsable() ) {
         bool aux = true;
         if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
           && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
@@ -3555,28 +3456,27 @@ void MainWindow::checkStatsRelatDrawable()
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    if ( this->checkDataDB() ) {
-        this->ui->box_StatsRelat_LogsField_1->clear();
-        this->ui->box_StatsRelat_LogsField_2->clear();
-        if ( index != -1 ) {
-            // refresh fields
-            QStringList fields = this->crapview.getFields( "Relational" );
-            this->ui->box_StatsRelat_LogsField_1->addItems( fields );
-            this->ui->box_StatsRelat_LogsField_2->addItems( fields );
-            this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
-            this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
-            // refresh dates
-            QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
-            // from
-            this->ui->box_StatsRelat_FromYear->clear();
-            this->ui->box_StatsRelat_FromYear->addItems( years );
-            this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
-            // to
-            this->ui->box_StatsRelat_ToYear->clear();
-            this->ui->box_StatsRelat_ToYear->addItems( years );
-            this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
-            years.clear();
-        }
+    this->ui->box_StatsRelat_LogsField_1->clear();
+    this->ui->box_StatsRelat_LogsField_2->clear();
+    this->ui->box_StatsRelat_FromYear->clear();
+    this->ui->box_StatsRelat_ToYear->clear();
+    if ( index != -1 ) {
+        // refresh fields
+        QStringList fields = this->crapview.getFields( "Relational" );
+        this->ui->box_StatsRelat_LogsField_1->addItems( fields );
+        this->ui->box_StatsRelat_LogsField_2->addItems( fields );
+        this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
+        this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
+        // refresh dates
+        QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
+        // from
+        this->ui->box_StatsRelat_FromYear->clear();
+        this->ui->box_StatsRelat_FromYear->addItems( years );
+        this->ui->box_StatsRelat_FromYear->setCurrentIndex( 0 );
+        // to
+        this->ui->box_StatsRelat_ToYear->clear();
+        this->ui->box_StatsRelat_ToYear->addItems( years );
+        this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3660,12 +3560,12 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
         delete this->crapview_timer;
         this->crapview_timer = new QTimer(this);
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(drawStatsRelat()));
+        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsRelat);
         this->crapview_timer->start(250);
     }
 }
@@ -3708,84 +3608,77 @@ void MainWindow::drawStatsRelat()
 
 ////////////////
 //// GLOBAL ////
-//
-void MainWindow::makeStatsGlobals()
+
+void MainWindow::drawStatsGlobals()
 {
-    if ( this->checkDataDB() ) {
-        std::vector<std::tuple<QString,QString>> recur_list;
-        std::vector<std::tuple<QString,QString>> traffic_list;
-        std::vector<std::tuple<QString,QString>> perf_list;
-        std::vector<QString> work_list;
+    std::vector<std::tuple<QString,QString>> recur_list;
+    std::vector<std::tuple<QString,QString>> traffic_list;
+    std::vector<std::tuple<QString,QString>> perf_list;
+    std::vector<QString> work_list;
 
-        const bool result = this->crapview.calcGlobals(
-            recur_list, traffic_list, perf_list, work_list,
-            this->glob_ws );
+    const bool result = this->crapview.calcGlobals(
+        recur_list, traffic_list, perf_list, work_list,
+        this->glob_ws );
 
-        if ( result ) {
-            this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
-            this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
-            this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
-            this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
-            this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
-            this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
-            this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
-            this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
+    if ( result ) {
+        this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
+        this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
+        this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
+        this->ui->label_StatsGlob_Recur_Method_Count->setText( std::get<1>( recur_list.at(1) ) );
+        this->ui->label_StatsGlob_Recur_URI_String->setText( std::get<0>( recur_list.at(2) ) );
+        this->ui->label_StatsGlob_Recur_URI_Count->setText( std::get<1>( recur_list.at(2) ) );
+        this->ui->label_StatsGlob_Recur_UserAgent_String->setText( std::get<0>( recur_list.at(3) ) );
+        this->ui->label_StatsGlob_Recur_UserAgent_Count->setText( std::get<1>( recur_list.at(3) ) );
 
-            this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
-            this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
-            this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
-            this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
-            this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
-            this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
+        this->ui->label_StatsGlob_Traffic_Date_String->setText( std::get<0>( traffic_list.at(0) ) );
+        this->ui->label_StatsGlob_Traffic_Date_Count->setText( std::get<1>( traffic_list.at(0) ) );
+        this->ui->label_StatsGlob_Traffic_Day_String->setText( std::get<0>( traffic_list.at(1) ) );
+        this->ui->label_StatsGlob_Traffic_Day_Count->setText( std::get<1>( traffic_list.at(1) ) );
+        this->ui->label_StatsGlob_Traffic_Hour_String->setText( std::get<0>( traffic_list.at(2) ) );
+        this->ui->label_StatsGlob_Traffic_Hour_Count->setText( std::get<1>( traffic_list.at(2) ) );
 
-            this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
-            this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
-            this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
-            this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
-            this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
-            this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
+        this->ui->label_StatsGlob_Perf_Time_Mean->setText( std::get<0>( perf_list.at(0) ) );
+        this->ui->label_StatsGlob_Perf_Time_Max->setText( std::get<1>( perf_list.at(0) ) );
+        this->ui->label_StatsGlob_Perf_Sent_Mean->setText( std::get<0>( perf_list.at(1) ) );
+        this->ui->label_StatsGlob_Perf_Sent_Max->setText( std::get<1>( perf_list.at(1) ) );
+        this->ui->label_StatsGlob_Perf_Received_Mean->setText( std::get<0>( perf_list.at(2) ) );
+        this->ui->label_StatsGlob_Perf_Received_Max->setText( std::get<1>( perf_list.at(2) ) );
 
-            this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
-            this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
-            this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
+        this->ui->label_StatsGlob_Work_Req_Count->setText( work_list.at(0) );
+        this->ui->label_StatsGlob_Work_Time_Count->setText( work_list.at(1) );
+        this->ui->label_StatsGlob_Work_Sent_Count->setText( work_list.at(2) );
 
-            if ( this->glob_ws == "apache" ) {
-                if ( this->ui->button_StatsGlob_Apache->isFlat() ) {
-                    // un-flat
-                    this->ui->button_StatsGlob_Apache->setFlat( false );
-                    this->ui->button_StatsGlob_Nginx->setFlat( true );
-                    this->ui->button_StatsGlob_Iis->setFlat( true );
-                }
-            } else if ( this->glob_ws == "nginx" ) {
-                if ( this->ui->button_StatsGlob_Nginx->isFlat() ) {
-                    // un-flat
-                    this->ui->button_StatsGlob_Nginx->setFlat( false );
-                    this->ui->button_StatsGlob_Apache->setFlat( true );
-                    this->ui->button_StatsGlob_Iis->setFlat( true );
-                }
-            } else if ( this->glob_ws == "iis" ) {
-                if ( this->ui->button_StatsGlob_Iis->isFlat() ) {
-                    // un-flat
-                    this->ui->button_StatsGlob_Iis->setFlat( false );
-                    this->ui->button_StatsGlob_Apache->setFlat( true );
-                    this->ui->button_StatsGlob_Nginx->setFlat( true );
-                }
+        if ( this->glob_ws == "apache" ) {
+            if ( this->ui->button_StatsGlob_Apache->isFlat() ) {
+                // un-flat
+                this->ui->button_StatsGlob_Apache->setFlat( false );
+                this->ui->button_StatsGlob_Nginx->setFlat( true );
+                this->ui->button_StatsGlob_Iis->setFlat( true );
             }
-
-        } else {
-            this->resetStatsGlobals();
+        } else if ( this->glob_ws == "nginx" ) {
+            if ( this->ui->button_StatsGlob_Nginx->isFlat() ) {
+                // un-flat
+                this->ui->button_StatsGlob_Nginx->setFlat( false );
+                this->ui->button_StatsGlob_Apache->setFlat( true );
+                this->ui->button_StatsGlob_Iis->setFlat( true );
+            }
+        } else if ( this->glob_ws == "iis" ) {
+            if ( this->ui->button_StatsGlob_Iis->isFlat() ) {
+                // un-flat
+                this->ui->button_StatsGlob_Iis->setFlat( false );
+                this->ui->button_StatsGlob_Apache->setFlat( true );
+                this->ui->button_StatsGlob_Nginx->setFlat( true );
+            }
         }
-        recur_list.clear(); traffic_list.clear();
-        perf_list.clear();  work_list.clear();
 
     } else {
-        this->resetStatsGlobals();
+        this->resetStatsGlob();
     }
-    // restore
+    // restore db state
     this->setDbWorkingState( false );
 }
 
-void MainWindow::resetStatsGlobals()
+void MainWindow::resetStatsGlob()
 {
     this->ui->label_StatsGlob_Recur_Protocol_String->setText( "-" );
     this->ui->label_StatsGlob_Recur_Protocol_Count->setText( "0" );
@@ -3825,39 +3718,39 @@ void MainWindow::resetStatsGlobals()
 
 
 
-void MainWindow::globalsButtonClicked()
+void MainWindow::makeStatsGlob()
 {
     this->setDbWorkingState( true );
     delete this->crapview_timer;
     this->crapview_timer = new QTimer(this);
     this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, SIGNAL(timeout()), this, SLOT(makeStatsGlobals()));
+    connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsGlobals);
     this->crapview_timer->start(250);
 }
 
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->glob_ws = "apache";
-        this->globalsButtonClicked();
+        this->makeStatsGlob();
     }
 }
 
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->glob_ws = "nginx";
-        this->globalsButtonClicked();
+        this->makeStatsGlob();
     }
 }
 
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-    if ( this->checkDataDB() ) {
+    if ( this->dbUsable() ) {
         this->glob_ws = "iis";
-        this->globalsButtonClicked();
+        this->makeStatsGlob();
     }
 }
 
@@ -4928,7 +4821,7 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 }
 
 // formats
-const int MainWindow::getIisLogsModule()
+const int MainWindow::getIisLogsModule() const
 {
     int module = 0;
     if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
@@ -4947,6 +4840,9 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setEnabled( true );
             this->ui->inLine_ConfIis_Format_String->setFocus();
+            if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->on_button_LogFiles_RefreshList_clicked();
+            }
         }
     }
 }
@@ -4961,6 +4857,9 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
+            if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->on_button_LogFiles_RefreshList_clicked();
+            }
         }
     }
 }
@@ -4975,6 +4874,9 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
+            if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->on_button_LogFiles_RefreshList_clicked();
+            }
         }
     }
 }

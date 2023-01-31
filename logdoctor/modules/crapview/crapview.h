@@ -14,20 +14,22 @@
 /*!
     Performs operations related to the visualization of the statistics
 */
-class Crapview
+class Crapview : public QObject
 {
+    Q_OBJECT
+
 public:
-    Crapview();
+    explicit Crapview();
 
     //! Returns the Dialogs level
-    const int& getDialogsLevel();
+    const int& getDialogsLevel() const;
 
     //! Sets the new Dialogs level
-    void setDialogsLevel( const int& new_level );
+    void setDialogsLevel( const int new_level );
 
 
-    //! Sets the new charts theme to use
-    void setChartsTheme( const int& new_theme_id );
+    /*//! Sets the new charts theme to use
+    void setChartsTheme( const int& new_theme_id );*/
 
 
     //! Sets the new path for the logs Collection database
@@ -39,24 +41,26 @@ public:
 
     //! Parses a filter for a database field with boolean type
     /*!
+        Boolean filters are not locale-dependant,
+        meaning that English syntax must be used (TRUE,FALSE)
         \param field_str The given filter
-        \return The resulting filter to apply at the query
+        \return The resulting filter to apply to the query
     */
-    const QString parseBooleanFilter( const QString& filter_str );
+    const QString parseBooleanFilter( const QString& filter_str ) const;
 
     //! Parses a filter for a log field with integer type
     /*!
         \param field_str The given filter
-        \return The resulting filter to apply at the query
+        \return The resulting filter to apply to the query
     */
-    const QString parseNumericFilter( const QString& filter_str );
+    const QString parseNumericFilter( const QString& filter_str ) const;
 
     //! Parses a filter for a log field with text type
     /*!
         \param field_str The given filter
-        \return The resulting filter to apply at the query
+        \return The resulting filter to apply to the query
     */
-    const QString parseTextualFilter( const QString& filter_str );
+    const QString parseTextualFilter( const QString& filter_str ) const;
 
 
     //! Returns the printable log field corresponding to the given ID
@@ -65,14 +69,14 @@ public:
         \param field_id The ID of the log fiels
         \return The printable field
     */
-    const QString getLogFieldString ( const int& field_id );
+    const QString getLogFieldString ( const int field_id ) const;
 
     //! Returns the log field ID corresponding to the given printable field
     /*!
         \param field_str The log field
         \return The ID of the log field
     */
-    const int getLogFieldID ( const QString& field_str );
+    const int getLogFieldID ( const QString& field_str ) const;
 
 
     //! Returns the month number corresponding to the given printable month
@@ -80,7 +84,7 @@ public:
         \param month_Str The printable month name
         \return The month number
     */
-    const int getMonthNumber( const QString& month_str );
+    const int getMonthNumber( const QString& month_str ) const;
 
 
     //! Refreshes the list of the dates which are available in the database
@@ -95,7 +99,7 @@ public:
         \param web_server The printable Web Server name
         \return The list of yearss which are avaliable
     */
-    const QStringList getYears(  const QString& web_server );
+    const QStringList getYears(  const QString& web_server ) const;
 
     //! Returns le list of available months in the given year, for the given web server
     /*!
@@ -103,7 +107,7 @@ public:
         \param year The year
         \return The list of printable month names which are avaliable
     */
-    const QStringList getMonths( const QString& web_server, const QString& year );
+    const QStringList getMonths( const QString& web_server, const QString& year ) const;
 
     //! Returns le list of available days in the given month and year, for the given web server
     /*!
@@ -112,13 +116,13 @@ public:
         \param month The printable month name
         \return The list of days which are avaliable
     */
-    const QStringList getDays( const QString& web_server, const QString& year, const QString& month );
+    const QStringList getDays( const QString& web_server, const QString& year, const QString& month ) const;
 
     //! Returns all the hours of the day
     /*!
         \return The list of all the hours
     */
-    const QStringList getHours();
+    const QStringList getHours() const;
 
 
     //! Returns a list of the fields for the given tab
@@ -126,7 +130,7 @@ public:
         \param tab The stats tab
         \return The list of fields
     */
-    const QStringList getFields( const std::string& tab );
+    const QStringList getFields( const std::string& tab ) const;
 
 
     //! Updates the database applying the changes which have been made to the table
@@ -136,7 +140,8 @@ public:
     */
     void updateWarn(
         QTableWidget* table,
-        const QString& web_server );
+        const QString& web_server
+    ) const;
 
 
     //! Draws the chart and fills the table for the Warnings stats
@@ -156,7 +161,8 @@ public:
         const QChart::ChartTheme& theme,
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
-        const QString& year, const QString& month, const QString& day, const QString& hour );
+        const QString& year, const QString& month, const QString& day, const QString& hour
+    ) const;
 
 
     //! Draws the chart and fills the table for the Speed stats
@@ -181,7 +187,8 @@ public:
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
-        const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response );
+        const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response
+    ) const;
 
 
     //! Draws the chart and fills the table for the Counts stats
@@ -202,7 +209,8 @@ public:
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
-        const QString& field );
+        const QString& field
+    ) const;
 
 
     //! Draws the chart for the Daytime stats
@@ -227,7 +235,8 @@ public:
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
-        const QString& field, const QString& filter );
+        const QString& field, const QString& filter
+    ) const;
 
 
     //! Draws the chart for the Relational stats
@@ -253,9 +262,10 @@ public:
         const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
-        const QString& to_year, const QString& to_month, const QString& to_day,
+        const QString& to_year,   const QString& to_month,   const QString& to_day,
         const QString& field_1, const QString& filter_1,
-        const QString& field_2, const QString& filter_2 );
+        const QString& field_2, const QString& filter_2
+    ) const;
 
 
     //! Retrieves the data to fill the Globals stats
@@ -272,7 +282,13 @@ public:
         std::vector<std::tuple<QString,QString>>& traffic_list,
         std::vector<std::tuple<QString,QString>>& perf_list,
         std::vector<QString>& work_list,
-        const QString& web_server );
+        const QString& web_server
+    ) const;
+
+
+private slots:
+
+    void sliceClicked( QtCharts::QPieSlice* slice );
 
 
 private:
@@ -286,8 +302,9 @@ private:
     DbQuery dbQuery;
 
     // collection of available dates
-    // { web_server_id : { year : { month_str : [ days ] } } }
-    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> dates;
+    // db_dates_t = std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
+    // { web_server_id : { year : { month : [ days ] } } }
+    stats_dates_t dates;
 
     // collection of available fields, for tabs which needs them
     // { tab : [ fields ] }
@@ -299,50 +316,13 @@ private:
     };
 
 
-    //! Returns a string of the given date in the format YYY-MM-DD
-    /*!
-        \overload const QString printableDate(const int& year, const int& month, const int& day)
-        \param year The year
-        \param month The month
-        \param day The day
-        \return The printable date
-    */
-    const QString printableDate( const QString& year, const int& month, const QString& day );
-
-    //! Returns a string of the given date in the format YYY-MM-DD
-    /*!
-        \param year The year
-        \param month The month
-        \param day The day
-        \return The printable date
-    */
-    const QString printableDate( const int& year, const int& month, const int& day );
-
-    //! Returns a string of the given time in the format HH:MM:SS
-    /*!
-        \param hour The hour
-        \param minut The minute
-        \param second The second
-        \return The printable time
-    */
-    const QString printableTime( const int& hour, const int& minute, const int& second );
-
-    //! Returns a string corresponding to the given value
-    /*!
-        Used to convert numeric booleans [0,1] to string [FALSE,TRUE]
-        \param value The value to convert
-        \return The corresponding printable string
-    */
-    const QString printableWarn( const int& value );
-
-
     // converr Web Servers names to  Web Server IDs
     const QHash<QString, int> WebServer_s2i = {
             {"apache",11}, {"nginx",12}, {"iis",13} };
 
     // convert log fields to log fields IDs
     const QHash<QString, int> LogFields_s2i = {
-            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)), 0},
+            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
             {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
             {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
             {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},

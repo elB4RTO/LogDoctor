@@ -24,7 +24,7 @@ public:
         \param text The message
         \param parent The parent Widget
     */
-    DialogBool( const QString& title, const QString& text, QWidget *parent=nullptr );
+    explicit DialogBool( const QString& title, const QString& text, QWidget *parent=nullptr );
     ~DialogBool();
 
 private slots:

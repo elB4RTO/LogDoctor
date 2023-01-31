@@ -16,7 +16,7 @@ class DonutBreakdown : public QChart
 {
 public:
 
-    DonutBreakdown( QGraphicsItem* parent=nullptr, Qt::WindowFlags wFlags={} );
+    explicit DonutBreakdown( QGraphicsItem* parent=nullptr, Qt::WindowFlags wFlags={} );
 
     //! Adds a slice to the donut
     /*!
@@ -52,7 +52,7 @@ class MainSlice : public QPieSlice
 
 public:
 
-    MainSlice( QPieSeries *breakdownSeries, QObject *parent=0 );
+    explicit MainSlice( QPieSeries *breakdownSeries, QObject *parent=0 );
 
     //! Returns the series
     QPieSeries *breakdownSeries() const;

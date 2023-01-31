@@ -1,19 +1,19 @@
 var searchData=
 [
-  ['deeptypecheck_0',['deepTypeCheck',['../classLogOps.html#a085e70e88d385d30ae1960e55e09fcd6',1,'LogOps']]],
-  ['definefiletype_1',['defineFileType',['../classLogOps.html#a2dfb583b3262c50d54653368d79af3bb',1,'LogOps']]],
+  ['deeptypecheck_0',['deepTypeCheck',['../classLogOps.html#afe1ec862826c06936354cb1c8152ac92',1,'LogOps']]],
+  ['definefiletype_1',['defineFileType',['../classLogOps.html#a8e99ddba252b22504331156160a97e84',1,'LogOps']]],
   ['defineosspec_2',['defineOSspec',['../classMainWindow.html#a190ea12a49c863423ebc169b1f8c92a2',1,'MainWindow']]],
   ['deletereply_3',['deleteReply',['../classCrapup.html#a52cad2625d432f367ca6441ebd35e64b',1,'Crapup']]],
   ['detecticonstheme_4',['detectIconsTheme',['../classMainWindow.html#a5684909fae2173eb30b7a77051042d0b',1,'MainWindow']]],
   ['dialogbool_5',['DialogBool',['../classDialogBool.html#aed40fd288c983c07b3abb7188655cb95',1,'DialogBool']]],
   ['dialogdia_6',['DialogDia',['../classDialogDia.html#ad0be19eb57e41d754b1dcd514b447891',1,'DialogDia']]],
   ['dialogmsg_7',['DialogMsg',['../classDialogMsg.html#a440fa0b48cb5a3a0efdb8005cf44b285',1,'DialogMsg']]],
-  ['digestfile_8',['digestFile',['../classHashOps.html#a413cfb68394bc237a19ebd05113dfdc1',1,'HashOps']]],
-  ['direction_9',['direction',['../classSnake.html#a81efcf9fc2119468d5c7278eaba83f9a',1,'Snake']]],
+  ['digestfile_8',['digestFile',['../classHashOps.html#a2c7011e3592520e4622f63ebefe3ede9',1,'HashOps']]],
+  ['direction_9',['direction',['../classSnake.html#a6152832ec0736c49fa6416ba30c46313',1,'Snake']]],
   ['draw_10',['draw',['../classCrissCross.html#a9f957e38250d4c58f2b232620891cb47',1,'CrissCross']]],
-  ['drawcount_11',['drawCount',['../classCrapview.html#ad6063317acd5a1861d6c8c49ffa4ff7f',1,'Crapview']]],
-  ['drawday_12',['drawDay',['../classCrapview.html#a951d380f509b31ce67661084db6779be',1,'Crapview']]],
-  ['drawrelat_13',['drawRelat',['../classCrapview.html#a22dbc03eaca3f113b42dfb2e6e69d1ba',1,'Crapview']]],
-  ['drawspeed_14',['drawSpeed',['../classCrapview.html#a7f623bc856d367df467d206722d07f99',1,'Crapview']]],
-  ['drawwarn_15',['drawWarn',['../classCrapview.html#aa1dbaf577883d7b24854e40427b172f4',1,'Crapview']]]
+  ['drawcount_11',['drawCount',['../classCrapview.html#a10d66f792d38416b3dd70bdcd7128e8a',1,'Crapview']]],
+  ['drawday_12',['drawDay',['../classCrapview.html#aa8ef798ee899b3758148966cce81fada',1,'Crapview']]],
+  ['drawrelat_13',['drawRelat',['../classCrapview.html#a90a97649d7b14c6e81770055c6b640c0',1,'Crapview']]],
+  ['drawspeed_14',['drawSpeed',['../classCrapview.html#a8049b143b29c3ee2e6b63b21247be46f',1,'Crapview']]],
+  ['drawwarn_15',['drawWarn',['../classCrapview.html#ad42db4ec8e6cf016ede35de8d1efa8a4',1,'Crapview']]]
 ];

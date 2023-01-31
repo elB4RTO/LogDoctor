@@ -225,10 +225,6 @@ LogDoctor の git リポジトリにアクセスし、更新方法に関する�
         <translation type="unfinished">バックアップの更新に失敗しました</translation>
     </message>
     <message>
-        <source>unrecognized entry</source>
-        <translation type="unfinished">認識されないエントリ</translation>
-    </message>
-    <message>
         <source>Failed to read gzipped file</source>
         <translation type="unfinished">Gzip されたファイルの読み取りに失敗しました</translation>
     </message>
@@ -669,6 +665,10 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Failed to create the directory</source>
         <translation type="unfinished">ディレクトリの作成に失敗しました</translation>
+    </message>
+    <message>
+        <source>Unrecognized entry</source>
+        <translation type="unfinished">認識されないエントリ</translation>
     </message>
 </context>
 <context>

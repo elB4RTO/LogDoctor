@@ -119,7 +119,7 @@ void SnakeGame::on_button_Play_clicked()
     this->ui->stackedWidget_GameDisplay->setCurrentIndex( 1 );
     // start playing
     this->game_loop = new QTimer(this);
-    connect(this->game_loop, SIGNAL(timeout()), this, SLOT(processGameLogic()));
+    connect(this->game_loop, &QTimer::timeout, this, &SnakeGame::processGameLogic);
     this->game_loop->start(175);
     this->playing = true;
 }
@@ -319,7 +319,7 @@ void SnakeGame::updateGameScore()
 }
 
 
-void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool& is_adv )
+void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_adv )
 {
     unsigned int x, y, x_, y_;
 

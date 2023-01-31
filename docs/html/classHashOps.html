@@ -89,38 +89,45 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (const int &amp;new_level)</td></tr>
 <tr class="memdesc:a9f10f6c91238d3a4c2d221b2ada54e34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new Dialogs level. <br /></td></tr>
 <tr class="separator:a9f10f6c91238d3a4c2d221b2ada54e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1184284b059b2094b0fc5cbbd1a2050b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#a1184284b059b2094b0fc5cbbd1a2050b">loadUsedHashesLists</a> (const std::string &amp;db_path)</td></tr>
-<tr class="memdesc:a1184284b059b2094b0fc5cbbd1a2050b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the lists of hashes from the database file.  <a href="classHashOps.html#a1184284b059b2094b0fc5cbbd1a2050b">More...</a><br /></td></tr>
-<tr class="separator:a1184284b059b2094b0fc5cbbd1a2050b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a413cfb68394bc237a19ebd05113dfdc1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#a413cfb68394bc237a19ebd05113dfdc1">digestFile</a> (const std::string &amp;file_path)</td></tr>
-<tr class="memdesc:a413cfb68394bc237a19ebd05113dfdc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the hash resulting from the content of the given file.  <a href="classHashOps.html#a413cfb68394bc237a19ebd05113dfdc1">More...</a><br /></td></tr>
-<tr class="separator:a413cfb68394bc237a19ebd05113dfdc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9900aa35ed9c3538586c1c1d97f421d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#aa9900aa35ed9c3538586c1c1d97f421d">hasBeenUsed</a> (const std::string &amp;file_hash, const int &amp;web_server_id)</td></tr>
-<tr class="memdesc:aa9900aa35ed9c3538586c1c1d97f421d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given hash equals one which is already in the list.  <a href="classHashOps.html#aa9900aa35ed9c3538586c1c1d97f421d">More...</a><br /></td></tr>
-<tr class="separator:aa9900aa35ed9c3538586c1c1d97f421d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeaf1ff64dcbec02e16eeec819a477019"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#aeaf1ff64dcbec02e16eeec819a477019">insertUsedHash</a> (QSqlQuery &amp;query, const QString &amp;db_name, const std::string &amp;hash, const int &amp;web_server_id)</td></tr>
-<tr class="memdesc:aeaf1ff64dcbec02e16eeec819a477019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a hashe in the corresponding database table.  <a href="classHashOps.html#aeaf1ff64dcbec02e16eeec819a477019">More...</a><br /></td></tr>
-<tr class="separator:aeaf1ff64dcbec02e16eeec819a477019"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63840ab6e5657c47179eb8667a25e3e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#a63840ab6e5657c47179eb8667a25e3e0">insertUsedHashes</a> (const std::string &amp;db_path, const std::vector&lt; std::string &gt; &amp;hashes, const int &amp;web_server_id)</td></tr>
-<tr class="memdesc:a63840ab6e5657c47179eb8667a25e3e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts multiple hashes in the corresponding database table.  <a href="classHashOps.html#a63840ab6e5657c47179eb8667a25e3e0">More...</a><br /></td></tr>
-<tr class="separator:a63840ab6e5657c47179eb8667a25e3e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d14de0d0eb29db60cd0d13291b3486"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#a26d14de0d0eb29db60cd0d13291b3486">loadUsedHashesLists</a> (const std::string &amp;db_path)</td></tr>
+<tr class="memdesc:a26d14de0d0eb29db60cd0d13291b3486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the lists of hashes from the database file.  <a href="classHashOps.html#a26d14de0d0eb29db60cd0d13291b3486">More...</a><br /></td></tr>
+<tr class="separator:a26d14de0d0eb29db60cd0d13291b3486"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c7011e3592520e4622f63ebefe3ede9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#a2c7011e3592520e4622f63ebefe3ede9">digestFile</a> (const std::string &amp;file_path, std::string &amp;hash) const</td></tr>
+<tr class="memdesc:a2c7011e3592520e4622f63ebefe3ede9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the hash resulting from the content of the given file.  <a href="classHashOps.html#a2c7011e3592520e4622f63ebefe3ede9">More...</a><br /></td></tr>
+<tr class="separator:a2c7011e3592520e4622f63ebefe3ede9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b763c6cbfe781cf0482d14c9c26d5f"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#af6b763c6cbfe781cf0482d14c9c26d5f">hasBeenUsed</a> (const std::string &amp;file_hash, const int &amp;web_server_id) const</td></tr>
+<tr class="memdesc:af6b763c6cbfe781cf0482d14c9c26d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given hash equals one which is already in the list.  <a href="classHashOps.html#af6b763c6cbfe781cf0482d14c9c26d5f">More...</a><br /></td></tr>
+<tr class="separator:af6b763c6cbfe781cf0482d14c9c26d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53fec149a0a74baa04a662df1e9183cc"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashOps.html#a53fec149a0a74baa04a662df1e9183cc">insertUsedHashes</a> (const std::string &amp;db_path, const std::vector&lt; std::string &gt; &amp;hashes, const int &amp;web_server_id)</td></tr>
+<tr class="memdesc:a53fec149a0a74baa04a662df1e9183cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts multiple hashes in the corresponding database table.  <a href="classHashOps.html#a53fec149a0a74baa04a662df1e9183cc">More...</a><br /></td></tr>
+<tr class="separator:a53fec149a0a74baa04a662df1e9183cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classHashOps.html" title="HashOps.">HashOps</a>. </p>
 <p >Operations for the hashes </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a413cfb68394bc237a19ebd05113dfdc1" name="a413cfb68394bc237a19ebd05113dfdc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a413cfb68394bc237a19ebd05113dfdc1">&#9670;&#160;</a></span>digestFile()</h2>
+<a id="a2c7011e3592520e4622f63ebefe3ede9" name="a2c7011e3592520e4622f63ebefe3ede9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c7011e3592520e4622f63ebefe3ede9">&#9670;&#160;</a></span>digestFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string HashOps::digestFile </td>
+          <td class="memname">void HashOps::digestFile </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>file_path</em></td><td>)</td>
+          <td class="paramname"><em>file_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>hash</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -143,14 +150,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (c
 
 </div>
 </div>
-<a id="aa9900aa35ed9c3538586c1c1d97f421d" name="aa9900aa35ed9c3538586c1c1d97f421d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9900aa35ed9c3538586c1c1d97f421d">&#9670;&#160;</a></span>hasBeenUsed()</h2>
+<a id="af6b763c6cbfe781cf0482d14c9c26d5f" name="af6b763c6cbfe781cf0482d14c9c26d5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6b763c6cbfe781cf0482d14c9c26d5f">&#9670;&#160;</a></span>hasBeenUsed()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool HashOps::hasBeenUsed </td>
+          <td class="memname">const bool HashOps::hasBeenUsed </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>file_hash</em>, </td>
@@ -164,7 +171,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (c
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -178,71 +185,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (c
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the hash is already in the list or not </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>hashes </dd></dl>
 
 </div>
 </div>
-<a id="aeaf1ff64dcbec02e16eeec819a477019" name="aeaf1ff64dcbec02e16eeec819a477019"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeaf1ff64dcbec02e16eeec819a477019">&#9670;&#160;</a></span>insertUsedHash()</h2>
+<a id="a53fec149a0a74baa04a662df1e9183cc" name="a53fec149a0a74baa04a662df1e9183cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53fec149a0a74baa04a662df1e9183cc">&#9670;&#160;</a></span>insertUsedHashes()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool HashOps::insertUsedHash </td>
-          <td>(</td>
-          <td class="paramtype">QSqlQuery &amp;&#160;</td>
-          <td class="paramname"><em>query</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const QString &amp;&#160;</td>
-          <td class="paramname"><em>db_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>hash</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>web_server_id</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Inserts a hashe in the corresponding database table. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">db_query</td><td>Query instance, already initialized </td></tr>
-    <tr><td class="paramname">db_name</td><td>The name of the database, eventually used by dialogs </td></tr>
-    <tr><td class="paramname">hash</td><td>The hash to insert </td></tr>
-    <tr><td class="paramname">web_server_id</td><td>The ID of the Web Server which generated the file </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Whether the operation has been successful or not </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classHashOps.html#a63840ab6e5657c47179eb8667a25e3e0" title="Inserts multiple hashes in the corresponding database table.">insertUsedHashes()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a63840ab6e5657c47179eb8667a25e3e0" name="a63840ab6e5657c47179eb8667a25e3e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a63840ab6e5657c47179eb8667a25e3e0">&#9670;&#160;</a></span>insertUsedHashes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool HashOps::insertUsedHashes </td>
+          <td class="memname">const bool HashOps::insertUsedHashes </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>db_path</em>, </td>
@@ -277,18 +230,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (c
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the operation has been successful or not </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classHashOps.html#aeaf1ff64dcbec02e16eeec819a477019" title="Inserts a hashe in the corresponding database table.">insertUsedHash()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a1184284b059b2094b0fc5cbbd1a2050b" name="a1184284b059b2094b0fc5cbbd1a2050b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1184284b059b2094b0fc5cbbd1a2050b">&#9670;&#160;</a></span>loadUsedHashesLists()</h2>
+<a id="a26d14de0d0eb29db60cd0d13291b3486" name="a26d14de0d0eb29db60cd0d13291b3486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26d14de0d0eb29db60cd0d13291b3486">&#9670;&#160;</a></span>loadUsedHashesLists()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool HashOps::loadUsedHashesLists </td>
+          <td class="memname">const bool HashOps::loadUsedHashesLists </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>db_path</em></td><td>)</td>
@@ -305,7 +257,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (c
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the operation has been successful or not </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>hashes </dd></dl>
 
 </div>
 </div>

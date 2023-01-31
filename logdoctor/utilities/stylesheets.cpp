@@ -10,7 +10,7 @@ StyleSec::StyleSec()
 }
 
 
-void StyleSec::getStyleSheet( QString& stylesheet, const QString& icons_theme, const int& theme_id )
+void StyleSec::getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id )
 {
     std::unordered_map<std::string, QString> style_map;
     switch ( theme_id ) {

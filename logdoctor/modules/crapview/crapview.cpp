@@ -1,6 +1,7 @@
 
 #include "crapview.h"
 
+#include "utilities/printables.h"
 #include "utilities/strings.h"
 
 #include <QGraphicsItem>
@@ -12,11 +13,11 @@ Crapview::Crapview()
 }
 
 
-const int& Crapview::getDialogsLevel()
+const int& Crapview::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
-void Crapview::setDialogsLevel( const int& new_level )
+void Crapview::setDialogsLevel( const int new_level )
 {
     this->dialogs_level = new_level;
 }
@@ -28,87 +29,18 @@ void Crapview::setDbPath( const std::string& path )
 }
 
 
-const QString Crapview::printableDate( const QString& year, const int& month, const QString& day )
-{
-    QString date = QString("%1-").arg( year );
-    if ( month < 10 ) {
-        date += QString("0%1-").arg( month );
-    } else {
-        date += QString("%1-").arg( month );
-    }
-    if ( day.size() < 2 ) {
-        date += QString("0%1").arg( day );
-    } else {
-        date += day;
-    }
-    return date;
-}
-
-
-const QString Crapview::printableDate( const int& year, const int& month, const int& day )
-{
-    QString date;
-    if ( year < 10 ) {
-        date += QString("0%1-").arg( year );
-    } else {
-        date += QString("%1-").arg( year );
-    }
-    if ( month < 10 ) {
-        date += QString("0%1-").arg( month );
-    } else {
-        date += QString("%1-").arg( month );
-    }
-    if ( day < 10 ) {
-        date += QString("0%1").arg( day );
-    } else {
-        date += QString("%1").arg( day );
-    }
-    return date;
-}
-
-
-const QString Crapview::printableTime( const int& hour, const int& minute, const int& second )
-{
-    QString time;
-    if ( hour < 10 ) {
-        time += QString("0%1:").arg( hour );
-    } else {
-        time += QString("%1:").arg( hour );
-    }
-    if ( minute < 10 ) {
-        time += QString("0%1:").arg( minute );
-    } else {
-        time += QString("%1:").arg( minute );
-    }
-    if ( second < 10 ) {
-        time += QString("0%1").arg( second );
-    } else {
-        time += QString("%1").arg( second );
-    }
-    return time;
-}
-
-
-const QString Crapview::printableWarn( const int& value )
-{
-    if ( value == 0 ) {
-        return TR::tr( BOOLS__FALSE.c_str() );
-    } else {
-        return TR::tr( BOOLS__TRUE.c_str() );
-    }
-}
-
-
-const QString Crapview::parseBooleanFilter( const QString& filter_str )
+const QString Crapview::parseBooleanFilter( const QString& filter_str ) const
 {
     QString aux = filter_str;
-    aux = aux.replace( TR::tr(BOOLS__TRUE.c_str()), "1", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( TR::tr(BOOLS__FALSE.c_str()),"0", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "NOT TRUE",  "!= 1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "NOT FALSE", "!= 0", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "TRUE",  "1", Qt::CaseSensitivity::CaseInsensitive );
+    aux = aux.replace( "FALSE", "0", Qt::CaseSensitivity::CaseInsensitive );
     return this->parseNumericFilter( aux );
 }
 
 
-const QString Crapview::parseNumericFilter( const QString& filter_str )
+const QString Crapview::parseNumericFilter( const QString& filter_str ) const
 {
     QString final_str = "";
     if ( filter_str.size() > 0 ) {
@@ -157,7 +89,7 @@ const QString Crapview::parseNumericFilter( const QString& filter_str )
 }
 
 
-const QString Crapview::parseTextualFilter( const QString& filter_str )
+const QString Crapview::parseTextualFilter( const QString& filter_str ) const
 {
     QString aux = filter_str;
     if ( filter_str.size() > 0 ) {
@@ -172,25 +104,13 @@ const QString Crapview::parseTextualFilter( const QString& filter_str )
 }
 
 
-void Crapview::refreshDates()
-{
-    std::tuple<bool, std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>> result;
-    this->dbQuery.refreshDates( result );
-    if ( std::get<0>(result) ) {
-        this->dates = std::get<1>(result);
-    }
-}
-void Crapview::clearDates()
-{
-    this->dates.clear();
-}
 
-const QString Crapview::getLogFieldString ( const int& field_id )
+const QString Crapview::getLogFieldString ( const int field_id ) const
 {
     return TR::tr( this->dbQuery.FIELDS.at( field_id ).c_str() );
 }
 
-const int Crapview::getLogFieldID ( const QString& field_str )
+const int Crapview::getLogFieldID ( const QString& field_str ) const
 {
     int f=0;
     for ( const auto& [id,str] : this->dbQuery.FIELDS ) {
@@ -203,7 +123,7 @@ const int Crapview::getLogFieldID ( const QString& field_str )
 }
 
 
-const int Crapview::getMonthNumber( const QString& month_str )
+const int Crapview::getMonthNumber( const QString& month_str ) const
 {
     int m=0;
     for ( const auto& [num,str] : this->dbQuery.MONTHS ) {
@@ -216,21 +136,36 @@ const int Crapview::getMonthNumber( const QString& month_str )
 }
 
 
+void Crapview::refreshDates()
+{
+    Result<stats_dates_t> result;
+    this->dbQuery.refreshDates( result );
+    if ( result ) {
+        this->dates.clear();
+        // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
+        // { web_server_id : { year : { month : [ days ] } } }
+        this->dates = std::move( result.getData() );
+    }
+}
+void Crapview::clearDates()
+{
+    this->dates.clear();
+}
 
-const QStringList Crapview::getYears( const QString& web_server )
+const QStringList Crapview::getYears( const QString& web_server ) const
 {
     QStringList years;
     if ( this->dates.size() > 0 ) {
         const int ws = this->WebServer_s2i.value( web_server );
         if ( this->dates.at( ws ).size() > 0 ) {
             for ( const auto& [year, data] : this->dates.at( ws ) ) {
-                years.push_back( QString::fromStdString( std::to_string( year ) ) );
+                years.push_back( QString::number( year ) );
             }
         }
     }
     return years;
 }
-const QStringList Crapview::getMonths( const QString& web_server, const QString& year )
+const QStringList Crapview::getMonths( const QString& web_server, const QString& year ) const
 {
     QStringList months;
     if ( this->dates.size() > 0 ) {
@@ -246,7 +181,7 @@ const QStringList Crapview::getMonths( const QString& web_server, const QString&
     }
     return months;
 }
-const QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month )
+const QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month ) const
 {
     QStringList days;
     if ( this->dates.size() > 0 ) {
@@ -256,21 +191,22 @@ const QStringList Crapview::getDays( const QString& web_server, const QString& y
             if ( this->dates.at( ws ).at( y ).size() ) {
                 const int m = this->getMonthNumber( month );
                 if ( this->dates.at( ws ).at( y ).at( m ).size() > 0 ) {
-                    for ( const int day : this->dates.at( ws ).at( y ).at( m ) ) {
-                        days.push_back( QString::fromStdString( std::to_string( day ) ) );
-                    }
+                    const auto& d = this->dates.at( ws ).at( y ).at( m );
+                    std::transform( d.cbegin(), d.cend(),
+                                    std::back_inserter( days ),
+                                    [](int day){ return QString::number( day ); } );
                 }
             }
         }
     }
     return days;
 }
-const QStringList Crapview::getHours()
+const QStringList Crapview::getHours() const
 {
     return QStringList({"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 }
 
-const QStringList Crapview::getFields( const std::string& tab )
+const QStringList Crapview::getFields( const std::string& tab ) const
 {
     QStringList list;
     for ( const auto& field : this->fields.at( tab ) ) {
@@ -283,7 +219,14 @@ const QStringList Crapview::getFields( const std::string& tab )
 ////////////////
 //// CHARTS ////
 ////////////////
-void Crapview::updateWarn( QTableWidget* table , const QString& web_server )
+void Crapview::sliceClicked( QtCharts::QPieSlice* slice )
+{
+    slice->setExploded( !slice->isExploded() );
+    slice->setLabelVisible( !slice->isLabelVisible() );
+}
+
+
+void Crapview::updateWarn( QTableWidget* table , const QString& web_server ) const
 {
     std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
     for ( int i=0; i<table->rowCount(); i++ ) {
@@ -297,20 +240,20 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server )
         }
     }
     this->dbQuery.updateWarnings( web_server, updates );
-    updates.clear();
 }
 
-void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour )
+void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour ) const
 {
-    std::tuple<bool, std::vector<std::vector<std::vector<std::vector<QString>>>>> result;
+    Result<stats_warn_items_t> result;
     this->dbQuery.getWarnCounts(
         result,
         web_server,
         year, month, day, hour );
-    if ( std::get<0>(result) ) {
-        // get data
-        // { hour : { 10th_minutes : count } }
-        std::vector<std::vector<std::vector<std::vector<QString>>>> &items = std::get<1>(result);
+    if ( result ) {
+        // std::vector<std::vector<std::vector<std::vector<QString>>>>
+        // day  -> [ hours[ 10th_minutes[ lines[ log_data ] ] ] ]
+        // hour -> [ 10th_minutes[ minute[ lines[ log_data ] ] ] ]
+        auto& items = result.getData();
 
         // bars
         std::vector<std::vector<QBarSet*>> sets;
@@ -318,7 +261,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         // build the bars and the table upon data
         QString date;
         QColor warn_col = QColor( 255, 140, 0, 255 );
-        int norm_count, warn_count, sum_count, max_count=0, aux;
+        int norm_count, warn_count, sum_count, max_count=0, n_rows=0;
         if ( hour.size() == 0 ) {
             // entire day
             for ( int i=0; i<6; i++ ) {
@@ -331,25 +274,34 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
                     const auto& data = items.at( h ).at( m );
                     norm_count = warn_count = 0;
                     for ( const std::vector<QString>& line : data ) {
-                        aux = table->rowCount();
-                        table->insertRow( aux );
-                        table->setItem( aux, 0, new QTableWidgetItem( this->printableWarn( line.at( 0 ).toInt() )));
+                        table->insertRow( n_rows );
+                        table->setItem( n_rows, 0, new QTableWidgetItem( PrintSec::printableBool( line.at( 0 ).toInt() )));
                         if ( line.at( 0 ).toInt() != 0 ) {
-                            table->item( aux, 0 )->setForeground( warn_col );
-                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Checked );
+                            table->item( n_rows, 0 )->setForeground( warn_col );
+                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Checked );
                         } else {
-                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Unchecked );
+                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Unchecked );
                         }
-                        table->setItem( aux, 1, new QTableWidgetItem( this->printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
-                        table->setItem( aux, 2, new QTableWidgetItem( this->printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
+                        table->setItem( n_rows, 1, new QTableWidgetItem( PrintSec::printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
+                        table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
+                        int col = 3;
                         for ( int i=7; i<line.size(); i++ ) {
-                            table->setItem( aux, i-4, new QTableWidgetItem( line.at( i ) ));
+                            QTableWidgetItem* itm;
+                            if ( (col == 7 || col >= 12) && line.at(i).size() > 0 ) {
+                                itm = new QTableWidgetItem();
+                                itm->setData( Qt::DisplayRole, line.at( i ).toInt() );
+                            } else {
+                                itm = new QTableWidgetItem( line.at( i ) );
+                            }
+                            table->setItem( n_rows, col, itm );
+                            col ++;
                         }
                         if ( line.at( 0 ) == "0" ) {
                             norm_count ++;
                         } else {
                             warn_count ++;
                         }
+                        n_rows ++;
                     }
                     sets.at( m ).at( 0 )->append( norm_count );
                     sets.at( m ).at( 1 )->append( warn_count );
@@ -359,7 +311,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
                     }
                 }
             }
-            date = this->printableDate( year, this->getMonthNumber( month ), day );
+            date = PrintSec::printableDate( year, this->getMonthNumber( month ), day );
         } else {
             // 1 hour
             for ( int i=0; i<10; i++ ) {
@@ -372,19 +324,19 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
                     const auto& data = items.at( g ).at( m );
                     norm_count = warn_count = 0;
                     for ( const std::vector<QString>& line : data ) {
-                        aux = table->rowCount();
-                        table->insertRow( aux );
-                        table->setItem( aux, 0, new QTableWidgetItem( this->printableWarn( line.at( 0 ).toInt() )));
+                        n_rows = table->rowCount();
+                        table->insertRow( n_rows );
+                        table->setItem( n_rows, 0, new QTableWidgetItem( PrintSec::printableBool( line.at( 0 ).toInt() )));
                         if ( line.at( 0 ).toInt() != 0 ) {
-                            table->item( aux, 0 )->setForeground( warn_col );
-                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Checked );
+                            table->item( n_rows, 0 )->setForeground( warn_col );
+                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Checked );
                         } else {
-                            table->item( aux, 0 )->setCheckState( Qt::CheckState::Unchecked );
+                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Unchecked );
                         }
-                        table->setItem( aux, 1, new QTableWidgetItem( this->printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
-                        table->setItem( aux, 2, new QTableWidgetItem( this->printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
+                        table->setItem( n_rows, 1, new QTableWidgetItem( PrintSec::printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
+                        table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
                         for ( int i=7; i<line.size(); i++ ) {
-                            table->setItem( aux, i-4, new QTableWidgetItem( line.at( i ) ));
+                            table->setItem( n_rows, i-4, new QTableWidgetItem( line.at( i ) ));
                         }
                         if ( line.at( 0 ) == "0" ) {
                             norm_count ++;
@@ -400,7 +352,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
                     }
                 }
             }
-            date = this->printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour;
+            date = PrintSec::printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour;
         }
         table->verticalHeader()->setVisible( false );
 
@@ -470,32 +422,30 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         // apply the chart to the view
         chart->setChart( b_chart );
         chart->setRenderHint( QPainter::Antialiasing );
-
-        items.clear();
     }
 }
 
 
 
-void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response )
+void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response ) const
 {
-    std::tuple<bool, std::vector<std::tuple<long long, std::vector<QString>>>> result;
+    Result<stats_speed_items_t> result;
     this->dbQuery.getSpeedData(
         result,
         web_server,
         year, month, day,
         protocol, method, uri, query, response );
-    if ( std::get<0>(result) ) {
-        // get data
-        // { hour : { 10th_minutes : count } }
-        std::vector<std::tuple<long long, std::vector<QString>>> &items = std::get<1>(result);
+    if ( result ) {
+        // std::vector<std::tuple<long long, std::vector<QString>>>
+        // [ ( epoch_msec, [ log_data ] ) ]
+        auto& items = result.getData();
 
         // draw the speed chart
         QLineSeries *line = new QLineSeries();
 
         // build the line upon data
-        int i=0, max_i=items.size(), max_t=0, aux;
-        long long time /* xD */, aux_time, t=0, aux_t, count=1;
+        int i=0, max_i=items.size(), value=0, aux_value, max_value=0, n_rows=0;
+        long long time /* xD */, aux_time, count=1;
         time = std::get<0>(items.at(0));
         QDateTime dt;
         std::vector<QString> data;
@@ -504,57 +454,50 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
             // append a value to the chart
             aux_time = std::get<0>(item);
             data = std::get<1>(item);
-            aux_t = data.at( 0 ).toLongLong();
+            aux_value = data.at( 0 ).toInt();
             // append only if the second is different, else sum
             if ( aux_time > time ) {
-                t = t/count;
-                if ( t == 0 ) {
-                    t = 1;
-                }
-                line->append( time, t );
-                if ( t > max_t ) {
-                    max_t = t;
+                value = value/count;
+                line->append( time, value );
+                if ( value > max_value ) {
+                    max_value = value;
                 }
                 time = aux_time;
-                t = aux_t;
+                value = aux_value;
                 count = 1;
                 if ( i == max_i ) {
                     // final
-                    if ( t == 0 ) {
-                        t = 1;
-                    }
-                    line->append( time, t );
-                    if ( t > max_t ) {
-                        max_t = t;
+                    line->append( time, value );
+                    if ( value > max_value ) {
+                        max_value = value;
                     }
                 }
             } else {
                 count ++;
-                t += aux_t;
+                value += aux_value;
                 if ( i == max_i ) {
                     // final
-                    t = t/count;
-                    if ( t == 0 ) {
-                        t = 1;
-                    }
-                    line->append( aux_time, t );
-                    if ( t > max_t ) {
-                        max_t = t;
+                    value = value/count;
+                    line->append( aux_time, value );
+                    if ( value > max_value ) {
+                        max_value = value;
                     }
                 }
             }
             // fill the teble with data
             if ( data.at(0).size() > 0 || data.at(1).size() > 0 || data.at(2).size() > 0 || data.at(3).size() > 0 || data.at(4).size() > 0 || data.at(5).size() > 0 ) {
-                aux = table->rowCount();
-                table->insertRow( aux );
-                table->setItem( aux,  0, new QTableWidgetItem( data.at(0) ));
-                table->setItem( aux,  1, new QTableWidgetItem( data.at(1) ));
-                table->setItem( aux,  2, new QTableWidgetItem( data.at(2) ));
-                table->setItem( aux,  3, new QTableWidgetItem( data.at(3) ));
-                table->setItem( aux,  4, new QTableWidgetItem( data.at(4) ));
-                table->setItem( aux,  5, new QTableWidgetItem( data.at(5) ));
+                table->insertRow( n_rows );
+                auto tt = new QTableWidgetItem();
+                tt->setData( Qt::DisplayRole, aux_value );
+                table->setItem( n_rows, 0, tt );
+                table->setItem( n_rows, 1, new QTableWidgetItem( data.at(1) ));
+                table->setItem( n_rows, 2, new QTableWidgetItem( data.at(2) ));
+                table->setItem( n_rows, 3, new QTableWidgetItem( data.at(3) ));
+                table->setItem( n_rows, 4, new QTableWidgetItem( data.at(4) ));
+                table->setItem( n_rows, 5, new QTableWidgetItem( data.at(5) ));
                 dt = QDateTime::fromMSecsSinceEpoch( aux_time );
-                table->setItem( aux,  6, new QTableWidgetItem( dt.time().toString("hh:mm:ss") ));
+                table->setItem( n_rows, 6, new QTableWidgetItem( dt.time().toString("hh:mm:ss") ));
+                n_rows ++;
             }
         }
         table->verticalHeader()->setVisible( false );
@@ -599,7 +542,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         axisX->setLabelsFont( fonts.at( "main_small" ) );
         axisX->setFormat( "hh:mm" );
         axisX->setTickCount( 25 );
-        axisX->setTitleText( this->printableDate( year, this->getMonthNumber(month), day ) );
+        axisX->setTitleText( PrintSec::printableDate( year, this->getMonthNumber(month), day ) );
         axisX->setTitleFont( fonts.at( "main_small" ) );
         l_chart->addAxis( axisX, Qt::AlignBottom );
         line->attachAxis( axisX );
@@ -607,11 +550,12 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         // set-up the count values axis (Y)
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_t < 8 ) ? max_t : 8 );
-        if ( max_t == 1 ) {
-            max_t = 0;
+        axisY->setTickCount( ( max_value < 8 ) ? max_value : 8 );
+        axisY->setMinorTickCount( 4 );
+        if ( max_value == 1 ) {
+            max_value = 0;
         }
-        axisY->setRange( 0, max_t );
+        axisY->setRange( 0, max_value );
         axisY->setLabelsFont( fonts.at( "main_small" ) );
         l_chart->addAxis( axisY, Qt::AlignLeft );
         line->attachAxis( axisY) ;
@@ -619,53 +563,58 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         // add the chart to the view
         chart->setChart( l_chart );
         chart->setRenderHint(QPainter::Antialiasing);
-
-        items.clear();
     }
 }
 
 
 
-void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field )
+void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field ) const
 {
-    std::tuple<bool, std::vector<std::tuple<QString, int>>> result;
+    Result<stats_count_items_t> result;
     this->dbQuery.getItemsCount(
         result,
         web_server,
         year, month, day,
         field );
-    if ( std::get<0>(result) ) {
-        // get data
-        std::vector<std::tuple<QString, int>> &aux_items = std::get<1>(result);
+    if ( result ) {
+        // std::vector<std::tuple<QString, int>>
+        // [ ( log_item, count ) ]
+        auto& items = result.getData();
 
         // make the pie
         QPieSeries *pie = new QPieSeries();
         // cut off exdceeding elements for the chart
         const int max_items=15;
-        int aux, count, oth_count=0;
+        int count, oth_count=0, n_rows=0;
         QString item;
-        for ( int i=0; i<aux_items.size(); i++ ) {
-            item = std::get<0>( aux_items.at(i) );
-            count = std::get<1>( aux_items.at(i) );
-            if ( i >= max_items ) {
+        // bring items in reverse order
+        stats_count_items_t::const_reverse_iterator iter = items.rbegin();
+        while ( iter != items.rend() ) {
+            item = iter->second;
+            count = iter->first;
+            ++iter;
+            if ( n_rows >= max_items ) {
                 oth_count += count;
             } else {
                 pie->append( item, count );
             }
-            aux = table->rowCount();
-            table->insertRow( aux );
-            table->setItem( aux,  0, new QTableWidgetItem( QString::fromStdString( std::to_string(count) )));
-            table->setItem( aux,  1, new QTableWidgetItem( std::get<0>( aux_items.at(i) ) ));
+            table->insertRow( n_rows );
+            auto ic = new QTableWidgetItem();
+            ic->setData( Qt::DisplayRole, count );
+            table->setItem( n_rows, 0, ic );
+            table->setItem( n_rows, 1, new QTableWidgetItem( item ));
+            n_rows ++;
         }
         table->verticalHeader()->setVisible( false );
-        aux_items.clear();
 
         if ( oth_count > 0 ) {
             pie->append( TR::tr( "Others" ), oth_count );
             QPieSlice *slice = pie->slices().at( pie->count()-1 );
             slice->setBrush( Qt::gray );
         }
-        pie->setLabelsVisible();
+        pie->setPieSize( 0.65 );
+        pie->setLabelsVisible( false );
+        connect( pie, &QPieSeries::clicked, this, &Crapview::sliceClicked );
 
         QChart *p_chart = new QChart();
         p_chart->setTheme( theme );
@@ -681,19 +630,19 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 
 
-void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter )
+void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter ) const
 {
-    std::tuple<bool, std::unordered_map<int, std::unordered_map<int, int>>> result;
+    Result<stats_day_items_t> result;
     this->dbQuery.getDaytimeCounts(
         result,
         web_server,
         from_year, from_month, from_day,
         to_year, to_month, to_day,
         field, filter );
-    if ( std::get<0>(result) ) {
-        // get data
+    if ( result ) {
+        // std::unordered_map<int, std::unordered_map<int, int>>
         // { hour : { 10th_minutes : count } }
-        std::unordered_map<int, std::unordered_map<int, int>> &items = std::get<1>(result);
+        auto& items = result.getData();
 
         // draw the chart
         QString date;
@@ -704,13 +653,13 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         b_20->setColor( col );
         QBarSet *b_30 = new QBarSet( "" );
         if ( to_year.size() == 0 || to_month.size() == 0 || to_day.size() == 0 ) {
-            date = this->printableDate( from_year, this->getMonthNumber(from_month), from_day );
+            date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
         } else {
             date = QString("%1 %2 %3 %4")
                 .arg( TR::tr( "from" ),
-                      this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+                      PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
                       TR::tr( "to" ),
-                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day ) );
+                      PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ) );
         }
         b_30->setColor( col );
         QBarSet *b_40 = new QBarSet( "" );
@@ -799,17 +748,15 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         // apply the chart to the view
         chart->setChart( b_chart );
         chart->setRenderHint( QPainter::Antialiasing );
-
-        items.clear();
     }
 }
 
 
 
-void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 )
+void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 ) const
 {
     bool period = true;
-    std::tuple<bool, std::vector<std::tuple<long long, int>>> result;
+    Result<stats_relat_items_t> result;
     if ( from_year == to_year
       && from_month == to_month
       && from_day == to_day ) {
@@ -830,10 +777,10 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
             field_2, filter_2 );
     }
 
-    if ( std::get<0>(result) ) {
-        // get data
-        // { hour : { 10th_minutes : count } }
-        std::vector<std::tuple<long long, int>> &items = std::get<1>(result);
+    if ( result ) {
+        // std::vector<std::tuple<long long, int>>
+        // [ ( epoch_ms, count ) ]
+        auto& items = result.getData();
 
         // draw the relational chart
         QLineSeries *line = new QLineSeries();
@@ -853,13 +800,13 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         QString date;
         QAreaSeries *area  = new QAreaSeries( line );
         if ( ! period ) {
-            date = this->printableDate( from_year, this->getMonthNumber(from_month), from_day );
+            date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
         } else {
             date = QString("%1 %2 %3 %4")
                 .arg( TR::tr( "from" ),
-                      this->printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+                      PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
                       TR::tr( "to" ),
-                      this->printableDate( to_year, this->getMonthNumber(to_month), to_day ));
+                      PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ));
         }
 
         // color the area
@@ -897,7 +844,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         if ( period ) {
             //axisX->setLabelsVisible( false );
             axisX->setFormat( "yyyy-MM" );
-            int ticks = this->dbQuery.getMonthsCount( from_year, from_month, to_year, to_month );
+            int ticks = this->dbQuery.countMonths( from_year, from_month, to_year, to_month );
             if ( ticks == 1 ) {
                 axisX->setFormat( "yyyy-MM-dd" );
                 ticks = to_day.toInt() - from_day.toInt() +2;
@@ -924,21 +871,19 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         // add the chart to the view
         chart->setChart( a_chart );
         chart->setRenderHint(QPainter::Antialiasing);
-
-        items.clear();
     }
 }
 
 
 // calculate global informations
-const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server )
+const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server ) const
 {
     bool result = false;
 
     if ( this->dates.at( this->WebServer_s2i.value( web_server ) ).size() > 0 ) {
 
         // { { item, count } } // 0:protocol, 1:method, 1:uri, 3:user-agent
-        std::vector<std::unordered_map<QString, int>> recurs = { {}, {}, {}, {} };
+        std::vector<std::unordered_map<QString, unsigned>> recurs = { {}, {}, {}, {} };
         // ( date_str, count )
         std::tuple<QString, int> traf_date;
         // { day_name : total_count }
@@ -968,8 +913,8 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
 
             // max request elements
             for ( int i=0; i<4; i++ ) {
-                int max=0;
-                QString max_str="";
+                unsigned max=0;
+                QString max_str="-";
                 const auto& aux = recurs.at( i );
                 for ( const auto& [s,c] : aux ) {
                     if ( c > max ) {
@@ -1085,10 +1030,6 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
                 work_list.push_back( QString("%1.%2 %3").arg(f).arg(d).arg(sfx) );
             }
         }
-
-        recurs.clear();
-        traf_day.clear(); traf_hour.clear();
-        perf_time.clear(); perf_sent.clear(); perf_receiv.clear();
     }
 
     return result;

@@ -30,43 +30,50 @@ Crapup::Crapup( const int& window_theme_id, const QString& icons_theme, QWidget*
 
 Crapup::~Crapup()
 {
-    delete this->ui;
-    if ( this->reply ) {
-        delete this->reply;
+    if ( this->ui != nullptr ) {
+        delete this->ui;
+        this->ui = nullptr;
     }
-    if ( this->img_timer ) {
+    if ( this->reply != nullptr ) {
+        this->deleteReply();
+    }
+    if ( this->img_timer != nullptr ) {
         delete this->img_timer;
+        this->img_timer = nullptr;
     }
-    if ( this->request_timer ) {
+    if ( this->request_timer != nullptr ) {
         delete this->request_timer;
+        this->request_timer = nullptr;
     }
 }
 
 void Crapup::closeEvent( QCloseEvent* event )
 {
     this->quitting = true;
-    if ( this->img_timer->isActive() ) {
-        this->img_timer->stop();
-    }
-    if ( this->request_timer->isActive() ) {
-        this->request_timer->stop();
-    }
-    if ( this->reply ) {
-        if ( !this->reply->isFinished() ) {
-            this->requestTimeout();
+    if ( this->img_timer != nullptr ) {
+        if ( this->img_timer->isActive() ) {
+            this->img_timer->stop();
         }
+    }
+    if ( this->request_timer != nullptr ) {
+        if ( this->request_timer->isActive() ) {
+            this->request_timer->stop();
+        }
+    }
+    if ( this->reply != nullptr ) {
+        this->requestTimeout();
     }
 }
 
 
-void Crapup::versionCheck( const float& v )
+void Crapup::versionCheck( const float v )
 {
     bool successful = false;
     float version = -1;
     int err = 1;
 
     this->img_timer = new QTimer(this);
-    connect(this->img_timer, SIGNAL(timeout()), this, SLOT(rotateImg()));
+    connect(this->img_timer, &QTimer::timeout, this, &Crapup::rotateImg);
     this->img_timer->start(100);
 
     QByteArray ua = QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+" (version check)");
@@ -93,7 +100,7 @@ void Crapup::versionCheck( const float& v )
         }
         this->request_timer = new QTimer(this);
         this->request_timer->setSingleShot( true );
-        connect(this->request_timer, SIGNAL(timeout()), this, SLOT(requestTimeout()));
+        connect(this->request_timer, &QTimer::timeout, this, &Crapup::requestTimeout);
 
         // set the URL and make the request
         QNetworkRequest request;
@@ -104,8 +111,8 @@ void Crapup::versionCheck( const float& v )
 
         // reply waiter loop
         QEventLoop wait_reply;
-        connect(this->reply, SIGNAL(readyRead()), &wait_reply, SLOT(quit()));
-        connect(this, SIGNAL(abortRequest()), &wait_reply, SLOT(quit()));
+        connect(this->reply, &QNetworkReply::readyRead, &wait_reply, &QEventLoop::quit);
+        connect(this, &Crapup::abortRequest, &wait_reply, &QEventLoop::quit);
 
         // make the request
         this->request_timer->start( this->timeout_msec+1000 );
@@ -254,11 +261,8 @@ void Crapup::requestTimeout()
 
 void Crapup::deleteReply()
 {
-    if ( !this->reply->isFinished() ) {
-        this->reply->abort();
-    }
     if ( this->reply->isOpen() ) {
-        this->reply->close();
+        this->reply->abort();
     }
     delete this->reply;
     this->reply = nullptr;
@@ -278,7 +282,7 @@ void Crapup::rotateImg()
 }
 
 
-void Crapup::getStyleSheet( QString& stylesheet, const int& theme_id )
+void Crapup::getStyleSheet( QString& stylesheet, const int& theme_id ) const
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {

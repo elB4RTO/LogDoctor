@@ -18,30 +18,33 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     // enrich the text
     rich_content.clear();
     rich_content.reserve( content.size() );
-    rich_content += QString("<!DOCTYPE html><html><head></head><body");
+    rich_content += "<!DOCTYPE html><html><head></head><body";
     if ( color_scheme > 0 ) {
-        rich_content += " style=\"background:" + colors.at("background") + "; color:" + colors.at("text") + "\"";
+        rich_content += QString(" style=\"background:%1; color:%2\"")
+            .arg( colors.at("background"), colors.at("text") );
     }
     rich_content += ">";
-    if ( wide_lines == true ) {
+    /*if ( wide_lines == true ) {
         rich_content += "<br/>";
-    }
+    }*/
     QString rich_line="", class_name="";
     std::string sep, fld, fld_str, aux_sep2;
-    bool missing=false;
+    bool missing = false;
     size_t start, stop, i, aux_start, aux_stop,
            line_size, sep_size;
     const size_t n_sep = logs_format.separators.size()-1;
     std::vector<std::string> lines;
     StringOps::splitrip( lines, content );
+    size_t lines_left = lines.size();
     for ( const std::string& line : lines ) {
+        lines_left --;
         // check if the line is commented, usually from IIS logs
         if ( StringOps::startsWith( line, "#" ) && !StringOps::startsWith( logs_format.initial, "#" ) ) {
             rich_line = QString("<p>%1</p>").arg( QString::fromStdString( line ) );
-            if ( wide_lines == true ) {
+            if ( wide_lines ) {
                 rich_line += "<br/>";
             }
-            rich_content.push_back( rich_line );
+            rich_content.append( rich_line );
             continue;
         }
         i = 0;
@@ -134,7 +137,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                 }
 
                 // finally update if needed
-                if ( ok == true && aux_stop >= stop ) {
+                if ( ok && aux_stop >= stop ) {
                     stop = aux_stop;
                     fld_str = StringOps::strip( line.substr(start, stop-start), " " );
                 }
@@ -147,7 +150,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                     fld_str = fld_str.substr( 1, fld_str.size()-1 );
                     rich_line += "[";
                     if ( StringOps::endsWith( fld_str, "]" ) ) {
-                        fld_str = fld_str.substr( 0, fld_str.size()-1 );
+                        fld_str.resize( fld_str.size()-1 );
                         sep = "]" + sep;
                     }
                 }
@@ -181,7 +184,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             }
             rich_line += "</b>";
             // update the stop for the next start
-            if ( missing == true ) {
+            if ( missing ) {
                 stop = aux_stop;
             } else {
                 stop += sep_size;
@@ -192,7 +195,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                 rich_line += QString::fromStdString( logs_format.final );
                 break;
             }
-            if ( missing == true ) {
+            if ( missing ) {
                 missing = false;
                 rich_line += QString::fromStdString( aux_sep2 );
             } else {
@@ -200,13 +203,13 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             }
         }
         rich_line += "</p>";
-        if ( wide_lines == true ) {
+        if ( wide_lines && lines_left > 0 ) {
             rich_line += "<br/>";
         }
-        rich_content.push_back( rich_line );
+        rich_content += rich_line;
     }
     lines.clear();
-    rich_content.push_back("</body></html>");
+    rich_content += "</body></html>";
 }
 
 

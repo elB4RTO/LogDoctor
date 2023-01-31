@@ -44,7 +44,7 @@ DonutBreakdown::DonutBreakdown( QGraphicsItem* parent, Qt::WindowFlags wFlags )
 {
     // create the series for main center pie
     this->m_mainSeries = new QPieSeries();
-    this->m_mainSeries->setPieSize( 0.7 );
+    this->m_mainSeries->setPieSize( 0.6 );
     QChart::addSeries( this->m_mainSeries );
 }
 
@@ -66,8 +66,8 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries* breakdownSeries, const QCol
     mainSlice->setLabelFont( font );
 
     // position and customize the breakdown series
-    breakdownSeries->setPieSize( 0.8 );
-    breakdownSeries->setHoleSize( 0.7 );
+    breakdownSeries->setPieSize( 0.7 );
+    breakdownSeries->setHoleSize( 0.6 );
     breakdownSeries->setLabelsVisible();
     const auto slices = breakdownSeries->slices();
     for (QPieSlice *slice : slices) {

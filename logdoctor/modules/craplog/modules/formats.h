@@ -15,7 +15,7 @@
 class FormatOps
 {
 public:
-    FormatOps();
+    explicit FormatOps();
 
     //! Structure which holds informations about a log format
     struct LogsFormat {
@@ -24,7 +24,7 @@ public:
         std::string final;                   //!< The final separator
         std::vector<std::string> separators; //!< The separators in the middle
         std::vector<std::string> fields;     //!< The fields
-        int new_lines;                       //!< The number of new lines
+        unsigned new_lines;                  //!< The number of new lines
     };
 
 
@@ -35,7 +35,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processApacheFormatString( const std::string& format_string );
+    const LogsFormat processApacheFormatString( const std::string& format_string ) const;
 
     //! Processes the given string to extrapolate the format for Nginx
     /*!
@@ -44,7 +44,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processNginxFormatString( const std::string& format_string );
+    const LogsFormat processNginxFormatString( const std::string& format_string ) const;
 
     //! Processes the given string to extrapolate the format for the IIS
     /*!
@@ -54,7 +54,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processIisFormatString( const std::string& format_string, const int& log_module );
+    const LogsFormat processIisFormatString( const std::string& format_string, const int& log_module ) const;
 
 
     /////////////////
@@ -66,7 +66,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getApacheLogSample( const LogsFormat& log_format );
+    const QString getApacheLogSample( const LogsFormat& log_format ) const;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -74,7 +74,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getNginxLogSample( const LogsFormat& log_format );
+    const QString getNginxLogSample( const LogsFormat& log_format ) const;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -82,7 +82,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getIisLogSample( const LogsFormat& log_format );
+    const QString getIisLogSample( const LogsFormat& log_format ) const;
 
 
 private:
@@ -96,7 +96,7 @@ private:
         \throw LogFormatException
         \see processApacheFormatString()
     */
-    const std::string parseApacheEscapes( const std::string& string, const bool& strftime=false );
+    const std::string parseApacheEscapes( const std::string& string, const bool strftime=false ) const;
 
     //! Parses the escapes (backslashes) and returns the resulting string
     /*!
@@ -106,7 +106,7 @@ private:
         \throw LogFormatException
         \see processNginxFormatString()
     */
-    const std::string parseNginxEscapes( const std::string& string );
+    const std::string parseNginxEscapes( const std::string& string ) const;
 
     //! Conuts how many new lines are there in the format
     /*!
@@ -117,7 +117,7 @@ private:
         \return The number of new lines in a single log line
         \see LogsFormat, processApacheFormatString(), processNginxFormatString()
     */
-    const int countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators );
+    const unsigned countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const;
 
     //! Finds the end of a Nginx log field
     /*!
@@ -126,7 +126,7 @@ private:
         \return The ending poin of the field in the string
         \see processNginxFormatString()
     */
-    const size_t findNginxFieldEnd( const std::string& string, const int& start );
+    const size_t findNginxFieldEnd( const std::string& string, const int start ) const;
 
     //! Checks whether the format string contains invalid characters or not
     /*!
@@ -134,7 +134,7 @@ private:
         \throw LogFormatException
         \see processIisFormatString
     */
-    void checkIisString( const std::string& string );
+    void checkIisString( const std::string& string ) const;
 
 
     /////////////////
@@ -437,7 +437,7 @@ private:
     /////////////
     //// IIS ////
 
-    //!< Access logs fields formats
+    //!< Access logs fields formats (W3C)
     const std::unordered_map<std::string, std::string> IIS_ALF = {
         {"date",             "date_time_utc_d"},
         {"time",             "date_time_utc_t"},
@@ -468,7 +468,7 @@ private:
     const std::unordered_map<std::string, QString> IIS_ALF_SAMPLES = {
         {"NONE",               "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_ncsa",     "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
-        {"date_time_MDYY",     "<b><span style=\"color:#00cc6f\">1/1/00</span></b>"},
+        {"date_time_MDYYYY",   "<b><span style=\"color:#00cc6f\">1/1/2000</span></b>"},
         {"date_time_utc_d",    "<b><span style=\"color:#00cc6f\">2000-01-01</span></b>"},
         {"date_time_utc_t",    "<b><span style=\"color:#00cc6f\">23:59:59</span></b>"},
         {"request_full",       "<b><span style=\"color:#00cc6f\">GET /index.php?query=x HTTP/1.1</span></b>"},

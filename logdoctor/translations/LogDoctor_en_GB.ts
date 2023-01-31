@@ -229,10 +229,6 @@ Please visit LogDoctor&apos;s git repository and follow the instruction about ho
         <translation>Failed to update the backups</translation>
     </message>
     <message>
-        <source>unrecognized entry</source>
-        <translation>unrecognized entry</translation>
-    </message>
-    <message>
         <source>Failed to read gzipped file</source>
         <translation>Failed to read gzipped file</translation>
     </message>
@@ -673,6 +669,10 @@ please follow the instruction on the repository page</translation>
     <message>
         <source>Failed to create the directory</source>
         <translation>Failed to create the directory</translation>
+    </message>
+    <message>
+        <source>Unrecognized entry</source>
+        <translation>Unrecognized entry</translation>
     </message>
 </context>
 <context>

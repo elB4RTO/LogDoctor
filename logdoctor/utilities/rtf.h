@@ -18,7 +18,7 @@ class RichText : public QObject
     Q_OBJECT
 
 public:
-    RichText();
+    explicit RichText();
 
     //! Enriches the content of a log file with HTML/CSS code
     /*!
@@ -31,7 +31,8 @@ public:
         QString& rich_content,
         const std::string& content,
         const FormatOps::LogsFormat& logs_format,
-        TextBrowser& TB );
+        TextBrowser& TB
+    );
 
     //! Provides the default string
     /*!

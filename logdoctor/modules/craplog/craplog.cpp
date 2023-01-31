@@ -4,6 +4,7 @@
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
+#include "utilities/printables.h"
 #include "utilities/strings.h"
 
 #include "modules/dialogs.h"
@@ -11,7 +12,7 @@
 #include "modules/shared.h"
 
 #include "modules/craplog/modules/donuts.h"
-#include "modules/craplog/modules/store.h"
+#include "modules/craplog/modules/worker.h"
 
 #include <QUrl>
 #include <QPainter>
@@ -82,7 +83,7 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-const int& Craplog::getDialogsLevel()
+const int& Craplog::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
@@ -92,11 +93,11 @@ void Craplog::setDialogsLevel( const int& new_level )
     this->hashOps.setDialogLevel( new_level );
 }
 
-const std::string& Craplog::getStatsDatabasePath()
+const std::string& Craplog::getStatsDatabasePath() const
 {
     return this->db_stats_path;
 }
-const std::string& Craplog::getHashesDatabasePath()
+const std::string& Craplog::getHashesDatabasePath() const
 {
     return this->db_hashes_path;
 }
@@ -110,12 +111,12 @@ void Craplog::setHashesDatabasePath( const std::string& path )
     this->db_hashes_path = path + "/hashes.db";
 }
 
-const long& Craplog::getWarningSize()
+const unsigned& Craplog::getWarningSize() const
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const long& new_size )
+void Craplog::setWarningSize(const unsigned& new_size )
 {
     this->warning_size = new_size;
 }
@@ -123,11 +124,11 @@ void Craplog::setWarningSize(const long& new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id )
+const bool& Craplog::isBlacklistUsed( const int& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
-const bool& Craplog::isWarnlistUsed( const int& web_server_id, const int& log_field_id )
+const bool& Craplog::isWarnlistUsed( const int& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
@@ -141,11 +142,11 @@ void Craplog::setWarnlistUsed( const int& web_server_id, const int& log_field_id
     this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
 }
 
-const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id, const int& log_field_id )
+const std::vector<std::string>& Craplog::getBlacklist( const int& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).list;
 }
-const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id )
+const std::vector<std::string>& Craplog::getWarnlist( const int& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).list;
 }
@@ -259,7 +260,7 @@ const int Craplog::warnlistMoveDown( const int& web_server_id, const int& log_fi
     return i;
 }
 
-const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item )
+const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
 {
     std::string sanitized_item;
     switch ( log_field_id ) {
@@ -298,13 +299,13 @@ const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::s
 /////////////////
 //// FORMATS ////
 // get the logs format string
-const std::string& Craplog::getLogsFormatString( const int& web_server_id )
+const std::string& Craplog::getLogsFormatString( const int& web_server_id ) const
 {
     return this->logs_format_strings.at( web_server_id );
 }
 
 // get the logs format
-const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id )
+const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id ) const
 {
     return this->logs_formats.at( web_server_id );
 }
@@ -363,7 +364,7 @@ const bool Craplog::setIisLogFormat( const std::string& format_string, const int
     return success;
 }
 
-const QString Craplog::getLogsFormatSample( const int& web_server_id )
+const QString Craplog::getLogsFormatSample( const int& web_server_id ) const
 {
     QString sample;
     if ( web_server_id == this->APACHE_ID ) {
@@ -387,7 +388,7 @@ void Craplog::setCurrentWSID( const int& web_server_id )
     this->setCurrentLogFormat();
 }
 
-const int& Craplog::getCurrentWSID()
+const int& Craplog::getCurrentWSID() const
 {
     return this->current_WS;
 }
@@ -399,7 +400,7 @@ void Craplog::setCurrentLogFormat()
 }
 
 // get the current access logs format
-const FormatOps::LogsFormat& Craplog::getCurrentLogFormat()
+const FormatOps::LogsFormat& Craplog::getCurrentLogFormat() const
 {
     return this->current_LF;
 }
@@ -407,7 +408,7 @@ const FormatOps::LogsFormat& Craplog::getCurrentLogFormat()
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const int& web_server )
+const std::string& Craplog::getLogsPath( const int& web_server ) const
 {
     return this->logs_paths.at( web_server );
 }
@@ -420,12 +421,12 @@ void Craplog::setLogsPath( const int& web_server, const std::string& new_path )
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-const int Craplog::getLogsListSize() {
+const int Craplog::getLogsListSize() const {
     return this->logs_list.size();
 }
 
 // return the list. rescan if fresh is true
-const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool& fresh )
+const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
 {
     if ( fresh ) {
         this->scanLogsDir();
@@ -435,7 +436,7 @@ const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool& fresh )
 
 
 // return the path of the file matching the given name
-const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name )
+const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
     for ( const Craplog::LogFile& item : this->logs_list ) {
         if ( item.name == file_name ) {
@@ -476,7 +477,7 @@ void Craplog::scanLogsDir()
         successful = false;
     }
     if ( successful ) {
-        int size;
+        unsigned size;
         QString name;
         std::string path;
         // iterate over entries in the logs folder
@@ -484,6 +485,12 @@ void Craplog::scanLogsDir()
             // get the attributes
             path = dir_entry.path().string();
             name = QString::fromStdString( dir_entry.path().filename().string() );
+
+            // match only valid files names
+            if ( ! this->isFileNameValid( name.toStdString() ) ) {
+                continue;
+            }
+
             // check if it is actually a file
             if ( IOutils::checkFile( path ) ) {
                 // it's a file, check the readability
@@ -518,7 +525,7 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            LogOps::LogType log_type = this->logOps.defineFileType(
+            const LogOps::LogType log_type = this->logOps.defineFileType(
                 content, this->logs_formats.at( this->current_WS ) );
             content.clear();
             if ( log_type == LogOps::LogType::Failed ) {
@@ -530,14 +537,9 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            // match only valid files names
-            if ( ! this->isFileNameValid( name.toStdString() ) ) {
-                continue;
-            }
-
             std::string hash;
             try {
-                hash = this->hashOps.digestFile( path );
+                this->hashOps.digestFile( path, hash );
             } catch ( GenericException& e ) {
                 // failed to digest
                 DialogSec::errGeneric( e.what() );
@@ -573,7 +575,7 @@ void Craplog::changeIisLogsBaseNames( const int& module_id )
             throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
     }
 }
-const bool Craplog::isFileNameValid( const std::string& name )
+const bool Craplog::isFileNameValid( const std::string& name ) const
 {
     bool valid = true;
     if ( this->logs_base_names.at( this->current_WS ).starts != "" ) {
@@ -663,141 +665,21 @@ const bool Craplog::isFileNameValid( const std::string& name )
 
 ///////////////
 //// WORKK ////
-void Craplog::startWorking()
-{
-    this->working = true;
-    this->parsing = true;
-    this->proceed = true;
-
-    this->perf_size = 0;
-    this->total_size = 0;
-    this->parsed_size = 0;
-    this->warnlisted_size = 0;
-    this->blacklisted_size = 0;
-    this->total_lines = 0;
-    this->parsed_lines = 0;
-
-    this->data_collection.clear();
-    this->logs_lines.clear();
-    this->used_files_hashes.clear();
-}
-void Craplog::stopWorking()
-{
-    this->working = false;
-    this->parsing = false;
-}
-const bool& Craplog::isWorking()
-{
-    return this->working;
-}
-const bool& Craplog::isParsing()
-{
-    return this->parsing;
-}
-const bool& Craplog::editedDatabase()
-{
-    return this->db_edited;
-}
-
-// performances
-const unsigned int &Craplog::getPerfSize()
-{
-    return this->perf_size;
-}
-/*void Craplog::sumPerfSize( const unsigned& size )
-{
-    this->perf_size   += size;
-    this->parsed_size += size;
-}*/
-const unsigned int &Craplog::getTotalSize()
-{
-    return this->total_size;
-}
-/*const unsigned int &Craplog::getParsedSize()
-{
-    return this->parsed_size;
-}*/
-const unsigned int &Craplog::getParsedLines()
-{
-    return this->parsed_lines;
-}
-
-void Craplog::sumWarningsSize( const unsigned int& size )
-{
-    this->warnlisted_size += size;
-}
-void Craplog::sumBlacklistededSize( const unsigned int& size )
-{
-    this->blacklisted_size += size;
-}
-
-void Craplog::collectPerfData()
-{
-    this->parsed_size  = this->logOps.getParsedSize();
-    this->parsed_lines = this->logOps.getParsedLines();
-    this->perf_size    = this->parsed_size;
-}
-
-void Craplog::clearDataCollection()
-{
-    this->data_collection.clear();
-}
-
-
-void Craplog::run()
-{
-    this->startWorking();
-    try {
-        if ( this->proceed ) {
-            // collect log lines
-            this->joinLogLines();
-        }
-        if ( this->proceed ) {
-            // parse the log lines to fill the collection
-            this->parseLogLines();
-            // finished parsing logs
-            this->parsing = false;
-            this->total_size   = this->logOps.getTotalSize();
-            this->parsed_size  = this->logOps.getParsedSize();
-            this->parsed_lines = this->logOps.getParsedLines();
-            this->perf_size    = this->parsed_size;
-        }
-        // clear log lines data
-        this->logs_lines.clear();
-
-        if ( this->proceed ) {
-            // store the new data
-            this->storeLogLines();
-        }
-
-        if ( this->proceed ) {
-            // succesfully updated the database
-            if ( this->parsed_size > 0 ) {
-                this->db_edited = true;
-            }
-            // insert the hashes of the used files
-            this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
-        }
-        this->used_files_hashes.clear();
-
-    } catch ( GenericException& e ) {
-        DialogSec::errGeneric( e.what() );
-        this->proceed = false;
-
-    } catch ( LogParserException& e ) {
-        DialogSec::errFailedParsingLogs( e.what() );
-        this->proceed = false;
-    }
-
-    this->stopWorking();
-}
-
-
-
 const bool Craplog::checkStuff()
 {
     this->proceed = true;
-    this->log_files_to_use.clear();
+    {
+        size_t l_size = this->logs_list.size();
+        this->log_files_to_use.clear();
+        if ( this->log_files_to_use.capacity() < l_size ) {
+            this->log_files_to_use.reserve( l_size );
+        }
+        this->used_files_hashes.clear();
+        if ( this->used_files_hashes.capacity() < l_size ) {
+            this->used_files_hashes.reserve( l_size );
+        }
+    }
+
     for ( const LogFile& file : this->logs_list ) {
 
         if ( ! this->proceed ) { break; }
@@ -832,31 +714,18 @@ const bool Craplog::checkStuff()
         }
 
         // check if the file respects the warning size
-        if ( this->warning_size >= 0 ) {
+        if ( this->warning_size > 0 ) {
             if ( file.size > this->warning_size ) {
                 // exceeds the warning size
-                QString size_str, msg = file.name;
+                QString msg = file.name;
                 if ( this->dialogs_level >= 1 ) {
-                    std::string size_sfx=" B";
-                    float size = (float)file.size;
-                    if (size > 1024) {
-                        size /= 1024; size_sfx = " KiB";
-                        if (size > 1024) {
-                            size /= 1024; size_sfx = " MiB";
-                        }
-                    }
-                    size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                    msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Size of the file"), size_str, size_sfx.c_str() );
+                    msg += QString("\n\n%1:\n%2").arg(
+                        DialogSec::tr("Size of the file"),
+                        PrintSec::printableSize( file.size ) );
                     if ( this->dialogs_level == 2 ) {
-                        size = (float)this->warning_size;
-                        if (size > 1024) {
-                            size /= 1024; size_sfx = " KiB";
-                            if (size > 1024) {
-                                size /= 1024; size_sfx = " MiB";
-                            }
-                        }
-                        size_str = std::to_string(size).substr(0,std::to_string(size).size()-3).c_str();
-                        msg += QString("\n\n%1:\n%2%3").arg( DialogSec::tr("Warning size parameter"), size_str, size_sfx.c_str() );
+                        msg += QString("\n\n%1:\n%2").arg(
+                            DialogSec::tr("Warning size parameter"),
+                            PrintSec::printableSize( this->warning_size ) );
                     }
                 }
                 const int choice = DialogSec::choiceFileSizeWarning( msg );
@@ -877,7 +746,7 @@ const bool Craplog::checkStuff()
             }
         }
 
-        // check if the statistics' database is fune
+        // check if the databases are fune
         if ( ! CheckSec::checkCollectionDatabase( this->db_stats_path ) ) {
             // checks failed, abort
             this->proceed = false;
@@ -889,234 +758,138 @@ const bool Craplog::checkStuff()
             break;
         }
 
-        this->log_files_to_use.push_back( file );
+        this->log_files_to_use.push_back(
+            std::make_tuple( file.path, file.hash )
+        );
+        this->used_files_hashes.push_back( file.hash );
     }
 
     return this->proceed;
 }
 
 
-void Craplog::joinLogLines()
+void Craplog::startWorking()
 {
-    std::string aux;
-    std::vector<std::string> content;
-    for ( const LogFile& file : this->log_files_to_use ) {
-
-        if ( ! this->proceed ) { break; }
-
-        // collect lines
-        try {
-            // try reading
-            content.clear();
-            aux = "";
-            try {
-                // try as gzip compressed archive first
-                GZutils::readFile( file.path, aux );
-
-            } catch ( const GenericException& ) {
-                // failed closing file pointer
-                throw;
-
-            } catch (...) {
-                // fallback on reading as normal file
-                if ( aux.size() > 0 ) {
-                    aux = "";
-                }
-                IOutils::readFile( file.path, aux );
-            }
-            StringOps::splitrip( content, aux );
-            if ( this->current_WS == this->IIS_ID ) {
-                this->logOps.cleanLines( content );
-            }
-
-        // re-catched in run()
-        } catch ( const GenericException& ) {
-            // failed closing gzip file pointer
-            throw GenericException( QString("%1:\n%2").arg(
-                DialogSec::tr("An error accured while reading the gzipped file"),
-                QString::fromStdString( file.path )
-                ).toStdString() );
-
-        } catch ( const std::ios_base::failure& ) {
-            // failed reading as text
-            throw GenericException( QString("%1:\n%2").arg(
-                DialogSec::tr("An error accured while reading the file"),
-                QString::fromStdString( file.path )
-                ).toStdString() );
-
-        } catch (...) {
-            // failed somehow
-            throw GenericException( QString("%1:\n%2").arg(
-                DialogSec::tr("Something failed while handling the file"),
-                QString::fromStdString( file.path )
-                ).toStdString() );
-        }
-
-        // append to the relative list
-        this->logs_lines.insert( this->logs_lines.end(), content.begin(), content.end() );
-        this->used_files_hashes.push_back( file.hash );
-        this->total_lines += content.size();
+    std::unique_lock<std::mutex> lock( this->mutex );
+    this->proceed = true;
+    this->total_lines  = 0;
+    this->parsed_lines = 0;
+    this->total_size   = 0;
+    this->parsed_size  = 0;
+    this->warnlisted_size  = 0;
+    this->blacklisted_size = 0;
+    // hire a worker
+    CraplogWorker* worker = new CraplogWorker(
+        this->current_WS,
+        this->dialogs_level,
+        this->db_stats_path,
+        this->db_hashes_path,
+        this->logs_formats.at( this->current_WS ),
+        this->blacklists.at( this->current_WS ),
+        this->warnlists.at( this->current_WS ),
+        this->log_files_to_use
+    );
+    QThread* worker_thread = new QThread();
+    worker->moveToThread( worker_thread );
+    // start the worker
+    connect( worker_thread, &QThread::started,
+             worker, &CraplogWorker::work );
+    // worker started parsing
+    connect( worker, &CraplogWorker::startedParsing,
+             this, &Craplog::workerStartedParsing );
+    // worker finished parsing
+    connect( worker, &CraplogWorker::finishedParsing,
+             this, &Craplog::workerFinishedParsing );
+    // receive performance data
+    connect( worker, &CraplogWorker::perfData,
+             this, &Craplog::updatePerfData );
+    // receive chart data, only received when worker has done
+    connect( worker, &CraplogWorker::chartData,
+             this, &Craplog::updateChartData );
+    // worker finished its career
+    connect( worker, &CraplogWorker::done,
+             this, &Craplog::stopWorking );
+    // plan deleting the thread
+    connect( worker, &CraplogWorker::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the worker
+    connect( worker, &CraplogWorker::retire,
+             worker, &CraplogWorker::deleteLater );
+    // make the worker work
+    worker_thread->start();
+}
+void Craplog::stopWorking( const bool successful )
+{
+    this->db_edited = successful;
+    if ( successful ) {
+        // insert the hashes of the used files
+        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
     }
-    aux.clear();
-    content.clear();
-    this->log_files_to_use.clear();
+    emit this->finishedWorking();
+}
+
+const bool Craplog::editedDatabase() const
+{
+    return this->db_edited;
 }
 
 
-void Craplog::parseLogLines()
+const unsigned Craplog::getParsedSize()
 {
-    if ( this-> proceed && this->logs_lines.size() > 0 ) {
-        this->logOps.parseLines(
-            this->data_collection,
-            this->logs_lines,
-            this->logs_formats.at( this->current_WS ) );
-    }
+    std::unique_lock<std::mutex> lock( this->mutex );
+    return this->parsed_size;
+}
+const unsigned Craplog::getParsedLines()
+{
+    std::unique_lock<std::mutex> lock( this->mutex );
+    return this->parsed_lines;
+}
+const QString Craplog::getParsingSpeed()
+{
+    std::unique_lock<std::mutex> lock( this->mutex );
+    auto stop = ( is_parsing )
+        ? std::chrono::system_clock::now()
+        : this->parsing_time_stop;
+    const unsigned secs = std::chrono::duration_cast<std::chrono::milliseconds>(
+        this->parsing_time_start - stop )
+        .count() / -1000000000;
+    return PrintSec::printableSpeed( this->parsed_size, secs );
+}
+
+void Craplog::workerStartedParsing()
+{
+    std::unique_lock<std::mutex> lock( this->mutex );
+    this->is_parsing = true;
+    this->parsing_time_start = std::chrono::system_clock::now();
+}
+void Craplog::workerFinishedParsing()
+{
+    std::unique_lock<std::mutex> lock( this->mutex );
+    this->parsing_time_stop = std::chrono::system_clock::now();
+    this->is_parsing = false;
+}
+const bool Craplog::isParsing() const
+{
+    return this->is_parsing;
+}
+
+void Craplog::updatePerfData( const unsigned parsed_size, const unsigned parsed_lines )
+{
+    std::unique_lock<std::mutex> lock( this->mutex );
+    this->parsed_size  = parsed_size;
+    this->parsed_lines = parsed_lines;
+}
+void Craplog::updateChartData( const unsigned total_size, const unsigned total_lines, const unsigned warnlisted_size, const unsigned blacklisted_size )
+{
+    std::unique_lock<std::mutex> lock( this->mutex );
+    this->total_size  = total_size;
+    this->total_lines = total_lines;
+    this->warnlisted_size  = warnlisted_size;
+    this->blacklisted_size = blacklisted_size;
 }
 
 
-
-void Craplog::storeLogLines()
-{
-    QString db_path = QString::fromStdString( this->db_stats_path );
-    QString db_name = QString::fromStdString( this->db_stats_path.substr( this->db_stats_path.find_last_of( '/' ) + 1 ) );
-
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( db_path );
-
-    if ( ! db.open() ) {
-        // error opening database
-        this->proceed = false;
-        QString err_msg = "";
-        if ( this->dialogs_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
-
-    } else {
-
-        bool successful;
-        try {
-            // ACID transaction
-            if ( ! db.transaction() ) {
-                // error opening database
-                this->proceed = false;
-                QString stmt_msg="", err_msg = "";
-                if ( this->dialogs_level > 0 ) {
-                    stmt_msg = "db.transaction()";
-                    if ( this->dialogs_level == 2 ) {
-                        err_msg = db.lastError().text();
-                    }
-                }
-                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
-            }
-
-            if ( this->proceed && this->data_collection.size() > 0 ) {
-                successful = StoreOps::storeData( db, *this, this->data_collection );
-                this->proceed = successful;
-            }
-
-            if ( this->proceed ) {
-                // commit the transaction
-                if ( ! db.commit() ) {
-                    // error opening database
-                    this->proceed = false;
-                    QString stmt_msg="", err_msg = "";
-                    if ( this->dialogs_level > 0 ) {
-                        stmt_msg = "db.commit()";
-                        if ( this->dialogs_level == 2 ) {
-                            err_msg= db.lastError().text();
-                        }
-                    }
-                    DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
-                }
-            }
-            if ( ! proceed ) {
-                // rollback
-                throw (std::exception());
-            }
-
-        } catch (...) {
-            // wrongthing w3nt some.,.
-            this->proceed = false;
-            bool err_shown = false;
-            // rollback the transaction
-            if ( ! db.rollback() ) {
-                // error rolling back commits
-                QString stmt_msg="", err_msg = "";
-                if ( this->dialogs_level > 0 ) {
-                    stmt_msg = "db.rollback()";
-                    if ( this->dialogs_level == 2 ) {
-                        err_msg = db.lastError().text();
-                    }
-                }
-                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
-                err_shown = true;
-            }
-            if ( ! err_shown ) {
-                // show a message
-                DialogSec::errGeneric( QString("%1\n\n%2").arg(
-                    DialogSec::tr("An error occured while working on the database"),
-                    DialogSec::tr("Aborting") ) );
-            }
-        }
-
-        db.close();
-    }
-
-}
-
-
-const QString Craplog::printableSize( const unsigned int& bytes )
-{
-    std::string size_str, size_sfx=" B";
-    float size = (float)bytes;
-    if (size > 1024) {
-        size /= 1024;
-        size_sfx = " KiB";
-        if (size > 1024) {
-            size /= 1024;
-            size_sfx = " MiB";
-        }
-    }
-    // cut decimals depending on how big the floor is
-    size_str = std::to_string( size );
-    size_t cut_index = size_str.find('.');
-    if ( cut_index == std::string::npos ) {
-        cut_index = size_str.find(',');
-        if ( cut_index == std::string::npos ) {
-            cut_index = 0;
-        }
-    }
-    if ( cut_index != 0 ) {
-        cut_index ++;
-    }
-    short n_decimals = 3;
-    if ( size >= 100 ) {
-        n_decimals = 2;
-        if ( size >= 1000 ) {
-            n_decimals = 1;
-            if ( size >= 10000 ) {
-                n_decimals = 0;
-                cut_index --;
-            }
-        }
-    }
-    if ( cut_index > 0 ) {
-        cut_index += n_decimals;
-        if ( cut_index > size_str.size()-1 ) {
-            cut_index = size_str.size()-1;
-        }
-    }
-    return QString::fromStdString( size_str.substr(0, cut_index ) + size_sfx );
-}
-
-
-void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart )
+void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_map<std::string, QFont>& fonts, QChartView* size_chart ) const
 {
     const QString
         size_chart_name        = TR::tr("Logs Size Breakdown"),
@@ -1127,23 +900,26 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries *parsedSize_donut = new QPieSeries();
-    parsedSize_donut->setName( this->printableSize( this->parsed_size ) );
+    parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size + this->blacklisted_size ) );
+    const unsigned parsed_size = this->parsed_size - this->warnlisted_size;
     parsedSize_donut->append(
-        "P@" + parsed_slice_name + "@" + this->printableSize( this->parsed_size-this->warnlisted_size ),
-        this->parsed_size-this->warnlisted_size );
+        "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
+        parsed_size );
     parsedSize_donut->append(
-        "W@" + warning_slice_name + "@" + this->printableSize( this->warnlisted_size ),
+        "W@" + warning_slice_name + "@" + PrintSec::printableSize( this->warnlisted_size ),
         this->warnlisted_size );
     parsedSize_donut->append(
-        "B@" + blacklisted_slice_name + "@" + this->printableSize( this->blacklisted_size ),
+        "B@" + blacklisted_slice_name + "@" + PrintSec::printableSize( this->blacklisted_size ),
         this->blacklisted_size );
 
     // logs size donut chart
     QPieSeries *ignoredSize_donut = new QPieSeries();
-    ignoredSize_donut->setName( this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ) );
+    const unsigned ignored_size = this->total_size - this->parsed_size - this->blacklisted_size;
+    QString printable_ignored_size = PrintSec::printableSize( ignored_size );
+    ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(
-        "I@#" + ignored_slice_name + "@#" + this->printableSize( this->total_size-this->parsed_size-this->blacklisted_size ),
-        this->total_size-this->parsed_size-this->blacklisted_size );
+        "I@#" + ignored_slice_name + "@#" + printable_ignored_size,
+        ignored_size );
     ignoredSize_donut->setLabelsVisible( false );
 
     DonutBreakdown *sizeBreakdown = new DonutBreakdown();

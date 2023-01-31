@@ -229,10 +229,6 @@ Visita il repository di LogDoctor e segui le istruzioni su come aggiornare</tran
         <translation>Fallimento nell&apos;aggiornare i backups</translation>
     </message>
     <message>
-        <source>unrecognized entry</source>
-        <translation>input non riconosciuto</translation>
-    </message>
-    <message>
         <source>Failed to read gzipped file</source>
         <translation>Lettura del file gzip non riuscita</translation>
     </message>
@@ -673,6 +669,10 @@ per favore segui le istruzioni nella pagina del repository</translation>
     <message>
         <source>Failed to create the directory</source>
         <translation>Creazione della cartella non riuscita</translation>
+    </message>
+    <message>
+        <source>Unrecognized entry</source>
+        <translation>Input non riconosciuto</translation>
     </message>
 </context>
 <context>

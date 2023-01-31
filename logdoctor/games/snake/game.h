@@ -26,7 +26,7 @@ class SnakeGame : public QWidget
     Q_OBJECT
 
 public:
-    SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
+    explicit SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
     ~SnakeGame();
 
 
@@ -110,7 +110,7 @@ private:
     void newSnake_();
 
     //! Checks if a snake will collide with another entity
-    void checkCollision( Snake& snake, Snake& adv_snake, const bool& is_adv );
+    void checkCollision( Snake& snake, Snake& adv_snake, const bool is_adv );
 
 
     //////////////

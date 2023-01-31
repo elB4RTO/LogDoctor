@@ -9,17 +9,17 @@ TextBrowser::TextBrowser()
 
 
 // getters
-const bool& TextBrowser::getWideLinesUsage()
+const bool& TextBrowser::getWideLinesUsage() const
 {
     return this->wide_lines;
 }
 
-const int& TextBrowser::getColorSchemeID()
+const int& TextBrowser::getColorSchemeID() const
 {
     return this->color_scheme_id;
 }
 
-const std::unordered_map<std::string, QString>& TextBrowser::getColorScheme()
+const std::unordered_map<std::string, QString>& TextBrowser::getColorScheme() const
 {
     return this->color_scheme;
 }
@@ -29,12 +29,12 @@ const std::unordered_map<std::string, QString>& TextBrowser::getColorScheme()
     return this->font_size;
 }*/
 
-const QString& TextBrowser::getFontFamily()
+const QString& TextBrowser::getFontFamily() const
 {
     return this->font_family;
 }
 
-const QFont& TextBrowser::getFont()
+const QFont& TextBrowser::getFont() const
 {
     return this->font;
 }
@@ -70,7 +70,7 @@ void TextBrowser::setFont( const QFont& font )
 
 
 // preview
-void TextBrowser::makePreview( QString& content )
+void TextBrowser::makePreview( QString& content ) const
 {
     content += QString("<!DOCTYPE html><html><head></head><body");
     if ( this->color_scheme_id > 0 ) {
@@ -79,9 +79,9 @@ void TextBrowser::makePreview( QString& content )
                   this->color_scheme.at("text") );
     }
     content += ">";
-    if ( wide_lines ) {
+    /*if ( this->wide_lines ) {
         content += "<br/>";
-    }
+    }*/
     for ( int i=0; i<32; i++ ) {
         content += "<p>";
 
@@ -166,7 +166,7 @@ void TextBrowser::makePreview( QString& content )
         content += "</b>";
 
         content += "</p>";
-        if ( this->wide_lines ) {
+        if ( this->wide_lines && i < 31 ) {
             content += "<br/>";
         }
     }

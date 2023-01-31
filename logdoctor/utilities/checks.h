@@ -16,7 +16,7 @@ class CheckSec
 {
 
 public:
-    CheckSec();
+    explicit CheckSec();
 
     //! Checks the structure's integrity of the Collection database
     /*!

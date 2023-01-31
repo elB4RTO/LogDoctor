@@ -9,25 +9,45 @@ Food::Food( const bool& can_move )
     this->x = 0;
     this->y = 0;
 }
+Food::Food( const Food& other )
+{
+    this->x = other.x;
+    this->y = other.y;
+    this->img_egg = other.img_egg;
+    this->img_rat = other.img_rat;
+    this->movable = other.movable;
+    this->image = new QGraphicsPixmapItem( (this->movable) ? this->img_rat : this->img_egg );
+}
+const Food& Food::operator=( const Food& other )
+{
+    if ( this == &other ) return other;
+    this->x = other.x;
+    this->y = other.y;
+    this->img_egg = other.img_egg;
+    this->img_rat = other.img_rat;
+    this->movable = other.movable;
+    this->image = new QGraphicsPixmapItem( (this->movable) ? this->img_rat : this->img_egg );
+    return *this;
+}
 
 
-const unsigned int& Food::X()
+const unsigned int& Food::X() const
 {
     return this->x;
 }
-const unsigned int& Food::Y()
+const unsigned int& Food::Y() const
 {
     return this->y;
 }
 
 
-QGraphicsPixmapItem* Food::getImageItem()
+QGraphicsPixmapItem* Food::getImageItem() const
 {
     return this->image;
 }
 
 
-const bool Food::inTile(  const unsigned int& x, const unsigned int& y  )
+const bool Food::inTile(  const unsigned int x, const unsigned int y  ) const
 {
     if ( this->x == x && this->y == y ) {
         return true;
@@ -37,25 +57,26 @@ const bool Food::inTile(  const unsigned int& x, const unsigned int& y  )
 }
 
 
-void Food::update( const unsigned int& new_x, const unsigned int& new_y ) {
+void Food::update( const unsigned int new_x, const unsigned int new_y )
+{
     this->x = new_x;
     this->y = new_y;
     this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
 }
 
 
-void Food::spawn( Snake& snake, Snake& snake_ )
+void Food::spawn( const Snake& snake, const Snake& snake_ )
 {
     // pick a new random position
-    unsigned int x, y;
+    unsigned int new_x, new_y;
     while (true) {
-        x = rand() % 16;
-        y = rand() % 16;
+        new_x = rand() % 16;
+        new_y = rand() % 16;
         // check it's actually inside the field
-        if ( x < 16 && y < 16 ) {
+        if ( new_x < 16 && new_y < 16 ) {
             // check the tile is empty
-            if ( x != this->x && y != this->y ) {
-                if ( !(snake.inTile( x, y, false ) || snake_.inTile( x, y, false )) ) {
+            if ( new_x != this->x && new_y != this->y ) {
+                if ( !(snake.inTile( new_x, new_y, false ) || snake_.inTile( new_x, new_y, false )) ) {
                     break;
                 }
             }
@@ -63,7 +84,7 @@ void Food::spawn( Snake& snake, Snake& snake_ )
     }
 
     // update to new position
-    this->update( x, y );
+    this->update( new_x, new_y );
 
     // randomly rotate the image
     int rand_ = rand()%4;
@@ -90,7 +111,7 @@ void Food::spawn( Snake& snake, Snake& snake_ )
 }
 
 
-void Food::move( Snake& snake )
+void Food::move( const Snake& snake )
 {
     int move_up    = 0,
         move_down  = 0,
@@ -150,17 +171,17 @@ void Food::move( Snake& snake )
             move_up += 30;
         } else if ( this->y > snake_y ) {
             move_down += 30;
-        } else if ( this->y == snake_y ) {
+        } else /*if ( this->y == snake_y )*/ {
             move_up += 30;
             move_down += 30;
         }
-    } else if ( this->x > snake_x ) {
+    } else /*if ( this->x > snake_x )*/ {
         move_right += 30;
         if ( this->y < snake_y ) {
             move_up += 30;
         } else if ( this->y > snake_y ) {
             move_down += 30;
-        } else if ( this->y == snake_y ) {
+        } else /*if ( this->y == snake_y )*/ {
             move_up += 30;
             move_down += 30;
         }

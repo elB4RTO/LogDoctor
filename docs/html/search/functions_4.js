@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['editeddatabase_0',['editedDatabase',['../classCraplog.html#af7811e4878f27fe0524d87ee65d5a003',1,'Craplog']]],
+  ['editeddatabase_0',['editedDatabase',['../classCraplog.html#a6cabb746e255f911ec2adcad74d5f332',1,'Craplog']]],
   ['endswith_1',['endsWith',['../classStringOps.html#a397c75a4e2713f9ed7a32bf4e7ee64a3',1,'StringOps']]],
   ['endturn_2',['endTurn',['../classCrissCross.html#a3d3d3eeb2b7666c4411c89cf153048e0',1,'CrissCross']]],
   ['enrichlogs_3',['enrichLogs',['../classRichText.html#a131e4cff5f46ce80e83384c2a236ecc9',1,'RichText']]],

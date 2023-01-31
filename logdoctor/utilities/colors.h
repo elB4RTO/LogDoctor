@@ -16,7 +16,7 @@
 class ColorSec
 {
 public:
-    ColorSec();
+    explicit ColorSec();
 
     //! Provides a map with pre-made colors
     static const std::unordered_map<std::string, QColor> getColors();
