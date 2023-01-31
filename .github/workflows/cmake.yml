@@ -18,9 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          #- { os: ubuntu-latest,  arch: gcc_64        }
+          - { os: ubuntu-latest,  arch: gcc_64        }
           - { os: windows-latest, arch: win64_mingw81 }
-          #- { os: macos-latest,   arch: clang_64      }
+          - { os: macos-latest,   arch: clang_64      }
 
     steps:
     - name: Get LogDoctor
@@ -54,13 +54,7 @@ jobs:
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: |
-        ls D:/a/LogDoctor/Qt/Tools/CMake_64
-        ls D:/a/LogDoctor/Qt/Tools/CMake_64/bin
-        ls D:/a/LogDoctor/Qt/Tools/QtCreator
-        ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin
-        ls D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
-        cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe" "-DCMAKE_PREFIX_PATH:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64" "-DQT_DIR:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe" "-DCMAKE_PREFIX_PATH:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64" "-DQT_DIR:PATH=D:/a/LogDoctor/Qt/5.15.2/mingw81_64/lib/cmake/Qt5"
 
 
     - name: Build (NIX)
@@ -69,7 +63,7 @@ jobs:
 
     - name: Build (WIN)
       if: runner.os == 'Windows'
-      run: cmake --build ${{github.workspace}}/build --target ALL_BUILD 
+      run: cmake --build ${{github.workspace}}/build --target all
 
     - name: '#!? (WIN)'
       if: runner.os == 'Windows' && failure()
