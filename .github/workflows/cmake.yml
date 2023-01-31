@@ -45,7 +45,7 @@ jobs:
       uses: myci-actions/export-env-var-powershell@1
       with:
         name: PATH
-        value: $env:PATH;D:/a/LogDoctor/Qt/Tools/CMake_64/bin;D:/a/LogDoctor/Qt/Tools/QtCreator/bin;D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
+        value: $env:PATH;D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
 
 
     - name: Configure CMake (NIX)
