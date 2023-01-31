@@ -42,7 +42,7 @@ jobs:
     
     - name: Append PATHs (WIN)
       if: runner.os == 'Windows'
-      uses: myci-actions/export-env-var-powershell@<version>
+      uses: myci-actions/export-env-var-powershell@1
       with:
         name: PATH
         value: $env:PATH;D:/a/LogDoctor/Qt/Tools/CMake_64/bin;D:/a/LogDoctor/Qt/Tools/QtCreator/bin;D:/a/LogDoctor/Qt/Tools/QtCreator/bin/jom
