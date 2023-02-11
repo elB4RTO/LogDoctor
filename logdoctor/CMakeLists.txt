@@ -74,6 +74,7 @@ set(PROJECT_SOURCES
 
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
+    modules/craplog/modules/lib.h
     modules/craplog/modules/datetime.h
     modules/craplog/modules/datetime.cpp
     modules/craplog/modules/donuts.h
@@ -204,6 +205,7 @@ add_test(
   NAME it_works
   COMMAND LogDoctor
 )
+
 
 # Deb/Flatpak
 if(UNIX AND NOT APPLE)
