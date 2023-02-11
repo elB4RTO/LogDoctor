@@ -80,49 +80,49 @@
         <translation type="unfinished">Vérification des mises à jour</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="177"/>
+        <location filename="../modules/crapup/crapup.cpp" line="166"/>
         <source>Failed to establish a connection</source>
         <translation type="unfinished">Échec de l&apos;établissement d&apos;une connexion</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="180"/>
+        <location filename="../modules/crapup/crapup.cpp" line="169"/>
         <source>Connection error, please try again later</source>
         <translation type="unfinished">Erreur de connexion, veuillez réessayer plus tard</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="184"/>
+        <location filename="../modules/crapup/crapup.cpp" line="173"/>
         <source>Connection timed out</source>
         <translation type="unfinished">La connexion a expiré</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="197"/>
+        <location filename="../modules/crapup/crapup.cpp" line="186"/>
         <source>New version available</source>
         <translation type="unfinished">Nouvelle version disponible</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="198"/>
+        <location filename="../modules/crapup/crapup.cpp" line="187"/>
         <source>A new version is available!
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
         <translation type="unfinished">Une nouvelle version est disponible!
 Veuillez visiter le référentiel git de LogDoctor et suivez les instructions sur la façon de mettre à jour</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="203"/>
+        <location filename="../modules/crapup/crapup.cpp" line="192"/>
         <source>No update found</source>
         <translation type="unfinished">Aucune mise à jour trouvée</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="204"/>
+        <location filename="../modules/crapup/crapup.cpp" line="193"/>
         <source>LogDoctor is up-to-date</source>
         <translation type="unfinished">LogDoctor est à jour</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="208"/>
+        <location filename="../modules/crapup/crapup.cpp" line="197"/>
         <source>:/</source>
         <translation type="unfinished">:/</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="209"/>
+        <location filename="../modules/crapup/crapup.cpp" line="198"/>
         <source>You&apos;re running a version from the future!
 Your version is beyond the current upstream version
 Are you running the original LogDoctor?
@@ -133,33 +133,33 @@ Utilisez-vous le LogDoctor d&apos;origine?
 Veuillez visiter le référentiel de LogDoctor et en obtenir une nouvelle version</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="222"/>
+        <location filename="../modules/crapup/crapup.cpp" line="211"/>
         <source>Version check failed</source>
         <translation type="unfinished">La vérification de la version a échoué</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="225"/>
+        <location filename="../modules/crapup/crapup.cpp" line="214"/>
         <source>An error occured while parsing:
 initial version mark not found</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 marqueur initial pas trouvé</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="230"/>
+        <location filename="../modules/crapup/crapup.cpp" line="219"/>
         <source>An error occured while parsing:
 final version mark not found</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 marqueur final pas trouvé</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="235"/>
+        <location filename="../modules/crapup/crapup.cpp" line="224"/>
         <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 version malformée</translation>
     </message>
     <message>
-        <location filename="../modules/crapup/crapup.cpp" line="240"/>
+        <location filename="../modules/crapup/crapup.cpp" line="229"/>
         <source>An error occured while comparing:
 malformed upstream version</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la comparaison:
@@ -236,66 +236,66 @@ version online malformée</translation>
 <context>
     <name>DialogSec</name>
     <message>
-        <location filename="../mainwindow.cpp" line="631"/>
+        <location filename="../mainwindow.cpp" line="616"/>
         <source>An error occured while reading the configuration file</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la lecture du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="637"/>
+        <location filename="../mainwindow.cpp" line="622"/>
         <source>One of the lists has an invalid item</source>
         <translation type="unfinished">L&apos;une des listes contient un élément non valide</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="642"/>
+        <location filename="../mainwindow.cpp" line="627"/>
         <source>An error occured while parsing configuration file&apos;s data</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse des données du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="733"/>
-        <location filename="../mainwindow.cpp" line="746"/>
+        <location filename="../mainwindow.cpp" line="718"/>
+        <location filename="../mainwindow.cpp" line="731"/>
         <source>Failed to create the configuration file&apos;s directory</source>
         <translation type="unfinished">Échec de la création du répertoire du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="843"/>
+        <location filename="../mainwindow.cpp" line="828"/>
         <source>An error occured while writing the configuration file</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;écriture du fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="846"/>
+        <location filename="../mainwindow.cpp" line="831"/>
         <source>An error occured while preparing the configuration file&apos;s data</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la préparation des données des fichiers de configuration</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="879"/>
-        <location filename="../mainwindow.cpp" line="895"/>
+        <location filename="../mainwindow.cpp" line="864"/>
+        <location filename="../mainwindow.cpp" line="880"/>
         <source>Failed to create the database backups&apos; directory</source>
         <translation type="unfinished">Echec de la création du répertoire des sauvegardes de le database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="922"/>
+        <location filename="../mainwindow.cpp" line="907"/>
         <source>Failed to copy the database file</source>
         <translation type="unfinished">Impossible de copier le fichier de database</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="936"/>
-        <location filename="../mainwindow.cpp" line="955"/>
+        <location filename="../mainwindow.cpp" line="921"/>
+        <location filename="../mainwindow.cpp" line="940"/>
         <source>Failed to update the backups</source>
         <translation type="unfinished">Échec de la mise à jour des sauvegardes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1639"/>
-        <location filename="../mainwindow.cpp" line="1655"/>
+        <location filename="../mainwindow.cpp" line="1624"/>
+        <location filename="../mainwindow.cpp" line="1640"/>
         <source>Failed to create the directory</source>
         <translation type="unfinished">Échec de la création du répertoire</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1841"/>
+        <location filename="../mainwindow.cpp" line="1825"/>
         <source>Unrecognized entry</source>
         <translation type="unfinished">Entrée non reconnue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2530"/>
+        <location filename="../mainwindow.cpp" line="2510"/>
         <source>Failed to read gzipped file</source>
         <translation type="unfinished">Impossible de lire le fichier gzippé</translation>
     </message>
@@ -625,8 +625,8 @@ Veuillez le corriger et réessayer</translation>
         <translation type="unfinished">Le fichier est vide</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/modules/hash.cpp" line="108"/>
-        <location filename="../modules/craplog/modules/worker.cpp" line="158"/>
+        <location filename="../modules/craplog/modules/hash.cpp" line="109"/>
+        <location filename="../modules/craplog/modules/worker.cpp" line="159"/>
         <location filename="../modules/dialogs.cpp" line="470"/>
         <source>An error accured while reading the file</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la lecture du fichier</translation>
@@ -819,7 +819,7 @@ merci de signaler ce problème</translation>
         <translation type="unfinished">Saut</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/modules/worker.cpp" line="555"/>
+        <location filename="../modules/craplog/modules/worker.cpp" line="556"/>
         <location filename="../modules/dialogs.cpp" line="113"/>
         <location filename="../modules/dialogs.cpp" line="178"/>
         <location filename="../modules/dialogs.cpp" line="312"/>
@@ -842,36 +842,36 @@ merci de signaler ce problème</translation>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse de la chaîne de format</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2486"/>
-        <location filename="../modules/craplog/craplog.cpp" line="723"/>
+        <location filename="../mainwindow.cpp" line="2466"/>
+        <location filename="../modules/craplog/craplog.cpp" line="717"/>
         <source>Size of the file</source>
         <translation type="unfinished">Taille du fichier</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="2490"/>
-        <location filename="../modules/craplog/craplog.cpp" line="727"/>
+        <location filename="../mainwindow.cpp" line="2470"/>
+        <location filename="../modules/craplog/craplog.cpp" line="721"/>
         <source>Warning size parameter</source>
         <translation type="unfinished">Paramètre de taille d&apos;avertissement</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/modules/hash.cpp" line="101"/>
-        <location filename="../modules/craplog/modules/worker.cpp" line="151"/>
+        <location filename="../modules/craplog/modules/hash.cpp" line="102"/>
+        <location filename="../modules/craplog/modules/worker.cpp" line="152"/>
         <source>An error accured while reading the gzipped file</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la lecture du fichier gzippé</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/modules/hash.cpp" line="115"/>
-        <location filename="../modules/craplog/modules/worker.cpp" line="165"/>
+        <location filename="../modules/craplog/modules/hash.cpp" line="116"/>
+        <location filename="../modules/craplog/modules/worker.cpp" line="166"/>
         <source>Something failed while handling the file</source>
         <translation type="unfinished">Quelque chose a échoué lors du traitement du fichier</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/modules/worker.cpp" line="554"/>
+        <location filename="../modules/craplog/modules/worker.cpp" line="555"/>
         <source>An error occured while working on the database</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors du travail sur le database</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/modules/hash.cpp" line="258"/>
+        <location filename="../modules/craplog/modules/hash.cpp" line="256"/>
         <source>An error occured while working on the database
 
 Aborting</source>
@@ -1968,35 +1968,35 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <translation type="unfinished">Ouvrir une fenêtre de type bloc-note pour écrire un texte temporaire</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="473"/>
-        <location filename="../mainwindow.cpp" line="481"/>
-        <location filename="../mainwindow.cpp" line="489"/>
-        <location filename="../mainwindow.cpp" line="497"/>
-        <location filename="../mainwindow.cpp" line="521"/>
-        <location filename="../mainwindow.cpp" line="529"/>
-        <location filename="../mainwindow.cpp" line="537"/>
-        <location filename="../mainwindow.cpp" line="545"/>
-        <location filename="../mainwindow.cpp" line="582"/>
-        <location filename="../mainwindow.cpp" line="590"/>
-        <location filename="../mainwindow.cpp" line="598"/>
-        <location filename="../mainwindow.cpp" line="606"/>
+        <location filename="../mainwindow.cpp" line="458"/>
+        <location filename="../mainwindow.cpp" line="466"/>
+        <location filename="../mainwindow.cpp" line="474"/>
+        <location filename="../mainwindow.cpp" line="482"/>
+        <location filename="../mainwindow.cpp" line="506"/>
+        <location filename="../mainwindow.cpp" line="514"/>
+        <location filename="../mainwindow.cpp" line="522"/>
+        <location filename="../mainwindow.cpp" line="530"/>
+        <location filename="../mainwindow.cpp" line="567"/>
+        <location filename="../mainwindow.cpp" line="575"/>
+        <location filename="../mainwindow.cpp" line="583"/>
+        <location filename="../mainwindow.cpp" line="591"/>
         <source>warnlist</source>
         <translation type="unfinished">warnlist</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="505"/>
-        <location filename="../mainwindow.cpp" line="553"/>
-        <location filename="../mainwindow.cpp" line="614"/>
+        <location filename="../mainwindow.cpp" line="490"/>
+        <location filename="../mainwindow.cpp" line="538"/>
+        <location filename="../mainwindow.cpp" line="599"/>
         <source>blacklist</source>
         <translation type="unfinished">blacklist</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4031"/>
+        <location filename="../mainwindow.cpp" line="4012"/>
         <source>copy</source>
         <translation type="unfinished">copie</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="4033"/>
+        <location filename="../mainwindow.cpp" line="4014"/>
         <source>copies</source>
         <translation type="unfinished">copies</translation>
     </message>
@@ -2022,61 +2022,61 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
 <context>
     <name>SnakeGame</name>
     <message>
-        <location filename="../games/snake/game.cpp" line="241"/>
+        <location filename="../games/snake/game.cpp" line="239"/>
         <source>Game Over</source>
         <translation type="unfinished">Game Over</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="375"/>
+        <location filename="../games/snake/game.cpp" line="373"/>
         <source>Your adversary fell in the water!</source>
         <translation type="unfinished">Votre adversaire est tombé dans l&apos;eau!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="375"/>
-        <location filename="../games/snake/game.cpp" line="382"/>
-        <location filename="../games/snake/game.cpp" line="391"/>
+        <location filename="../games/snake/game.cpp" line="373"/>
+        <location filename="../games/snake/game.cpp" line="380"/>
+        <location filename="../games/snake/game.cpp" line="389"/>
         <source>YOU WON!</source>
         <translation type="unfinished">TU AS GAGNÉ!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="376"/>
+        <location filename="../games/snake/game.cpp" line="374"/>
         <source>You fell in the water!</source>
         <translation type="unfinished">Tu es tombé dans l&apos;eau!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="376"/>
-        <location filename="../games/snake/game.cpp" line="383"/>
-        <location filename="../games/snake/game.cpp" line="392"/>
+        <location filename="../games/snake/game.cpp" line="374"/>
+        <location filename="../games/snake/game.cpp" line="381"/>
+        <location filename="../games/snake/game.cpp" line="390"/>
         <source>YOU LOST!</source>
         <translation type="unfinished">TU AS PERDU!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="382"/>
+        <location filename="../games/snake/game.cpp" line="380"/>
         <source>Your adversary ate itself!</source>
         <translation type="unfinished">Votre adversaire s&apos;est mangé!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="391"/>
+        <location filename="../games/snake/game.cpp" line="389"/>
         <source>Your adversary ate you!</source>
         <translation type="unfinished">Votre adversaire vous a mangé!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="383"/>
+        <location filename="../games/snake/game.cpp" line="381"/>
         <source>You ate yourself!</source>
         <translation type="unfinished">Vous vous êtes mangé!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="392"/>
+        <location filename="../games/snake/game.cpp" line="390"/>
         <source>You ate your adversary!</source>
         <translation type="unfinished">Vous avez mangé votre adversaire!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="395"/>
+        <location filename="../games/snake/game.cpp" line="393"/>
         <source>You ate each other!</source>
         <translation type="unfinished">Vous vous êtes mangés réciproquement!</translation>
     </message>
     <message>
-        <location filename="../games/snake/game.cpp" line="395"/>
+        <location filename="../games/snake/game.cpp" line="393"/>
         <source>MATCH IS DRAW!</source>
         <translation type="unfinished">CRAVATE!</translation>
     </message>
@@ -2104,27 +2104,27 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
 <context>
     <name>TR</name>
     <message>
-        <location filename="../modules/craplog/craplog.cpp" line="895"/>
+        <location filename="../modules/craplog/craplog.cpp" line="889"/>
         <source>Logs Size Breakdown</source>
         <translation type="unfinished">Répartition de la Taille des Journaux</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/craplog.cpp" line="896"/>
+        <location filename="../modules/craplog/craplog.cpp" line="890"/>
         <source>Ignored</source>
         <translation type="unfinished">Ignoré</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/craplog.cpp" line="897"/>
+        <location filename="../modules/craplog/craplog.cpp" line="891"/>
         <source>Parsed</source>
         <translation type="unfinished">analysé</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/craplog.cpp" line="898"/>
+        <location filename="../modules/craplog/craplog.cpp" line="892"/>
         <source>Warnings</source>
         <translation type="unfinished">Avertissements</translation>
     </message>
     <message>
-        <location filename="../modules/craplog/craplog.cpp" line="899"/>
+        <location filename="../modules/craplog/craplog.cpp" line="893"/>
         <source>Blacklisted</source>
         <translation type="unfinished">Exclu</translation>
     </message>
