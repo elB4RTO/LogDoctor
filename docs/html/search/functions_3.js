@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['deeptypecheck_0',['deepTypeCheck',['../classLogOps.html#afe1ec862826c06936354cb1c8152ac92',1,'LogOps']]],
-  ['definefiletype_1',['defineFileType',['../classLogOps.html#a8e99ddba252b22504331156160a97e84',1,'LogOps']]],
+  ['deeptypecheck_0',['deepTypeCheck',['../classLogOps.html#ae42f044cd92157e2da613d3ab545ef5a',1,'LogOps']]],
+  ['definefiletype_1',['defineFileType',['../classLogOps.html#a8c8f9b7c7b13f85d30dea328ba5b22c3',1,'LogOps']]],
   ['defineosspec_2',['defineOSspec',['../classMainWindow.html#a190ea12a49c863423ebc169b1f8c92a2',1,'MainWindow']]],
   ['deletereply_3',['deleteReply',['../classCrapup.html#a52cad2625d432f367ca6441ebd35e64b',1,'Crapup']]],
   ['detecticonstheme_4',['detectIconsTheme',['../classMainWindow.html#a5684909fae2173eb30b7a77051042d0b',1,'MainWindow']]],

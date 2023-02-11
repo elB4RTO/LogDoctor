@@ -4,7 +4,7 @@ var searchData=
   ['ends_1',['ends',['../structCraplog_1_1LogName.html#a84d26cb4dc6f8efd87b26ad77d048e15',1,'Craplog::LogName']]],
   ['endswith_2',['endsWith',['../classStringOps.html#a397c75a4e2713f9ed7a32bf4e7ee64a3',1,'StringOps']]],
   ['endturn_3',['endTurn',['../classCrissCross.html#a3d3d3eeb2b7666c4411c89cf153048e0',1,'CrissCross']]],
-  ['enrichlogs_4',['enrichLogs',['../classRichText.html#a131e4cff5f46ce80e83384c2a236ecc9',1,'RichText']]],
+  ['enrichlogs_4',['enrichLogs',['../classRichText.html#a2afa546c743511aba5eb62f4bdc1da09',1,'RichText']]],
   ['errconfdirnotwritable_5',['errConfDirNotWritable',['../classDialogSec.html#a2cfc4ee49a455ec10253c133308e5235',1,'DialogSec']]],
   ['errconffailedwriting_6',['errConfFailedWriting',['../classDialogSec.html#a2dcb66d839d8a10574414d45011e1764',1,'DialogSec']]],
   ['errconffilenotreadable_7',['errConfFileNotReadable',['../classDialogSec.html#ae2a40f972582a40f5c4533cc7e2b425b',1,'DialogSec']]],

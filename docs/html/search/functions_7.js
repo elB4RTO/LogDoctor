@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['hasbeenused_0',['hasBeenUsed',['../classHashOps.html#af6b763c6cbfe781cf0482d14c9c26d5f',1,'HashOps']]],
-  ['helplogsformat_1',['helpLogsFormat',['../classCraphelp.html#ad1b146944b75f1e4a2e0830aafa11865',1,'Craphelp']]],
-  ['helplogsformatdefault_2',['helpLogsFormatDefault',['../classCraphelp.html#afb73eb70dc39ad46a0a67c6cd57c7fa6',1,'Craphelp']]]
+  ['hasbeenused_0',['hasBeenUsed',['../classHashOps.html#a19cb8eb46664186cb1d6632335e4e3ba',1,'HashOps::hasBeenUsed()'],['../classLogFile.html#ad760c0c41945d211d55d05e663df9ecd',1,'LogFile::hasBeenUsed() const']]],
+  ['hash_1',['hash',['../classLogFile.html#a4099a83df4e95c689a36378442cc547c',1,'LogFile']]],
+  ['helplogsformat_2',['helpLogsFormat',['../classCraphelp.html#ad1b146944b75f1e4a2e0830aafa11865',1,'Craphelp']]],
+  ['helplogsformatdefault_3',['helpLogsFormatDefault',['../classCraphelp.html#ae3001b0a06bac8557eb100bcff4cbe89',1,'Craphelp']]]
 ];

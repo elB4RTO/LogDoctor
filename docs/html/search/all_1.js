@@ -8,6 +8,6 @@ var searchData=
   ['blacklistremove_5',['blacklistRemove',['../classCraplog.html#ad762720f210cb068808ae1b6cbc349c9',1,'Craplog']]],
   ['bodypart_6',['BodyPart',['../structBodyPart.html',1,'']]],
   ['breakdownseries_7',['breakdownSeries',['../classMainSlice.html#af44c7a7a24e34fcd30da0ed8c3412e0d',1,'MainSlice']]],
-  ['bwlist_8',['BWlist',['../structCraplog_1_1BWlist.html',1,'Craplog']]],
+  ['bwlist_8',['BWlist',['../structBWlist.html',1,'']]],
   ['bwlistexception_9',['BWlistException',['../classBWlistException.html',1,'']]]
 ];

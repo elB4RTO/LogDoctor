@@ -10,6 +10,5 @@ var searchData=
   ['updateuitheme_7',['updateUiTheme',['../classMainWindow.html#aa38e8aac36ede194803b378725fc123c',1,'MainWindow']]],
   ['updatewarn_8',['updateWarn',['../classCrapview.html#a5936b20a36eb7293eb1ab7dffd5a28cf',1,'Crapview']]],
   ['updatewarnings_9',['updateWarnings',['../classDbQuery.html#a6d86a91f0880d9d7ca27b6b9720257fd',1,'DbQuery']]],
-  ['used_10',['used',['../structCraplog_1_1BWlist.html#a012ed401cb4203ebdd24b149477a6c24',1,'Craplog::BWlist']]],
-  ['used_5falready_11',['used_already',['../structCraplog_1_1LogFile.html#a7ba18b36c9f124b05d85a48f381860e8',1,'Craplog::LogFile']]]
+  ['used_10',['used',['../structBWlist.html#ae0664e12fbe88c18dc830cd93fbe6abc',1,'BWlist']]]
 ];

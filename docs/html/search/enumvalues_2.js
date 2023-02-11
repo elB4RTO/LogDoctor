@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['classic_0',['Classic',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea7fbcdf670873949c8c960b892a303e59',1,'SnakeGame']]]
+  ['hunt_0',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea3bc7db4877c4b58e8b8f5ed74ffc1abb',1,'SnakeGame']]]
 ];
