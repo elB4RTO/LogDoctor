@@ -34,33 +34,25 @@ Crapup::~Crapup()
         delete this->ui;
         this->ui = nullptr;
     }
-    if ( this->reply != nullptr ) {
+    if ( !this->reply.isNull() ) {
         this->deleteReply();
-    }
-    if ( this->img_timer != nullptr ) {
-        delete this->img_timer;
-        this->img_timer = nullptr;
-    }
-    if ( this->request_timer != nullptr ) {
-        delete this->request_timer;
-        this->request_timer = nullptr;
     }
 }
 
 void Crapup::closeEvent( QCloseEvent* event )
 {
     this->quitting = true;
-    if ( this->img_timer != nullptr ) {
+    if ( !this->img_timer.isNull() ) {
         if ( this->img_timer->isActive() ) {
             this->img_timer->stop();
         }
     }
-    if ( this->request_timer != nullptr ) {
+    if ( !this->request_timer.isNull() ) {
         if ( this->request_timer->isActive() ) {
             this->request_timer->stop();
         }
     }
-    if ( this->reply != nullptr ) {
+    if ( !this->reply.isNull() ) {
         this->requestTimeout();
     }
 }
@@ -72,8 +64,8 @@ void Crapup::versionCheck( const float v )
     float version = -1;
     int err = 1;
 
-    this->img_timer = new QTimer(this);
-    connect(this->img_timer, &QTimer::timeout, this, &Crapup::rotateImg);
+    this->img_timer.reset( new QTimer(this) );
+    connect( this->img_timer.get(), &QTimer::timeout, this, &Crapup::rotateImg );
     this->img_timer->start(100);
 
     QByteArray ua = QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+" (version check)");
@@ -95,24 +87,21 @@ void Crapup::versionCheck( const float v )
         this->request_aborted = false;
 
         // request timeout timer
-        if ( this->request_timer ) {
-            delete this->request_timer;
-        }
-        this->request_timer = new QTimer(this);
+        this->request_timer.reset( new QTimer(this) );
         this->request_timer->setSingleShot( true );
-        connect(this->request_timer, &QTimer::timeout, this, &Crapup::requestTimeout);
+        connect( this->request_timer.get(), &QTimer::timeout, this, &Crapup::requestTimeout );
 
         // set the URL and make the request
         QNetworkRequest request;
         request.setRawHeader( "User-Agent", ua );
         request.setUrl( QUrl( URL.c_str() ) );
         request.setTransferTimeout( this->timeout_msec );
-        this->reply = networkMgr.get( request );
+        this->reply.reset( networkMgr.get( request ) );
 
         // reply waiter loop
         QEventLoop wait_reply;
-        connect(this->reply, &QNetworkReply::readyRead, &wait_reply, &QEventLoop::quit);
-        connect(this, &Crapup::abortRequest, &wait_reply, &QEventLoop::quit);
+        connect( this->reply.get(), &QNetworkReply::readyRead, &wait_reply, &QEventLoop::quit );
+        connect( this, &Crapup::abortRequest, &wait_reply, &QEventLoop::quit );
 
         // make the request
         this->request_timer->start( this->timeout_msec+1000 );
@@ -126,7 +115,7 @@ void Crapup::versionCheck( const float v )
         if ( this->request_timer->isActive() ) {
             this->request_timer->stop();
         }
-        if ( !this->reply ) {
+        if ( this->reply.isNull() ) {
             err = 2;
             continue;
         }
@@ -165,7 +154,7 @@ void Crapup::versionCheck( const float v )
             }
         }
     }
-    if ( this-> reply ) {
+    if ( !this->reply.isNull() ) {
         this->deleteReply();
     }
     networkMgr.disconnect();
@@ -264,8 +253,7 @@ void Crapup::deleteReply()
     if ( this->reply->isOpen() ) {
         this->reply->abort();
     }
-    delete this->reply;
-    this->reply = nullptr;
+    this->reply.reset();
 }
 
 

@@ -79,8 +79,13 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->listLogFiles->header()->resizeSection(0,200);
     this->ui->listLogFiles->header()->resizeSection(1,100);
 
-    // blocknote
-    this->crapnote->setFont( this->FONTS.at( "main" ) );
+    // text browser's default message
+    {
+        QString rich_text;
+        RichText::richLogsDefault( rich_text );
+        this->ui->textLogFiles->setText( rich_text );
+        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
+    }
 
 
     //////////////
@@ -110,8 +115,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     /////////////////
     //// CRAPLOG ////
-    connect(this, &MainWindow::runCraplog, &this->craplog, &Craplog::startWorking);
-    connect(&this->craplog, &Craplog::finishedWorking, this, &MainWindow::craplogFinished);
+    connect( this, &MainWindow::runCraplog, &this->craplog, &Craplog::startWorking);
+    connect( &this->craplog, &Craplog::finishedWorking, this, &MainWindow::craplogFinished);
 
 
     ///////////////////
@@ -221,19 +226,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->on_box_ConfIis_Blacklist_Field_currentTextChanged( this->ui->box_ConfIis_Blacklist_Field->currentText() );
 
 
-    // blocknote's font and colors
-    this->crapnote->setTextFont( this->TB.getFont() );
-    this->crapnote->setColorScheme( this->TB.getColorSchemeID() );
-
-    // text browser's default message
-    {
-        QString rich_text;
-        RichText::richLogsDefault( rich_text );
-        this->ui->textLogFiles->setText( rich_text );
-        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
-    }
-
-
     ///////////////////
     //// INTERFACE ////
     this->updateUiLanguage();
@@ -243,22 +235,15 @@ MainWindow::MainWindow(QWidget *parent)
     ///////////////
     //// START ////
     // get a fresh list of LogFiles
-    this->waiter_timer = new QTimer(this);
-    connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::waitActiveWindow);
+    this->waiter_timer.reset( new QTimer(this) );
+    connect( this->waiter_timer.get(), &QTimer::timeout,
+             this, &MainWindow::waitActiveWindow);
     this->waiter_timer->start(250);
 }
 
 MainWindow::~MainWindow()
 {
     delete this->ui;
-    delete this->waiter_timer;
-    delete this->crapview_timer;
-    delete this->craphelp;
-    delete this->crapnote;
-    delete this->crapinfo;
-    delete this->crapup;
-    delete this->crisscross;
-    delete this->snake;
 }
 
 void MainWindow::closeEvent( QCloseEvent *event )
@@ -369,7 +354,7 @@ void MainWindow::readConfigs()
         try {
             // reset the lists when a config file is found
             for ( int w=this->APACHE_ID; w<=this->IIS_ID; w++ ) {
-                for ( const int& f : std::vector<int>({11,12,20,21}) ) {
+                for ( const int& f : {11,12,20,21} ) {
                     this->craplog.setWarnlist( w, f, {} );
                 }
                 this->craplog.setBlacklist( w, 20, {} );
@@ -1589,7 +1574,7 @@ void MainWindow::makeInitialChecks()
 
     if ( ok ) {
         // check LogDoctor's folders paths
-        for ( const std::string& path : std::vector<std::string>({this->parentPath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path}) ) {
+        for ( const std::string& path : {this->parentPath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path} ) {
             if ( IOutils::exists( path ) ) {
                 if ( IOutils::isDir( path ) ) {
                     if ( ! IOutils::checkDir( path, true ) ) {
@@ -1819,9 +1804,8 @@ void MainWindow::showHelp( const std::string& file_name )
     if ( IOutils::exists( path ) ) {
         if ( IOutils::isFile( path ) ) {
             if ( IOutils::checkFile( path, true ) ) {
-                // everything ok, delete the old help window and open a new one
-                delete this->craphelp;
-                this->craphelp = new Craphelp();
+                // everything ok, open a new window
+                this->craphelp.reset( new Craphelp() );
                 this->craphelp->helpLogsFormat(
                     path,
                     this->TB.getFont(),
@@ -1848,8 +1832,7 @@ void MainWindow::showHelp( const std::string& file_name )
     }
     if ( fallback ) {
         // help file not found for the current locale, fallback to the default version
-        delete this->craphelp;
-        this->craphelp = new Craphelp();
+        this->craphelp.reset( new Craphelp() );
         this->craphelp->helpLogsFormatDefault(
             file_name,
             this->TB.getFont(),
@@ -1943,12 +1926,11 @@ void MainWindow::menu_actionPortuguesBr_triggered()
 // use a tool
 void MainWindow::menu_actionBlockNote_triggered()
 {
-    if ( this->crapnote->isVisible() ) {
+    if ( !this->crapnote.isNull() && this->crapnote->isVisible() ) {
         this->crapnote->activateWindow();
 
     } else {
-        delete this->crapnote;
-        this->crapnote = new Crapnote();
+        this->crapnote.reset( new Crapnote() );
         this->crapnote->setTextFont( this->TB.getFont() );
         this->crapnote->setColorScheme( this->TB.getColorSchemeID() );
         this->crapnote->show();
@@ -1957,26 +1939,24 @@ void MainWindow::menu_actionBlockNote_triggered()
 
 void MainWindow::menu_actionInfos_triggered()
 {
-    delete this->crapinfo;
-    this->crapinfo = new Crapinfo(
+    this->crapinfo.reset( new Crapinfo(
         this->window_theme_id,
         QString::number( this->version ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->configs_path ),
-        QString::fromStdString( this->logdoc_path ) );
+        QString::fromStdString( this->logdoc_path ) ) );
     this->crapinfo->show();
 }
 
 void MainWindow::menu_actionCheckUpdates_triggered()
 {
-    if ( this->crapup->isVisible() ) {
+    if ( !this->crapup.isNull() && this->crapup->isVisible() ) {
         this->crapup->activateWindow();
 
     } else {
-        delete this->crapup;
-        this->crapup = new Crapup(
+        this->crapup.reset( new Crapup(
             this->window_theme_id,
-            this->icons_theme );
+            this->icons_theme ) );
         this->crapup->show();
         this->crapup->versionCheck( this->version );
     }
@@ -1985,24 +1965,25 @@ void MainWindow::menu_actionCheckUpdates_triggered()
 // play a game
 void MainWindow::menu_actionCrissCross_triggered()
 {
-    if ( this->crisscross->isVisible() ) {
+    if ( !this->crisscross.isNull() && this->crisscross->isVisible() ) {
         this->crisscross->activateWindow();
 
     } else {
-        delete this->crisscross;
-        this->crisscross = new CrissCross( this->window_theme_id );
+        this->crisscross.reset( new CrissCross(
+            this->window_theme_id ) );
         this->crisscross->show();
     }
 }
 
 void MainWindow::menu_actionSnake_triggered()
 {
-    if ( this->snake->isVisible() ) {
+    if ( !this->snake.isNull() && this->snake->isVisible() ) {
         this->snake->activateWindow();
 
     } else {
-        delete this->snake;
-        this->snake = new SnakeGame( this->window_theme_id, this->FONTS.at("script") );
+        this->snake.reset( new SnakeGame(
+            this->window_theme_id,
+            this->FONTS.at("script") ) );
         this->snake->show();
     }
 }
@@ -2373,10 +2354,9 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
         this->ui->button_LogFiles_Nginx->setEnabled( false );
         this->ui->button_LogFiles_Iis->setEnabled( false );
         // start refreshing as thread
-        delete this->waiter_timer;
-        this->waiter_timer = new QTimer(this);
+        this->waiter_timer.reset( new QTimer(this) );
         this->waiter_timer->setSingleShot( true );
-        connect( this->waiter_timer, &QTimer::timeout,
+        connect( this->waiter_timer.get(), &QTimer::timeout,
                  this, &MainWindow::refreshLogsList);
         this->waiter_timer->start(250);
     }
@@ -2386,15 +2366,15 @@ void MainWindow::refreshLogsList()
 {
     std::string col;
     // iterate over elements of list
-    for ( const Craplog::LogFile& log_file : this->craplog.getLogsList(true) ) {
+    for ( const LogFile& log_file : this->craplog.getLogsList(true) ) {
         // new entry for the tree widget
         QTreeWidgetItem *item = new QTreeWidgetItem();
 
         // preliminary check for file usage display
-        if ( log_file.used_already ) {
+        if ( log_file.hasBeenUsed() ) {
             if ( this->hide_used_files ) {
                 // do not display
-                delete item; // possible memory leak
+                delete item;
                 continue;
             }
             // display with red foreground
@@ -2403,15 +2383,15 @@ void MainWindow::refreshLogsList()
 
         // preliminary check on file size
         col = "grey";
-        if ( log_file.size > this->craplog.getWarningSize() ) {
+        if ( log_file.size() > this->craplog.getWarningSize() ) {
             col = "orange";
         }
         item->setForeground( 1, this->COLORS.at( col ) );
 
         // set the name
-        item->setText( 0, log_file.name );
+        item->setText( 0, log_file.name() );
         // set the size
-        item->setText( 1, PrintSec::printableSize( log_file.size ) );
+        item->setText( 1, PrintSec::printableSize( log_file.size() ) );
         item->setFont( 1, this->FONTS.at("main_italic") );
         // append the item (on top, forced)
         item->setCheckState(0, Qt::CheckState::Unchecked );
@@ -2462,7 +2442,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
     // display the selected item
     if ( this->ui->listLogFiles->selectedItems().size() > 0 ) {
         bool proceed = true;
-        Craplog::LogFile item;
+        LogFile item;
         // retrieve the file item
         try {
             item = this->craplog.getLogFileItem(
@@ -2471,20 +2451,20 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
         } catch ( const GenericException& ) {
             // failed to find file
             proceed = false;
-            DialogSec::errFileNotFound( QString::fromStdString( item.path ), true );
+            DialogSec::errFileNotFound( QString::fromStdString( item.path() ), true );
         }
 
         // check the size
         if ( proceed ) {
             const unsigned warn_size = this->craplog.getWarningSize();
             if ( warn_size > 0 ) {
-                if ( item.size > warn_size ) {
+                if ( item.size() > warn_size ) {
                     // exceeds the warning size
-                    QString msg = item.name;
+                    QString msg = item.name();
                     if ( this->dialogs_level >= 1 ) {
                         msg += QString("\n\n%1:\n%2").arg(
                             DialogSec::tr("Size of the file"),
-                            PrintSec::printableSize( item.size ) );
+                            PrintSec::printableSize( item.size() ) );
                         if ( this->dialogs_level == 2 ) {
                             msg += QString("\n\n%1:\n%2").arg(
                                 DialogSec::tr("Warning size parameter"),
@@ -2502,13 +2482,13 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         if ( proceed ) {
             // get the current log format
-            FormatOps::LogsFormat format = this->craplog.getCurrentLogFormat();
+            const LogsFormat& format = this->craplog.getCurrentLogFormat();
             // read the content
             std::string content;
             try {
                 try {
                     // try reading as gzip compressed file
-                    GZutils::readFile( item.path, content );
+                    GZutils::readFile( item.path(), content );
 
                 } catch ( const GenericException& ) {
                     // failed closing file pointer
@@ -2519,7 +2499,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     if ( content.size() > 0 ) {
                         content.clear();
                     }
-                    IOutils::readFile( item.path, content );
+                    IOutils::readFile( item.path(), content );
                 }
 
             } catch ( const GenericException& ) {
@@ -2528,7 +2508,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 // >> e.what() << //
                 DialogSec::errGeneric( QString("%1:\n%2").arg(
                     DialogSec::tr("Failed to read gzipped file"),
-                    item.name) );
+                    item.name()) );
 
             /*} catch ( const std::ios_base::failure& err ) {
                 // failed reading as text
@@ -2538,7 +2518,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             } catch (...) {
                 // failed somehow
                 proceed = false;
-                DialogSec::errFailedReadFile( item.name );
+                DialogSec::errFailedReadFile( item.name() );
             }
 
             if ( proceed ) {
@@ -2594,7 +2574,7 @@ void MainWindow::on_button_MakeStats_Start_clicked()
     if ( this->dbUsable() ) {
         bool proceed = true;
         // check that the format has been set
-        const FormatOps::LogsFormat& lf = this->craplog.getLogsFormat( this->craplog.getCurrentWSID() );
+        const LogsFormat& lf = this->craplog.getLogsFormat( this->craplog.getCurrentWSID() );
         if ( lf.string.size() == 0 ) {
             // format string not set
             proceed = false;
@@ -2646,11 +2626,10 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 
             if ( proceed ) {
                 // periodically update perfs
-                delete this->waiter_timer;
-                this->waiter_timer = new QTimer(this);
+                this->waiter_timer.reset( new QTimer(this) );
                 this->waiter_timer->setInterval(250);
                 this->waiter_timer->setTimerType( Qt::PreciseTimer );
-                connect( this->waiter_timer, &QTimer::timeout,
+                connect( this->waiter_timer.get(), &QTimer::timeout,
                          this, &MainWindow::updatePerfsLabels );
                 // start processing
                 this->waiter_timer_start = std::chrono::system_clock::now();
@@ -2722,10 +2701,10 @@ void MainWindow::craplogFinished()
             this->ui->chart_MakeStats_Size );
         this->db_edited = this->craplog.editedDatabase();
         // refresh the logs section
-        delete this->waiter_timer;
-        this->waiter_timer = new QTimer(this);
+        this->waiter_timer.reset( new QTimer(this) );
         this->waiter_timer->setSingleShot( true );
-        connect(this->waiter_timer, &QTimer::timeout, this, &MainWindow::afterCraplogFinished);
+        connect( this->waiter_timer.get(), &QTimer::timeout,
+                 this, &MainWindow::afterCraplogFinished);
         this->waiter_timer->start(1000);
     } else {
         this->afterCraplogFinished();
@@ -2859,10 +2838,10 @@ void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
     if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
-        delete this->crapview_timer;
-        this->crapview_timer = new QTimer(this);
+        this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsWarn);
+        connect( this->crapview_timer.get(), &QTimer::timeout,
+                 this, &MainWindow::drawStatsWarn);
         this->crapview_timer->start(250);
     }
 }
@@ -2958,10 +2937,10 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
     if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
-        delete this->crapview_timer;
-        this->crapview_timer = new QTimer(this);
+        this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsSpeed);
+        connect( this->crapview_timer.get(), &QTimer::timeout,
+                 this, &MainWindow::drawStatsSpeed);
         this->crapview_timer->start(250);
     }
 }
@@ -3084,10 +3063,10 @@ void MainWindow::resetStatsCountButtons()
 void MainWindow::makeStatsCount()
 {
     this->setDbWorkingState( true );
-    delete this->crapview_timer;
-    this->crapview_timer = new QTimer(this);
+    this->crapview_timer.reset( new QTimer(this) );
     this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsCount);
+    connect( this->crapview_timer.get(), &QTimer::timeout,
+             this, &MainWindow::drawStatsCount);
     this->crapview_timer->start(250);
 }
 
@@ -3369,10 +3348,10 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 {
     if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
-        delete this->crapview_timer;
-        this->crapview_timer = new QTimer(this);
+        this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsDay);
+        connect( this->crapview_timer.get(), &QTimer::timeout,
+                 this, &MainWindow::drawStatsDay);
         this->crapview_timer->start(250);
     }
 }
@@ -3562,10 +3541,10 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
     if ( this->dbUsable() ) {
         this->setDbWorkingState( true );
-        delete this->crapview_timer;
-        this->crapview_timer = new QTimer(this);
+        this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
-        connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsRelat);
+        connect( this->crapview_timer.get(), &QTimer::timeout,
+                 this, &MainWindow::drawStatsRelat);
         this->crapview_timer->start(250);
     }
 }
@@ -3721,10 +3700,10 @@ void MainWindow::resetStatsGlob()
 void MainWindow::makeStatsGlob()
 {
     this->setDbWorkingState( true );
-    delete this->crapview_timer;
-    this->crapview_timer = new QTimer(this);
+    this->crapview_timer.reset( new QTimer(this) );
     this->crapview_timer->setSingleShot( true );
-    connect(this->crapview_timer, &QTimer::timeout, this, &MainWindow::drawStatsGlobals);
+    connect( this->crapview_timer.get(), &QTimer::timeout,
+             this, &MainWindow::drawStatsGlobals);
     this->crapview_timer->start(250);
 }
 
@@ -3804,26 +3783,26 @@ void MainWindow::on_slider_ConfDialogs_Stats_sliderReleased()
 //// TEXT BROWSER ////
 void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
 {
-    QFont font;
+    std::string f;
     switch ( index ) {
         case 0:
-            font = this->FONTS.at( "main" );
-            break;
+            f = "main"; break;
         case 1:
-            font = this->FONTS.at( "alternative" );
-            break;
+            f = "alternative"; break;
         case 2:
-            font = this->FONTS.at( "script" );
-            break;
+            f = "script"; break;
         default:
             throw GenericException( "Unexpected Font index: "+std::to_string(index), true );
     }
+    const QFont& font = this->FONTS.at( f );
     this->TB.setFont( font );
-    this->crapnote->setTextFont( font );
     this->ui->textBrowser_ConfTextBrowser_Preview->setFont( font );
-    this->ui->preview_ConfApache_Format_Sample->setFont( this->TB.getFont() );
-    this->ui->preview_ConfNginx_Format_Sample->setFont( this->TB.getFont() );
-    this->ui->preview_ConfIis_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfApache_Format_Sample->setFont( font );
+    this->ui->preview_ConfNginx_Format_Sample->setFont( font );
+    this->ui->preview_ConfIis_Format_Sample->setFont( font );
+    if ( !this->crapnote.isNull() ) {
+        this->crapnote->setTextFont( font );
+    }
 }
 void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 {
@@ -3833,7 +3812,9 @@ void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 void MainWindow::on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int index)
 {
     this->TB.setColorScheme( index, this->TB_COLOR_SCHEMES.at( index ) );
-    this->crapnote->setColorScheme( index );
+    if ( !this->crapnote.isNull() ) {
+        this->crapnote->setColorScheme( index );
+    }
     this->refreshTextBrowserPreview();
 }
 void MainWindow::refreshTextBrowserPreview()

@@ -75,7 +75,7 @@ private:
 
     Direction head_direction;
 
-    bool will_grow;
+    bool will_grow = false;
 
     //! Increases the length of the body of the snake of 1 part
     void grow( const bool is_borning );
@@ -86,7 +86,7 @@ private:
 
     const unsigned int aggressiveness = 10 - (rand()%9);
 
-    enum Entity {
+    enum class Entity {
         N, // none
         S, // self
         A, // adversary

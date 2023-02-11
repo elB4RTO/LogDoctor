@@ -57,7 +57,7 @@ private slots:
 
     ///////////////////
     //// OVERRIDES ////
-    void closeEvent( QCloseEvent *event ) override;
+    void closeEvent( QCloseEvent* event ) override;
 
 
     //////////////
@@ -111,9 +111,9 @@ private slots:
 
     void on_button_LogFiles_RefreshList_clicked();
 
-    void on_listLogFiles_itemDoubleClicked(QTreeWidgetItem *item, int column);
+    void on_listLogFiles_itemDoubleClicked(QTreeWidgetItem* item, int column);
 
-    void on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column);
+    void on_listLogFiles_itemChanged(QTreeWidgetItem* item, int column);
 
     void on_button_LogFiles_Apache_clicked();
 
@@ -517,13 +517,13 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 
     // current version of LogDoctor
     const float version = 2.03;
 
     // web servers ID constants
-    const unsigned int APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
+    const unsigned APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
     const QString wsFromIndex( const int index ) const;
 
 
@@ -624,7 +624,7 @@ private:
     int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
 
     // default web server
-    int default_ws = 11;
+    unsigned default_ws = 11;
 
 
     //////////////////
@@ -683,7 +683,7 @@ private:
     //// GENERAL USE ////
     /////////////////////
 
-    QTimer* waiter_timer;
+    QScopedPointer<QTimer> waiter_timer;
     std::chrono::system_clock::time_point waiter_timer_start;
     std::chrono::system_clock::duration   waiter_timer_elapsed;
 
@@ -785,7 +785,7 @@ private:
 
     Crapview crapview;
 
-    QTimer *crapview_timer = new QTimer();
+    QScopedPointer<QTimer> crapview_timer;
 
     // change tab
     void switchStatsTab( const int new_index );
@@ -829,7 +829,7 @@ private:
     //// CRAPHELP ////
     //////////////////
 
-    Craphelp* craphelp = new Craphelp();
+    QScopedPointer<Craphelp> craphelp;
 
     void showHelp( const std::string& file_name );
 
@@ -838,30 +838,32 @@ private:
     //// CRAPUP ////
     ////////////////
 
-    Crapup *crapup = new Crapup(0,"");
+    QScopedPointer<Crapup> crapup;
 
 
     //////////////////
     //// CRAPNOTE ////
     //////////////////
 
-    Crapnote* crapnote = new Crapnote();
+    QScopedPointer<Crapnote> crapnote;
 
 
     //////////////////
     //// CRAPINFO ////
     //////////////////
 
-    Crapinfo* crapinfo = new Crapinfo(0,"","","","");
+    QScopedPointer<Crapinfo> crapinfo;
 
 
     ///////////////////
     //// CRAPGAMES ////
     ///////////////////
 
-    CrissCross* crisscross = new CrissCross( 0 );
+    QScopedPointer<CrissCross> crisscross;
 
-    SnakeGame* snake = new SnakeGame( 0, QFont() );
+    QScopedPointer<SnakeGame> snake;
 
 };
+
+
 #endif // MAINWINDOW_H

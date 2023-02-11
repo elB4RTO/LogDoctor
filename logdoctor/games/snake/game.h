@@ -69,7 +69,7 @@ private:
     //////////////////
     //// GRAPHICS ////
 
-    QGraphicsScene* field_scene;
+    QScopedPointer<QGraphicsScene> field_scene;
 
     QPixmap img_water = QPixmap(":/games/games/snake/water.png");
 
@@ -88,7 +88,7 @@ private:
 
     bool playing = false;
 
-    QTimer* game_loop = new QTimer();
+    QScopedPointer<QTimer> game_loop;
 
     bool game_over = false;
 

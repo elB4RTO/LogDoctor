@@ -6,14 +6,16 @@
 #include "modules/craplog/craplog.h"
 
 
-typedef std::vector<std::tuple<std::string,std::string>> worker_files_t;
-typedef std::unordered_map<int, std::string> log_line_data_t;
-typedef std::unordered_map<int, Craplog::BWlist> bw_lists_t;
-
-
 class CraplogWorker : public QObject
 {
     Q_OBJECT
+
+private:
+
+    typedef std::vector<std::tuple<std::string,std::string>> worker_files_t;
+    typedef std::unordered_map<int, std::string> log_line_data_t;
+    typedef std::unordered_map<int, BWlist> bw_lists_t;
+
 
 public:
 
@@ -22,7 +24,7 @@ public:
         const unsigned dialogs_level,
         const std::string& db_data_path,
         const std::string& db_hashes_path,
-        const FormatOps::LogsFormat& logs_format,
+        const LogsFormat& logs_format,
         const bw_lists_t& blacklists,
         const bw_lists_t& warnlists,
         const worker_files_t& log_files,
@@ -78,7 +80,7 @@ private:
     bw_lists_t blacklists;
     bw_lists_t warnlists;
 
-    FormatOps::LogsFormat logs_format;
+    LogsFormat logs_format;
 
     std::mutex mutex;
 

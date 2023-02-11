@@ -68,17 +68,17 @@ private:
 
     float img_orientation = 0.0;
 
-    QTimer* img_timer = nullptr;
+    QScopedPointer<QTimer> img_timer;
 
     void getStyleSheet( QString& stylesheet, const int& theme_id ) const;
 
     bool request_aborted;
 
-    QTimer* request_timer = nullptr;
+    QScopedPointer<QTimer> request_timer;
 
     const int timeout_msec = 15000;
 
-    QNetworkReply* reply = nullptr;
+    QScopedPointer<QNetworkReply> reply;
 
     //! Deletes the reply in a safe way
     void deleteReply();

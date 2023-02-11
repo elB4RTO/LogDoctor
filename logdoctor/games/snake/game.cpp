@@ -25,20 +25,18 @@ SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* pare
     this->ui->box_GameMode->setFont( font );
 
     // create the field
-    this->field_scene = new QGraphicsScene( this );
+    this->field_scene.reset( new QGraphicsScene( this ) );
     this->field_scene->setSceneRect( 0,0, 544, 544 );
     this->field_scene->setBackgroundBrush( Qt::black );
     // put water limits
     this->field_scene->addItem( new QGraphicsPixmapItem( this->img_water ) );
     // add the scene to the view
-    this->ui->view_Field->setScene( this->field_scene );
+    this->ui->view_Field->setScene( this->field_scene.get() );
 }
 
 SnakeGame::~SnakeGame()
 {
     delete this->ui;
-    delete this->field_scene;
-    delete this->game_loop;
 }
 
 void SnakeGame::closeEvent( QCloseEvent* event )
@@ -118,8 +116,8 @@ void SnakeGame::on_button_Play_clicked()
     // switch to game board
     this->ui->stackedWidget_GameDisplay->setCurrentIndex( 1 );
     // start playing
-    this->game_loop = new QTimer(this);
-    connect(this->game_loop, &QTimer::timeout, this, &SnakeGame::processGameLogic);
+    this->game_loop.reset( new QTimer(this) );
+    connect( this->game_loop.get(), &QTimer::timeout, this, &SnakeGame::processGameLogic);
     this->game_loop->start(175);
     this->playing = true;
 }
@@ -166,10 +164,10 @@ void SnakeGame::newSnake()
     this->snake.front().update( head_x, head_y, this->snake.direction() );
     // a body part
     this->snake.willGrow();
-    this->snake.update( this->field_scene, true, true );
+    this->snake.update( this->field_scene.get(), true, true );
     // and a tail
     this->snake.willGrow();
-    this->snake.update( this->field_scene, true, true );
+    this->snake.update( this->field_scene.get(), true, true );
 }
 
 void SnakeGame::newSnake_()
@@ -214,10 +212,10 @@ void SnakeGame::newSnake_()
     this->snake_.front().update( head_x, head_y, this->snake_.direction() );
     // a body part
     this->snake_.willGrow();
-    this->snake_.update( this->field_scene, true, true );
+    this->snake_.update( this->field_scene.get(), true, true );
     // and a tail
     this->snake_.willGrow();
-    this->snake_.update( this->field_scene, true, true );
+    this->snake_.update( this->field_scene.get(), true, true );
 }
 
 void SnakeGame::newFood( const bool& movable )
@@ -257,9 +255,9 @@ void SnakeGame::processGameLogic()
         // check for game over
         if ( ! this->game_over ) {
             // update snake position
-            this->snake.update( this->field_scene );
+            this->snake.update( this->field_scene.get() );
             if ( this->game_mode == GameMode::Battle ) {
-                this->snake_.update( this->field_scene );
+                this->snake_.update( this->field_scene.get() );
             }
             if ( this->spawn_food ) {
                 // updae the score and spawn food in a new position

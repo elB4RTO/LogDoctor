@@ -1,6 +1,9 @@
 
 #include "vectors.h"
 
+#include <string>
+#include <algorithm>
+
 
 template <typename T>
 VecOps<T>::VecOps()
@@ -12,14 +15,10 @@ VecOps<T>::VecOps()
 template <typename T>
 const bool VecOps<T>::contains(const std::vector<T>& list, const T& flag )
 {
-    bool result = false;
-    for ( const T& item : list ) {
-        if ( item == flag ) {
-            result = true;
-            break;
-        }
-    }
-    return result;
+    return std::any_of(
+        list.cbegin(), list.cend(),
+        [&flag]( const T& item )
+               { return item == flag; } );
 }
 
 

@@ -35,7 +35,7 @@ public:
         \return The result of the check
         \see isNumeric()
     */
-    static const bool isNumeric( const unsigned char& chr );
+    static const bool isNumeric( const char& chr );
 
     //! Checks whether a string only contains alphabetic characters
     /*!
@@ -50,7 +50,7 @@ public:
         \return The result of the check
         \see isAlphabetic()
     */
-    static const bool isAlphabetic( const unsigned char& chr );
+    static const bool isAlphabetic( const char& chr );
 
     //! Checks whether a string only contains alpha-numeric characters
     /*!
@@ -65,14 +65,14 @@ public:
         \return The result of the check
         \see isAlnum
     */
-    static const bool isAlnum( const unsigned char& chr );
+    static const bool isAlnum( const char& chr );
 
     //! Checks whether a string only contains hexadecimal characters
     /*!
         \param str The target character
         \return The result of the check
     */
-    static const bool isHex( const unsigned char& chr );
+    static const bool isHex( const char& chr );
 
     //! Checks whether a string could be a valid IPv4/IPv6
     /*!
@@ -103,7 +103,7 @@ public:
         \param flag The sequence to search for
         \return The result of the check
     */
-    static const bool endsWith(   const std::string& str, const std::string& flag );
+    static const bool endsWith( const std::string& str, const std::string& flag );
 
     //! Checks if a string contains the given sequence
     /*!
@@ -119,7 +119,7 @@ public:
         \param chars The characters to strip away
         \return The result string
     */
-    static std::string strip(  const std::string& str, const std::string& chars=" \n\t\b\r\v" );
+    static std::string strip( const std::string& str, const std::string& chars=" \n\t\b\r\v" );
 
     //!  Strips the given characters from the left side of a string
     /*!

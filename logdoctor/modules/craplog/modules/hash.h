@@ -46,7 +46,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the hash is already in the list or not
     */
-    const bool hasBeenUsed( const std::string& file_hash, const int& web_server_id ) const;
+    const bool hasBeenUsed( const std::string& file_hash, const unsigned& web_server_id ) const;
 
     //! Inserts multiple hashes in the corresponding database table
     /*!
@@ -55,7 +55,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the operation has been successful or not
     */
-    const bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const int& web_server_id );
+    const bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id );
 
 private:
 
@@ -63,9 +63,9 @@ private:
     int dialog_level = 2;
 
     // id constants
-    const int APACHE_ID = 11;
-    const int NGINX_ID  = 12;
-    const int IIS_ID    = 13;
+    const unsigned APACHE_ID = 11;
+    const unsigned NGINX_ID  = 12;
+    const unsigned IIS_ID    = 13;
 
     // List of Web Servers names for database tables
     const std::unordered_map<int, QString> ws_names = {
@@ -76,7 +76,7 @@ private:
 
     // Lists of used files' hashes
     // { web_server_id : { hashes } }
-    std::unordered_map<int, std::vector<std::string>> hashes = {
+    std::unordered_map<unsigned, std::vector<std::string>> hashes = {
         {this->APACHE_ID, {}},
         {this->NGINX_ID,  {}},
         {this->IIS_ID,    {}}
@@ -85,8 +85,9 @@ private:
 
     // Called by insertUsedHashes()
     // Inserts a hash in the corresponding database table
-    const bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id );
+    const bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id );
 
 };
+
 
 #endif // HASH_H

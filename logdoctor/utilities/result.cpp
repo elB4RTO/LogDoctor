@@ -11,9 +11,10 @@ Result<T>::Result()
 
 template <typename T>
 Result<T>::Result( const bool ok, const T& data )
+    : result( ok )
+    , data( std::move(data) )
 {
-    this->result = ok;
-    this->data   = std::move(data);
+
 }
 
 template <typename T>

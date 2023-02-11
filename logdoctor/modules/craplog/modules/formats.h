@@ -1,6 +1,8 @@
 #ifndef FORMATS_H
 #define FORMATS_H
 
+#include "lib.h"
+
 #include <QString>
 
 #include <string>
@@ -16,16 +18,6 @@ class FormatOps
 {
 public:
     explicit FormatOps();
-
-    //! Structure which holds informations about a log format
-    struct LogsFormat {
-        std::string string;                  //!< The logs format string
-        std::string initial;                 //!< The initial separator
-        std::string final;                   //!< The final separator
-        std::vector<std::string> separators; //!< The separators in the middle
-        std::vector<std::string> fields;     //!< The fields
-        unsigned new_lines;                  //!< The number of new lines
-    };
 
 
     //! Processes the given string to extrapolate the format for Apache2
@@ -486,5 +478,6 @@ private:
         {"client",             "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
 };
+
 
 #endif // FORMATS_H

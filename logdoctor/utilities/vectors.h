@@ -1,7 +1,6 @@
 #ifndef VECOPS_H
 #define VECOPS_H
 
-#include <string>
 #include <vector>
 
 

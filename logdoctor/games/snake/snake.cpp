@@ -3,9 +3,9 @@
 
 
 Snake::Snake( const bool is_adversary )
+    : adversary( is_adversary )
 {
     this->will_grow = false;
-    this->adversary = is_adversary;
     if ( is_adversary ) {
         for ( size_t x=0; x<16; x++ ) {
             this->field_map.push_back( std::vector<Tile>{} );
@@ -32,12 +32,12 @@ const bool Snake::inTile( const unsigned int x, const unsigned int y , const boo
 {
     bool result = false;
     if ( this->size() > 0 ) {
-        size_t i = 0,
-               max = this->size()-1;
+        size_t i = 0;
+        size_t max = this->size()-1;
         if ( !avoid_tail ) {
             max ++;
         }
-        for ( std::vector<BodyPart>::const_iterator bp = this->begin(); bp != this->end(); ++bp ) {
+        for ( auto bp = this->cbegin(); bp != this->cend(); ++bp ) {
             if ( bp->x == x && bp->y == y ) {
                 result = true;
                 break;
@@ -112,15 +112,15 @@ void Snake::update( QGraphicsScene* field_scene, const bool dry , const bool is_
         field_scene->addItem( this->back().image );
     }
     // anyway, update the whole body
-    size_t i = 0,
-           max_i = this->size()-1;
+    size_t i = 0;
+    size_t max_i = this->size()-1;
     unsigned int new_x, prev_x, new_y, prev_y;
     Direction new_direction, prev_direction, prev_body_d;
-    QPixmap& head_img  = (this->adversary) ? this->img_snakeHead_  : this->img_snakeHead;
-    QPixmap& body_img  = (this->adversary) ? this->img_snakeBody_  : this->img_snakeBody;
-    QPixmap& curve_img = (this->adversary) ? this->img_snakeCurve_ : this->img_snakeCurve;
-    QPixmap& tail_img  = (this->adversary) ? this->img_snakeTail_  : this->img_snakeTail;
-    for ( std::vector<BodyPart>::iterator bp = this->begin(); bp != this->end(); ++bp ) {
+    const QPixmap& head_img  = (this->adversary) ? this->img_snakeHead_  : this->img_snakeHead;
+    const QPixmap& body_img  = (this->adversary) ? this->img_snakeBody_  : this->img_snakeBody;
+    const QPixmap& curve_img = (this->adversary) ? this->img_snakeCurve_ : this->img_snakeCurve;
+    const QPixmap& tail_img  = (this->adversary) ? this->img_snakeTail_  : this->img_snakeTail;
+    for ( auto bp = this->begin(); bp != this->end(); ++bp ) {
         if ( ! dry ) {
             // future position
             if ( i == 0 ) {
@@ -736,7 +736,7 @@ void Snake::updateFieldMap( const Snake& adv_snake, const unsigned int& food_x, 
     this->field_map.at(food_x).at(food_y).entity = Entity::F;
     // update self
     unsigned int i = this->size();
-    for ( std::vector<BodyPart>::const_iterator bp = this->begin(); bp != this->end(); ++bp ) {
+    for ( auto bp = this->cbegin(); bp != this->cend(); ++bp ) {
         Tile& t = this->field_map.at(bp->x).at(bp->y);
         t.entity = Entity::S;
         t.s_index = i;
@@ -854,9 +854,8 @@ const std::vector<unsigned int> Snake::checkAround( const Direction& direction, 
 const unsigned int Snake::isDeadHole( const unsigned int& start_x, const unsigned int& start_y, Direction start_direction ) const
 {
     bool result=false, check=false, check_clockwise=false;
-    int front_step, front_check, side_check;
-    unsigned int steps=1, side, front;
     Direction direction = start_direction;
+    unsigned int steps = 1;
 
     const auto blocked_around = this->checkAround( direction, start_x, start_y );
     if ( (blocked_around.at(3)>0 && blocked_around.at(4)>0)
@@ -879,7 +878,8 @@ const unsigned int Snake::isDeadHole( const unsigned int& start_x, const unsigne
 
     if ( check ) {
 
-        unsigned int aux_side, aux_front;
+        int front_step, front_check, side_check;
+        unsigned int side, front, aux_side, aux_front;
         const unsigned int max_steps = this->size()-1;
         std::vector<std::tuple<unsigned int, unsigned int>> tried_positions = {
             std::make_tuple( start_x, start_y )
@@ -1130,7 +1130,7 @@ const unsigned int Snake::isDeadHole( const unsigned int& start_x, const unsigne
         }
 
         // mean result
-        result = result | aux_result;
+        result |= aux_result;
         steps = (steps>aux_steps) ? steps : aux_steps;
     }
 

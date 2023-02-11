@@ -7,7 +7,8 @@
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
-#include "modules/craplog/modules/sha256.h"
+
+#include "sha256.h"
 
 #include <ios>
 
@@ -127,21 +128,18 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash ) cons
 
 
 // check if the given hash is from a file which has been used already
-const bool HashOps::hasBeenUsed( const std::string &file_hash, const int& web_server_id) const
+const bool HashOps::hasBeenUsed( const std::string &file_hash, const unsigned& web_server_id) const
 {
-    bool found = false;
-    for ( const std::string &hash : this->hashes.at( web_server_id ) ) {
-        if ( file_hash == hash ) {
-            found = true;
-            break;
-        }
-    }
-    return found;
+    const auto& ws_hashes = this->hashes.at( web_server_id );
+    return std::any_of(
+        ws_hashes.cbegin(), ws_hashes.cend(),
+        [&file_hash]( const std::string& hash )
+                    { return file_hash == hash; } );
 }
 
 
 // insert the given hash/es in the relative list
-const bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const int& web_server_id )
+const bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id )
 {
     bool successful = true;
     try {
@@ -174,7 +172,7 @@ const bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, co
 }
 
 
-const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string> &hashes, const int& web_server_id )
+const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id )
 {
     bool proceed = true;
 

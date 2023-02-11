@@ -3,28 +3,24 @@
 
 
 Food::Food( const bool& can_move )
+    : image( new QGraphicsPixmapItem( (can_move) ? this->img_rat : this->img_egg ) )
+    , movable( can_move )
+    , x( 0 )
+    , y( 0 )
 {
-    this->movable = can_move;
-    this->image = new QGraphicsPixmapItem( (can_move) ? this->img_rat : this->img_egg );
-    this->x = 0;
-    this->y = 0;
 }
 Food::Food( const Food& other )
+    : image( new QGraphicsPixmapItem( (other.movable) ? this->img_rat : this->img_egg ) )
+    , movable( other.movable )
+    , x( other.x )
+    , y( other.y )
 {
-    this->x = other.x;
-    this->y = other.y;
-    this->img_egg = other.img_egg;
-    this->img_rat = other.img_rat;
-    this->movable = other.movable;
-    this->image = new QGraphicsPixmapItem( (this->movable) ? this->img_rat : this->img_egg );
 }
 const Food& Food::operator=( const Food& other )
 {
     if ( this == &other ) return other;
     this->x = other.x;
     this->y = other.y;
-    this->img_egg = other.img_egg;
-    this->img_rat = other.img_rat;
     this->movable = other.movable;
     this->image = new QGraphicsPixmapItem( (this->movable) ? this->img_rat : this->img_egg );
     return *this;

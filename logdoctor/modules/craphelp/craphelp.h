@@ -34,10 +34,11 @@ public:
     /*!
         Shows the built-in default version in case the file
         for the currently selected locale was not found or unreadable
+        \param file_name The file that was supposed to be shown
         \param font The font to be used
         \param color_scheme_id The ID of the color-scheme to be used
     */
-    void helpLogsFormatDefault( const std::string& path, const QFont& font, const int& color_scheme_id ) const;
+    void helpLogsFormatDefault( const std::string& file_name, const QFont& font, const int& color_scheme_id ) const;
 
 private:
     Ui::Craphelp *ui;

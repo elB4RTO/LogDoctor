@@ -30,7 +30,7 @@ public:
     static void enrichLogs(
         QString& rich_content,
         const std::string& content,
-        const FormatOps::LogsFormat& logs_format,
+        const LogsFormat& logs_format,
         TextBrowser& TB
     );
 

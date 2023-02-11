@@ -37,17 +37,14 @@ const bool StringOps::isNumeric( const std::string& str )
 {
     bool result = false;
     if ( str.size() > 0 ) {
-        result = true;
-        for ( const unsigned char& chr : str ) {
-            if ( ! StringOps::isNumeric( chr ) ) {
-                result = false;
-                break;
-            }
-        }
+        result = !std::any_of(
+            str.cbegin(), str.cend(),
+            []( const char& chr )
+              { return !StringOps::isNumeric( chr ); });
     }
     return result;
 }
-const bool StringOps::isNumeric(const unsigned char& chr )
+const bool StringOps::isNumeric( const char& chr )
 {
     if ( chr > 47 && chr < 58 ) {
         return true;
@@ -61,17 +58,14 @@ const bool StringOps::isAlphabetic( const std::string& str )
 {
     bool result = false;
     if ( str.size() > 0 ) {
-        result = true;
-        for ( const unsigned char& chr : str ) {
-            if ( ! StringOps::isAlphabetic( chr ) ) {
-                result = false;
-                break;
-            }
-        }
+        result = !std::any_of(
+            str.cbegin(), str.cend(),
+            []( const char& chr )
+              { return !StringOps::isAlphabetic( chr ); });
     }
     return result;
 }
-const bool StringOps::isAlphabetic(const unsigned char& chr )
+const bool StringOps::isAlphabetic( const char& chr )
 {
     if ( (chr > 64 && chr < 91)
       || (chr > 96 && chr < 123) ) {
@@ -86,17 +80,14 @@ const bool StringOps::isAlnum( const std::string& str )
 {
     bool result = false;
     if ( str.size() > 0 ) {
-        result = true;
-        for ( const unsigned char& chr : str ) {
-            if ( ! StringOps::isAlnum( chr ) ) {
-                result = false;
-                break;
-            }
-        }
+        result = !std::any_of(
+            str.cbegin(), str.cend(),
+            []( const char& chr )
+              { return !StringOps::isAlnum( chr ); });
     }
     return result;
 }
-const bool StringOps::isAlnum(const unsigned char& chr )
+const bool StringOps::isAlnum( const char& chr )
 {
     if ( !StringOps::isNumeric( chr )
       && !StringOps::isAlphabetic( chr ) ) {
@@ -107,7 +98,7 @@ const bool StringOps::isAlnum(const unsigned char& chr )
 }
 
 
-const bool StringOps::isHex( const unsigned char& chr )
+const bool StringOps::isHex( const char& chr )
 {
     if ( (chr > 47 && chr < 58)
       || (chr > 64 && chr < 71)
@@ -124,7 +115,7 @@ const bool StringOps::isIP( const std::string& str )
     bool result = false;
     if ( str.size() > 0 ) {
         result = true;
-        for ( const unsigned char& chr : str ) {
+        for ( const char& chr : str ) {
             if ( chr == '.' || chr == ':' ) {
                 continue;
             } else if ( ! StringOps::isHex( chr ) ) {
@@ -213,18 +204,15 @@ std::string StringOps::strip( const std::string& str, const std::string& chars )
 std::string StringOps::lstrip( const std::string& str, const std::string& chars )
 {
     bool found;
-    int i = 0;
-    const int max = str.size();
+    size_t i = 0;
+    const size_t max = str.size();
     while ( i < max ) {
-        found = false;
-        char str_index = str.at( i );
-        for ( const char& chr : chars ) {
-            if ( str_index == chr ) {
-                found = true;
-                break;
-            }
-        }
-        if ( ! found ) {
+        const char& str_index = str.at( i );
+        found = std::any_of(
+            chars.cbegin(), chars.cend(),
+            [&str_index]( const char& chr )
+                        { return str_index == chr; });
+        if ( !found ) {
             break;
         }
         i++;
@@ -240,24 +228,22 @@ std::string StringOps::lstrip( const std::string& str, const std::string& chars 
 std::string StringOps::rstrip( const std::string& str, const std::string& chars )
 {
     bool found;
-    int i = str.size() - 1;
-    while ( i >= 0 ) {
-        found = false;
+    const size_t max = str.size();
+    size_t i = max - 1;
+    while ( i < max ) {
         char str_index = str.at( i );
-        for ( const char& chr : chars ) {
-            if ( str_index == chr ) {
-                found = true;
-                break;
-            }
-        }
-        if ( ! found ) {
+        found = std::any_of(
+            chars.cbegin(), chars.cend(),
+            [&str_index]( const char& chr )
+                        { return str_index == chr; });
+        if ( !found ) {
             break;
         }
         i--;
     }
     std::string stripped = "";
-    if ( i >= 0 ) {
-        stripped = str.substr( 0, str.size() - (str.size() - i) + 1 );
+    if ( i < max ) {
+        stripped = str.substr( 0, max - (max - i) + 1 );
     }
     return stripped;
 }

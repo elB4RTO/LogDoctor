@@ -62,20 +62,20 @@ public:
     /*!
         \param web_server_id The new currently used Web Server
     */
-    void setCurrentWSID( const int& web_server_id );
+    void setCurrentWSID( const unsigned& web_server_id );
 
     //! Returns the currently used Web Server ID
     /*!
         \return The Web Server ID
     */
-    const int& getCurrentWSID() const;
+    const unsigned& getCurrentWSID() const;
 
     //! Returns the currently used LogsFormat
     /*!
         \return The LogsFormat
-        \see FormatOps::LogsFormat
+        \see LogsFormat
     */
-    const FormatOps::LogsFormat& getCurrentLogFormat() const;
+    const LogsFormat& getCurrentLogFormat() const;
 
 
     ////////////////////
@@ -101,16 +101,6 @@ public:
 
     ///////////////////
     //// LOG FILES ////
-
-    //! Structure which holds informations about a log file
-    struct LogFile {
-        bool selected;     //!< Wheter the file has been selected to be use or not
-        bool used_already; //!< Wheter the file has been used already or not
-        unsigned size;     //!< The size of the file
-        QString name;      //!< The name of the file, to be displayed in the list
-        std::string hash;  //!< The sha256 hash of the content
-        std::string path;  //!< The path of the file, including the file name
-    };
 
     //! Checks if a file name respects the relative criterions
     /*!
@@ -199,9 +189,9 @@ public:
     /*!
         \param web_server_id ID of the Web Server
         \return The LogsFormat instance
-        \see FormatOps::LogsFormat
+        \see LogsFormat
     */
-    const FormatOps::LogsFormat& getLogsFormat( const int& web_server_id ) const;
+    const LogsFormat& getLogsFormat( const int& web_server_id ) const;
 
     //! Returns a sample log line for the given Web Server using the relative LogsFormat
     /*!
@@ -230,17 +220,8 @@ public:
     // logs usage control
     HashOps hashOps;
 
-    // operations on logs
-    LogOps logOps;
-
     //////////////////////////////
     //// BLACKLIST / WARNLIST ////
-
-    //! Structure to hold the items of a blacklist/warnlist
-    struct BWlist {
-        bool used;                     //!< Whether the list is set to be used or not
-        std::vector<std::string> list; //!< The list of items
-    };
 
     //! Returns whether the relative blacklist is set to be used or not
     /*!
@@ -537,7 +518,7 @@ private:
     //// WEB SERVER ////
 
     // currently used web server
-    int current_WS = this->APACHE_ID;
+    unsigned current_WS = this->APACHE_ID;
 
     std::unordered_map<int, std::string> logs_paths;
 
@@ -580,7 +561,7 @@ private:
 
     std::unordered_map<int, std::string> logs_format_strings;
 
-    std::unordered_map<int, FormatOps::LogsFormat> logs_formats;
+    std::unordered_map<int, LogsFormat> logs_formats;
 
     //! Uses the current Web Server to set the relative logs format
     /*!
@@ -589,8 +570,9 @@ private:
     void setCurrentLogFormat();
 
     // currently used logs format
-    FormatOps::LogsFormat current_LF;
+    LogsFormat current_LF;
 
 };
+
 
 #endif // CRAPLOG_H

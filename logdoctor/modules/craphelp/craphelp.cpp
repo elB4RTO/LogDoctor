@@ -86,7 +86,7 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
                 break;
             }
             const int stop  = aux.find( ";\n", start ) + 2;
-            aux = aux.substr( 0, start ) + aux.substr( stop );
+            aux.erase( start, stop-start );
         }
         while (true) {
             const int start = aux.find( "color:" );
@@ -94,7 +94,7 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
                 break;
             }
             const int stop  = aux.find( ";\n", start ) + 2;
-            aux = aux.substr( 0, start ) + aux.substr( stop );
+            aux.erase( start, stop-start );
         }
         content = QString::fromStdString( aux );
 
@@ -136,7 +136,7 @@ void Craphelp::helpLogsFormatDefault( const std::string& file_name, const QFont&
                 break;
             }
             const int stop  = aux.find( ";", start ) + 1;
-            aux = aux.substr( 0, start ) + aux.substr( stop );
+            aux.erase( start, stop-start );
         }
         while (true) {
             const int start = aux.find( "color:" );
@@ -144,7 +144,7 @@ void Craphelp::helpLogsFormatDefault( const std::string& file_name, const QFont&
                 break;
             }
             const int stop  = aux.find( ";", start ) + 1;
-            aux = aux.substr( 0, start ) + aux.substr( stop );
+            aux.erase( start, stop-start );
         }
         content = QString::fromStdString( aux );
 

@@ -361,7 +361,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         //QColor cols[] = {QColor(18,175,194), QColor(237,80,61)};
         std::vector<QStackedBarSeries*> b_series;
         for ( int i=0; i<sets.size(); i++ ) {
-            auto& set = sets.at( i );
+            const auto& set = sets.at( i );
             b_series.push_back( new QStackedBarSeries() );
             for ( int w=0; w<2; w++ ) {
                 QBarSet* b = set.at( w );

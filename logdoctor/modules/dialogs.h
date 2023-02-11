@@ -241,4 +241,5 @@ private:
 
 };
 
+
 #endif // DIALOGS_H

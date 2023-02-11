@@ -10,7 +10,7 @@ class Food
 public:
     explicit Food( const bool& can_move=false );
     explicit Food( const Food& other );
-    const Food& operator =( const Food& other );
+    const Food& operator=( const Food& other );
 
     //! Returns the position on the X-axis
     const unsigned int& X() const;
@@ -39,6 +39,9 @@ private:
 
     QPixmap img_rat = QPixmap(":/games/games/snake/rat.png");
 
+    //!< The image which graphically represents the food
+    QGraphicsPixmapItem* image = nullptr;
+
     //!< Whether the food is a rat or an egg
     bool movable;
 
@@ -47,9 +50,6 @@ private:
 
     //!< The position on the Y-axis
     unsigned int y;
-
-    //!< The image which graphically represents the food
-    QGraphicsPixmapItem* image = nullptr;
 };
 
 #endif // FOOD_H

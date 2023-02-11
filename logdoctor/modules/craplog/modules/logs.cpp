@@ -13,21 +13,18 @@ LogOps::LogOps()
 }
 
 
-const LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& lines, const FormatOps::LogsFormat& format ) const
+const LogType LogOps::defineFileType( const std::vector<std::string>& lines, const LogsFormat& format )
 {
     if ( lines.size() == 0 ) {
-        // empty content
-        return LogOps::LogType::Failed;
+        // empty file, already handled by craplog, should be unreachable
+        return LogType::Failed;
     }
 
-    int n_access=0, n_other=0;
-    LogOps::LogType log_type;
-
     // real type assignment
-    log_type = LogOps::LogType::Failed;
+    int n_access{0}, n_other{0};
     for ( const std::string& line : lines ) {
-        // scan
-        if ( this->deepTypeCheck( line, format ) ) {
+        // scan the given lines
+        if ( LogOps::deepTypeCheck( line, format ) ) {
             n_access++;
         } else {
             n_other++;
@@ -36,19 +33,19 @@ const LogOps::LogType LogOps::defineFileType( const std::vector<std::string>& li
 
     // final decision
     if ( n_access > 0 && n_other == 0 ) {
-        // access logs
-        log_type = LogOps::LogType::Access;
+        // Access: valid logs (for the currently set LogsFormat)
+        return LogType::Access;
     } else if ( n_other > 0 && n_access == 0 ) {
-        // other format, maybe error logs
-        log_type = LogOps::LogType::Discarded;
+        // Discarded: other format, or maybe error logs
+        return LogType::Discarded;
     } else {
-        // something is wrong with this file, keep the Failed type
+        // Failed: something is wrong with this file
+        return LogType::Failed;
     }
-    return log_type;
 }
 
 
-const bool LogOps::deepTypeCheck( const std::string& line, const FormatOps::LogsFormat& format ) const
+const bool LogOps::deepTypeCheck( const std::string& line, const LogsFormat& format )
 {
     int n_sep_found=0, n_blank_sep=0,
         n_sep = format.separators.size();

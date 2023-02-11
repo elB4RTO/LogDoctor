@@ -305,7 +305,7 @@ const std::string& Craplog::getLogsFormatString( const int& web_server_id ) cons
 }
 
 // get the logs format
-const FormatOps::LogsFormat& Craplog::getLogsFormat(const int& web_server_id ) const
+const LogsFormat& Craplog::getLogsFormat(const int& web_server_id ) const
 {
     return this->logs_formats.at( web_server_id );
 }
@@ -382,13 +382,13 @@ const QString Craplog::getLogsFormatSample( const int& web_server_id ) const
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( const int& web_server_id )
+void Craplog::setCurrentWSID( const unsigned& web_server_id )
 {
     this->current_WS = web_server_id;
     this->setCurrentLogFormat();
 }
 
-const int& Craplog::getCurrentWSID() const
+const unsigned& Craplog::getCurrentWSID() const
 {
     return this->current_WS;
 }
@@ -400,7 +400,7 @@ void Craplog::setCurrentLogFormat()
 }
 
 // get the current access logs format
-const FormatOps::LogsFormat& Craplog::getCurrentLogFormat() const
+const LogsFormat& Craplog::getCurrentLogFormat() const
 {
     return this->current_LF;
 }
@@ -426,7 +426,7 @@ const int Craplog::getLogsListSize() const {
 }
 
 // return the list. rescan if fresh is true
-const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
+const std::vector<LogFile>& Craplog::getLogsList( const bool fresh )
 {
     if ( fresh ) {
         this->scanLogsDir();
@@ -436,13 +436,12 @@ const std::vector<Craplog::LogFile>& Craplog::getLogsList( const bool fresh )
 
 
 // return the path of the file matching the given name
-const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name ) const
+const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
-    for ( const Craplog::LogFile& item : this->logs_list ) {
-        if ( item.name == file_name ) {
-            return item;
-        }
-    }
+    const auto& item = std::find_if
+        ( this->logs_list.begin(), this->logs_list.end(),
+          [&](const LogFile& it){ return it.name()==file_name; } );
+    if ( item != this->logs_list.end() ) return *item;
     // should be unreachable
     throw GenericException("File item not found");
 }
@@ -452,12 +451,12 @@ const Craplog::LogFile& Craplog::getLogFileItem( const QString& file_name ) cons
 const bool Craplog::setLogFileSelected( const QString& file_name )
 {
     bool result = false;
-    for ( Craplog::LogFile& item : this->logs_list ) {
-        if ( item.name == file_name ) {
-            item.selected = true;
-            result = true;
-            break;
-        }
+    const auto& item = std::find_if
+        ( this->logs_list.begin(), this->logs_list.end(),
+          [&](const LogFile& it){ return it.name()==file_name; } );
+    if ( item != this->logs_list.end() ) {
+        (*item).setSelected();
+        result = true;
     }
     return result;
 }
@@ -525,14 +524,14 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            const LogOps::LogType log_type = this->logOps.defineFileType(
+            const LogType log_type = LogOps::defineFileType(
                 content, this->logs_formats.at( this->current_WS ) );
             content.clear();
-            if ( log_type == LogOps::LogType::Failed ) {
+            if ( log_type == LogType::Failed ) {
                 // failed to get the log type, do not append
                 DialogSec::errFailedDefiningLogType( name );
                 continue;
-            } else if ( log_type == LogOps::LogType::Discarded ) {
+            } else if ( log_type == LogType::Discarded ) {
                 // skip
                 continue;
             }
@@ -546,14 +545,9 @@ void Craplog::scanLogsDir()
                 continue;
             }
 
-            LogFile logfile = {
-                .selected = false,
-                .used_already = this->hashOps.hasBeenUsed( hash, this->current_WS ),
-                .size = size,
-                .name = name,
-                .hash = hash,
-                .path = path
-            };
+            LogFile logfile(
+                false, this->hashOps.hasBeenUsed( hash, this->current_WS ),
+                size, name, hash, path );
             // push in the list
             this->logs_list.push_back( logfile );
         }
@@ -684,17 +678,17 @@ const bool Craplog::checkStuff()
 
         if ( ! this->proceed ) { break; }
 
-        if ( ! file.selected ) {
+        if ( ! file.isSelected() ) {
             // not selected, skip
             continue;
         }
 
         // check if the file has been used already
-        if ( file.used_already ) {
+        if ( file.hasBeenUsed() ) {
             // already used
-            QString msg = file.name;
+            QString msg = file.name();
             if ( this->dialogs_level == 2 ) {
-                msg += "\n" + QString::fromStdString( file.hash );
+                msg += "\n" + QString::fromStdString( file.hash() );
             }
             const int choice = DialogSec::choiceFileAlreadyUsed( msg );
             if ( choice == 0 ) {
@@ -715,13 +709,13 @@ const bool Craplog::checkStuff()
 
         // check if the file respects the warning size
         if ( this->warning_size > 0 ) {
-            if ( file.size > this->warning_size ) {
+            if ( file.size() > this->warning_size ) {
                 // exceeds the warning size
-                QString msg = file.name;
+                QString msg = file.name();
                 if ( this->dialogs_level >= 1 ) {
                     msg += QString("\n\n%1:\n%2").arg(
                         DialogSec::tr("Size of the file"),
-                        PrintSec::printableSize( file.size ) );
+                        PrintSec::printableSize( file.size() ) );
                     if ( this->dialogs_level == 2 ) {
                         msg += QString("\n\n%1:\n%2").arg(
                             DialogSec::tr("Warning size parameter"),
@@ -759,9 +753,9 @@ const bool Craplog::checkStuff()
         }
 
         this->log_files_to_use.push_back(
-            std::make_tuple( file.path, file.hash )
+            std::make_tuple( file.path(), file.hash() )
         );
-        this->used_files_hashes.push_back( file.hash );
+        this->used_files_hashes.push_back( file.hash() );
     }
 
     return this->proceed;

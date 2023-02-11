@@ -8,20 +8,21 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
-#include "modules/craplog/modules/datetime.h"
+#include "datetime.h"
 
 
-CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const FormatOps::LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
+CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
     : QObject{parent}
+    , wsID           ( web_server_id  )
+    , dialogs_level  ( dialogs_level  )
+    , db_data_path   ( db_data_path   )
+    , db_hashes_path ( db_hashes_path )
+    , logs_format    ( logs_format    )
+    , blacklists     ( blacklists     )
+    , warnlists      ( warnlists      )
+    , files_to_use   ( log_files      )
 {
-    this->wsID           = web_server_id;
-    this->dialogs_level  = dialogs_level;
-    this->db_data_path   = db_data_path;
-    this->db_hashes_path = db_hashes_path;
-    this->logs_format    = logs_format;
-    this->blacklists     = blacklists;
-    this->warnlists      = warnlists;
-    this->files_to_use   = log_files;
+
 }
 
 
@@ -684,13 +685,13 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
             if ( row.find( 11 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target = row.at( 11 );
-                for ( const auto& item : wl_met_list ) {
-                    if ( item == target ) {
-                        // match found! skip this line
-                        warning |= true;
-                        this->warnlisted_size += item.size();
-                        break;
-                    }
+                auto found = std::find_if(
+                    wl_met_list.cbegin(), wl_met_list.cend(),
+                    [&target]( const auto& item ){ return item == target; } );
+                if ( found != wl_met_list.end() ) {
+                    // match found! skip this line
+                    warning |= true;
+                    this->warnlisted_size += (*found).size();
                 }
             }
         }
