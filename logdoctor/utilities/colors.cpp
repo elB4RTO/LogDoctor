@@ -1,5 +1,6 @@
 
 #include "colors.h"
+#include "modules/exceptions.h"
 
 
 ColorSec::ColorSec()
@@ -70,4 +71,72 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
             {"res","#56e8e4"} }}
     };
     return scheme;
+}
+
+
+void ColorSec::applyChartTheme( const int theme_id, const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
+{
+    QPen axis_pen;
+    QPen grid_pen;
+    QColor label_color;
+    QBrush title_brush = chart_view->foregroundBrush();
+    QBrush background_brush = chart_view->backgroundBrush();
+    const QFont& small_font = fonts.at("main_small");
+    const QFont& font = fonts.at("main");
+    switch ( theme_id ) {
+        case 0:
+            label_color.setRgb( 16, 16, 16 );
+            axis_pen.setColor( QColor( 32, 32, 32 ) );
+            grid_pen.setColor( QColor( 128, 128, 128 ) );
+            background_brush.setColor( QColor( 248, 248, 248 ) );
+            break;
+        case 1:
+            label_color.setRgb( 248, 248, 248 );
+            axis_pen.setColor( QColor( 216, 216, 216 ) );
+            grid_pen.setColor( QColor( 128, 128, 128 ) );
+            background_brush.setColor( QColor( 40, 40, 40 ) );
+            break;
+        case 2:
+            label_color.setRgb( 40, 31, 7 );
+            axis_pen.setColor( QColor( 70, 61, 37 ) );
+            grid_pen.setColor( QColor( 100, 91, 67 ) );
+            background_brush.setColor( QColor( 230, 221, 197 ) );
+            break;
+        case 3:
+            label_color.setRgb( 220, 250, 124 );
+            axis_pen.setColor( QColor( 188, 224, 232 ) );
+            grid_pen.setColor( QColor( 134, 199, 214 ) );
+            background_brush.setColor( QColor( 0, 77, 94 ) );
+            break;
+        default:
+            // shouldn't be here
+            throw GenericException( "Unexpeced ChartsTheme ID: "+std::to_string(theme_id), true );
+            break;
+    }
+    axis_pen.setWidthF( 1.1 );
+    grid_pen.setWidthF( 0.8 );
+    title_brush.setColor( label_color );
+    background_brush.setStyle( Qt::SolidPattern );
+    // apply to the chart
+    QChart* chart = chart_view->chart();
+    // title
+    chart->setTitleFont( font );
+    chart->setTitleBrush( title_brush );
+    // legend
+    chart->legend()->setFont( font );
+    chart->legend()->setLabelColor( label_color );
+    // axes
+    QList<QAbstractAxis*> axes = chart->axes();
+    for ( auto* axis : axes ) {
+        axis->setLinePen( axis_pen );
+        axis->setGridLinePen( grid_pen );
+        axis->setLabelsColor( label_color );
+        axis->setLabelsFont( small_font );
+        axis->setTitleBrush( title_brush );
+        axis->setTitleFont( small_font );
+    }
+    // background
+    chart->setBackgroundBrush( background_brush );
+    /*chart->setPlotAreaBackgroundBrush( background_brush );
+    chart_view->setBackgroundBrush( background_brush );*/
 }
