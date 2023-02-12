@@ -22,9 +22,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.04</span>
    </div>
-   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and create statistics</div>
+   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
  </tr>
  </tbody>
@@ -74,6 +74,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="classDbQuery-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">DbQuery Class Reference</div></div>
 </div><!--header-->
@@ -121,25 +122,28 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:aa3611bbef762a8b6123f54b33dfb1249"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#aa3611bbef762a8b6123f54b33dfb1249">getDbField</a> (const QString &amp;tr_fld) const</td></tr>
 <tr class="memdesc:aa3611bbef762a8b6123f54b33dfb1249"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the database field corresponding to the relative log field.  <br /></td></tr>
 <tr class="separator:aa3611bbef762a8b6123f54b33dfb1249"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a441234aeca3523055ab2f603001f947b"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a441234aeca3523055ab2f603001f947b">getMinuteGap</a> (const int minute, const int gap=10) const</td></tr>
-<tr class="memdesc:a441234aeca3523055ab2f603001f947b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minute gap for the given minute with the given gap.  <br /></td></tr>
-<tr class="separator:a441234aeca3523055ab2f603001f947b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d8c2969bf46cd3fad5106ab58ed8018"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a6d8c2969bf46cd3fad5106ab58ed8018">getMonthDays</a> (const int year, const int month) const</td></tr>
-<tr class="memdesc:a6d8c2969bf46cd3fad5106ab58ed8018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of days for a given month.  <br /></td></tr>
-<tr class="separator:a6d8c2969bf46cd3fad5106ab58ed8018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b8e5f79fcd3dd3bee9e7208b00305fa"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a7b8e5f79fcd3dd3bee9e7208b00305fa">getMonthNumber</a> (const QString &amp;month_str) const</td></tr>
 <tr class="memdesc:a7b8e5f79fcd3dd3bee9e7208b00305fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the month number in the year.  <br /></td></tr>
 <tr class="separator:a7b8e5f79fcd3dd3bee9e7208b00305fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64f8fbc658236e9b45e6bc61e3c8359e"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a64f8fbc658236e9b45e6bc61e3c8359e">countDays</a> (const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day) const</td></tr>
-<tr class="memdesc:a64f8fbc658236e9b45e6bc61e3c8359e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of days in a given period.  <br /></td></tr>
-<tr class="separator:a64f8fbc658236e9b45e6bc61e3c8359e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7a5359e630a35beee0b6dd183815218"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#ac7a5359e630a35beee0b6dd183815218">countMonths</a> (const int &amp;from_year, const int &amp;from_month, const int &amp;to_year, const int &amp;to_month) const</td></tr>
-<tr class="memdesc:ac7a5359e630a35beee0b6dd183815218"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of months in a given period.  <br /></td></tr>
-<tr class="separator:ac7a5359e630a35beee0b6dd183815218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:ad84db758810e989b8f61ac992d683f4a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#ad84db758810e989b8f61ac992d683f4a">getMinuteGap</a> (const int minute, const int gap=10)</td></tr>
+<tr class="memdesc:ad84db758810e989b8f61ac992d683f4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minute gap for the given minute with the given gap.  <br /></td></tr>
+<tr class="separator:ad84db758810e989b8f61ac992d683f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ad1575ea0a9b5f3554e5d18bf0a3273"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a1ad1575ea0a9b5f3554e5d18bf0a3273">getMonthDays</a> (const int year, const int month)</td></tr>
+<tr class="memdesc:a1ad1575ea0a9b5f3554e5d18bf0a3273"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of days for a given month.  <br /></td></tr>
+<tr class="separator:a1ad1575ea0a9b5f3554e5d18bf0a3273"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d34cbd13cf2781e454c30e581bd2905"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a4d34cbd13cf2781e454c30e581bd2905">countDays</a> (const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day)</td></tr>
+<tr class="memdesc:a4d34cbd13cf2781e454c30e581bd2905"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of days in a given period.  <br /></td></tr>
+<tr class="separator:a4d34cbd13cf2781e454c30e581bd2905"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38a6b999229bc713db46e42d9c0261e8"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a38a6b999229bc713db46e42d9c0261e8">countMonths</a> (const int &amp;from_year, const int &amp;from_month, const int &amp;to_year, const int &amp;to_month)</td></tr>
+<tr class="memdesc:a38a6b999229bc713db46e42d9c0261e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of months in a given period.  <br /></td></tr>
+<tr class="separator:a38a6b999229bc713db46e42d9c0261e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a64f8fbc658236e9b45e6bc61e3c8359e" name="a64f8fbc658236e9b45e6bc61e3c8359e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64f8fbc658236e9b45e6bc61e3c8359e">&#9670;&#160;</a></span>countDays()</h2>
+<a id="a4d34cbd13cf2781e454c30e581bd2905" name="a4d34cbd13cf2781e454c30e581bd2905"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d34cbd13cf2781e454c30e581bd2905">&#9670;&#160;</a></span>countDays()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -148,7 +152,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const int DbQuery::countDays </td>
+          <td class="memname">int DbQuery::countDays </td>
           <td>(</td>
           <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>from_year</em>, </td>
@@ -186,12 +190,12 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -218,8 +222,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac7a5359e630a35beee0b6dd183815218" name="ac7a5359e630a35beee0b6dd183815218"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7a5359e630a35beee0b6dd183815218">&#9670;&#160;</a></span>countMonths()</h2>
+<a id="a38a6b999229bc713db46e42d9c0261e8" name="a38a6b999229bc713db46e42d9c0261e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38a6b999229bc713db46e42d9c0261e8">&#9670;&#160;</a></span>countMonths()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,7 +232,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const int DbQuery::countMonths </td>
+          <td class="memname">int DbQuery::countMonths </td>
           <td>(</td>
           <td class="paramtype">const int &amp;&#160;</td>
           <td class="paramname"><em>from_year</em>, </td>
@@ -254,12 +258,12 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -565,8 +569,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a441234aeca3523055ab2f603001f947b" name="a441234aeca3523055ab2f603001f947b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a441234aeca3523055ab2f603001f947b">&#9670;&#160;</a></span>getMinuteGap()</h2>
+<a id="ad84db758810e989b8f61ac992d683f4a" name="ad84db758810e989b8f61ac992d683f4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad84db758810e989b8f61ac992d683f4a">&#9670;&#160;</a></span>getMinuteGap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -575,7 +579,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const int DbQuery::getMinuteGap </td>
+          <td class="memname">int DbQuery::getMinuteGap </td>
           <td>(</td>
           <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>minute</em>, </td>
@@ -589,12 +593,12 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -617,8 +621,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6d8c2969bf46cd3fad5106ab58ed8018" name="a6d8c2969bf46cd3fad5106ab58ed8018"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d8c2969bf46cd3fad5106ab58ed8018">&#9670;&#160;</a></span>getMonthDays()</h2>
+<a id="a1ad1575ea0a9b5f3554e5d18bf0a3273" name="a1ad1575ea0a9b5f3554e5d18bf0a3273"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ad1575ea0a9b5f3554e5d18bf0a3273">&#9670;&#160;</a></span>getMonthDays()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -627,7 +631,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const int DbQuery::getMonthDays </td>
+          <td class="memname">int DbQuery::getMonthDays </td>
           <td>(</td>
           <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>year</em>, </td>
@@ -641,12 +645,12 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

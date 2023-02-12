@@ -22,9 +22,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.04</span>
    </div>
-   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and create statistics</div>
+   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
  </tr>
  </tbody>
@@ -73,7 +73,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classFormatOps-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">FormatOps Class Reference</div></div>
@@ -106,23 +106,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0b2b6c1517cc6b47035732cef440547b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a log line sample based on the given format.  <br /></td></tr>
 <tr class="separator:a0b2b6c1517cc6b47035732cef440547b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a3963611fb736a9a28dfef77de102c888"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a3963611fb736a9a28dfef77de102c888">parseApacheEscapes</a> (const std::string &amp;string, const bool strftime=false) const</td></tr>
-<tr class="memdesc:a3963611fb736a9a28dfef77de102c888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the escapes (backslashes) and returns the resulting string.  <br /></td></tr>
-<tr class="separator:a3963611fb736a9a28dfef77de102c888"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c97f42018d73ba3cf6c8f79e16cc032"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a1c97f42018d73ba3cf6c8f79e16cc032">parseNginxEscapes</a> (const std::string &amp;string) const</td></tr>
-<tr class="memdesc:a1c97f42018d73ba3cf6c8f79e16cc032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the escapes (backslashes) and returns the resulting string.  <br /></td></tr>
-<tr class="separator:a1c97f42018d73ba3cf6c8f79e16cc032"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a383ab7b6ad5432587756d140ec80fd0d"><td class="memItemLeft" align="right" valign="top">const unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a383ab7b6ad5432587756d140ec80fd0d">countNewLines</a> (const std::string &amp;initial, const std::string &amp;final, const std::vector&lt; std::string &gt; &amp;separators) const</td></tr>
-<tr class="memdesc:a383ab7b6ad5432587756d140ec80fd0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conuts how many new lines are there in the format.  <br /></td></tr>
-<tr class="separator:a383ab7b6ad5432587756d140ec80fd0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d79448ce34d1ca61f8522a39e5d6852"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a1d79448ce34d1ca61f8522a39e5d6852">findNginxFieldEnd</a> (const std::string &amp;string, const int start) const</td></tr>
-<tr class="memdesc:a1d79448ce34d1ca61f8522a39e5d6852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the end of a Nginx log field.  <br /></td></tr>
-<tr class="separator:a1d79448ce34d1ca61f8522a39e5d6852"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e5622969d1c72ce8ae68860f53f3e86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a9e5622969d1c72ce8ae68860f53f3e86">checkIisString</a> (const std::string &amp;string) const</td></tr>
-<tr class="memdesc:a9e5622969d1c72ce8ae68860f53f3e86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the format string contains invalid characters or not.  <br /></td></tr>
-<tr class="separator:a9e5622969d1c72ce8ae68860f53f3e86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:ad94e5b62e1bae1d13796b21d91a5c4ee"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#ad94e5b62e1bae1d13796b21d91a5c4ee">parseApacheEscapes</a> (const std::string &amp;string, const bool strftime=false)</td></tr>
+<tr class="memdesc:ad94e5b62e1bae1d13796b21d91a5c4ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the escapes (backslashes) and returns the resulting string.  <br /></td></tr>
+<tr class="separator:ad94e5b62e1bae1d13796b21d91a5c4ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a220b9a64837c77dc5810bba6b3f616f7"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a220b9a64837c77dc5810bba6b3f616f7">parseNginxEscapes</a> (const std::string &amp;string)</td></tr>
+<tr class="memdesc:a220b9a64837c77dc5810bba6b3f616f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the escapes (backslashes) and returns the resulting string.  <br /></td></tr>
+<tr class="separator:a220b9a64837c77dc5810bba6b3f616f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a292c5f54b72731081e7a8184bb4ffd93"><td class="memItemLeft" align="right" valign="top">static unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a292c5f54b72731081e7a8184bb4ffd93">countNewLines</a> (const std::string &amp;initial, const std::string &amp;final, const std::vector&lt; std::string &gt; &amp;separators)</td></tr>
+<tr class="memdesc:a292c5f54b72731081e7a8184bb4ffd93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conuts how many new lines are there in the format.  <br /></td></tr>
+<tr class="separator:a292c5f54b72731081e7a8184bb4ffd93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af806ead8ef7dff1bdf7da79c3887f263"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#af806ead8ef7dff1bdf7da79c3887f263">findNginxFieldEnd</a> (const std::string &amp;string, const int start)</td></tr>
+<tr class="memdesc:af806ead8ef7dff1bdf7da79c3887f263"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the end of a Nginx log field.  <br /></td></tr>
+<tr class="separator:af806ead8ef7dff1bdf7da79c3887f263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d16a895af9986503a05459f014bc6f9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFormatOps.html#a4d16a895af9986503a05459f014bc6f9">checkIisString</a> (const std::string &amp;string)</td></tr>
+<tr class="memdesc:a4d16a895af9986503a05459f014bc6f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the format string contains invalid characters or not.  <br /></td></tr>
+<tr class="separator:a4d16a895af9986503a05459f014bc6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -142,8 +142,8 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
 <div class="textblock"><p><a class="el" href="classFormatOps.html" title="FormatOps.">FormatOps</a>. </p>
 <p>Operations for the logs formats </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9e5622969d1c72ce8ae68860f53f3e86" name="a9e5622969d1c72ce8ae68860f53f3e86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e5622969d1c72ce8ae68860f53f3e86">&#9670;&#160;</a></span>checkIisString()</h2>
+<a id="a4d16a895af9986503a05459f014bc6f9" name="a4d16a895af9986503a05459f014bc6f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d16a895af9986503a05459f014bc6f9">&#9670;&#160;</a></span>checkIisString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,12 +156,12 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>string</em></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -183,8 +183,8 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
 
 </div>
 </div>
-<a id="a383ab7b6ad5432587756d140ec80fd0d" name="a383ab7b6ad5432587756d140ec80fd0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a383ab7b6ad5432587756d140ec80fd0d">&#9670;&#160;</a></span>countNewLines()</h2>
+<a id="a292c5f54b72731081e7a8184bb4ffd93" name="a292c5f54b72731081e7a8184bb4ffd93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a292c5f54b72731081e7a8184bb4ffd93">&#9670;&#160;</a></span>countNewLines()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,7 +193,7 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned FormatOps::countNewLines </td>
+          <td class="memname">unsigned FormatOps::countNewLines </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>initial</em>, </td>
@@ -213,12 +213,12 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -237,8 +237,8 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
 
 </div>
 </div>
-<a id="a1d79448ce34d1ca61f8522a39e5d6852" name="a1d79448ce34d1ca61f8522a39e5d6852"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d79448ce34d1ca61f8522a39e5d6852">&#9670;&#160;</a></span>findNginxFieldEnd()</h2>
+<a id="af806ead8ef7dff1bdf7da79c3887f263" name="af806ead8ef7dff1bdf7da79c3887f263"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af806ead8ef7dff1bdf7da79c3887f263">&#9670;&#160;</a></span>findNginxFieldEnd()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -247,7 +247,7 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const size_t FormatOps::findNginxFieldEnd </td>
+          <td class="memname">size_t FormatOps::findNginxFieldEnd </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>string</em>, </td>
@@ -261,12 +261,12 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -368,8 +368,8 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
 
 </div>
 </div>
-<a id="a3963611fb736a9a28dfef77de102c888" name="a3963611fb736a9a28dfef77de102c888"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3963611fb736a9a28dfef77de102c888">&#9670;&#160;</a></span>parseApacheEscapes()</h2>
+<a id="ad94e5b62e1bae1d13796b21d91a5c4ee" name="ad94e5b62e1bae1d13796b21d91a5c4ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad94e5b62e1bae1d13796b21d91a5c4ee">&#9670;&#160;</a></span>parseApacheEscapes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,7 +378,7 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string FormatOps::parseApacheEscapes </td>
+          <td class="memname">std::string FormatOps::parseApacheEscapes </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>string</em>, </td>
@@ -392,12 +392,12 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -421,8 +421,8 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
 
 </div>
 </div>
-<a id="a1c97f42018d73ba3cf6c8f79e16cc032" name="a1c97f42018d73ba3cf6c8f79e16cc032"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c97f42018d73ba3cf6c8f79e16cc032">&#9670;&#160;</a></span>parseNginxEscapes()</h2>
+<a id="a220b9a64837c77dc5810bba6b3f616f7" name="a220b9a64837c77dc5810bba6b3f616f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a220b9a64837c77dc5810bba6b3f616f7">&#9670;&#160;</a></span>parseNginxEscapes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -431,16 +431,16 @@ const std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string FormatOps::parseNginxEscapes </td>
+          <td class="memname">std::string FormatOps::parseNginxEscapes </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>string</em></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

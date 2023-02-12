@@ -22,9 +22,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.04</span>
    </div>
-   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and create statistics</div>
+   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
  </tr>
  </tbody>
@@ -146,21 +146,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 <tr class="memitem:a5936b20a36eb7293eb1ab7dffd5a28cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a5936b20a36eb7293eb1ab7dffd5a28cf">updateWarn</a> (QTableWidget *table, const QString &amp;web_server) const</td></tr>
 <tr class="memdesc:a5936b20a36eb7293eb1ab7dffd5a28cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the database applying the changes which have been made to the table.  <br /></td></tr>
 <tr class="separator:a5936b20a36eb7293eb1ab7dffd5a28cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad42db4ec8e6cf016ede35de8d1efa8a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#ad42db4ec8e6cf016ede35de8d1efa8a4">drawWarn</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;hour) const</td></tr>
-<tr class="memdesc:ad42db4ec8e6cf016ede35de8d1efa8a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Warnings stats.  <br /></td></tr>
-<tr class="separator:ad42db4ec8e6cf016ede35de8d1efa8a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8049b143b29c3ee2e6b63b21247be46f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a8049b143b29c3ee2e6b63b21247be46f">drawSpeed</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;protocol, const QString &amp;method, const QString &amp;uri, const QString &amp;query, const QString &amp;response) const</td></tr>
-<tr class="memdesc:a8049b143b29c3ee2e6b63b21247be46f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Speed stats.  <br /></td></tr>
-<tr class="separator:a8049b143b29c3ee2e6b63b21247be46f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10d66f792d38416b3dd70bdcd7128e8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a10d66f792d38416b3dd70bdcd7128e8a">drawCount</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;field) const</td></tr>
-<tr class="memdesc:a10d66f792d38416b3dd70bdcd7128e8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Counts stats.  <br /></td></tr>
-<tr class="separator:a10d66f792d38416b3dd70bdcd7128e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8ef798ee899b3758148966cce81fada"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa8ef798ee899b3758148966cce81fada">drawDay</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field, const QString &amp;filter) const</td></tr>
-<tr class="memdesc:aa8ef798ee899b3758148966cce81fada"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Daytime stats.  <br /></td></tr>
-<tr class="separator:aa8ef798ee899b3758148966cce81fada"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90a97649d7b14c6e81770055c6b640c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a90a97649d7b14c6e81770055c6b640c0">drawRelat</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field_1, const QString &amp;filter_1, const QString &amp;field_2, const QString &amp;filter_2) const</td></tr>
-<tr class="memdesc:a90a97649d7b14c6e81770055c6b640c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Relational stats.  <br /></td></tr>
-<tr class="separator:a90a97649d7b14c6e81770055c6b640c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ab3683df668a280e3331e1ad0533466"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a6ab3683df668a280e3331e1ad0533466">drawWarn</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;hour) const</td></tr>
+<tr class="memdesc:a6ab3683df668a280e3331e1ad0533466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Warnings stats.  <br /></td></tr>
+<tr class="separator:a6ab3683df668a280e3331e1ad0533466"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1029cd84b8b8714914ba41e6441ee25b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a1029cd84b8b8714914ba41e6441ee25b">drawSpeed</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;protocol, const QString &amp;method, const QString &amp;uri, const QString &amp;query, const QString &amp;response) const</td></tr>
+<tr class="memdesc:a1029cd84b8b8714914ba41e6441ee25b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Speed stats.  <br /></td></tr>
+<tr class="separator:a1029cd84b8b8714914ba41e6441ee25b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d654bcb031c3dc994e665c1d73a125a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a0d654bcb031c3dc994e665c1d73a125a">drawCount</a> (QTableWidget *table, QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;field) const</td></tr>
+<tr class="memdesc:a0d654bcb031c3dc994e665c1d73a125a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Counts stats.  <br /></td></tr>
+<tr class="separator:a0d654bcb031c3dc994e665c1d73a125a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39c4dd650adacc3cea98ca5df77dcfb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#a39c4dd650adacc3cea98ca5df77dcfb9">drawDay</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field, const QString &amp;filter) const</td></tr>
+<tr class="memdesc:a39c4dd650adacc3cea98ca5df77dcfb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Daytime stats.  <br /></td></tr>
+<tr class="separator:a39c4dd650adacc3cea98ca5df77dcfb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa15b19dc928bfd627be9fe2ac08bc945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#aa15b19dc928bfd627be9fe2ac08bc945">drawRelat</a> (QtCharts::QChartView *chart, const QChart::ChartTheme &amp;theme, const QString &amp;web_server, const QString &amp;from_year, const QString &amp;from_month, const QString &amp;from_day, const QString &amp;to_year, const QString &amp;to_month, const QString &amp;to_day, const QString &amp;field_1, const QString &amp;filter_1, const QString &amp;field_2, const QString &amp;filter_2) const</td></tr>
+<tr class="memdesc:aa15b19dc928bfd627be9fe2ac08bc945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Relational stats.  <br /></td></tr>
+<tr class="separator:aa15b19dc928bfd627be9fe2ac08bc945"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd79f3e98097fd7127620b25a664d2d"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCrapview.html#abfd79f3e98097fd7127620b25a664d2d">calcGlobals</a> (std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;recur_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;traffic_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;perf_list, std::vector&lt; QString &gt; &amp;work_list, const QString &amp;web_server) const</td></tr>
 <tr class="memdesc:abfd79f3e98097fd7127620b25a664d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data to fill the Globals stats.  <br /></td></tr>
 <tr class="separator:abfd79f3e98097fd7127620b25a664d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,8 +228,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 
 </div>
 </div>
-<a id="a10d66f792d38416b3dd70bdcd7128e8a" name="a10d66f792d38416b3dd70bdcd7128e8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10d66f792d38416b3dd70bdcd7128e8a">&#9670;&#160;</a></span>drawCount()</h2>
+<a id="a0d654bcb031c3dc994e665c1d73a125a" name="a0d654bcb031c3dc994e665c1d73a125a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d654bcb031c3dc994e665c1d73a125a">&#9670;&#160;</a></span>drawCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,12 +251,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
           <td></td>
           <td class="paramtype">const QChart::ChartTheme &amp;&#160;</td>
           <td class="paramname"><em>theme</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
-          <td class="paramname"><em>fonts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -301,8 +295,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
   <table class="params">
     <tr><td class="paramname">table</td><td>The table widget </td></tr>
     <tr><td class="paramname">chart</td><td>The chart widget </td></tr>
-    <tr><td class="paramname">theme</td><td>The theme to use for the chart </td></tr>
-    <tr><td class="paramname">fonts</td><td>The map holding the fonts </td></tr>
+    <tr><td class="paramname">theme</td><td>The base theme to use for the chart </td></tr>
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
     <tr><td class="paramname">year</td><td>The year </td></tr>
     <tr><td class="paramname">month</td><td>The printable month name </td></tr>
@@ -314,8 +307,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 
 </div>
 </div>
-<a id="aa8ef798ee899b3758148966cce81fada" name="aa8ef798ee899b3758148966cce81fada"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8ef798ee899b3758148966cce81fada">&#9670;&#160;</a></span>drawDay()</h2>
+<a id="a39c4dd650adacc3cea98ca5df77dcfb9" name="a39c4dd650adacc3cea98ca5df77dcfb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39c4dd650adacc3cea98ca5df77dcfb9">&#9670;&#160;</a></span>drawDay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -331,12 +324,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
           <td></td>
           <td class="paramtype">const QChart::ChartTheme &amp;&#160;</td>
           <td class="paramname"><em>theme</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
-          <td class="paramname"><em>fonts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -404,8 +391,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">chart</td><td>The chart widget </td></tr>
-    <tr><td class="paramname">theme</td><td>The theme to use for the chart </td></tr>
-    <tr><td class="paramname">fonts</td><td>The map holding the fonts </td></tr>
+    <tr><td class="paramname">theme</td><td>The base theme to use for the chart </td></tr>
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
     <tr><td class="paramname">year</td><td>The initial year </td></tr>
     <tr><td class="paramname">month</td><td>The initial printable month name </td></tr>
@@ -421,8 +407,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 
 </div>
 </div>
-<a id="a90a97649d7b14c6e81770055c6b640c0" name="a90a97649d7b14c6e81770055c6b640c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90a97649d7b14c6e81770055c6b640c0">&#9670;&#160;</a></span>drawRelat()</h2>
+<a id="aa15b19dc928bfd627be9fe2ac08bc945" name="aa15b19dc928bfd627be9fe2ac08bc945"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa15b19dc928bfd627be9fe2ac08bc945">&#9670;&#160;</a></span>drawRelat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -438,12 +424,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
           <td></td>
           <td class="paramtype">const QChart::ChartTheme &amp;&#160;</td>
           <td class="paramname"><em>theme</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
-          <td class="paramname"><em>fonts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -523,8 +503,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">chart</td><td>The chart widget </td></tr>
-    <tr><td class="paramname">theme</td><td>The theme to use for the chart </td></tr>
-    <tr><td class="paramname">fonts</td><td>The map holding the fonts </td></tr>
+    <tr><td class="paramname">theme</td><td>The base theme to use for the chart </td></tr>
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
     <tr><td class="paramname">year</td><td>The initial year </td></tr>
     <tr><td class="paramname">month</td><td>The initial printable month name </td></tr>
@@ -542,8 +521,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 
 </div>
 </div>
-<a id="a8049b143b29c3ee2e6b63b21247be46f" name="a8049b143b29c3ee2e6b63b21247be46f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8049b143b29c3ee2e6b63b21247be46f">&#9670;&#160;</a></span>drawSpeed()</h2>
+<a id="a1029cd84b8b8714914ba41e6441ee25b" name="a1029cd84b8b8714914ba41e6441ee25b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1029cd84b8b8714914ba41e6441ee25b">&#9670;&#160;</a></span>drawSpeed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -565,12 +544,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
           <td></td>
           <td class="paramtype">const QChart::ChartTheme &amp;&#160;</td>
           <td class="paramname"><em>theme</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
-          <td class="paramname"><em>fonts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -639,8 +612,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
   <table class="params">
     <tr><td class="paramname">table</td><td>The table widget </td></tr>
     <tr><td class="paramname">chart</td><td>The chart widget </td></tr>
-    <tr><td class="paramname">theme</td><td>The theme to use for the chart </td></tr>
-    <tr><td class="paramname">fonts</td><td>The map holding the fonts </td></tr>
+    <tr><td class="paramname">theme</td><td>The base theme to use for the chart </td></tr>
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
     <tr><td class="paramname">year</td><td>The year </td></tr>
     <tr><td class="paramname">month</td><td>The printable month name </td></tr>
@@ -656,8 +628,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
 
 </div>
 </div>
-<a id="ad42db4ec8e6cf016ede35de8d1efa8a4" name="ad42db4ec8e6cf016ede35de8d1efa8a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad42db4ec8e6cf016ede35de8d1efa8a4">&#9670;&#160;</a></span>drawWarn()</h2>
+<a id="a6ab3683df668a280e3331e1ad0533466" name="a6ab3683df668a280e3331e1ad0533466"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ab3683df668a280e3331e1ad0533466">&#9670;&#160;</a></span>drawWarn()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -679,12 +651,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
           <td></td>
           <td class="paramtype">const QChart::ChartTheme &amp;&#160;</td>
           <td class="paramname"><em>theme</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
-          <td class="paramname"><em>fonts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -729,8 +695,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> ()</td
   <table class="params">
     <tr><td class="paramname">table</td><td>The table widget </td></tr>
     <tr><td class="paramname">chart</td><td>The chart widget </td></tr>
-    <tr><td class="paramname">theme</td><td>The theme to use for the chart </td></tr>
-    <tr><td class="paramname">fonts</td><td>The map holding the fonts </td></tr>
+    <tr><td class="paramname">theme</td><td>The base theme to use for the chart </td></tr>
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
     <tr><td class="paramname">year</td><td>The year </td></tr>
     <tr><td class="paramname">month</td><td>The printable month name </td></tr>

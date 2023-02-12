@@ -22,9 +22,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;2.04</span>
    </div>
-   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and create statistics</div>
+   <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
  </tr>
  </tbody>
@@ -83,9 +83,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a33b8a01b7d46709b956496a8f924ed14"><td class="memItemLeft" align="right" valign="top">static const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrintSec.html#a33b8a01b7d46709b956496a8f924ed14">printableSize</a> (const unsigned bytes)</td></tr>
 <tr class="memdesc:a33b8a01b7d46709b956496a8f924ed14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the size including the suffix, for display purposes.  <br /></td></tr>
 <tr class="separator:a33b8a01b7d46709b956496a8f924ed14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef572352736d46f81c2f5502445f32a1"><td class="memItemLeft" align="right" valign="top">static const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrintSec.html#aef572352736d46f81c2f5502445f32a1">printableSpeed</a> (const unsigned bytes, const unsigned seconds)</td></tr>
-<tr class="memdesc:aef572352736d46f81c2f5502445f32a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the speed including the suffix, for display purposes.  <br /></td></tr>
-<tr class="separator:aef572352736d46f81c2f5502445f32a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af070602729943550b94ec790d651a80e"><td class="memItemLeft" align="right" valign="top">static const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrintSec.html#af070602729943550b94ec790d651a80e">printableSpeed</a> (const float &amp;bytes, const float &amp;seconds)</td></tr>
+<tr class="memdesc:af070602729943550b94ec790d651a80e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the speed including the suffix, for display purposes.  <br /></td></tr>
+<tr class="separator:af070602729943550b94ec790d651a80e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d60ea77863fc0dbd330df20d9140467"><td class="memItemLeft" align="right" valign="top">static const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPrintSec.html#a6d60ea77863fc0dbd330df20d9140467">printableTime</a> (const unsigned seconds)</td></tr>
 <tr class="memdesc:a6d60ea77863fc0dbd330df20d9140467"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the time, for display purposes.  <br /></td></tr>
 <tr class="separator:a6d60ea77863fc0dbd330df20d9140467"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,8 +223,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aef572352736d46f81c2f5502445f32a1" name="aef572352736d46f81c2f5502445f32a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef572352736d46f81c2f5502445f32a1">&#9670;&#160;</a></span>printableSpeed()</h2>
+<a id="af070602729943550b94ec790d651a80e" name="af070602729943550b94ec790d651a80e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af070602729943550b94ec790d651a80e">&#9670;&#160;</a></span>printableSpeed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -235,13 +235,13 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">const QString PrintSec::printableSpeed </td>
           <td>(</td>
-          <td class="paramtype">const unsigned&#160;</td>
+          <td class="paramtype">const float &amp;&#160;</td>
           <td class="paramname"><em>bytes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const unsigned&#160;</td>
+          <td class="paramtype">const float &amp;&#160;</td>
           <td class="paramname"><em>seconds</em>&#160;</td>
         </tr>
         <tr>

@@ -9,7 +9,7 @@ var searchData=
   ['checkdir_6',['checkDir',['../classIOutils.html#ab5d61de63617601f974e413d57342d10',1,'IOutils']]],
   ['checkfile_7',['checkFile',['../classIOutils.html#ab7eef4b2b60686ceeb367155f13f3a99',1,'IOutils']]],
   ['checkhashesdatabase_8',['checkHashesDatabase',['../classCheckSec.html#a012e382c91f035ced3c5868ad551a2ec',1,'CheckSec']]],
-  ['checkiisstring_9',['checkIisString',['../classFormatOps.html#a9e5622969d1c72ce8ae68860f53f3e86',1,'FormatOps']]],
+  ['checkiisstring_9',['checkIisString',['../classFormatOps.html#a4d16a895af9986503a05459f014bc6f9',1,'FormatOps']]],
   ['checkstuff_10',['checkStuff',['../classCraplog.html#af24d2934e2227cfaf1555c89186f0c2e',1,'Craplog']]],
   ['checkvictory_11',['checkVictory',['../classCrissCross.html#a5dccc6edb887b96eef8d4d1d5c00697d',1,'CrissCross']]],
   ['choicedatabasemissingcolumn_12',['choiceDatabaseMissingColumn',['../classDialogSec.html#ac02553fc006764aeaec0dd2afd88a371',1,'DialogSec']]],
@@ -30,9 +30,9 @@ var searchData=
   ['contains_27',['contains',['../classStringOps.html#a3017639b683ae6b1555a19ac8ba9c7aa',1,'StringOps::contains()'],['../classVecOps.html#a591f42b19a9f4638bae861fc9a4045a0',1,'VecOps::contains()']]],
   ['convertmonth_28',['convertMonth',['../classDateTimeOps.html#adb479373277de1df7e77392bffbe9c01',1,'DateTimeOps']]],
   ['count_29',['count',['../classStringOps.html#a9839f0ecbc4aaa9c444cff6392325f35',1,'StringOps']]],
-  ['countdays_30',['countDays',['../classDbQuery.html#a64f8fbc658236e9b45e6bc61e3c8359e',1,'DbQuery']]],
-  ['countmonths_31',['countMonths',['../classDbQuery.html#ac7a5359e630a35beee0b6dd183815218',1,'DbQuery']]],
-  ['countnewlines_32',['countNewLines',['../classFormatOps.html#a383ab7b6ad5432587756d140ec80fd0d',1,'FormatOps']]],
+  ['countdays_30',['countDays',['../classDbQuery.html#a4d34cbd13cf2781e454c30e581bd2905',1,'DbQuery']]],
+  ['countmonths_31',['countMonths',['../classDbQuery.html#a38a6b999229bc713db46e42d9c0261e8',1,'DbQuery']]],
+  ['countnewlines_32',['countNewLines',['../classFormatOps.html#a292c5f54b72731081e7a8184bb4ffd93',1,'FormatOps']]],
   ['crapinfo_33',['Crapinfo',['../classCrapinfo.html#a5a036ed71eaccc1da462339abc810125',1,'Crapinfo']]],
   ['crapup_34',['Crapup',['../classCrapup.html#ab004aebc9dd40cc330e522f78f19471c',1,'Crapup']]]
 ];

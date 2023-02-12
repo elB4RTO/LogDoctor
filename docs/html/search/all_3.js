@@ -16,9 +16,9 @@ var searchData=
   ['direction_13',['direction',['../structBodyPart.html#ad732b10425a86790821523da2388910b',1,'BodyPart::direction()'],['../classSnake.html#a6152832ec0736c49fa6416ba30c46313',1,'Snake::direction()']]],
   ['donutbreakdown_14',['DonutBreakdown',['../classDonutBreakdown.html',1,'']]],
   ['draw_15',['draw',['../classCrissCross.html#a9f957e38250d4c58f2b232620891cb47',1,'CrissCross']]],
-  ['drawcount_16',['drawCount',['../classCrapview.html#a10d66f792d38416b3dd70bdcd7128e8a',1,'Crapview']]],
-  ['drawday_17',['drawDay',['../classCrapview.html#aa8ef798ee899b3758148966cce81fada',1,'Crapview']]],
-  ['drawrelat_18',['drawRelat',['../classCrapview.html#a90a97649d7b14c6e81770055c6b640c0',1,'Crapview']]],
-  ['drawspeed_19',['drawSpeed',['../classCrapview.html#a8049b143b29c3ee2e6b63b21247be46f',1,'Crapview']]],
-  ['drawwarn_20',['drawWarn',['../classCrapview.html#ad42db4ec8e6cf016ede35de8d1efa8a4',1,'Crapview']]]
+  ['drawcount_16',['drawCount',['../classCrapview.html#a0d654bcb031c3dc994e665c1d73a125a',1,'Crapview']]],
+  ['drawday_17',['drawDay',['../classCrapview.html#a39c4dd650adacc3cea98ca5df77dcfb9',1,'Crapview']]],
+  ['drawrelat_18',['drawRelat',['../classCrapview.html#aa15b19dc928bfd627be9fe2ac08bc945',1,'Crapview']]],
+  ['drawspeed_19',['drawSpeed',['../classCrapview.html#a1029cd84b8b8714914ba41e6441ee25b',1,'Crapview']]],
+  ['drawwarn_20',['drawWarn',['../classCrapview.html#a6ab3683df668a280e3331e1ad0533466',1,'Crapview']]]
 ];
