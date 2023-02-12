@@ -1,4 +1,19 @@
 
+# v2.03
+
+- Improvements and fixes
+
+<br/><br/>
+
+# v2.02
+
+- Improvements and fixes
+- Added new translations:
+  - Japanese
+  - Portuguese
+
+<br/><br/>
+
 # v2.01
 
 - Improvements and fixes
