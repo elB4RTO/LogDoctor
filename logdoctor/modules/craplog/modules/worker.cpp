@@ -439,11 +439,8 @@ void CraplogWorker::parseLogLines()
 
         // set the default warning mark ( 0=false ) to default status
         data.emplace( 99, "0" );
-        {
-            std::unique_lock<std::mutex> lock( this->mutex );
-            this->parsed_size += line_size;
-            this->parsed_lines ++;
-        }
+        this->parsed_size += line_size;
+        this->parsed_lines ++;
         this->data_collection.push_back( data );
         this->sendPerfData();
     };
@@ -623,7 +620,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
          warning = false;
     QSqlQuery query = QSqlQuery( db );
     // parse every row of data
-    for ( const std::unordered_map<int, std::string>& row : this->data_collection ) {
+    for ( const log_line_data_t& row : this->data_collection ) {
         // break if failed
         if ( ! successful ) { break; }
 

@@ -55,7 +55,7 @@ public:
     explicit LogsFormat(){}
     explicit LogsFormat
         (const std::string& str,const std::string& itl,const std::string& fnl,const std::vector<std::string>& seps,const std::vector<std::string>& flds,const unsigned nl)
-        :string(std::move(str)),initial(std::move(itl)),final(std::move(fnl)),separators(std::move(seps)),fields(std::move(flds)),new_lines(nl){}
+        :string(str),initial(itl),final(fnl),separators(seps),fields(flds),new_lines(nl){}
     std::string string;                  //!< The logs format string
     std::string initial;                 //!< The initial separator
     std::string final;                   //!< The final separator

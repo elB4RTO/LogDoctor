@@ -88,7 +88,7 @@ private:
         \throw LogFormatException
         \see processApacheFormatString()
     */
-    const std::string parseApacheEscapes( const std::string& string, const bool strftime=false ) const;
+    static std::string parseApacheEscapes( const std::string& string, const bool strftime=false );
 
     //! Parses the escapes (backslashes) and returns the resulting string
     /*!
@@ -98,7 +98,7 @@ private:
         \throw LogFormatException
         \see processNginxFormatString()
     */
-    const std::string parseNginxEscapes( const std::string& string ) const;
+    static std::string parseNginxEscapes( const std::string& string );
 
     //! Conuts how many new lines are there in the format
     /*!
@@ -109,7 +109,7 @@ private:
         \return The number of new lines in a single log line
         \see LogsFormat, processApacheFormatString(), processNginxFormatString()
     */
-    const unsigned countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const;
+    static unsigned countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators );
 
     //! Finds the end of a Nginx log field
     /*!
@@ -118,7 +118,7 @@ private:
         \return The ending poin of the field in the string
         \see processNginxFormatString()
     */
-    const size_t findNginxFieldEnd( const std::string& string, const int start ) const;
+    static size_t findNginxFieldEnd( const std::string& string, const int start );
 
     //! Checks whether the format string contains invalid characters or not
     /*!
@@ -126,7 +126,7 @@ private:
         \throw LogFormatException
         \see processIisFormatString
     */
-    void checkIisString( const std::string& string ) const;
+    static void checkIisString( const std::string& string );
 
 
     /////////////////

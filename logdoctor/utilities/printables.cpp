@@ -49,19 +49,16 @@ const QString PrintSec::printableSize( const unsigned bytes )
 }
 
 
-const QString PrintSec::printableSpeed( const unsigned bytes, const unsigned secs_ )
+const QString PrintSec::printableSpeed( const float& bytes, const float& secs_ )
 {
     std::string speed_str, speed_sfx=" B/s";
-    unsigned secs = secs_;
-    if ( secs == 0 ) {
-        secs ++;
-    }
-    float speed = (float)bytes / (float)secs;
-    if (speed > 1024) {
-        speed /= 1024;
+    const float secs = ( secs_ > 0.0 ) ? secs_ : ( secs_ < 0.0 ) ? -secs_ : 0.1 ;
+    float speed = bytes / secs;
+    if (speed > 1024.0) {
+        speed /= 1024.0;
         speed_sfx = " KiB/s";
-        if (speed > 1024) {
-            speed /= 1024;
+        if (speed > 1024.0) {
+            speed /= 1024.0;
             speed_sfx = " MiB/s";
         }
     }

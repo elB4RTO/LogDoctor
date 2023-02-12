@@ -13,7 +13,7 @@ class CraplogWorker : public QObject
 private:
 
     typedef std::vector<std::tuple<std::string,std::string>> worker_files_t;
-    typedef std::unordered_map<int, std::string> log_line_data_t;
+    typedef std::map<int, std::string> log_line_data_t;
     typedef std::unordered_map<int, BWlist> bw_lists_t;
 
 
@@ -81,8 +81,6 @@ private:
     bw_lists_t warnlists;
 
     LogsFormat logs_format;
-
-    std::mutex mutex;
 
     bool proceed = true;
 

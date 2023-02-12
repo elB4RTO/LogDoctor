@@ -25,7 +25,7 @@ public:
         \return The string to be displayed
     */
     static const QString printableSpeed(
-        const unsigned bytes, const unsigned seconds
+        const float& bytes, const float& seconds
     );
 
 

@@ -301,7 +301,7 @@ private:
         \return The gap index
         \throw DateTimeException
     */
-    const int getMinuteGap( const int minute, const int gap=10 ) const;
+    static int getMinuteGap( const int minute, const int gap=10 );
 
 
     //! Returns the number of days for a given month
@@ -311,7 +311,7 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    const int getMonthDays( const int year, const int month ) const;
+    static int getMonthDays( const int year, const int month );
 
     //! Returns the month number in the year
     /*!
@@ -332,7 +332,9 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    const int countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day ) const;
+    static int countDays(
+        const int from_year, const int from_month, const int from_day,
+        const int to_year, const int to_month, const int to_day );
 
 
     //! Returns the number of months in a given period
@@ -343,10 +345,9 @@ private:
         \param to_month The final month
         \return The number of months in the period
     */
-    const int countMonths(
+    static int countMonths(
         const int& from_year, const int& from_month,
-        const int& to_year,   const int& to_month
-    ) const;
+        const int& to_year,   const int& to_month );
 };
 
 #endif // QUERY_H

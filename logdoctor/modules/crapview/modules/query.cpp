@@ -30,7 +30,7 @@ void DbQuery::setDbPath( const std::string& path )
 }
 
 
-const int DbQuery::getMinuteGap( const int minute, const int gap ) const
+int DbQuery::getMinuteGap( const int minute, const int gap )
 {
     int m = -1;
     if ( minute < 0 || minute >= 60 ) {
@@ -48,7 +48,7 @@ const int DbQuery::getMinuteGap( const int minute, const int gap ) const
     return m;
 }
 
-const int DbQuery::getMonthDays( const int year, const int month ) const
+int DbQuery::getMonthDays( const int year, const int month )
 {
     int n_days;
     switch (month) {
@@ -85,7 +85,7 @@ const int DbQuery::getMonthNumber( const QString& month_str ) const
 }
 
 
-const int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day ) const
+int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
 {
     int n_days = 1;
     if ( from_year == to_year ) {
@@ -94,17 +94,17 @@ const int DbQuery::countDays( const int from_year, const int from_month, const i
             // 1 month
             n_days += to_day - from_day + 1;
         } else {
-            n_days += this->getMonthDays( from_year, from_month ) - from_day; // first month's days
+            n_days += getMonthDays( from_year, from_month ) - from_day; // first month's days
             for ( int month=from_month+1; month<to_month; month++ ) {
-                n_days += this->getMonthDays( from_year, month );
+                n_days += getMonthDays( from_year, month );
             }
             n_days += to_day; // last month's days
         }
     } else {
-        n_days += this->getMonthDays( from_year, from_month ) - from_day;
+        n_days += getMonthDays( from_year, from_month ) - from_day;
         if ( from_month < 12 ) {
             for ( int month=from_month+1; month<=12; month++ ) {
-                n_days += this->getMonthDays( from_year, month );
+                n_days += getMonthDays( from_year, month );
             }
         }
         for ( int year=from_year+1; year<=to_year; year++ ) {
@@ -114,14 +114,14 @@ const int DbQuery::countDays( const int from_year, const int from_month, const i
                 n_days += to_day; // last month's days, added in advance
             }
             for ( int month=1; month<=last_month; month++ ) {
-                n_days += this->getMonthDays( year, month );
+                n_days += getMonthDays( year, month );
             }
         }
     }
     return n_days;
 }
 
-const int DbQuery::countMonths( const int& from_year, const int& from_month, const int& to_year, const int& to_month ) const
+int DbQuery::countMonths( const int& from_year, const int& from_month, const int& to_year, const int& to_month )
 {
     int n_months = 0;
     if ( from_year == to_year ) {
@@ -154,7 +154,7 @@ const int DbQuery::countMonths( const QString& from_year, const QString& from_mo
         // failed to convert to integers
         throw DateTimeException( "Failed to convert Month from string to int" ); // leave un-catched
     }
-    return this->countMonths( from_year_, from_month_, to_year_, to_month_ );
+    return countMonths( from_year_, from_month_, to_year_, to_month_ );
 }
 
 
@@ -477,7 +477,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                             aux.push_back( query.value( 0 ).toString() );
                             // append the line
                             items.at( query.value(5).toInt() )
-                                 .at( this->getMinuteGap( query.value(6).toInt() )/10 )
+                                 .at( getMinuteGap( query.value(6).toInt() )/10 )
                                  .push_back( aux );
                         }
                     } catch (...) {
@@ -519,7 +519,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                             }
                             aux.push_back( query.value( 0 ).toString() );
                             // append the line
-                            items.at( this->getMinuteGap( query.value(6).toInt() )/10 )
+                            items.at( getMinuteGap( query.value(6).toInt() )/10 )
                                  .at( query.value(6).toInt()%10 )
                                  .push_back( aux );
                         }
@@ -872,7 +872,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                     }
                     // append the last fictitious count
                     day ++;
-                    if ( day > this->getMonthDays( year, month ) ) {
+                    if ( day > getMonthDays( year, month ) ) {
                         day = 1;
                         month ++;
                         if ( month > 12 ) {
@@ -1062,7 +1062,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
             QString log_field = this->getDbField( log_field_ );
 
             int n_days   = 0,
-                n_months = this->countMonths( from_year, from_month, to_year, to_month );
+                n_months = countMonths( from_year, from_month, to_year, to_month );
 
             int year = from_year,
                 month = from_month,
@@ -1126,7 +1126,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                             hour   = query.value(1).toInt();
                             minute = query.value(2).toInt();
                             // increase the count
-                            data.at( hour ).at( this->getMinuteGap( minute ) ) ++;
+                            data.at( hour ).at( getMinuteGap( minute ) ) ++;
                             // append the day as newly found if not found yet
                             days_l[ day ] ++;
                         }
@@ -1205,7 +1205,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                                 hour   = query.value(1).toInt();
                                 minute = query.value(2).toInt();
                                 // increase the count
-                                data.at( hour ).at( this->getMinuteGap( minute ) ) ++;
+                                data.at( hour ).at( getMinuteGap( minute ) ) ++;
                                 // append the day as newly found if not found yet
                                 days_l[ day ] ++;
                             }
@@ -1404,7 +1404,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                     minute = count = 0;
                     while ( query.next() ) {
                         aux_hour   = query.value(0).toInt();
-                        aux_minute = this->getMinuteGap( query.value(1).toInt(), gap );
+                        aux_minute = getMinuteGap( query.value(1).toInt(), gap );
                         if ( aux_hour == hour && aux_minute == minute ) {
                             count ++;
                         } else {
@@ -1467,7 +1467,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                     }
                     // append the real last fictitious count
                     day ++;
-                    if ( day > this->getMonthDays( year, month ) ) {
+                    if ( day > getMonthDays( year, month ) ) {
                         day = 1;
                         month ++;
                         if ( month > 12 ) {
@@ -1551,7 +1551,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
             QString log_field_1 = this->getDbField( log_field_1_ ),
                     log_field_2 = this->getDbField( log_field_2_ );
 
-            int n_months = this->countMonths( from_year, from_month, to_year, to_month );
+            int n_months = countMonths( from_year, from_month, to_year, to_month );
 
             QDateTime time;
             int year  = from_year,
@@ -1664,10 +1664,10 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                                             m = 12;
                                             y --;
                                         }
-                                        d = this->getMonthDays( y, m );
+                                        d = getMonthDays( y, m );
                                     }
                                     for ( ; d!=aux_day; d++ ) {
-                                        if ( d > this->getMonthDays( y, m ) ) {
+                                        if ( d > getMonthDays( y, m ) ) {
                                             d = 1;
                                             m ++;
                                             if ( m > 12 ) {
@@ -1688,26 +1688,26 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                         // append any missing day from the last found until 1 day fater the last one
                         day++;
-                        if ( day > this->getMonthDays( year, month ) ) {
+                        if ( day > getMonthDays( year, month ) ) {
                             month ++;
                             if ( month > 12 ) {
                                 month = 1;
                                 year ++;
                             }
-                            day = this->getMonthDays( year, month );
+                            day = getMonthDays( year, month );
                         }
                         to_day += 2;
-                        if ( to_day > this->getMonthDays( year, month ) ) {
+                        if ( to_day > getMonthDays( year, month ) ) {
                             int m = month + 1,
                                 y = year;
                             if ( m > 12 ) {
                                 m = 1;
                                 y ++;
                             }
-                            to_day = this->getMonthDays( y, m );
+                            to_day = getMonthDays( y, m );
                         }
                         for ( ; day!=to_day; day++ ) {
-                            if ( day > this->getMonthDays( year, month ) ) {
+                            if ( day > getMonthDays( year, month ) ) {
                                 day = 1;
                                 month ++;
                                 if ( month > 12 ) {
@@ -1727,7 +1727,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
 
 
             } else {
-                data.reserve( this->countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
+                data.reserve( countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
                 for ( int m=1; m<=n_months; m++ ) {
                     stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
                         .arg( web_server )
@@ -1806,7 +1806,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                             if ( ! query.last() ) {
                                 // no days found, append missing days with 0 value
                                 int f_d = 1,
-                                    t_d = this->getMonthDays( year, month );
+                                    t_d = getMonthDays( year, month );
                                 if ( m == 1 ) {
                                     // first month, only get the day from the beginning day
                                     f_d = from_day;
@@ -1856,7 +1856,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                                 }
                                 // append any missing day to the end of the month with a zero value
-                                for ( int d=day+1; d<=this->getMonthDays(year,month); d++ ) {
+                                for ( int d=day+1; d<=getMonthDays(year,month); d++ ) {
                                     time.setDate( QDate( year, month , d ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }

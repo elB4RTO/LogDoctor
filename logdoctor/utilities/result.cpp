@@ -12,7 +12,7 @@ Result<T>::Result()
 template <typename T>
 Result<T>::Result( const bool ok, const T& data )
     : result( ok )
-    , data( std::move(data) )
+    , data( data )
 {
 
 }
