@@ -400,7 +400,7 @@ public:
 
     //! Builds and draws the chart to be displayed in the main window
     /*!
-        \param theme The theme to use for the Chart
+        \param theme The base theme to use for the Chart
         \param fonts The map holding the fonts
         \param size_chart The widget which will display the chart
         \see DonutBreakdown

@@ -685,7 +685,7 @@ private:
 
     QScopedPointer<QTimer> waiter_timer;
     std::chrono::system_clock::time_point waiter_timer_start;
-    std::chrono::system_clock::duration   waiter_timer_elapsed;
+    /*std::chrono::system_clock::duration   waiter_timer_elapsed;*/
 
 
     //! Resolves the given path and returns the canonical path

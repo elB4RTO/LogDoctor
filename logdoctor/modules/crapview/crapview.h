@@ -148,8 +148,7 @@ public:
     /*!
         \param table The table widget
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The year
         \param month The printable month name
@@ -159,7 +158,6 @@ public:
     void drawWarn(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day, const QString& hour
     ) const;
@@ -169,8 +167,7 @@ public:
     /*!
         \param table The table widget
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The year
         \param month The printable month name
@@ -184,7 +181,6 @@ public:
     void drawSpeed(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
         const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response
@@ -195,8 +191,7 @@ public:
     /*!
         \param table The table widget
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The year
         \param month The printable month name
@@ -206,7 +201,6 @@ public:
     void drawCount(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
         const QString& field
@@ -216,8 +210,7 @@ public:
     //! Draws the chart for the Daytime stats
     /*!
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The initial year
         \param month The initial printable month name
@@ -231,7 +224,6 @@ public:
     void drawDay(
         QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
@@ -242,8 +234,7 @@ public:
     //! Draws the chart for the Relational stats
     /*!
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The initial year
         \param month The initial printable month name
@@ -259,7 +250,6 @@ public:
     void drawRelat(
         QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year,   const QString& to_month,   const QString& to_day,

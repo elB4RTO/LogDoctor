@@ -230,6 +230,19 @@ MainWindow::MainWindow(QWidget *parent)
     //// INTERFACE ////
     this->updateUiLanguage();
     this->updateUiTheme();
+    QChartView* charts[] = {
+        this->ui->chart_MakeStats_Size,
+        this->ui->chart_ConfCharts_Preview,
+        this->ui->chart_StatsWarn,
+        this->ui->chart_StatsSpeed,
+        this->ui->chart_StatsCount,
+        this->ui->chart_StatsDay,
+        this->ui->chart_StatsRelat
+    };
+    for ( auto* chart : charts ) {
+        ColorSec::applyChartTheme(
+            this->charts_theme_id, this->FONTS, chart );
+    }
 
 
     ///////////////
@@ -981,14 +994,14 @@ const std::string MainWindow::list2string( const std::vector<std::string>& list,
     if ( user_agent ) {
         string = std::accumulate(
             list.begin(), list.end(), string,
-            [](auto& s, auto str)->std::string&
-            { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
+            []( auto& s, auto str ) -> std::string&
+              { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
 
     } else {
         string = std::accumulate(
             list.begin(), list.end(), string,
-            [](auto& s, auto str)->std::string&
-            { return s += str + " "; } );
+            []( auto& s, auto str ) -> std::string&
+              { return s += str + " "; } );
     }
     return string;
 }
@@ -997,13 +1010,14 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, " " );
     if ( user_agent ) {
+        list.reserve( aux.size() );
         std::transform( aux.cbegin(), aux.cend(),
                         std::back_inserter( list ),
                         [](auto str){ return StringOps::replace( str, "%@#", " " ); } );
+        return list;
     } else {
-        list = std::move( aux );
+        return aux;
     }
-    return list;
 }
 
 
@@ -1788,7 +1802,7 @@ const std::string MainWindow::resolvePath( const std::string& path ) const
 }
 const std::string MainWindow::parentPath( const std::string& path ) const
 {
-    const int stop = path.rfind( '/' );
+    const size_t stop = path.rfind( '/' );
     return path.substr( 0, stop );
 }
 
@@ -2662,11 +2676,11 @@ void MainWindow::updatePerfsLabels()
         this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
     }
     // time and speed
-    this->waiter_timer_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-        this->waiter_timer_start - std::chrono::system_clock::now()
-    );
-    const unsigned secs = this->waiter_timer_elapsed.count() / -1000000000;
-    this->ui->label_MakeStats_Time->setText( PrintSec::printableTime( secs ));
+    std::chrono::duration<float, std::milli> timer_elapsed =
+        std::chrono::system_clock::now() - this->waiter_timer_start;
+    this->ui->label_MakeStats_Time->setText(
+        PrintSec::printableTime( static_cast<unsigned>(
+            timer_elapsed.count() * 0.001 ) ) );
 }
 
 void MainWindow::craplogStarted()
@@ -2674,18 +2688,9 @@ void MainWindow::craplogStarted()
     // reset perfs
     this->resetPerfsLabels();
     // disable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled(false);
+    this->ui->stacked_Logs_Pages->setEnabled( false );
     // disable things which needs database access
     this->setDbWorkingState( true );
-    // enable all labels (needed only the first time)
-    this->ui->icon_MakeStats_Size->setEnabled(  false );
-    this->ui->label_MakeStats_Size->setEnabled(  true );
-    this->ui->icon_MakeStats_Lines->setEnabled( false );
-    this->ui->label_MakeStats_Lines->setEnabled( true );
-    this->ui->icon_MakeStats_Time->setEnabled(  false );
-    this->ui->label_MakeStats_Time->setEnabled(  true );
-    this->ui->icon_MakeStats_Speed->setEnabled( false );
-    this->ui->label_MakeStats_Speed->setEnabled( true );
 }
 
 void MainWindow::craplogFinished()
@@ -2698,6 +2703,9 @@ void MainWindow::craplogFinished()
         // draw the chart
         this->craplog.makeChart(
             this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->ui->chart_MakeStats_Size );
+        ColorSec::applyChartTheme(
+            this->charts_theme_id, this->FONTS,
             this->ui->chart_MakeStats_Size );
         this->db_edited = this->craplog.editedDatabase();
         // refresh the logs section
@@ -2714,12 +2722,7 @@ void MainWindow::craplogFinished()
 void MainWindow::afterCraplogFinished()
 {
     // enable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled(   true );
-    // enable all labels (needed only the first time each session)
-    this->ui->icon_MakeStats_Size->setEnabled(  true );
-    this->ui->icon_MakeStats_Lines->setEnabled( true );
-    this->ui->icon_MakeStats_Time->setEnabled(  true );
-    this->ui->icon_MakeStats_Speed->setEnabled( true );
+    this->ui->stacked_Logs_Pages->setEnabled( true );
     // enable back
     this->setDbWorkingState( false );
     if ( this->craplog.editedDatabase() ) {
@@ -2851,12 +2854,15 @@ void MainWindow::drawStatsWarn()
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ),
         this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
         this->ui->box_StatsWarn_Day->currentText(),
         (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsWarn );
     this->setDbWorkingState( false );
 }
 
@@ -2950,8 +2956,8 @@ void MainWindow::drawStatsSpeed()
     this->ui->table_StatsSpeed->setRowCount(0);
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
-        this->ui->chart_SatsSpeed,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+        this->ui->chart_StatsSpeed,
+        this->CHARTS_THEMES.at( this->charts_theme_id ),
         this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
@@ -2961,6 +2967,9 @@ void MainWindow::drawStatsSpeed()
         this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ),
         this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ),
         this->crapview.parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ) );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsSpeed );
     this->setDbWorkingState( false );
 }
 
@@ -3166,12 +3175,17 @@ void MainWindow::drawStatsCount()
     this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ),
         this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(),
         this->ui->box_StatsCount_Month->currentText(),
         this->ui->box_StatsCount_Day->currentText(),
         this->count_fld );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsCount );
+    this->ui->chart_StatsCount->chart()->setTitleFont(
+        this->FONTS.at( "main_big" ) );
     this->setDbWorkingState( false );
 }
 
@@ -3367,7 +3381,7 @@ void MainWindow::drawStatsDay()
     }
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ),
         this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
@@ -3377,6 +3391,9 @@ void MainWindow::drawStatsDay()
         ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
         this->ui->box_StatsDay_LogsField->currentText(),
         filter );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsDay );
     this->setDbWorkingState( false );
 }
 
@@ -3570,7 +3587,7 @@ void MainWindow::drawStatsRelat()
     }
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
-        this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+        this->CHARTS_THEMES.at( this->charts_theme_id ),
         this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
         this->ui->box_StatsRelat_FromYear->currentText(),
         this->ui->box_StatsRelat_FromMonth->currentText(),
@@ -3580,6 +3597,9 @@ void MainWindow::drawStatsRelat()
         this->ui->box_StatsRelat_ToDay->currentText(),
         this->ui->box_StatsRelat_LogsField_1->currentText(), filter1,
         this->ui->box_StatsRelat_LogsField_2->currentText(), filter2 );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsRelat );
     this->setDbWorkingState( false );
 }
 
@@ -3904,6 +3924,10 @@ void MainWindow::refreshChartsPreview()
 
     this->ui->chart_ConfCharts_Preview->setChart( t_chart );
     this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
+
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_ConfCharts_Preview );
 }
 
 

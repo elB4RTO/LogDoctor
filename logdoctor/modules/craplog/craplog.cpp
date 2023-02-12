@@ -844,10 +844,15 @@ const QString Craplog::getParsingSpeed()
     auto stop = ( is_parsing )
         ? std::chrono::system_clock::now()
         : this->parsing_time_stop;
-    const unsigned secs = std::chrono::duration_cast<std::chrono::milliseconds>(
-        this->parsing_time_start - stop )
-        .count() / -1000000000;
-    return PrintSec::printableSpeed( this->parsed_size, secs );
+    return PrintSec::printableSpeed(
+        static_cast<float>(
+            this->parsed_size ),
+        static_cast<float>(
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                stop - this->parsing_time_start
+            ).count()
+            ) * 0.001
+        );
 }
 
 void Craplog::workerStartedParsing()
@@ -920,7 +925,6 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
     sizeBreakdown->setTheme( theme );
     sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
     sizeBreakdown->setTitle( size_chart_name );
-    sizeBreakdown->setTitleFont( fonts.at("main") );
     if ( this->proceed && this->total_size > 0 ) {
         sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
         sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
@@ -929,7 +933,6 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
         sizeBreakdown->legend()->setVisible( false );
         sizeBreakdown->setTitle("");
     }
-    sizeBreakdown->legend()->setFont( fonts.at("main") );
     sizeBreakdown->legend()->markers( ignoredSize_donut ).first()->setVisible( false );
 
     size_chart->setChart( sizeBreakdown );
