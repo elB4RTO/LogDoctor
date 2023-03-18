@@ -82,8 +82,8 @@ then
 		exit 1
 	fi
 fi
-chmod 644 ./logdocdata/help/*/*
-chmod 444 ./logdocdata/licenses/*
+chmod 644 -R ./logdocdata/help/*
+chmod 444 -R ./logdocdata/licenses/*
 which rsync &> /dev/null
 if [[ "$?" == "0" ]]
 then
