@@ -2,14 +2,15 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-2.03-fff"/>
-  <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
-  <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
+  <img src="https://img.shields.io/badge/version-2.04-fff"/>
+  <img src="https://img.shields.io/badge/C%2B%2B-17-31c653"/>
+  <img src="https://img.shields.io/badge/Qt-5.15-31c653"/>
+  <img src="https://github.com/elB4RTO/LogDoctor/actions/workflows/cmake.yml/badge.svg"/>
   <br/>
-  <img src="https://img.shields.io/badge/Linux-supported-brightgreen"/>
-  <img src="https://img.shields.io/badge/BSD-supported-brightgreen"/>
-  <img src="https://img.shields.io/badge/Windows-supported-brightgreen"/>
-  <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-brightgreen"/>
+  <img src="https://img.shields.io/badge/Linux-supported-blue"/>
+  <img src="https://img.shields.io/badge/BSD-supported-blue"/>
+  <img src="https://img.shields.io/badge/Windows-supported-blue"/>
+  <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-blue"/>
  
   <h2>🇬🇧 🇪🇸 🇫🇷 🇮🇹 🇯🇵 🇧🇷</h2>
 </div>
