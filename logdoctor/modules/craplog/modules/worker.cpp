@@ -201,7 +201,7 @@ void CraplogWorker::parseLogLines()
             } else if ( i == n_sep+1 ) {
                 // final separator
                 sep = this->logs_format.final;
-                if ( sep == "" ) {
+                if ( sep.size() == 0 ) {
                     stop = line_size+1;
                 } else {
                     stop = line.find( sep, start );

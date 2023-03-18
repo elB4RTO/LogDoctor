@@ -70,6 +70,12 @@ public:
     */
     const unsigned& getCurrentWSID() const;
 
+    //! Uses the current Web Server to set the relative logs format
+    /*!
+        \see LogsFormat
+    */
+    void setCurrentLogFormat();
+
     //! Returns the currently used LogsFormat
     /*!
         \return The LogsFormat
@@ -562,12 +568,6 @@ private:
     std::unordered_map<int, std::string> logs_format_strings;
 
     std::unordered_map<int, LogsFormat> logs_formats;
-
-    //! Uses the current Web Server to set the relative logs format
-    /*!
-        \see LogOps::LogsFormat
-    */
-    void setCurrentLogFormat();
 
     // currently used logs format
     LogsFormat current_LF;

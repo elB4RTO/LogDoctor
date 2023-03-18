@@ -12,12 +12,11 @@
 class StringOps
 {
 public:
-    explicit StringOps();
-
-
     //! Count the occurrences of the given sequence in the given string
     /*!
         \param str The target string
+        \param flag The string to find
+        \param consecutives If true, don't increase the count for consegutive occurrencies
         \return The number of occurrences
     */
     static const int count( const std::string& str, const std::string& flag, const bool consecutives=true );

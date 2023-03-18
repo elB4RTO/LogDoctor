@@ -30,7 +30,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     QString rich_line="", class_name="";
     std::string sep, fld, fld_str, aux_sep2;
     bool missing = false;
-    size_t start, stop, i, aux_start, aux_stop,
+    size_t i, start, stop, aux_start, aux_stop,
            line_size, sep_size;
     const size_t n_sep = logs_format.separators.size()-1;
     std::vector<std::string> lines;
@@ -48,7 +48,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             continue;
         }
         i = 0;
-        line_size = line.size()-1;
+        line_size = line.size();
         rich_line = "<p>";
         // add the initial chars
         stop = logs_format.initial.size();
@@ -143,7 +143,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                 }
             }
 
-            sep_size = sep.size(); // do not remove, holdss the corretc size to increase stop
+            sep_size = sep.size(); // do not remove, holds the corretc size to increase stop
             // color the fields
             if ( StringOps::startsWith( fld, "date_time" ) ) {
                 if ( StringOps::startsWith( fld_str, "[" ) ) {
@@ -161,8 +161,6 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                 class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
                     class_name += colors.at("ip");
-                } else if ( fld == "port" ) {
-                    class_name += colors.at("pt");
                 } else if ( StringOps::startsWith( fld, "date_time" ) ) {
                     class_name += colors.at("time");
                 } else if ( fld == "user_agent" ) {
@@ -171,6 +169,8 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                     class_name += colors.at("req");
                 } else if ( fld == "response_code" ) {
                     class_name += colors.at("res");
+                } else if ( StringOps::startsWith( fld, "bytes" ) ) {
+                    class_name += colors.at("byte");
                 } else {
                     class_name += colors.at("x");
                 }

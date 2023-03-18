@@ -4,12 +4,6 @@
 #include <algorithm>
 
 
-StringOps::StringOps()
-{
-
-}
-
-
 const int StringOps::count( const std::string& str, const std::string& flag, const bool consecutives )
 {
     size_t start=0, aux_start=0, count=0;
@@ -46,11 +40,7 @@ const bool StringOps::isNumeric( const std::string& str )
 }
 const bool StringOps::isNumeric( const char& chr )
 {
-    if ( chr > 47 && chr < 58 ) {
-        return true;
-    } else {
-        return false;
-    }
+    return chr > 47 && chr < 58;
 }
 
 
@@ -67,12 +57,8 @@ const bool StringOps::isAlphabetic( const std::string& str )
 }
 const bool StringOps::isAlphabetic( const char& chr )
 {
-    if ( (chr > 64 && chr < 91)
-      || (chr > 96 && chr < 123) ) {
-        return true;
-    } else {
-        return false;
-    }
+    return (chr > 64 && chr < 91)
+        || (chr > 96 && chr < 123);
 }
 
 
@@ -89,24 +75,16 @@ const bool StringOps::isAlnum( const std::string& str )
 }
 const bool StringOps::isAlnum( const char& chr )
 {
-    if ( !StringOps::isNumeric( chr )
-      && !StringOps::isAlphabetic( chr ) ) {
-        return false;
-    } else {
-        return true;
-    }
+    return StringOps::isNumeric( chr )
+        || StringOps::isAlphabetic( chr );
 }
 
 
 const bool StringOps::isHex( const char& chr )
 {
-    if ( (chr > 47 && chr < 58)
-      || (chr > 64 && chr < 71)
-      || (chr > 96 && chr < 103) ) {
-        return true;
-    } else {
-        return false;
-    }
+    return (chr > 47 && chr < 58)
+        || (chr > 64 && chr < 71)
+        || (chr > 96 && chr < 103);
 }
 
 
@@ -183,12 +161,7 @@ const bool StringOps::endsWith( const std::string& str, const std::string& flag 
 
 const bool StringOps::contains( const std::string& str, const std::string& flag )
 {
-    bool result = true;
-    size_t i = str.find( flag );
-    if ( i == std::string::npos ) {
-        result = false;
-    }
-    return result;
+    return str.find( flag ) != std::string::npos;
 }
 
 

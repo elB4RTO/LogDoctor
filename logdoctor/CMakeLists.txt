@@ -42,7 +42,6 @@ set(PROJECT_SOURCES
     utilities/printables.h
     utilities/printables.cpp
     utilities/result.h
-    utilities/result.cpp
     utilities/rtf.h
     utilities/rtf.cpp
     utilities/strings.h
@@ -50,7 +49,6 @@ set(PROJECT_SOURCES
     utilities/stylesheets.h
     utilities/stylesheets.cpp
     utilities/vectors.h
-    utilities/vectors.cpp
 
     modules/shared.h
     modules/shared.cpp

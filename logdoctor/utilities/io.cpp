@@ -29,7 +29,7 @@ const bool IOutils::exists( const std::string& path )
 const bool IOutils::isFile( const std::string& path )
 {
     bool result = false;
-    if ( std::filesystem::exists( path )) {
+    if ( IOutils::exists( path )) {
         result = std::filesystem::is_regular_file( path );
     }
     return result;
@@ -60,7 +60,7 @@ const bool IOutils::checkFile( const std::string& path, const bool& readable, co
 const bool IOutils::isDir( const std::string& path )
 {
     bool result = false;
-    if ( std::filesystem::exists( path )) {
+    if ( IOutils::exists( path )) {
         result = std::filesystem::is_directory( path );
     }
     return result;
@@ -162,7 +162,7 @@ void IOutils::randomLines(const std::string& path, std::vector<std::string>& lin
                 lines = aux_lines;
             } else {
                 time_t nTime;
-                srand((unsigned) time(&nTime));
+                srand( (unsigned)time(&nTime) );
                 int index;
                 std::vector<int> picked_indexes;
                 for( int i=0 ; i<n_lines ; i++ ) {

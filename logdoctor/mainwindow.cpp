@@ -4148,6 +4148,9 @@ void MainWindow::on_button_ConfApache_Format_Save_clicked()
         this->ui->inLine_ConfApache_Format_String->text().toStdString() );
     if ( success ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( false );
+        if ( this->craplog.getCurrentWSID() == this->APACHE_ID ) {
+            this->craplog.setCurrentLogFormat();
+        }
     }
 }
 void MainWindow::on_button_ConfApache_Format_Sample_clicked()
@@ -4497,6 +4500,9 @@ void MainWindow::on_button_ConfNginx_Format_Save_clicked()
         this->ui->inLine_ConfNginx_Format_String->text().toStdString() );
     if ( success ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( false );
+        if ( this->craplog.getCurrentWSID() == this->NGINX_ID ) {
+            this->craplog.setCurrentLogFormat();
+        }
     }
 }
 void MainWindow::on_button_ConfNginx_Format_Sample_clicked()
@@ -4846,6 +4852,7 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setEnabled( true );
             this->ui->inLine_ConfIis_Format_String->setFocus();
             if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
         }
@@ -4863,6 +4870,7 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
             if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
         }
@@ -4880,6 +4888,7 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
             if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+                this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
         }
@@ -4907,6 +4916,9 @@ void MainWindow::on_button_ConfIis_Format_Save_clicked()
         this->getIisLogsModule() );
     if ( success ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( false );
+        if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
+            this->craplog.setCurrentLogFormat();
+        }
     }
 }
 void MainWindow::on_button_ConfIis_Format_Sample_clicked()

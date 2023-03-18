@@ -1,12 +1,7 @@
 #ifndef RESULT_H
 #define RESULT_H
 
-#include <QString>
-
-#include <unordered_map>
-#include <vector>
-#include <tuple>
-#include <map>
+#include "modules/exceptions.h"
 
 
 //! Result
@@ -17,21 +12,37 @@ template <typename T>
 class Result
 {
 public:
-    explicit Result();
-    explicit Result( const bool ok, const T& data );
+    explicit Result()
+    : result{ false }, data{}
+    {}
 
-    explicit operator bool() const;
+    explicit Result( const bool ok, const T& data )
+    : result{ ok }, data{ data }
+    {}
+
+    explicit operator bool() const
+    { return this->result; }
 
     /*
     //! Checks if the operation was successful
-    const bool isOk();
+    const bool isOk()
+    { return this->result == true; }
 
     //! Checks if the operation has failed
-    const bool isErr();
+    const bool isErr()
+    { return this->result == false; }
     */
 
     //! Returns the data
-    const T& getData() const;
+    const T& getData() const
+    {
+        if ( this->result ) {
+            return this->data;
+        } else {
+            // unexpected operation
+            throw GenericException( "Result is Err, no data to be returned", true );
+        }
+    }
 
 private:
 

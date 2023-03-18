@@ -578,8 +578,7 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
         }
     }
     if ( this->logs_base_names.at( this->current_WS ).contains != "" ) {
-        if ( ! StringOps::contains(
-                                    name.substr( this->logs_base_names.at( this->current_WS ).starts.size() ),
+        if ( ! StringOps::contains( name.substr( this->logs_base_names.at( this->current_WS ).starts.size() ),
                                     this->logs_base_names.at( this->current_WS ).contains ) ) {
             return false;
         }
