@@ -16,10 +16,17 @@ public:
     /*!
         \param str The target string
         \param flag The string to find
-        \param consecutives If true, don't increase the count for consegutive occurrencies
         \return The number of occurrences
     */
-    static const int count( const std::string& str, const std::string& flag, const bool consecutives=true );
+    static const size_t count( const std::string& str, const std::string& flag );
+
+    //! Count the occurrences of the given sequence in the given string
+    /*!
+        \param str The target string
+        \param flag The char to find
+        \return The number of occurrences
+    */
+    static const size_t count( const std::string& str, const char flag );
 
     //! Checks whether a string only contains numeric characters
     /*!
@@ -73,20 +80,14 @@ public:
     */
     static const bool isHex( const char& chr );
 
-    //! Checks whether a string could be a valid IPv4/IPv6
+    //! Checks whether a string contains only IPv4/IPv6 chars
     /*!
+        This method doesn't check if the IP could be actually valid,
+        since this is beyond its purpose
         \param str The target string
         \return The result of the check
     */
     static const bool isIP( const std::string& str );
-
-    //! Finds the last occurrence of the given sequence in the given string
-    /*!
-        \param str The target string
-        \param flag The sequence to search for
-        \return The position of the last occurrence
-    */
-    static const size_t findLast( const std::string& str, const std::string& flag );
 
     //! Checks if a string starts with the given sequence
     /*!
@@ -139,12 +140,12 @@ public:
     //! Strips everything from a string starting from the left side untill the delimiter is found (a.k.a. cut)
     /*!
         \param str The target string
-        \param chr The delimiter
+        \param delim The delimiter
         \param inclusive Whether to also strip the delimiter or not
-        \param consecutives Whether to strip all the occurrences of the delimiter if they're consecutive
+        \param consecutives Whether to strip all the occurrences of the delimiter if they're consecutive, only applies if inclusive
         \return The result string
     */
-    static std::string lstripUntil( const std::string& str, const std::string& chr, const bool& inclusive=true, const bool& consecutives=true );
+    static std::string lstripUntil( const std::string& str, const std::string& delim, const bool& inclusive=true, const bool& consecutives=true );
 
     //! Splits a string using a separator
     /*!
@@ -161,7 +162,7 @@ public:
         \param separator The sequence to use as separator
         \param strip The characters to strip away
     */
-    static void splitrip( std::vector<std::string>& list, const std::string& target_str, const std::string& separator="\n", const std::string& strip=" \n\t\b\r\v" );
+    static void splitrip( std::vector<std::string>& list, const std::string& target_str, const std::string& separator="\n", const std::string& strips=" \n\t\b\r\v" );
 
     //! Replaces all the occurrences of a sequence with another
     /*!
