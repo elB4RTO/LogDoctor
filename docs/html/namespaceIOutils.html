@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LogDoctor: IOutils Class Reference</title>
+<title>LogDoctor: IOutils Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,79 +72,73 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="classIOutils-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">IOutils Class Reference</div></div>
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">IOutils Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>IOUtils.  
- <a href="classIOutils.html#details">More...</a></p>
-
-<p><code>#include &lt;io.h&gt;</code></p>
+<a href="namespaceIOutils.html#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a01cb7864b4ed38d8569b4ba093c0ffd9"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a01cb7864b4ed38d8569b4ba093c0ffd9">exists</a> (const std::string &amp;path)</td></tr>
-<tr class="memdesc:a01cb7864b4ed38d8569b4ba093c0ffd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the existence of a file/folder.  <br /></td></tr>
-<tr class="separator:a01cb7864b4ed38d8569b4ba093c0ffd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bcf274a39f4c2187cca2b7246813c92"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a8bcf274a39f4c2187cca2b7246813c92">isFile</a> (const std::string &amp;path)</td></tr>
-<tr class="memdesc:a8bcf274a39f4c2187cca2b7246813c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists and points to a file.  <br /></td></tr>
-<tr class="separator:a8bcf274a39f4c2187cca2b7246813c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae205985989cf337fc03cd332971bfa71"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ae205985989cf337fc03cd332971bfa71">isDir</a> (const std::string &amp;path)</td></tr>
-<tr class="memdesc:ae205985989cf337fc03cd332971bfa71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists and points to a directory.  <br /></td></tr>
-<tr class="separator:ae205985989cf337fc03cd332971bfa71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7eef4b2b60686ceeb367155f13f3a99"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ab7eef4b2b60686ceeb367155f13f3a99">checkFile</a> (const std::string &amp;path, const bool &amp;readable=false, const bool &amp;writable=false)</td></tr>
-<tr class="memdesc:ab7eef4b2b60686ceeb367155f13f3a99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it.  <br /></td></tr>
-<tr class="separator:ab7eef4b2b60686ceeb367155f13f3a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5d61de63617601f974e413d57342d10"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ab5d61de63617601f974e413d57342d10">checkDir</a> (const std::string &amp;path, const bool &amp;readable=false, const bool &amp;writable=false)</td></tr>
-<tr class="memdesc:ab5d61de63617601f974e413d57342d10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it.  <br /></td></tr>
-<tr class="separator:ab5d61de63617601f974e413d57342d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac38e61e00c839dca681d90b5c0397093"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#ac38e61e00c839dca681d90b5c0397093">makeDir</a> (const std::string &amp;path, std::error_code &amp;err) noexcept(true)</td></tr>
-<tr class="memdesc:ac38e61e00c839dca681d90b5c0397093"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a directory.  <br /></td></tr>
-<tr class="separator:ac38e61e00c839dca681d90b5c0397093"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fc152ae29702c3760a4f519ceb0b62a"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a8fc152ae29702c3760a4f519ceb0b62a">renameAsCopy</a> (const std::string &amp;path, std::error_code &amp;err) noexcept(true)</td></tr>
-<tr class="memdesc:a8fc152ae29702c3760a4f519ceb0b62a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renames an entry with a trailing '.copy'.  <br /></td></tr>
-<tr class="separator:a8fc152ae29702c3760a4f519ceb0b62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b47051acc0d9abdc4faa421e31c8f8d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a5b47051acc0d9abdc4faa421e31c8f8d">randomLines</a> (const std::string &amp;path, std::vector&lt; std::string &gt; &amp;lines, const int &amp;n_lines=16, const bool &amp;strip_lines=true)</td></tr>
-<tr class="memdesc:a5b47051acc0d9abdc4faa421e31c8f8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Randomly pick lines from a file.  <br /></td></tr>
-<tr class="separator:a5b47051acc0d9abdc4faa421e31c8f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a185c38eff9d9f4432c8138404941915e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a185c38eff9d9f4432c8138404941915e">readFile</a> (const std::string &amp;path, std::string &amp;content)</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab5d50d893f9555e52cd035b3afdce5f7"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#ab5d50d893f9555e52cd035b3afdce5f7">exists</a> (std::string_view path)</td></tr>
+<tr class="memdesc:ab5d50d893f9555e52cd035b3afdce5f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the existence of a file/folder.  <br /></td></tr>
+<tr class="separator:ab5d50d893f9555e52cd035b3afdce5f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51d622290e1a3ec3a4725dbd7c526f3d"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a51d622290e1a3ec3a4725dbd7c526f3d">isFile</a> (std::string_view path)</td></tr>
+<tr class="memdesc:a51d622290e1a3ec3a4725dbd7c526f3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists and points to a file.  <br /></td></tr>
+<tr class="separator:a51d622290e1a3ec3a4725dbd7c526f3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd78039d64c4d60cb53efe0366d8e606"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#acd78039d64c4d60cb53efe0366d8e606">checkFile</a> (std::string_view path, const bool readable=false, const bool writable=false)</td></tr>
+<tr class="memdesc:acd78039d64c4d60cb53efe0366d8e606"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it.  <br /></td></tr>
+<tr class="separator:acd78039d64c4d60cb53efe0366d8e606"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55eabe5de7aaa7b4948334586b410a1a"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a55eabe5de7aaa7b4948334586b410a1a">isDir</a> (std::string_view path)</td></tr>
+<tr class="memdesc:a55eabe5de7aaa7b4948334586b410a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists and points to a directory.  <br /></td></tr>
+<tr class="separator:a55eabe5de7aaa7b4948334586b410a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61a7e951f32a2f51030bf32b5d6bf276"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a61a7e951f32a2f51030bf32b5d6bf276">checkDir</a> (std::string_view path, const bool readable=false, const bool writable=false)</td></tr>
+<tr class="memdesc:a61a7e951f32a2f51030bf32b5d6bf276"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it.  <br /></td></tr>
+<tr class="separator:a61a7e951f32a2f51030bf32b5d6bf276"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07b21afffc37bea1f5e2a912b614622a"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a07b21afffc37bea1f5e2a912b614622a">makeDir</a> (std::string_view path, std::error_code &amp;err) noexcept(true)</td></tr>
+<tr class="memdesc:a07b21afffc37bea1f5e2a912b614622a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a directory.  <br /></td></tr>
+<tr class="separator:a07b21afffc37bea1f5e2a912b614622a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a6ffee0b6032c103a85d51d15d85163"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a4a6ffee0b6032c103a85d51d15d85163">renameAsCopy</a> (std::string_view path, std::error_code &amp;err) noexcept(true)</td></tr>
+<tr class="memdesc:a4a6ffee0b6032c103a85d51d15d85163"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renames an entry with a trailing '.copy'.  <br /></td></tr>
+<tr class="separator:a4a6ffee0b6032c103a85d51d15d85163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a185c38eff9d9f4432c8138404941915e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a185c38eff9d9f4432c8138404941915e">readFile</a> (const std::string &amp;path, std::string &amp;content)</td></tr>
 <tr class="memdesc:a185c38eff9d9f4432c8138404941915e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the content of a file.  <br /></td></tr>
 <tr class="separator:a185c38eff9d9f4432c8138404941915e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4373d388a59e3a61b855892ed37e8757"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOutils.html#a4373d388a59e3a61b855892ed37e8757">writeOnFile</a> (const std::string &amp;path, const std::string &amp;content)</td></tr>
-<tr class="memdesc:a4373d388a59e3a61b855892ed37e8757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a string on file.  <br /></td></tr>
-<tr class="separator:a4373d388a59e3a61b855892ed37e8757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa52ebe237d181752064409cf0623a135"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#aa52ebe237d181752064409cf0623a135">randomLines</a> (const std::string &amp;path, std::vector&lt; std::string &gt; &amp;lines, const size_t n_lines=16ul, const bool strip_lines=true)</td></tr>
+<tr class="memdesc:aa52ebe237d181752064409cf0623a135"><td class="mdescLeft">&#160;</td><td class="mdescRight">Randomly pick lines from a file.  <br /></td></tr>
+<tr class="separator:aa52ebe237d181752064409cf0623a135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88b18d0e0f947455640e1a3c9818f3db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceIOutils.html#a88b18d0e0f947455640e1a3c9818f3db">writeOnFile</a> (const std::string &amp;path, std::string_view content)</td></tr>
+<tr class="memdesc:a88b18d0e0f947455640e1a3c9818f3db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a string on file.  <br /></td></tr>
+<tr class="separator:a88b18d0e0f947455640e1a3c9818f3db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>IOUtils. </p>
 <p>Utilities to work on files </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab5d61de63617601f974e413d57342d10" name="ab5d61de63617601f974e413d57342d10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5d61de63617601f974e413d57342d10">&#9670;&#160;</a></span>checkDir()</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a61a7e951f32a2f51030bf32b5d6bf276" name="a61a7e951f32a2f51030bf32b5d6bf276"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61a7e951f32a2f51030bf32b5d6bf276">&#9670;&#160;</a></span>checkDir()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const bool IOutils::checkDir </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>readable</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>writable</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
@@ -153,11 +147,6 @@ Static Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it. </p>
@@ -173,31 +162,28 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab7eef4b2b60686ceeb367155f13f3a99" name="ab7eef4b2b60686ceeb367155f13f3a99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7eef4b2b60686ceeb367155f13f3a99">&#9670;&#160;</a></span>checkFile()</h2>
+<a id="acd78039d64c4d60cb53efe0366d8e606" name="acd78039d64c4d60cb53efe0366d8e606"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd78039d64c4d60cb53efe0366d8e606">&#9670;&#160;</a></span>checkFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const bool IOutils::checkFile </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>readable</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>writable</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
@@ -206,11 +192,6 @@ Static Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it. </p>
@@ -226,28 +207,20 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a01cb7864b4ed38d8569b4ba093c0ffd9" name="a01cb7864b4ed38d8569b4ba093c0ffd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01cb7864b4ed38d8569b4ba093c0ffd9">&#9670;&#160;</a></span>exists()</h2>
+<a id="ab5d50d893f9555e52cd035b3afdce5f7" name="ab5d50d893f9555e52cd035b3afdce5f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5d50d893f9555e52cd035b3afdce5f7">&#9670;&#160;</a></span>exists()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const bool IOutils::exists </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Checks the existence of a file/folder. </p>
@@ -261,28 +234,20 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae205985989cf337fc03cd332971bfa71" name="ae205985989cf337fc03cd332971bfa71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae205985989cf337fc03cd332971bfa71">&#9670;&#160;</a></span>isDir()</h2>
+<a id="a55eabe5de7aaa7b4948334586b410a1a" name="a55eabe5de7aaa7b4948334586b410a1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55eabe5de7aaa7b4948334586b410a1a">&#9670;&#160;</a></span>isDir()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const bool IOutils::isDir </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Checks if a path exists and points to a directory. </p>
@@ -296,28 +261,20 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8bcf274a39f4c2187cca2b7246813c92" name="a8bcf274a39f4c2187cca2b7246813c92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bcf274a39f4c2187cca2b7246813c92">&#9670;&#160;</a></span>isFile()</h2>
+<a id="a51d622290e1a3ec3a4725dbd7c526f3d" name="a51d622290e1a3ec3a4725dbd7c526f3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51d622290e1a3ec3a4725dbd7c526f3d">&#9670;&#160;</a></span>isFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const bool IOutils::isFile </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Checks if a path exists and points to a file. </p>
@@ -331,8 +288,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac38e61e00c839dca681d90b5c0397093" name="ac38e61e00c839dca681d90b5c0397093"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac38e61e00c839dca681d90b5c0397093">&#9670;&#160;</a></span>makeDir()</h2>
+<a id="a07b21afffc37bea1f5e2a912b614622a" name="a07b21afffc37bea1f5e2a912b614622a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07b21afffc37bea1f5e2a912b614622a">&#9670;&#160;</a></span>makeDir()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -343,7 +300,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">const bool IOutils::makeDir </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em>, </td>
         </tr>
         <tr>
@@ -360,7 +317,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -376,14 +333,11 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5b47051acc0d9abdc4faa421e31c8f8d" name="a5b47051acc0d9abdc4faa421e31c8f8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b47051acc0d9abdc4faa421e31c8f8d">&#9670;&#160;</a></span>randomLines()</h2>
+<a id="aa52ebe237d181752064409cf0623a135" name="aa52ebe237d181752064409cf0623a135"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa52ebe237d181752064409cf0623a135">&#9670;&#160;</a></span>randomLines()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void IOutils::randomLines </td>
@@ -400,13 +354,13 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int &amp;&#160;</td>
-          <td class="paramname"><em>n_lines</em> = <code>16</code>, </td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>n_lines</em> = <code>16ul</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>strip_lines</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
@@ -415,11 +369,6 @@ Static Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Randomly pick lines from a file. </p>
@@ -440,9 +389,6 @@ Static Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void IOutils::readFile </td>
@@ -462,11 +408,6 @@ Static Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Reads the content of a file. </p>
@@ -480,8 +421,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8fc152ae29702c3760a4f519ceb0b62a" name="a8fc152ae29702c3760a4f519ceb0b62a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fc152ae29702c3760a4f519ceb0b62a">&#9670;&#160;</a></span>renameAsCopy()</h2>
+<a id="a4a6ffee0b6032c103a85d51d15d85163" name="a4a6ffee0b6032c103a85d51d15d85163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a6ffee0b6032c103a85d51d15d85163">&#9670;&#160;</a></span>renameAsCopy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -492,7 +433,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">const bool IOutils::renameAsCopy </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>path</em>, </td>
         </tr>
         <tr>
@@ -509,7 +450,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -526,14 +467,11 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4373d388a59e3a61b855892ed37e8757" name="a4373d388a59e3a61b855892ed37e8757"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4373d388a59e3a61b855892ed37e8757">&#9670;&#160;</a></span>writeOnFile()</h2>
+<a id="a88b18d0e0f947455640e1a3c9818f3db" name="a88b18d0e0f947455640e1a3c9818f3db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88b18d0e0f947455640e1a3c9818f3db">&#9670;&#160;</a></span>writeOnFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void IOutils::writeOnFile </td>
@@ -544,7 +482,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>content</em>&#160;</td>
         </tr>
         <tr>
@@ -553,11 +491,6 @@ Static Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Writes a string on file. </p>
@@ -571,10 +504,6 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>logdoctor/utilities/io.h</li>
-<li>logdoctor/utilities/io.cpp</li>
-</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

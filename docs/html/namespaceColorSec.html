@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LogDoctor: ColorSec Class Reference</title>
+<title>LogDoctor: ColorSec Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,35 +72,76 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="classColorSec-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">ColorSec Class Reference</div></div>
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">ColorSec Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classColorSec.html" title="ColorSec.">ColorSec</a>.  
- <a href="classColorSec.html#details">More...</a></p>
-
-<p><code>#include &lt;colors.h&gt;</code></p>
+<p><a class="el" href="namespaceColorSec.html" title="ColorSec.">ColorSec</a>.  
+<a href="namespaceColorSec.html#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
 <tr class="memitem:ad185a26760f960baf931b0bb79c711ff"><td class="memItemLeft" align="right" valign="top"><a id="ad185a26760f960baf931b0bb79c711ff" name="ad185a26760f960baf931b0bb79c711ff"></a>
-static const std::unordered_map&lt; std::string, QColor &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getColors</b> ()</td></tr>
+const std::unordered_map&lt; std::string, QColor &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getColors</b> ()</td></tr>
 <tr class="memdesc:ad185a26760f960baf931b0bb79c711ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a map with pre-made colors. <br /></td></tr>
 <tr class="separator:ad185a26760f960baf931b0bb79c711ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ad467469ba6b81fd0827f73ac53b6f8"><td class="memItemLeft" align="right" valign="top"><a id="a4ad467469ba6b81fd0827f73ac53b6f8" name="a4ad467469ba6b81fd0827f73ac53b6f8"></a>
-static const std::unordered_map&lt; int, std::unordered_map&lt; std::string, QString &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getColorSchemes</b> ()</td></tr>
+const std::unordered_map&lt; int, std::unordered_map&lt; std::string, QString &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getColorSchemes</b> ()</td></tr>
 <tr class="memdesc:a4ad467469ba6b81fd0827f73ac53b6f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a map with pre-made color-schemes for the <a class="el" href="classTextBrowser.html" title="TextBrowser.">TextBrowser</a>. <br /></td></tr>
 <tr class="separator:a4ad467469ba6b81fd0827f73ac53b6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea8324d4e5357725a55e5ab670bbfb5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceColorSec.html#aea8324d4e5357725a55e5ab670bbfb5c">applyChartTheme</a> (const int theme_id, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, QtCharts::QChartView *chart_view)</td></tr>
+<tr class="memdesc:aea8324d4e5357725a55e5ab670bbfb5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the choosen theme to the given chart.  <br /></td></tr>
+<tr class="separator:aea8324d4e5357725a55e5ab670bbfb5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classColorSec.html" title="ColorSec.">ColorSec</a>. </p>
+<div class="textblock"><p><a class="el" href="namespaceColorSec.html" title="ColorSec.">ColorSec</a>. </p>
 <p>Utilities for the colors </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>logdoctor/utilities/colors.h</li>
-<li>logdoctor/utilities/colors.cpp</li>
-</ul>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="aea8324d4e5357725a55e5ab670bbfb5c" name="aea8324d4e5357725a55e5ab670bbfb5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea8324d4e5357725a55e5ab670bbfb5c">&#9670;&#160;</a></span>applyChartTheme()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ColorSec::applyChartTheme </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>theme_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
+          <td class="paramname"><em>fonts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QtCharts::QChartView *&#160;</td>
+          <td class="paramname"><em>chart_view</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Applies the choosen theme to the given chart. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">theme_id</td><td>The ID of the theme to apply </td></tr>
+    <tr><td class="paramname">fonts</td><td>The fonts set </td></tr>
+    <tr><td class="paramname">chart_view</td><td>The chart on which the theme will be applied </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

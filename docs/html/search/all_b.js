@@ -6,9 +6,9 @@ var searchData=
   ['logfile_3',['LogFile',['../classLogFile.html',1,'']]],
   ['logformatexception_4',['LogFormatException',['../classLogFormatException.html',1,'']]],
   ['logname_5',['LogName',['../structCraplog_1_1LogName.html',1,'Craplog']]],
-  ['logops_6',['LogOps',['../classLogOps.html',1,'']]],
+  ['logops_6',['LogOps',['../namespaceLogOps.html',1,'']]],
   ['logparserexception_7',['LogParserException',['../classLogParserException.html',1,'']]],
   ['logsformat_8',['LogsFormat',['../classLogsFormat.html',1,'']]],
-  ['lstrip_9',['lstrip',['../classStringOps.html#ad57d5941c836f52cefcb711bff23fb50',1,'StringOps']]],
-  ['lstripuntil_10',['lstripUntil',['../classStringOps.html#a8a308ab32a62169c5a28ddb6db0b78f6',1,'StringOps']]]
+  ['lstrip_9',['lstrip',['../namespaceStringOps.html#a1644758d43395075d1957ec1a164d9f2',1,'StringOps::lstrip(const std::string &amp;str, const char chr)'],['../namespaceStringOps.html#aa4aa86f5f5995f0be311651f5332aff0',1,'StringOps::lstrip(const std::string &amp;str, std::string_view chars=&quot; \n\t\b\r\v&quot;)']]],
+  ['lstripuntil_10',['lstripUntil',['../namespaceStringOps.html#a588506aee7e6e25f630bf378b08aa302',1,'StringOps']]]
 ];

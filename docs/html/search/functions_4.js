@@ -1,7 +1,7 @@
 var searchData=
 [
   ['editeddatabase_0',['editedDatabase',['../classCraplog.html#a6cabb746e255f911ec2adcad74d5f332',1,'Craplog']]],
-  ['endswith_1',['endsWith',['../classStringOps.html#a397c75a4e2713f9ed7a32bf4e7ee64a3',1,'StringOps']]],
+  ['endswith_1',['endsWith',['../namespaceStringOps.html#a5843b851d3731a93f5f18fbf89ff51bc',1,'StringOps::endsWith(std::string_view str, const char flag)'],['../namespaceStringOps.html#a8cadbdaa44cb42d709f29e2ea46851e5',1,'StringOps::endsWith(std::string_view str, std::string_view flag)']]],
   ['endturn_2',['endTurn',['../classCrissCross.html#a3d3d3eeb2b7666c4411c89cf153048e0',1,'CrissCross']]],
   ['enrichlogs_3',['enrichLogs',['../classRichText.html#a2afa546c743511aba5eb62f4bdc1da09',1,'RichText']]],
   ['errconfdirnotwritable_4',['errConfDirNotWritable',['../classDialogSec.html#a2cfc4ee49a455ec10253c133308e5235',1,'DialogSec']]],
@@ -22,9 +22,9 @@ var searchData=
   ['errfaileddefininglogtype_19',['errFailedDefiningLogType',['../classDialogSec.html#a37b210d2f9a087eaf395a45ff2095ed5',1,'DialogSec']]],
   ['errfailedmakedir_20',['errFailedMakeDir',['../classDialogSec.html#af10077a5f3ebbf3683801999d8005f9a',1,'DialogSec']]],
   ['errfailedparsinglogs_21',['errFailedParsingLogs',['../classDialogSec.html#a8bdf9d669f24bffd5d996ec18020194b',1,'DialogSec']]],
-  ['errfailedreadfile_22',['errFailedReadFile',['../classDialogSec.html#a0a5d1f707b891d3f177ecf5ebdc62d41',1,'DialogSec']]],
-  ['errfilenotfound_23',['errFileNotFound',['../classDialogSec.html#a940492f741a59fa7eb609e5bd12e6c91',1,'DialogSec']]],
-  ['errgeneric_24',['errGeneric',['../classDialogSec.html#a8315e79b58bd6bb557b5a934d5f4beba',1,'DialogSec']]],
+  ['errfailedreadfile_22',['errFailedReadFile',['../classDialogSec.html#a475316d013f45940a1953af608fe3d3f',1,'DialogSec']]],
+  ['errfilenotfound_23',['errFileNotFound',['../classDialogSec.html#a12d801b9dbfc0fc340c4bda5e69a6002',1,'DialogSec']]],
+  ['errgeneric_24',['errGeneric',['../classDialogSec.html#a6b7e8089712ea78ba9e6b2440dde2d1a',1,'DialogSec']]],
   ['errhelpfailed_25',['errHelpFailed',['../classDialogSec.html#abc275ca943e81edb5459da0afbe8c8c3',1,'DialogSec']]],
   ['errhelpnotfound_26',['errHelpNotFound',['../classDialogSec.html#a910d3500df728c06173056a4eac0c358',1,'DialogSec']]],
   ['errhelpnotreadable_27',['errHelpNotReadable',['../classDialogSec.html#aefdc8e73c551460720d8a58e7e5e18bb',1,'DialogSec']]],
@@ -36,5 +36,5 @@ var searchData=
   ['errlogformatnotset_33',['errLogFormatNotSet',['../classDialogSec.html#af9f19176ce2981bd3397b9d033490cb8',1,'DialogSec']]],
   ['errrenaming_34',['errRenaming',['../classDialogSec.html#a93804c66ed89197dceb292926fceb690',1,'DialogSec']]],
   ['errsqldrivernotfound_35',['errSqlDriverNotFound',['../classDialogSec.html#a41c7f8f921aff3ecfb876be3d89276b6',1,'DialogSec']]],
-  ['exists_36',['exists',['../classIOutils.html#a01cb7864b4ed38d8569b4ba093c0ffd9',1,'IOutils']]]
+  ['exists_36',['exists',['../namespaceIOutils.html#ab5d50d893f9555e52cd035b3afdce5f7',1,'IOutils']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['joinloglines_0',['joinLogLines',['../classCraplogWorker.html#a7d0b061d0741296686c42ff57e79fbd7',1,'CraplogWorker']]]
+  ['keypressevent_0',['keyPressEvent',['../classSnakeGame.html#a407dd2bae84d0f6572b94bb37feb87bc',1,'SnakeGame']]]
 ];
