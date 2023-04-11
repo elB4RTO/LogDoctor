@@ -9,31 +9,18 @@
 /*!
     Operations for the dates
 */
-class DateTimeOps
+namespace DateTimeOps
 {
-public:
-    explicit DateTimeOps();
 
-    //! Returns a standardized list of items representing the given date and time
-    /*!
-        \param datetime The given date and time string
-        \param  format The format of the given string
-        \throw DateTimeException
-        \return The list of items
-    */
-    static const std::vector<std::string> processDateTime( const std::string& datetime, const std::string& format );
+//! Returns a standardized list of items representing the given date and time
+/*!
+    \param datetime The given date and time string
+    \param  format The format of the given string
+    \throw DateTimeException
+    \return The list of items
+*/
+const std::vector<std::string> processDateTime( std::string_view datetime, std::string_view format );
 
-private:
-
-    //! Converts a month from the short-name to the number
-    /*!
-        \param month The short-name of the month
-        \return The month number in the calendar
-        \throw DateTimeException
-        \see processDateTime
-    */
-    static const std::string convertMonth( const std::string& month );
-
-};
+} // namespace DateTimeOps
 
 #endif // DATETIME_H

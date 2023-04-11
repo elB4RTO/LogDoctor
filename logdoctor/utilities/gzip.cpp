@@ -3,7 +3,6 @@
 
 #include "modules/exceptions.h"
 
-#include <string>
 #include <errno.h>
 #if defined( Q_OS_WIN )
     #include <QtZlib/zlib.h>
@@ -25,15 +24,12 @@
 #define CHUNK 16384
 
 
-GZutils::GZutils()
+namespace GZutils
 {
 
-}
-
-
-void GZutils::readFile( const std::string& path, std::string& content )
+void readFile( const std::string& path, std::string& content )
 {
-    bool successful = true;
+    bool successful{ true };
 
     int ret;
     unsigned have;
@@ -49,11 +45,11 @@ void GZutils::readFile( const std::string& path, std::string& content )
     strm.next_in  = Z_NULL;
     ret = inflateInit2( &strm, 15|32 );
     if ( ret != Z_OK ) {
-        successful = false;
+        successful &= false;
     }
 
     if ( successful ) {
-        FILE *file = fopen ( path.c_str(), "rb" );
+        FILE* file = fopen ( path.c_str(), "rb" );
         /*FILE *dest = fopen ( out_path.c_str(), "wb" );*/
         if ( file == NULL ) {
             // unable to open the file
@@ -86,7 +82,7 @@ void GZutils::readFile( const std::string& path, std::string& content )
                     case Z_DATA_ERROR:
                     case Z_MEM_ERROR:
                         (void)inflateEnd( &strm );
-                        successful = false;
+                        successful &= false;
                         break;
                 }
                 have = CHUNK - strm.avail_out;
@@ -114,11 +110,13 @@ void GZutils::readFile( const std::string& path, std::string& content )
         }
         //delete file;
     }
-    if ( content.size() == 0 ) {
+    if ( content.empty() ) {
         // probably not a gzip compressed file
         throw(""); // do not implement
     }
     if ( ! successful ) {
-        content = "";
+        content.clear();
     }
 }
+
+} // namespace GZutils

@@ -2,15 +2,17 @@
 #include "colors.h"
 #include "modules/exceptions.h"
 
+#include <QPalette>
+#include <QColor>
+#include <QString>
 
-ColorSec::ColorSec()
+
+namespace ColorSec
 {
 
-}
-
-const std::unordered_map<std::string, QColor> ColorSec::getColors()
+const std::unordered_map<std::string, QColor> getColors()
 {
-    const std::unordered_map<std::string, QColor> colors = {
+    return {
         // greyscale
         {"black",      QColor(   0,   0,   0, 255 )},
         {"dark_grey",  QColor(  63,  63,  63, 255 )},
@@ -22,13 +24,12 @@ const std::unordered_map<std::string, QColor> ColorSec::getColors()
         {"orange", QColor( 255, 140,   0, 255 )},
         {"yellow", QColor( 255, 200,   0, 255 )},
     };
-    return colors;
 }
 
 
-const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec::getColorSchemes()
+const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes()
 {
-    const std::unordered_map<int, std::unordered_map<std::string, QString>> scheme = {
+    return {
         // none
         {0,{{"background",""},
             {"text",""},
@@ -70,19 +71,18 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> ColorSec
             {"req","#d5358f"},
             {"res","#56e8e4"} }}
     };
-    return scheme;
 }
 
 
-void ColorSec::applyChartTheme( const int theme_id, const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
+void applyChartTheme( const int theme_id, const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
 {
     QPen axis_pen;
     QPen grid_pen;
     QColor label_color;
-    QBrush title_brush = chart_view->foregroundBrush();
-    QBrush background_brush = chart_view->backgroundBrush();
-    const QFont& small_font = fonts.at("main_small");
-    const QFont& font = fonts.at("main");
+    QBrush title_brush{ chart_view->foregroundBrush() };
+    QBrush background_brush{ chart_view->backgroundBrush() };
+    const QFont& small_font{ fonts.at("main_small") };
+    const QFont& font{ fonts.at("main") };
     switch ( theme_id ) {
         case 0:
             label_color.setRgb( 16, 16, 16 );
@@ -118,7 +118,7 @@ void ColorSec::applyChartTheme( const int theme_id, const std::unordered_map<std
     title_brush.setColor( label_color );
     background_brush.setStyle( Qt::SolidPattern );
     // apply to the chart
-    QChart* chart = chart_view->chart();
+    QChart* chart{ chart_view->chart() };
     // title
     chart->setTitleFont( font );
     chart->setTitleBrush( title_brush );
@@ -126,7 +126,7 @@ void ColorSec::applyChartTheme( const int theme_id, const std::unordered_map<std
     chart->legend()->setFont( font );
     chart->legend()->setLabelColor( label_color );
     // axes
-    QList<QAbstractAxis*> axes = chart->axes();
+    QList<QAbstractAxis*> axes{ chart->axes() };
     for ( auto* axis : axes ) {
         axis->setLinePen( axis_pen );
         axis->setGridLinePen( grid_pen );
@@ -140,3 +140,5 @@ void ColorSec::applyChartTheme( const int theme_id, const std::unordered_map<std
     /*chart->setPlotAreaBackgroundBrush( background_brush );
     chart_view->setBackgroundBrush( background_brush );*/
 }
+
+} // namespace ColorSec
