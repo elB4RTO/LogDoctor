@@ -8,19 +8,24 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
+#include "modules/craplog/craplog.h"
 #include "datetime.h"
+
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 
 CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
-    : QObject{parent}
-    , wsID           ( web_server_id  )
-    , dialogs_level  ( dialogs_level  )
-    , db_data_path   ( db_data_path   )
-    , db_hashes_path ( db_hashes_path )
-    , logs_format    ( logs_format    )
-    , blacklists     ( blacklists     )
-    , warnlists      ( warnlists      )
-    , files_to_use   ( log_files      )
+    : QObject        { parent         }
+    , wsID           { web_server_id  }
+    , dialogs_level  { dialogs_level  }
+    , db_data_path   { db_data_path   }
+    , db_hashes_path { db_hashes_path }
+    , logs_format    { logs_format    }
+    , blacklists     { blacklists     }
+    , warnlists      { warnlists      }
+    , files_to_use   { log_files      }
 {
 
 }
@@ -29,7 +34,7 @@ CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialo
 void CraplogWorker::sendPerfData()
 {
     emit this->perfData(
-        this->parsed_size,
+        static_cast<unsigned>( this->parsed_size ),
         this->parsed_lines
     );
 }
@@ -37,10 +42,10 @@ void CraplogWorker::sendPerfData()
 void CraplogWorker::sendChartData()
 {
     emit this->chartData(
-        this->total_size,
+        static_cast<unsigned>( this->total_size ),
         this->total_lines,
-        this->warnlisted_size,
-        this->blacklisted_size
+        static_cast<unsigned>( this->warnlisted_size ),
+        static_cast<unsigned>( this->blacklisted_size )
     );
 }
 
@@ -95,22 +100,23 @@ void CraplogWorker::work()
 
 void CraplogWorker::joinLogLines()
 {
-    std::function<void(std::vector<std::string>&)>
-    cleanLines = [&](std::vector<std::string>& lines) {
+    const auto cleanLines = [](std::vector<std::string>& lines) {
         std::vector<std::string> aux;
+        aux.reserve( lines.size() );
         for ( const std::string& line : lines ) {
-            if ( !StringOps::startsWith( line, "#" ) ) {
+            if ( line.front() != '#' ) {
                 // not a commented line
                 aux.push_back( line );
             }
         }
+        aux.shrink_to_fit();
         lines = std::move( aux );
     };
 
 
     std::string aux;
     std::vector<std::string> content;
-    for ( auto file : this->files_to_use ) {
+    for ( const auto& file : this->files_to_use ) {
 
         if ( ! this->proceed ) { break; }
 
@@ -172,7 +178,7 @@ void CraplogWorker::joinLogLines()
         this->logs_lines.insert( this->logs_lines.end(), content.begin(), content.end() );
     }
     this->files_to_use.clear();
-    if ( this->logs_lines.size() == 0 ) {
+    if ( this->logs_lines.empty() ) {
         this->proceed &= false;
     }
 }
@@ -180,17 +186,15 @@ void CraplogWorker::joinLogLines()
 
 void CraplogWorker::parseLogLines()
 {
-    const std::function<void(const std::string&)>
-    parseLine = [&]( const std::string& line ) {
+    const auto parseLine = [this]( const std::string& line ) {
         log_line_data_t data;
         std::string sep, fld, fld_str;
-        bool add_pm=false, ok=true;
-        size_t start, stop=0, aux_start, aux_stop,
-               line_size = line.size()-1;
-        int i=0, n_sep=this->logs_format.separators.size()-1;
-
-        // add the initial chars
-        stop = this->logs_format.initial.size();
+        bool add_pm{false}, ok{true};
+        size_t start, stop{this->logs_format.initial.size()},
+               aux_start, aux_stop,
+               i{0};
+        const size_t line_size{ line.size()-1ul },
+                     n_sep{ this->logs_format.separators.size()-1ul };
 
         while (true) {
             // split fields
@@ -198,15 +202,15 @@ void CraplogWorker::parseLogLines()
             if ( i <= n_sep ) {
                 sep = this->logs_format.separators.at( i );
                 stop = line.find( sep, start );
-            } else if ( i == n_sep+1 ) {
+            } else if ( i == n_sep+1ul ) {
                 // final separator
                 sep = this->logs_format.final;
-                if ( sep.size() == 0 ) {
-                    stop = line_size+1;
+                if ( sep.empty() ) {
+                    stop = line_size+1ul;
                 } else {
                     stop = line.find( sep, start );
                     if ( stop == std::string::npos ) {
-                        stop = line_size +1;
+                        stop = line_size+1ul;
                     }
                 }
             } else {
@@ -222,29 +226,29 @@ void CraplogWorker::parseLogLines()
             fld = this->logs_format.fields.at( i );
             if ( fld != "NONE" ) {
                 // only parse the considered fields
-                fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+                fld_str = StringOps::strip( line.substr(start, stop-start), ' ' );
 
-                if ( i+1 <= n_sep ) {
+                if ( i+1ul <= n_sep ) {
                     // not the last separator, check for mistakes
                     ok |= true;
                     aux_stop = stop;
 
                     if ( sep == " " ) {
                         // whitespace-separated-values fields
-                        int c = StringOps::count( fld_str, sep ),
-                            n = 0;
+                        size_t c{ static_cast<size_t>( std::count( fld_str.cbegin(), fld_str.cend(), ' ' ) ) },
+                               n{ 0 };
                         if ( fld == "request_full" ) {
-                            n = 2;
+                            n += 2ul;
                         } else if ( fld == "date_time_mcs" ) {
-                            n = 4;
+                            n += 4ul;
                         } else if ( fld == "date_time_ncsa" ) {
-                            n = 1;
+                            n += 1ul;
                         } else if ( fld == "date_time_gmt" ) {
-                            n = 3;
+                            n += 3ul;
                         }
-                        if ( n > 0 && c < n ) {
+                        if ( n > 0ul && c < n ) {
                             // loop until the correct number of whitespaces is reached
-                            aux_start = stop + 1;
+                            aux_start = stop+1ul;
                             while ( c < n ) {
                                 aux_stop = line.find( sep, aux_start );
                                 if ( aux_stop == std::string::npos ) {
@@ -252,12 +256,12 @@ void CraplogWorker::parseLogLines()
                                     ok &= false;
                                     break;
                                 }
-                                aux_start = aux_stop + 1;
+                                aux_start = aux_stop+1ul;
                                 c++;
                             }
                         }
 
-                    } else if ( fld == "user_agent" && StringOps::startsWith( sep, "\"" ) ) {
+                    } else if ( sep.front() == '"' && fld == "user_agent" ) {
                         // atm the only support is for escaped quotes
                         if ( fld_str.back() == '\\' ) {
                             aux_start = stop + sep.size();
@@ -266,7 +270,7 @@ void CraplogWorker::parseLogLines()
                                 if ( aux_stop == std::string::npos ) {
                                     // not found
                                     break;
-                                } else if ( line.at( aux_stop-1 ) != '\\' ) {
+                                } else if ( line.at( aux_stop-1ul ) != '\\' ) {
                                     // non-backslashed quotes
                                     break;
                                 }
@@ -278,13 +282,13 @@ void CraplogWorker::parseLogLines()
                     // finally update if needed
                     if ( ok && aux_stop >= stop ) {
                         stop = aux_stop;
-                        fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+                        fld_str = StringOps::strip( line.substr(start, stop-start), ' ' );
                     }
                 }
 
-                if ( fld_str.size() > 0 ) {
+                if ( ! fld_str.empty() ) {
                     // process the field
-                    int fld_id = this->field2id.at(fld);
+                    const int& fld_id{ this->field2id.at(fld) };
                     if ( fld_id > 0 ) {
                         // no need to process, append directly if non-empty
                         if ( fld_id == 13 && fld_str == "-" ) {
@@ -296,21 +300,21 @@ void CraplogWorker::parseLogLines()
                         // process the field
 
                         // process the date to get year, month, day, hour and minute
-                        if ( StringOps::startsWith( fld, "date_time" ) ) {
+                        if ( fld.find("date_time") == 0ul ) {
                             const std::vector<std::string> dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part which is useless from now on
-                            if ( dt.at( 0 ) != "" ) {
+                            if ( ! dt.at( 0 ).empty() ) {
                                 // year
                                 data.emplace( this->field2id.at("date_time_year"), dt.at( 0 ) );
                             }
-                            if ( dt.at( 1 ) != "" ) {
+                            if ( ! dt.at( 1 ).empty() ) {
                                 // month
                                 data.emplace( this->field2id.at("date_time_month"), dt.at( 1 ) );
                             }
-                            if ( dt.at( 2 ) != "" ) {
+                            if ( ! dt.at( 2 ).empty() ) {
                                 // day
                                 data.emplace( this->field2id.at("date_time_day"), dt.at( 2 ) );
                             }
-                            if ( dt.at( 3 ) != "" ) {
+                            if ( ! dt.at( 3 ).empty() ) {
                                 // hour
                                 if ( dt.at( 3 ) == "PM" ) {
                                     add_pm |= true;
@@ -318,11 +322,11 @@ void CraplogWorker::parseLogLines()
                                     data.emplace( this->field2id.at("date_time_hour"), dt.at( 3 ) );
                                 }
                             }
-                            if ( dt.at( 4 ) != "" ) {
+                            if ( ! dt.at( 4 ).empty() ) {
                                 // minute
                                 data.emplace( this->field2id.at("date_time_minute"), dt.at( 4 ) );
                             }
-                            if ( dt.at( 5 ) != "" ) {
+                            if ( ! dt.at( 5 ).empty() ) {
                                 // second
                                 data.emplace( this->field2id.at("date_time_second"), dt.at( 5 ) );
                             }
@@ -331,23 +335,23 @@ void CraplogWorker::parseLogLines()
                         // process the request to get the protocol, method, resource and query
                         } else if ( fld == "request_full" ) {
                             size_t aux;
-                            std::string aux_fld, protocol="", method="", uri="", query="";
-                            aux_fld = fld_str;
+                            std::string protocol, method, uri, query,
+                                        aux_fld{ fld_str };
                             // method
                             aux = aux_fld.find( ' ' );
                             if ( aux != std::string::npos ) {
-                                method  = aux_fld.substr( 0, aux );
+                                method  = aux_fld.substr( 0ul, aux );
                                 aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
 
                                 // page & query
                                 aux = aux_fld.find( ' ' );
                                 if ( aux != std::string::npos ) {
-                                    std::string aux_str = aux_fld.substr( 0, aux );
+                                    const std::string aux_str{ aux_fld.substr( 0ul, aux ) };
                                     // search for the query
-                                    int aux_ = aux_str.find( '?' );
+                                    const size_t aux_{ aux_str.find( '?' ) };
                                     if ( aux_ != std::string::npos ) {
-                                        uri  = aux_str.substr( 0, aux_ );
-                                        query = aux_str.substr( aux_+1 );
+                                        uri   = aux_str.substr( 0ul, aux_ );
+                                        query = aux_str.substr( aux_+1ul  );
                                     } else {
                                         // query not found
                                         uri = aux_str;
@@ -359,16 +363,16 @@ void CraplogWorker::parseLogLines()
                                 }
                             }
                             // append non-empty data
-                            if ( protocol != "" ) {
+                            if ( ! protocol.empty() ) {
                                 data.emplace( this->field2id.at("request_protocol"), protocol );
                             }
-                            if ( method != "" ) {
+                            if ( ! method.empty() ) {
                                 data.emplace( this->field2id.at("request_method"), method );
                             }
-                            if ( uri != "" ) {
+                            if ( ! uri.empty() ) {
                                 data.emplace( this->field2id.at("request_uri"), uri );
                             }
-                            if ( query != "" ) {
+                            if ( ! query.empty() ) {
                                 data.emplace( this->field2id.at("request_query"), query );
                             }
 
@@ -378,27 +382,27 @@ void CraplogWorker::parseLogLines()
                         } else if ( fld == "request_uri_query" ) {
                             // search for the query
                             std::string uri, query;
-                            size_t aux_ = fld_str.find( '?' );
+                            const size_t aux_{ fld_str.find( '?' ) };
                             if ( aux_ != std::string::npos ) {
-                                uri  = fld_str.substr( 0, aux_ );
-                                query = fld_str.substr( aux_+1 );
+                                uri   = fld_str.substr( 0ul, aux_ );
+                                query = fld_str.substr( aux_+1ul  );
                             } else {
                                 // query not found
                                 uri = fld_str;
                             }
-                            if ( uri != "" ) {
+                            if ( ! uri.empty() ) {
                                 data.emplace( this->field2id.at("request_uri"), uri );
                             }
-                            if ( query != "" ) {
+                            if ( ! query.empty() ) {
                                 data.emplace( this->field2id.at("request_query"), query );
                             }
 
 
 
                         // process the time taken to convert to milliseconds
-                        } else if ( StringOps::startsWith( fld, "time_taken_" ) ) {
-                            float t = std::stof( fld_str );
-                            fld = fld.substr( 11 );
+                        } else if ( fld.find("time_taken_") == 0ul ) {
+                            float t{ std::stof( fld_str ) };
+                            fld = fld.substr( 11ul );
                             if ( fld == "us" ) {
                                 // from microseconds
                                 t /= 1000;
@@ -406,7 +410,7 @@ void CraplogWorker::parseLogLines()
                                 // from seconds
                                 t *= 1000;
                             }
-                            data.emplace( this->field2id.at("time_taken"), std::to_string( (int)t ) );
+                            data.emplace( this->field2id.at("time_taken"), std::to_string( static_cast<int>( t ) ) );
 
 
                         // something went wrong
@@ -448,18 +452,18 @@ void CraplogWorker::parseLogLines()
 
     // parse all the lines
     if ( this->proceed ) {
-        const unsigned n_lines = this->logs_lines.size();
-        const unsigned nl = this->logs_format.new_lines;
-        if ( nl == 0 ) {
+        const size_t n_lines{ this->logs_lines.size() };
+        const size_t nl{ this->logs_format.new_lines };
+        if ( nl == 0ul ) {
             this->data_collection.reserve( n_lines );
             for ( const std::string& line : this->logs_lines ) {
                 parseLine( line );
             }
         } else {
             this->data_collection.reserve( n_lines / (nl+1) );
-            for ( int i=0; i<n_lines; i++ ) {
+            for ( size_t i{0}; i<n_lines; i++ ) {
                 std::string line = this->logs_lines.at( i );
-                for ( int n=0; n<nl; n++ ) {
+                for ( size_t n{0}; n<nl; n++ ) {
                     i++;
                     line += "\n" + this->logs_lines.at( i );
                 }
@@ -473,16 +477,16 @@ void CraplogWorker::parseLogLines()
 
 void CraplogWorker::storeLogLines()
 {
-    QString db_path = QString::fromStdString( this->db_data_path );
-    QString db_name = QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1 ) );
+    QString db_path{ QString::fromStdString( this->db_data_path ) };
+    QString db_name{ QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db{ QSqlDatabase::addDatabase("QSQLITE") };
     db.setDatabaseName( db_path );
 
     if ( ! db.open() ) {
         // error opening database
         this->proceed &= false;
-        QString err_msg = "";
+        QString err_msg;
         if ( this->dialogs_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -495,7 +499,7 @@ void CraplogWorker::storeLogLines()
             if ( ! db.transaction() ) {
                 // error opening database
                 this->proceed &= false;
-                QString stmt_msg="", err_msg = "";
+                QString stmt_msg, err_msg;
                 if ( this->dialogs_level > 0 ) {
                     stmt_msg = "db.transaction()";
                     if ( this->dialogs_level == 2 ) {
@@ -505,7 +509,7 @@ void CraplogWorker::storeLogLines()
                 DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
             }
 
-            if ( this->proceed && this->data_collection.size() > 0 ) {
+            if ( this->proceed && !this->data_collection.empty() ) {
                 this->proceed &= this->storeData( db );
             }
 
@@ -514,7 +518,7 @@ void CraplogWorker::storeLogLines()
                 if ( ! db.commit() ) {
                     // error opening database
                     this->proceed &= false;
-                    QString stmt_msg="", err_msg = "";
+                    QString stmt_msg, err_msg;
                     if ( this->dialogs_level > 0 ) {
                         stmt_msg = "db.commit()";
                         if ( this->dialogs_level == 2 ) {
@@ -536,7 +540,7 @@ void CraplogWorker::storeLogLines()
             // rollback the transaction
             if ( ! db.rollback() ) {
                 // error rolling back commits
-                QString stmt_msg="", err_msg = "";
+                QString stmt_msg, err_msg;
                 if ( this->dialogs_level > 0 ) {
                     stmt_msg = "db.rollback()";
                     if ( this->dialogs_level == 2 ) {
@@ -561,11 +565,11 @@ void CraplogWorker::storeLogLines()
 
 const bool CraplogWorker::storeData( QSqlDatabase& db )
 {
-    bool successful = true;
+    bool successful{ true };
 
-    const QString db_name = QString::fromStdString(
+    const QString db_name{ QString::fromStdString(
         this->db_data_path.substr(
-            this->db_data_path.find_last_of( '/' ) + 1 ) );
+            this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
 
     // get blacklist/warnlist items
     bool check_bl_cli,
@@ -577,37 +581,37 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
     check_wl_ua  = this->warnlists.at( 21 ).used;
 
     const std::vector<std::string> empty;
-    const std::vector<std::string>& bl_cli_list = (check_bl_cli)
+    const std::vector<std::string>& bl_cli_list{ (check_bl_cli)
         ? this->blacklists.at( 20 ).list
-        : empty;
+        : empty };
 
-    const std::vector<std::string>& wl_met_list = (check_wl_met)
+    const std::vector<std::string>& wl_met_list{ (check_wl_met)
         ? this->warnlists.at( 11 ).list
-        : empty;
+        : empty };
 
-    const std::vector<std::string>& wl_req_list = (check_wl_req)
+    const std::vector<std::string>& wl_req_list{ (check_wl_req)
         ? this->warnlists.at( 12 ).list
-        : empty;
+        : empty };
 
-    const std::vector<std::string>& wl_cli_list = (check_wl_cli)
+    const std::vector<std::string>& wl_cli_list{ (check_wl_cli)
         ? this->warnlists.at( 20 ).list
-        : empty;
+        : empty };
 
-    const std::vector<std::string>& wl_ua_list = (check_wl_ua)
+    const std::vector<std::string>& wl_ua_list{ (check_wl_ua)
         ? this->warnlists.at( 21 ).list
-        : empty;
+        : empty };
 
     // prepare the database related studd
     QString table;
     switch ( this->wsID ) {
         case 11:
-            table = "apache";
+            table += "apache";
             break;
         case 12:
-            table = "nginx";
+            table += "nginx";
             break;
         case 13:
-            table = "iis";
+            table += "iis";
             break;
         default:
             // wrong WebServerID, but should be unreachable because of the previous operations
@@ -616,9 +620,9 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
 
 
     /*int perf_size;*/
-    bool skip = false,
-         warning = false;
-    QSqlQuery query = QSqlQuery( db );
+    bool skip{ false },
+         warning{ false };
+    QSqlQuery query{ db };
     // parse every row of data
     for ( const log_line_data_t& row : this->data_collection ) {
         // break if failed
@@ -627,10 +631,10 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         // check blacklisted clients
         if ( check_bl_cli ) {
             if ( row.find( 20 ) != row.end() ) {
-                // this row do contains this row item, check if they match
-                const std::string& target = row.at( 20 );
+                // this row does contain this row item, check if they match
+                const std::string& target{ row.at( 20 ) };
                 for ( const auto& item : bl_cli_list ) {
-                    if ( StringOps::startsWith( target, item ) ) {
+                    if ( target.find( item ) == 0ul ) {
                         // match found! skip this line
                         skip |= true;
                         break;
@@ -651,9 +655,9 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         if ( check_wl_cli ) {
             if ( row.find( 20 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                const std::string& target = row.at( 20 );
+                const std::string& target{ row.at( 20 ) };
                 for ( const auto& item : wl_cli_list ) {
-                    if ( StringOps::startsWith( target, item ) ) {
+                    if ( target.find( item ) == 0ul ) {
                         // match found! put a warning on this line
                         warning |= true;
                         this->warnlisted_size += item.size();
@@ -666,9 +670,9 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         if ( check_wl_ua && !warning ) {
             if ( row.find( 21 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                const std::string& target = row.at( 21 );
+                const std::string& target{ row.at( 21 ) };
                 for ( const auto& item : wl_ua_list ) {
-                    if ( StringOps::startsWith( target, item ) ) {
+                    if ( target.find( item ) == 0ul ) {
                         // match found! skip this line
                         warning |= true;
                         this->warnlisted_size += item.size();
@@ -681,10 +685,10 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         if ( check_wl_met && !warning ) {
             if ( row.find( 11 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                const std::string& target = row.at( 11 );
-                auto found = std::find_if(
+                const std::string& target{ row.at( 11 ) };
+                auto found{ std::find_if(
                     wl_met_list.cbegin(), wl_met_list.cend(),
-                    [&target]( const auto& item ){ return item == target; } );
+                    [&target]( const auto& item ){ return item == target; } ) };
                 if ( found != wl_met_list.end() ) {
                     // match found! skip this line
                     warning |= true;
@@ -696,9 +700,9 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         if ( check_wl_req && !warning ) {
             if ( row.find( 12 ) != row.end() ) {
                 // this row do contains this row item, check if they match
-                const std::string& target = row.at( 12 );
+                const std::string& target{ row.at( 12 ) };
                 for ( const auto& item : wl_req_list ) {
-                    if ( StringOps::startsWith( target, item ) ) {
+                    if ( target.find( item ) == 0ul ) {
                         // match found! skip this line
                         warning |= true;
                         this->warnlisted_size += item.size();
@@ -710,9 +714,8 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
 
 
         // initialize the SQL statement
-        QString query_stmt;
-        query_stmt = "INSERT INTO \""+table+"\" (\"warning\", \"year\", \"month\", \"day\", \"hour\", \"minute\", \"second\", \"protocol\", \"method\", \"uri\", \"query\", \"response\", \"time_taken\", \"bytes_sent\", \"bytes_received\", \"referrer\", \"client\", \"user_agent\", \"cookie\") "\
-                   "VALUES (";
+        QString query_stmt{ "INSERT INTO \""+table+"\" (\"warning\", \"year\", \"month\", \"day\", \"hour\", \"minute\", \"second\", \"protocol\", \"method\", \"uri\", \"query\", \"response\", \"time_taken\", \"bytes_sent\", \"bytes_received\", \"referrer\", \"client\", \"user_agent\", \"cookie\") "
+                            "VALUES (" };
 
 
         // complete and execute the statement, binding NULL if not found
@@ -772,7 +775,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         }
 
         // client data and referrer
-        for ( int i : std::vector<int>({18,20,21,22}) ) {
+        for ( const int& i : std::vector<int>({18,20,21,22}) ) {
             query_stmt += ", ";
             if ( row.find( i ) == row.end() ) {
                 // no value found in the collection, bind NULL
@@ -797,7 +800,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         if ( ! query.prepare( query_stmt ) ) {
             // error opening database
             successful &= false;
-            QString query_msg="", err_msg="";
+            QString query_msg, err_msg;
             if ( this->dialogs_level > 0 ) {
                 query_msg = "query.prepare()";
                 if ( this->dialogs_level == 2 ) {
@@ -811,7 +814,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         if ( ! query.exec() ) {
             // error finalizing step
             successful &= false;
-            QString query_msg="", err_msg="";
+            QString query_msg, err_msg;
             if ( this->dialogs_level > 0 ) {
                 query_msg = "query.exec()";
                 if ( this->dialogs_level == 2 ) {

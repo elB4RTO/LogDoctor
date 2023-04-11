@@ -5,24 +5,26 @@
 #include "modules/exceptions.h"
 
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QEventLoop>
+#include <QPixmap>
+#include <QTimer>
 
 #include <string>
 #include <stdexcept>
 #include <unordered_map> // leave this for OSX
 
 
-Crapup::Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent ) :
-    QWidget(parent),
-    ui(new Ui::Crapup)
+Crapup::Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent )
+    : QWidget{ parent }
+    , ui{ new Ui::Crapup }
+    , img_checking{ ":/icons/icons/"+icons_theme+"/checking.png" }
 {
     this->ui->setupUi(this);
 
-    QString stylesheet = "";
+    QString stylesheet;
     this->getStyleSheet( stylesheet, window_theme_id );
     this->setStyleSheet( stylesheet );
-
-    this->img_checking = QPixmap(":/icons/icons/"+icons_theme+"/checking.png");
 
     this->ui->label_Title->setText( Crapup::tr("Checking for updates") );
     this->adjustSize();
@@ -41,7 +43,7 @@ Crapup::~Crapup()
 
 void Crapup::closeEvent( QCloseEvent* event )
 {
-    this->quitting = true;
+    this->quitting |= true;
     if ( !this->img_timer.isNull() ) {
         if ( this->img_timer->isActive() ) {
             this->img_timer->stop();
@@ -60,22 +62,22 @@ void Crapup::closeEvent( QCloseEvent* event )
 
 void Crapup::versionCheck( const float v )
 {
-    bool successful = false;
-    float version = -1;
-    int err = 1;
+    bool successful{ false };
+    float version{ -1.0 };
+    int err{ 1 };
 
     this->img_timer.reset( new QTimer(this) );
     connect( this->img_timer.get(), &QTimer::timeout, this, &Crapup::rotateImg );
     this->img_timer->start(100);
 
-    QByteArray ua = QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+" (version check)");
+    QByteArray ua{ QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+" (version check)") };
     std::string content;
 
-    const std::string links[3] = {"https://raw.githubusercontent.com/elB4RTO/LogDoctor/main/version.txt",
-                                  "https://git.disroot.org/elB4RTO/LogDoctor/raw/branch//main/version.txt",
-                                  "https://gitlab.com/elB4RTO/LogDoctor/-/raw/main/version.txt"};
+    const std::string links[3] {"https://raw.githubusercontent.com/elB4RTO/LogDoctor/main/version.txt",
+                                "https://git.disroot.org/elB4RTO/LogDoctor/raw/branch//main/version.txt",
+                                "https://gitlab.com/elB4RTO/LogDoctor/-/raw/main/version.txt"};
 
-    QNetworkAccessManager networkMgr = QNetworkAccessManager(this);
+    QNetworkAccessManager networkMgr{ this };
 
 
     for ( const std::string& URL : links ) {
@@ -84,7 +86,7 @@ void Crapup::versionCheck( const float v )
         content.clear();
 
         // reset the reply
-        this->request_aborted = false;
+        this->request_aborted &= false;
 
         // request timeout timer
         this->request_timer.reset( new QTimer(this) );
@@ -126,18 +128,18 @@ void Crapup::versionCheck( const float v )
             // connection successful, get the content
             content = this->reply->readAll().toStdString();
             // search for the version mark
-            const std::string version_mark = ".:!¦version¦!:.";
-            int start = content.find( version_mark );
+            const std::string version_mark{ ".:!¦version¦!:." };
+            size_t start{ content.find( version_mark ) };
             if ( start != std::string::npos ) {
                 // first found
                 start += version_mark.size();
-                const int stop = content.find( version_mark, start );
+                const size_t stop{ content.find( version_mark, start ) };
                 if ( stop != std::string::npos ) {
                     // second found too
                     try {
                         // get the version
                         version = std::stof( content.substr( start, stop-start ) );
-                        successful = true;
+                        successful |= true;
                         break;
 
                     } catch ( const std::invalid_argument&/*& e*/ ) {
@@ -192,7 +194,7 @@ void Crapup::versionCheck( const float v )
                 this->ui->label_Title->setText( Crapup::tr("No update found") );
                 this->ui->label_Message->setText( Crapup::tr(
                     "LogDoctor is up-to-date" ) );
-            } else if ( version > 0 )  {
+            } else if ( version > 0.0f )  {
                 // this version is beyond the current upstream version
                 this->ui->label_Title->setText( Crapup::tr(":/") );
                 this->ui->label_Message->setText( Crapup::tr(
@@ -202,7 +204,7 @@ void Crapup::versionCheck( const float v )
                     "Please visit the LogDoctor's repository and get a fresh version of it" ) );
             } else {
                 // something went wrong, can't be successful if version is less than 0
-                successful = false;
+                successful &= false;
                 err = 22;
             }
         }
@@ -243,7 +245,7 @@ void Crapup::versionCheck( const float v )
 
 void Crapup::requestTimeout()
 {
-    this->request_aborted = true;
+    this->request_aborted |= true;
     this->deleteReply();
     emit this->abortRequest();
 }
@@ -260,9 +262,9 @@ void Crapup::deleteReply()
 
 void Crapup::rotateImg()
 {
-    this->img_orientation += 36.0;
-    if ( this->img_orientation >= 360.0 ) {
-        this->img_orientation = 0.0;
+    this->img_orientation += 36.0f;
+    if ( this->img_orientation >= 360.0f ) {
+        this->img_orientation = 0.0f;
     }
     this->ui->label_Image->setPixmap(
         this->img_checking.transformed(

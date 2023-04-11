@@ -40,9 +40,9 @@ private slots:
 
 
 private:
-    Ui::Crapnote *ui;
+    Ui::Crapnote* ui;
 
-    int font_size = 17;
+    int font_size{ 17 };
 };
 
 #endif // CRAPNOTE_H

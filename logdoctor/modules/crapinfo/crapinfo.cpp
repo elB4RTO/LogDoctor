@@ -9,22 +9,22 @@
 #include <QFontDatabase>
 
 
-Crapinfo::Crapinfo( const int& window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent ) :
-    QWidget(parent),
-    ui(new Ui::Crapinfo)
+Crapinfo::Crapinfo( const int& window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent )
+    : QWidget{ parent }
+    , ui{ new Ui::Crapinfo }
 {
     ui->setupUi(this);
-    QString stylesheet = "";
+    QString stylesheet{ "" };
     this->getStyleSheet( stylesheet, window_theme_id );
     this->setStyleSheet( stylesheet );
 
     // fonts
-    const QString ff = QFontDatabase::applicationFontFamilies(
-        QFontDatabase::addApplicationFont(":/fonts/Metropolis")).at(0);
-    const QFont font( ff, 13 );
-    const QString ff_s = QFontDatabase::applicationFontFamilies(
-        QFontDatabase::addApplicationFont(":/fonts/Hack")).at(0);
-    const QFont font_script( ff_s, 13 );
+    const QString& ff{ QFontDatabase::applicationFontFamilies(
+        QFontDatabase::addApplicationFont(":/fonts/Metropolis")).at(0) };
+    const QFont font{ ff, 13 };
+    const QString& ff_s{ QFontDatabase::applicationFontFamilies(
+        QFontDatabase::addApplicationFont(":/fonts/Hack")).at(0) };
+    const QFont font_script{ ff_s, 13 };
 
     // apply the fonts
     this->ui->toolBox_Infos->setFont( font );

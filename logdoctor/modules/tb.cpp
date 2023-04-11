@@ -2,19 +2,13 @@
 #include "tb.h"
 
 
-TextBrowser::TextBrowser()
-{
-
-}
-
-
 // getters
-const bool& TextBrowser::getWideLinesUsage() const
+const bool TextBrowser::getWideLinesUsage() const
 {
     return this->wide_lines;
 }
 
-const int& TextBrowser::getColorSchemeID() const
+const int TextBrowser::getColorSchemeID() const
 {
     return this->color_scheme_id;
 }
@@ -82,7 +76,7 @@ void TextBrowser::makePreview( QString& content ) const
     /*if ( this->wide_lines ) {
         content += "<br/>";
     }*/
-    for ( int i=0; i<32; i++ ) {
+    for ( int i{0}; i<32; i++ ) {
         content += "<p>";
 
         content += "<b>";

@@ -2,22 +2,20 @@
 #include "rtf.h"
 
 #include "utilities/strings.h"
+#include "modules/craplog/modules/lib.h"
+#include "modules/tb.h"
+
+#include <QString>
 
 
-RichText::RichText()
+void RichText::enrichLogs( QString& rich_content, const std::string& content, const LogsFormat& logs_format, TextBrowser& TB )
 {
-
-}
-
-
-void RichText::enrichLogs( QString &rich_content, const std::string& content, const LogsFormat& logs_format, TextBrowser& TB )
-{
-    const std::unordered_map<std::string, QString>& colors = TB.getColorScheme();
-    int color_scheme = TB.getColorSchemeID();
-    bool wide_lines = TB.getWideLinesUsage();
+    const std::unordered_map<std::string, QString>& colors{ TB.getColorScheme() };
+    const int color_scheme{ TB.getColorSchemeID() };
+    const bool wide_lines{ TB.getWideLinesUsage() };
     // enrich the text
     rich_content.clear();
-    rich_content.reserve( content.size() );
+    rich_content.reserve( content.size()*2ul );
     rich_content += "<!DOCTYPE html><html><head></head><body";
     if ( color_scheme > 0 ) {
         rich_content += QString(" style=\"background:%1; color:%2\"")
@@ -27,19 +25,19 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     /*if ( wide_lines == true ) {
         rich_content += "<br/>";
     }*/
-    QString rich_line="", class_name="";
+    QString rich_line{}, class_name{};
     std::string sep, fld, fld_str, aux_sep2;
-    bool missing = false;
+    bool missing{ false };
     size_t i, start, stop, aux_start, aux_stop,
            line_size, sep_size;
-    const size_t n_sep = logs_format.separators.size()-1;
+    const size_t n_sep{ logs_format.separators.size()-1 };
     std::vector<std::string> lines;
     StringOps::splitrip( lines, content );
-    size_t lines_left = lines.size();
+    size_t lines_left{ lines.size() };
     for ( const std::string& line : lines ) {
         lines_left --;
         // check if the line is commented, usually from IIS logs
-        if ( StringOps::startsWith( line, "#" ) && !StringOps::startsWith( logs_format.initial, "#" ) ) {
+        if ( StringOps::startsWith( line, '#' ) && !StringOps::startsWith( logs_format.initial, '#' ) ) {
             rich_line = QString("<p>%1</p>").arg( QString::fromStdString( line ) );
             if ( wide_lines ) {
                 rich_line += "<br/>";
@@ -62,7 +60,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
             } else if ( i == n_sep+1 ) {
                 // final separator
                 sep = logs_format.final;
-                if ( sep.size() == 0 ) {
+                if ( sep.empty() ) {
                     stop = line_size+1;
                 } else {
                     stop = line.find( sep, start );
@@ -87,13 +85,13 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
 
             if ( i+1 <= n_sep ) {
                 // not the last separator, check for mistakes
-                bool ok = true;
+                bool ok{ true };
                 aux_stop = stop;
 
                 if ( sep == " " ) {
                     // whitespace-separated-values fields
-                    int c = StringOps::count( fld_str, sep ),
-                        n = 0;
+                    size_t c{ StringOps::count( fld_str, ' ' ) },
+                           n{ 0 };
                     if ( fld == "request_full" ) {
                         n = 2;
                     } else if ( fld == "date_time_mcs" ) {
@@ -118,7 +116,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                         }
                     }
 
-                } else if ( fld == "user_agent" && StringOps::startsWith( sep, "\"" ) ) {
+                } else if ( StringOps::startsWith( sep, '"' ) && fld == "user_agent" ) {
                     // atm the only support is for escaped quotes
                     if ( fld_str.back() == '\\' ) {
                         aux_start = stop + sep.size();
@@ -139,24 +137,24 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
                 // finally update if needed
                 if ( ok && aux_stop >= stop ) {
                     stop = aux_stop;
-                    fld_str = StringOps::strip( line.substr(start, stop-start), " " );
+                    fld_str = StringOps::strip( line.substr(start, stop-start), ' ' );
                 }
             }
 
             sep_size = sep.size(); // do not remove, holds the corretc size to increase stop
             // color the fields
             if ( StringOps::startsWith( fld, "date_time" ) ) {
-                if ( StringOps::startsWith( fld_str, "[" ) ) {
+                if ( StringOps::startsWith( fld_str, '[' ) ) {
                     fld_str = fld_str.substr( 1, fld_str.size()-1 );
                     rich_line += "[";
-                    if ( StringOps::endsWith( fld_str, "]" ) ) {
+                    if ( StringOps::endsWith( fld_str, ']' ) ) {
                         fld_str.resize( fld_str.size()-1 );
                         sep = "]" + sep;
                     }
                 }
             }
             rich_line += "<b>";
-            class_name = "";
+            class_name.clear();
             if ( color_scheme > 0 ) {
                 class_name += "<span style=\"color:";
                 if ( fld == "client" ) {
@@ -210,6 +208,7 @@ void RichText::enrichLogs( QString &rich_content, const std::string& content, co
     }
     lines.clear();
     rich_content += "</body></html>";
+    rich_content.shrink_to_fit();
 }
 
 

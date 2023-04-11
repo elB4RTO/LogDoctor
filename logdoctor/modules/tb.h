@@ -14,17 +14,15 @@
 class TextBrowser
 {
 public:
-    explicit TextBrowser();
-
 
     /////////////////
     //// GETTERS ////
 
     //! Returns whether the wide lines option is set to be used or not
-    const bool& getWideLinesUsage() const;
+    const bool getWideLinesUsage() const;
 
     //! Returns the ID of the color scheme in use
-    const int& getColorSchemeID() const;
+    const int getColorSchemeID() const;
 
     //! Returns the color scheme in use
     const std::unordered_map<std::string, QString>& getColorScheme() const;
@@ -66,8 +64,8 @@ public:
 
 private:
 
-    bool wide_lines = false;
-    int  color_scheme_id = 1;
+    bool wide_lines{ false };
+    int  color_scheme_id{ 1 };
     std::unordered_map<std::string, QString> color_scheme;
     /*int  font_size = 13;*/
     QString font_family;

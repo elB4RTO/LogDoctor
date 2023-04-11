@@ -24,11 +24,11 @@ public:
     explicit LogFile(){}
     explicit LogFile
         (const bool sel,const bool used,const unsigned sz,const QString& nm,const std::string& hs,const std::string& pt)
-        :selected(sel),used_already(used),size_(sz),name_(nm),hash_(hs),path_(pt){}
+        :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
     const bool isSelected() const   //!< Wheter the file has been selected to be use or not
         { return this->selected; }
     void setSelected()              //!< Sets the file as selected
-        { this->selected = true; }
+        { this->selected |= true; }
     const bool hasBeenUsed() const  //!< Wheter the file has been used already or not
         { return this->used_already; }
     const unsigned size() const     //!< The size of the file
@@ -55,15 +55,14 @@ public:
     explicit LogsFormat(){}
     explicit LogsFormat
         (const std::string& str,const std::string& itl,const std::string& fnl,const std::vector<std::string>& seps,const std::vector<std::string>& flds,const unsigned nl)
-        :string(str),initial(itl),final(fnl),separators(seps),fields(flds),new_lines(nl){}
+        :string{str},initial{itl},final{fnl},separators{seps},fields{flds},new_lines{nl}{}
     std::string string;                  //!< The logs format string
     std::string initial;                 //!< The initial separator
     std::string final;                   //!< The final separator
     std::vector<std::string> separators; //!< The separators in the middle
     std::vector<std::string> fields;     //!< The fields
-    unsigned new_lines;                  //!< The number of new lines
+    size_t new_lines;                    //!< The number of new lines
 };
-
 
 
 //! Hold the items of a blacklist/warnlist

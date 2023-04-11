@@ -1,15 +1,11 @@
 #ifndef CRAPLOG_H
 #define CRAPLOG_H
 
-#include <string>
-#include <vector>
-
-#include <QMainWindow>
 #include <QtCharts>
 
-#include "modules/craplog/modules/formats.h"
+#include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
-#include "modules/craplog/modules/logs.h"
+#include "modules/craplog/modules/formats.h"
 
 
 //! Craplog
@@ -92,15 +88,14 @@ public:
         \param web_server The ID of the Web Server
         \return The path of the logs' folder
     */
-    const std::string& getLogsPath( const int& web_server ) const;
+    const std::string& getLogsPath( const unsigned& web_server ) const;
 
     //! Sets a new path for the given Web Server to search the logs in
     /*!
         \param web_server The ID of the Web Server
         \param new_path The new path
     */
-    void setLogsPath(
-        const int& web_server,
+    void setLogsPath( const unsigned& web_server,
         const std::string& new_path
     );
 
@@ -189,7 +184,7 @@ public:
         \return The format string
         \see FormatOps::LogsFormat
     */
-    const std::string& getLogsFormatString( const int& web_server_id ) const;
+    const std::string& getLogsFormatString( const unsigned& web_server_id ) const;
 
     //! Returns the LogsFormat currently set for the given Web Server
     /*!
@@ -197,7 +192,7 @@ public:
         \return The LogsFormat instance
         \see LogsFormat
     */
-    const LogsFormat& getLogsFormat( const int& web_server_id ) const;
+    const LogsFormat& getLogsFormat( const unsigned& web_server_id ) const;
 
     //! Returns a sample log line for the given Web Server using the relative LogsFormat
     /*!
@@ -206,7 +201,7 @@ public:
         \throw WebServerException
         \see FormatOps::getApacheLogSample(), FormatOps::getNginxLogSample(), FormatOps::getIisLogSample()
     */
-    const QString getLogsFormatSample( const int& web_server_id ) const;
+    const QString getLogsFormatSample( const unsigned& web_server_id ) const;
 
 
 
@@ -236,7 +231,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isBlacklistUsed( const int& web_server_id, const int& log_field_id ) const;
+    const bool& isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
@@ -245,7 +240,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isWarnlistUsed( const int& web_server_id, const int& log_field_id ) const;
+    const bool& isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative blacklist to be used or not
     /*!
@@ -254,7 +249,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setBlacklistUsed( const int& web_server_id, const int& log_field_id, const bool& used );
+    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used );
 
     //! Sets the relative warnlist to be used or not
     /*!
@@ -263,7 +258,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setWarnlistUsed( const int& web_server_id, const int& log_field_id, const bool& used );
+    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used );
 
     //! Returns the relative items list
     /*!
@@ -272,7 +267,7 @@ public:
         \return The list of items in the given blacklist
         \see BWlist
     */
-    const std::vector<std::string>& getBlacklist( const int& web_server_id, const int& log_field_id ) const;
+    const std::vector<std::string>& getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Returns the relative items list
     /*!
@@ -281,7 +276,7 @@ public:
         \return The list of items in the givenwarnlist
         \see BWlist
     */
-    const std::vector<std::string>& getWarnlist( const int& web_server_id, const int& log_field_id ) const;
+    const std::vector<std::string>& getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative items list
     /*!
@@ -290,7 +285,7 @@ public:
         \param new_list The new items list
         \see BWlist
     */
-    void setBlacklist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
+    void setBlacklist( const unsigned& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
 
     //! Sets the relative items list
     /*!
@@ -299,7 +294,7 @@ public:
         \param new_list The new items list
         \see BWlist
     */
-    void setWarnlist( const int& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
+    void setWarnlist( const unsigned& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
 
     //! Adds an item to the relative list
     /*!
@@ -308,7 +303,7 @@ public:
         \param new_list The new items list
         \see BWlist
     */
-    void blacklistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item );
+    void blacklistAdd( const unsigned& web_server_id, const int& log_field_id, const std::string& new_item );
 
     //! Adds an item to the relative list
     /*!
@@ -317,7 +312,7 @@ public:
         \param new_item The new item to add to the list
         \see BWlist
     */
-    void warnlistAdd( const int& web_server_id, const int& log_field_id, const std::string& new_item );
+    void warnlistAdd( const unsigned& web_server_id, const int& log_field_id, const std::string& new_item );
 
     //! Removes an item from the relative list
     /*!
@@ -326,7 +321,7 @@ public:
         \param item The item to remove from the list
         \see BWlist
     */
-    void blacklistRemove( const int& web_server_id, const int& log_field_id, const std::string& item );
+    void blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Removes an item from the relative list
     /*!
@@ -335,7 +330,7 @@ public:
         \param item The item to remove from the list
         \see BWlist
     */
-    void warnlistRemove( const int& web_server_id, const int& log_field_id, const std::string& item );
+    void warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position up in the relative list
     /*!
@@ -344,7 +339,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int blacklistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item );
+    const int blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position up in the relative list
     /*!
@@ -353,7 +348,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int warnlistMoveUp( const int& web_server_id, const int& log_field_id, const std::string& item );
+    const int warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position down in the relative list
     /*!
@@ -362,7 +357,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int blacklistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item );
+    const int blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position down in the relative list
     /*!
@@ -371,7 +366,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int warnlistMoveDown( const int& web_server_id, const int& log_field_id, const std::string& item );
+    const int warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
 
     //////////////
@@ -444,14 +439,14 @@ private:
     //// DIALOGS ////
 
     // quantity of information to display throught dialogs
-    int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
     /////////////////////////
     //// WEB SERVERS IDs ////
 
-    const unsigned APACHE_ID = 11; //!< ID of the Apache2 Web Server
-    const unsigned NGINX_ID  = 12; //!< ID of the Nginx Web Server
-    const unsigned IIS_ID    = 13; //!< ID of the IIS Web Server
+    const unsigned APACHE_ID { 11 }; //!< ID of the Apache2 Web Server
+    const unsigned NGINX_ID  { 12 }; //!< ID of the Nginx Web Server
+    const unsigned IIS_ID    { 13 }; //!< ID of the IIS Web Server
 
 
     ///////////////////
@@ -464,9 +459,9 @@ private:
     //////////////
     //// WORK ////
 
-    bool proceed = false;
-    bool db_edited = false;
-    bool is_parsing = false;
+    bool proceed    { false };
+    bool db_edited  { false };
+    bool is_parsing { false };
 
     std::mutex mutex;
 
@@ -474,12 +469,12 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    unsigned total_lines  = 0; // total number of logs lines
-    unsigned parsed_lines = 0; // number of parsed logs lines
-    unsigned total_size       = 0; // total size of the logs
-    unsigned parsed_size      = 0; // size of the logs which have been used
-    unsigned warnlisted_size  = 0; // size of the logs which caused a warning
-    unsigned blacklisted_size = 0; // size of the logs which has been blacklisted
+    unsigned total_lines  { 0 }; // total number of logs lines
+    unsigned parsed_lines { 0 }; // number of parsed logs lines
+    unsigned total_size       { 0 }; // total size of the logs
+    unsigned parsed_size      { 0 }; // size of the logs which have been used
+    unsigned warnlisted_size  { 0 }; // size of the logs which caused a warning
+    unsigned blacklisted_size { 0 }; // size of the logs which has been blacklisted
 
     std::chrono::system_clock::time_point parsing_time_start,
                                           parsing_time_stop;
@@ -498,15 +493,15 @@ private:
     //// LOGS CONTROL ////
 
     // warning size, in Bytes
-    unsigned warning_size = (1'048'576 * 50) +1; // => 1 MiB * x
+    unsigned warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
 
 
     //////////////////////////////
     //// BLACKLIST / WARNLIST ////
 
     // { web_server_id : { log_field_id : BWlist } }
-    std::unordered_map<int, std::unordered_map<int, BWlist>> blacklists;
-    std::unordered_map<int, std::unordered_map<int, BWlist>> warnlists;
+    std::unordered_map<unsigned, std::unordered_map<int, BWlist>> blacklists;
+    std::unordered_map<unsigned, std::unordered_map<int, BWlist>> warnlists;
 
     //! Ssnitizes an item removing the unwanted elements
     /*!
@@ -524,7 +519,7 @@ private:
     //// WEB SERVER ////
 
     // currently used web server
-    unsigned current_WS = this->APACHE_ID;
+    unsigned current_WS{ this->APACHE_ID };
 
     std::unordered_map<int, std::string> logs_paths;
 
@@ -539,7 +534,7 @@ private:
         std::string ends;     //!< What should be final part of the name
     };
 
-    std::unordered_map<int, LogName> logs_base_names;
+    std::unordered_map<unsigned, LogName> logs_base_names;
 
     //! Changes the name criterions for IIS logs files names depending on the given module
     /*!
@@ -565,9 +560,9 @@ private:
 
     FormatOps formatOps;
 
-    std::unordered_map<int, std::string> logs_format_strings;
+    std::unordered_map<unsigned, std::string> logs_format_strings;
 
-    std::unordered_map<int, LogsFormat> logs_formats;
+    std::unordered_map<unsigned, LogsFormat> logs_formats;
 
     // currently used logs format
     LogsFormat current_LF;

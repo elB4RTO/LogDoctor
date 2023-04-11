@@ -1,24 +1,24 @@
 #ifndef RTF_H
 #define RTF_H
 
-#include <QFont>
-#include <QString>
+#include <QObject>
 
-#include "modules/tb.h"
-#include "modules/craplog/modules/formats.h"
+#include <string>
+
+class TextBrowser;
+class LogsFormat;
+class QString;
 
 
 //! RichText
 /*!
     Utilities for the TextBrowser
 */
-
 class RichText : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit RichText();
 
     //! Enriches the content of a log file with HTML/CSS code
     /*!

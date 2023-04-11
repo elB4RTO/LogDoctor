@@ -1,14 +1,12 @@
 #ifndef HASH_H
 #define HASH_H
 
-#include <string>
 #include <vector>
 #include <unordered_map>
 
-#include <QVariant>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
+#include <QString>
+
+class QSqlQuery;
 
 
 //! HashOps
@@ -18,8 +16,6 @@
 class HashOps
 {
 public:
-    explicit HashOps();
-
 
     //! Sets the new Dialogs level
     void setDialogLevel( const int& new_level );
@@ -38,7 +34,7 @@ public:
         \throw GenericException
         \see SHA256
     */
-    void digestFile( const std::string& file_path, std::string& hash ) const;
+    static void digestFile( const std::string& file_path, std::string& hash );
 
     //! Checks if the given hash equals one which is already in the list
     /*!
@@ -60,15 +56,15 @@ public:
 private:
 
     // Quantity of information to display throught dialogs
-    int dialog_level = 2;
+    int dialog_level{ 2 };
 
     // id constants
-    const unsigned APACHE_ID = 11;
-    const unsigned NGINX_ID  = 12;
-    const unsigned IIS_ID    = 13;
+    const unsigned APACHE_ID { 11 };
+    const unsigned NGINX_ID  { 12 };
+    const unsigned IIS_ID    { 13 };
 
     // List of Web Servers names for database tables
-    const std::unordered_map<int, QString> ws_names = {
+    const std::unordered_map<unsigned, QString> ws_names{
         {this->APACHE_ID, "apache"},
         {this->NGINX_ID,  "nginx"},
         {this->IIS_ID,    "iis"}
@@ -76,7 +72,7 @@ private:
 
     // Lists of used files' hashes
     // { web_server_id : { hashes } }
-    std::unordered_map<unsigned, std::vector<std::string>> hashes = {
+    std::unordered_map<unsigned, std::vector<std::string>> hashes{
         {this->APACHE_ID, {}},
         {this->NGINX_ID,  {}},
         {this->IIS_ID,    {}}

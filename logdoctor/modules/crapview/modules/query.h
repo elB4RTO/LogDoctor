@@ -4,20 +4,15 @@
 #include "modules/shared.h"
 #include "utilities/result.h"
 
-#include <QString>
-
-#include <map>
-#include <vector>
 #include <unordered_map>
 
 
 class DbQuery
 {
 public:
-    explicit DbQuery();
 
     // convert log fields IDs to log fields
-    const std::unordered_map<int, std::string> FIELDS = {
+    const std::unordered_map<int, std::string> FIELDS{
             {0, FIELDS__WARNING},
             {10,FIELDS__PROTOCOL},   {11,FIELDS__METHOD},
             {12,FIELDS__URI},        {13,FIELDS__QUERY},      {14,FIELDS__RESPONSE_CODE},
@@ -26,14 +21,14 @@ public:
             {20,FIELDS__CLIENT},     {21,FIELDS__USER_AGENT} };
 
     // convert month numbers to month names
-    const std::unordered_map<int, std::string> MONTHS = {
+    const std::unordered_map<int, std::string> MONTHS{
             {1, MONTHS__JANUARY},  {2, MONTHS__FEBRUARY},  {3, MONTHS__MARCH},
             {4, MONTHS__APRIL},    {5, MONTHS__MAY},       {6, MONTHS__JUNE},
             {7, MONTHS__JULY},     {8, MONTHS__AUGUST},    {9, MONTHS__SEPTEMBER},
             {10,MONTHS__OCTOBER},  {11,MONTHS__NOVEMBER},  {12,MONTHS__DECEMBER} };
 
     // convert week-day numbers to day names
-    const std::unordered_map<int, std::string> DAYS = {
+    const std::unordered_map<int, std::string> DAYS{
             {1, DAYS__SUNDAY},    {2, DAYS__MONDAY},   {3, DAYS__TUESDAY},
             {4, DAYS__WEDNESDAY}, {5, DAYS__THURSDAY}, {6, DAYS__FRIDAY},
             {7, DAYS__SATURDAY} };
@@ -249,26 +244,28 @@ public:
         long& req_count
     ) const;
 
+
 private:
 
-    const std::string MSG_ERR_UNX_WS = TR::tr("Unexpected WebServer").toStdString();
-    const std::string MSG_ERR_PROCESSING = TR::tr("An error occured while processing").toStdString();
-    const std::string MSG_ERR_PROCESSING_DATES = TR::tr("An error occured while processing dates").toStdString();
-    const std::string MSG_ERR_PARSING_YMD = TR::tr("An error occured while parsing %1 from the database").toStdString();
-    const std::string WORD_YEARS  = TR::tr("Years").toStdString();
-    const std::string WORD_MONTHS = TR::tr("Months").toStdString();
-    const std::string WORD_DAYS   = TR::tr("Days").toStdString();
-    const std::string MSG_RESPONSIBLE_VALUE = TR::tr("Value responsible for the error").toStdString();
-    const std::string MSG_TABLE_NAME = TR::tr("Database table name").toStdString();
+    // leave TR::tr here to make them appear in the translatable phrases
+    const std::string MSG_ERR_UNX_WS{ TR::tr("Unexpected WebServer").toStdString() };
+    const std::string MSG_ERR_PROCESSING{ TR::tr("An error occured while processing").toStdString() };
+    const std::string MSG_ERR_PROCESSING_DATES{ TR::tr("An error occured while processing dates").toStdString() };
+    const std::string MSG_ERR_PARSING_YMD{ TR::tr("An error occured while parsing %1 from the database").toStdString() };
+    const std::string WORD_YEARS{  TR::tr("Years").toStdString() };
+    const std::string WORD_MONTHS{ TR::tr("Months").toStdString() };
+    const std::string WORD_DAYS{   TR::tr("Days").toStdString() };
+    const std::string MSG_RESPONSIBLE_VALUE{ TR::tr("Value responsible for the error").toStdString() };
+    const std::string MSG_TABLE_NAME{ TR::tr("Database table name").toStdString() };
 
     // quantity of information to display throught dialogs
-    int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialog_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
     std::string db_path;
     QString db_name;
 
     // convert log fields to database fields
-    const std::unordered_map<std::string, QString> LogFields_to_DbFields = {
+    const std::unordered_map<std::string, QString> LogFields_to_DbFields{
         {this->FIELDS.at( 0), "warning"},
         {this->FIELDS.at(10), "protocol"},
         {this->FIELDS.at(11), "method"},
@@ -301,7 +298,7 @@ private:
         \return The gap index
         \throw DateTimeException
     */
-    static int getMinuteGap( const int minute, const int gap=10 );
+    static const int getMinuteGap( const int minute, const int gap=10 );
 
 
     //! Returns the number of days for a given month
@@ -311,7 +308,7 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    static int getMonthDays( const int year, const int month );
+    static const int getMonthDays( const int year, const int month );
 
     //! Returns the month number in the year
     /*!
@@ -332,7 +329,7 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    static int countDays(
+    static const int countDays(
         const int from_year, const int from_month, const int from_day,
         const int to_year, const int to_month, const int to_day );
 
@@ -345,9 +342,9 @@ private:
         \param to_month The final month
         \return The number of months in the period
     */
-    static int countMonths(
-        const int& from_year, const int& from_month,
-        const int& to_year,   const int& to_month );
+    static const int countMonths(
+        const int from_year, const int from_month,
+        const int to_year,   const int to_month );
 };
 
 #endif // QUERY_H

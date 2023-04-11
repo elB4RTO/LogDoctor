@@ -3,9 +3,9 @@
 #include "ui_dialogdia.h"
 
 
-DialogDia::DialogDia( const QString& title, const QString& text, const bool& ignore, const bool& discard, const bool& abort, QWidget *parent ) :
-    QDialog(parent),
-    ui(new Ui::DialogDia)
+DialogDia::DialogDia( const QString& title, const QString& text, const bool ignore, const bool discard, const bool abort, QWidget* parent )
+    : QDialog{ parent }
+    , ui{ new Ui::DialogDia }
 {
     ui->setupUi(this);
 

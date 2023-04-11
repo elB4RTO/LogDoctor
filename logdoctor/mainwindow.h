@@ -7,11 +7,6 @@
 #include <QCloseEvent>
 
 #include <QTranslator>
-#include <QFontDatabase>
-#include <QMessageBox>
-#include <QTreeWidget>
-#include <QChartView>
-#include <QThread>
 
 #include "utilities/strings.h"
 
@@ -27,6 +22,8 @@
 
 #include "games/crisscross/game.h"
 #include "games/snake/game.h"
+
+class QTreeWidgetItem;
 
 
 QT_BEGIN_NAMESPACE
@@ -520,34 +517,34 @@ private:
     Ui::MainWindow* ui;
 
     // current version of LogDoctor
-    const float version = 2.04;
+    const float version{ 2.04 };
 
     // web servers ID constants
-    const unsigned APACHE_ID=11, NGINX_ID=12, IIS_ID=13;
+    const unsigned APACHE_ID{11}, NGINX_ID{12}, IIS_ID{13};
     const QString wsFromIndex( const int index ) const;
 
 
     //////////////////////////
     //// OPERATING SYSTEM ////
 
-    const std::string home_path = StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), "/" );
+    const std::string home_path{ StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), '/' ) };
 
     // 1: linux, 2:windows, 3:mac
     #if defined( Q_OS_DARWIN )
         // Darwin-based systems: macOS, iOS, watchOS and tvOS.
-        const unsigned int OS = 3;
-        const std::string configs_path = this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
-        const std::string logdoc_path  = this->home_path + "/Lybrary/Application Support/LogDoctor";
+        const unsigned int OS{ 3 };
+        const std::string configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
+        const std::string logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
     #elif defined( Q_OS_WIN )
         // Microsoft Windows systems
-        const unsigned int OS = 2;
-        const std::string configs_path = this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
-        const std::string logdoc_path  = this->home_path + "/AppData/Local/LogDoctor";
+        const unsigned int OS{ 2 };
+        const std::string configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
+        const std::string logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
     #elif defined( Q_OS_UNIX )
         // Unix-like systems: Linux, BSD and SysV
-        const unsigned int OS = 1;
-        const std::string configs_path = this->home_path + "/.config/LogDoctor/logdoctor.conf";
-        const std::string logdoc_path  = "/usr/share/LogDoctor";
+        const unsigned int OS{ 1 };
+        const std::string configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
+        const std::string logdoc_path  { "/usr/share/LogDoctor" };
     #else
         #error "System not supported"
     #endif
@@ -586,8 +583,8 @@ private:
     const std::vector<std::string> string2list( const std::string& string, const bool user_agent=false ) const;
 
     // string to bool and vice versa
-    const std::unordered_map<std::string, bool> s2b = { {"true",true}, {"false",false} };
-    const std::unordered_map<bool, std::string> b2s = { {true,"true"}, {false,"false"} };
+    const std::unordered_map<std::string, bool> s2b{ {"true",true}, {"false",false} };
+    const std::unordered_map<bool, std::string> b2s{ {true,"true"}, {false,"false"} };
 
 
     //////////////////
@@ -595,7 +592,7 @@ private:
 
     QTranslator translator;
 
-    std::string language = "en_GB";
+    std::string language{ "en_GB" };
 
     //! Translates the UI to the selected language
     void updateUiLanguage();
@@ -621,10 +618,10 @@ private:
     //// GENERAL ////
 
     // quantoty of informational dialogs to display
-    int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
     // default web server
-    unsigned default_ws = 11;
+    unsigned default_ws{ 11 };
 
 
     //////////////////
@@ -632,12 +629,12 @@ private:
     //////////////////
 
     // remember window position and sizes
-    bool remember_window = true;
+    bool remember_window{ true };
 
     // themes
-    int window_theme_id = 0;
-    int charts_theme_id = 0;
-    int icons_theme_id  = 0;
+    int window_theme_id { 0 };
+    int charts_theme_id { 0 };
+    int icons_theme_id  { 0 };
 
     QString icons_theme;
 
@@ -653,7 +650,7 @@ private:
     //! Updates the fonts on the window
     void updateUiFonts();
 
-    const std::vector<QChart::ChartTheme> CHARTS_THEMES = {
+    const std::vector<QChart::ChartTheme> CHARTS_THEMES{
         QChart::ChartTheme::ChartThemeLight,
         QChart::ChartTheme::ChartThemeDark,
         QChart::ChartTheme::ChartThemeBrownSand,
@@ -669,9 +666,9 @@ private:
     // fonts
     std::unordered_map<std::string, QFont>  FONTS;
 
-    int font_size       = 13;
-    int font_size_big   = 16;
-    int font_size_small = 10;
+    int font_size       { 13 };
+    int font_size_big   { 16 };
+    int font_size_small { 10 };
 
     // base font families, to build fonts from
     QString main_font_family;
@@ -699,9 +696,9 @@ private:
     //// CHECKS ////
     ////////////////
 
-    bool initiating = true;
+    bool initiating{ true };
 
-    bool db_ok = true;
+    bool db_ok{ true };
 
     //! Makes the initial integrity checks
     void makeInitialChecks();
@@ -714,11 +711,11 @@ private:
     //// DATABASES ////
     ///////////////////
 
-    bool db_edited = false;
+    bool db_edited{ false };
 
-    bool db_do_backup = true;
+    bool db_do_backup{ true };
 
-    unsigned db_backups_number = 3;
+    unsigned db_backups_number{ 3 };
 
     //! Backs-up the logs data collection database
     void backupDatabase() const;
@@ -727,7 +724,7 @@ private:
     std::string db_hashes_path;
 
     // actions when working on a db
-    bool db_working = false;
+    bool db_working{ false };
 
     //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool working );
@@ -756,13 +753,13 @@ private:
     //////////////
     //// LOGS ////
 
-    bool loading_LogsList = false;
+    bool loading_LogsList{ false };
 
     void disableAllButtons_LogFiles_WS();
     void enableAllButtons_LogFiles_WS();
 
-    bool hide_used_files = false;
-    bool refreshing_list = false;
+    bool hide_used_files{ false };
+    bool refreshing_list{ false };
 
 
     //////////////////////
@@ -776,7 +773,7 @@ private:
 
     void resetPerfsLabels();
 
-    bool force_updating_labels = false;
+    bool force_updating_labels{ false };
 
 
     //////////////////

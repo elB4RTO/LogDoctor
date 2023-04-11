@@ -7,9 +7,9 @@
 #include "utilities/io.h"
 
 
-Craphelp::Craphelp(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Craphelp)
+Craphelp::Craphelp(QWidget *parent)
+    : QWidget{ parent }
+    , ui{ new Ui::Craphelp }
 {
     ui->setupUi(this);
 }
@@ -72,28 +72,28 @@ const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const i
 }
 
 
-void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int &color_scheme_id ) const
+void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id ) const
 {
-    std::unordered_map<std::string, QString> color_scheme = this->getColorScheme( color_scheme_id );
+    std::unordered_map<std::string, QString> color_scheme{ this->getColorScheme( color_scheme_id ) };
     std::string aux;
     IOutils::readFile( path, aux );
     QString content;
     if ( color_scheme_id == 0 ) {
         // remove the style for the colors
         while (true) {
-            const int start = aux.find( "background-color:" );
-            if ( start < 0 || start > aux.size() ) {
+            const size_t start{ aux.find( "background-color:" ) };
+            if ( start == std::string::npos ) {
                 break;
             }
-            const int stop  = aux.find( ";\n", start ) + 2;
+            const size_t stop{ aux.find( ";\n", start ) + 2ul };
             aux.erase( start, stop-start );
         }
         while (true) {
-            const int start = aux.find( "color:" );
-            if ( start < 0 || start > aux.size() ) {
+            const size_t start{ aux.find( "color:" ) };
+            if ( start == std::string::npos ) {
                 break;
             }
-            const int stop  = aux.find( ";\n", start ) + 2;
+            const size_t stop{ aux.find( ";\n", start ) + 2ul };
             aux.erase( start, stop-start );
         }
         content = QString::fromStdString( aux );
@@ -116,7 +116,7 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
 }
 
 
-void Craphelp::helpLogsFormatDefault( const std::string& file_name, const QFont& font, const int &color_scheme_id ) const
+void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int &color_scheme_id ) const
 {
     std::unordered_map<std::string, QString> color_scheme = this->getColorScheme( color_scheme_id );
     std::string aux;
@@ -131,19 +131,19 @@ void Craphelp::helpLogsFormatDefault( const std::string& file_name, const QFont&
     if ( color_scheme_id == 0 ) {
         // remove the style for the colors
         while (true) {
-            const int start = aux.find( "background-color:" );
-            if ( start < 0 || start > aux.size() ) {
+            const size_t start{ aux.find( "background-color:" ) };
+            if ( start == std::string::npos ) {
                 break;
             }
-            const int stop  = aux.find( ";", start ) + 1;
+            const size_t stop{ aux.find( ";", start ) + 1ul };
             aux.erase( start, stop-start );
         }
         while (true) {
-            const int start = aux.find( "color:" );
-            if ( start < 0 || start > aux.size() ) {
+            const size_t start{ aux.find( "color:" ) };
+            if ( start == std::string::npos ) {
                 break;
             }
-            const int stop  = aux.find( ";", start ) + 1;
+            const size_t stop{ aux.find( ";", start ) + 1ul };
             aux.erase( start, stop-start );
         }
         content = QString::fromStdString( aux );

@@ -14,15 +14,20 @@
 #include "modules/exceptions.h"
 #include "modules/shared.h"
 
+#include <QThread>
 #include <QTimer>
+#include <QTreeWidget>
+#include <QSqlDatabase>
+#include <QFontDatabase>
+#include <QChartView>
 
 #include <chrono>
 #include <filesystem>
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow{ parent }
+    , ui{ new Ui::MainWindow }
 {
     //////////////////
     //// GRAPHICS ////
@@ -230,7 +235,7 @@ MainWindow::MainWindow(QWidget *parent)
     //// INTERFACE ////
     this->updateUiLanguage();
     this->updateUiTheme();
-    QChartView* charts[] = {
+    QChartView* charts[]{
         this->ui->chart_MakeStats_Size,
         this->ui->chart_ConfCharts_Preview,
         this->ui->chart_StatsWarn,
@@ -311,9 +316,9 @@ void MainWindow::defineOSspec()
 
 void MainWindow::readConfigs()
 {
-    bool proceed = true;
+    bool proceed{ true };
     std::error_code err;
-    QString err_msg = "";
+    QString err_msg;
     // check the file
     if ( IOutils::exists( this->configs_path ) ) {
         if ( IOutils::checkFile( this->configs_path ) ) {
@@ -324,8 +329,8 @@ void MainWindow::readConfigs()
                                               std::filesystem::perm_options::add,
                                               err );
                 if ( err.value() ) {
-                    proceed = false;
-                    QString file = "";
+                    proceed &= false;
+                    QString file;
                     if ( this->dialogs_level > 0 ) {
                         file = QString::fromStdString( this->configs_path );
                         err_msg = QString::fromStdString( err.message() );
@@ -339,7 +344,7 @@ void MainWindow::readConfigs()
             if ( proceed ) {
                 proceed = IOutils::renameAsCopy( this->configs_path, err );
                 if ( ! proceed ) {
-                    QString path = "";
+                    QString path;
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
                         if ( err.value() ) {
@@ -352,8 +357,8 @@ void MainWindow::readConfigs()
         }
     } else {
         // configuration file not found
-        proceed = false;
-        QString file = "";
+        proceed &= false;
+        QString file;
         if ( this->dialogs_level == 2 ) {
             file = QString::fromStdString( this->configs_path );
         }
@@ -366,7 +371,7 @@ void MainWindow::readConfigs()
         std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
-            for ( int w=this->APACHE_ID; w<=this->IIS_ID; w++ ) {
+            for ( unsigned w=this->APACHE_ID; w<=this->IIS_ID; w++ ) {
                 for ( const int& f : {11,12,20,21} ) {
                     this->craplog.setWarnlist( w, f, {} );
                 }
@@ -376,21 +381,21 @@ void MainWindow::readConfigs()
             IOutils::readFile( this->configs_path, content );
             StringOps::splitrip( configs, content );
             for ( const std::string& line : configs ) {
-                if ( StringOps::startsWith( line, "[") ) {
+                if ( StringOps::startsWith( line, '[') ) {
                     // section descriptor
                     continue;
                 }
                 aux.clear();
-                StringOps::splitrip( aux, line, "=" );
+                StringOps::splitrip( aux, line, '=' );
                 if ( aux.size() < 2 ) {
                     // nothing to do
                     continue;
                 }
                 // if here, a value is present
-                const std::string& var = aux.at( 0 ),
-                                   val = aux.at( 1 );
+                const std::string& var{ aux.at( 0 ) };
+                const std::string& val{ aux.at( 1 ) };
 
-                if ( val.size() == 0 ) {
+                if ( val.empty() ) {
                     // nothing to do, no value stored
                     continue;
                 }
@@ -625,18 +630,18 @@ void MainWindow::readConfigs()
 
         } catch ( const std::ios_base::failure& ) {
             // failed reading
-            proceed = false;
+            proceed &= false;
             err_msg = DialogSec::tr("An error occured while reading the configuration file");
         } catch ( const LogFormatException& ) {
-            proceed = false; // message already shown
+            proceed &= false; // message already shown
         } catch ( const BWlistException& ) {
-            proceed = false;
+            proceed &= false;
             err_msg = QString("%1:\n%2").arg(
                 DialogSec::tr("One of the lists has an invalid item"),
                 aux_err_msg );
         } catch (...) {
             // something failed
-            proceed = false;
+            proceed &= false;
             err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
         }
         if ( ! proceed ) {
@@ -649,8 +654,8 @@ void MainWindow::readConfigs()
 void MainWindow::writeConfigs()
 {
     std::error_code err;
-    bool proceed=true, msg_shown=false;
-    QString msg="", err_msg="";
+    bool proceed{true}, msg_shown{false};
+    QString msg, err_msg;
     // check the file first
     if ( IOutils::exists( this->configs_path ) ) {
         if ( IOutils::checkFile( this->configs_path ) ) {
@@ -661,14 +666,14 @@ void MainWindow::writeConfigs()
                                               std::filesystem::perm_options::add,
                                               err );
                 if ( err.value() ) {
-                    proceed = false;
-                    QString file = "";
+                    proceed &= false;
+                    QString file;
                     if ( this->dialogs_level > 0 ) {
                         file = QString::fromStdString( this->configs_path );
                         err_msg = QString::fromStdString( err.message() );
                     }
                     DialogSec::errConfFileNotWritable( file, err_msg );
-                    msg_shown = true;
+                    msg_shown |= true;
                 }
             }
         } else {
@@ -677,7 +682,7 @@ void MainWindow::writeConfigs()
             if ( proceed ) {
                 proceed = IOutils::renameAsCopy( this->configs_path, err );
                 if ( ! proceed ) {
-                    QString path = "";
+                    QString path;
                     if ( this->dialogs_level > 0 ) {
                         path = QString::fromStdString( this->configs_path );
                         if ( err.value() ) {
@@ -685,13 +690,13 @@ void MainWindow::writeConfigs()
                         }
                     }
                     DialogSec::errRenaming( path, err_msg );
-                    msg_shown = true;
+                    msg_shown |= true;
                 }
             }
         }
     } else {
         // file does not exists, check if at least the folder exists
-        const std::string base_path = this->parentPath( this->configs_path );
+        const std::string base_path{ this->parentPath( this->configs_path ) };
         if ( IOutils::exists( base_path ) ) {
             if ( IOutils::isDir( base_path ) ) {
                 if ( ! IOutils::checkDir( base_path, false, true ) ) {
@@ -701,14 +706,14 @@ void MainWindow::writeConfigs()
                                                   std::filesystem::perm_options::add,
                                                   err );
                     if ( err.value() ) {
-                        proceed = false;
-                        QString file = "";
+                        proceed &= false;
+                        QString file;
                         if ( this->dialogs_level > 0 ) {
                             file = QString::fromStdString( base_path );
                             err_msg = QString::fromStdString( err.message() );
                         }
                         DialogSec::errConfDirNotWritable( file, err_msg );
-                        msg_shown = true;
+                        msg_shown |= true;
                     }
                 }
             } else {
@@ -717,13 +722,13 @@ void MainWindow::writeConfigs()
                 if ( proceed ) {
                     proceed = IOutils::renameAsCopy( base_path, err );
                     if ( ! proceed ) {
-                        QString path = "";
+                        QString path;
                         if ( this->dialogs_level > 0 ) {
                             path = QString::fromStdString( base_path );
                             err_msg = QString::fromStdString( err.message() );
                         }
                         DialogSec::errRenaming( path, err_msg );
-                        msg_shown = true;
+                        msg_shown |= true;
                     } else {
                         // make the new folder
                         proceed = IOutils::makeDir( base_path, err );
@@ -755,7 +760,7 @@ void MainWindow::writeConfigs()
 
     if ( proceed ) {
         //// USER INTERFACE ////
-        std::string configs = "";
+        std::string configs;
         configs += "\n\n[UI]";
         configs += "\nLanguage=" + this->language;
         configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
@@ -810,7 +815,7 @@ void MainWindow::writeConfigs()
         //// IIS ////
         configs += "\n\n[IIS]";
         configs += "\nIisLogsPath=" + this->craplog.getLogsPath( this->IIS_ID );
-        std::string module = "0";
+        std::string module{ "0" };
         if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
             module = "1";
         } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
@@ -849,12 +854,12 @@ void MainWindow::writeConfigs()
 
 void MainWindow::backupDatabase() const
 {
-    bool proceed = true;
+    bool proceed{ true };
     std::error_code err;
-    QString err_msg = "";
+    QString err_msg;
     if ( IOutils::checkFile( this->db_data_path+"/collection.db" ) ) {
         // db exists and is a file
-        const std::string path = this->db_data_path+"/backups";
+        const std::string path{ this->db_data_path+"/backups" };
         if ( std::filesystem::exists( path ) ) {
             if ( !std::filesystem::is_directory( path, err ) ) {
                 // exists but it's not a directory, rename as copy and make a new one
@@ -862,7 +867,7 @@ void MainWindow::backupDatabase() const
                 if ( proceed ) {
                     proceed = IOutils::renameAsCopy( path, err );
                     if ( ! proceed ) {
-                        QString p = "";
+                        QString p;
                         if ( this->dialogs_level > 0 ) {
                             p = QString::fromStdString( path );
                             if ( err.value() ) {
@@ -920,13 +925,13 @@ void MainWindow::backupDatabase() const
             DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ), err_msg );
         } else {
             // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
-            std::string path, new_path;
-            path = this->db_data_path+"/backups/collection.db."+std::to_string(this->db_backups_number);
+            std::string path{ this->db_data_path+"/backups/collection.db."+std::to_string(this->db_backups_number) };
+            std::string new_path;
             if ( std::filesystem::exists( path ) ) {
                 std::ignore = std::filesystem::remove_all( path, err );
                 if ( err.value() ) {
                     err_msg = QString::fromStdString( err.message() );
-                    proceed = false;
+                    proceed &= false;
                 } else {
                     proceed = ! std::filesystem::exists( path );
                 }
@@ -943,7 +948,7 @@ void MainWindow::backupDatabase() const
                         std::filesystem::rename( path, new_path, err );
                         if ( err.value() ) {
                             err_msg = QString::fromStdString( err.message() );
-                            proceed = false;
+                            proceed &= false;
                         } else {
                             proceed = ! std::filesystem::exists( path );
                         }
@@ -962,8 +967,8 @@ void MainWindow::backupDatabase() const
 
 const std::string MainWindow::geometryToString() const
 {
-    QRect geometry = this->geometry();
-    std::string string = "";
+    QRect geometry{ this->geometry() };
+    std::string string;
     string += std::to_string( geometry.x() );
     string += ",";
     string += std::to_string( geometry.y() );
@@ -978,7 +983,7 @@ const std::string MainWindow::geometryToString() const
 void MainWindow::setGeometryFromString( const std::string& geometry )
 {
     std::vector<std::string> aux;
-    StringOps::splitrip( aux, geometry, "," );
+    StringOps::splitrip( aux, geometry, ',' );
     QRect new_geometry;
     new_geometry.setRect( std::stoi(aux.at(0)), std::stoi(aux.at(1)), std::stoi(aux.at(2)), std::stoi(aux.at(3)) );
     this->setGeometry( new_geometry );
@@ -990,25 +995,23 @@ void MainWindow::setGeometryFromString( const std::string& geometry )
 
 const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
 {
-    std::string string;
     if ( user_agent ) {
-        string = std::accumulate(
-            list.begin(), list.end(), string,
+        return std::accumulate(
+            list.begin(), list.end(), std::string{},
             []( auto& s, auto str ) -> std::string&
               { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
 
     } else {
-        string = std::accumulate(
-            list.begin(), list.end(), string,
+        return std::accumulate(
+            list.begin(), list.end(), std::string{},
             []( auto& s, auto str ) -> std::string&
               { return s += str + " "; } );
     }
-    return string;
 }
 const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
 {
     std::vector<std::string> list, aux;
-    StringOps::splitrip( aux, string, " " );
+    StringOps::splitrip( aux, string, ' ' );
     if ( user_agent ) {
         list.reserve( aux.size() );
         std::transform( aux.cbegin(), aux.cend(),
@@ -1083,7 +1086,7 @@ void MainWindow::updateUiTheme()
 
 void MainWindow::updateUiIcons()
 {
-    const QString old_icons_theme = this->icons_theme;
+    const QString old_icons_theme{ this->icons_theme };
     switch ( this->icons_theme_id ) {
         case 0:
             this->detectIconsTheme();
@@ -1101,7 +1104,7 @@ void MainWindow::updateUiIcons()
 
     if ( this->icons_theme != old_icons_theme ) {
         // main tabs
-        const int m_index = this->ui->stacked_Tabs_Pages->currentIndex();
+        const int m_index{ this->ui->stacked_Tabs_Pages->currentIndex() };
         this->ui->button_Tab_Log->setIcon(
             QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
                 this->icons_theme,
@@ -1129,7 +1132,7 @@ void MainWindow::updateUiIcons()
         this->ui->icon_MakeStats_Speed->setPixmap(
             QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
         // stats
-        const int s_index = this->ui->stacked_Stats_Pages->currentIndex();
+        const int s_index{ this->ui->stacked_Stats_Pages->currentIndex() };
         // stats warn
         this->ui->button_Tab_StatsWarn->setIcon(
             QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
@@ -1198,12 +1201,12 @@ void MainWindow::updateUiIcons()
 
 void MainWindow::updateUiFonts()
 {
-    const QFont &small_font = this->FONTS.at( "main_small" );
-    const QFont &font = this->FONTS.at( "main" );
-    const QFont &big_font = this->FONTS.at( "main_big" );
-    QFont menu_font = this->FONTS.at( "main_small" );
+    const QFont& small_font{ this->FONTS.at( "main_small" ) };
+    const QFont& font{ this->FONTS.at( "main" ) };
+    const QFont& big_font{ this->FONTS.at( "main_big" ) };
+    QFont menu_font{ this->FONTS.at( "main_small" ) };
     menu_font.setPointSizeF( this->font_size_small+1.5 );
-    QFont header_font = this->FONTS.at( "main_small" );
+    QFont header_font{ this->FONTS.at( "main_small" ) };
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
     this->ui->menuLanguage->setFont( menu_font );
@@ -1486,7 +1489,7 @@ void MainWindow::updateUiLanguage()
         this->ui->retranslateUi( this );
         // stats warn table header
         {
-            const QStringList h = {
+            const QStringList h{
                 this->crapview.getLogFieldString(0),
                 TR::tr( WORDS__DATE.c_str() ),
                 TR::tr( WORDS__TIME.c_str() ),
@@ -1508,7 +1511,7 @@ void MainWindow::updateUiLanguage()
         }
         // stats speed table header
         {
-            const QStringList h = {
+            const QStringList h{
                 this->crapview.getLogFieldString(15),
                 this->crapview.getLogFieldString(12),
                 this->crapview.getLogFieldString(13),
@@ -1531,12 +1534,12 @@ void MainWindow::updateUiLanguage()
         this->ui->button_StatsCount_Client->setText(    this->crapview.getLogFieldString( 20 ) );
         // configs warn/black-lists
         {
-            const QStringList wl = {
+            const QStringList wl{
                 this->crapview.getLogFieldString( 11 ),
                 this->crapview.getLogFieldString( 12 ),
                 this->crapview.getLogFieldString( 21 ),
                 this->crapview.getLogFieldString( 20 ) };
-            const QStringList bl = {
+            const QStringList bl{
                 this->crapview.getLogFieldString( 20 ) };
             // set
             this->ui->box_ConfApache_Warnlist_Field->clear();
@@ -1576,14 +1579,14 @@ void MainWindow::waitActiveWindow()
 }
 void MainWindow::makeInitialChecks()
 {
-    bool ok = true;
+    bool ok{ true };
     std::error_code err;
-    QString err_msg = "";
+    QString err_msg;
     // check that the sqlite plugin is available
     if ( ! QSqlDatabase::drivers().contains("QSQLITE") ) {
         // checks failed, abort
         DialogSec::errSqlDriverNotFound( "QSQLITE" );
-        ok = false;
+        ok &= false;
     }
 
     if ( ok ) {
@@ -1598,7 +1601,7 @@ void MainWindow::makeInitialChecks()
                                                       std::filesystem::perm_options::add,
                                                       err );
                         if ( err.value() ) {
-                            ok = false;
+                            ok &= false;
                             err_msg = QString::fromStdString( err.message() );
                             DialogSec::errDirNotReadable( QString::fromStdString( path ), err_msg );
                         }
@@ -1611,7 +1614,7 @@ void MainWindow::makeInitialChecks()
                                                           std::filesystem::perm_options::add,
                                                           err );
                             if ( err.value() ) {
-                                ok = false;
+                                ok &= false;
                                 err_msg = QString::fromStdString( err.message() );
                                 DialogSec::errDirNotWritable( QString::fromStdString( path ), err_msg );
                             }
@@ -1624,7 +1627,7 @@ void MainWindow::makeInitialChecks()
                     if ( ok ) {
                         ok = IOutils::renameAsCopy( path, err );
                         if ( ! ok ) {
-                            QString p = "";
+                            QString p;
                             if ( this->dialogs_level > 0 ) {
                                 p = QString::fromStdString( path );
                                 if ( err.value() ) {
@@ -1671,19 +1674,19 @@ void MainWindow::makeInitialChecks()
         // statistics' database
         if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/collection.db" ) ) {
             // checks failed, abort
-            ok = false;
+            ok &= false;
         } else {
             this->crapview.setDbPath( this->db_data_path );
             this->craplog.setStatsDatabasePath( this->db_data_path );
             // used-files' hashes' database
             if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path + "/hashes.db" ) ) {
                 // checks failed, abort
-                ok = false;
+                ok &= false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
                 if ( ! this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" ) ) {
                     // failed to load the list, abort
-                    ok = false;
+                    ok &= false;
                 }
             }
         }
@@ -1724,7 +1727,7 @@ void MainWindow::makeInitialChecks()
                 // shouldn't be here
                 throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
         }
-        this->initiating = false;
+        this->initiating &= false;
         // effectively check if draw buttons can be enabled
         this->checkStatsWarnDrawable();
         this->checkStatsSpeedDrawable();
@@ -1737,10 +1740,10 @@ void MainWindow::makeInitialChecks()
 
 const bool MainWindow::checkDataDB()
 {
-    bool ok = false;
+    bool ok{ false };
     if ( ! this->initiating ) { // avoid recursions
         // check the db
-        const std::string path = this->db_data_path + "/collection.db";
+        const std::string path{ this->db_data_path + "/collection.db" };
         ok = IOutils::checkFile( path, true );
         if ( ! ok ) {
             // database file not found, make a new one
@@ -1762,9 +1765,9 @@ const bool MainWindow::checkDataDB()
         }
         if ( ok && !this->db_ok ) {
             this->db_ok = ok;
-            this->initiating = true;
+            this->initiating |= true;
             this->refreshStatsDates();
-            this->initiating = false;
+            this->initiating &= false;
         } else {
             this->db_ok = ok;
         }
@@ -1802,8 +1805,7 @@ const std::string MainWindow::resolvePath( const std::string& path ) const
 }
 const std::string MainWindow::parentPath( const std::string& path ) const
 {
-    const size_t stop = path.rfind( '/' );
-    return path.substr( 0, stop );
+    return path.substr( 0, path.rfind( '/' ) );
 }
 
 
@@ -1812,9 +1814,9 @@ const std::string MainWindow::parentPath( const std::string& path ) const
 //////////////
 void MainWindow::showHelp( const std::string& file_name )
 {
-    bool fallback = false;
-    const QString link = "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/";
-    const std::string path =  this->logdoc_path+"/help/"+this->language+"/"+file_name+".html";
+    bool fallback{ false };
+    const QString link{ "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/" };
+    const std::string path{ this->logdoc_path+"/help/"+this->language+"/"+file_name+".html" };
     if ( IOutils::exists( path ) ) {
         if ( IOutils::isFile( path ) ) {
             if ( IOutils::checkFile( path, true ) ) {
@@ -1832,17 +1834,17 @@ void MainWindow::showHelp( const std::string& file_name )
             } else {
                 // resource not readable
                 DialogSec::errHelpNotReadable( link );
-                fallback = true;
+                fallback |= true;
             }
         } else {
             // resource is not a file
             DialogSec::errHelpFailed( link, DialogSec::tr("Unrecognized entry") );
-            fallback = true;
+            fallback |= true;
         }
     } else {
         // resource not found
         DialogSec::errHelpNotFound( link );
-        fallback = true;
+        fallback |= true;
     }
     if ( fallback ) {
         // help file not found for the current locale, fallback to the default version
@@ -2009,7 +2011,7 @@ void MainWindow::menu_actionSnake_triggered()
 //////////////
 void MainWindow::switchMainTab( const int new_index )
 {
-    const int old_index = this->ui->stacked_Tabs_Pages->currentIndex();
+    const int old_index{ this->ui->stacked_Tabs_Pages->currentIndex() };
     // turn off the old icon
     switch ( old_index ) {
         case 0:
@@ -2081,7 +2083,7 @@ void MainWindow::on_button_Tab_Conf_clicked()
 //// STATS ////
 void MainWindow::switchStatsTab( const int new_index )
 {
-    const int old_index = this->ui->stacked_Stats_Pages->currentIndex();
+    const int old_index{ this->ui->stacked_Stats_Pages->currentIndex() };
     // turn off the old icon
     switch ( old_index ) {
         case 0:
@@ -2239,11 +2241,10 @@ void MainWindow::setDbWorkingState( const bool working )
 
 const bool MainWindow::dbUsable()
 {
-    bool ok = false;
     if ( !this->db_working ) {
-        ok = this->checkDataDB();
+        return this->checkDataDB();
     }
-    return ok;
+    return false;
 }
 
 
@@ -2266,19 +2267,19 @@ void MainWindow::on_button_Logs_Up_clicked()
 // check
 void MainWindow::checkMakeStats_Makable()
 {
-    bool state = false;
+    bool state{ false };
     if ( this->dbUsable() ) {
         // db is not busy
         if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
             // all checked
-            state = true;
+            state |= true;
         } else if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::PartiallyChecked ) {
             // at least one should be checked
             QTreeWidgetItemIterator i(this->ui->listLogFiles);
             while ( *i ) {
                 if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
                     // an entry is checked
-                    state = true;
+                    state |= true;
                     break;
                 }
                 ++i;
@@ -2357,7 +2358,7 @@ void MainWindow::on_button_LogFiles_Iis_clicked()
 void MainWindow::on_button_LogFiles_RefreshList_clicked()
 {
     if ( ! this->refreshing_list ) {
-        this->refreshing_list = true;
+        this->refreshing_list |= true;
         // clear the current tree
         this->ui->listLogFiles->clear();
         this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
@@ -2382,7 +2383,7 @@ void MainWindow::refreshLogsList()
     // iterate over elements of list
     for ( const LogFile& log_file : this->craplog.getLogsList(true) ) {
         // new entry for the tree widget
-        QTreeWidgetItem *item = new QTreeWidgetItem();
+        QTreeWidgetItem* item{ new QTreeWidgetItem() };
 
         // preliminary check for file usage display
         if ( log_file.hasBeenUsed() ) {
@@ -2425,7 +2426,7 @@ void MainWindow::refreshLogsList()
     this->ui->button_LogFiles_Apache->setEnabled( true );
     this->ui->button_LogFiles_Nginx->setEnabled( true );
     this->ui->button_LogFiles_Iis->setEnabled( true );
-    this->refreshing_list = false;
+    this->refreshing_list &= false;
 }
 
 
@@ -2454,8 +2455,8 @@ void MainWindow::on_checkBox_LogFiles_CheckAll_stateChanged(int arg1)
 void MainWindow::on_button_LogFiles_ViewFile_clicked()
 {
     // display the selected item
-    if ( this->ui->listLogFiles->selectedItems().size() > 0 ) {
-        bool proceed = true;
+    if ( ! this->ui->listLogFiles->selectedItems().isEmpty() ) {
+        bool proceed{ true };
         LogFile item;
         // retrieve the file item
         try {
@@ -2464,17 +2465,17 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         } catch ( const GenericException& ) {
             // failed to find file
-            proceed = false;
+            proceed &= false;
             DialogSec::errFileNotFound( QString::fromStdString( item.path() ), true );
         }
 
         // check the size
         if ( proceed ) {
-            const unsigned warn_size = this->craplog.getWarningSize();
+            const unsigned warn_size{ this->craplog.getWarningSize() };
             if ( warn_size > 0 ) {
                 if ( item.size() > warn_size ) {
                     // exceeds the warning size
-                    QString msg = item.name();
+                    QString msg{ item.name() };
                     if ( this->dialogs_level >= 1 ) {
                         msg += QString("\n\n%1:\n%2").arg(
                             DialogSec::tr("Size of the file"),
@@ -2496,7 +2497,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         if ( proceed ) {
             // get the current log format
-            const LogsFormat& format = this->craplog.getCurrentLogFormat();
+            const LogsFormat& format{ this->craplog.getCurrentLogFormat() };
             // read the content
             std::string content;
             try {
@@ -2518,7 +2519,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
             } catch ( const GenericException& ) {
                 // failed closing gzip file pointer
-                proceed = false;
+                proceed &= false;
                 // >> e.what() << //
                 DialogSec::errGeneric( QString("%1:\n%2").arg(
                     DialogSec::tr("Failed to read gzipped file"),
@@ -2526,12 +2527,12 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
             /*} catch ( const std::ios_base::failure& err ) {
                 // failed reading as text
-                proceed = false;
+                proceed &= false;
                 // >> err.what() << //
                 DialogSec::errFailedReadFile( item.name );*/
             } catch (...) {
                 // failed somehow
-                proceed = false;
+                proceed &= false;
                 DialogSec::errFailedReadFile( item.name() );
             }
 
@@ -2565,7 +2566,7 @@ void MainWindow::on_listLogFiles_itemDoubleClicked(QTreeWidgetItem *item, int co
 void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 {
     // control checked
-    int n_checked = 0;
+    int n_checked{ 0 };
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
     while ( *i ) {
         if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
@@ -2586,20 +2587,20 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 void MainWindow::on_button_MakeStats_Start_clicked()
 {
     if ( this->dbUsable() ) {
-        bool proceed = true;
+        bool proceed{ true };
         // check that the format has been set
-        const LogsFormat& lf = this->craplog.getLogsFormat( this->craplog.getCurrentWSID() );
-        if ( lf.string.size() == 0 ) {
+        const LogsFormat& lf{ this->craplog.getLogsFormat( this->craplog.getCurrentWSID() ) };
+        if ( lf.string.empty() ) {
             // format string not set
-            proceed = false;
+            proceed &= false;
             DialogSec::errLogFormatNotSet( nullptr );
-        } else if ( lf.fields.size() == 0 ) {
+        } else if ( lf.fields.empty() ) {
             // no field, useless to parse
-            proceed = false;
+            proceed &= false;
             DialogSec::errLogFormatNoFields( nullptr );
         } else if ( lf.separators.size() < lf.fields.size()-1 ) {
             // missing at least a separator between two (or more) fields
-            proceed = false;
+            proceed &= false;
             DialogSec::errLogFormatNoSeparators( nullptr );
         }
 
@@ -2608,16 +2609,16 @@ void MainWindow::on_button_MakeStats_Start_clicked()
             this->craplogStarted();
 
             // feed craplog with the checked files
-            QTreeWidgetItemIterator i(this->ui->listLogFiles);
+            QTreeWidgetItemIterator i{ this->ui->listLogFiles };
             while ( *i ) {
                 if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
                     // tell Craplog to set this file as selected
                     if ( ! this->craplog.setLogFileSelected( (*i)->text(0) ) ) {
                         // failed to retrieve the file. this shouldn't be, but...
-                        const int choice = DialogSec::choiceSelectedFileNotFound( (*i)->text(0) );
+                        const int choice{ DialogSec::choiceSelectedFileNotFound( (*i)->text(0) ) };
                         if ( choice == 0 ) {
                             // choosed to abort all
-                            proceed = false;
+                            proceed &= false;
                             break;
                         } else if ( choice == 1 ) {
                             // choosed to discard the file and continue
@@ -2670,7 +2671,7 @@ void MainWindow::updatePerfsLabels()
 {
     // update values
     if ( this->craplog.isParsing() || this->force_updating_labels ) {
-        const unsigned size = this->craplog.getParsedSize();
+        const unsigned size{ this->craplog.getParsedSize() };
         this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
         this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
         this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
@@ -2697,9 +2698,9 @@ void MainWindow::craplogFinished()
 {
     if ( this->waiter_timer->isActive() ) {
         this->waiter_timer->stop();
-        this->force_updating_labels = true;
+        this->force_updating_labels |= true;
         this->updatePerfsLabels();
-        this->force_updating_labels = false;
+        this->force_updating_labels &= false;
         // draw the chart
         this->craplog.makeChart(
             this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
@@ -2872,7 +2873,7 @@ void MainWindow::on_button_StatsWarn_Update_clicked()
     this->crapview.updateWarn(
         this->ui->table_StatsWarn,
         this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ) );
-    this->db_edited = true;
+    this->db_edited |= true;
 }
 
 
@@ -3195,32 +3196,31 @@ void MainWindow::drawStatsCount()
 void MainWindow::checkStatsDayDrawable()
 {
     if ( this->dbUsable() ) {
-        bool aux = true;
+        bool aux{ true };
         // secondary date (period)
         if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
             if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
               && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
               && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
-               aux = false;
+               aux &= false;
             } else {
-                int a,b;
-                a = this->ui->box_StatsDay_ToYear->currentText().toInt();
-                b = this->ui->box_StatsDay_FromYear->currentText().toInt();
+                int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
+                int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
                 if ( a < b ) {
                     // year 'to' is less than 'from'
-                    aux = false;
+                    aux &= false;
                 } else if ( a == b ) {
                     a = this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() );
                     b = this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() );
                     if ( a < b ) {
                         // month 'to' is less than 'from'
-                        aux = false;
+                        aux &= false;
                     } else if ( a == b ) {
                         a = this->ui->box_StatsDay_ToDay->currentText().toInt();
                         b = this->ui->box_StatsDay_FromDay->currentText().toInt();
                         if ( a < b ) {
                             // day 'to' is less than 'from'
-                            aux = false;
+                            aux &= false;
                         }
                     }
                 }
@@ -3230,13 +3230,13 @@ void MainWindow::checkStatsDayDrawable()
         if ( this->ui->box_StatsDay_FromYear->currentIndex() < 0
           && this->ui->box_StatsDay_FromMonth->currentIndex() < 0
           && this->ui->box_StatsDay_FromDay->currentIndex() < 0 ) {
-            aux = false;
+            aux &= false;
         }
         // check log field validity
         if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
-            aux = false;
+            aux &= false;
         }
-        this->ui->button_StatsDay_Draw->setEnabled( aux);
+        this->ui->button_StatsDay_Draw->setEnabled( aux );
 
     } else {
         // db busy
@@ -3255,7 +3255,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
             this->crapview.getFields( "Daytime" ));
         this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
         // refresh dates
-        QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
+        QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
         this->ui->box_StatsDay_FromYear->addItems( years );
         this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
         if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
@@ -3404,7 +3404,7 @@ void MainWindow::drawStatsDay()
 void MainWindow::checkStatsRelatDrawable()
 {
     if ( this->dbUsable() ) {
-        bool aux = true;
+        bool aux{ true };
         if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
           && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
           && this->ui->box_StatsRelat_FromDay->currentIndex() >= 0
@@ -3412,35 +3412,34 @@ void MainWindow::checkStatsRelatDrawable()
           && this->ui->box_StatsRelat_ToMonth->currentIndex() >= 0
           && this->ui->box_StatsRelat_ToDay->currentIndex() >= 0 ) {
             // check period validity
-            int a,b;
-            a = this->ui->box_StatsRelat_ToYear->currentText().toInt();
-            b = this->ui->box_StatsRelat_FromYear->currentText().toInt();
+            int a{ this->ui->box_StatsRelat_ToYear->currentText().toInt() };
+            int b{ this->ui->box_StatsRelat_FromYear->currentText().toInt() };
             if ( a < b ) {
                 // year 'to' is less than 'from'
-                aux = false;
+                aux &= false;
             } else if ( a == b ) {
                 a = this->crapview.getMonthNumber( this->ui->box_StatsRelat_ToMonth->currentText() );
                 b = this->crapview.getMonthNumber( this->ui->box_StatsRelat_FromMonth->currentText() );
                 if ( a < b ) {
                     // month 'to' is less than 'from'
-                    aux = false;
+                    aux &= false;
                 } else if ( a == b ) {
                     a = this->ui->box_StatsRelat_ToDay->currentText().toInt();
                     b = this->ui->box_StatsRelat_FromDay->currentText().toInt();
                     if ( a < b ) {
                         // day 'to' is less than 'from'
-                        aux = false;
+                        aux &= false;
                     }
                 }
             }
         } else {
             // disable the draw button
-            aux = false;
+            aux &= false;
         }
         // check log field validity
         if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() < 0
           || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
-            aux = false;
+            aux &= false;
         }
         this->ui->button_StatsRelat_Draw->setEnabled( aux );
 
@@ -3458,13 +3457,13 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
     this->ui->box_StatsRelat_ToYear->clear();
     if ( index != -1 ) {
         // refresh fields
-        QStringList fields = this->crapview.getFields( "Relational" );
+        QStringList fields{ this->crapview.getFields( "Relational" ) };
         this->ui->box_StatsRelat_LogsField_1->addItems( fields );
         this->ui->box_StatsRelat_LogsField_2->addItems( fields );
         this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
         this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
         // refresh dates
-        QStringList years = this->crapview.getYears( this->wsFromIndex( index ) );
+        QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
         // from
         this->ui->box_StatsRelat_FromYear->clear();
         this->ui->box_StatsRelat_FromYear->addItems( years );
@@ -3567,9 +3566,8 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 }
 void MainWindow::drawStatsRelat()
 {
-    int aux;
+    int aux{ this->ui->box_StatsRelat_LogsField_1->currentIndex() };
     QString filter1, filter2;
-    aux = this->ui->box_StatsRelat_LogsField_1->currentIndex();
     if ( aux == 0 ) {
         filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
     } else if ( aux >= 5 && aux <= 8 ) {
@@ -3615,9 +3613,9 @@ void MainWindow::drawStatsGlobals()
     std::vector<std::tuple<QString,QString>> perf_list;
     std::vector<QString> work_list;
 
-    const bool result = this->crapview.calcGlobals(
+    const bool result{ this->crapview.calcGlobals(
         recur_list, traffic_list, perf_list, work_list,
-        this->glob_ws );
+        this->glob_ws ) };
 
     if ( result ) {
         this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
@@ -3814,7 +3812,7 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
         default:
             throw GenericException( "Unexpected Font index: "+std::to_string(index), true );
     }
-    const QFont& font = this->FONTS.at( f );
+    const QFont& font{ this->FONTS.at( f ) };
     this->TB.setFont( font );
     this->ui->textBrowser_ConfTextBrowser_Preview->setFont( font );
     this->ui->preview_ConfApache_Format_Sample->setFont( font );
@@ -3839,7 +3837,7 @@ void MainWindow::on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int inde
 }
 void MainWindow::refreshTextBrowserPreview()
 {
-    QString content = "";
+    QString content;
     this->TB.makePreview( content );
     this->ui->textBrowser_ConfTextBrowser_Preview->setText( content );
     this->ui->textBrowser_ConfTextBrowser_Preview->setFont( this->TB.getFont() );
@@ -3855,22 +3853,22 @@ void MainWindow::on_box_ConfCharts_Theme_currentIndexChanged(int index)
 }
 void MainWindow::refreshChartsPreview()
 {
-    QColor col = Qt::GlobalColor::darkGreen;
-    QBarSet *bars_1 = new QBarSet( "" );
+    QColor col{ Qt::GlobalColor::darkGreen };
+    QBarSet* bars_1{ new QBarSet( "" ) };
     bars_1->setColor( col );
-    QBarSet *bars_2 = new QBarSet( "" );
+    QBarSet* bars_2{ new QBarSet( "" ) };
     bars_2->setColor( col );
-    QBarSet *bars_3 = new QBarSet( "" );
+    QBarSet* bars_3{ new QBarSet( "" ) };
     bars_3->setColor( col );
-    QBarSet *bars_4 = new QBarSet( "" );
+    QBarSet* bars_4{ new QBarSet( "" ) };
     bars_4->setColor( col );
-    QBarSet *bars_5 = new QBarSet( "" );
+    QBarSet* bars_5{ new QBarSet( "" ) };
     bars_5->setColor( col );
-    QBarSet *bars_6 = new QBarSet( "" );
+    QBarSet* bars_6{ new QBarSet( "" ) };
     bars_6->setColor( col );
 
-    int aux, max=0;
-    for ( int i=0; i<24; i++ ) {
+    int aux, max{0};
+    for ( int i{0}; i<24; i++ ) {
         aux = rand() %100; *bars_1 << aux;
         if ( aux > max ) { max = aux; }
         aux = rand() %100; *bars_2 << aux;
@@ -3885,12 +3883,12 @@ void MainWindow::refreshChartsPreview()
         if ( aux > max ) { max = aux; }
     }
 
-    QBarSeries *bars = new QBarSeries();
+    QBarSeries* bars{ new QBarSeries() };
     bars->append( bars_1 ); bars->append( bars_2 ); bars->append( bars_3 );
     bars->append( bars_4 ); bars->append( bars_5 ); bars->append( bars_6 );
     bars->setBarWidth( 1 );
 
-    QChart *t_chart = new QChart();
+    QChart* t_chart{ new QChart() };
     // apply the theme
     t_chart->setTheme( this->CHARTS_THEMES.at( this->charts_theme_id ) );
     // add the bars
@@ -3903,7 +3901,7 @@ void MainWindow::refreshChartsPreview()
     categories << "00" << "01" << "02" << "03" << "04" << "05" << "06" << "07" << "08" << "09" << "10" << "11"
                << "12" << "13" << "14" << "15" << "16" << "17" << "18" << "19" << "20" << "21" << "22" << "23";
 
-    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    QBarCategoryAxis* axisX{ new QBarCategoryAxis() };
     axisX->append( categories );
     axisX->setLabelsFont( this->FONTS.at( "main_small" ) );
     axisX->setTitleText( "Infoes" );
@@ -3911,7 +3909,7 @@ void MainWindow::refreshChartsPreview()
     t_chart->addAxis( axisX, Qt::AlignBottom );
     bars->attachAxis( axisX );
 
-    QValueAxis *axisY = new QValueAxis();
+    QValueAxis* axisY{ new QValueAxis() };
     axisY->setLabelFormat( "%d" );
     axisY->setRange( 0, max );
     axisY->setLabelsFont( this->FONTS.at( "main_small" ) );
@@ -3936,8 +3934,8 @@ void MainWindow::refreshChartsPreview()
 // data collection
 void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePath( arg1.toStdString() );
+    if ( ! arg1.isEmpty() ) {
+        std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
             this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
@@ -3958,9 +3956,9 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 {
     if ( ! this->ui->icon_ConfDatabases_Data_Wrong->isVisible() ) {
         // set the paths
-        std::string path = this->resolvePath( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() );
-        if ( StringOps::endsWith( path, "/" ) ) {
-            path = StringOps::rstrip( path, "/" );
+        std::string path{ this->resolvePath( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() ) };
+        if ( StringOps::endsWith( path, '/' ) ) {
+            path = StringOps::rstrip( path, '/' );
         }
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
@@ -3980,8 +3978,8 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 // usef files hashes
 void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePath( arg1.toStdString() );
+    if ( ! arg1.isEmpty() ) {
+        std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
             this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
@@ -4002,9 +4000,9 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
 {
     if ( ! this->ui->icon_ConfDatabases_Hashes_Wrong->isVisible() ) {
         // set the paths
-        std::string path = this->resolvePath( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() );
-        if ( StringOps::endsWith( path, "/" ) ) {
-            path = StringOps::rstrip( path, "/" );
+        std::string path{ this->resolvePath( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() ) };
+        if ( StringOps::endsWith( path, '/' ) ) {
+            path = StringOps::rstrip( path, '/' );
         }
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
@@ -4093,7 +4091,7 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString &arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePath( arg1.toStdString() );
+        std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
             this->ui->button_ConfApache_Path_Save->setEnabled( true );
@@ -4114,9 +4112,9 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
 {
     if ( ! this->ui->icon_ConfApache_Path_Wrong->isVisible() ) {
         // set the paths
-        std::string path = this->resolvePath( this->ui->inLine_ConfApache_Path_String->text().toStdString() );
-        if ( StringOps::endsWith( path, "/" ) ) {
-            path = StringOps::rstrip( path, "/" );
+        std::string path{ this->resolvePath( this->ui->inLine_ConfApache_Path_String->text().toStdString() ) };
+        if ( StringOps::endsWith( path, '/' ) ) {
+            path = StringOps::rstrip( path, '/' );
         }
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
@@ -4144,8 +4142,8 @@ void MainWindow::on_inLine_ConfApache_Format_String_returnPressed()
 }
 void MainWindow::on_button_ConfApache_Format_Save_clicked()
 {
-    const bool success = this->craplog.setApacheLogFormat(
-        this->ui->inLine_ConfApache_Format_String->text().toStdString() );
+    const bool success{ this->craplog.setApacheLogFormat(
+        this->ui->inLine_ConfApache_Format_String->text().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( false );
         if ( this->craplog.getCurrentWSID() == this->APACHE_ID ) {
@@ -4166,19 +4164,19 @@ void MainWindow::on_button_ConfApache_Format_Help_clicked()
 // warnlists
 void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfApache_Warnlist_String->clear();
         this->ui->list_ConfApache_Warnlist_List->clear();
         // update the list
-        const std::vector<std::string>& list = this->craplog.getWarnlist(
-            this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) );
+        const std::vector<std::string>& list{ this->craplog.getWarnlist(
+            this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfApache_Warnlist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
-        const bool used = this->craplog.isWarnlistUsed(
+        const bool used{ this->craplog.isWarnlistUsed(
             this->APACHE_ID,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ) );
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ) ) };
         this->ui->checkBox_ConfApache_Warnlist_Used->setChecked( used );
         this->on_checkBox_ConfApache_Warnlist_Used_clicked( used );
     }
@@ -4214,8 +4212,8 @@ void MainWindow::on_inLine_ConfApache_Warnlist_String_returnPressed()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Add_clicked()
 {
-    const QString& item = this->ui->inLine_ConfApache_Warnlist_String->text();
-    if ( this->ui->list_ConfApache_Warnlist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+    const QString& item{ this->ui->inLine_ConfApache_Warnlist_String->text() };
+    if ( this->ui->list_ConfApache_Warnlist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).isEmpty() ) {
         // not in the list yet, append
         try {
             this->craplog.warnlistAdd(
@@ -4241,13 +4239,13 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfApache_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item = this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0);
-        const int max = this->ui->list_ConfApache_Warnlist_List->count() -1;
+        const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+        const int max{ this->ui->list_ConfApache_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfApache_Warnlist_Up->setEnabled( false );
             this->ui->button_ConfApache_Warnlist_Down->setEnabled( false );
         } else {
-            for ( int i=0; i<=max; i++ ) {
+            for ( int i{0}; i<=max; i++ ) {
                 if ( this->ui->list_ConfApache_Warnlist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfApache_Warnlist_Up->setEnabled( false );
@@ -4265,7 +4263,7 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 {
-    const auto& item = this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0);
+    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4275,11 +4273,11 @@ void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 {
-    const auto& item = this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0);
-    const int i = this->craplog.warnlistMoveUp(
+    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const int i{ this->craplog.warnlistMoveUp(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfApache_Warnlist_Field_currentTextChanged( this->ui->box_ConfApache_Warnlist_Field->currentText() );
     // re-select the item
@@ -4288,11 +4286,11 @@ void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 {
-    const auto& item = this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0);
-    const int i = this->craplog.warnlistMoveDown(
+    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const int i{ this->craplog.warnlistMoveDown(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfApache_Warnlist_Field_currentTextChanged( this->ui->box_ConfApache_Warnlist_Field->currentText() );
     // re-select the item
@@ -4304,19 +4302,19 @@ void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 // blacklist
 void MainWindow::on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfApache_Blacklist_String->clear();
         this->ui->list_ConfApache_Blacklist_List->clear();
         // update the list
-        const std::vector<std::string>& list = this->craplog.getBlacklist(
-            this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) );
+        const std::vector<std::string>& list{ this->craplog.getBlacklist(
+            this->APACHE_ID, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfApache_Blacklist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
-        bool used = this->craplog.isBlacklistUsed(
+        const bool used{ this->craplog.isBlacklistUsed(
             this->APACHE_ID,
-            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ) );
+            this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ) ) };
         this->ui->checkBox_ConfApache_Blacklist_Used->setChecked( used );
         this->on_checkBox_ConfApache_Blacklist_Used_clicked( used );
     }
@@ -4352,8 +4350,8 @@ void MainWindow::on_inLine_ConfApache_Blacklist_String_returnPressed()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Add_clicked()
 {
-    const QString& item = this->ui->inLine_ConfApache_Blacklist_String->text();
-    if ( this->ui->list_ConfApache_Blacklist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+    const QString& item{ this->ui->inLine_ConfApache_Blacklist_String->text() };
+    if ( this->ui->list_ConfApache_Blacklist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).isEmpty() ) {
         // not in the list yet, append
         try {
             this->craplog.blacklistAdd(
@@ -4379,13 +4377,13 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfApache_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item = this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0);
-        const int max = this->ui->list_ConfApache_Blacklist_List->count() -1;
+        const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+        const int max{ this->ui->list_ConfApache_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfApache_Blacklist_Up->setEnabled( false );
             this->ui->button_ConfApache_Blacklist_Down->setEnabled( false );
         } else {
-            for ( int i=0; i<=max; i++ ) {
+            for ( int i{0}; i<=max; i++ ) {
                 if ( this->ui->list_ConfApache_Blacklist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfApache_Blacklist_Up->setEnabled( false );
@@ -4403,7 +4401,7 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 {
-    const auto& item = this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0);
+    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -4413,11 +4411,11 @@ void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 {
-    const auto& item = this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0);
-    const int i = this->craplog.blacklistMoveUp(
+    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const int i{ this->craplog.blacklistMoveUp(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfApache_Blacklist_Field_currentTextChanged( this->ui->box_ConfApache_Blacklist_Field->currentText() );
     // re-select the item
@@ -4426,11 +4424,11 @@ void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 {
-    const auto& item = this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0);
-    const int i = this->craplog.blacklistMoveDown(
+    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const int i{ this->craplog.blacklistMoveDown(
         this->APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfApache_Blacklist_Field_currentTextChanged( this->ui->box_ConfApache_Blacklist_Field->currentText() );
     // re-select the item
@@ -4444,8 +4442,8 @@ void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 // paths
 void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePath( arg1.toStdString() );
+    if ( ! arg1.isEmpty() ) {
+        std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
             this->ui->button_ConfNginx_Path_Save->setEnabled( true );
@@ -4466,9 +4464,9 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
 {
     if ( ! this->ui->icon_ConfNginx_Path_Wrong->isVisible() ) {
         // set the paths
-        std::string path = this->resolvePath( this->ui->inLine_ConfNginx_Path_String->text().toStdString() );
-        if ( StringOps::endsWith( path, "/" ) ) {
-            path = StringOps::rstrip( path, "/" );
+        std::string path{ this->resolvePath( this->ui->inLine_ConfNginx_Path_String->text().toStdString() ) };
+        if ( StringOps::endsWith( path, '/' ) ) {
+            path = StringOps::rstrip( path, '/' );
         }
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
@@ -4496,8 +4494,8 @@ void MainWindow::on_inLine_ConfNginx_Format_String_returnPressed()
 }
 void MainWindow::on_button_ConfNginx_Format_Save_clicked()
 {
-    const bool success = this->craplog.setNginxLogFormat(
-        this->ui->inLine_ConfNginx_Format_String->text().toStdString() );
+    const bool success{ this->craplog.setNginxLogFormat(
+        this->ui->inLine_ConfNginx_Format_String->text().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( false );
         if ( this->craplog.getCurrentWSID() == this->NGINX_ID ) {
@@ -4518,19 +4516,19 @@ void MainWindow::on_button_ConfNginx_Format_Help_clicked()
 // warnlists
 void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfNginx_Warnlist_String->clear();
         this->ui->list_ConfNginx_Warnlist_List->clear();
         // update the list
-        const std::vector<std::string>& list = this->craplog.getWarnlist(
-            this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) );
+        const std::vector<std::string>& list{ this->craplog.getWarnlist(
+            this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfNginx_Warnlist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
-        const bool used = this->craplog.isWarnlistUsed(
+        const bool used{ this->craplog.isWarnlistUsed(
             this->NGINX_ID,
-            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ) );
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ) ) };
         this->ui->checkBox_ConfNginx_Warnlist_Used->setChecked( used );
         this->on_checkBox_ConfNginx_Warnlist_Used_clicked( used );
     }
@@ -4566,8 +4564,8 @@ void MainWindow::on_inLine_ConfNginx_Warnlist_String_returnPressed()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Add_clicked()
 {
-    const QString& item = this->ui->inLine_ConfNginx_Warnlist_String->text();
-    if ( this->ui->list_ConfNginx_Warnlist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+    const QString& item{ this->ui->inLine_ConfNginx_Warnlist_String->text() };
+    if ( this->ui->list_ConfNginx_Warnlist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).isEmpty() ) {
         // not in the list yet, append
         try {
             this->craplog.warnlistAdd(
@@ -4593,13 +4591,13 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfNginx_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfNginx_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item = this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0);
-        const int max = this->ui->list_ConfNginx_Warnlist_List->count() -1;
+        const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+        const int max{ this->ui->list_ConfNginx_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfNginx_Warnlist_Up->setEnabled( false );
             this->ui->button_ConfNginx_Warnlist_Down->setEnabled( false );
         } else {
-            for ( int i=0; i<=max; i++ ) {
+            for ( int i{0}; i<=max; i++ ) {
                 if ( this->ui->list_ConfNginx_Warnlist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfNginx_Warnlist_Up->setEnabled( false );
@@ -4617,7 +4615,7 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 {
-    const auto& item = this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0);
+    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -4627,11 +4625,11 @@ void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 {
-    const auto& item = this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0);
-    const int i = this->craplog.warnlistMoveUp(
+    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const int i{ this->craplog.warnlistMoveUp(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfNginx_Warnlist_Field_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Field->currentText() );
     // re-select the item
@@ -4640,11 +4638,11 @@ void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 {
-    const auto& item = this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0);
-    const int i = this->craplog.warnlistMoveDown(
+    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const int i{ this->craplog.warnlistMoveDown(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfNginx_Warnlist_Field_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Field->currentText() );
     // re-select the item
@@ -4656,19 +4654,19 @@ void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 // blacklist
 void MainWindow::on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfNginx_Blacklist_String->clear();
         this->ui->list_ConfNginx_Blacklist_List->clear();
         // update the list
-        const std::vector<std::string>& list = this->craplog.getBlacklist(
-            this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) );
+        const std::vector<std::string>& list{ this->craplog.getBlacklist(
+            this->NGINX_ID, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfNginx_Blacklist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
-        bool used = this->craplog.isBlacklistUsed(
+        const bool used{ this->craplog.isBlacklistUsed(
             this->NGINX_ID,
-            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ) );
+            this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ) ) };
         this->ui->checkBox_ConfNginx_Blacklist_Used->setChecked( used );
         this->on_checkBox_ConfNginx_Blacklist_Used_clicked( used );
     }
@@ -4704,8 +4702,8 @@ void MainWindow::on_inLine_ConfNginx_Blacklist_String_returnPressed()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Add_clicked()
 {
-    const QString& item = this->ui->inLine_ConfNginx_Blacklist_String->text();
-    if ( this->ui->list_ConfNginx_Blacklist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+    const QString& item{ this->ui->inLine_ConfNginx_Blacklist_String->text() };
+    if ( this->ui->list_ConfNginx_Blacklist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).isEmpty() ) {
         // not in the list yet, append
         try {
             this->craplog.blacklistAdd(
@@ -4731,13 +4729,13 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfNginx_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfNginx_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item = this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0);
-        const int max = this->ui->list_ConfNginx_Blacklist_List->count() -1;
+        const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+        const int max{ this->ui->list_ConfNginx_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfNginx_Blacklist_Up->setEnabled( false );
             this->ui->button_ConfNginx_Blacklist_Down->setEnabled( false );
         } else {
-            for ( int i=0; i<=max; i++ ) {
+            for ( int i{0}; i<=max; i++ ) {
                 if ( this->ui->list_ConfNginx_Blacklist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfNginx_Blacklist_Up->setEnabled( false );
@@ -4755,7 +4753,7 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 {
-    const auto& item = this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0);
+    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -4765,11 +4763,11 @@ void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 {
-    const auto& item = this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0);
-    const int i = this->craplog.blacklistMoveUp(
+    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const int i{ this->craplog.blacklistMoveUp(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfNginx_Blacklist_Field_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Field->currentText() );
     // re-select the item
@@ -4778,11 +4776,11 @@ void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 {
-    const auto& item = this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0);
-    const int i = this->craplog.blacklistMoveDown(
+    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const int i{ this->craplog.blacklistMoveDown(
         this->NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfNginx_Blacklist_Field_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Field->currentText() );
     // re-select the item
@@ -4796,8 +4794,8 @@ void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 // paths
 void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
-        std::string path = this->resolvePath( arg1.toStdString() );
+    if ( ! arg1.isEmpty() ) {
+        std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
             this->ui->button_ConfIis_Path_Save->setEnabled( true );
@@ -4818,9 +4816,9 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 {
     if ( ! this->ui->icon_ConfIis_Path_Wrong->isVisible() ) {
         // set the paths
-        std::string path = this->resolvePath( this->ui->inLine_ConfIis_Path_String->text().toStdString() );
-        if ( StringOps::endsWith( path, "/" ) ) {
-            path = StringOps::rstrip( path, "/" );
+        std::string path{ this->resolvePath( this->ui->inLine_ConfIis_Path_String->text().toStdString() ) };
+        if ( StringOps::endsWith( path, '/' ) ) {
+            path = StringOps::rstrip( path, '/' );
         }
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
@@ -4834,11 +4832,11 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 // formats
 const int MainWindow::getIisLogsModule() const
 {
-    int module = 0;
+    int module{ 0 };
     if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
-        module = 1;
+        module += 1;
     } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
-        module = 2;
+        module += 2;
     }
     return module;
 }
@@ -4846,7 +4844,7 @@ const int MainWindow::getIisLogsModule() const
 void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
 {
     if ( checked ) {
-        const bool success = this->craplog.setIisLogFormat( "", 0 );
+        const bool success{ this->craplog.setIisLogFormat( "", 0 ) };
         if ( success ) {
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setEnabled( true );
@@ -4861,9 +4859,9 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
 void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
 {
     if ( checked ) {
-        const bool success = this->craplog.setIisLogFormat(
+        const bool success{ this->craplog.setIisLogFormat(
             "c-ip s-sitename s-computername [date:time] sc-status sc-bytes",
-            1 );
+            1 ) };
         if ( success ) {
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
@@ -4879,9 +4877,9 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
 void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
 {
     if ( checked ) {
-        const bool success = this->craplog.setIisLogFormat(
+        const bool success{ this->craplog.setIisLogFormat(
             "c-ip, cs-username, date, time, s-sitename, s-computername, s-ip, time-taken, cs-bytes, sc-bytes, sc-status, sc-win32-status, cs-method, cs-uri-stem, cs-uri-query,",
-            2 );
+            2 ) };
         if ( success ) {
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( this->IIS_ID ) ) );
@@ -4911,9 +4909,9 @@ void MainWindow::on_inLine_ConfIis_Format_String_returnPressed()
 }
 void MainWindow::on_button_ConfIis_Format_Save_clicked()
 {
-    const bool success = this->craplog.setIisLogFormat(
+    const bool success{ this->craplog.setIisLogFormat(
         StringOps::strip( this->ui->inLine_ConfIis_Format_String->text().toStdString() ),
-        this->getIisLogsModule() );
+        this->getIisLogsModule() ) };
     if ( success ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( false );
         if ( this->craplog.getCurrentWSID() == this->IIS_ID ) {
@@ -4934,19 +4932,19 @@ void MainWindow::on_button_ConfIis_Format_Help_clicked()
 // warnlists
 void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfIis_Warnlist_String->clear();
         this->ui->list_ConfIis_Warnlist_List->clear();
         // update the list
-        const std::vector<std::string>& list = this->craplog.getWarnlist(
-            this->IIS_ID, this->crapview.getLogFieldID( arg1 ) );
+        const std::vector<std::string>& list{ this->craplog.getWarnlist(
+            this->IIS_ID, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfIis_Warnlist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
-        const bool used = this->craplog.isWarnlistUsed(
+        const bool used{ this->craplog.isWarnlistUsed(
             this->IIS_ID,
-            this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ) );
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ) ) };
         this->ui->checkBox_ConfIis_Warnlist_Used->setChecked( used );
         this->on_checkBox_ConfIis_Warnlist_Used_clicked( used );
     }
@@ -4982,8 +4980,8 @@ void MainWindow::on_inLine_ConfIis_Warnlist_String_returnPressed()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Add_clicked()
 {
-    const QString& item = this->ui->inLine_ConfIis_Warnlist_String->text();
-    if ( this->ui->list_ConfIis_Warnlist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+    const QString& item{ this->ui->inLine_ConfIis_Warnlist_String->text() };
+    if ( this->ui->list_ConfIis_Warnlist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).isEmpty() ) {
         // not in the list yet, append
         try {
             this->craplog.warnlistAdd(
@@ -5009,13 +5007,13 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfIis_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfIis_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item = this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0);
-        const int max = this->ui->list_ConfIis_Warnlist_List->count() -1;
+        const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+        const int max{ this->ui->list_ConfIis_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfIis_Warnlist_Up->setEnabled( false );
             this->ui->button_ConfIis_Warnlist_Down->setEnabled( false );
         } else {
-            for ( int i=0; i<=max; i++ ) {
+            for ( int i{0}; i<=max; i++ ) {
                 if ( this->ui->list_ConfIis_Warnlist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfIis_Warnlist_Up->setEnabled( false );
@@ -5033,7 +5031,7 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 {
-    const auto& item = this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0);
+    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5043,11 +5041,11 @@ void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 {
-    const auto& item = this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0);
-    const int i = this->craplog.warnlistMoveUp(
+    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const int i{ this->craplog.warnlistMoveUp(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfIis_Warnlist_Field_currentTextChanged( this->ui->box_ConfIis_Warnlist_Field->currentText() );
     // re-select the item
@@ -5056,11 +5054,11 @@ void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 {
-    const auto& item = this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0);
-    const int i = this->craplog.warnlistMoveDown(
+    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const int i{ this->craplog.warnlistMoveDown(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfIis_Warnlist_Field_currentTextChanged( this->ui->box_ConfIis_Warnlist_Field->currentText() );
     // re-select the item
@@ -5072,19 +5070,19 @@ void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 // blacklist
 void MainWindow::on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfIis_Blacklist_String->clear();
         this->ui->list_ConfIis_Blacklist_List->clear();
         // update the list
-        const std::vector<std::string>& list = this->craplog.getBlacklist(
-            this->IIS_ID, this->crapview.getLogFieldID( arg1 ) );
+        const std::vector<std::string>& list{ this->craplog.getBlacklist(
+            this->IIS_ID, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfIis_Blacklist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
-        bool used = this->craplog.isBlacklistUsed(
+        const bool used{ this->craplog.isBlacklistUsed(
             this->IIS_ID,
-            this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ) );
+            this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ) ) };
         this->ui->checkBox_ConfIis_Blacklist_Used->setChecked( used );
         this->on_checkBox_ConfIis_Blacklist_Used_clicked( used );
     }
@@ -5120,8 +5118,8 @@ void MainWindow::on_inLine_ConfIis_Blacklist_String_returnPressed()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Add_clicked()
 {
-    const QString& item = this->ui->inLine_ConfIis_Blacklist_String->text();
-    if ( this->ui->list_ConfIis_Blacklist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).size() == 0 ) {
+    const QString& item{ this->ui->inLine_ConfIis_Blacklist_String->text() };
+    if ( this->ui->list_ConfIis_Blacklist_List->findItems( item, Qt::MatchFlag::MatchCaseSensitive ).isEmpty() ) {
         // not in the list yet, append
         try {
             this->craplog.blacklistAdd(
@@ -5147,13 +5145,13 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfIis_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfIis_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item = this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0);
-        const int max = this->ui->list_ConfIis_Blacklist_List->count() -1;
+        const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+        const int max{ this->ui->list_ConfIis_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfIis_Blacklist_Up->setEnabled( false );
             this->ui->button_ConfIis_Blacklist_Down->setEnabled( false );
         } else {
-            for ( int i=0; i<=max; i++ ) {
+            for ( int i{0}; i<=max; i++ ) {
                 if ( this->ui->list_ConfIis_Blacklist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfIis_Blacklist_Up->setEnabled( false );
@@ -5171,7 +5169,7 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 {
-    const auto& item = this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0);
+    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
@@ -5181,11 +5179,11 @@ void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 {
-    const auto& item = this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0);
-    const int i = this->craplog.blacklistMoveUp(
+    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const int i{ this->craplog.blacklistMoveUp(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfIis_Blacklist_Field_currentTextChanged( this->ui->box_ConfIis_Blacklist_Field->currentText() );
     // re-select the item
@@ -5194,11 +5192,11 @@ void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
 {
-    const auto& item = this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0);
-    const int i = this->craplog.blacklistMoveDown(
+    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const int i{ this->craplog.blacklistMoveDown(
         this->IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
-        item->text().toStdString() );
+        item->text().toStdString() ) };
     // refresh the list
     this->on_box_ConfIis_Blacklist_Field_currentTextChanged( this->ui->box_ConfIis_Blacklist_Field->currentText() );
     // re-select the item

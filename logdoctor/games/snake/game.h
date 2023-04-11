@@ -6,11 +6,11 @@
 
 #include <queue>
 
-#include <QTimer>
 #include <QWidget>
-#include <QKeyEvent>
 
-#include <QGraphicsScene>
+class QTimer;
+class QKeyEvent;
+class QGraphicsScene;
 
 
 namespace Ui {
@@ -43,7 +43,7 @@ private slots:
 
 
 private:
-    Ui::SnakeGame *ui;
+    Ui::SnakeGame* ui;
 
     ////////////////////
     //// KEY EVENTS ////
@@ -71,7 +71,7 @@ private:
 
     QScopedPointer<QGraphicsScene> field_scene;
 
-    QPixmap img_water = QPixmap(":/games/games/snake/water.png");
+    QPixmap img_water{ ":/games/games/snake/water.png" };
 
 
     //////////////
@@ -86,11 +86,11 @@ private:
 
     GameMode game_mode;
 
-    bool playing = false;
+    bool playing{ false };
 
     QScopedPointer<QTimer> game_loop;
 
-    bool game_over = false;
+    bool game_over{ false };
 
     QString game_over_msg;
 
@@ -99,14 +99,14 @@ private:
     //// SNAKE ////
 
     //! The maximum length of the snake
-    const unsigned int MAX_SNAKE_LENGTH = 64;
+    const size_t MAX_SNAKE_LENGTH{ 64 };
 
     //! The snake
     Snake snake;
     void newSnake();
 
     // The adversary snake
-    Snake snake_ = Snake(true);
+    Snake snake_{ true };
     void newSnake_();
 
     //! Checks if a snake will collide with another entity
@@ -120,20 +120,20 @@ private:
     Food food;
     void newFood( const bool& movable );
 
-    bool spawn_food = false;
+    bool spawn_food{ false };
 
-    unsigned int moving_countdown = 5;
-    unsigned int moving_rate = 5;
+    unsigned moving_countdown{ 5 };
+    unsigned moving_rate{ 5 };
 
 
     ///////////////
     //// SCORE ////
 
-    int game_score = 0;
+    int game_score{ 0 };
 
     //! Increases/Decreases the player's score by one
     void updateGameScore();
-    int score_step = 1;
+    int score_step{ 1 };
 
 };
 

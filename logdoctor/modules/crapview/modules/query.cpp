@@ -12,11 +12,9 @@
 #include <QDateTime>
 #include <QDate>
 
+#include <map>
+#include <vector>
 
-DbQuery::DbQuery()
-{
-
-}
 
 void DbQuery::setDialogLevel(const int new_level )
 {
@@ -26,19 +24,19 @@ void DbQuery::setDialogLevel(const int new_level )
 void DbQuery::setDbPath( const std::string& path )
 {
     this->db_path = path;
-    this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1 ) );
+    this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1ul ) );
 }
 
 
-int DbQuery::getMinuteGap( const int minute, const int gap )
+const int DbQuery::getMinuteGap( const int minute, const int gap )
 {
-    int m = -1;
+    int m{ -1 };
     if ( minute < 0 || minute >= 60 ) {
         // unexpected value
         throw DateTimeException( "Unexpected Minute: "+std::to_string( minute ) );
     }
-    int n = 0;
-    for ( int g=0; g<60; g+=gap ) {
+    int n{ 0 };
+    for ( int g{0}; g<60; g+=gap ) {
         if ( minute >= g && minute < g+gap ) {
             m = gap * n;
             break;
@@ -48,7 +46,7 @@ int DbQuery::getMinuteGap( const int minute, const int gap )
     return m;
 }
 
-int DbQuery::getMonthDays( const int year, const int month )
+const int DbQuery::getMonthDays( const int year, const int month )
 {
     int n_days;
     switch (month) {
@@ -74,7 +72,7 @@ int DbQuery::getMonthDays( const int year, const int month )
 
 const int DbQuery::getMonthNumber( const QString& month_str ) const
 {
-    int m=0;
+    int m{ 0 };
     for ( const auto& [num,str] : this->MONTHS ) {
         if ( TR::tr(str.c_str()) == month_str ) {
             m = num;
@@ -85,9 +83,9 @@ const int DbQuery::getMonthNumber( const QString& month_str ) const
 }
 
 
-int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
+const int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
 {
-    int n_days = 1;
+    int n_days{ 1 };
     if ( from_year == to_year ) {
         // 1 year
         if ( from_month == to_month ) {
@@ -103,17 +101,17 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
     } else {
         n_days += getMonthDays( from_year, from_month ) - from_day;
         if ( from_month < 12 ) {
-            for ( int month=from_month+1; month<=12; month++ ) {
+            for ( int month{from_month+1}; month<=12; month++ ) {
                 n_days += getMonthDays( from_year, month );
             }
         }
-        for ( int year=from_year+1; year<=to_year; year++ ) {
-            int last_month = 12;
+        for ( int year{from_year+1}; year<=to_year; year++ ) {
+            int last_month{ 12 };
             if ( year == to_year ) {
                 last_month = to_month-1;
                 n_days += to_day; // last month's days, added in advance
             }
-            for ( int month=1; month<=last_month; month++ ) {
+            for ( int month{1}; month<=last_month; month++ ) {
                 n_days += getMonthDays( year, month );
             }
         }
@@ -121,9 +119,9 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
     return n_days;
 }
 
-int DbQuery::countMonths( const int& from_year, const int& from_month, const int& to_year, const int& to_month )
+const int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month )
 {
-    int n_months = 0;
+    int n_months{ 0 };
     if ( from_year == to_year ) {
         // same year
         if ( from_month == to_month ) {
@@ -148,8 +146,8 @@ const int DbQuery::countMonths( const QString& from_year, const QString& from_mo
     try {
         from_year_  = from_year.toInt();
         from_month_ = this->getMonthNumber( from_month );
-        to_year_  = ( to_year.size() == 0 )  ? from_year_  : to_year.toInt() ;
-        to_month_ = ( to_month.size() == 0 ) ? from_month_ : this->getMonthNumber( to_month ) ;
+        to_year_  = ( to_year.isEmpty() )  ? from_year_  : to_year.toInt() ;
+        to_month_ = ( to_month.isEmpty() ) ? from_month_ : this->getMonthNumber( to_month ) ;
     } catch (...) {
         // failed to convert to integers
         throw DateTimeException( "Failed to convert Month from string to int" ); // leave un-catched
@@ -187,8 +185,8 @@ const QString DbQuery::getDbField( const QString& tr_fld ) const
 // get a fresh map of available dates
 void DbQuery::refreshDates( Result<stats_dates_t>& result )
 {
-    bool successful = true;
-    stats_dates_t dates = { // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
+    bool successful{ true };
+    stats_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
         {11, {}}, {12, {}}, {13, {}}
     };
 
@@ -202,8 +200,8 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -211,24 +209,24 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
 
     } else {
         // recursively query years, months and days for every WebServer
-        std::vector<std::tuple<int, QString>> tables = {
+        std::vector<std::tuple<int, QString>> tables{
             std::make_tuple(11,"apache"),
             std::make_tuple(12,"nginx"),
             std::make_tuple(13,"iis") };
 
-        QSqlQuery Y_query = QSqlQuery( db ),
-                  M_query = QSqlQuery( db ),
-                  D_query = QSqlQuery( db );
+        QSqlQuery Y_query{ db },
+                  M_query{ db },
+                  D_query{ db };
 
         for ( const auto& table : tables ) {
             if ( ! successful ) { break; }
 
-            int ws = std::get<0>(table);
-            QString tbl = std::get<1>(table);
+            const int ws{ std::get<0>(table) };
+            const QString tbl{ std::get<1>(table) };
 
             if ( ! Y_query.exec( QString("SELECT DISTINCT \"year\" FROM \"%1\" ORDER BY \"year\" ASC;").arg(tbl) ) ) {
                 // error querying database
-                successful = false;
+                successful &= false;
                 DialogSec::errDatabaseFailedExecuting( this->db_name, Y_query.lastQuery(), Y_query.lastError().text() );
                 break;
 
@@ -240,8 +238,8 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
                         year = Y_query.value(0).toInt();
                     } catch (...) {
                         // failed to convert to integer
-                        successful = false;
-                        QString err_msg = TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_YEARS.c_str()) );
+                        successful &= false;
+                        QString err_msg{ TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_YEARS.c_str()) ) };
                         if ( this->dialog_level > 0 ) {
                             err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), Y_query.value(0).toString() );
                             if ( this->dialog_level == 2 ) {
@@ -256,19 +254,19 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
                     // query any available month
                     if ( ! M_query.exec( QString("SELECT DISTINCT \"month\" FROM \"%1\" WHERE \"year\"=%2 ORDER BY \"month\" ASC;").arg(tbl).arg(year) ) ) {
                         // error querying database
-                        successful = false;
+                        successful &= false;
                         DialogSec::errDatabaseFailedExecuting( this->db_name, M_query.lastQuery(), M_query.lastError().text() );
                         break;
 
                     } else {
-                        auto& months = years.at( year );
+                        auto& months{ years.at( year ) };
                         while ( M_query.next() ) {
                             try {
                                 month = M_query.value(0).toInt();
                             } catch (...) {
                                 // failed to convert to integer
-                                successful = false;
-                                QString err_msg = TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_MONTHS.c_str()) );
+                                successful &= false;
+                                QString err_msg{ TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_MONTHS.c_str()) ) };
                                 if ( this->dialog_level > 0 ) {
                                     err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), M_query.value(0).toString() );
                                     if ( this->dialog_level == 2 ) {
@@ -283,12 +281,12 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
                             // query any available day
                             if ( ! D_query.exec( QString("SELECT DISTINCT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\" ASC;").arg(tbl).arg(year).arg(month) ) ) {
                                 // error querying database
-                                successful = false;
+                                successful &= false;
                                 DialogSec::errDatabaseFailedExecuting( this->db_name, D_query.lastQuery(), D_query.lastError().text() );
                                 break;
 
                             } else if ( D_query.last() ) {
-                                auto& days = months.at( month );
+                                auto& days{ months.at( month ) };
                                 days.reserve( D_query.at() );
                                 D_query.first();
                                 D_query.previous();
@@ -298,8 +296,8 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
                                         day = D_query.value(0).toInt();
                                     } catch (...) {
                                         // failed to convert to integer
-                                        successful = false;
-                                        QString err_msg = TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_DAYS.c_str()) );
+                                        successful &= false;
+                                        QString err_msg{ TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_DAYS.c_str()) ) };
                                         if ( this->dialog_level > 0 ) {
                                             err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), D_query.value(0).toString() );
                                             if ( this->dialog_level == 2 ) {
@@ -342,7 +340,7 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
 // update the values for the warnings
 void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::tuple<int, int>>& updates ) const
 {
-    bool successful = true;
+    bool successful{ true };
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -354,7 +352,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 
     if ( ! db.open() ) {
         // error opening database
-        QString err_msg = "";
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -369,7 +367,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 
         if ( successful ) {
             // update the database
-            QSqlQuery query = QSqlQuery( db );
+            QSqlQuery query{ db };
 
             for ( const auto& data : updates ) {
                 // build the query statement
@@ -395,7 +393,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 // get daytime values for the warnings
 void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
 {
-    bool successful = true;
+    bool successful{ true };
     stats_warn_items_t items; // std::vector<std::vector<std::vector<std::vector<QString>>>>
 
     QSqlDatabase db;
@@ -408,8 +406,8 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -418,7 +416,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
+            successful &= false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int year, month, day, hour;
@@ -428,30 +426,30 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                 year  = year_.toInt();
                 month = this->getMonthNumber( month_ );
                 day   = day_.toInt();
-                if ( hour_.size() > 0 ) {
+                if ( ! hour_.isEmpty() ) {
                     hour = hour_.toInt();
                 }
             } catch (...) {
                 // failed to convert to integers
-                successful = false;
+                successful &= false;
                 DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful ) {
             // build the query statement
-            QSqlQuery query = QSqlQuery( db );
-            QString stmt = QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
+            QSqlQuery query{ db };
+            QString stmt{ QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                     .arg( web_server )
-                    .arg( year ).arg( month ).arg( day );
+                    .arg( year ).arg( month ).arg( day ) };
 
-            if ( hour_.size() == 0 ) {
+            if ( hour_.isEmpty() ) {
                 // entire day
                 items.reserve( 24 );
-                for ( int h=0; h<24; h++ ) {
+                for ( size_t h{0}; h<24ul; h++ ) {
                     items.push_back( std::vector<std::vector<std::vector<QString>>>() );
-                    auto& aux = items.at( h );
+                    auto& aux{ items.at( h ) };
                     aux.reserve( 6 );
-                    for ( int m=0; m<60; m+=10 ) {
+                    for ( int m{0}; m<60; m+=10 ) {
                         aux.push_back( std::vector<std::vector<QString>>() );
                     }
                 }
@@ -459,7 +457,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                 stmt += " ORDER BY \"hour\",\"minute\",\"second\" ASC;";
                 if ( ! query.exec( stmt.replace("'","''") ) ) {
                     // error querying database
-                    successful = false;
+                    successful &= false;
                     DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
                 } else {
@@ -468,10 +466,10 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                         while ( query.next() ) {
                             std::vector<QString> aux;
                             aux.reserve( 20 );
-                            for ( int i=1; i<13; i++ ) {
+                            for ( int i{1}; i<13; i++ ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
-                            for ( int i=19; i>12; i-- ) {
+                            for ( int i{19}; i>12; i-- ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
                             aux.push_back( query.value( 0 ).toString() );
@@ -482,7 +480,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                         }
                     } catch (...) {
                         // something failed
-                        successful = false;
+                        successful &= false;
                         DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
@@ -490,11 +488,11 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
             } else {
                 // 1 hour
                 items.reserve( 6 );
-                for ( int g=0; g<6; g++ ) {
+                for ( size_t g{0}; g<6ul; g++ ) {
                     items.push_back( std::vector<std::vector<std::vector<QString>>>() );
-                    auto& aux = items.at( g );
-                    aux.reserve( 10 );
-                    for ( int m=0; m<10; m++ ) {
+                    auto& aux{ items.at( g ) };
+                    aux.reserve( 10ul );
+                    for ( int m{0}; m<10; m++ ) {
                         aux.push_back( std::vector<std::vector<QString>>() );
                     }
                 }
@@ -502,7 +500,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                 stmt += QString(" AND \"hour\"=%5 ORDER BY \"minute\",\"second\" ASC;").arg( hour );
                 if ( ! query.exec( stmt.replace("'","''") ) ) {
                     // error querying database
-                    successful = false;
+                    successful &= false;
                     DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
                 } else {
@@ -511,21 +509,21 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
                         while ( query.next() ) {
                             std::vector<QString> aux;
                             aux.reserve( 20 );
-                            for ( int i=1; i<13; i++ ) {
+                            for ( int i{1}; i<13; i++ ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
-                            for ( int i=19; i>12; i-- ) {
+                            for ( int i{19}; i>12; i-- ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
                             aux.push_back( query.value( 0 ).toString() );
                             // append the line
-                            items.at( getMinuteGap( query.value(6).toInt() )/10 )
-                                 .at( query.value(6).toInt()%10 )
+                            items.at( static_cast<size_t>( getMinuteGap( query.value(6).toInt() )/10 ) )
+                                 .at( static_cast<size_t>( query.value(6).toInt()%10 ) )
                                  .push_back( aux );
                         }
                     } catch (...) {
                         // something failed
-                        successful = false;
+                        successful &= false;
                         DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
@@ -545,7 +543,7 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
 // get day-time values for the time-taken field
 void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f ) const
 {
-    bool successful = true;
+    bool successful{ true };
     stats_speed_items_t data; // std::vector<std::tuple<long long, std::vector<QString>>>
 
     QSqlDatabase db;
@@ -558,8 +556,8 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -568,7 +566,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
+            successful &= false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int year, month, day;
@@ -580,7 +578,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                 day   = day_.toInt();
             } catch (...) {
                 // failed to convert to integers
-                successful = false;
+                successful &= false;
                 DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
@@ -588,7 +586,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
             QDateTime time;
             time.setDate( QDate( year, month , day ) );
             // build the query statement
-            QSqlQuery query = QSqlQuery( db );
+            QSqlQuery query{ db };
             QString stmt;
 
             // prepare the statement
@@ -597,7 +595,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                 .arg( year ).arg( month ).arg( day );
 
             // apply a filter if present
-            if ( protocol_f.size() > 0 ) {
+            if ( ! protocol_f.isEmpty() ) {
                 if ( protocol_f == "NULL" ) {
                     // only select NULL values
                     stmt += QString(" AND \"protocol\" IS NULL");
@@ -609,7 +607,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                         .arg( QString(protocol_f).replace("'","''") );
                 }
             }
-            if ( method_f.size() > 0 ) {
+            if ( ! method_f.isEmpty() ) {
                 if ( method_f == "NULL" ) {
                     // only select NULL values
                     stmt += QString(" AND \"method\" IS NULL");
@@ -621,7 +619,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                         .arg( QString(method_f).replace("'","''") );
                 }
             }
-            if ( uri_f.size() > 0 ) {
+            if ( ! uri_f.isEmpty() ) {
                 if ( uri_f == "NULL" ) {
                     // only select NULL values
                     stmt += QString(" AND \"uri\" IS NULL");
@@ -633,7 +631,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                         .arg( QString(uri_f).replace("'","''") );
                 }
             }
-            if ( query_f.size() > 0 ) {
+            if ( ! query_f.isEmpty() ) {
                 if ( query_f == "NULL" ) {
                     // only select NULL values
                     stmt += QString(" AND \"query\" IS NULL");
@@ -645,7 +643,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
                         .arg( QString(query_f).replace("'","''") );
                 }
             }
-            if ( response_f.size() > 0 ) {
+            if ( ! response_f.isEmpty() ) {
                 // numbers
                 if ( response_f == "NULL" ) {
                     // only select NULL values
@@ -669,7 +667,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
             stmt += QString(" ORDER BY \"hour\",\"minute\",\"second\" ASC;");
             if ( ! query.exec( stmt ) ) {
                 // error querying database
-                successful = false;
+                successful &= false;
                 DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
             } else {
@@ -684,14 +682,14 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
 
                     if ( query.last() ) {
                         data.clear();
-                        data.reserve( query.at()*2 );
+                        data.reserve( static_cast<size_t>( query.at()*2 ) );
                         query.first();
                         query.previous();
 
                         // get query data
-                        int hour=-1,  aux_hour,   prev_hour=0,   h,
-                            minute=0, aux_minute, prev_minute=0, m,
-                            second=0, aux_second, prev_second=0, s;
+                        int hour{-1},  aux_hour,   prev_hour{0},   h,
+                            minute{0}, aux_minute, prev_minute{0}, m,
+                            second{0}, aux_second, prev_second{0}, s;
                         QString tt, ur, qr, mt, pt, rs;
                         while ( query.next() ) {
                             aux_hour   = query.value(0).toInt();
@@ -910,7 +908,7 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
 // get, group and count identical items of a specific field in a date
 void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field ) const
 {
-    bool successful = true;
+    bool successful{ true };
     QHash<QString, unsigned> aux_items;
     stats_count_items_t items; // std::map<QString, unsigned int>>
 
@@ -924,8 +922,8 @@ void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString&
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -939,18 +937,18 @@ void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString&
         }
         if ( successful ) {
             // build the query statement
-            QSqlQuery query = QSqlQuery( db );
-            QString stmt = QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
+            QSqlQuery query{ db };
+            QString stmt{ QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
                 .arg( this->getDbField( log_field ),
                       web_server,
                       this->getDbField( log_field ),
                       year,
                       QString::fromStdString( std::to_string( this->getMonthNumber( month ) )),
-                      day );
+                      day ) };
             // quary the database
             if ( ! query.exec( stmt.replace("'","''") ) ) {
                 // error querying database
-                successful = false;
+                successful &= false;
                 DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
             } else if ( query.last() ) {
@@ -963,20 +961,20 @@ void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString&
                     QString item;
                     while ( query.next() ) {
                         item = query.value(0).toString();
-                        if ( item.size() > 0 ) {
+                        if ( ! item.isEmpty() ) {
                             aux_items[ item ] ++;
                         }
                     }
                 } catch (...) {
                     // something failed
-                    successful = false;
+                    successful &= false;
                     DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                 }
             }
         }
         if ( successful ) { // sort the list
             // morph tha QHash into an ordered map
-            QHashIterator iter( aux_items );
+            QHashIterator iter{ aux_items };
             while ( iter.hasNext() ) {
                 iter.next();
                 items.emplace( iter.value(), iter.key() );
@@ -999,8 +997,8 @@ void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString&
 // get and count items with a 10 minutes gap for every hour of the day
 void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter ) const
 {
-    bool successful = true;
-    stats_day_items_t data = { // std::unordered_map<int, std::unordered_map<int, int>>
+    bool successful{ true };
+    stats_day_items_t data{ // std::unordered_map<int, std::unordered_map<int, int>>
         {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {2,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {3,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {4,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {5,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
@@ -1025,8 +1023,8 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -1035,7 +1033,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
+            successful &= false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int from_year, from_month, from_day,
@@ -1046,29 +1044,29 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                 from_year  = from_year_.toInt();
                 from_month = this->getMonthNumber( from_month_ );
                 from_day   = from_day_.toInt();
-                to_year  = ( to_year_.size() == 0 )  ? from_year  : to_year_.toInt() ;
-                to_month = ( to_month_.size() == 0 ) ? from_month : this->getMonthNumber( to_month_ ) ;
-                to_day   = ( to_day_.size() == 0 )   ? from_day   : to_day_.toInt() ;
+                to_year    = ( to_year_.isEmpty() )  ? from_year  : to_year_.toInt() ;
+                to_month   = ( to_month_.isEmpty() ) ? from_month : this->getMonthNumber( to_month_ ) ;
+                to_day     = ( to_day_.isEmpty() )   ? from_day   : to_day_.toInt() ;
             } catch (...) {
                 // failed to convert to integers
-                successful = false;
+                successful &= false;
                 DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful ) {
             // build the query statement
-            QSqlQuery query = QSqlQuery( db );
+            QSqlQuery query{ db };
             QString stmt;
-            QString log_field = this->getDbField( log_field_ );
+            QString log_field{ this->getDbField( log_field_ ) };
 
-            int n_days   = 0,
-                n_months = countMonths( from_year, from_month, to_year, to_month );
+            int n_days   { 0 },
+                n_months { countMonths( from_year, from_month, to_year, to_month ) };
 
-            int year = from_year,
-                month = from_month,
+            int year  { from_year },
+                month { from_month },
                 day, hour, minute;
             std::unordered_map<int,int> days_l;
-            days_l.reserve( 31 );
+            days_l.reserve( 31ul );
 
             if ( n_months == 1 ) {
                 // 1 month, no need to loop
@@ -1078,8 +1076,8 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                     .arg( from_day ).arg( to_day );
 
                 // apply a filter if present
-                if ( field_filter.size() > 0 ) {
-                    QString filter = field_filter;
+                if ( ! field_filter.isEmpty() ) {
+                    QString filter{ field_filter };
                     if ( filter == "NULL" ) {
                         // only select NULL values
                         stmt += QString(" AND \"%1\" IS NULL")
@@ -1115,7 +1113,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                 stmt += ";";
                 if ( ! query.exec( stmt ) ) {
                     // error querying database
-                    successful = false;
+                    successful &= false;
                     DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
                 } else {
@@ -1133,7 +1131,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                         n_days += days_l.size();
                     } catch (...) {
                         // something failed
-                        successful = false;
+                        successful &= false;
                         DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
@@ -1153,7 +1151,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                     }
 
                     // apply a filter if present
-                    if ( field_filter.size() > 0 ) {
+                    if ( ! field_filter.isEmpty() ) {
                         QString filter = field_filter;
                         if ( filter == "NULL" ) {
                             // only select NULL values
@@ -1192,7 +1190,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                     stmt += ";";
                     if ( ! query.exec( stmt ) ) {
                         // error querying database
-                        successful = false;
+                        successful &= false;
                         DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
                     } else {
@@ -1217,7 +1215,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
                             }
                         } catch (...) {
                             // something failed
-                            successful = false;
+                            successful &= false;
                             DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                             break;
                         }
@@ -1251,7 +1249,7 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
 // get and count how many times a specific item value brought to another
 void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
 {
-    bool successful = true;
+    bool successful{ true };
     stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
     int gap = 20;
 
@@ -1265,8 +1263,8 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -1275,7 +1273,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
+            successful &= false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
 
@@ -1288,7 +1286,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                 day   = day_.toInt();
             } catch (...) {
                 // failed to convert to integers
-                successful = false;
+                successful &= false;
                 DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
@@ -1296,10 +1294,10 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
             QDateTime time;
             time.setDate( QDate( year, month , day ) );
             // build the query statement
-            QSqlQuery query = QSqlQuery( db );
+            QSqlQuery query{ db };
             QString stmt;
-            QString log_field_1 = this->getDbField( log_field_1_ ),
-                    log_field_2 = this->getDbField( log_field_2_ );
+            QString log_field_1{ this->getDbField( log_field_1_ ) },
+                    log_field_2{ this->getDbField( log_field_2_ ) };
 
             // 1 month, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
@@ -1307,8 +1305,8 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                 .arg( year ).arg( month ).arg( day );
 
             // apply a filter if present
-            if ( field_filter_1.size() > 0 ) {
-                QString filter = field_filter_1;
+            if ( ! field_filter_1.isEmpty() ) {
+                QString filter{ field_filter_1 };
                 if ( filter == "NULL" ) {
                     // only select NULL values
                     stmt += QString(" AND \"%1\" IS NULL")
@@ -1342,8 +1340,8 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                 }
             }
             // apply a filter if present
-            if ( field_filter_2.size() > 0 ) {
-                QString filter = field_filter_2;
+            if ( ! field_filter_2.isEmpty() ) {
+                QString filter{ field_filter_2 };
                 if ( filter == "NULL" ) {
                     // only select NULL values
                     stmt += QString(" AND \"%1\" IS NULL")
@@ -1380,13 +1378,13 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
             stmt += QString(" ORDER BY \"hour\",\"minute\" ASC;");
             if ( ! query.exec( stmt ) ) {
                 // error querying database
-                successful = false;
+                successful &= false;
                 DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
             } else if ( ! query.last() ) {
                 // no result found, fill with 0 values
-                for ( int h=0; h<24; h++ ) {
-                    for ( int m=0; m<60; m+=gap ) {
+                for ( int h{0}; h<24; h++ ) {
+                    for ( int m{0}; m<60; m+=gap ) {
                         time.setTime( QTime( h, m ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                     }
@@ -1397,11 +1395,11 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                 query.previous();
 
                 try {
-                    data.reserve( 24*(60/gap) );
+                    data.reserve( static_cast<size_t>( 24*(60/gap) ) );
                     // get query data
-                    int hour, aux_hour, minute, aux_minute, count;
-                    hour = -1;
-                    minute = count = 0;
+                    int hour{-1}, aux_hour,
+                        minute{0}, aux_minute,
+                        count{0};
                     while ( query.next() ) {
                         aux_hour   = query.value(0).toInt();
                         aux_minute = getMinuteGap( query.value(1).toInt(), gap );
@@ -1413,7 +1411,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                                 time.setTime( QTime( hour, minute ) );
                                 data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                                 // and any missing gap
-                                for ( int m=minute+gap; m<aux_minute; m+=gap ) {
+                                for ( int m{minute+gap}; m<aux_minute; m+=gap ) {
                                     time.setTime( QTime( hour, m ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }
@@ -1424,7 +1422,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                                     time.setTime( QTime( hour, minute ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                                     // append any missing gap in the current hour
-                                    for ( int m=minute+gap; m<60; m+=gap ) {
+                                    for ( int m{minute+gap}; m<60; m+=gap ) {
                                         time.setTime( QTime( hour, m ) );
                                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                     }
@@ -1434,14 +1432,14 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                                     hour = 0;
                                 }
                                 // append any missing gap in every hour between the current and the next found (aux)
-                                for ( int h=hour; h<aux_hour; h++ ) {
-                                    for ( int m=0; m<60; m+=gap ) {
+                                for ( int h{hour}; h<aux_hour; h++ ) {
+                                    for ( int m{0}; m<60; m+=gap ) {
                                         time.setTime( QTime( h, m ) );
                                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                     }
                                 }
                                 // append any missing gap in the netx found hour
-                                for ( int m=0; m<aux_minute; m+=gap ) {
+                                for ( int m{0}; m<aux_minute; m+=gap ) {
                                     time.setTime( QTime( aux_hour, m ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }
@@ -1455,12 +1453,12 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                     time.setTime( QTime( hour, minute ) );
                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                     // yet again, append any missing gap
-                    for ( int m=minute+gap; m<60; m+=gap ) {
+                    for ( int m{minute+gap}; m<60; m+=gap ) {
                         time.setTime( QTime( hour, m ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                     }
-                    for ( int h=hour+1; h<24; h++ ) {
-                        for ( int m=0; m<60; m+=gap ) {
+                    for ( int h{hour+1}; h<24; h++ ) {
+                        for ( int m{0}; m<60; m+=gap ) {
                             time.setTime( QTime( h, m ) );
                             data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                         }
@@ -1481,7 +1479,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                 } catch (...) {
                     // something failed
-                    successful = false;
+                    successful &= false;
                     DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                 }
             }
@@ -1501,7 +1499,7 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
 
 void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
 {
-    bool successful = true;
+    bool successful{ true };
     stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
 
     QSqlDatabase db;
@@ -1514,8 +1512,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -1524,7 +1522,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
+            successful &= false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
         int from_year, from_month, from_day,
@@ -1535,27 +1533,27 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                 from_year  = from_year_.toInt();
                 from_month = this->getMonthNumber( from_month_ );
                 from_day   = from_day_.toInt();
-                to_year  = ( to_year_.size() == 0 )  ? from_year  : to_year_.toInt() ;
-                to_month = ( to_month_.size() == 0 ) ? from_month : this->getMonthNumber( to_month_ ) ;
-                to_day   = ( to_day_.size() == 0 )   ? from_day   : to_day_.toInt() ;
+                to_year  = ( to_year_.isEmpty() )  ? from_year  : to_year_.toInt() ;
+                to_month = ( to_month_.isEmpty() ) ? from_month : this->getMonthNumber( to_month_ ) ;
+                to_day   = ( to_day_.isEmpty() )   ? from_day   : to_day_.toInt() ;
             } catch (...) {
                 // failed to convert to integers
-                successful = false;
+                successful &= false;
                 DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
             }
         }
         if ( successful ) {
             // build the query statement
-            QSqlQuery query = QSqlQuery( db );
+            QSqlQuery query{ db };
             QString stmt;
-            QString log_field_1 = this->getDbField( log_field_1_ ),
-                    log_field_2 = this->getDbField( log_field_2_ );
+            QString log_field_1{ this->getDbField( log_field_1_ ) },
+                    log_field_2{ this->getDbField( log_field_2_ ) };
 
-            int n_months = countMonths( from_year, from_month, to_year, to_month );
+            const int n_months{ countMonths( from_year, from_month, to_year, to_month ) };
 
             QDateTime time;
-            int year  = from_year,
-                month = from_month,
+            int year  { from_year  },
+                month { from_month },
                 day, aux_day, count;
 
             if ( n_months == 1 ) {
@@ -1569,8 +1567,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                 stmt += QString(" AND \"%1\" IS NOT NULL")
                     .arg( log_field_1.replace("'","''") );
                 // apply a filter if present
-                if ( field_filter_1.size() > 0 ) {
-                    QString filter = field_filter_1;
+                if ( ! field_filter_1.isEmpty() ) {
+                    QString filter{ field_filter_1 };
                     if ( log_field_1 == "warning"
                       || log_field_1 == "response"
                       || log_field_1 == "time_taken"
@@ -1595,8 +1593,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                 stmt += QString(" AND \"%1\" IS NOT NULL")
                     .arg( log_field_2.replace("'","''") );
                 // apply a filter if present
-                if ( field_filter_2.size() > 0 ) {
-                    QString filter = field_filter_2;
+                if ( ! field_filter_2.isEmpty() ) {
+                    QString filter{ field_filter_2 };
                     if ( log_field_2 == "warning"
                       || log_field_2 == "response"
                       || log_field_2 == "time_taken"
@@ -1621,12 +1619,12 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                 stmt += QString(" ORDER BY \"day\" ASC;");
                 if ( ! query.exec( stmt ) ) {
                     // error querying database
-                    successful = false;
+                    successful &= false;
                     DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
                 } else if ( ! query.last() ) {
                     // no days found, append missing days with 0 value
-                    for ( int d=from_day; d<=to_day; d++ ) {
+                    for ( int d{from_day}; d<=to_day; d++ ) {
                         time.setDate( QDate( year, month , d ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                     }
@@ -1648,7 +1646,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                                     // any loop-round except the first
                                     time.setDate( QDate( year, month , day ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                    for ( int d=day+1; d<aux_day; d++ ) {
+                                    for ( int d{day+1}; d<aux_day; d++ ) {
                                         // append any missing day with a zero value
                                         time.setDate( QDate( year, month , d ) );
                                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -1698,8 +1696,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                         }
                         to_day += 2;
                         if ( to_day > getMonthDays( year, month ) ) {
-                            int m = month + 1,
-                                y = year;
+                            int m{ month + 1 },
+                                y{ year };
                             if ( m > 12 ) {
                                 m = 1;
                                 y ++;
@@ -1720,7 +1718,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                         }
                     } catch (...) {
                         // something failed
-                        successful = false;
+                        successful &= false;
                         DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                     }
                 }
@@ -1728,7 +1726,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
 
             } else {
                 data.reserve( countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
-                for ( int m=1; m<=n_months; m++ ) {
+                for ( int m{1}; m<=n_months; m++ ) {
                     stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
                         .arg( web_server )
                         .arg( year ).arg( month );
@@ -1745,7 +1743,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                     stmt += QString(" AND \"%1\" IS NOT NULL")
                         .arg( log_field_1.replace("'","''") );
                     // apply a filter if present
-                    if ( field_filter_1.size() > 0 ) {
+                    if ( ! field_filter_1.isEmpty() ) {
                         QString filter = field_filter_1;
                         if ( log_field_1 == "warning"
                           || log_field_1 == "response"
@@ -1771,7 +1769,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                     stmt += QString(" AND \"%1\" IS NOT NULL")
                         .arg( log_field_2.replace("'","''") );
                     // apply a filter if present
-                    if ( field_filter_2.size() > 0 ) {
+                    if ( ! field_filter_2.isEmpty() ) {
                         QString filter = field_filter_2;
                         if ( log_field_2 == "warning"
                           || log_field_2 == "response"
@@ -1805,8 +1803,8 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                         try {
                             if ( ! query.last() ) {
                                 // no days found, append missing days with 0 value
-                                int f_d = 1,
-                                    t_d = getMonthDays( year, month );
+                                int f_d{ 1 },
+                                    t_d{ getMonthDays( year, month ) };
                                 if ( m == 1 ) {
                                     // first month, only get the day from the beginning day
                                     f_d = from_day;
@@ -1833,7 +1831,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                                             // any loop-round except the first
                                             time.setDate( QDate( year, month , day ) );
                                             data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                            for ( int d=day+1; d<aux_day; d++ ) {
+                                            for ( int d{day+1}; d<aux_day; d++ ) {
                                                 // append any missing day with a zero value
                                                 time.setDate( QDate( year, month , d ) );
                                                 data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -1841,7 +1839,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                                         } else {
                                             // append any missing day until the next found day
                                             day = 1;
-                                            for ( int d=day; d<aux_day; d++ ) {
+                                            for ( int d{day}; d<aux_day; d++ ) {
                                                 time.setDate( QDate( year, month , d ) );
                                                 data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                             }
@@ -1856,7 +1854,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                                 }
                                 // append any missing day to the end of the month with a zero value
-                                for ( int d=day+1; d<=getMonthDays(year,month); d++ ) {
+                                for ( int d{day+1}; d<=getMonthDays(year,month); d++ ) {
                                     time.setDate( QDate( year, month , d ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }
@@ -1869,7 +1867,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
                             }
                         } catch (...) {
                             // something failed
-                            successful = false;
+                            successful &= false;
                             DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                             break;
                         }
@@ -1904,7 +1902,7 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
 
 const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, std::map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, unsigned>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
 {
-    bool successful = true;
+    bool successful{ true };
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -1916,8 +1914,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
 
     if ( ! db.open() ) {
         // error opening database
-        successful = false;
-        QString err_msg = "";
+        successful &= false;
+        QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
         }
@@ -1926,22 +1924,22 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
+            successful &= false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
         }
     }
 
     if ( successful ) {
-        QSqlQuery query = QSqlQuery( db );
+        QSqlQuery query{ db };
         int d, h, tt, bs, br,
             day, hour, week_day,
-            max_tt=0, tot_tt=0, num_tt=0,
-            max_bs=0, tot_bs=0, num_bs=0,
-            max_br=0, tot_br=0, num_br=0,
-            n_days=0;
-        unsigned day_count, hour_count, max_date_count=0;
-        QString protocol, method, uri, user_agent, max_date_str="";
-        std::unordered_map<int, int> num_day_count = {
+            max_tt{0}, tot_tt{0}, num_tt{0},
+            max_bs{0}, tot_bs{0}, num_bs{0},
+            max_br{0}, tot_br{0}, num_br{0},
+            n_days{0};
+        unsigned day_count, hour_count, max_date_count{0};
+        QString protocol, method, uri, user_agent, max_date_str;
+        std::unordered_map<int, int> num_day_count{
             {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
         // get years
         for ( const auto& [year, dates_] : dates ) {
@@ -1954,7 +1952,7 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
                 if ( ! query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;")
                                           .arg( web_server ).arg( year ).arg( month ).replace("'","''") ) ) {
                     // error querying database
-                    successful = false;
+                    successful &= false;
                     DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
                     break;
 
@@ -1978,25 +1976,25 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
                             }
                             // protocol
                             if ( query.value(2).isNull() ) {
-                                protocol = "";
+                                protocol.clear();
                             } else {
                                 protocol = query.value(2).toString();
                             }
                             // method
                             if ( query.value(3).isNull() ) {
-                                method = "";
+                                method.clear();
                             } else {
                                 method = query.value(3).toString();
                             }
                             // uri
                             if ( query.value(4).isNull() ) {
-                                uri = "";
+                                uri.clear();
                             } else {
                                 uri = query.value(4).toString();
                             }
                             // user agent
                             if ( query.value(5).isNull() ) {
-                                user_agent = "";
+                                user_agent.clear();
                             } else {
                                 user_agent = query.value(5).toString();
                             }
@@ -2020,8 +2018,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
                             }
                         } catch (...) {
                             // failed to convert to integer
-                            successful = false;
-                            QString err_msg = "";
+                            successful &= false;
+                            QString err_msg;
                             if ( this->dialog_level == 2 ) {
                                 err_msg = TR::tr(this->MSG_ERR_PROCESSING.c_str());
                             }
@@ -2046,8 +2044,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
                                     traf_day.at( week_day ) += day_count;
                                     num_day_count.at( week_day ) ++;
                                     // check the max date count
-                                    const QString m_str = (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) ;
-                                    const QString d_str = (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) ;
+                                    const QString m_str{ (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) };
+                                    const QString d_str{ (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) };
                                     if ( day_count > max_date_count ) {
                                         max_date_count = day_count;
                                         max_date_str = QString("%1-%2-%3").arg( year ).arg( m_str, d_str );
@@ -2099,22 +2097,22 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
                             }
 
                             // process the protocol
-                            if ( protocol.size() > 0 ) {
+                            if ( ! protocol.isEmpty() ) {
                                 recurs.at( 0 )[ protocol ] ++;
                             }
 
                             // process the method
-                            if ( method.size() > 0 ) {
+                            if ( ! method.isEmpty() ) {
                                 recurs.at( 1 )[ method ] ++;
                             }
 
                             // process the uri
-                            if ( uri.size() > 0 ) {
+                            if ( ! uri.isEmpty() ) {
                                 recurs.at( 2 )[ uri ] ++;
                             }
 
                             // process the user-agent
-                            if ( user_agent.size() > 0 ) {
+                            if ( ! user_agent.isEmpty() ) {
                                 recurs.at( 3 )[ user_agent ] ++;
                             }
                         }
@@ -2135,8 +2133,8 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
                         num_day_count.at( week_day ) ++;
 
                         // check the max date count
-                        const QString m_str = (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) ;
-                        const QString d_str = (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) ;
+                        const QString m_str{ (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) };
+                        const QString d_str{ (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) };
                         if ( day_count > max_date_count ) {
                             max_date_count = day_count;
                             max_date_str = QString("%1-%2-%3").arg( year ).arg( m_str, d_str );
@@ -2153,15 +2151,15 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
         if ( successful ) {
 
             // process the hours of the day
-            for ( int i=0; i<24; i++ ) {
+            for ( int i{0}; i<24; i++ ) {
                 if ( n_days > 0 ) {
                     traf_hour.at( i ) /= n_days;
                 }
             }
 
             // process the day of the week
-            for ( int i=1; i<8; i++ ) {
-                const int &x = num_day_count.at( i );
+            for ( int i{1}; i<8; i++ ) {
+                const int& x{ num_day_count.at( i ) };
                 if ( x > 0 ) {
                     traf_day.at( i ) /= x;
                 }

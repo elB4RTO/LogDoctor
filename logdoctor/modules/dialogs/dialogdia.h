@@ -27,7 +27,7 @@ public:
         \param abort Whether to show the ABORT button or not
         \param parent The parent Widget
     */
-    explicit DialogDia( const QString& title, const QString& text, const bool& ignore=true, const bool& discard=true, const bool& abort=true, QWidget *parent=nullptr );
+    explicit DialogDia( const QString& title, const QString& text, const bool ignore=true, const bool discard=true, const bool abort=true, QWidget* parent=nullptr );
     ~DialogDia();
 
 private slots:
@@ -42,7 +42,7 @@ private slots:
     void on_button_ABORT_clicked();
 
 private:
-    Ui::DialogDia *ui;
+    Ui::DialogDia* ui;
 };
 
 #endif // DIALOGDIA_H
