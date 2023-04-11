@@ -197,11 +197,45 @@ endif()
 
 
 # CTest
+include(CTest)
 enable_testing()
-
+add_executable(LogDocTester
+    tests/main.cpp
+    tests/white_box.h
+    tests/white_box.cpp
+    # 2 test
+    modules/exceptions.h
+    modules/exceptions.cpp
+    modules/craplog/modules/lib.h
+    utilities/gzip.h
+    utilities/gzip.cpp
+    utilities/io.h
+    utilities/io.cpp
+    utilities/strings.h
+    utilities/strings.cpp
+    utilities/vectors.h
+    modules/craplog/modules/datetime.h
+    modules/craplog/modules/datetime.cpp
+    modules/craplog/modules/formats.h
+    modules/craplog/modules/formats.cpp
+    modules/craplog/modules/logs.h
+    modules/craplog/modules/logs.cpp
+)
+if(WIN32)
+    target_link_libraries(LogDocTester PRIVATE
+        -static Qt${QT_VERSION_MAJOR}::Widgets
+        #-static Qt${QT_VERSION_MAJOR}::Sql
+    )
+else()
+    target_link_libraries(LogDocTester PRIVATE
+        Qt${QT_VERSION_MAJOR}::Widgets
+        #Qt${QT_VERSION_MAJOR}::Sql
+        ${ZLIB_LIBRARIES}
+    )
+endif()
 add_test(
-  NAME it_works
-  COMMAND LogDoctor
+  NAME LogDocTester
+  COMMAND $<TARGET_FILE:LogDocTester>
 )
 
 
