@@ -63,5 +63,5 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/build
-      run: cd ${{github.workspace}}/build && ctest
+      run: ctest
 
