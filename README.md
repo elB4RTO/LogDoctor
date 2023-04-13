@@ -518,7 +518,7 @@ LogDoctor is available in:
 
 - 🇬🇧 **English** (100%)
 
-- 🇮🇹 **Italian** (90%, *wanna [contribute](#translations)?*)
+- 🇮🇹 **Italian** (100%)
 
 - 🇪🇸 **Spanish** (90%, *wanna [contribute](#translations)?*)
 
@@ -534,7 +534,7 @@ LogDoctor is available in:
 
 LogDoctor is under development.
 
-If you have suggestions about how to improve it, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues).
+If you have suggestions about how to improve it, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
 
 If you want to contribute to the code, please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
 
@@ -545,8 +545,6 @@ If you want to contribute to the translation, please read the [Translation Guide
 ### Translations
 
 Current translations under developement:
-
-- `it_IT` : **90%**
 
 - `es_ES` : **90%** *(auditor needed)*
 
@@ -595,7 +593,7 @@ If you don't want to install QtLinguist, you can do it the hard way, by opening 
 
 <br/>
 
-If you don't feel comfortable with any of the above solutions, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
+If you don't feel comfortable with any of the above solutions, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
 
 <br/>
 
