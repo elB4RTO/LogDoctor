@@ -10,6 +10,8 @@
 #include "modules/craplog/modules/formats.h"
 #include "modules/craplog/modules/logs.h"
 
+#include <QTimeZone>
+
 
 #define T_PRINT(ARG) std::cout << "  [PASSED] " ARG "()" << std::endl;
 
@@ -180,15 +182,19 @@ void testCraplogModules()
     //// DATE-TIME ////
 
     {
+    QTimeZone tz{ QTimeZone::systemTimeZone() };
+    int e{ 946771199 - tz.standardTimeOffset( QDateTime::fromSecsSinceEpoch(946771199) ) };
+    std::string e_str{ std::to_string( e ) };
+    std::string epochs[4]{ e_str, e_str+".000", e_str+"000", e_str+"000000" };
     std::vector<std::string> target{"2000","01","01","23","59","59"};
     assert( DateTimeOps::processDateTime("[01/Jan/2000:23:59:59 +0000]", "ncsa") == target );
     assert( DateTimeOps::processDateTime("Sat Jan 01 23:59:59 2000", "mcs") == target );
     assert( DateTimeOps::processDateTime("Saturday, 01-Jan-2000 23:59:59 UTC", "gmt") == target );
     assert( DateTimeOps::processDateTime("2000-01-01T23:59:59+00:00", "iso") == target );
-    assert( DateTimeOps::processDateTime("946771199", "epoch_s") == target );
-    assert( DateTimeOps::processDateTime("946771199.000", "epoch_s.ms") == target );
-    assert( DateTimeOps::processDateTime("946771199000", "epoch_ms") == target );
-    assert( DateTimeOps::processDateTime("946771199000000", "epoch_us") == target );
+    assert( DateTimeOps::processDateTime(epochs[0], "epoch_s") == target );
+    assert( DateTimeOps::processDateTime(epochs[1], "epoch_s.ms") == target );
+    assert( DateTimeOps::processDateTime(epochs[2], "epoch_ms") == target );
+    assert( DateTimeOps::processDateTime(epochs[3], "epoch_us") == target );
     target = {"2000","01","01","","",""};
     assert( DateTimeOps::processDateTime("2000-01-01", "utc_d") == target );
     assert( DateTimeOps::processDateTime("2000-01-01", "YYYYMMDD") == target );
