@@ -1,4 +1,4 @@
-name: Build
+name: CMake Build
 
 on:
   push:
@@ -58,7 +58,6 @@ jobs:
 
 
     - name: Build
-      if: runner.os != 'Windows'
       run: cmake --build ${{github.workspace}}/build --target all
 
     - name: Test
