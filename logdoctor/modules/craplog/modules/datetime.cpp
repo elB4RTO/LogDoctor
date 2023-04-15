@@ -229,7 +229,7 @@ const std::vector<std::string> processDateTime( std::string_view datetime_, std:
         }
     }
 
-    return std::vector<std::string>{ year, month, day, hour, minute, second };
+    return { year, month, day, hour, minute, second };
 }
 
 } // namespace DateTimeOps

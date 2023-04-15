@@ -137,7 +137,7 @@ void CraplogWorker::joinLogLines()
 
             } catch (...) {
                 // fallback on reading as normal file
-                if ( aux.size() > 0 ) {
+                if ( ! aux.empty() ) {
                     aux.clear();
                 }
                 IOutils::readFile( file_path, aux );
@@ -188,21 +188,21 @@ void CraplogWorker::parseLogLines()
 {
     const auto parseLine = [this]( const std::string& line ) {
         log_line_data_t data;
-        std::string sep, fld, fld_str;
+        std::string_view sep;
+        std::string fld_str;
         bool add_pm{false}, ok{true};
         size_t start, stop{this->logs_format.initial.size()},
-               aux_start, aux_stop,
-               i{0};
+               sep_i{0};
         const size_t line_size{ line.size()-1ul },
-                     n_sep{ this->logs_format.separators.size()-1ul };
+                     n_seps{ this->logs_format.separators.size()-1ul };
 
         while (true) {
             // split fields
             start = stop; // stop updated at the end of the loop
-            if ( i <= n_sep ) {
-                sep = this->logs_format.separators.at( i );
+            if ( sep_i <= n_seps ) {
+                sep = this->logs_format.separators.at( sep_i );
                 stop = line.find( sep, start );
-            } else if ( i == n_sep+1ul ) {
+            } else if ( sep_i == n_seps+1ul ) {
                 // final separator
                 sep = this->logs_format.final;
                 if ( sep.empty() ) {
@@ -219,19 +219,20 @@ void CraplogWorker::parseLogLines()
             }
             if ( stop == std::string::npos ) {
                 // separator not found, abort
-                throw LogParserException( "Separator not found", sep );
+                throw LogParserException( "Separator not found", std::string{sep} );
             }
+            const size_t sep_size = sep.size();
 
             // get the field
-            fld = this->logs_format.fields.at( i );
+            const std::string& fld = this->logs_format.fields.at( sep_i );
             if ( fld != "NONE" ) {
                 // only parse the considered fields
                 fld_str = StringOps::strip( line.substr(start, stop-start), ' ' );
 
-                if ( i+1ul <= n_sep ) {
+                if ( sep_i+1ul <= n_seps ) {
                     // not the last separator, check for mistakes
                     ok |= true;
-                    aux_stop = stop;
+                    size_t aux_stop = stop;
 
                     if ( sep == " " ) {
                         // whitespace-separated-values fields
@@ -248,7 +249,7 @@ void CraplogWorker::parseLogLines()
                         }
                         if ( n > 0ul && c < n ) {
                             // loop until the correct number of whitespaces is reached
-                            aux_start = stop+1ul;
+                            size_t aux_start = stop+1ul;
                             while ( c < n ) {
                                 aux_stop = line.find( sep, aux_start );
                                 if ( aux_stop == std::string::npos ) {
@@ -264,7 +265,7 @@ void CraplogWorker::parseLogLines()
                     } else if ( sep.front() == '"' && fld == "user_agent" ) {
                         // atm the only support is for escaped quotes
                         if ( fld_str.back() == '\\' ) {
-                            aux_start = stop + sep.size();
+                            size_t aux_start = stop + sep_size;
                             while (true) {
                                 aux_stop = line.find( sep, aux_start );
                                 if ( aux_stop == std::string::npos ) {
@@ -274,7 +275,7 @@ void CraplogWorker::parseLogLines()
                                     // non-backslashed quotes
                                     break;
                                 }
-                                aux_start = aux_stop + sep.size();
+                                aux_start = aux_stop + sep_size;
                             }
                         }
                     }
@@ -301,7 +302,7 @@ void CraplogWorker::parseLogLines()
 
                         // process the date to get year, month, day, hour and minute
                         if ( fld.find("date_time") == 0ul ) {
-                            const std::vector<std::string> dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part which is useless from now on
+                            const auto dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part
                             if ( ! dt.at( 0 ).empty() ) {
                                 // year
                                 data.emplace( this->field2id.at("date_time_year"), dt.at( 0 ) );
@@ -341,7 +342,7 @@ void CraplogWorker::parseLogLines()
                             aux = aux_fld.find( ' ' );
                             if ( aux != std::string::npos ) {
                                 method  = aux_fld.substr( 0ul, aux );
-                                aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
+                                aux_fld = StringOps::lstrip( aux_fld.substr( aux+1ul ) );
 
                                 // page & query
                                 aux = aux_fld.find( ' ' );
@@ -356,10 +357,8 @@ void CraplogWorker::parseLogLines()
                                         // query not found
                                         uri = aux_str;
                                     }
-                                    aux_fld = StringOps::lstrip( aux_fld.substr( aux ) );
-
                                     // protocol
-                                    protocol = aux_fld;
+                                    protocol = StringOps::lstrip( aux_fld.substr( aux+1ul ) );
                                 }
                             }
                             // append non-empty data
@@ -375,7 +374,6 @@ void CraplogWorker::parseLogLines()
                             if ( ! query.empty() ) {
                                 data.emplace( this->field2id.at("request_query"), query );
                             }
-
 
 
                         // process the request to get uri and query
@@ -398,17 +396,16 @@ void CraplogWorker::parseLogLines()
                             }
 
 
-
                         // process the time taken to convert to milliseconds
                         } else if ( fld.find("time_taken_") == 0ul ) {
                             float t{ std::stof( fld_str ) };
-                            fld = fld.substr( 11ul );
-                            if ( fld == "us" ) {
+                            const std::string u{ fld.substr( 11ul ) };
+                            if ( u == "us" ) {
                                 // from microseconds
-                                t /= 1000;
-                            } else if ( fld == "s" || fld == "s.ms" ) {
+                                t /= 1000.0f;
+                            } else if ( u == "s" || u == "s.ms" ) {
                                 // from seconds
-                                t *= 1000;
+                                t *= 1000.0f;
                             }
                             data.emplace( this->field2id.at("time_taken"), std::to_string( static_cast<int>( t ) ) );
 
@@ -423,8 +420,8 @@ void CraplogWorker::parseLogLines()
             }
 
             // update the stop for the next start
-            stop += sep.size();
-            i++;
+            stop += sep_size;
+            sep_i++;
             if ( stop > line_size ) {
                 // this was the final separator
                 break;
@@ -441,11 +438,10 @@ void CraplogWorker::parseLogLines()
             }
         }
 
-        // set the default warning mark ( 0=false ) to default status
-        data.emplace( 99, "0" );
+        this->data_collection.push_back( data );
+        // update performance data
         this->parsed_size += line_size;
         this->parsed_lines ++;
-        this->data_collection.push_back( data );
         this->sendPerfData();
     };
 
@@ -460,10 +456,10 @@ void CraplogWorker::parseLogLines()
                 parseLine( line );
             }
         } else {
-            this->data_collection.reserve( n_lines / (nl+1) );
-            for ( size_t i{0}; i<n_lines; i++ ) {
+            this->data_collection.reserve( n_lines / (nl+1ul) );
+            for ( size_t i{0ul}; i<n_lines; i++ ) {
                 std::string line = this->logs_lines.at( i );
-                for ( size_t n{0}; n<nl; n++ ) {
+                for ( size_t n{0ul}; n<nl; n++ ) {
                     i++;
                     line += "\n" + this->logs_lines.at( i );
                 }
@@ -565,20 +561,16 @@ void CraplogWorker::storeLogLines()
 
 const bool CraplogWorker::storeData( QSqlDatabase& db )
 {
-    bool successful{ true };
-
     const QString db_name{ QString::fromStdString(
         this->db_data_path.substr(
             this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
 
     // get blacklist/warnlist items
-    bool check_bl_cli,
-         check_wl_cli, check_wl_ua, check_wl_met, check_wl_req;
-    check_bl_cli = this->blacklists.at( 20 ).used;
-    check_wl_met = this->warnlists.at( 11 ).used;
-    check_wl_req = this->warnlists.at( 12 ).used;
-    check_wl_cli = this->warnlists.at( 20 ).used;
-    check_wl_ua  = this->warnlists.at( 21 ).used;
+    const bool check_bl_cli { this->blacklists.at( 20 ).used };
+    const bool check_wl_met { this->warnlists.at( 11 ).used  };
+    const bool check_wl_req { this->warnlists.at( 12 ).used  };
+    const bool check_wl_cli { this->warnlists.at( 20 ).used  };
+    const bool check_wl_ua  { this->warnlists.at( 21 ).used  };
 
     const std::vector<std::string> empty;
     const std::vector<std::string>& bl_cli_list{ (check_bl_cli)
@@ -620,35 +612,26 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
 
 
     /*int perf_size;*/
-    bool skip{ false },
-         warning{ false };
+    bool warning{ false };
     QSqlQuery query{ db };
     // parse every row of data
     for ( const log_line_data_t& row : this->data_collection ) {
-        // break if failed
-        if ( ! successful ) { break; }
 
         // check blacklisted clients
         if ( check_bl_cli ) {
             if ( row.find( 20 ) != row.end() ) {
                 // this row does contain this row item, check if they match
                 const std::string& target{ row.at( 20 ) };
-                for ( const auto& item : bl_cli_list ) {
-                    if ( target.find( item ) == 0ul ) {
-                        // match found! skip this line
-                        skip |= true;
-                        break;
-                    }
+                if ( std::any_of( bl_cli_list.cbegin(), bl_cli_list.cend(),
+                                  [&target]( const std::string& item )
+                                           { return target.find( item ) == 0ul; }) ) {
+                    // append every field to ignored size
+                    this->blacklisted_size += std::accumulate( row.cbegin(), row.cend(), 0ul,
+                                                               []( size_t size, const auto& item )
+                                                                 { return size + item.second.size(); });
+                    continue;
                 }
             }
-        }
-        if ( skip ) {
-            // append every field to ignored size
-            for ( const auto& [ id, str ] : row ) {
-                this->blacklisted_size += str.size();
-            }
-            skip &= false;
-            continue;
         }
 
         // check warnlisted clients
@@ -656,13 +639,11 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
             if ( row.find( 20 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target{ row.at( 20 ) };
-                for ( const auto& item : wl_cli_list ) {
-                    if ( target.find( item ) == 0ul ) {
-                        // match found! put a warning on this line
-                        warning |= true;
-                        this->warnlisted_size += item.size();
-                        break;
-                    }
+                if ( std::any_of( wl_cli_list.cbegin(), wl_cli_list.cend(),
+                                  [&target]( const std::string& item )
+                                           { return target.find( item ) == 0ul; }) ) {
+                    // match found! put a warning on this line
+                    warning |= true;
                 }
             }
         }
@@ -671,13 +652,11 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
             if ( row.find( 21 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target{ row.at( 21 ) };
-                for ( const auto& item : wl_ua_list ) {
-                    if ( target.find( item ) == 0ul ) {
-                        // match found! skip this line
-                        warning |= true;
-                        this->warnlisted_size += item.size();
-                        break;
-                    }
+                if ( std::any_of( wl_ua_list.cbegin(), wl_ua_list.cend(),
+                                  [&target]( const std::string& item )
+                                           { return target.find( item ) == 0ul; }) ) {
+                    // match found! skip this line
+                    warning |= true;
                 }
             }
         }
@@ -686,13 +665,11 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
             if ( row.find( 11 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target{ row.at( 11 ) };
-                auto found{ std::find_if(
-                    wl_met_list.cbegin(), wl_met_list.cend(),
-                    [&target]( const auto& item ){ return item == target; } ) };
-                if ( found != wl_met_list.end() ) {
+                if ( std::any_of( wl_met_list.cbegin(), wl_met_list.cend(),
+                                  [&target]( const std::string& item )
+                                           { return item == target; }) ) {
                     // match found! skip this line
                     warning |= true;
-                    this->warnlisted_size += (*found).size();
                 }
             }
         }
@@ -701,13 +678,11 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
             if ( row.find( 12 ) != row.end() ) {
                 // this row do contains this row item, check if they match
                 const std::string& target{ row.at( 12 ) };
-                for ( const auto& item : wl_req_list ) {
-                    if ( target.find( item ) == 0ul ) {
-                        // match found! skip this line
-                        warning |= true;
-                        this->warnlisted_size += item.size();
-                        break;
-                    }
+                if ( std::any_of( wl_req_list.cbegin(), wl_req_list.cend(),
+                                  [&target]( const std::string& item )
+                                           { return target.find( item ) == 0ul; }) ) {
+                    // match found! skip this line
+                    warning |= true;
                 }
             }
         }
@@ -717,67 +692,58 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
         QString query_stmt{ "INSERT INTO \""+table+"\" (\"warning\", \"year\", \"month\", \"day\", \"hour\", \"minute\", \"second\", \"protocol\", \"method\", \"uri\", \"query\", \"response\", \"time_taken\", \"bytes_sent\", \"bytes_received\", \"referrer\", \"client\", \"user_agent\", \"cookie\") "
                             "VALUES (" };
 
-
         // complete and execute the statement, binding NULL if not found
-        /*perf_size = 0;*/
 
         // warning
-        if ( row.find( 99 ) == row.end() ) {
-            // no value found in the collection, bind NULL
-            query_stmt += "0";
+        if ( warning ) {
+            warning &= false;
+            this->warnlisted_size += std::accumulate( row.cbegin(), row.cend(), 0ul,
+                                                      []( size_t size, const auto& item )
+                                                        { return size + item.second.size(); });
+            query_stmt += "1";
         } else {
-            // value found, bind it
-            /*perf_size ++;*/
-            if ( warning ) {
-                query_stmt += "1";
-                warning &= false;
-            } else {
-                query_stmt += "0";
-            }
+            query_stmt += "0";
         }
 
         // date and time
-        for ( int i=1; i<7; i++ ) {
+        for ( int i{1}; i<7; i++ ) {
             query_stmt += ", ";
-            if ( row.find( i ) == row.end() ) {
+            if ( row.find( i ) == row.cend() ) {
                 // no value found in the collection, bind NULL
                 query_stmt += "NULL";
             } else {
                 // value found, bind it
-                /*perf_size += row.at( i ).size();*/
                 query_stmt += QString::fromStdString( row.at( i ) ).replace("'","''");
             }
         }
 
         // request
-        for ( int i=10; i<14; i++ ) {
+        for ( int i{10}; i<14; i++ ) {
             query_stmt += ", ";
-            if ( row.find( i ) == row.end() ) {
+            if ( row.find( i ) == row.cend() ) {
                 // no value found in the collection, bind NULL
                 query_stmt += "NULL";
             } else {
                 // value found, bind it
-                /*perf_size += row.at( i ).size();*/
                 query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
             }
         }
 
-        for ( int i=14; i<18; i++ ) {
+        for ( int i{14}; i<18; i++ ) {
             query_stmt += ", ";
-            if ( row.find( i ) == row.end() ) {
+            if ( row.find( i ) == row.cend() ) {
                 // no value found in the collection, bind NULL
                 query_stmt += "NULL";
             } else {
                 // value found, bind it
-                /*perf_size += row.at( i ).size();*/
                 query_stmt += QString::fromStdString( row.at( i ) ).replace("'","''");
             }
         }
 
         // client data and referrer
-        for ( const int& i : std::vector<int>({18,20,21,22}) ) {
+        for ( const int& i : std::vector<int>{18,20,21,22} ) {
             query_stmt += ", ";
-            if ( row.find( i ) == row.end() ) {
+            if ( row.find( i ) == row.cend() ) {
                 // no value found in the collection, bind NULL
                 query_stmt += "NULL";
             } else {
@@ -785,21 +751,18 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 if ( i == 21 && this->wsID == this->IIS_ID ) {
                     // iis logs the user-agent using '+' instead of ' ' (spaces)
                     QString str = QString::fromStdString( row.at( i ) ).replace("+"," ");
-                    /*perf_size += str.size();*/
                     query_stmt += QString("'%1'").arg( str.replace("'","''") );
                 } else {
-                    /*perf_size += row.at( i ).size();*/
                     query_stmt += QString("'%1'").arg( QString::fromStdString( row.at( i ) ).replace("'","''") );
                 }
             }
         }
 
+        query_stmt += ");";
 
         // encode the statement
-        query_stmt += ");";
         if ( ! query.prepare( query_stmt ) ) {
             // error opening database
-            successful &= false;
             QString query_msg, err_msg;
             if ( this->dialogs_level > 0 ) {
                 query_msg = "query.prepare()";
@@ -808,12 +771,12 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 }
             }
             DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
+            return false;
         }
 
         // finalize this statement
         if ( ! query.exec() ) {
             // error finalizing step
-            successful &= false;
             QString query_msg, err_msg;
             if ( this->dialogs_level > 0 ) {
                 query_msg = "query.exec()";
@@ -822,12 +785,12 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 }
             }
             DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
-            break;
+            return false;
         }
 
         // reset the statement to prepare for the next one
         query.finish();
     }
 
-    return successful;
+    return true;
 }

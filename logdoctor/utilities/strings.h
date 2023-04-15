@@ -18,7 +18,7 @@ namespace StringOps
     \param flag The character to find
     \return The number of occurrences
 */
-const size_t count( const std::string_view str, const char flag );
+const size_t count( std::string_view str, const char flag );
 
 //! Count the occurrences of the given sequence in the given string
 /*!

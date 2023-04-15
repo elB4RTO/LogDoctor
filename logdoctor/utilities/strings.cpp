@@ -6,17 +6,16 @@
 namespace StringOps
 {
 
-const size_t count( const std::string_view str, const char flag )
+const size_t count( std::string_view str, const char flag )
 {
     return static_cast<size_t>( std::count( str.cbegin(), str.cend(), flag ) );
 }
 
-
 const size_t count( std::string_view str, std::string_view flag )
 {
     const size_t flg_size{ flag.size() };
-    size_t count{ 0 };
-    for ( size_t start{0}; (start=str.find(flag, start)) != std::string::npos; count++ ) {
+    size_t count{ 0ul };
+    for ( size_t start{0ul}; (start=str.find(flag, start)) != std::string::npos; count++ ) {
         start += flg_size;
     }
     return count;
@@ -27,7 +26,6 @@ const bool isNumeric( const char& chr )
 {
     return chr > 47 && chr < 58;
 }
-
 
 const bool isNumeric( std::string_view str )
 {
@@ -46,7 +44,6 @@ const bool isAlphabetic( const char& chr )
         || (chr > 96 && chr < 123);
 }
 
-
 const bool isAlphabetic( std::string_view str )
 {
     if ( str.empty() ) {
@@ -63,7 +60,6 @@ const bool isAlnum( const char& chr )
     return isNumeric( chr )
         || isAlphabetic( chr );
 }
-
 
 const bool isAlnum( std::string_view str )
 {
@@ -102,9 +98,8 @@ const bool isIP( std::string_view str )
 
 const bool startsWith( std::string_view str, const char flag )
 {
-    return str.at(0ul) == flag;
+    return str.front() == flag;
 }
-
 
 const bool startsWith( std::string_view str, std::string_view flag )
 {
@@ -117,10 +112,11 @@ const bool endsWith( std::string_view str, const char flag )
     return str.back() == flag;
 }
 
-
 const bool endsWith( std::string_view str, std::string_view flag )
 {
-    return str.rfind( flag ) == str.size()-flag.size();
+    const size_t stop{ str.size() };
+    const size_t start{ stop-flag.size() };
+    return str.compare( flag ) == start;
 }
 
 
@@ -132,43 +128,43 @@ const bool contains( std::string_view str, std::string_view flag )
 
 const std::string strip( const std::string& str, const char chr )
 {
-    size_t start = str.find_first_not_of( chr );
-    size_t stop = str.find_last_not_of( chr );
+    size_t start{ str.find_first_not_of( chr ) };
+    size_t stop{ str.find_last_not_of( chr ) };
     if ( start == std::string::npos ) {
         start++;
     }
     if ( stop == std::string::npos ) {
         stop = str.size();
     }
-    return str.substr( start, stop-start+1 );
+    return str.substr( start, stop-start+1ul );
 }
 
-
-const std::string strip( const std::string& str, std::string_view chars ) {
-    size_t start = str.find_first_not_of( chars );
-    size_t stop = str.find_last_not_of( chars );
+const std::string strip( const std::string& str, std::string_view chars )
+{
+    size_t start{ str.find_first_not_of( chars ) };
+    size_t stop{ str.find_last_not_of( chars ) };
     if ( start == std::string::npos ) {
         start++;
     }
     if ( stop == std::string::npos ) {
         stop = str.size();
     }
-    return str.substr( start, stop-start+1 );
+    return str.substr( start, stop-start+1ul );
 }
 
 
 const std::string lstrip( const std::string& str, const char chr )
 {
-    const size_t start = str.find_first_not_of( chr );
+    const size_t start{ str.find_first_not_of( chr ) };
     if ( start != std::string::npos ) {
         return str.substr( start );
     }
     return std::string{};
 }
 
-
-const std::string lstrip( const std::string& str, std::string_view chars ) {
-    const size_t start = str.find_first_not_of( chars );
+const std::string lstrip( const std::string& str, std::string_view chars )
+{
+    const size_t start{ str.find_first_not_of( chars ) };
     if ( start != std::string::npos ) {
         return str.substr( start );
     }
@@ -178,18 +174,18 @@ const std::string lstrip( const std::string& str, std::string_view chars ) {
 
 const std::string rstrip( const std::string &str, const char chr )
 {
-    const size_t stop = str.find_last_not_of( chr );
+    const size_t stop{ str.find_last_not_of( chr ) };
     if ( stop != std::string::npos ) {
-        return str.substr( 0, stop+1 );
+        return str.substr( 0ul, stop+1ul );
     }
     return std::string{};
 }
 
-
-const std::string rstrip( const std::string& str, std::string_view chars ) {
-    const size_t stop = str.find_last_not_of( chars );
+const std::string rstrip( const std::string& str, std::string_view chars )
+{
+    const size_t stop{ str.find_last_not_of( chars ) };
     if ( stop != std::string::npos ) {
-        return str.substr( 0, stop+1 );
+        return str.substr( 0ul, stop+1ul );
     }
     return std::string{};
 }
@@ -213,12 +209,13 @@ const std::string lstripUntil( const std::string& str, const char delim, const b
 }
 
 
-void split( std::vector<std::string>& list, const std::string& target_str, const char separator ) {
+void split( std::vector<std::string>& list, const std::string& target_str, const char separator )
+{
     if ( target_str.empty() ) {
         return;
     }
-    list.reserve( count( target_str, separator )+1 );
-    size_t start{0}, stop;
+    list.reserve( count( target_str, separator )+1ul );
+    size_t start{0ul}, stop;
     while ( (stop=target_str.find( separator, start )) != std::string::npos ) {
         if ( start < stop ) {
             list.push_back( target_str.substr( start, stop-start ) );
@@ -230,16 +227,15 @@ void split( std::vector<std::string>& list, const std::string& target_str, const
     }
 }
 
-
 void split( std::vector<std::string>& list, const std::string& target_str, std::string_view separator )
 {
     if ( target_str.empty() ) {
         return;
     }
-    list.reserve( count( target_str, separator )+1 );
+    list.reserve( count( target_str, separator )+1ul );
     const size_t trg_size{ target_str.size() };
     const size_t sep_size{ separator.size()  };
-    size_t start{0}, stop;
+    size_t start{0ul}, stop;
     while ( (stop=target_str.find( separator, start )) != std::string::npos ) {
         if ( start < stop ) {
             list.push_back( target_str.substr( start, stop-start ) );
@@ -252,15 +248,16 @@ void split( std::vector<std::string>& list, const std::string& target_str, std::
 }
 
 
-void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator, std::string_view strips ) {
+void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator, std::string_view strips )
+{
     split( list, strip( target_str, strips ), separator );
     std::transform( list.begin(), list.end(), list.begin(),
                     [&strips]( const std::string& str )
                              { return strip( str, strips ); } );
 }
 
-
-void splitrip( std::vector<std::string>& list, const std::string& target_str, std::string_view separator, std::string_view strips ) {
+void splitrip( std::vector<std::string>& list, const std::string& target_str, std::string_view separator, std::string_view strips )
+{
     split( list, strip( target_str, strips ), separator );
     std::transform( list.begin(), list.end(), list.begin(),
                     [&strips]( const std::string& str )
