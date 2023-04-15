@@ -5,7 +5,11 @@
 
 #include "lib.h"
 
+#include <unordered_map> // leave this here for OSX
+
 class QSqlDatabase;
+
+typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for OSX
 
 
 class CraplogWorker : public QObject
@@ -16,7 +20,6 @@ private:
 
     using worker_files_t  = std::vector<std::tuple<std::string,std::string>>;
     using log_line_data_t = std::map<int, std::string>;
-    using bw_lists_t      = std::unordered_map<int, BWlist>;
 
 
 public:

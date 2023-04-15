@@ -540,6 +540,8 @@ void Craplog::scanLogsDir()
             case LogType::Discarded:
                 // skip
                 continue;
+            default:
+                break;
         }
 
         std::string hash;

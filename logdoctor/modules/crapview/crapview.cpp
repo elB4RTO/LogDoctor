@@ -913,7 +913,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             traffic_list.push_back( std::make_tuple( std::get<0>(traf_date), QString("%1").arg( std::get<1>(traf_date) ) ) );
 
             // max day of the week
-            double max{ 0.d };
+            double max{ 0.0 };
             int max_{ 0 };
             for ( const auto& [d,c] : traf_day ) {
                 if ( c > max ) {
@@ -921,11 +921,11 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
                     max_ = d;
                 }
             }
-            if ( max_ == 0.d ) {
+            if ( max_ == 0.0 ) {
                 traffic_list.push_back( std::make_tuple( "-", "0" ) );
             } else {
                 const int f{ static_cast<int>(max) };
-                const int d{ (max<10.d) ? static_cast<int>(max*100.d)%100 : static_cast<int>(max*10.d)%10 };
+                const int d{ (max<10.0) ? static_cast<int>(max*100.0)%100 : static_cast<int>(max*10.0)%10 };
                 QString count{ QString("%1").arg( f ) };
                 if ( d > 0 ) {
                     count += QString(".%1").arg( d );
@@ -934,7 +934,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
             }
 
             // max hour of the day
-            max=0.d, max_=-1.d;
+            max=0.0, max_=-1.0;
             for ( const auto& [h,c] : traf_hour ) {
                 if ( c > max ) {
                     max = c;
@@ -945,7 +945,7 @@ const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recu
                 traffic_list.push_back( std::make_tuple( "", "0" ) );
             } else {
                 const int f{ static_cast<int>(max) };
-                const int d{ (max<10.d) ? static_cast<int>(max*100.d)%100 : static_cast<int>(max*10.d)%10 };
+                const int d{ (max<10.0) ? static_cast<int>(max*100.0)%100 : static_cast<int>(max*10.0)%10 };
                 QString count = QString("%1").arg( f );
                 if ( d > 0 ) {
                     count += QString(".%1").arg( d );

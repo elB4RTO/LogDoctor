@@ -240,7 +240,7 @@ void checkIisString( std::string_view string )
     for ( const char& chr : string ) {
         if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == ',' || chr == ':' || chr == '(' || chr == ')' || chr == '[' || chr == ']') ) {
             // unwanted character
-            throw LogFormatException( "Unexpected character found: "+chr );
+            throw LogFormatException( "Unexpected character found: "+std::string{chr} );
         }
     }
 }

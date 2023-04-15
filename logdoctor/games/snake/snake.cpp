@@ -545,6 +545,8 @@ void Snake::collectData( std::vector<float>& data, Direction& direction, const S
             case Entity::A:
                 blocked_way = 1u;
                 break;
+            default:
+                break;
         }
 
         if ( ! blocked_way ) {
@@ -841,6 +843,8 @@ const std::vector<unsigned> Snake::checkAround( const Direction& direction, cons
                 case Entity::S:
                 case Entity::A:
                     around.at(i) = 2u;
+                    break;
+                default:
                     break;
             }
         }
