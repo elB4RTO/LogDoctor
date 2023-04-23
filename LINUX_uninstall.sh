@@ -124,6 +124,7 @@ then
 				then
 					echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove the configuration: $(tput setaf 11)"~/.config/LogDoctor"$(tput sgr0)"
 				fi
+				break
 			;;
 			"n"|"N"|[nN][oO])
 				break
