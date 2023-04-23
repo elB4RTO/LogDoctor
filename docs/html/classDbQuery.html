@@ -89,30 +89,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogLevel</b> (c
 <tr class="memitem:a1e7cf5357869bc2c19053cb63afd6b67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a1e7cf5357869bc2c19053cb63afd6b67">setDbPath</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a1e7cf5357869bc2c19053cb63afd6b67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the path for the logs Collection database.  <br /></td></tr>
 <tr class="separator:a1e7cf5357869bc2c19053cb63afd6b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a666a5e656764c18907affcd169988212"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a666a5e656764c18907affcd169988212">refreshDates</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_dates_t &gt; &amp;result)</td></tr>
-<tr class="memdesc:a666a5e656764c18907affcd169988212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes the dates which are available in the database.  <br /></td></tr>
-<tr class="separator:a666a5e656764c18907affcd169988212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6739efb23d825be9585b773685382e41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a6739efb23d825be9585b773685382e41">refreshDates</a> (std::optional&lt; stats_dates_t &gt; &amp;result)</td></tr>
+<tr class="memdesc:a6739efb23d825be9585b773685382e41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes the dates which are available in the database.  <br /></td></tr>
+<tr class="separator:a6739efb23d825be9585b773685382e41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d86a91f0880d9d7ca27b6b9720257fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a6d86a91f0880d9d7ca27b6b9720257fd">updateWarnings</a> (const QString &amp;web_server, const std::vector&lt; std::tuple&lt; int, int &gt; &gt; &amp;updates) const</td></tr>
 <tr class="memdesc:a6d86a91f0880d9d7ca27b6b9720257fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the database applying the changes made in the Warnings statistics table.  <br /></td></tr>
 <tr class="separator:a6d86a91f0880d9d7ca27b6b9720257fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52c3bb9ccbdb09f31dfd47ee3b890002"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a52c3bb9ccbdb09f31dfd47ee3b890002">getWarnCounts</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_warn_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year_, const QString &amp;month_, const QString &amp;day_, const QString &amp;hour_) const</td></tr>
-<tr class="memdesc:a52c3bb9ccbdb09f31dfd47ee3b890002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Warnings statistics.  <br /></td></tr>
-<tr class="separator:a52c3bb9ccbdb09f31dfd47ee3b890002"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26f6f3955299ca45019c3e57c71ea4bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a26f6f3955299ca45019c3e57c71ea4bd">getSpeedData</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_speed_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year_, const QString &amp;month_, const QString &amp;day_, const QString &amp;protocol_f, const QString &amp;method_f, const QString &amp;uri_f, const QString &amp;query_f, const QString &amp;response_f) const</td></tr>
-<tr class="memdesc:a26f6f3955299ca45019c3e57c71ea4bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Speed statistics.  <br /></td></tr>
-<tr class="separator:a26f6f3955299ca45019c3e57c71ea4bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b1853fa07fece11d1fae523b977fa30"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a9b1853fa07fece11d1fae523b977fa30">getItemsCount</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_count_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;log_field) const</td></tr>
-<tr class="memdesc:a9b1853fa07fece11d1fae523b977fa30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Counts statistics.  <br /></td></tr>
-<tr class="separator:a9b1853fa07fece11d1fae523b977fa30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a937de286c843f08d7a0c7973d7353722"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a937de286c843f08d7a0c7973d7353722">getDaytimeCounts</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_day_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;from_year_, const QString &amp;from_month_, const QString &amp;from_day_, const QString &amp;to_year_, const QString &amp;to_month_, const QString &amp;to_day_, const QString &amp;log_field_, const QString &amp;field_filter) const</td></tr>
-<tr class="memdesc:a937de286c843f08d7a0c7973d7353722"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Daytime statistics.  <br /></td></tr>
-<tr class="separator:a937de286c843f08d7a0c7973d7353722"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d8d337ef7a70599c3b6fd5710b41f95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a2d8d337ef7a70599c3b6fd5710b41f95">getRelationalCountsDay</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_relat_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year_, const QString &amp;month_, const QString &amp;day_, const QString &amp;log_field_1_, const QString &amp;field_filter_1, const QString &amp;log_field_2_, const QString &amp;field_filter_2) const</td></tr>
-<tr class="memdesc:a2d8d337ef7a70599c3b6fd5710b41f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Relationsl statistics.  <br /></td></tr>
-<tr class="separator:a2d8d337ef7a70599c3b6fd5710b41f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab05e51544f15c63f86b184502e091e0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#ab05e51544f15c63f86b184502e091e0d">getRelationalCountsPeriod</a> (<a class="el" href="classResult.html">Result</a>&lt; stats_relat_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;from_year_, const QString &amp;from_month_, const QString &amp;from_day_, const QString &amp;to_year_, const QString &amp;to_month_, const QString &amp;to_day_, const QString &amp;log_field_1_, const QString &amp;field_filter_1, const QString &amp;log_field_2_, const QString &amp;field_filter_2) const</td></tr>
-<tr class="memdesc:ab05e51544f15c63f86b184502e091e0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Relational statistics.  <br /></td></tr>
-<tr class="separator:ab05e51544f15c63f86b184502e091e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a202b946c47e35d86f62e09cd1653479d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a202b946c47e35d86f62e09cd1653479d">getWarnCounts</a> (std::optional&lt; stats_warn_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year_, const QString &amp;month_, const QString &amp;day_, const QString &amp;hour_) const</td></tr>
+<tr class="memdesc:a202b946c47e35d86f62e09cd1653479d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Warnings statistics.  <br /></td></tr>
+<tr class="separator:a202b946c47e35d86f62e09cd1653479d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab00855f73578e2cc83b4c2ffa2c04e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#aab00855f73578e2cc83b4c2ffa2c04e9">getSpeedData</a> (std::optional&lt; stats_speed_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year_, const QString &amp;month_, const QString &amp;day_, const QString &amp;protocol_f, const QString &amp;method_f, const QString &amp;uri_f, const QString &amp;query_f, const QString &amp;response_f) const</td></tr>
+<tr class="memdesc:aab00855f73578e2cc83b4c2ffa2c04e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Speed statistics.  <br /></td></tr>
+<tr class="separator:aab00855f73578e2cc83b4c2ffa2c04e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac28b2a9352b50f537ec8e105e461277b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#ac28b2a9352b50f537ec8e105e461277b">getItemsCount</a> (std::optional&lt; stats_count_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year, const QString &amp;month, const QString &amp;day, const QString &amp;log_field) const</td></tr>
+<tr class="memdesc:ac28b2a9352b50f537ec8e105e461277b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Counts statistics.  <br /></td></tr>
+<tr class="separator:ac28b2a9352b50f537ec8e105e461277b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf3ce4120be55f718298786c2865b73e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#acf3ce4120be55f718298786c2865b73e">getDaytimeCounts</a> (std::optional&lt; stats_day_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;from_year_, const QString &amp;from_month_, const QString &amp;from_day_, const QString &amp;to_year_, const QString &amp;to_month_, const QString &amp;to_day_, const QString &amp;log_field_, const QString &amp;field_filter) const</td></tr>
+<tr class="memdesc:acf3ce4120be55f718298786c2865b73e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Daytime statistics.  <br /></td></tr>
+<tr class="separator:acf3ce4120be55f718298786c2865b73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade63d90c7cf05115dac780d4d6884c6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#ade63d90c7cf05115dac780d4d6884c6c">getRelationalCountsDay</a> (std::optional&lt; stats_relat_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;year_, const QString &amp;month_, const QString &amp;day_, const QString &amp;log_field_1_, const QString &amp;field_filter_1, const QString &amp;log_field_2_, const QString &amp;field_filter_2) const</td></tr>
+<tr class="memdesc:ade63d90c7cf05115dac780d4d6884c6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Relationsl statistics.  <br /></td></tr>
+<tr class="separator:ade63d90c7cf05115dac780d4d6884c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd64837bce2294c32866c85795db085"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a9dd64837bce2294c32866c85795db085">getRelationalCountsPeriod</a> (std::optional&lt; stats_relat_items_t &gt; &amp;result, const QString &amp;web_server, const QString &amp;from_year_, const QString &amp;from_month_, const QString &amp;from_day_, const QString &amp;to_year_, const QString &amp;to_month_, const QString &amp;to_day_, const QString &amp;log_field_1_, const QString &amp;field_filter_1, const QString &amp;log_field_2_, const QString &amp;field_filter_2) const</td></tr>
+<tr class="memdesc:a9dd64837bce2294c32866c85795db085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Relational statistics.  <br /></td></tr>
+<tr class="separator:a9dd64837bce2294c32866c85795db085"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79b1307456e0c2081d9e6b5c70dbb737"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbQuery.html#a79b1307456e0c2081d9e6b5c70dbb737">getGlobalCounts</a> (const QString &amp;web_server, const std::map&lt; int, std::map&lt; int, std::vector&lt; int &gt; &gt; &gt; &amp;dates, std::vector&lt; std::unordered_map&lt; QString, unsigned &gt; &gt; &amp;recurs, std::tuple&lt; QString, int &gt; &amp;traf_date, std::unordered_map&lt; int, double &gt; &amp;traf_day, std::unordered_map&lt; int, double &gt; &amp;traf_hour, std::vector&lt; long long &gt; &amp;perf_time, std::vector&lt; long long &gt; &amp;perf_sent, std::vector&lt; long long &gt; &amp;perf_receiv, long &amp;req_count) const</td></tr>
 <tr class="memdesc:a79b1307456e0c2081d9e6b5c70dbb737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data needed for the Global statistics.  <br /></td></tr>
 <tr class="separator:a79b1307456e0c2081d9e6b5c70dbb737"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,8 +282,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a937de286c843f08d7a0c7973d7353722" name="a937de286c843f08d7a0c7973d7353722"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a937de286c843f08d7a0c7973d7353722">&#9670;&#160;</a></span>getDaytimeCounts()</h2>
+<a id="acf3ce4120be55f718298786c2865b73e" name="acf3ce4120be55f718298786c2865b73e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf3ce4120be55f718298786c2865b73e">&#9670;&#160;</a></span>getDaytimeCounts()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,7 +291,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::getDaytimeCounts </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_day_items_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_day_items_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
@@ -359,7 +359,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Retrieves the data needed for the Daytime statistics. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
     <tr><td class="paramname">web_server</td><td>The ID of the Web Server to use </td></tr>
     <tr><td class="paramname">from_year_</td><td>The initial year </td></tr>
     <tr><td class="paramname">from_month_</td><td>The initial month </td></tr>
@@ -504,8 +504,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9b1853fa07fece11d1fae523b977fa30" name="a9b1853fa07fece11d1fae523b977fa30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b1853fa07fece11d1fae523b977fa30">&#9670;&#160;</a></span>getItemsCount()</h2>
+<a id="ac28b2a9352b50f537ec8e105e461277b" name="ac28b2a9352b50f537ec8e105e461277b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac28b2a9352b50f537ec8e105e461277b">&#9670;&#160;</a></span>getItemsCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -513,7 +513,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::getItemsCount </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_count_items_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_count_items_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
@@ -557,7 +557,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Retrieves the data needed for the Counts statistics. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
     <tr><td class="paramname">web_server</td><td>The ID of the Web Server to use </td></tr>
     <tr><td class="paramname">year</td><td>The year </td></tr>
     <tr><td class="paramname">month</td><td>The month </td></tr>
@@ -708,8 +708,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2d8d337ef7a70599c3b6fd5710b41f95" name="a2d8d337ef7a70599c3b6fd5710b41f95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d8d337ef7a70599c3b6fd5710b41f95">&#9670;&#160;</a></span>getRelationalCountsDay()</h2>
+<a id="ade63d90c7cf05115dac780d4d6884c6c" name="ade63d90c7cf05115dac780d4d6884c6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade63d90c7cf05115dac780d4d6884c6c">&#9670;&#160;</a></span>getRelationalCountsDay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -717,7 +717,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::getRelationalCountsDay </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_relat_items_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_relat_items_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
@@ -779,7 +779,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Retrieves the data needed for the Relationsl statistics. </p>
 <p>Used when querying a single day </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
     <tr><td class="paramname">web_server</td><td>The ID of the Web Server to use </td></tr>
     <tr><td class="paramname">year_</td><td>The year </td></tr>
     <tr><td class="paramname">month_</td><td>The month </td></tr>
@@ -791,12 +791,12 @@ Static Private Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classDbQuery.html#ab05e51544f15c63f86b184502e091e0d" title="Retrieves the data needed for the Relational statistics.">getRelationalCountsPeriod()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classDbQuery.html#a9dd64837bce2294c32866c85795db085" title="Retrieves the data needed for the Relational statistics.">getRelationalCountsPeriod()</a> </dd></dl>
 
 </div>
 </div>
-<a id="ab05e51544f15c63f86b184502e091e0d" name="ab05e51544f15c63f86b184502e091e0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab05e51544f15c63f86b184502e091e0d">&#9670;&#160;</a></span>getRelationalCountsPeriod()</h2>
+<a id="a9dd64837bce2294c32866c85795db085" name="a9dd64837bce2294c32866c85795db085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd64837bce2294c32866c85795db085">&#9670;&#160;</a></span>getRelationalCountsPeriod()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -804,7 +804,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::getRelationalCountsPeriod </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_relat_items_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_relat_items_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
@@ -884,7 +884,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Retrieves the data needed for the Relational statistics. </p>
 <p>Used when querying a period of time </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
     <tr><td class="paramname">web_server</td><td>The ID of the Web Server to use </td></tr>
     <tr><td class="paramname">from_year_</td><td>The initial year </td></tr>
     <tr><td class="paramname">from_month_</td><td>The initial month </td></tr>
@@ -899,12 +899,12 @@ Static Private Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classDbQuery.html#a2d8d337ef7a70599c3b6fd5710b41f95" title="Retrieves the data needed for the Relationsl statistics.">getRelationalCountsDay()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classDbQuery.html#ade63d90c7cf05115dac780d4d6884c6c" title="Retrieves the data needed for the Relationsl statistics.">getRelationalCountsDay()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a26f6f3955299ca45019c3e57c71ea4bd" name="a26f6f3955299ca45019c3e57c71ea4bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26f6f3955299ca45019c3e57c71ea4bd">&#9670;&#160;</a></span>getSpeedData()</h2>
+<a id="aab00855f73578e2cc83b4c2ffa2c04e9" name="aab00855f73578e2cc83b4c2ffa2c04e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab00855f73578e2cc83b4c2ffa2c04e9">&#9670;&#160;</a></span>getSpeedData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -912,7 +912,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::getSpeedData </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_speed_items_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_speed_items_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
@@ -980,7 +980,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Retrieves the data needed for the Speed statistics. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
     <tr><td class="paramname">web_server</td><td>The ID of the Web Server to use </td></tr>
     <tr><td class="paramname">year_</td><td>The year </td></tr>
     <tr><td class="paramname">month_</td><td>The month </td></tr>
@@ -996,8 +996,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a52c3bb9ccbdb09f31dfd47ee3b890002" name="a52c3bb9ccbdb09f31dfd47ee3b890002"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52c3bb9ccbdb09f31dfd47ee3b890002">&#9670;&#160;</a></span>getWarnCounts()</h2>
+<a id="a202b946c47e35d86f62e09cd1653479d" name="a202b946c47e35d86f62e09cd1653479d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a202b946c47e35d86f62e09cd1653479d">&#9670;&#160;</a></span>getWarnCounts()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1005,7 +1005,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::getWarnCounts </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_warn_items_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_warn_items_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
@@ -1049,7 +1049,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Retrieves the data needed for the Warnings statistics. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
     <tr><td class="paramname">web_server</td><td>The ID of the Web Server to use </td></tr>
     <tr><td class="paramname">year_</td><td>The year </td></tr>
     <tr><td class="paramname">month_</td><td>The month </td></tr>
@@ -1061,8 +1061,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a666a5e656764c18907affcd169988212" name="a666a5e656764c18907affcd169988212"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a666a5e656764c18907affcd169988212">&#9670;&#160;</a></span>refreshDates()</h2>
+<a id="a6739efb23d825be9585b773685382e41" name="a6739efb23d825be9585b773685382e41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6739efb23d825be9585b773685382e41">&#9670;&#160;</a></span>refreshDates()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1070,7 +1070,7 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void DbQuery::refreshDates </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classResult.html">Result</a>&lt; stats_dates_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::optional&lt; stats_dates_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>result</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1080,7 +1080,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Refreshes the dates which are available in the database. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">result</td><td>Tuple which will hold the result of the operation and the data </td></tr>
+    <tr><td class="paramname">result</td><td>Holds the data only if the operation completed succssfully </td></tr>
   </table>
   </dd>
 </dl>

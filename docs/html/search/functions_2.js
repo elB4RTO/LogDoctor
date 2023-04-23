@@ -26,7 +26,7 @@ var searchData=
   ['cleardates_23',['clearDates',['../classCrapview.html#ae0eb083eea7e2bef76345242da41bf69',1,'Crapview']]],
   ['closeevent_24',['closeEvent',['../classCrapup.html#a1b3b1fa451669dc2791e5d14288a96e5',1,'Crapup']]],
   ['contains_25',['contains',['../namespaceStringOps.html#ae46487946ef0fbf955cd6147993d803f',1,'StringOps::contains()'],['../namespaceVecOps.html#a17ff7fe02a008292a11e30d1a7d33c4e',1,'VecOps::contains()']]],
-  ['count_26',['count',['../namespaceStringOps.html#a2a228fed6497ab82fb2db0880ba87736',1,'StringOps::count(const std::string_view str, const char flag)'],['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)']]],
+  ['count_26',['count',['../namespaceStringOps.html#a47d404a4a7a4acd812051e925841c0dc',1,'StringOps::count(std::string_view str, const char flag)'],['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)']]],
   ['countdays_27',['countDays',['../classDbQuery.html#aa3e09b4a90bfba6554c1807d291bea54',1,'DbQuery']]],
   ['countmonths_28',['countMonths',['../classDbQuery.html#a071c26b502f7b2662ba816f263f665ed',1,'DbQuery']]],
   ['crapinfo_29',['Crapinfo',['../classCrapinfo.html#a5a036ed71eaccc1da462339abc810125',1,'Crapinfo']]],

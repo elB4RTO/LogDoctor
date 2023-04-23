@@ -29,7 +29,7 @@ var searchData=
   ['closeevent_26',['closeEvent',['../classCrapup.html#a1b3b1fa451669dc2791e5d14288a96e5',1,'Crapup']]],
   ['colorsec_27',['ColorSec',['../namespaceColorSec.html',1,'']]],
   ['contains_28',['contains',['../namespaceStringOps.html#ae46487946ef0fbf955cd6147993d803f',1,'StringOps::contains()'],['../structCraplog_1_1LogName.html#a64fc39be93c9b1338ace87443ed597f3',1,'Craplog::LogName::contains()'],['../namespaceVecOps.html#a17ff7fe02a008292a11e30d1a7d33c4e',1,'VecOps::contains()']]],
-  ['count_29',['count',['../namespaceStringOps.html#a2a228fed6497ab82fb2db0880ba87736',1,'StringOps::count(const std::string_view str, const char flag)'],['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)']]],
+  ['count_29',['count',['../namespaceStringOps.html#a47d404a4a7a4acd812051e925841c0dc',1,'StringOps::count(std::string_view str, const char flag)'],['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)']]],
   ['countdays_30',['countDays',['../classDbQuery.html#aa3e09b4a90bfba6554c1807d291bea54',1,'DbQuery']]],
   ['countmonths_31',['countMonths',['../classDbQuery.html#a071c26b502f7b2662ba816f263f665ed',1,'DbQuery']]],
   ['craphelp_32',['Craphelp',['../classCraphelp.html',1,'']]],

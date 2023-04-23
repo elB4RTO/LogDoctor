@@ -4,7 +4,7 @@ var searchData=
   ['readconfigs_1',['readConfigs',['../classMainWindow.html#aae306cbf256c5a686cc8d9f2a1dbb18b',1,'MainWindow']]],
   ['readfile_2',['readFile',['../namespaceGZutils.html#a72f6960bddea2b816af84e7773d5c6b2',1,'GZutils::readFile()'],['../namespaceIOutils.html#a185c38eff9d9f4432c8138404941915e',1,'IOutils::readFile()']]],
   ['recalculateangles_3',['recalculateAngles',['../classDonutBreakdown.html#acd747ee2bbd23ce84eaf9d4db57938e3',1,'DonutBreakdown']]],
-  ['refreshdates_4',['refreshDates',['../classCrapview.html#ac98b1cbc75604b5145b5cff36e96eb78',1,'Crapview::refreshDates()'],['../classDbQuery.html#a666a5e656764c18907affcd169988212',1,'DbQuery::refreshDates()']]],
+  ['refreshdates_4',['refreshDates',['../classCrapview.html#ac98b1cbc75604b5145b5cff36e96eb78',1,'Crapview::refreshDates()'],['../classDbQuery.html#a6739efb23d825be9585b773685382e41',1,'DbQuery::refreshDates()']]],
   ['refreshstatsdates_5',['refreshStatsDates',['../classMainWindow.html#ac8f4c84b43d14b6dcc6cb7b5f75ce343',1,'MainWindow']]],
   ['renameascopy_6',['renameAsCopy',['../namespaceIOutils.html#a4a6ffee0b6032c103a85d51d15d85163',1,'IOutils']]],
   ['replace_7',['replace',['../namespaceStringOps.html#a8baa7ffdbec59d017362329ec96a46da',1,'StringOps']]],
