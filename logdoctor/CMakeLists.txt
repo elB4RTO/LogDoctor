@@ -41,7 +41,6 @@ set(PROJECT_SOURCES
     utilities/io.cpp
     utilities/printables.h
     utilities/printables.cpp
-    utilities/result.h
     utilities/rtf.h
     utilities/rtf.cpp
     utilities/strings.h

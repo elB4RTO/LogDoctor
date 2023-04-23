@@ -183,7 +183,7 @@ const QString DbQuery::getDbField( const QString& tr_fld ) const
 
 
 // get a fresh map of available dates
-void DbQuery::refreshDates( Result<stats_dates_t>& result )
+void DbQuery::refreshDates( std::optional<stats_dates_t>& result )
 {
     bool successful{ true };
     stats_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
@@ -326,14 +326,13 @@ void DbQuery::refreshDates( Result<stats_dates_t>& result )
             }
         }
     }
-
-    if ( ! successful ) {
-        dates.clear();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, dates );
+
+    if ( successful ) {
+        result.emplace( dates );
+    }
 }
 
 
@@ -391,7 +390,7 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
 
 
 // get daytime values for the warnings
-void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
+void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
 {
     bool successful{ true };
     stats_warn_items_t items; // std::vector<std::vector<std::vector<std::vector<QString>>>>
@@ -530,18 +529,18 @@ void DbQuery::getWarnCounts( Result<stats_warn_items_t>& result, const QString& 
             }
         }
     }
-    if ( ! successful ) {
-        items.clear();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, items );
+
+    if ( successful ) {
+        result.emplace( items );
+    }
 }
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f ) const
+void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f ) const
 {
     bool successful{ true };
     stats_speed_items_t data; // std::vector<std::tuple<long long, std::vector<QString>>>
@@ -891,22 +890,22 @@ void DbQuery::getSpeedData( Result<stats_speed_items_t>& result, const QString& 
             }
         }
     }
-
-    if ( ! successful ) {
-        data.clear();
-    } else if ( data.capacity() > data.size() ) {
-        data.shrink_to_fit();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, data );
+
+    if ( successful ) {
+        if ( data.capacity() > data.size() ) {
+            data.shrink_to_fit();
+        }
+        result.emplace( data );
+    }
 }
 
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field ) const
+void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field ) const
 {
     bool successful{ true };
     QHash<QString, unsigned> aux_items;
@@ -982,20 +981,19 @@ void DbQuery::getItemsCount( Result<stats_count_items_t>& result, const QString&
         }
         aux_items.clear();
     }
-
-    if ( ! successful ) {
-        items.clear();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, items );
+
+    if ( successful ) {
+        result.emplace( items );
+    }
 }
 
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter ) const
+void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter ) const
 {
     bool successful{ true };
     stats_day_items_t data{ // std::unordered_map<int, std::unordered_map<int, int>>
@@ -1233,21 +1231,19 @@ void DbQuery::getDaytimeCounts( Result<stats_day_items_t>& result, const QString
             }
         }
     }
-
-
-    if ( ! successful ) {
-        data.clear();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, data );
+
+    if ( successful ) {
+        result.emplace( data );
+    }
 }
 
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
+void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
 {
     bool successful{ true };
     stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
@@ -1485,19 +1481,18 @@ void DbQuery::getRelationalCountsDay( Result<stats_relat_items_t>& result, const
             }
         }
     }
-
-    if ( ! successful ) {
-        data.clear();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, data );
+
+    if ( ! successful ) {
+        result.emplace( data );
+    }
 }
 
 
 
-void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
+void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
 {
     bool successful{ true };
     stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
@@ -1886,16 +1881,16 @@ void DbQuery::getRelationalCountsPeriod( Result<stats_relat_items_t>& result, co
             }
         }
     }
-
-    if ( ! successful ) {
-        data.clear();
-    } else if ( data.capacity() > data.size() ) {
-        data.shrink_to_fit();
-    }
     if ( db.isOpen() ) {
         db.close();
     }
-    result = Result( successful, data );
+
+    if ( successful ) {
+        if ( data.capacity() > data.size() ) {
+            data.shrink_to_fit();
+        }
+        result.emplace( data );
+    }
 }
 
 

@@ -134,13 +134,13 @@ const int Crapview::getMonthNumber( const QString& month_str ) const
 
 void Crapview::refreshDates()
 {
-    Result<stats_dates_t> result;
+    std::optional<stats_dates_t> result;
     this->dbQuery.refreshDates( result );
     if ( result ) {
         this->dates.clear();
         // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
         // { web_server_id : { year : { month : [ days ] } } }
-        this->dates = std::move( result.getData() );
+        this->dates = std::move( result.value() );
     }
 }
 void Crapview::clearDates()
@@ -244,7 +244,7 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server ) con
 
 void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour ) const
 {
-    Result<stats_warn_items_t> result;
+    std::optional<stats_warn_items_t> result;
     this->dbQuery.getWarnCounts(
         result,
         web_server,
@@ -253,7 +253,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         // std::vector<std::vector<std::vector<std::vector<QString>>>>
         // day  -> [ hours[ 10th_minutes[ lines[ log_data ] ] ] ]
         // hour -> [ 10th_minutes[ minute[ lines[ log_data ] ] ] ]
-        auto& items = result.getData();
+        auto& items{ result.value() };
 
         // bars
         std::vector<std::vector<QBarSet*>> sets;
@@ -426,7 +426,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
 
 void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response ) const
 {
-    Result<stats_speed_items_t> result;
+    std::optional<stats_speed_items_t> result;
     this->dbQuery.getSpeedData(
         result,
         web_server,
@@ -435,7 +435,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
     if ( result ) {
         // std::vector<std::tuple<long long, std::vector<QString>>>
         // [ ( epoch_msec, [ log_data ] ) ]
-        auto& items{ result.getData() };
+        auto& items{ result.value() };
 
         // draw the speed chart
         QLineSeries* line{ new QLineSeries() };
@@ -564,7 +564,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field ) const
 {
-    Result<stats_count_items_t> result;
+    std::optional<stats_count_items_t> result;
     this->dbQuery.getItemsCount(
         result,
         web_server,
@@ -573,7 +573,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
     if ( result ) {
         // std::vector<std::tuple<QString, int>>
         // [ ( log_item, count ) ]
-        auto& items{ result.getData() };
+        auto& items{ result.value() };
 
         // make the pie
         QPieSeries* pie{ new QPieSeries() };
@@ -582,8 +582,8 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
         int count, oth_count{0}, n_rows{0};
         QString item;
         // bring items in reverse order
-        stats_count_items_t::const_reverse_iterator iter = items.rbegin();
-        while ( iter != items.rend() ) {
+        stats_count_items_t::const_reverse_iterator iter = items.crbegin();
+        while ( iter != items.crend() ) {
             item = iter->second;
             count = iter->first;
             ++iter;
@@ -625,7 +625,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter ) const
 {
-    Result<stats_day_items_t> result;
+    std::optional<stats_day_items_t> result;
     this->dbQuery.getDaytimeCounts(
         result,
         web_server,
@@ -635,7 +635,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
     if ( result ) {
         // std::unordered_map<int, std::unordered_map<int, int>>
         // { hour : { 10th_minutes : count } }
-        auto& items{ result.getData() };
+        auto& items{ result.value() };
 
         // draw the chart
         QString date;
@@ -744,10 +744,8 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
 void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 ) const
 {
     bool period{ true };
-    Result<stats_relat_items_t> result;
-    if ( from_year == to_year
-      && from_month == to_month
-      && from_day == to_day ) {
+    std::optional<stats_relat_items_t> result;
+    if ( from_year == to_year && from_month == to_month && from_day == to_day ) {
         period &= false;
         this->dbQuery.getRelationalCountsDay(
             result,
@@ -768,7 +766,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
     if ( result ) {
         // std::vector<std::tuple<long long, int>>
         // [ ( epoch_ms, count ) ]
-        auto& items{ result.getData() };
+        auto& items{ result.value() };
 
         // draw the relational chart
         QLineSeries* line{ new QLineSeries() };

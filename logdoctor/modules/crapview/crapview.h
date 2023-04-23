@@ -18,6 +18,7 @@ class QTableWidget;
 class Crapview : public QObject
 {
     Q_OBJECT
+    DATA_TYPEDEFS
 
 public:
 

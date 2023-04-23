@@ -1,5 +1,5 @@
-#ifndef TR_H
-#define TR_H
+#ifndef SHARED_H
+#define SHARED_H
 
 #include <QObject>
 
@@ -58,4 +58,4 @@ const std::string DAYS__FRIDAY    { TR::tr("Friday").toStdString()    };
 const std::string DAYS__SATURDAY  { TR::tr("Saturday").toStdString()  };
 
 
-#endif // TR_H
+#endif // SHARED_H

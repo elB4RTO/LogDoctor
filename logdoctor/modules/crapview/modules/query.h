@@ -2,13 +2,23 @@
 #define QUERY_H
 
 #include "modules/shared.h"
-#include "utilities/result.h"
 
 #include <unordered_map>
+#include <optional>
+
+#define DATA_TYPEDEFS\
+    using stats_dates_t       = std::map<int, std::map<int, std::map<int, std::vector<int>>>>;\
+    using stats_warn_items_t  = std::vector<std::vector<std::vector<std::vector<QString>>>>;\
+    using stats_speed_items_t = std::vector<std::tuple<long long, std::vector<QString>>>;\
+    using stats_day_items_t   = std::unordered_map<int, std::unordered_map<int, int>>;\
+    using stats_relat_items_t = std::vector<std::tuple<long long, int>>;\
+    using stats_count_items_t = std::multimap<unsigned, QString>;
 
 
 class DbQuery
 {
+    DATA_TYPEDEFS
+
 public:
 
     // convert log fields IDs to log fields
@@ -66,9 +76,9 @@ public:
 
     //! Refreshes the dates which are available in the database
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
     */
-    void refreshDates( Result<stats_dates_t>& result );
+    void refreshDates( std::optional<stats_dates_t>& result );
 
 
     //! Updates the database applying the changes made in the Warnings statistics table
@@ -83,7 +93,7 @@ public:
 
     //! Retrieves the data needed for the Warnings statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year_ The year
         \param month_ The month
@@ -91,7 +101,7 @@ public:
         \param hour_ The hour
     */
     void getWarnCounts(
-        Result<stats_warn_items_t>& result,
+        std::optional<stats_warn_items_t>& result,
         const QString& web_server,
         const QString& year_,
         const QString& month_,
@@ -102,7 +112,7 @@ public:
 
     //! Retrieves the data needed for the Speed statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year_ The year
         \param month_ The month
@@ -114,7 +124,7 @@ public:
         \param response_f The filter for the Response field
     */
     void getSpeedData(
-        Result<stats_speed_items_t>& result,
+        std::optional<stats_speed_items_t>& result,
         const QString& web_server,
         const QString& year_,
         const QString& month_,
@@ -129,7 +139,7 @@ public:
 
     //! Retrieves the data needed for the Counts statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year The year
         \param month The month
@@ -137,7 +147,7 @@ public:
         \param log_field The log field
     */
     void getItemsCount(
-        Result<stats_count_items_t>& result,
+        std::optional<stats_count_items_t>& result,
         const QString& web_server,
         const QString& year,
         const QString& month,
@@ -148,7 +158,7 @@ public:
 
     //! Retrieves the data needed for the Daytime statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param from_year_ The initial year
         \param from_month_ The initial month
@@ -160,7 +170,7 @@ public:
         \param field_filter The filter to apply
     */
     void getDaytimeCounts(
-        Result<stats_day_items_t>& result,
+        std::optional<stats_day_items_t>& result,
         const QString& web_server,
         const QString& from_year_, const QString& from_month_, const QString& from_day_,
         const QString& to_year_,   const QString& to_month_,   const QString& to_day_,
@@ -171,7 +181,7 @@ public:
     //! Retrieves the data needed for the Relationsl statistics
     /*!
         Used when querying a single day
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year_ The year
         \param month_ The month
@@ -183,7 +193,7 @@ public:
         \see getRelationalCountsPeriod()
     */
     void getRelationalCountsDay(
-        Result<stats_relat_items_t>& result,
+        std::optional<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& year_,        const QString& month_,         const QString& day_,
         const QString& log_field_1_, const QString& field_filter_1,
@@ -193,7 +203,7 @@ public:
     //! Retrieves the data needed for the Relational statistics
     /*!
         Used when querying a period of time
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param from_year_ The initial year
         \param from_month_ The initial month
@@ -208,7 +218,7 @@ public:
         \see getRelationalCountsDay()
     */
     void getRelationalCountsPeriod(
-        Result<stats_relat_items_t>& result,
+        std::optional<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& from_year_,   const QString& from_month_,    const QString& from_day_,
         const QString& to_year_,     const QString& to_month_,      const QString& to_day_,
