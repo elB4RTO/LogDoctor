@@ -2,14 +2,16 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-2.03-fff"/>
+  <img src="https://img.shields.io/badge/version-2.04-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
   <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
   <br/>
-  <img src="https://img.shields.io/badge/Linux-supported-brightgreen"/>
-  <img src="https://img.shields.io/badge/BSD-supported-brightgreen"/>
-  <img src="https://img.shields.io/badge/Windows-supported-brightgreen"/>
-  <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-brightgreen"/>
+  <img src="https://img.shields.io/badge/Linux-supported-31c653"/>
+  <img src="https://img.shields.io/badge/BSD-supported-31c653"/>
+  <img src="https://img.shields.io/badge/Windows-supported-31c653"/>
+  <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-31c653"/>
+  <br/>
+  <img src="https://github.com/elB4RTO/LogDoctor/actions/workflows/cmake.yml/badge.svg"/>
  
   <h2>🇬🇧 🇪🇸 🇫🇷 🇮🇹 🇯🇵 🇧🇷</h2>
 </div>
@@ -111,9 +113,12 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>
 - Run the installation script
-  - Linux/BSD:
-    - `chmod +x ./build_install.sh`
-    - `./build_install.sh`
+  - Linux:
+    - `chmod +x ./LINUX_build_install.sh`
+    - `./LINUX_build_install.sh`
+  - BSD:
+    - `chmod +x ./BSD_build_install.sh`
+    - `./BSD_build_install.sh`
   - Windows:
     - run `WIN_build_install_1.bat` as normal user
     - right-click on `WIN_build_install_2.bat` and select **Run as Administrator**
@@ -219,9 +224,12 @@ At the moment of writing, the only supported method is the manual update.<br/><b
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>
 - Run the update script
-  - Linux/BSD:
-    - `chmod +x ./build_update.sh`
-    - `./build_update.sh`
+  - Linux:
+    - `chmod +x ./LINUX_build_update.sh`
+    - `./LINUX_build_update.sh`
+  - BSD:
+    - `chmod +x ./BSD_build_update.sh`
+    - `./BSD_build_update.sh`
   - Windows:
     - run `WIN_build_update_1.bat` as normal user
     - right-click on `WIN_build_update_2.bat` and select **Run as Administrator**
@@ -516,7 +524,7 @@ LogDoctor is available in:
 
 - 🇬🇧 **English** (100%)
 
-- 🇮🇹 **Italian** (90%, *wanna [contribute](#translations)?*)
+- 🇮🇹 **Italian** (100%)
 
 - 🇪🇸 **Spanish** (90%, *wanna [contribute](#translations)?*)
 
@@ -532,7 +540,7 @@ LogDoctor is available in:
 
 LogDoctor is under development.
 
-If you have suggestions about how to improve it, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues).
+If you have suggestions about how to improve it, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
 
 If you want to contribute to the code, please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
 
@@ -543,8 +551,6 @@ If you want to contribute to the translation, please read the [Translation Guide
 ### Translations
 
 Current translations under developement:
-
-- `it_IT` : **90%**
 
 - `es_ES` : **90%** *(auditor needed)*
 
@@ -593,7 +599,7 @@ If you don't want to install QtLinguist, you can do it the hard way, by opening 
 
 <br/>
 
-If you don't feel comfortable with any of the above solutions, please open an ![issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
+If you don't feel comfortable with any of the above solutions, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
 
 <br/>
 
