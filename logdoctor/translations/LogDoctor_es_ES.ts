@@ -674,6 +674,14 @@ Aborting</source>
 
 Anulado</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation type="unfinished">Archivo duplicado</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation type="unfinished">El archivo aparece dos veces en la lista de selecciones</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

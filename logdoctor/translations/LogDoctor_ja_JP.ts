@@ -670,6 +670,14 @@ please follow the instruction on the repository page</source>
         <source>Unrecognized entry</source>
         <translation type="unfinished">認識されないエントリ</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation type="unfinished">重複ファイル</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation type="unfinished">選択リストにファイルが 2 回表示される</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

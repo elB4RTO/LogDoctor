@@ -674,6 +674,14 @@ please follow the instruction on the repository page</translation>
         <source>Unrecognized entry</source>
         <translation>Unrecognized entry</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation>Duplicate file</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation>The file appears twice in the list of selections</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

@@ -674,6 +674,14 @@ per favore segui le istruzioni nella pagina del repository</translation>
         <source>Unrecognized entry</source>
         <translation>Input non riconosciuto</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation>File duplicato</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation>Il file appare due volte nella lista dei selezionati</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
