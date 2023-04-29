@@ -427,6 +427,19 @@ const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent 
 }
 
 
+const int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
+{
+    DialogDia dialog{
+        DialogSec::tr("Duplicate file"),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr("The file appears twice in the list of selections"),
+            msg,
+            DialogSec::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?") ),
+        true, true, true, parent };
+    return dialog.exec();
+}
+
+
 const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
 {
     DialogDia dialog{

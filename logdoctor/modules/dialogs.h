@@ -148,6 +148,9 @@ public:
     //! A log file has already been used
     static const int choiceFileAlreadyUsed( const QString& msg, QWidget* parent=nullptr );
 
+    //! A log file appears twice in the selection
+    static const int choiceDuplicateFile( const QString& msg, QWidget* parent=nullptr );
+
     ///////////////////
     //// LOGS SIZE ////
 
