@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 2.03 LANGUAGES CXX)
+project(LogDoctor VERSION 2.04 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -41,8 +41,6 @@ set(PROJECT_SOURCES
     utilities/io.cpp
     utilities/printables.h
     utilities/printables.cpp
-    utilities/result.h
-    utilities/result.cpp
     utilities/rtf.h
     utilities/rtf.cpp
     utilities/strings.h
@@ -50,7 +48,6 @@ set(PROJECT_SOURCES
     utilities/stylesheets.h
     utilities/stylesheets.cpp
     utilities/vectors.h
-    utilities/vectors.cpp
 
     modules/shared.h
     modules/shared.cpp
@@ -74,6 +71,7 @@ set(PROJECT_SOURCES
 
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
+    modules/craplog/modules/lib.h
     modules/craplog/modules/datetime.h
     modules/craplog/modules/datetime.cpp
     modules/craplog/modules/donuts.h
@@ -175,6 +173,9 @@ else()
     target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 endif()
 
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+
 
 if(APPLE)
     set_target_properties(LogDoctor PROPERTIES
@@ -198,12 +199,47 @@ endif()
 
 
 # CTest
+include(CTest)
 enable_testing()
-
-add_test(
-  NAME it_works
-  COMMAND LogDoctor
+add_executable(LogDocTester
+    tests/main.cpp
+    tests/white_box.h
+    tests/white_box.cpp
+    # 2 test
+    modules/exceptions.h
+    modules/exceptions.cpp
+    modules/craplog/modules/lib.h
+    utilities/gzip.h
+    utilities/gzip.cpp
+    utilities/io.h
+    utilities/io.cpp
+    utilities/strings.h
+    utilities/strings.cpp
+    utilities/vectors.h
+    modules/craplog/modules/datetime.h
+    modules/craplog/modules/datetime.cpp
+    modules/craplog/modules/formats.h
+    modules/craplog/modules/formats.cpp
+    modules/craplog/modules/logs.h
+    modules/craplog/modules/logs.cpp
 )
+if(WIN32)
+    target_link_libraries(LogDocTester PRIVATE
+        -static Qt${QT_VERSION_MAJOR}::Widgets
+        #-static Qt${QT_VERSION_MAJOR}::Sql
+    )
+else()
+    target_link_libraries(LogDocTester PRIVATE
+        Qt${QT_VERSION_MAJOR}::Widgets
+        #Qt${QT_VERSION_MAJOR}::Sql
+        ${ZLIB_LIBRARIES}
+    )
+endif()
+add_test(
+  NAME LogDocTester
+  COMMAND $<TARGET_FILE:LogDocTester>
+)
+
 
 # Deb/Flatpak
 if(UNIX AND NOT APPLE)

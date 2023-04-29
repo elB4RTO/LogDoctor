@@ -36,6 +36,10 @@ fi
 echo "Starting compilation process"
 
 # Make a build folder
+if [ -d build ]
+then
+	rm -r build
+fi
 mkdir build && cd build
 
 # Prepare the cmake files

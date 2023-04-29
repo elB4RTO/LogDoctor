@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en_US">
+  <head>
+    <meta charset="utf-8">
+    <title>LogDoctor - Aiuto</title>
+    <style type="text/css">
+      body {
+        color: $TEXT$;
+        font-size: 19px;
+        background-color: $BG$;
+      }
+      h1 {
+        color: $H1$;
+      }
+      h2 {
+        color: $BG$;
+        background-color: $H1$;
+      }
+      h3 {
+        color: $H3$;
+      }
+      th,td {
+        padding: 20px;
+      }
+      code {
+        color: $CODE$;
+        font-size: 17px;
+        padding-left:16px
+      }
+      i {
+        color: $IT$;
+      }
+      a {
+        color: $LINK$;
+      }
+    </style>
+  </head>
+  <body>
+
+    <br>
+    <h1 align="center">Nginx</h1>
+    <br>
+    <br>
+    <br>
+    <h2 align="center"><br>Stringa di formato per i log di accesso</h2>
+    <br>
+    <h3><br>File di configurazione</h3>
+    <br>
+    <p>Il file di configurazione è generalmente:</p><br>
+      <code>/usr/local/etc/nginx/nginx.conf</code>
+    <br>
+    <p>La linea usata per configurare i log di accesso è quella che inizia con "<b>log_format main</b>" seguita dalla lista dei codici dei campi.</p>
+    <br>
+    <br>
+    <br>
+    <h3>Formato di default</h3>
+    <br>
+    <p>Di default, la stringa di formato è:</p>
+    <br>
+    <code>log_format main '$remote_addr - $remote_user [$time_local] "$request" $status $bytes_sent "$http_referer" "$http_user_agent"'</code>
+    <br>
+    <br>
+    <br>
+    <h3>Formati suggeriti</h3>
+    <br>
+    <p>La stringa di formato suggerita, per usare a pieno le funzionalità di LogDoctor, è:</p><br>
+      <code>log_format main '$time_iso8601 "$request" $status $request_length $bytes_sent $request_time "$http_referer" "$http_user_agent" $remote_addr'</code>
+    <br>
+    <br>
+    <br>
+    <h3>Nota sulle stringa di formato</h3>
+    <br>
+    <p>QUando copi-incolli la stringa, ricordati di rimuovere le identazioni (se presenti) e di incollare solamente la stringa di formato che ne risulta.</p>
+    <br>
+    <br>
+    <br>
+    <h3>Nota sui caratteri di controllo</h3>
+    <br>
+    <p>Nonostante Nginx supporti l'uso di alcuni caratteri di controllo (<i>a.k.a.</i> sequenze di escape), la raccomandazione è di <b>non usarli</b> nella stringa di formato.<br>
+    In particolare, il <i>carriage return</i> potrebbe causare una sovrascrittura dei dati dei campi precedenti, rendendo molto difficile capire dove inizia il campo corrente (specialmente per campi come URI, query, user-agent, ecc) e praticamente impossibile il recupero dei dati sovrascritti, cosa che porta ad avere un database errato, statistiche non realistiche e/o crash durante l'esecuzione.<br>
+    In riferimento al carattere <i>new line</i> (<i>a.k.a.</i> a capo), non ha praticamente senso usarlo, se non per propositi di test. La stessa cosa vale per il <i>tab orizzontale</i>, al posto del quale è più opportuno usare un singolo spazio.<br>
+    I caratteri di controllo supportati da Nginx sono <b>\n</b>, <b>\t</b> e <b>\r</b>. Gli altri caratteri cerranno ignorati ed usati come testo.</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h2 align="center"><br>Campi dei log di accesso</h2>
+    <br>
+    <h3><br>Campi considerati da LogDoctor</h3>
+    <br>
+    <p>Gli unici campi considerati sono quelli che seguono, ovvero solo i dati di questi campi verranno salvati nel database ed usati per le statistiche.</p>
+    <br>
+    <table border="1" width="100%">
+      <tr><th style="width:150px">Codice</th><th>Informazioni</th></tr>
+      <tr>
+        <td align="center">$time_local</td>
+        <td>Data e orario in formato <i>CLF</i> (NCSA).</td>
+      </tr>
+      <tr>
+        <td align="center">$time_iso8601</td>
+        <td>Data e orario in formato <i>ISO 8601</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">$msec</td>
+        <td>Tempo Unix (in secondi, con risoluzione in millisecondi) nel momento di scrittura del log.</td>
+      </tr>
+      <tr>
+        <td align="center">$request</td>
+        <td>Prima linea della richiesta, equivalente a: <i>$request_method $request_uri $server_protocol</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">$server_protocol</td>
+        <td>Il protocollo della richiesta <i>(HTTP/v, HTTPS/v)</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">$request_method</td>
+        <td>Il metodo della richiesta <i>(GET, POST, HEAD, ...)</i>.</td>
+      </tr>
+      <tr>
+        <td align="center">$request_uri</td>
+        <td>L'URI richiesto, inclusa la stringa di query (se presente).</td>
+      </tr>
+      <tr>
+        <td align="center">$uri</td>
+        <td>L'URI richiesto, senza la stringa di query.</td>
+      </tr>
+      <tr>
+        <td align="center">$query_string</td>
+        <td>La stringa di query (se presente).</td>
+      </tr>
+      <tr>
+        <td align="center">$status</td>
+        <td>Codice dello Status HTTP.</td>
+      </tr>
+      <tr>
+        <td align="center">$request_length</td>
+        <td>Numero di Byte recevuti (include la linea di richiesta, l'header, e il corpo della richiesta).</td>
+      </tr>
+      <tr>
+        <td align="center">$bytes_sent</td>
+        <td>Numero di Byte inviati al client.</td>
+      </tr>
+      <tr>
+        <td align="center">$request_time</td>
+        <td>Il tempo necessario per processare la richiesta, in secondi con risoluzione in millisecondi: il tempo trascorso dal momento in cui i primi Byte provenienti dal client sono stati letti ed il momento di scrittura del log dopo che gli ultimi Byte sono stati inviati.</td>
+      </tr>
+      <tr>
+        <td align="center">$http_referer</td>
+        <td>Hostname del sito referente.</td>
+      </tr>
+      <tr>
+        <td align="center">$cookie_NOME</td>
+        <td>Il Cookie della richiesta con il <i>NOME</i> dato.</td>
+      </tr>
+      <tr>
+        <td align="center">$http_user_agent</td>
+        <td>Stringa di identificazione del browser o del bot.</td>
+      </tr>
+      <tr>
+        <td align="center">$remote_addr</td>
+        <td>Indirizzo IP del visitatore (client).</td>
+      </tr>
+      <tr>
+        <td align="center">$realip_remote_addr</td>
+        <td>Indirizzo IP originale del client.</td>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <h3>Campi scartati da LogDoctor</h3>
+    <br>
+    <p>Ogni campo eccetto i precedenti verrà scartato da LogDoctor.<br>
+    Nella generazione di una stringa di <i>log di esempio</i>, questi campi appariranno come '<b>DISCARDED</b>'.<br>
+    Se non utilizzi i log per altri propositi, è consigliato rimuovere questi campi per velocizzare il processo e ridurre le possibilità di errore.</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h3>Riferimenti</h3>
+    <br>
+    <ul>
+      <li>Formati per i log di Nginx:<br>
+        <a>https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format</a><br>
+        <a>https://docs.nginx.com/nginx/admin-guide/monitoring/logging/#setting-up-the-access-log</a></li><br>
+    </ul>
+    <br>
+    <br>
+    <br>
+  </body>
+</html>

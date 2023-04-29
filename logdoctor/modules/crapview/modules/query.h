@@ -2,22 +2,27 @@
 #define QUERY_H
 
 #include "modules/shared.h"
-#include "utilities/result.h"
 
-#include <QString>
-
-#include <map>
-#include <vector>
 #include <unordered_map>
+#include <optional>
+
+#define DATA_TYPEDEFS\
+    using stats_dates_t       = std::map<int, std::map<int, std::map<int, std::vector<int>>>>;\
+    using stats_warn_items_t  = std::vector<std::vector<std::vector<std::vector<QString>>>>;\
+    using stats_speed_items_t = std::vector<std::tuple<long long, std::vector<QString>>>;\
+    using stats_day_items_t   = std::unordered_map<int, std::unordered_map<int, int>>;\
+    using stats_relat_items_t = std::vector<std::tuple<long long, int>>;\
+    using stats_count_items_t = std::multimap<unsigned, QString>;
 
 
 class DbQuery
 {
+    DATA_TYPEDEFS
+
 public:
-    explicit DbQuery();
 
     // convert log fields IDs to log fields
-    const std::unordered_map<int, std::string> FIELDS = {
+    const std::unordered_map<int, std::string> FIELDS{
             {0, FIELDS__WARNING},
             {10,FIELDS__PROTOCOL},   {11,FIELDS__METHOD},
             {12,FIELDS__URI},        {13,FIELDS__QUERY},      {14,FIELDS__RESPONSE_CODE},
@@ -26,14 +31,14 @@ public:
             {20,FIELDS__CLIENT},     {21,FIELDS__USER_AGENT} };
 
     // convert month numbers to month names
-    const std::unordered_map<int, std::string> MONTHS = {
+    const std::unordered_map<int, std::string> MONTHS{
             {1, MONTHS__JANUARY},  {2, MONTHS__FEBRUARY},  {3, MONTHS__MARCH},
             {4, MONTHS__APRIL},    {5, MONTHS__MAY},       {6, MONTHS__JUNE},
             {7, MONTHS__JULY},     {8, MONTHS__AUGUST},    {9, MONTHS__SEPTEMBER},
             {10,MONTHS__OCTOBER},  {11,MONTHS__NOVEMBER},  {12,MONTHS__DECEMBER} };
 
     // convert week-day numbers to day names
-    const std::unordered_map<int, std::string> DAYS = {
+    const std::unordered_map<int, std::string> DAYS{
             {1, DAYS__SUNDAY},    {2, DAYS__MONDAY},   {3, DAYS__TUESDAY},
             {4, DAYS__WEDNESDAY}, {5, DAYS__THURSDAY}, {6, DAYS__FRIDAY},
             {7, DAYS__SATURDAY} };
@@ -71,9 +76,9 @@ public:
 
     //! Refreshes the dates which are available in the database
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
     */
-    void refreshDates( Result<stats_dates_t>& result );
+    void refreshDates( std::optional<stats_dates_t>& result );
 
 
     //! Updates the database applying the changes made in the Warnings statistics table
@@ -88,7 +93,7 @@ public:
 
     //! Retrieves the data needed for the Warnings statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year_ The year
         \param month_ The month
@@ -96,7 +101,7 @@ public:
         \param hour_ The hour
     */
     void getWarnCounts(
-        Result<stats_warn_items_t>& result,
+        std::optional<stats_warn_items_t>& result,
         const QString& web_server,
         const QString& year_,
         const QString& month_,
@@ -107,7 +112,7 @@ public:
 
     //! Retrieves the data needed for the Speed statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year_ The year
         \param month_ The month
@@ -119,7 +124,7 @@ public:
         \param response_f The filter for the Response field
     */
     void getSpeedData(
-        Result<stats_speed_items_t>& result,
+        std::optional<stats_speed_items_t>& result,
         const QString& web_server,
         const QString& year_,
         const QString& month_,
@@ -134,7 +139,7 @@ public:
 
     //! Retrieves the data needed for the Counts statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year The year
         \param month The month
@@ -142,7 +147,7 @@ public:
         \param log_field The log field
     */
     void getItemsCount(
-        Result<stats_count_items_t>& result,
+        std::optional<stats_count_items_t>& result,
         const QString& web_server,
         const QString& year,
         const QString& month,
@@ -153,7 +158,7 @@ public:
 
     //! Retrieves the data needed for the Daytime statistics
     /*!
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param from_year_ The initial year
         \param from_month_ The initial month
@@ -165,7 +170,7 @@ public:
         \param field_filter The filter to apply
     */
     void getDaytimeCounts(
-        Result<stats_day_items_t>& result,
+        std::optional<stats_day_items_t>& result,
         const QString& web_server,
         const QString& from_year_, const QString& from_month_, const QString& from_day_,
         const QString& to_year_,   const QString& to_month_,   const QString& to_day_,
@@ -176,7 +181,7 @@ public:
     //! Retrieves the data needed for the Relationsl statistics
     /*!
         Used when querying a single day
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param year_ The year
         \param month_ The month
@@ -188,7 +193,7 @@ public:
         \see getRelationalCountsPeriod()
     */
     void getRelationalCountsDay(
-        Result<stats_relat_items_t>& result,
+        std::optional<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& year_,        const QString& month_,         const QString& day_,
         const QString& log_field_1_, const QString& field_filter_1,
@@ -198,7 +203,7 @@ public:
     //! Retrieves the data needed for the Relational statistics
     /*!
         Used when querying a period of time
-        \param result Tuple which will hold the result of the operation and the data
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param from_year_ The initial year
         \param from_month_ The initial month
@@ -213,7 +218,7 @@ public:
         \see getRelationalCountsDay()
     */
     void getRelationalCountsPeriod(
-        Result<stats_relat_items_t>& result,
+        std::optional<stats_relat_items_t>& result,
         const QString& web_server,
         const QString& from_year_,   const QString& from_month_,    const QString& from_day_,
         const QString& to_year_,     const QString& to_month_,      const QString& to_day_,
@@ -249,26 +254,28 @@ public:
         long& req_count
     ) const;
 
+
 private:
 
-    const std::string MSG_ERR_UNX_WS = TR::tr("Unexpected WebServer").toStdString();
-    const std::string MSG_ERR_PROCESSING = TR::tr("An error occured while processing").toStdString();
-    const std::string MSG_ERR_PROCESSING_DATES = TR::tr("An error occured while processing dates").toStdString();
-    const std::string MSG_ERR_PARSING_YMD = TR::tr("An error occured while parsing %1 from the database").toStdString();
-    const std::string WORD_YEARS  = TR::tr("Years").toStdString();
-    const std::string WORD_MONTHS = TR::tr("Months").toStdString();
-    const std::string WORD_DAYS   = TR::tr("Days").toStdString();
-    const std::string MSG_RESPONSIBLE_VALUE = TR::tr("Value responsible for the error").toStdString();
-    const std::string MSG_TABLE_NAME = TR::tr("Database table name").toStdString();
+    // leave TR::tr here to make them appear in the translatable phrases
+    const std::string MSG_ERR_UNX_WS{ TR::tr("Unexpected WebServer").toStdString() };
+    const std::string MSG_ERR_PROCESSING{ TR::tr("An error occured while processing").toStdString() };
+    const std::string MSG_ERR_PROCESSING_DATES{ TR::tr("An error occured while processing dates").toStdString() };
+    const std::string MSG_ERR_PARSING_YMD{ TR::tr("An error occured while parsing %1 from the database").toStdString() };
+    const std::string WORD_YEARS{  TR::tr("Years").toStdString() };
+    const std::string WORD_MONTHS{ TR::tr("Months").toStdString() };
+    const std::string WORD_DAYS{   TR::tr("Days").toStdString() };
+    const std::string MSG_RESPONSIBLE_VALUE{ TR::tr("Value responsible for the error").toStdString() };
+    const std::string MSG_TABLE_NAME{ TR::tr("Database table name").toStdString() };
 
     // quantity of information to display throught dialogs
-    int dialog_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialog_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
     std::string db_path;
     QString db_name;
 
     // convert log fields to database fields
-    const std::unordered_map<std::string, QString> LogFields_to_DbFields = {
+    const std::unordered_map<std::string, QString> LogFields_to_DbFields{
         {this->FIELDS.at( 0), "warning"},
         {this->FIELDS.at(10), "protocol"},
         {this->FIELDS.at(11), "method"},
@@ -301,7 +308,7 @@ private:
         \return The gap index
         \throw DateTimeException
     */
-    const int getMinuteGap( const int minute, const int gap=10 ) const;
+    static const int getMinuteGap( const int minute, const int gap=10 );
 
 
     //! Returns the number of days for a given month
@@ -311,7 +318,7 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    const int getMonthDays( const int year, const int month ) const;
+    static const int getMonthDays( const int year, const int month );
 
     //! Returns the month number in the year
     /*!
@@ -332,7 +339,9 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    const int countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day ) const;
+    static const int countDays(
+        const int from_year, const int from_month, const int from_day,
+        const int to_year, const int to_month, const int to_day );
 
 
     //! Returns the number of months in a given period
@@ -343,10 +352,9 @@ private:
         \param to_month The final month
         \return The number of months in the period
     */
-    const int countMonths(
-        const int& from_year, const int& from_month,
-        const int& to_year,   const int& to_month
-    ) const;
+    static const int countMonths(
+        const int from_year, const int from_month,
+        const int to_year,   const int to_month );
 };
 
 #endif // QUERY_H

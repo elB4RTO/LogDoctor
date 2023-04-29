@@ -36,7 +36,7 @@ private slots:
     void on_button_YES_clicked();
 
 private:
-    Ui::DialogBool *ui;
+    Ui::DialogBool* ui;
 };
 
 #endif // DIALOGBOOL_H

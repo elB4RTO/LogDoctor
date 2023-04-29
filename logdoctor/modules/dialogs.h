@@ -2,7 +2,6 @@
 #define DIALOGS_H
 
 #include <QWidget>
-#include <QString>
 
 
 //! DialogSec
@@ -20,10 +19,10 @@ public:
     /////////////////
     //// GENERIC ////
 
-    /*static void warnGeneric( const QString& message, const bool& report_msg=false, QWidget* parent=nullptr );*/
+    /*static void warnGeneric( const QString& message, const bool report_msg=false, QWidget* parent=nullptr );*/
 
     //! Generic error message
-    static void errGeneric( const QString& message, const bool& report_msg=false, QWidget* parent=nullptr );
+    static void errGeneric( const QString& message, const bool report_msg=false, QWidget* parent=nullptr );
 
     //! Error while renaming
     static void errRenaming( const QString& path, const QString& err, QWidget* parent=nullptr );
@@ -186,7 +185,7 @@ public:
     //// FILES ////
 
     //! File not found
-    static void errFileNotFound( const QString& file, const bool& report=false, QWidget* parent=nullptr );
+    static void errFileNotFound( const QString& file, const bool report=false, QWidget* parent=nullptr );
 
     //! Missing read permission for a file
     static void warnFileNotReadable( const QString& file, QWidget* parent=nullptr );
@@ -195,9 +194,9 @@ public:
     static void warnEmptyFile( const QString& file, QWidget* parent=nullptr );
 
     //! An error occured while reading a file
-    static void errFailedReadFile( const QString& file, const bool& skipping=false, QWidget* parent=nullptr );
+    static void errFailedReadFile( const QString& file, const bool skipping=false, QWidget* parent=nullptr );
 
-    /*static void errFailedWriteFile( const QString& file, const bool& skipping=false, QWidget* parent=nullptr );*/
+    /*static void errFailedWriteFile( const QString& file, const bool skipping=false, QWidget* parent=nullptr );*/
 
 
     /////////////////
@@ -240,5 +239,6 @@ private:
     static const bool choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent=nullptr );
 
 };
+
 
 #endif // DIALOGS_H

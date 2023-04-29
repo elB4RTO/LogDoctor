@@ -2,9 +2,10 @@
 #define CRAPUP_H
 
 #include <QWidget>
-#include <QPixmap>
-#include <QTimer>
-#include <QNetworkReply>
+
+class QNetworkReply;
+class QPixmap;
+class QTimer;
 
 
 namespace Ui {
@@ -66,24 +67,24 @@ private:
 
     QPixmap img_checking;
 
-    float img_orientation = 0.0;
+    float img_orientation{ 0.0 };
 
-    QTimer* img_timer = nullptr;
+    QScopedPointer<QTimer> img_timer;
 
     void getStyleSheet( QString& stylesheet, const int& theme_id ) const;
 
     bool request_aborted;
 
-    QTimer* request_timer = nullptr;
+    QScopedPointer<QTimer> request_timer;
 
-    const int timeout_msec = 15000;
+    const int timeout_msec{ 15000 };
 
-    QNetworkReply* reply = nullptr;
+    QScopedPointer<QNetworkReply> reply;
 
     //! Deletes the reply in a safe way
     void deleteReply();
 
-    bool quitting = false;
+    bool quitting{ false };
 };
 
 #endif // CRAPUP_H

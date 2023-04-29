@@ -1,7 +1,13 @@
 var searchData=
 [
-  ['name_0',['name',['../classMainSlice.html#adda5fecbc9d60f8d6367f187fd4f6c0f',1,'MainSlice']]],
-  ['newcollectiondatabase_1',['newCollectionDatabase',['../classCheckSec.html#a31f0c54f9b229bd616ad49a0bc09e16d',1,'CheckSec']]],
-  ['newhashesdatabase_2',['newHashesDatabase',['../classCheckSec.html#a56248ef831e3ea55830735ce5d436ba4',1,'CheckSec']]],
-  ['nextturn_3',['nextTurn',['../classCrissCross.html#acb1ca7cc584c4c2e21e94d88c794c06a',1,'CrissCross']]]
+  ['on_5fbutton_5fabort_5fclicked_0',['on_button_ABORT_clicked',['../classDialogDia.html#a6fd03d1ce4cb3b6d424ada80b0a5b1f1',1,'DialogDia']]],
+  ['on_5fbutton_5fdiscard_5fclicked_1',['on_button_DISCARD_clicked',['../classDialogDia.html#a6682425f97963fbf2e2d94af0c766108',1,'DialogDia']]],
+  ['on_5fbutton_5ffontsize_5fminus_5fclicked_2',['on_button_FontSize_Minus_clicked',['../classCrapnote.html#acdcd9cf3e007d9c60aa2f1449798a0ae',1,'Crapnote']]],
+  ['on_5fbutton_5ffontsize_5fplus_5fclicked_3',['on_button_FontSize_Plus_clicked',['../classCrapnote.html#a0939b6b9916b5719ea9c55d40659b83b',1,'Crapnote']]],
+  ['on_5fbutton_5fignore_5fclicked_4',['on_button_IGNORE_clicked',['../classDialogDia.html#a8ba6f60f5f3833c972f3408bcd34c324',1,'DialogDia']]],
+  ['on_5fbutton_5fno_5fclicked_5',['on_button_NO_clicked',['../classDialogBool.html#a718195dfd76ecefd349333cfd82dc1cc',1,'DialogBool']]],
+  ['on_5fbutton_5fok_5fclicked_6',['on_button_Ok_clicked',['../classDialogMsg.html#a14ce87023686cac4cf700e0283073058',1,'DialogMsg']]],
+  ['on_5fbutton_5fshowadditional_5fclicked_7',['on_button_ShowAdditional_clicked',['../classDialogMsg.html#aa273ea069307de059183e8d2b7a2f7ef',1,'DialogMsg']]],
+  ['on_5fbutton_5fyes_5fclicked_8',['on_button_YES_clicked',['../classDialogBool.html#a14f2fcaac67126b4411bd4a78768809e',1,'DialogBool']]],
+  ['on_5fspinbox_5ffontsize_5fvaluechanged_9',['on_spinBox_FontSize_valueChanged',['../classCrapnote.html#a3eb5f7525b474fb46c15d383ee9b1d6a',1,'Crapnote']]]
 ];

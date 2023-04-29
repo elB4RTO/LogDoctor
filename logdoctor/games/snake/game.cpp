@@ -4,47 +4,48 @@
 
 #include "games/games.h"
 
-#include <QMessageBox>
+#include <QTimer>
+#include <QKeyEvent>
+#include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QMessageBox>
 
 
-SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent ) :
-    QWidget(parent),
-    ui(new Ui::SnakeGame)
+SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent )
+    : QWidget{ parent }
+    , ui{ new Ui::SnakeGame }
 {
     this->ui->setupUi(this);
 
-    QString stylesheet = "";
+    QString stylesheet{ "" };
     GameSec::snakeStyleSheet( stylesheet, theme_id );
     this->setStyleSheet( stylesheet );
 
-    QFont font = QFont( term_font );
+    QFont font{ term_font };
     font.setPointSize( 64 );
     this->ui->button_Play->setFont( font );
     font.setPointSize( 12 );
     this->ui->box_GameMode->setFont( font );
 
     // create the field
-    this->field_scene = new QGraphicsScene( this );
-    this->field_scene->setSceneRect( 0,0, 544, 544 );
+    this->field_scene.reset( new QGraphicsScene( this ) );
+    this->field_scene->setSceneRect( 0,0, 544,544 );
     this->field_scene->setBackgroundBrush( Qt::black );
     // put water limits
     this->field_scene->addItem( new QGraphicsPixmapItem( this->img_water ) );
     // add the scene to the view
-    this->ui->view_Field->setScene( this->field_scene );
+    this->ui->view_Field->setScene( this->field_scene.get() );
 }
 
 SnakeGame::~SnakeGame()
 {
     delete this->ui;
-    delete this->field_scene;
-    delete this->game_loop;
 }
 
 void SnakeGame::closeEvent( QCloseEvent* event )
 {
     this->game_loop->stop();
-    this->playing = false;
+    this->playing &= false;
 }
 
 
@@ -96,14 +97,14 @@ void SnakeGame::on_button_Play_clicked()
 {
     // set-up the game
     this->newSnake();
-    bool food_movable = false;
+    bool food_movable{ false };
     switch ( this->ui->box_GameMode->currentIndex() ) {
         case 0:
             this->game_mode = GameMode::Classic;
             break;
         case 1:
             this->game_mode = GameMode::Hunt;
-            food_movable = true;
+            food_movable |= true;
             break;
         case 2:
             this->game_mode = GameMode::Battle;
@@ -118,25 +119,25 @@ void SnakeGame::on_button_Play_clicked()
     // switch to game board
     this->ui->stackedWidget_GameDisplay->setCurrentIndex( 1 );
     // start playing
-    this->game_loop = new QTimer(this);
-    connect(this->game_loop, &QTimer::timeout, this, &SnakeGame::processGameLogic);
+    this->game_loop.reset( new QTimer(this) );
+    connect( this->game_loop.get(), &QTimer::timeout, this, &SnakeGame::processGameLogic);
     this->game_loop->start(175);
-    this->playing = true;
+    this->playing |= true;
 }
 
 
 void SnakeGame::newSnake()
 {
     // snake initial position
-    const unsigned int head_x = (rand()%4)+6;
-    const unsigned int head_y = (rand()%4)+6;
-    if ( head_x > 15 || head_y > 15 ) {
+    const unsigned head_x{ static_cast<unsigned>((rand()%4)+6) };
+    const unsigned head_y{ static_cast<unsigned>((rand()%4)+6) };
+    if ( head_x > 15u || head_y > 15u ) {
         // should be unreachable
         throw("Unexpected initial position: ("+std::to_string(head_x)+","+std::to_string(head_y)+")");
     }
 
     // snake initial direction
-    const int rand_d = rand()%4;
+    const unsigned short rand_d{ static_cast<unsigned short>( rand()%4 ) };
     switch ( rand_d ) {
         case 0:
             this->snake.setDirection( Direction::UP );
@@ -166,21 +167,20 @@ void SnakeGame::newSnake()
     this->snake.front().update( head_x, head_y, this->snake.direction() );
     // a body part
     this->snake.willGrow();
-    this->snake.update( this->field_scene, true, true );
+    this->snake.update( this->field_scene.get(), true, true );
     // and a tail
     this->snake.willGrow();
-    this->snake.update( this->field_scene, true, true );
+    this->snake.update( this->field_scene.get(), true, true );
 }
 
 void SnakeGame::newSnake_()
 {
     // snake initial position
-    unsigned int head_x, head_y;
-    head_x = this->snake.front().x;
-    head_y = this->snake.front().y;
+    unsigned head_x{ this->snake.front().x };
+    unsigned head_y{ this->snake.front().y };
 
     // snake initial direction
-    const unsigned int rnd = (rand()%2);
+    const unsigned rnd{ static_cast<unsigned>(rand()%2) };
     this->snake_.setDirection( this->snake.direction() );
     switch ( this->snake_.direction() ) {
         case Direction::UP:
@@ -214,10 +214,10 @@ void SnakeGame::newSnake_()
     this->snake_.front().update( head_x, head_y, this->snake_.direction() );
     // a body part
     this->snake_.willGrow();
-    this->snake_.update( this->field_scene, true, true );
+    this->snake_.update( this->field_scene.get(), true, true );
     // and a tail
     this->snake_.willGrow();
-    this->snake_.update( this->field_scene, true, true );
+    this->snake_.update( this->field_scene.get(), true, true );
 }
 
 void SnakeGame::newFood( const bool& movable )
@@ -235,7 +235,7 @@ void SnakeGame::processGameLogic()
 {
     if ( game_over ) {
         this->game_loop->stop();
-        this->playing = false;
+        this->playing &= false;
         QMessageBox::about(
             this,
             SnakeGame::tr("Game Over"),
@@ -257,22 +257,22 @@ void SnakeGame::processGameLogic()
         // check for game over
         if ( ! this->game_over ) {
             // update snake position
-            this->snake.update( this->field_scene );
+            this->snake.update( this->field_scene.get() );
             if ( this->game_mode == GameMode::Battle ) {
-                this->snake_.update( this->field_scene );
+                this->snake_.update( this->field_scene.get() );
             }
             if ( this->spawn_food ) {
                 // updae the score and spawn food in a new position
                 this->updateGameScore();
                 this->food.spawn( this->snake, this->snake_ );
-                this->spawn_food = false;
+                this->spawn_food &= false;
                 if ( this->game_mode == GameMode::Hunt ) {
-                    this->moving_rate = 6 - ((this->snake.size()/13)+1);
+                    this->moving_rate = static_cast<unsigned>( 6ul-((this->snake.size()/13ul)+1ul) );
                     this->moving_countdown = this->moving_rate;
                 }
             } else if ( this->game_mode == GameMode::Hunt ) {
                 this->moving_countdown --;
-                if ( this->moving_countdown == 0 ) {
+                if ( this->moving_countdown == 0u ) {
                     this->moving_countdown = this->moving_rate;
                     this->food.move( this->snake );
                 }
@@ -321,10 +321,9 @@ void SnakeGame::updateGameScore()
 
 void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_adv )
 {
-    unsigned int x, y, x_, y_;
-
-    x = snake.front().x,
-    y = snake.front().y;
+    unsigned x{ snake.front().x };
+    unsigned y{ snake.front().y };
+    unsigned x_, y_;
     switch ( snake.direction() ) {
         case Direction::UP:
             y--;
@@ -343,7 +342,7 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
             throw("Unexpected direction: "+std::to_string(snake.direction()));
     }
 
-    if ( adv_snake.size() > 0 ) {
+    if ( adv_snake.size() > 0ul ) {
         x_ = adv_snake.front().x,
         y_ = adv_snake.front().y;
         switch ( adv_snake.direction() ) {
@@ -364,20 +363,20 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
                 throw("Unexpected direction: "+std::to_string(adv_snake.direction()));
         }
     } else {
-        x_ = y_ = 16;
+        x_ = y_ = 16u;
     }
 
     // check the upcoming movement
-    if ( x > 15 || y > 15 ) {
+    if ( x > 15u || y > 15u ) {
         // collision with the field limits
-        this->game_over = true;
+        this->game_over |= true;
         this->game_over_msg = (is_adv)
             ? SnakeGame::tr("Your adversary fell in the water!")+"\n\n"+SnakeGame::tr("YOU WON!")
             : SnakeGame::tr("You fell in the water!")+"\n\n"+SnakeGame::tr("YOU LOST!");
 
     } else if ( snake.inTile( x, y ) ) {
         // collision with another part of the snake
-        this->game_over = true;
+        this->game_over |= true;
         this->game_over_msg = (is_adv)
             ? SnakeGame::tr("Your adversary ate itself!")+"\n\n"+SnakeGame::tr("YOU WON!")
             : SnakeGame::tr("You ate yourself!")+"\n\n"+SnakeGame::tr("YOU LOST!");
@@ -386,12 +385,12 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
         // collision with another part of the snake
         if ( x_ != x || y_ != y ) {
             // not the head
-            this->game_over = true;
+            this->game_over |= true;
             this->game_over_msg = (is_adv)
                 ? SnakeGame::tr("Your adversary ate you!")+"\n\n"+SnakeGame::tr("YOU WON!")
                 : SnakeGame::tr("You ate your adversary!")+"\n\n"+SnakeGame::tr("YOU LOST!");
         } else {
-            this->game_over = true;
+            this->game_over |= true;
             this->game_over_msg = SnakeGame::tr("You ate each other!")+"\n\n"+SnakeGame::tr("MATCH IS DRAW!");
         }
 
@@ -402,7 +401,7 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
             snake.willGrow();
         } else {
             // max size reached, increase speed
-            const int interval = this->game_loop->interval();
+            const int interval{ this->game_loop->interval() };
             if ( interval > 50 ) {
                 this->game_loop->setInterval( interval - 5 );
             }
@@ -412,6 +411,6 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
         } else {
             this->score_step = 1;
         }
-        this->spawn_food = true;
+        this->spawn_food |= true;
     }
 }

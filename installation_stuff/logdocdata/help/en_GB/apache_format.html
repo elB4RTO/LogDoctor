@@ -80,13 +80,13 @@
     <h3>Note on custom format strings</h3>
     <br>
     <p>If you're using your own custom string, please keep in mind that parsing is not magic. When you define your own string, think about which characters can be there in a field and use separators accordingly to not conflict with the field itself.<br>
-    As an example: an URI (<i>%U</i>) can't contain whitespaces, so it is safe to use a space to separe this field by the previous and next one. Instead, the User-Agent (*%{User-agent}i*) may contain spaces, as well as parenthesis, brackets, dashes, etc, so it's better to pick an appropriate separator (double-quotes are a good choice, since they get escaped while logging).</p>
+    As an example: an URI (<i>%U</i>) can't contain whitespaces, so it is safe to use a space to separe this field from next one. Instead, the User-Agent (*%{User-agent}i*) may contain spaces, as well as parenthesis, brackets, dashes, etc, so it's better to pick an appropriate separator (double-quotes are a good choice, since they get escaped while logging).</p>
     <br>
     <br>
     <br>
     <h3>Note on control-characters</h3>
     <br>
-    <p>Although Apache2 does support some control-characters (<i>aka</i> escape sequences), it is reccomended to <b>not use them</b> inside format strings.<br>
+    <p>Although Apache2 does support some control-characters (<i>a.k.a.</i> escape sequences), it is reccomended to <b>not use them</b> inside format strings.<br>
     In particular, the <i>carriage return</i> will most-likely overwrite previous fields data, making it very difficult to understand where the current field ends (specially for fields like URIs, queries, user-agents, etc) and nearly impossible to retrieve the overwritten data, which will lead in having a wasted database, un-realistic statistics and/or crashes during execution.<br>
     About the <i>new line</i> character, it has no sense to use it, if not for testing purposes. The same is true for the <i>horizontal tab</i>, for which is better to use a simple whitespace instead.<br>
     The only control-characters supported by Apache2 are <b>\n</b>, <b>\t</b> and <b>\r</b>. Any other character will be ignored and treated as text.</p>
@@ -133,7 +133,7 @@
           <tr><td align="center" style="padding:10px">%H</td><td style="padding:10px">hour, in <i>24h</i> format, zero padded</td></tr>
           <tr><td align="center" style="padding:10px">%m</td><td style="padding:10px">month number, zero padded</td></tr>
           <tr><td align="center" style="padding:10px">%M</td><td style="padding:10px">minute</td></tr>
-          <tr><td align="center" style="padding:10px">%r</td><td style="padding:10px">time if the day, in <i>12h</i> format, in the form of <i>HH:MM:SS AM/PM</i></td></tr>
+          <tr><td align="center" style="padding:10px">%r</td><td style="padding:10px">time of the day, in <i>12h</i> format, in the form of <i>HH:MM:SS AM/PM</i></td></tr>
           <tr><td align="center" style="padding:10px">%R</td><td style="padding:10px">time of the day, in <i>HH:MM</i> format</td></tr>
           <tr><td align="center" style="padding:10px">%S</td><td style="padding:10px">second</td></tr>
           <tr><td align="center" style="padding:10px">%T</td><td style="padding:10px">ISO 8601 time, in the form of <i>HH:MM:SS</i></td></tr>
@@ -209,7 +209,7 @@
       </tr>
       <tr>
         <td align="center">%{c}h</td>
-        <td>Like %h, but always reports on the hostname of the underlying TCP connection and not any modifications to the remote hostname by modules like mod_remoteip.</td>
+        <td>Like <i>%h</i>, but always reports on the hostname of the underlying TCP connection and not any modifications to the remote hostname by modules like mod_remoteip.</td>
       </tr>
       <tr>
         <td align="center">%{<i>VARNAME</i>}i</td>

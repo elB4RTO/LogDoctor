@@ -15,7 +15,7 @@ MainSlice::MainSlice( QPieSeries* breakdownSeries, QObject* parent )
 }
 
 
-QPieSeries *MainSlice::breakdownSeries() const
+QPieSeries* MainSlice::breakdownSeries() const
 {
     return this->m_breakdownSeries;
 }
@@ -50,13 +50,13 @@ DonutBreakdown::DonutBreakdown( QGraphicsItem* parent, Qt::WindowFlags wFlags )
 
 
 
-void DonutBreakdown::addBreakdownSeries( QPieSeries* breakdownSeries, const QColor& color, const QFont& font )
+void DonutBreakdown::addBreakdownSeries( QPieSeries* series, const QColor& color, const QFont& font )
 {
     // add breakdown series as a slice to center pie
-    MainSlice *mainSlice = new MainSlice(breakdownSeries);
-    mainSlice->setName(breakdownSeries->name());
-    mainSlice->setValue(breakdownSeries->sum());
-    m_mainSeries->append(mainSlice);
+    MainSlice *mainSlice = new MainSlice(series);
+    mainSlice->setName(series->name());
+    mainSlice->setValue(series->sum());
+    this->m_mainSeries->append(mainSlice);
 
     // customize the slice
     mainSlice->setBrush( color );
@@ -66,18 +66,18 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries* breakdownSeries, const QCol
     mainSlice->setLabelFont( font );
 
     // position and customize the breakdown series
-    breakdownSeries->setPieSize( 0.7 );
-    breakdownSeries->setHoleSize( 0.6 );
-    breakdownSeries->setLabelsVisible();
-    const auto slices = breakdownSeries->slices();
+    series->setPieSize( 0.7 );
+    series->setHoleSize( 0.6 );
+    series->setLabelsVisible();
+    const auto slices = series->slices();
     for (QPieSlice *slice : slices) {
-        if ( StringOps::startsWith( slice->label().toStdString(), "B" ) ) {
+        if ( StringOps::startsWith( slice->label().toStdString(), 'B' ) ) {
             slice->setBrush( Qt::GlobalColor::black );
-        } else if ( StringOps::startsWith( slice->label().toStdString(), "W" ) ) {
+        } else if ( StringOps::startsWith( slice->label().toStdString(), 'W' ) ) {
             slice->setBrush( QColor( 255, 140, 0, 255 ) );
-        } else if ( StringOps::startsWith( slice->label().toStdString(), "I" ) ) {
+        } else if ( StringOps::startsWith( slice->label().toStdString(), 'I' ) ) {
             slice->setBrush( Qt::GlobalColor::transparent );
-            breakdownSeries->setPieSize( 0.0 );
+            series->setPieSize( 0.0 );
         } else {
             slice->setBrush( color.lighter( 150 ) );
         }
@@ -88,7 +88,7 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries* breakdownSeries, const QCol
     }
 
     // add the series to the chart
-    QChart::addSeries(breakdownSeries);
+    QChart::addSeries(series);
 
     // recalculate breakdown donut segments
     this->recalculateAngles();

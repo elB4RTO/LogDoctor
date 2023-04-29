@@ -76,7 +76,7 @@
     <br>
     <h3>Note on control-characters</h3>
     <br>
-    <p>Although Nginx does support some control-characters (<i>aka</i> escape sequences), it is reccomended to <b>not use them</b> inside format strings.<br>
+    <p>Although Nginx does support some control-characters (<i>a.k.a.</i> escape sequences), it is reccomended to <b>not use them</b> inside format strings.<br>
     In particular, the <i>carriage return</i> will most-likely overwrite previous fields data, making it very difficult to understand where the current field ends (specially for fields like URIs, queries, user-agents, etc) and nearly impossible to retrieve the overwritten data, which will lead in having a wasted database, un-realistic statistics and/or crashes during execution.<br>
     About the <i>new line</i> character, it has no sense to use it, if not for testing purposes. The same is true for the <i>horizontal tab</i>, for which is better to use a simple whitespace instead.<br>
     The only control-characters supported by Nginx are <b>\n</b>, <b>\t</b> and <b>\r</b>. Any other character will be ignored and treated as text.</p>
@@ -144,7 +144,7 @@
       </tr>
       <tr>
         <td align="center">$request_time</td>
-        <td>Request processing time in seconds with a milliseconds resolution: time elapsed between the first bytes were read from the client and the log write after the last bytes were sent to the client.</td>
+        <td>Request processing time in seconds with a milliseconds resolution: time elapsed between the first bytes from the client were read and the log write after the last bytes were sent to the client.</td>
       </tr>
       <tr>
         <td align="center">$http_referer</td>

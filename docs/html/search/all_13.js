@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['update_0',['update',['../classFood.html#ad556bb6eeb352185303a96b2ee3c58ea',1,'Food::update()'],['../structBodyPart.html#a1e03c51bc4de20e572e8903a657fc10b',1,'BodyPart::update()'],['../classSnake.html#ab3610a54cbc6b6ec8d44e24871d59301',1,'Snake::update()']]],
+  ['update_0',['update',['../classFood.html#a63d7fd88d5db54881de451b2429ed04d',1,'Food::update()'],['../structBodyPart.html#a6addb68ca5c7ac51dbb072e55ada5e33',1,'BodyPart::update()'],['../classSnake.html#ab3610a54cbc6b6ec8d44e24871d59301',1,'Snake::update()']]],
   ['updategamescore_1',['updateGameScore',['../classSnakeGame.html#a420f3980fab86475ea4788a2e971597b',1,'SnakeGame']]],
   ['updatelabel_2',['updateLabel',['../classMainSlice.html#aed2a6013aafca878143a8f05c391c590',1,'MainSlice']]],
   ['updatelegendmarkers_3',['updateLegendMarkers',['../classDonutBreakdown.html#a682599f0fd4f13530b7bfe6dc3331578',1,'DonutBreakdown']]],
@@ -10,6 +10,5 @@ var searchData=
   ['updateuitheme_7',['updateUiTheme',['../classMainWindow.html#aa38e8aac36ede194803b378725fc123c',1,'MainWindow']]],
   ['updatewarn_8',['updateWarn',['../classCrapview.html#a5936b20a36eb7293eb1ab7dffd5a28cf',1,'Crapview']]],
   ['updatewarnings_9',['updateWarnings',['../classDbQuery.html#a6d86a91f0880d9d7ca27b6b9720257fd',1,'DbQuery']]],
-  ['used_10',['used',['../structCraplog_1_1BWlist.html#a012ed401cb4203ebdd24b149477a6c24',1,'Craplog::BWlist']]],
-  ['used_5falready_11',['used_already',['../structCraplog_1_1LogFile.html#a7ba18b36c9f124b05d85a48f381860e8',1,'Craplog::LogFile']]]
+  ['used_10',['used',['../structBWlist.html#ae0664e12fbe88c18dc830cd93fbe6abc',1,'BWlist']]]
 ];

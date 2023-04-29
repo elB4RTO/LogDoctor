@@ -4,16 +4,17 @@
 
 #include "games/games.h"
 
+#include <QPushButton>
 #include <QMessageBox>
 
 
-CrissCross::CrissCross( const int& theme_id, QWidget* parent ) :
-    QWidget(parent),
-    ui(new Ui::CrissCross)
+CrissCross::CrissCross( const int& theme_id, QWidget* parent )
+    : QWidget{ parent }
+    , ui{ new Ui::CrissCross }
 {
     this->ui->setupUi(this);
 
-    QString stylesheet = "";
+    QString stylesheet{ "" };
     GameSec::crisscrossStyleSheet( stylesheet, theme_id );
     this->setStyleSheet( stylesheet );
 
@@ -176,7 +177,7 @@ void CrissCross::nextTurn()
             break;
         default:
             // wrong
-            throw("Wrong turn: "+std::to_string(this->p_turn));
+            throw("Unexpected turn: "+std::to_string(this->p_turn));
             break;
     }
 }
@@ -184,8 +185,8 @@ void CrissCross::nextTurn()
 
 const bool CrissCross::checkVictory()
 {
-    bool result = false;
-    unsigned int streak;
+    bool result{ false };
+    unsigned streak;
     for ( const auto& sequence : this->sequences ) {
         streak = 0;
         for ( const auto& index : sequence ) {
@@ -198,7 +199,7 @@ const bool CrissCross::checkVictory()
         }
         if ( streak == 3 ) {
             // victory
-            result = true;
+            result |= true;
             break;
         } else {
             this->victory_sequence.clear();
@@ -210,12 +211,12 @@ const bool CrissCross::checkVictory()
 void CrissCross::victory()
 {
     // disable all buttons except the victory sequence ones
-    bool disable;
-    for ( unsigned int i=0; i<9; i++ ) {
-        disable = true;
+    bool disable{ true };
+    for ( unsigned i=0; i<9; i++ ) {
+        disable |= true;
         for ( const auto& j : this->victory_sequence ) {
             if ( i == j ) {
-                disable = false;
+                disable &= false;
                 break;
             } else if ( i < j ) {
                 break;
@@ -246,8 +247,8 @@ void CrissCross::victory()
 
 const bool CrissCross::gameDraw() const
 {
-    bool result = false;
-    unsigned int empty_tiles = 9;
+    bool result{ false };
+    unsigned empty_tiles{ 9 };
     for ( const auto& tile : this->board ) {
         if ( tile > 0 ) {
             empty_tiles --;
@@ -255,7 +256,7 @@ const bool CrissCross::gameDraw() const
     }
     if ( empty_tiles == 0 ) {
         // no movement left
-        result = true;
+        result |= true;
     }
     return result;
 }
@@ -290,8 +291,8 @@ void CrissCross::AI_updateWeights()
         this->board_weights[ i ] = 0;
     }
     // calculate the new weights
-    unsigned int win_streak, lose_streak;
-    std::vector<unsigned int> empty_tiles;
+    unsigned win_streak, lose_streak;
+    std::vector<unsigned> empty_tiles;
     for ( const auto& sequence : this->sequences ) {
         // reset data
         win_streak = lose_streak = 0;
@@ -307,7 +308,7 @@ void CrissCross::AI_updateWeights()
             }
         }
         // set the new weight for the empty tiles
-        const unsigned int new_weight = (win_streak>=lose_streak)
+        const unsigned new_weight = (win_streak>=lose_streak)
             ? (win_streak==2) ? win_streak+2 : win_streak+1
             : lose_streak+1;
         for ( const auto& index : empty_tiles ) {
@@ -319,12 +320,12 @@ void CrissCross::AI_updateWeights()
 
 }
 
-const unsigned int CrissCross::AI_makeChoice() const
+const unsigned CrissCross::AI_makeChoice() const
 {
     // get a list of the heaviest tiles
-    std::vector<unsigned int> moves;
-    unsigned int max_weight = 0;
-    unsigned int index = 0;
+    std::vector<unsigned> moves;
+    unsigned max_weight{ 0 };
+    unsigned index{ 0 };
     for ( const auto& weight : this->board_weights ) {
         if ( weight > max_weight ) {
             // heavier weight found
@@ -341,7 +342,7 @@ const unsigned int CrissCross::AI_makeChoice() const
         index ++;
     }
     // decide the movement (or better, randomly pick one)
-    unsigned int next_move;
+    unsigned next_move;
     if ( max_weight == 0 ) {
         // first turn
         next_move = rand() % 9;

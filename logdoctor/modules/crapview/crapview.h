@@ -3,11 +3,12 @@
 
 #include <QHash>
 #include <QtCharts>
-#include <QTableWidget>
 
 #include "modules/crapview/modules/query.h"
 
 #include <string>
+
+class QTableWidget;
 
 
 //! Crapview
@@ -17,9 +18,9 @@
 class Crapview : public QObject
 {
     Q_OBJECT
+    DATA_TYPEDEFS
 
 public:
-    explicit Crapview();
 
     //! Returns the Dialogs level
     const int& getDialogsLevel() const;
@@ -148,8 +149,7 @@ public:
     /*!
         \param table The table widget
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The year
         \param month The printable month name
@@ -159,7 +159,6 @@ public:
     void drawWarn(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day, const QString& hour
     ) const;
@@ -169,8 +168,7 @@ public:
     /*!
         \param table The table widget
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The year
         \param month The printable month name
@@ -184,7 +182,6 @@ public:
     void drawSpeed(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
         const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response
@@ -195,8 +192,7 @@ public:
     /*!
         \param table The table widget
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The year
         \param month The printable month name
@@ -206,7 +202,6 @@ public:
     void drawCount(
         QTableWidget* table, QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
         const QString& field
@@ -216,8 +211,7 @@ public:
     //! Draws the chart for the Daytime stats
     /*!
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The initial year
         \param month The initial printable month name
@@ -231,7 +225,6 @@ public:
     void drawDay(
         QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year, const QString& to_month, const QString& to_day,
@@ -242,8 +235,7 @@ public:
     //! Draws the chart for the Relational stats
     /*!
         \param chart The chart widget
-        \param theme The theme to use for the chart
-        \param fonts The map holding the fonts
+        \param theme The base theme to use for the chart
         \param web_server The printable Web Server name
         \param year The initial year
         \param month The initial printable month name
@@ -259,7 +251,6 @@ public:
     void drawRelat(
         QtCharts::QChartView* chart,
         const QChart::ChartTheme& theme,
-        const std::unordered_map<std::string, QFont>& fonts,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
         const QString& to_year,   const QString& to_month,   const QString& to_day,
@@ -294,10 +285,10 @@ private slots:
 private:
 
     // quantity of information to display throught dialogs
-    int dialogs_level = 2; // 0: essential, 1: usefull, 2: explanatory
+    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
     // charts theme ID
-    int charts_theme = 0;
+    int charts_theme{ 0 };
 
     DbQuery dbQuery;
 
@@ -308,7 +299,7 @@ private:
 
     // collection of available fields, for tabs which needs them
     // { tab : [ fields ] }
-    const std::unordered_map<std::string, std::vector<std::string>> fields = {
+    const std::unordered_map<std::string, std::vector<std::string>> fields{
         {"Daytime", {
             this->dbQuery.FIELDS.at(0),this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} },
         {"Relational", {
@@ -317,11 +308,11 @@ private:
 
 
     // converr Web Servers names to  Web Server IDs
-    const QHash<QString, int> WebServer_s2i = {
+    const QHash<QString, int> WebServer_s2i{
             {"apache",11}, {"nginx",12}, {"iis",13} };
 
     // convert log fields to log fields IDs
-    const QHash<QString, int> LogFields_s2i = {
+    const QHash<QString, int> LogFields_s2i{
             {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
             {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
             {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
@@ -337,7 +328,7 @@ private:
             {QString::fromStdString(this->dbQuery.FIELDS.at(22)), 22}};
 
     // convert months names to months numbers
-    const QHash<QString, int> Months_s2i = {
+    const QHash<QString, int> Months_s2i{
             {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
             {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
             {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},

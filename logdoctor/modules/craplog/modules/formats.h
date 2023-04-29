@@ -3,9 +3,9 @@
 
 #include <QString>
 
-#include <string>
-#include <vector>
 #include <unordered_map>
+
+class LogsFormat;
 
 
 //! FormatOps
@@ -15,18 +15,6 @@
 class FormatOps
 {
 public:
-    explicit FormatOps();
-
-    //! Structure which holds informations about a log format
-    struct LogsFormat {
-        std::string string;                  //!< The logs format string
-        std::string initial;                 //!< The initial separator
-        std::string final;                   //!< The final separator
-        std::vector<std::string> separators; //!< The separators in the middle
-        std::vector<std::string> fields;     //!< The fields
-        unsigned new_lines;                  //!< The number of new lines
-    };
-
 
     //! Processes the given string to extrapolate the format for Apache2
     /*!
@@ -87,61 +75,11 @@ public:
 
 private:
 
-    //! Parses the escapes (backslashes) and returns the resulting string
-    /*!
-        Used to obtain the same result as on Apache2
-        \param string The string to parse
-        \param strftime Whether to apply the strftime special rule when parsing or not
-        \return The resulting string
-        \throw LogFormatException
-        \see processApacheFormatString()
-    */
-    const std::string parseApacheEscapes( const std::string& string, const bool strftime=false ) const;
-
-    //! Parses the escapes (backslashes) and returns the resulting string
-    /*!
-        Used to obtain the same result as on Nginx
-        \param string The string to parse
-        \return The resulting string
-        \throw LogFormatException
-        \see processNginxFormatString()
-    */
-    const std::string parseNginxEscapes( const std::string& string ) const;
-
-    //! Conuts how many new lines are there in the format
-    /*!
-        Used to join log lines which refer to the same log line
-        \param initial The initial separator
-        \param final The final separator
-        \param separators The separators in the middle
-        \return The number of new lines in a single log line
-        \see LogsFormat, processApacheFormatString(), processNginxFormatString()
-    */
-    const unsigned countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const;
-
-    //! Finds the end of a Nginx log field
-    /*!
-        \param string The format string
-        \param start The starting point of the field in the string
-        \return The ending poin of the field in the string
-        \see processNginxFormatString()
-    */
-    const size_t findNginxFieldEnd( const std::string& string, const int start ) const;
-
-    //! Checks whether the format string contains invalid characters or not
-    /*!
-        \param string The format string
-        \throw LogFormatException
-        \see processIisFormatString
-    */
-    void checkIisString( const std::string& string ) const;
-
-
     /////////////////
     //// APACHE2 ////
 
     //!< Access logs fields formats
-    const std::unordered_map<std::string, std::string> APACHE_ALF = {
+    const std::unordered_map<std::string, std::string> APACHE_ALF{
         {"h",  "client"},
         {"t",  "date_time_ncsa"},
         {"r",  "request_full"},
@@ -176,7 +114,7 @@ private:
         {"X",  "NONE"} };
 
     //!< Composed access logs fields formats
-    const std::unordered_map<std::string, std::unordered_map<std::string, std::string>> APACHE_ALF_V = {
+    const std::unordered_map<std::string, std::unordered_map<std::string, std::string>> APACHE_ALF_V{
         {"a", { {"c",          "client"}}},
         {"h", { {"c",          "client"}}},
         {"i", { {"Cookie",     "cookie"},
@@ -244,7 +182,7 @@ private:
         {"^to", {}} };
 
     // Access logs fields formats samples
-    const std::unordered_map<std::string, QString> APACHE_ALF_SAMPLES = {
+    const std::unordered_map<std::string, QString> APACHE_ALF_SAMPLES{
         {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_epoch_s",     "<b><span style=\"color:#00cc6f\">946771199</span></b>"},
         {"date_time_epoch_ms",    "<b><span style=\"color:#00cc6f\">946771199000</span></b>"},
@@ -285,7 +223,7 @@ private:
     //// NGINX ////
 
     //!< Access logs fields formats
-    const std::unordered_map<std::string, std::string> NGINX_ALF = {
+    const std::unordered_map<std::string, std::string> NGINX_ALF{
         {"remote_addr",        "client"},
         {"realip_remote_addr", "client"},
         {"time_local",         "date_time_ncsa"},
@@ -411,7 +349,7 @@ private:
         {"upstream_status",           "NONE"} };
 
     // Access logs fields formats samples
-    const std::unordered_map<std::string, QString> NGINX_ALF_SAMPLES = {
+    const std::unordered_map<std::string, QString> NGINX_ALF_SAMPLES{
         {"NONE",                  "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_epoch_s.ms",  "<b><span style=\"color:#00cc6f\">946771199.000</span></b>"},
         {"date_time_ncsa",        "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
@@ -438,7 +376,7 @@ private:
     //// IIS ////
 
     //!< Access logs fields formats (W3C)
-    const std::unordered_map<std::string, std::string> IIS_ALF = {
+    const std::unordered_map<std::string, std::string> IIS_ALF{
         {"date",             "date_time_utc_d"},
         {"time",             "date_time_utc_t"},
         {"cs-version",       "request_protocol"},
@@ -465,7 +403,7 @@ private:
         {"streamid",          "NONE"} };
 
     // Access logs fields formats samples
-    const std::unordered_map<std::string, QString> IIS_ALF_SAMPLES = {
+    const std::unordered_map<std::string, QString> IIS_ALF_SAMPLES{
         {"NONE",               "<span style=\"color:#7f7f7f\">DISCARDED</span>"},
         {"date_time_ncsa",     "<b><span style=\"color:#00cc6f\">01/Jan/2000:23:59:59 +0000</span></b>"},
         {"date_time_MDYYYY",   "<b><span style=\"color:#00cc6f\">1/1/2000</span></b>"},
@@ -486,5 +424,6 @@ private:
         {"client",             "<b><span style=\"color:#00cc6f\">192.168.1.123</span></b>"} };
 
 };
+
 
 #endif // FORMATS_H

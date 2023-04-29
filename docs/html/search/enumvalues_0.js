@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['access_0',['Access',['../classLogOps.html#aa566f381796a235007d1d27bc0b9e0f3abc99732253f105e139b0be3de2a9cfff',1,'LogOps']]]
+  ['battle_0',['Battle',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea33f4c7667fa1a7bf17dee0b0cade1f7b',1,'SnakeGame']]]
 ];

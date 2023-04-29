@@ -1,5 +1,15 @@
 var searchData=
 [
-  ['versioncheck_0',['versionCheck',['../classCrapup.html#a6d982e763155f2d28dcd55931623bb58',1,'Crapup']]],
-  ['victory_1',['victory',['../classCrissCross.html#afa0a5b671afad8da3d071c5629c134b3',1,'CrissCross']]]
+  ['warnconffilenotfound_0',['warnConfFileNotFound',['../classDialogSec.html#a3b25c703b036517d3de43596809f1845',1,'DialogSec']]],
+  ['warndirnotreadable_1',['warnDirNotReadable',['../classDialogSec.html#a57e732827bbb8e58fb863bdd47318b5b',1,'DialogSec']]],
+  ['warndirnotwritable_2',['warnDirNotWritable',['../classDialogSec.html#ade3c5fd40c2b38b688bfce8a4f2bcd51',1,'DialogSec']]],
+  ['warnemptyfile_3',['warnEmptyFile',['../classDialogSec.html#a4a80026203e34ff692bc720d65f5c097',1,'DialogSec']]],
+  ['warnfilenotreadable_4',['warnFileNotReadable',['../classDialogSec.html#a2424ed3e4b1c9a98a0ca979764d004b9',1,'DialogSec']]],
+  ['warninvaliditembw_5',['warnInvalidItemBW',['../classDialogSec.html#ae9cf747999d28638f8bec00dba752271',1,'DialogSec']]],
+  ['warnlistadd_6',['warnlistAdd',['../classCraplog.html#a0b8a8e9c44dc4a8878c64a674d1b74aa',1,'Craplog']]],
+  ['warnlistmovedown_7',['warnlistMoveDown',['../classCraplog.html#ab539bd0f163e62ac25b73e075ae22535',1,'Craplog']]],
+  ['warnlistmoveup_8',['warnlistMoveUp',['../classCraplog.html#a6c3e3d76934f38a49a097067db450300',1,'Craplog']]],
+  ['warnlistremove_9',['warnlistRemove',['../classCraplog.html#a88e7879cc0a759504dd0c87185c58b89',1,'Craplog']]],
+  ['writeconfigs_10',['writeConfigs',['../classMainWindow.html#a77e405bc3eb9a34a2517a45ed7dbabf0',1,'MainWindow']]],
+  ['writeonfile_11',['writeOnFile',['../namespaceIOutils.html#a88b18d0e0f947455640e1a3c9818f3db',1,'IOutils']]]
 ];

@@ -9,9 +9,9 @@
 #include <QPixmap>
 
 
-DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& additional, const int& type, QWidget* parent ) :
-    QDialog(parent),
-    ui(new Ui::DialogMsg)
+DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& additional, const int type, QWidget* parent )
+    : QDialog{ parent }
+    , ui{ new Ui::DialogMsg }
 {
     ui->setupUi(this);
 
@@ -40,7 +40,7 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
 
     // additional info, hide by default
     this->ui->frame_Additional->setVisible( false );
-    if ( additional.size() == 0 ) {
+    if ( additional.isEmpty() ) {
         this->ui->button_ShowAdditional->setEnabled( false );
         this->ui->button_ShowAdditional->setVisible( false );
     } else {

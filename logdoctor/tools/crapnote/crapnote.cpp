@@ -5,9 +5,9 @@
 #include "modules/exceptions.h"
 
 
-Crapnote::Crapnote(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Crapnote)
+Crapnote::Crapnote(QWidget *parent)
+    : QWidget{ parent }
+    , ui{ new Ui::Crapnote }
 {
     ui->setupUi(this);
 }
@@ -20,7 +20,7 @@ Crapnote::~Crapnote()
 
 void Crapnote::setTextFont( const QFont& font )
 {
-    QFont f = QFont( font );
+    QFont f{ font };
     f.setPointSize( this->font_size );
     this->ui->textEdit->setFont( f );
 }

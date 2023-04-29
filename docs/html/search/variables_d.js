@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['used_0',['used',['../structCraplog_1_1BWlist.html#a012ed401cb4203ebdd24b149477a6c24',1,'Craplog::BWlist']]],
-  ['used_5falready_1',['used_already',['../structCraplog_1_1LogFile.html#a7ba18b36c9f124b05d85a48f381860e8',1,'Craplog::LogFile']]]
+  ['x_0',['x',['../classFood.html#af35fa376e635e2de2eaf8861654215fe',1,'Food::x()'],['../structBodyPart.html#a51183c659a9618d7a4a497c118f0df6c',1,'BodyPart::x()']]]
 ];

@@ -3,32 +3,31 @@
 
 #include "modules/shared.h"
 
+#include <QString>
 
-PrintSec::PrintSec()
+
+namespace PrintSec
 {
 
-}
-
-
-const QString PrintSec::printableSize( const unsigned bytes )
+const QString printableSize( const unsigned bytes )
 {
-    std::string size_str, size_sfx=" B";
-    float size = (float)bytes;
-    if (size > 1024) {
-        size /= 1024;
+    std::string size_sfx{" B"};
+    float size{ static_cast<float>(bytes) };
+    if (size > 1024.f) {
+        size /= 1024.f;
         size_sfx = " KiB";
-        if (size > 1024) {
-            size /= 1024;
+        if (size > 1024.f) {
+            size /= 1024.f;
             size_sfx = " MiB";
         }
     }
     // cut decimals depending on how big the floor is
-    size_str = std::to_string( size );
-    size_t cut_index = size_str.find('.')+1;
+    std::string size_str{ std::to_string( size ) };
+    size_t cut_index{ size_str.find('.')+1 };
     if ( cut_index == 0 ) { // catches the overflow of +1 of the above
         cut_index = size_str.find(',')+1;
     }
-    size_t n_decimals = 3;
+    size_t n_decimals{ 3 };
     if ( size >= 100 ) {
         n_decimals --;
         if ( size >= 1000 ) {
@@ -49,29 +48,26 @@ const QString PrintSec::printableSize( const unsigned bytes )
 }
 
 
-const QString PrintSec::printableSpeed( const unsigned bytes, const unsigned secs_ )
+const QString printableSpeed( const float& bytes, const float& secs_ )
 {
-    std::string speed_str, speed_sfx=" B/s";
-    unsigned secs = secs_;
-    if ( secs == 0 ) {
-        secs ++;
-    }
-    float speed = (float)bytes / (float)secs;
-    if (speed > 1024) {
-        speed /= 1024;
+    std::string speed_sfx{" B/s"};
+    const float secs{ ( secs_ > .0f ) ? secs_ : ( secs_ < .0f ) ? -secs_ : .1f };
+    float speed{ bytes / secs };
+    if (speed > 1024.f) {
+        speed /= 1024.f;
         speed_sfx = " KiB/s";
-        if (speed > 1024) {
-            speed /= 1024;
+        if (speed > 1024.f) {
+            speed /= 1024.f;
             speed_sfx = " MiB/s";
         }
     }
     // cut decimals depending on how big the floor is
-    speed_str = std::to_string( speed );
-    size_t cut_index = speed_str.find('.')+1;
+    std::string speed_str{ std::to_string( speed ) };
+    size_t cut_index{ speed_str.find('.')+1 };
     if ( cut_index == 0 ) { // catches the overflow of +1 of the above
         cut_index = speed_str.find(',')+1;
     }
-    size_t n_decimals = 3;
+    size_t n_decimals{ 3 };
     if ( speed >= 100 ) {
         n_decimals --;
         if ( speed >= 1000 ) {
@@ -92,10 +88,10 @@ const QString PrintSec::printableSpeed( const unsigned bytes, const unsigned sec
 }
 
 
-const QString PrintSec::printableTime( const unsigned seconds )
+const QString printableTime( const unsigned seconds )
 {
-    const unsigned mins = seconds / 60;
-    const unsigned secs = seconds - (mins*60);
+    const unsigned mins{ seconds / 60 };
+    const unsigned secs{ seconds - (mins*60) };
     return QString("%1:%2").arg(
         (mins<10)
             ? QString("0%1").arg( mins )
@@ -107,7 +103,7 @@ const QString PrintSec::printableTime( const unsigned seconds )
 }
 
 
-const QString PrintSec::printableTime( const int hour, const int minute, const int second )
+const QString printableTime( const int hour, const int minute, const int second )
 {
     return QString("%1:%2:%3").arg(
         (hour<10)
@@ -123,7 +119,7 @@ const QString PrintSec::printableTime( const int hour, const int minute, const i
 }
 
 
-const QString PrintSec::printableDate( const QString& year, const int month, const QString& day )
+const QString printableDate( const QString& year, const int month, const QString& day )
 {
     return QString("%1-%2-%3").arg(
         year,
@@ -137,7 +133,7 @@ const QString PrintSec::printableDate( const QString& year, const int month, con
 }
 
 
-const QString PrintSec::printableDate( const int year, const int month, const int day )
+const QString printableDate( const int year, const int month, const int day )
 {
     return QString("%1-%2-%3").arg(
         QString::number( year ),
@@ -151,7 +147,7 @@ const QString PrintSec::printableDate( const int year, const int month, const in
 }
 
 
-const QString PrintSec::printableBool( const int value )
+const QString printableBool( const int value )
 {
     if ( value == 0 ) {
         return TR::tr( BOOLS__FALSE.c_str() );
@@ -159,3 +155,5 @@ const QString PrintSec::printableBool( const int value )
         return TR::tr( BOOLS__TRUE.c_str() );
     }
 }
+
+} // namespace PrintSec

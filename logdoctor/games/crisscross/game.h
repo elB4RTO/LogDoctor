@@ -3,7 +3,8 @@
 
 #include <QIcon>
 #include <QWidget>
-#include <QPushButton>
+
+class QPushButton;
 
 
 namespace Ui {
@@ -44,20 +45,20 @@ private slots:
 
 
 private:
-    Ui::CrissCross *ui;
+    Ui::CrissCross* ui;
 
     // player turn
-    unsigned int p_turn = 1;
+    unsigned p_turn{ 1 };
 
     // players identity
-    const bool p1_human = rand() %2;
-    const bool p2_human = (p1_human) ? false : true;
+    const bool p1_human{ static_cast<bool>( rand()%2 ) };
+    const bool p2_human{ (p1_human) ? false : true };
 
     // victory related
-    std::vector<unsigned int> victory_sequence;
+    std::vector<unsigned> victory_sequence;
 
     // game data
-    unsigned int board[9] = {
+    unsigned board[9]{
         0,0,0,
         0,0,0,
         0,0,0
@@ -65,19 +66,19 @@ private:
 
     QPushButton* board_buttons[9];
 
-    const QIcon icons[2] = {
+    const QIcon icons[2]{
         QIcon(":/games/games/crisscross/o.png"),
         QIcon(":/games/games/crisscross/x.png")
     };
 
-    const unsigned int sequences[8][3] = {
+    const unsigned sequences[8][3]{
         {0,1,2},{3,4,5},{6,7,8}, // horizontal
         {0,3,6},{1,4,7},{2,5,8}, // vertical
         {0,4,8},{2,4,6}          // diagonal
     };
 
     // AI data
-    unsigned int board_weights[9] = {
+    unsigned board_weights[9]{
         1,1,1,
         1,1,1,
         1,1,1
@@ -127,7 +128,7 @@ private:
         \return The tile to select
         \see AI_playTurn();
     */
-    const unsigned int AI_makeChoice() const;
+    const unsigned AI_makeChoice() const;
 
 };
 

@@ -208,7 +208,7 @@
        <locale language="English" country="UnitedStates"/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_Tab_Log">
        <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -912,7 +912,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Size">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="minimumSize">
                      <size>
@@ -933,7 +933,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="label_MakeStats_Size">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -959,7 +959,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      </font>
                     </property>
                     <property name="text">
-                     <string notr="true">0 KiB</string>
+                     <string notr="true">-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -1009,7 +1009,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Lines">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="minimumSize">
                      <size>
@@ -1030,7 +1030,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="label_MakeStats_Lines">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -1056,7 +1056,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      </font>
                     </property>
                     <property name="text">
-                     <string notr="true">0</string>
+                     <string notr="true">-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -1156,7 +1156,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Time">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="minimumSize">
                      <size>
@@ -1177,7 +1177,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="label_MakeStats_Time">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -1203,7 +1203,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      </font>
                     </property>
                     <property name="text">
-                     <string notr="true">00:00</string>
+                     <string notr="true">-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -1256,7 +1256,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="icon_MakeStats_Speed">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="minimumSize">
                      <size>
@@ -1277,7 +1277,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <item>
                    <widget class="QLabel" name="label_MakeStats_Speed">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -1303,7 +1303,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                      </font>
                     </property>
                     <property name="text">
-                     <string notr="true">0 Kib/s</string>
+                     <string notr="true">-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -2335,7 +2335,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </property>
                </column>
               </widget>
-              <widget class="QChartView" name="chart_SatsSpeed"/>
+              <widget class="QChartView" name="chart_StatsSpeed"/>
              </widget>
             </item>
             <item row="1" column="0">
@@ -4587,7 +4587,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>317</width>
+                      <width>181</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4943,7 +4943,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>317</width>
+                      <width>164</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -5198,7 +5198,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>429</width>
+                      <width>152</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -5463,7 +5463,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>429</width>
+                      <width>181</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -8420,7 +8420,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -9424,7 +9424,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>
@@ -10506,7 +10506,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                            <rect>
                             <x>0</x>
                             <y>0</y>
-                            <width>98</width>
+                            <width>62</width>
                             <height>54</height>
                            </rect>
                           </property>

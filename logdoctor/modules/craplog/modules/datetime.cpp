@@ -9,75 +9,81 @@
 #include <ctime>
 
 
-DateTimeOps::DateTimeOps()
+namespace DateTimeOps
 {
 
-}
-
-
-const std::string DateTimeOps::convertMonth( const std::string& month )
+namespace /*private*/
 {
-    std::string m;
+
+//! Converts a month from the short-name to the number
+/*!
+    \param month The short-name of the month
+    \return The month number in the calendar
+    \throw DateTimeException
+    \see processDateTime
+*/
+const std::string convertMonth( std::string_view month )
+{
     if ( month == "Jan" ) {
-        m = "1";
+        return "01";
     } else if ( month == "Feb" ) {
-        m = "2";
+        return "02";
     } else if ( month == "Mar" ) {
-        m = "3";
+        return "03";
     } else if ( month == "Apr" ) {
-        m = "4";
+        return "04";
     } else if ( month == "May" ) {
-        m = "5";
+        return "05";
     } else if ( month == "Jun" ) {
-        m = "6";
+        return "06";
     } else if ( month == "Jul" ) {
-        m = "7";
+        return "07";
     } else if ( month == "Aug" ) {
-        m = "8";
+        return "08";
     } else if ( month == "Sep" ) {
-        m = "9";
+        return "09";
     } else if ( month == "Oct" ) {
-        m = "10";
+        return "10";
     } else if ( month == "Nov" ) {
-        m = "11";
+        return "11";
     } else if ( month == "Dec" ) {
-        m = "12";
+        return "12";
     } else {
         // nope
-        throw DateTimeException("Unexpected month format: "+month);
+        throw DateTimeException("Unexpected month format: "+std::string{month});
     }
-    return m;
 }
 
+} // namespace (private)
 
 
-const std::vector<std::string> DateTimeOps::processDateTime( const std::string& datetime_, const std::string& format )
+const std::vector<std::string> processDateTime( std::string_view datetime_, std::string_view format )
 {
-    std::string aux, datetime=datetime_;
-    std::string year="", month="", day="", hour="", minute="", second="";
+    std::string aux, datetime{datetime_};
+    std::string year{""}, month{""}, day{""}, hour{""}, minute{""}, second{""};
 
     if ( format == "ncsa" ) {
         datetime = StringOps::strip( datetime, "[ ]" );
         day    = datetime.substr( 0, 2 );
-        month  = DateTimeOps::convertMonth( datetime.substr( 3, 3 ) );
+        month  = convertMonth( datetime.substr( 3, 3 ) );
         year   = datetime.substr( 7, 4 );
         hour   = datetime.substr( 12, 2 );
         minute = datetime.substr( 15, 2 );
         second = datetime.substr( 18, 2 );
 
     } else if ( format == "mcs" ) {
-        month  = DateTimeOps::convertMonth( datetime.substr( 4, 3 ) );
+        month  = convertMonth( datetime.substr( 4, 3 ) );
         day    = datetime.substr( 8, 2 );
         hour   = datetime.substr( 11, 2 );
         minute = datetime.substr( 14, 2 );
         second = datetime.substr( 17, 2 );
-        year   = datetime.substr( datetime.size()-5 );
+        year   = datetime.substr( datetime.size()-4 );
 
     } else if ( format == "gmt" ) {
         int start = datetime.find( ", " ) + 2;
         day    = datetime.substr( start, 2 );
         start += 3;
-        month  = DateTimeOps::convertMonth( datetime.substr( start, 3 ) );
+        month  = convertMonth( datetime.substr( start, 3 ) );
         start += 4;
         year   = datetime.substr( start, 4 );
         start += 5;
@@ -122,8 +128,8 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
             datetime = std::to_string( std::stoi( datetime ) );
         }
         // convert to iso date format
-        QDateTime e = QDateTime::fromSecsSinceEpoch( std::stoi( datetime ) );
-        datetime = e.toString( "yyyy-MM-dd  HH:mm:ss" ).toStdString();
+        const QDateTime e{ QDateTime::fromSecsSinceEpoch( std::stoi( datetime ) ) };
+        datetime = e.toString( "yyyy-MM-dd HH:mm:ss" ).toStdString();
 
         // parse
         year   = datetime.substr( 0, 4 );
@@ -140,14 +146,14 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
             day    = datetime.substr( 8, 2 );
 
         } else if ( format == "MMDDYY" ) {
-            int y = std::stoi( datetime.substr( 6, 2 ) );
+            const int y = std::stoi( datetime.substr( 6, 2 ) );
             month  = datetime.substr( 0, 2 );
             day    = datetime.substr( 3, 2 );
             year   = (y<70) ? "20" : "19";
-            year  += std::to_string( y );
+            year  += (y<10) ? "0"+std::to_string( y ) : std::to_string( y );
 
         } else if ( format == "MDYYYY" ) {
-            int aux_;
+            size_t aux_;
             if ( datetime.at(2) == '/' ) {
                 month = datetime.substr( 0, 2 );
                 aux_ = 3;
@@ -177,7 +183,7 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
                 month = datetime;
             } else {
                 datetime.resize( 3 ); // may be the full name
-                month = DateTimeOps::convertMonth( datetime );
+                month = convertMonth( datetime );
             }
 
         } else if ( format == "day" ) {
@@ -219,9 +225,11 @@ const std::vector<std::string> DateTimeOps::processDateTime( const std::string& 
 
         } else {
             // wronthing went some ...
-            throw DateTimeException("Unexpected DateTime format: "+datetime_);
+            throw DateTimeException("Unexpected DateTime format: "+std::string{datetime_});
         }
     }
 
-    return std::vector<std::string>({ year, month, day, hour, minute, second });
+    return { year, month, day, hour, minute, second };
 }
+
+} // namespace DateTimeOps

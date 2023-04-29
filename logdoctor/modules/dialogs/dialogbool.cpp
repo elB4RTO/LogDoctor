@@ -3,9 +3,9 @@
 #include "ui_dialogbool.h"
 
 
-DialogBool::DialogBool( const QString& title, const QString& text, QWidget *parent ) :
-    QDialog(parent),
-    ui(new Ui::DialogBool)
+DialogBool::DialogBool( const QString& title, const QString& text, QWidget *parent )
+    : QDialog{ parent }
+    , ui{ new Ui::DialogBool }
 {
     ui->setupUi(this);
 

@@ -1,36 +1,57 @@
 
 #include "formats.h"
 
+#include "lib.h"
 #include "modules/exceptions.h"
 #include "utilities/strings.h"
 
+#include <vector>
 
-FormatOps::FormatOps()
+
+namespace /*private*/
 {
 
-}
-
-
-// count the new lines
-const unsigned FormatOps::countNewLines( const std::string& initial, const std::string& final, const std::vector<std::string>& separators ) const
+//! Conuts how many new lines are there in the format
+/*!
+    Used to join log lines which refer to the same log line
+    \param initial The initial separator
+    \param final The final separator
+    \param separators The separators in the middle
+    \return The number of new lines in a single log line
+    \see LogsFormat, processApacheFormatString(), processNginxFormatString()
+*/
+unsigned countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators )
 {
-    unsigned nl = 0;
-    nl += StringOps::count( initial, "\n" );
-    nl += StringOps::count( final, "\n" );
+    size_t nl{ 0ul };
+    nl += StringOps::count( initial, '\n' );
+    nl += StringOps::count( final, '\n' );
     for ( const std::string& sep : separators ) {
-        nl += StringOps::count( sep, "\n" );
+        nl += StringOps::count( sep, '\n' );
     }
     return nl;
 }
 
 
-// process escapes like apache
-const std::string FormatOps::parseApacheEscapes( const std::string& string , const bool strftime ) const
+//! Parses the escapes (backslashes) and returns the resulting string
+/*!
+    Used to obtain the same result as on Apache2
+    \param string The string to parse
+    \param strftime Whether to apply the strftime special rule when parsing or not
+    \return The resulting string
+    \throw LogFormatException
+    \see processApacheFormatString()
+*/
+std::string parseApacheEscapes( std::string_view string , const bool strftime=false )
 {
-    int i = 0,
-        max = string.size()-1;
-    std::string str1 = "",
-                str2 = "";
+    if ( string.empty() ) {
+        return std::string{string};
+    }
+    size_t i{ 0ul },
+           max{ string.size()-1ul };
+    std::string str1;
+    str1.reserve( string.size() );
+    std::string str2;
+    str2.reserve( string.size() );
     char c, cc;
     // parse the first time, no control-character added
     while (true) {
@@ -42,7 +63,7 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
             break;
         }
         c = string.at( i );
-        cc = string.at( i+1 );
+        cc = string.at( i+1ul );
         if ( c == '\\' && (cc == '\\' || cc == '"') ) {
             str1.push_back( cc );
             i++;
@@ -54,8 +75,8 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
         }
         i++;
     }
-    i = 0;
-    max = str1.size()-1;
+    i = 0ul;
+    max = str1.size()-1ul;
     // parse the second time, adding control-characters
     while (true) {
         if ( i >= max ) {
@@ -118,16 +139,29 @@ const std::string FormatOps::parseApacheEscapes( const std::string& string , con
         i++;
     }
 
+    str2.shrink_to_fit();
     return str2;
 }
 
-// process escapes like nginx
-const std::string FormatOps::parseNginxEscapes( const std::string& string ) const
+
+//! Parses the escapes (backslashes) and returns the resulting string
+/*!
+    Used to obtain the same result as on Nginx
+    \param string The string to parse
+    \return The resulting string
+    \throw LogFormatException
+    \see processNginxFormatString()
+*/
+std::string parseNginxEscapes( std::string_view string )
 {
-    int i = 0,
-        max = string.size()-1;
+    if ( string.empty() ) {
+        return std::string{string};
+    }
+    size_t i{ 0ul };
+    const size_t max{ string.size()-1ul };
     char c, cc;
-    std::string str = "";
+    std::string str;
+    str.reserve( string.size() );
     // parse once
     while (true) {
         if ( i >= max ) {
@@ -138,7 +172,7 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string ) cons
             break;
         }
         c = string.at( i );
-        cc = string.at( i+1 );
+        cc = string.at( i+1ul );
         if ( c == '\\' ) {
             // just the ones supported by nginx
             if ( cc == '\\' || cc == '\'' || cc == '"' ) {
@@ -165,17 +199,25 @@ const std::string FormatOps::parseNginxEscapes( const std::string& string ) cons
         i++;
     }
 
+    str.shrink_to_fit();
     return str;
 }
 
-// find where the field ends
-const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int start ) const
+
+//! Finds the end of a Nginx log field
+/*!
+    \param string The format string
+    \param start The starting point of the field in the string
+    \return The ending poin of the field in the string
+    \see processNginxFormatString()
+*/
+size_t findNginxFieldEnd( std::string_view string, const size_t start )
 {
-    size_t stop=start;
-    const int max=string.size()-1;
+    size_t stop{ start };
+    const size_t max{ string.size()-1ul };
     if ( start < max ) { // if start equals max there's no need to loop
-        for ( int i=start; i<=max; i++ ) {
-            const char& c = string.at( i );
+        for ( size_t i{start}; i<=max; i++ ) {
+            const char& c{ string.at( i ) };
             if ( StringOps::isAlnum( c ) || c == '_' ) {
                 stop = i;
             } else {
@@ -186,37 +228,44 @@ const size_t FormatOps::findNginxFieldEnd( const std::string& string, const int 
     return stop;
 }
 
-// check the given format string for unwanted characters
-void FormatOps::checkIisString( const std::string& string ) const
+
+//! Checks whether the format string contains invalid characters or not
+/*!
+    \param string The format string
+    \throw LogFormatException
+    \see processIisFormatString
+*/
+void checkIisString( std::string_view string )
 {
     for ( const char& chr : string ) {
         if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == ',' || chr == ':' || chr == '(' || chr == ')' || chr == '[' || chr == ']') ) {
             // unwanted character
-            const std::string c( 1, chr );
-            throw LogFormatException( "Unexpected character found: "+c );
+            throw LogFormatException( "Unexpected character found: "+std::string{chr} );
         }
     }
 }
 
+} // namespace (private)
 
 
-const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) const
+
+const LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) const
 {
-    const auto &f_map   = this->APACHE_ALF;
-    const auto &f_map_v = this->APACHE_ALF_V;
+    const auto& f_map   { this->APACHE_ALF   };
+    const auto& f_map_v { this->APACHE_ALF_V };
 
-    std::string initial="", final="";
+    std::string initial{""}, final{""};
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
-    int n_fld=0;
-    size_t start, stop=0, aux, aux_start, aux_stop;
-    const size_t max=f_str.size()-1;
+    int n_fld{ 0 };
+    size_t start, stop{0ul}, aux, aux_start, aux_stop;
+    const size_t max{ f_str.size()-1ul };
     std::string aux_fld, aux_fld_v, cur_fld, cur_sep;
     // find and convert any field
     while (true) {
         // start after the last found field
         start = stop;
-        cur_sep = "";
+        cur_sep.clear();
         if ( cur_fld == "date_time_ncsa" ) {
             // NCAS time format is always enclosed inside brackets
             cur_sep += "]";
@@ -235,7 +284,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                     // apache only escapes a format field using the double percent sign
                     // backslashes are valid for control-characters only, or get reduced
                     // single percent-signs are considered invalid
-                    const char c = f_str.at(aux+1);
+                    const char& c{ f_str.at(aux+1ul) };
                     if ( c == ',' || c == '{' || c == '<' || c == '>' ) {
                         // in the first case: status code(s) may follow, or may not
                         // in the second case: a composed format code may follow
@@ -244,7 +293,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                         ;
                     } else if ( c == '%' ) {
                         // the percent sign character, will be used as separator, skip
-                        stop = aux + 2;
+                        stop = aux + 2ul;
                         continue;
                     } else if ( ! StringOps::isAlnum( c ) ) {
                         // invalid, there must be a field code, a status code or a percent sign after a '%'
@@ -268,17 +317,15 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
             char c = f_str.at( aux );
             // remove the per-status directives (if any)
-            if ( StringOps::isNumeric( c )
-              || c == ',' ) {
+            if ( StringOps::isNumeric( c ) || c == ',' ) {
                 // per-status, not important for LogDoctor
-                size_t aux_aux = aux+1;
+                size_t aux_aux{ aux+1ul };
                 while (true) {
                     if ( aux_aux > max ) {
                         break;
                     }
                     c = f_str.at( aux_aux );
-                    if ( StringOps::isNumeric( c )
-                      || c == ',' ) {
+                    if ( StringOps::isNumeric( c ) || c == ',' ) {
                         // skip these chars
                         aux_aux ++;
                         continue;
@@ -294,34 +341,32 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
             // define if normal or composed
             if ( c == '{' ) {
                 // composed
-                aux_start = aux + 1;
+                aux_start = aux + 1ul;
                 aux = f_str.find( '}', aux_start );
                 if ( aux == std::string::npos ) {
                     // closer bracket not found, resulting in an invalid field
                     throw LogFormatException( "Invalid format code, no closing bracket found: '%{'." );
                 }
-                aux_stop = aux + 2;
+                aux_stop = aux + 2ul;
                 // get the varname(s)
-                aux_fld = f_str.substr(
-                    aux_start,
-                    aux - aux_start );
+                aux_fld = f_str.substr( aux_start, aux-aux_start );
                 // get the module
-                aux_fld_v = f_str.at( aux+1 );
+                aux_fld_v = f_str.at( aux+1ul );
                 if ( aux_fld_v == "^" ) {
-                    aux_stop += 2;
-                    aux_fld_v = f_str.substr( aux+1, 3 );
+                    aux_stop += 2ul;
+                    aux_fld_v = f_str.substr( aux+1ul, 3ul );
                 }
                 if ( f_map_v.find( aux_fld_v ) == f_map_v.end() ) {
                     // invalid module, abort
                     throw LogFormatException( "Invalid format code found: '%{...}"+aux_fld_v+"'." );
                 } else {
                     // module is valud
-                    const auto &aux_map = f_map_v.at( aux_fld_v );
-                    if ( aux_map.size() == 0 ) {
+                    const auto& aux_map{ f_map_v.at( aux_fld_v ) };
+                    if ( aux_map.empty() ) {
                         // module not considered and always giving out something, even if invalid varname is passed
                         fields.push_back( "NONE" );
-                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
-                        cur_sep = "";
+                        separators.push_back( parseApacheEscapes( cur_sep ) );
+                        cur_sep.clear();
 
                     } else if ( aux_fld_v == "p" || aux_fld_v == "P" || aux_fld_v == "T" ) {
                         // still not considered (except 'T'), but invalid fields get used as text
@@ -334,14 +379,14 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                             fields.push_back( "NONE" );
                             cur_sep += aux_fld;
                         }
-                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
-                        cur_sep = "";
+                        separators.push_back( parseApacheEscapes( cur_sep ) );
+                        cur_sep.clear();
 
                     } else if ( aux_fld_v == "a" || aux_fld_v == "h" ) {
                         // client, in any case
                         fields.push_back( "client" );
-                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
-                        cur_sep = "";
+                        separators.push_back( parseApacheEscapes( cur_sep ) );
+                        cur_sep.clear();
 
                     } else if ( aux_fld_v == "i" ) {
                         // always giving a result, may the varname be valid or not ('-' if invalid)
@@ -351,20 +396,20 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                         } else {
                             fields.push_back( "NONE" );
                         }
-                        separators.push_back( this->parseApacheEscapes( cur_sep ) );
-                        cur_sep = "";
+                        separators.push_back( parseApacheEscapes( cur_sep ) );
+                        cur_sep.clear();
 
                     } else /*if ( aux_fld_v == "t" )*/ {
                         // only 't' remaining
-                        size_t aux_aux = aux_fld.find( '%' );
+                        size_t aux_aux{ aux_fld.find( '%' ) };
                         if ( aux_aux == std::string::npos ) {
                             // no concatenation, only valid fields used, anything else used as text
                             // whole content used as varname
                             if ( aux_map.find( aux_fld ) != aux_map.end() ) {
                                 // valid
                                 fields.push_back( aux_map.at( aux_fld ) );
-                                separators.push_back( this->parseApacheEscapes( cur_sep, true ) );
-                                cur_sep = "";
+                                separators.push_back( parseApacheEscapes( cur_sep, true ) );
+                                cur_sep.clear();
                             } else {
                                 // invalid, append to current separator and restart hunting
                                 cur_sep += aux_fld;
@@ -373,7 +418,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                         } else {
                             // concatenation allowed, only strftime() value used as fields, everything else treated as text
                             size_t aux_aux_start,
-                                   aux_aux_stop = 0;
+                                   aux_aux_stop{0};
                             std::string aux_aux_fld;
                             while (true) {
                                 // loop inside the composed field
@@ -387,7 +432,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                                         const char c_ = aux_fld.at( aux_aux+1 );
                                         if ( c_ == '%' || c_ == 'n' || c_ == 't' ) {
                                             // control characters, will be used as separator, skip
-                                            aux_aux_stop = aux_aux + 2;
+                                            aux_aux_stop = aux_aux + 2ul;
                                             continue;
                                         }
                                     }
@@ -403,16 +448,16 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
                                 // append the current separator
                                 cur_sep += aux_fld.substr( aux_aux_start, aux_aux-aux_aux_start );
                                 // and get the possible field
-                                aux_aux_fld = aux_fld.substr( aux_aux, 2 );
-                                aux_aux_stop = aux_aux+2;
+                                aux_aux_fld = aux_fld.substr( aux_aux, 2ul );
+                                aux_aux_stop = aux_aux+2ul;
                                 // check if the field is valid
                                 if ( aux_map.find( aux_aux_fld ) != aux_map.end() ) {
                                     // valid, append
                                     cur_fld = aux_map.at( aux_aux_fld );
                                     fields.push_back( cur_fld );
                                     // append to separators list
-                                    separators.push_back( this->parseApacheEscapes( cur_sep, true ) );
-                                    cur_sep = "";
+                                    separators.push_back( parseApacheEscapes( cur_sep, true ) );
+                                    cur_sep.clear();
 
                                 } else {
                                     // invalid, append as separator and keep hunting
@@ -429,7 +474,7 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
             } else {
                 // normal
                 aux_fld = c;
-                aux_stop = aux+1;
+                aux_stop = aux+1ul;
                 if ( aux_fld == ">" || aux_fld == "<" ) {
                     aux_fld += f_str.at( aux+1 );
                     aux_stop ++;
@@ -454,16 +499,16 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
 
         if ( n_fld < 0 ) {
             // final reached, stop looping
-            final = this->parseApacheEscapes( cur_sep );
+            final = parseApacheEscapes( cur_sep );
             break;
 
         } else if ( n_fld == 0 ) {
             // first field found, assign the separator as the initial one
-            initial = this->parseApacheEscapes( cur_sep );
+            initial = parseApacheEscapes( cur_sep );
 
         } else {
             // append to separators list
-            separators.push_back( this->parseApacheEscapes( cur_sep ) );
+            separators.push_back( parseApacheEscapes( cur_sep ) );
         }
 
         // append the field
@@ -471,31 +516,26 @@ const FormatOps::LogsFormat FormatOps::processApacheFormatString( const std::str
         n_fld++;
     }
 
-    return FormatOps::LogsFormat{
-            .string     = f_str,
-            .initial    = initial,
-            .final      = final,
-            .separators = separators,
-            .fields     = fields,
-            .new_lines  = this->countNewLines( initial, final, separators )
-        };
+    return LogsFormat(
+        f_str, initial, final, separators, fields,
+        countNewLines( initial, final, separators ) );
 
 }
 // sample
 const QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
 {
-    QString sample = "";
-    const std::unordered_map<std::string, QString>& map = this->APACHE_ALF_SAMPLES;
+    QString sample{ "" };
+    const std::unordered_map<std::string, QString>& map{ this->APACHE_ALF_SAMPLES };
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
-    for ( int i=0; i<log_format.separators.size(); i++ ) {
+    for ( size_t i{0ul}; i<log_format.separators.size(); i++ ) {
         // append fields and separators
         sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
     }
     // add the last field
-    if ( log_format.fields.size() > 0 ) {
+    if ( log_format.fields.size() > 0ul ) {
         sample += map.at( log_format.fields.back() );
     }
     // and the final characters
@@ -505,16 +545,16 @@ const QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) cons
 
 
 
-const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
+const LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
 {
-    const auto& f_map  = this->NGINX_ALF;
+    const auto& f_map{ this->NGINX_ALF };
 
-    std::string initial="", final="";
+    std::string initial{""}, final{""};
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
-    bool finished = false;
-    size_t start, aux, stop=0;
-    const size_t max=f_str.size()-1;
+    bool finished{ false };
+    size_t start, aux, stop{0ul};
+    const size_t max{ f_str.size()-1ul };
     std::string cur_fld, cur_sep;
     // find and convert any field
     while (true) {
@@ -524,18 +564,18 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         aux = f_str.find( '$', start );
         if ( aux == std::string::npos ) {
             // not found, append as final and stop searching
-            final = this->parseNginxEscapes( f_str.substr( start ) );
+            final = parseNginxEscapes( f_str.substr( start ) );
             break;
         }
         aux ++;
         // find the end of the current field
-        stop = this->findNginxFieldEnd( f_str, aux ) + 1;
+        stop = findNginxFieldEnd( f_str, aux ) + 1ul;
         if ( stop == max ) {
             // this is the last field, and ther's no final separator
-            finished = true;
+            finished |= true;
         }
 
-        cur_sep = f_str.substr( start, aux-start-1 );
+        cur_sep = f_str.substr( start, aux-start-1ul );
         cur_fld = f_str.substr( aux, stop-aux );
 
         // fixes for varnames
@@ -557,10 +597,10 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         // check if the field is valid
         if ( f_map.find( cur_fld ) != f_map.end() ) {
             // valid, append
-            if ( start == 0 ) {
-                initial = this->parseNginxEscapes( cur_sep );
+            if ( start == 0ul ) {
+                initial = parseNginxEscapes( cur_sep );
             } else {
-                separators.push_back( this->parseNginxEscapes( cur_sep ) );
+                separators.push_back( parseNginxEscapes( cur_sep ) );
             }
             fields.push_back( f_map.at( cur_fld ) );
             if ( finished ) {
@@ -573,30 +613,25 @@ const FormatOps::LogsFormat FormatOps::processNginxFormatString( const std::stri
         }
     }
 
-    return FormatOps::LogsFormat{
-            .string     = f_str,
-            .initial    = initial,
-            .final      = final,
-            .separators = separators,
-            .fields     = fields,
-            .new_lines  = this->countNewLines( initial, final, separators )
-        };
+    return LogsFormat(
+        f_str, initial, final, separators, fields,
+        countNewLines( initial, final, separators ) );
 }
 // sample
 const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 {
-    QString sample = "";
-    const std::unordered_map<std::string, QString>& map = this->NGINX_ALF_SAMPLES;
+    QString sample{ "" };
+    const std::unordered_map<std::string, QString>& map{ this->NGINX_ALF_SAMPLES };
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
-    for ( int i=0; i<log_format.separators.size(); i++ ) {
+    for ( size_t i{0}; i<log_format.separators.size(); i++ ) {
         // append fields and separators
         sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
     }
     // add the last field
-    if ( log_format.fields.size() > 0 ) {
+    if ( log_format.fields.size() > 0ul ) {
         sample += map.at( log_format.fields.back() );
     }
     // and the final characters
@@ -606,10 +641,10 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 
 
 
-const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
+const LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
 {
-    this->checkIisString( f_str );
-    std::string initial="", final="";
+    checkIisString( f_str );
+    std::string initial{""}, final{""};
     std::vector<std::string> separators, fields;
     switch ( l_mod ) {
         case 2:
@@ -625,13 +660,13 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
             break;
         case 0:
             // W3C logging module
-            if ( f_str.size() > 0 ) {
-                bool finished = false;
-                size_t start, stop=0;
-                const size_t max=f_str.size()-1;
+            if ( f_str.size() > 0ul ) {
+                bool finished{ false };
+                size_t start, stop{0ul};
+                const size_t max{ f_str.size()-1ul };
                 std::string cur_fld;
-                const std::string cur_sep = " ";
-                const auto &f_map = this->IIS_ALF;
+                const std::string cur_sep{ " " };
+                const auto& f_map{ this->IIS_ALF };
                 // parse the string to convert keyargs in craplog's fields format
                 while (true) {
                     // start after the last found separator
@@ -640,8 +675,8 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
                     stop = f_str.find( cur_sep, start );
                     if ( stop == std::string::npos ) {
                         // not found, this is the last field
-                        stop = max+1;
-                        finished = true;
+                        stop = max+1ul;
+                        finished |= true;
                     }
 
                     // set the current field
@@ -673,30 +708,24 @@ const FormatOps::LogsFormat FormatOps::processIisFormatString( const std::string
             throw LogFormatException( "Unexpected LogModule for IIS: "+std::to_string( l_mod ) );
     }
 
-    return FormatOps::LogsFormat{
-            .string     = f_str,
-            .initial    = initial,
-            .final      = final,
-            .separators = separators,
-            .fields     = fields,
-            .new_lines  = 0
-        };
+    return LogsFormat(
+        f_str, initial, final, separators, fields, 0 );
 }
 // sample
 const QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
 {
-    QString sample = "";
-    const std::unordered_map<std::string, QString>& map = this->IIS_ALF_SAMPLES;
+    QString sample{ "" };
+    const std::unordered_map<std::string, QString>& map{ this->IIS_ALF_SAMPLES };
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
-    for ( int i=0; i<log_format.separators.size(); i++ ) {
+    for ( size_t i{0}; i<log_format.separators.size(); i++ ) {
         // append fields and separators
         sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
     }
     // add the last field
-    if ( log_format.fields.size() > 0 ) {
+    if ( log_format.fields.size() > 0ul ) {
         sample += map.at( log_format.fields.back() );
     }
     // and the final characters

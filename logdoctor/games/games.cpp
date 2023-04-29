@@ -5,14 +5,13 @@
 
 #include <unordered_map>
 
+#include <QString>
 
-GameSec::GameSec()
+
+namespace GameSec
 {
 
-}
-
-
-void GameSec::crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
+void crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {
@@ -139,7 +138,7 @@ void GameSec::crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
 }
 
 
-void GameSec::snakeStyleSheet( QString& stylesheet, const int& theme_id )
+void snakeStyleSheet( QString& stylesheet, const int& theme_id )
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {
@@ -326,3 +325,5 @@ void GameSec::snakeStyleSheet( QString& stylesheet, const int& theme_id )
             "}";
     }
 }
+
+} // namespace GameSec

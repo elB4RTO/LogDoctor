@@ -3,17 +3,24 @@
 
 #include <QObject>
 
-#include "modules/craplog/craplog.h"
+#include "lib.h"
 
+#include <unordered_map> // leave this here for OSX
 
-typedef std::vector<std::tuple<std::string,std::string>> worker_files_t;
-typedef std::unordered_map<int, std::string> log_line_data_t;
-typedef std::unordered_map<int, Craplog::BWlist> bw_lists_t;
+class QSqlDatabase;
+
+typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for OSX
 
 
 class CraplogWorker : public QObject
 {
     Q_OBJECT
+
+private:
+
+    using worker_files_t  = std::vector<std::tuple<std::string,std::string>>;
+    using log_line_data_t = std::map<int, std::string>;
+
 
 public:
 
@@ -22,12 +29,13 @@ public:
         const unsigned dialogs_level,
         const std::string& db_data_path,
         const std::string& db_hashes_path,
-        const FormatOps::LogsFormat& logs_format,
+        const LogsFormat& logs_format,
         const bw_lists_t& blacklists,
         const bw_lists_t& warnlists,
         const worker_files_t& log_files,
         QObject* parent=nullptr
     );
+
 
 signals:
 
@@ -62,13 +70,13 @@ private:
     /////////////////////////
     //// WEB SERVERS IDs ////
 
-    const unsigned APACHE_ID = 11; //!< ID of the Apache2 Web Server
-    const unsigned NGINX_ID  = 12; //!< ID of the Nginx Web Server
-    const unsigned IIS_ID    = 13; //!< ID of the IIS Web Server
+    const unsigned APACHE_ID { 11 }; //!< ID of the Apache2 Web Server
+    const unsigned NGINX_ID  { 12 }; //!< ID of the Nginx Web Server
+    const unsigned IIS_ID    { 13 }; //!< ID of the IIS Web Server
 
-    unsigned wsID;
+    const unsigned wsID;
 
-    unsigned dialogs_level = 2;
+    const unsigned dialogs_level{ 2 };
 
 
     //////////////////////////////
@@ -78,13 +86,11 @@ private:
     bw_lists_t blacklists;
     bw_lists_t warnlists;
 
-    FormatOps::LogsFormat logs_format;
+    LogsFormat logs_format;
 
-    std::mutex mutex;
+    bool proceed{ true };
 
-    bool proceed = true;
-
-    bool db_edited = false;
+    bool db_edited{ false };
     std::string db_data_path;
     std::string db_hashes_path;
 
@@ -137,16 +143,16 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    unsigned total_lines      = 0;
-    unsigned parsed_lines     = 0;
-    unsigned total_size       = 0;
-    unsigned parsed_size      = 0;
-    unsigned warnlisted_size  = 0;
-    unsigned blacklisted_size = 0;
+    unsigned total_lines    { 0 };
+    unsigned parsed_lines   { 0 };
+    size_t total_size       { 0 };
+    size_t parsed_size      { 0 };
+    size_t warnlisted_size  { 0 };
+    size_t blacklisted_size { 0 };
 
 
     // Map to convert log fields to field IDs
-    const std::unordered_map<std::string, int> field2id = {
+    const std::unordered_map<std::string, int> field2id{
         // date-time
         {"date_time_year",     1},
         {"date_time_month",    2},
