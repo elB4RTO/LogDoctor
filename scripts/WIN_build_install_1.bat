@@ -10,6 +10,7 @@ FOR /F "tokens=* USEBACKQ" %%e IN (`cd`) DO SET actual_path=%%e
 SET logdocdir=%~dp0
 SET logdocdir=%logdocdir:\=/%
 IF "%logdocdir:~-1%"=="/" SET logdocdir=%logdocdir:~0,-1%
+SET logdocdir=%logdocdir%/..
 cd %logdocdir%
 
 

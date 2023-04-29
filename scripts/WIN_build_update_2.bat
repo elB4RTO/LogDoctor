@@ -8,6 +8,7 @@ SET actual_path=%1
 SET logdocdir=%~dp0
 SET logdocdir=%logdocdir:\=/%
 IF "%logdocdir:~-1%"=="/" SET logdocdir=%logdocdir:~0,-1%
+SET logdocdir=%logdocdir%/..
 cd %logdocdir%
 
 

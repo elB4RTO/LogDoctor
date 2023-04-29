@@ -4,7 +4,7 @@
 actual_path=$(pwd)
 
 # Get the path of LogDoctor-git's folder and move in
-docdir="$(dirname $0)"
+docdir="$(dirname $(dirname $0))"
 cd "$docdir"
 
 # Check the existence of a previous executable file
