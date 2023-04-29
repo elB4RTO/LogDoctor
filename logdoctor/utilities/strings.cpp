@@ -114,9 +114,7 @@ const bool endsWith( std::string_view str, const char flag )
 
 const bool endsWith( std::string_view str, std::string_view flag )
 {
-    const size_t stop{ str.size() };
-    const size_t start{ stop-flag.size() };
-    return str.compare( flag ) == start;
+    return str.rfind( flag ) == str.size()-flag.size();
 }
 
 
