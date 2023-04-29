@@ -173,6 +173,9 @@ else()
     target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 endif()
 
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+
 
 if(APPLE)
     set_target_properties(LogDoctor PROPERTIES
