@@ -1,4 +1,14 @@
 
+# v2.04
+
+- Code improvements
+- Performance improvements
+- Added tests suite:
+  - white box tests
+- Customized charts themes
+
+<br/><br/>
+
 # v2.03
 
 - Improvements and fixes
@@ -8,7 +18,7 @@
 # v2.02
 
 - Improvements and fixes
-- Added new translations:
+- New translations:
   - Japanese
   - Portuguese
 
@@ -30,7 +40,7 @@
 - Restyled GUI
 - Restyled dialogs
 - Doxygen documentation
-- Games:
+- Mini-Games:
   - Criss-cross
   - Snake
 
