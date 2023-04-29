@@ -6,6 +6,7 @@
 #include "utilities/io.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
+#include "utilities/vectors.h"
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
@@ -709,6 +710,30 @@ const bool Craplog::checkStuff()
             } else {
                 // shouldn't be here
                 throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
+            }
+        } else {
+            // not used already, check for duplicates in the same list
+            if ( VecOps::contains( this->used_files_hashes, file.hash() ) ) {
+                // appears twice in the list
+                QString msg{ file.name() };
+                if ( this->dialogs_level == 2 ) {
+                        msg += "\n" + QString::fromStdString( file.hash() );
+                }
+                const int choice = DialogSec::choiceDuplicateFile( msg );
+                if ( choice == 0 ) {
+                        // choosed to abort all
+                        this->proceed &= false;
+                        break;
+                } else if ( choice == 1 ) {
+                        // choosed to discard the file and continue
+                        continue;
+                } else if ( choice == 2 ) {
+                        // choosed to ignore and use the file anyway
+                        ;
+                } else {
+                        // shouldn't be here
+                        throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
+                }
             }
         }
 
