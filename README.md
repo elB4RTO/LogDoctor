@@ -118,7 +118,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
     - `./LINUX_build_install.sh`
   - BSD:
     - `chmod +x ./BSD_build_install.sh`
-    - `./BSD_build_install.sh`
+    - `bash ./BSD_build_install.sh`
   - Windows:
     - run `WIN_build_install_1.bat` as normal user
     - right-click on `WIN_build_install_2.bat` and select **Run as Administrator**
@@ -229,7 +229,7 @@ At the moment of writing, the only supported method is the manual update.<br/><b
     - `./LINUX_build_update.sh`
   - BSD:
     - `chmod +x ./BSD_build_update.sh`
-    - `./BSD_build_update.sh`
+    - `bash ./BSD_build_update.sh`
   - Windows:
     - run `WIN_build_update_1.bat` as normal user
     - right-click on `WIN_build_update_2.bat` and select **Run as Administrator**
