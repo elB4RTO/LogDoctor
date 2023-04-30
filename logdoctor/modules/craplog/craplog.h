@@ -209,10 +209,10 @@ public:
     //// WARNING SIZE ////
 
     //! Returns the currently set warning size for the log files
-    const unsigned& getWarningSize() const;
+    const size_t getWarningSize() const;
 
     //! Sets the new warning size for the log files
-    void setWarningSize( const unsigned& new_size );
+    void setWarningSize( const size_t new_size );
 
 
     ////////////////////
@@ -391,10 +391,10 @@ public:
     //// PERFORMANCES ////
 
     //! Returns the total logs size
-    const unsigned getParsedSize();
+    const size_t getParsedSize();
 
     //! Returns the parsed logs lines
-    const unsigned getParsedLines();
+    const size_t getParsedLines();
 
     //! Returns the speed on parsing logs
     const QString getParsingSpeed();
@@ -424,13 +424,13 @@ public slots:
 
     void stopWorking( const bool successful );
 
-    void updatePerfData( const unsigned parsed_size,
-                         const unsigned parsed_lines );
+    void updatePerfData( const size_t parsed_size,
+                         const size_t parsed_lines );
 
-    void updateChartData( const unsigned total_size,
-                          const unsigned total_lines,
-                          const unsigned warnlisted_size,
-                          const unsigned blacklisted_size );
+    void updateChartData( const size_t total_size,
+                          const size_t total_lines,
+                          const size_t warnlisted_size,
+                          const size_t blacklisted_size );
 
 
 private:
@@ -469,12 +469,12 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    unsigned total_lines  { 0 }; // total number of logs lines
-    unsigned parsed_lines { 0 }; // number of parsed logs lines
-    unsigned total_size       { 0 }; // total size of the logs
-    unsigned parsed_size      { 0 }; // size of the logs which have been used
-    unsigned warnlisted_size  { 0 }; // size of the logs which caused a warning
-    unsigned blacklisted_size { 0 }; // size of the logs which has been blacklisted
+    size_t total_lines      { 0ul }; // total number of logs lines
+    size_t parsed_lines     { 0ul }; // number of parsed logs lines
+    size_t total_size       { 0ul }; // total size of the logs
+    size_t parsed_size      { 0ul }; // size of the logs which have been used
+    size_t warnlisted_size  { 0ul }; // size of the logs which caused a warning
+    size_t blacklisted_size { 0ul }; // size of the logs which has been blacklisted
 
     std::chrono::system_clock::time_point parsing_time_start,
                                           parsing_time_stop;
@@ -493,7 +493,7 @@ private:
     //// LOGS CONTROL ////
 
     // warning size, in Bytes
-    unsigned warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
+    size_t warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
 
 
     //////////////////////////////

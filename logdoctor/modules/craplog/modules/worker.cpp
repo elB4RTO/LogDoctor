@@ -34,7 +34,7 @@ CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialo
 void CraplogWorker::sendPerfData()
 {
     emit this->perfData(
-        static_cast<unsigned>( this->parsed_size ),
+        this->parsed_size,
         this->parsed_lines
     );
 }
@@ -42,10 +42,10 @@ void CraplogWorker::sendPerfData()
 void CraplogWorker::sendChartData()
 {
     emit this->chartData(
-        static_cast<unsigned>( this->total_size ),
+        this->total_size,
         this->total_lines,
-        static_cast<unsigned>( this->warnlisted_size ),
-        static_cast<unsigned>( this->blacklisted_size )
+        this->warnlisted_size,
+        this->blacklisted_size
     );
 }
 
@@ -68,7 +68,7 @@ void CraplogWorker::work()
         // clear log lines data
         this->logs_lines.clear();
 
-        if ( this->proceed && this->parsed_size > 0 ) {
+        if ( this->proceed && this->parsed_size > 0ul ) {
             // store the new data
             this->storeLogLines();
             this->db_edited |= this->proceed;
@@ -84,12 +84,12 @@ void CraplogWorker::work()
     }
     // send the final data
     if ( ! this->proceed ) {
-        this->total_lines  = 0;
-        this->parsed_lines = 0;
-        this->total_size   = 0;
-        this->parsed_size  = 0;
-        this->warnlisted_size  = 0;
-        this->blacklisted_size = 0;
+        this->total_lines  = 0ul;
+        this->parsed_lines = 0ul;
+        this->total_size   = 0ul;
+        this->parsed_size  = 0ul;
+        this->warnlisted_size  = 0ul;
+        this->blacklisted_size = 0ul;
     }
     this->sendPerfData();
     this->sendChartData();

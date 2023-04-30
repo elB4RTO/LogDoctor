@@ -40,14 +40,14 @@ public:
 signals:
 
     void perfData(
-        const unsigned parsed_size,
-        const unsigned parsed_lines );
+        const size_t parsed_size,
+        const size_t parsed_lines );
 
     void chartData(
-        const unsigned total_size,
-        const unsigned total_lines,
-        const unsigned warnlisted_size,
-        const unsigned blacklisted_size );
+        const size_t total_size,
+        const size_t total_lines,
+        const size_t warnlisted_size,
+        const size_t blacklisted_size );
 
     void startedParsing();
 
@@ -143,8 +143,8 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    unsigned total_lines    { 0 };
-    unsigned parsed_lines   { 0 };
+    size_t total_lines      { 0 };
+    size_t parsed_lines     { 0 };
     size_t total_size       { 0 };
     size_t parsed_size      { 0 };
     size_t warnlisted_size  { 0 };

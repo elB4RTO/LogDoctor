@@ -113,12 +113,12 @@ void Craplog::setHashesDatabasePath( const std::string& path )
     this->db_hashes_path = path + "/hashes.db";
 }
 
-const unsigned& Craplog::getWarningSize() const
+const size_t Craplog::getWarningSize() const
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const unsigned& new_size )
+void Craplog::setWarningSize(const size_t new_size )
 {
     this->warning_size = new_size;
 }
@@ -445,7 +445,7 @@ const std::vector<LogFile>& Craplog::getLogsList( const bool fresh )
 }
 
 
-// return the path of the file matching the given name
+// return the LogFile instance of the file matching the given name
 const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
     const auto& item{ std::find_if
@@ -483,7 +483,7 @@ void Craplog::scanLogsDir()
         }
         return;
     }
-    unsigned size;
+    size_t size;
     QString name;
     std::string path;
     // iterate over entries in the logs folder
@@ -738,7 +738,7 @@ const bool Craplog::checkStuff()
         }
 
         // check if the file respects the warning size
-        if ( this->warning_size > 0 ) {
+        if ( this->warning_size > 0ul ) {
             if ( file.size() > this->warning_size ) {
                 // exceeds the warning size
                 QString msg{ file.name() };
@@ -796,12 +796,12 @@ void Craplog::startWorking()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->proceed |= true;
-    this->total_lines  = 0u;
-    this->parsed_lines = 0u;
-    this->total_size   = 0u;
-    this->parsed_size  = 0u;
-    this->warnlisted_size  = 0u;
-    this->blacklisted_size = 0u;
+    this->total_lines  = 0ul;
+    this->parsed_lines = 0ul;
+    this->total_size   = 0ul;
+    this->parsed_size  = 0ul;
+    this->warnlisted_size  = 0ul;
+    this->blacklisted_size = 0ul;
     // hire a worker
     CraplogWorker* worker{ new CraplogWorker(
         this->current_WS,
@@ -858,12 +858,12 @@ const bool Craplog::editedDatabase() const
 }
 
 
-const unsigned Craplog::getParsedSize()
+const size_t Craplog::getParsedSize()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-const unsigned Craplog::getParsedLines()
+const size_t Craplog::getParsedLines()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
@@ -875,13 +875,13 @@ const QString Craplog::getParsingSpeed()
         ? std::chrono::system_clock::now()
         : this->parsing_time_stop };
     return PrintSec::printableSpeed(
-        static_cast<float>(
+        static_cast<double>(
             this->parsed_size ),
-        static_cast<float>(
+        static_cast<double>(
             std::chrono::duration_cast<std::chrono::milliseconds>(
                 stop - this->parsing_time_start
             ).count()
-            ) * 0.001f
+            ) * 0.001
         );
 }
 
@@ -902,13 +902,13 @@ const bool Craplog::isParsing() const
     return this->is_parsing;
 }
 
-void Craplog::updatePerfData( const unsigned parsed_size, const unsigned parsed_lines )
+void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines )
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const unsigned total_size, const unsigned total_lines, const unsigned warnlisted_size, const unsigned blacklisted_size )
+void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t warnlisted_size, const size_t blacklisted_size )
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;
@@ -930,7 +930,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
     parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size + this->blacklisted_size ) );
-    const unsigned parsed_size{ this->parsed_size - this->warnlisted_size };
+    const size_t parsed_size{ this->parsed_size - this->warnlisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         parsed_size );
@@ -943,7 +943,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* ignoredSize_donut{ new QPieSeries() };
-    const unsigned ignored_size{ this->total_size - this->parsed_size - this->blacklisted_size };
+    const size_t ignored_size{ this->total_size - this->parsed_size - this->blacklisted_size };
     QString printable_ignored_size{ PrintSec::printableSize( ignored_size ) };
     ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(
@@ -955,7 +955,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
     sizeBreakdown->setTheme( theme );
     sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
     sizeBreakdown->setTitle( size_chart_name );
-    if ( this->proceed && this->total_size > 0u ) {
+    if ( this->proceed && this->total_size > 0ul ) {
         sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
         sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
         sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::gray, fonts.at("main_small") );

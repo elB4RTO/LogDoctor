@@ -461,7 +461,7 @@ void MainWindow::readConfigs()
                     hide_used_files = this->s2b.at( val );
 
                 } else if ( var == "WarningSize" ) {
-                    this->craplog.setWarningSize( std::stoi( val ) );
+                    this->craplog.setWarningSize( std::stoul( val ) );
 
                 } else if ( var == "ApacheLogsPath" ) {
                     this->craplog.setLogsPath( this->APACHE_ID, this->resolvePath( val ) );
@@ -2471,8 +2471,8 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         // check the size
         if ( proceed ) {
-            const unsigned warn_size{ this->craplog.getWarningSize() };
-            if ( warn_size > 0 ) {
+            const size_t warn_size{ this->craplog.getWarningSize() };
+            if ( warn_size > 0ul ) {
                 if ( item.size() > warn_size ) {
                     // exceeds the warning size
                     QString msg{ item.name() };
@@ -2671,7 +2671,7 @@ void MainWindow::updatePerfsLabels()
 {
     // update values
     if ( this->craplog.isParsing() || this->force_updating_labels ) {
-        const unsigned size{ this->craplog.getParsedSize() };
+        const size_t size{ this->craplog.getParsedSize() };
         this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
         this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
         this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
@@ -4072,16 +4072,18 @@ void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
     if ( ! checked ) {
         // disable size warning
         this->ui->spinBox_ConfControl_Size->setEnabled( false );
-        this->craplog.setWarningSize( 0 );
+        this->craplog.setWarningSize( 0ul );
     } else {
         // enable warning
         this->ui->spinBox_ConfControl_Size->setEnabled( true );
-        this->craplog.setWarningSize( (this->ui->spinBox_ConfControl_Size->value() * 1'048'576) +1 );
+        this->craplog.setWarningSize(
+            (static_cast<size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
     }
 }
 void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 {
-    this->craplog.setWarningSize( (this->ui->spinBox_ConfControl_Size->value() * 1'048'576) +1 );
+    this->craplog.setWarningSize(
+        (static_cast<size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
 }
 
 
@@ -4090,7 +4092,7 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 // paths
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString &arg1)
 {
-    if ( arg1.size() > 0 ) {
+    if ( arg1.size() > 0ul ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
