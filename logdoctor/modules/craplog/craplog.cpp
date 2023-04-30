@@ -460,14 +460,23 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 // set a file as selected
 const bool Craplog::setLogFileSelected( const QString& file_name )
 {
-    const auto& item{ std::find_if
+    const auto item{ std::find_if
         ( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& it){ return it.name()==file_name; } ) };
+          [&file_name]( const LogFile& it )
+                      { return it.name() == file_name; } ) };
     if ( item != this->logs_list.end() ) {
-        (*item).setSelected();
+        item->setSelected();
         return true;
     }
     return false;
+}
+
+void Craplog::clearLogFilesSelection()
+{
+    std::ignore = std::for_each(
+        this->logs_list.begin(), this->logs_list.end(),
+        []( LogFile& it )
+          { if (it.isSelected()) it.setUnselected(); } );
 }
 
 

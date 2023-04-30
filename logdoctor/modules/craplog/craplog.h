@@ -149,6 +149,13 @@ public:
     */
     const bool setLogFileSelected( const QString& file_name );
 
+    //! Sets all files in the list as unselected
+    /*!
+        \return Wheter the given file name has been found in the list
+        \see LogFile, logs_list
+    */
+    void clearLogFilesSelection();
+
 
     //////////////////////
     //// LOGS FORMATS ////

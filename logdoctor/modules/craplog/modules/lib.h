@@ -29,6 +29,8 @@ public:
         { return this->selected; }
     void setSelected()              //!< Sets the file as selected
         { this->selected |= true; }
+    void setUnselected()            //!< Sets the file as unselected
+        { this->selected &= false; }
     const bool hasBeenUsed() const  //!< Wheter the file has been used already or not
         { return this->used_already; }
     const size_t size() const     //!< The size of the file

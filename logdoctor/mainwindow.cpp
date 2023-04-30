@@ -2718,6 +2718,7 @@ void MainWindow::craplogFinished()
     } else {
         this->afterCraplogFinished();
     }
+    this->craplog.clearLogFilesSelection();
 }
 
 void MainWindow::afterCraplogFinished()
