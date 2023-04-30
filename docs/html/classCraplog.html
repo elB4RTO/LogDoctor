@@ -155,6 +155,9 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="memitem:a57b298653b106bfc564b5b5a7d06b86d"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a57b298653b106bfc564b5b5a7d06b86d">setLogFileSelected</a> (const QString &amp;file_name)</td></tr>
 <tr class="memdesc:a57b298653b106bfc564b5b5a7d06b86d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a file in the list as selected.  <br /></td></tr>
 <tr class="separator:a57b298653b106bfc564b5b5a7d06b86d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af712a3a0fce65fe3b46b63149dac35b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#af712a3a0fce65fe3b46b63149dac35b4">clearLogFilesSelection</a> ()</td></tr>
+<tr class="memdesc:af712a3a0fce65fe3b46b63149dac35b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets all files in the list as unselected.  <br /></td></tr>
+<tr class="separator:af712a3a0fce65fe3b46b63149dac35b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fca53dbd1698b2af7b82b6b9ff49c29"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a7fca53dbd1698b2af7b82b6b9ff49c29">setApacheLogFormat</a> (const std::string &amp;format_string)</td></tr>
 <tr class="memdesc:a7fca53dbd1698b2af7b82b6b9ff49c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Apache2 <a class="el" href="classLogsFormat.html" title="Holds informations about a log format.">LogsFormat</a> from the given format string.  <br /></td></tr>
 <tr class="separator:a7fca53dbd1698b2af7b82b6b9ff49c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,14 +176,14 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="memitem:ae2eeee8610c21e2f9e3cb15b50569e9f"><td class="memItemLeft" align="right" valign="top">const QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#ae2eeee8610c21e2f9e3cb15b50569e9f">getLogsFormatSample</a> (const unsigned &amp;web_server_id) const</td></tr>
 <tr class="memdesc:ae2eeee8610c21e2f9e3cb15b50569e9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a sample log line for the given Web Server using the relative <a class="el" href="classLogsFormat.html" title="Holds informations about a log format.">LogsFormat</a>.  <br /></td></tr>
 <tr class="separator:ae2eeee8610c21e2f9e3cb15b50569e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8bbdad22c944e08e0d7cce18509f3c2"><td class="memItemLeft" align="right" valign="top"><a id="ad8bbdad22c944e08e0d7cce18509f3c2" name="ad8bbdad22c944e08e0d7cce18509f3c2"></a>
-const unsigned &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getWarningSize</b> () const</td></tr>
-<tr class="memdesc:ad8bbdad22c944e08e0d7cce18509f3c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the currently set warning size for the log files. <br /></td></tr>
-<tr class="separator:ad8bbdad22c944e08e0d7cce18509f3c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abefd52f9b1a69abac0e34a4bfb4bf20a"><td class="memItemLeft" align="right" valign="top"><a id="abefd52f9b1a69abac0e34a4bfb4bf20a" name="abefd52f9b1a69abac0e34a4bfb4bf20a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setWarningSize</b> (const unsigned &amp;new_size)</td></tr>
-<tr class="memdesc:abefd52f9b1a69abac0e34a4bfb4bf20a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new warning size for the log files. <br /></td></tr>
-<tr class="separator:abefd52f9b1a69abac0e34a4bfb4bf20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7c333916cd655226f93195a7d6966d5"><td class="memItemLeft" align="right" valign="top"><a id="ad7c333916cd655226f93195a7d6966d5" name="ad7c333916cd655226f93195a7d6966d5"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getWarningSize</b> () const</td></tr>
+<tr class="memdesc:ad7c333916cd655226f93195a7d6966d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the currently set warning size for the log files. <br /></td></tr>
+<tr class="separator:ad7c333916cd655226f93195a7d6966d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e2d55bc0cd12ed0798e47e85067fa43"><td class="memItemLeft" align="right" valign="top"><a id="a1e2d55bc0cd12ed0798e47e85067fa43" name="a1e2d55bc0cd12ed0798e47e85067fa43"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setWarningSize</b> (const size_t new_size)</td></tr>
+<tr class="memdesc:a1e2d55bc0cd12ed0798e47e85067fa43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the new warning size for the log files. <br /></td></tr>
+<tr class="separator:a1e2d55bc0cd12ed0798e47e85067fa43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29378e1282de3360a95ec69c511ab612"><td class="memItemLeft" align="right" valign="top">const bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a29378e1282de3360a95ec69c511ab612">isBlacklistUsed</a> (const unsigned &amp;web_server_id, const int &amp;log_field_id) const</td></tr>
 <tr class="memdesc:a29378e1282de3360a95ec69c511ab612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the relative blacklist is set to be used or not.  <br /></td></tr>
 <tr class="separator:a29378e1282de3360a95ec69c511ab612"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -240,14 +243,14 @@ const bool&#160;</td><td class="memItemRight" valign="bottom"><b>isParsing</b> (
 const bool&#160;</td><td class="memItemRight" valign="bottom"><b>editedDatabase</b> () const</td></tr>
 <tr class="memdesc:a6cabb746e255f911ec2adcad74d5f332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the database has been edited or not during the process. <br /></td></tr>
 <tr class="separator:a6cabb746e255f911ec2adcad74d5f332"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a067f8f1d1f0e8d21b7aaf321ffce3937"><td class="memItemLeft" align="right" valign="top"><a id="a067f8f1d1f0e8d21b7aaf321ffce3937" name="a067f8f1d1f0e8d21b7aaf321ffce3937"></a>
-const unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>getParsedSize</b> ()</td></tr>
-<tr class="memdesc:a067f8f1d1f0e8d21b7aaf321ffce3937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total logs size. <br /></td></tr>
-<tr class="separator:a067f8f1d1f0e8d21b7aaf321ffce3937"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab99e27523b6b6f4436c98a1c1d2c2e4"><td class="memItemLeft" align="right" valign="top"><a id="aab99e27523b6b6f4436c98a1c1d2c2e4" name="aab99e27523b6b6f4436c98a1c1d2c2e4"></a>
-const unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>getParsedLines</b> ()</td></tr>
-<tr class="memdesc:aab99e27523b6b6f4436c98a1c1d2c2e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parsed logs lines. <br /></td></tr>
-<tr class="separator:aab99e27523b6b6f4436c98a1c1d2c2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea553baf920305c9f626e8c186ab784a"><td class="memItemLeft" align="right" valign="top"><a id="aea553baf920305c9f626e8c186ab784a" name="aea553baf920305c9f626e8c186ab784a"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getParsedSize</b> ()</td></tr>
+<tr class="memdesc:aea553baf920305c9f626e8c186ab784a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total logs size. <br /></td></tr>
+<tr class="separator:aea553baf920305c9f626e8c186ab784a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca83d3e8d1045df175fc2b8b658b8102"><td class="memItemLeft" align="right" valign="top"><a id="aca83d3e8d1045df175fc2b8b658b8102" name="aca83d3e8d1045df175fc2b8b658b8102"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getParsedLines</b> ()</td></tr>
+<tr class="memdesc:aca83d3e8d1045df175fc2b8b658b8102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parsed logs lines. <br /></td></tr>
+<tr class="separator:aca83d3e8d1045df175fc2b8b658b8102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04d1114c7eef6e8841ffedcd83c66044"><td class="memItemLeft" align="right" valign="top"><a id="a04d1114c7eef6e8841ffedcd83c66044" name="a04d1114c7eef6e8841ffedcd83c66044"></a>
 const QString&#160;</td><td class="memItemRight" valign="bottom"><b>getParsingSpeed</b> ()</td></tr>
 <tr class="memdesc:a04d1114c7eef6e8841ffedcd83c66044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the speed on parsing logs. <br /></td></tr>
@@ -532,6 +535,27 @@ const unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>IIS_ID</b> 
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="af712a3a0fce65fe3b46b63149dac35b4" name="af712a3a0fce65fe3b46b63149dac35b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af712a3a0fce65fe3b46b63149dac35b4">&#9670;&#160;</a></span>clearLogFilesSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Craplog::clearLogFilesSelection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets all files in the list as unselected. </p>
+<dl class="section return"><dt>Returns</dt><dd>Wheter the given file name has been found in the list </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLogFile.html" title="Holds informations about a log file.">LogFile</a>, logs_list </dd></dl>
 
 </div>
 </div>
