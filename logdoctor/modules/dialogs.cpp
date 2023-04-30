@@ -463,6 +463,18 @@ const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget* paren
     return dialog.exec();
 }
 
+void DialogSec::msgNotEnoughMemory( const QString& msg, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("Not enough memory"),
+        QString("%1%2\n\n%3").arg(
+            DialogSec::tr("The total size of the selected files exceeds the available memory"),
+            msg,
+            DialogSec::tr("Please free some resources, parse the files at different times or split them into smaller units") ),
+        "", 2, parent };
+    std::ignore = dialog.exec();
+}
+
 
 void DialogSec::errFailedReadFile( const QString& file , const bool skipping, QWidget* parent )
 {
