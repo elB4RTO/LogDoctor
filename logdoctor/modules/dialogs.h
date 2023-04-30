@@ -128,6 +128,9 @@ public:
     //! A log file which has been selected to be used is no more available
     static const int choiceSelectedFileNotFound( const QString& file, QWidget* parent=nullptr );
 
+    //! The list of files to parse is empty
+    static void msgNoFileToParse( QWidget* parent=nullptr );
+
 
     ////////////////////////////
     //// WARNLIST/BLACKLIST ////

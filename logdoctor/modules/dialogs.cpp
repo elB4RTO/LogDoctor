@@ -538,6 +538,17 @@ const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* p
     return dialog.exec();
 }
 
+void DialogSec::msgNoFileToParse( QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("No file to parse"),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr("The list of files to parse is empty"),
+            DialogSec::tr("Aborting") ),
+        "", 2, parent };
+    std::ignore = dialog.exec();
+}
+
 
 
 /////////////////////
