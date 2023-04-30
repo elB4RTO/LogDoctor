@@ -4,6 +4,7 @@
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
+#include "utilities/memory.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
@@ -689,6 +690,7 @@ const bool Craplog::checkStuff()
         }
     }
 
+    size_t logs_size{ 0ul };
     for ( const LogFile& file : this->logs_list ) {
 
         if ( ! this->proceed ) { break; }
@@ -795,11 +797,31 @@ const bool Craplog::checkStuff()
             std::make_tuple( file.path(), file.hash() )
         );
         this->used_files_hashes.push_back( file.hash() );
+        logs_size += file.size();
     }
 
+    // check if there are enough files to use
     if ( this->proceed && this->log_files_to_use.size() == 0ul ) {
         // no files left, abort
         DialogSec::msgNoFileToParse();
+        this->proceed &= false;
+    }
+
+    // check if the total size of the files do not exceed the available RAM
+    if ( this->proceed && logs_size >= MemOps::availableMemory() ) {
+        // no files left, abort
+        QString msg;
+        if ( this->dialogs_level >= 1 ) {
+            msg += QString("\n\n%1: %2").arg(
+                DialogSec::tr("Available memory"),
+                PrintSec::printableSize( MemOps::availableMemory() ) );
+            if ( this->dialogs_level == 2 ) {
+                msg += QString("\n%1: %2").arg(
+                    DialogSec::tr("Size of the logs"),
+                    PrintSec::printableSize( logs_size ) );
+            }
+        }
+        DialogSec::msgNotEnoughMemory( msg );
         this->proceed &= false;
     }
 
