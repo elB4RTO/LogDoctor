@@ -4,6 +4,10 @@
 class QString;
 
 
+//! PrintSec
+/*!
+    Utilities to have printable stuff
+*/
 namespace PrintSec
 {
 
