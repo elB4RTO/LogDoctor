@@ -788,6 +788,12 @@ const bool Craplog::checkStuff()
         this->used_files_hashes.push_back( file.hash() );
     }
 
+    if ( this->proceed && this->log_files_to_use.size() == 0ul ) {
+        // no files left, abort
+        DialogSec::msgNoFileToParse();
+        this->proceed &= false;
+    }
+
     return this->proceed;
 }
 
