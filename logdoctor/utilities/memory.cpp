@@ -29,9 +29,9 @@ const size_t availableMemory() {
     if ( host_statistics( mach_host_self(), HOST_VM_INFO, (host_info_t)&vmstat, &count ) != KERN_SUCCESS ) {
         throw GenericException("Failed to get host infos", true);
     }
-    double n_pages{ vmstat.free_count };
+    natural_t n_pages{ vmstat.free_count };
     long page_size{ sysconf( _SC_PAGE_SIZE ) };
-    if ( n_pages < 0.0 || page_size < 0l ) {
+    if ( n_pages < 0u || page_size < 0l ) {
         return 0ul;
     }
     return static_cast<size_t>( n_pages ) * static_cast<size_t>( page_size );
