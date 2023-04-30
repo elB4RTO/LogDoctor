@@ -682,6 +682,34 @@ Abortado</translation>
         <source>The file appears twice in the list of selections</source>
         <translation type="unfinished">O arquivo aparece duas vezes na lista de seleções</translation>
     </message>
+    <message>
+        <source>The list of files to parse is empty</source>
+        <translation type="unfinished">A lista de arquivos para analisar está vazia</translation>
+    </message>
+    <message>
+        <source>No file to parse</source>
+        <translation type="unfinished">Nenhum arquivo para analisar</translation>
+    </message>
+    <message>
+        <source>Available memory</source>
+        <translation type="unfinished">Memoria disponivel</translation>
+    </message>
+    <message>
+        <source>Size of the logs</source>
+        <translation type="unfinished">Tamanho dos registros</translation>
+    </message>
+    <message>
+        <source>Not enough memory</source>
+        <translation type="unfinished">Memória insuficiente</translation>
+    </message>
+    <message>
+        <source>The total size of the selected files exceeds the available memory</source>
+        <translation type="unfinished">O tamanho total dos arquivos selecionados excede a memória disponível</translation>
+    </message>
+    <message>
+        <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
+        <translation type="unfinished">Por favor libere alguns recursos, analise os arquivos em diferentes etapas ou divida-os em unidades menores</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
