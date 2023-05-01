@@ -23,15 +23,17 @@ class LogFile {
 public:
     explicit LogFile(){}
     explicit LogFile
-        (const bool sel,const bool used,const unsigned sz,const QString& nm,const std::string& hs,const std::string& pt)
+        (const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt)
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
     const bool isSelected() const   //!< Wheter the file has been selected to be use or not
         { return this->selected; }
     void setSelected()              //!< Sets the file as selected
         { this->selected |= true; }
+    void setUnselected()            //!< Sets the file as unselected
+        { this->selected &= false; }
     const bool hasBeenUsed() const  //!< Wheter the file has been used already or not
         { return this->used_already; }
-    const unsigned size() const     //!< The size of the file
+    const size_t size() const     //!< The size of the file
         { return this->size_; }
     const QString& name() const     //!< The name of the file, to be displayed in the list
         { return this->name_; }
@@ -42,7 +44,7 @@ public:
 private:
     bool selected;
     bool used_already;
-    unsigned size_;
+    size_t size_;
     QString name_;
     std::string hash_;
     std::string path_;

@@ -4,13 +4,13 @@
 current_path=$(pwd)
 
 # Get the path of LogDoctor-git's folder and move in
-docdir="$(dirname $(realpath $0))"
+docdir="$(dirname $(dirname $(realpath $0)))"
 cd "$docdir"
 
 # Check the existence of a previous executable file
-if [ ! -e /usr/bin/logdoctor ]
+if [ -e /usr/bin/logdoctor ]
 then
-	echo "$(tput setaf 11)Warning:$(tput sgr0) no previous installation found, please run the $(tput bold)install$(tput sgr0) script instead"
+	echo "$(tput setaf 11)Warning:$(tput sgr0) a previous installation exists, please run the $(tput bold)update$(tput sgr0) script instead"
 	exit 0
 fi
 
@@ -68,9 +68,26 @@ fi
 wait
 echo "$(tput setaf 10)-->$(tput sgr0) Built succesfully"
 
-# Start updating LogDoctor
-echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Updating$(tput sgr0)"
+# Start installing LogDoctor
+echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Installing$(tput sgr0)"
 cd ../installation_stuff/
+
+if [ ! -d ~/.config/LogDoctor ]
+then
+	mkdir -p ~/.config/LogDoctor
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to create directory: ~/.config/LogDoctor"
+		exit 1
+	fi
+fi
+chmod 644 ./logdoctor.conf
+install -DC ./logdoctor.conf -t ~/.config/LogDoctor
+if [[ "$?" != "0" ]]
+then
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy configuration file"
+	exit 1
+fi
 
 
 if [ ! -d /usr/share/LogDoctor ]
@@ -131,6 +148,6 @@ then
 fi
 
 
-# Update finished
-echo "$(tput setaf 10)-->$(tput sgr0) $(tput bold)Updated succesfully$(tput sgr0)"
+# Installation finished
+echo "$(tput setaf 10)-->$(tput sgr0) $(tput bold)Installed succesfully$(tput sgr0)"
 cd "$current_path"

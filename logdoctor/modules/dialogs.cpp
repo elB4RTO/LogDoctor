@@ -427,6 +427,19 @@ const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent 
 }
 
 
+const int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
+{
+    DialogDia dialog{
+        DialogSec::tr("Duplicate file"),
+        QString("%1:\n%2\n\n%3").arg(
+            DialogSec::tr("The file appears twice in the list of selections"),
+            msg,
+            DialogSec::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?") ),
+        true, true, true, parent };
+    return dialog.exec();
+}
+
+
 const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
 {
     DialogDia dialog{
@@ -448,6 +461,18 @@ const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget* paren
             DialogSec::tr("Proceed anyway?") ),
         parent };
     return dialog.exec();
+}
+
+void DialogSec::msgNotEnoughMemory( const QString& msg, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("Not enough memory"),
+        QString("%1%2\n\n%3").arg(
+            DialogSec::tr("The total size of the selected files exceeds the available memory"),
+            msg,
+            DialogSec::tr("Please free some resources, parse the files in different steps or split them into smaller units") ),
+        "", 2, parent };
+    std::ignore = dialog.exec();
 }
 
 
@@ -523,6 +548,17 @@ const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* p
             DialogSec::tr("Discard it and continue, or Abort all and exit?") ),
         false, true, true, parent };
     return dialog.exec();
+}
+
+void DialogSec::msgNoFileToParse( QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("No file to parse"),
+        QString("%1\n\n%2").arg(
+            DialogSec::tr("The list of files to parse is empty"),
+            DialogSec::tr("Aborting") ),
+        "", 2, parent };
+    std::ignore = dialog.exec();
 }
 
 

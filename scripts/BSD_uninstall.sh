@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 # Start uninstalling
-echo "\033[94m==>\033[0m \033[1mUninstalling\033[0m"
+echo -e "\033[94m==>\033[0m \033[1mUninstalling\033[0m"
 
 # Remove the executable
 if [ -e /usr/bin/logdoctor ]
@@ -9,10 +9,10 @@ then
 	sudo rm /usr/bin/logdoctor
 	if [[ "$?" != "0" ]]
 	then
-		echo "\033[31mError:\033[0m failed to remove the executable: \033[93m/usr/bin/logdoctor\033[0m"
+		echo -e "\033[31mError:\033[0m failed to remove the executable: \033[93m/usr/bin/logdoctor\033[0m"
 	fi
 else
-	echo "\033[93mWarning:\033[0m executable not found"
+	echo -e "\033[93mWarning:\033[0m executable not found"
 fi
 
 # Remove LogDoctor's data
@@ -21,22 +21,22 @@ then
 	sudo rm -r /usr/share/LogDoctor
 	if [[ "$?" != "0" ]]
 	then
-		echo "\033[31mError:\033[0m failed to remove LogDoctor's data: \033[93m/usr/share/LogDoctor\033[0m"
+		echo -e "\033[31mError:\033[0m failed to remove LogDoctor's data: \033[93m/usr/share/LogDoctor\033[0m"
 	fi
 else
-	echo "\033[93mWarning:\033[0m LogDoctor's data folder not found"
+	echo -e "\033[93mWarning:\033[0m LogDoctor's data folder not found"
 fi
 
 # Remove the menu entry
-if [ -e /usr/share/applications/LogDoctor.desktop ]
+if [ -e /usr/local/share/applications/LogDoctor.desktop ]
 then
-	sudo rm /usr/share/applications/LogDoctor.desktop
+	sudo rm /usr/local/share/applications/LogDoctor.desktop
 	if [[ "$?" != "0" ]]
 	then
-		echo "\033[31mError:\033[0m failed to remove the menu entry: \033[93m/usr/share/applications/LogDoctor.desktop\033[0m"
+		echo -e "\033[31mError:\033[0m failed to remove the menu entry: \033[93m/usr/share/applications/LogDoctor.desktop\033[0m"
 	fi
 else
-	echo "\033[93mWarning:\033[0m menu entry not found"
+	echo -e "\033[93mWarning:\033[0m menu entry not found"
 fi
 
 # Ask about removing databases
@@ -59,20 +59,20 @@ then
 						rm "$db_data_path/collection.db"
 						if [[ "$?" != "0" ]]
 						then
-							echo "\033[31mError:\033[0m failed to remove data collection database: \033[93m$db_data_path/collection.db\033[0m"
+							echo -e "\033[31mError:\033[0m failed to remove data collection database: \033[93m$db_data_path/collection.db\033[0m"
 						fi
 						if [ -d "$db_data_path/backups" ]
 						then
 							rm -r "$db_data_path/backups"
 							if [[ "$?" != "0" ]]
 							then
-								echo "\033[31mError:\033[0m failed to remove data collection database backups: \033[93m$db_data_path/backups\033[0m"
+								echo -e "\033[31mError:\033[0m failed to remove data collection database backups: \033[93m$db_data_path/backups\033[0m"
 							fi
 						else
-							echo "\033[93mWarning:\033[0m data collection database's backups folder not found"
+							echo -e "\033[93mWarning:\033[0m data collection database's backups folder not found"
 						fi
 					else
-						echo "\033[93mWarning:\033[0m data collection database not found"
+						echo -e "\033[93mWarning:\033[0m data collection database not found"
 					fi
 					# Remove the hashes database
 					if [ -e "$db_hashes_path/hashes.db" ]
@@ -80,10 +80,10 @@ then
 						rm "$db_hashes_path/hashes.db"
 						if [[ "$?" != "0" ]]
 						then
-							echo "\033[31mError:\033[0m failed to remove hashes database: \033[93m$db_hashes_path/hashes.db\033[0m"
+							echo -e "\033[31mError:\033[0m failed to remove hashes database: \033[93m$db_hashes_path/hashes.db\033[0m"
 						fi
 					else
-						echo "\033[93mWarning:\033[0m hashes database not found"
+						echo -e "\033[93mWarning:\033[0m hashes database not found"
 					fi
 					# Wipe the default folder
 					if [ -e ~/.local/share/LogDoctor ]
@@ -91,10 +91,10 @@ then
 						rm -r ~/.local/share/LogDoctor
 						if [[ "$?" != "0" ]]
 						then
-							echo "\033[31mError:\033[0m failed to remove the default databases folder: \033[93m"~/.local/share/LogDoctor"\033[0m"
+							echo -e "\033[31mError:\033[0m failed to remove the default databases folder: \033[93m"~/.local/share/LogDoctor"\033[0m"
 						fi
 					else
-						echo "\033[93mWarning:\033[0m default databases' folder not found"
+						echo -e "\033[93mWarning:\033[0m default databases' folder not found"
 					fi
 					break
 				;;
@@ -102,7 +102,7 @@ then
 					break
 				;;
 				*)
-					echo "Invalid answer"
+					echo -e "Invalid answer"
 				;;
 			esac
 		done
@@ -122,7 +122,7 @@ then
 				rm -r ~/.config/LogDoctor
 				if [[ "$?" != "0" ]]
 				then
-					echo "\033[31mError:\033[0m failed to remove the configuration: \033[93m"~/.config/LogDoctor"\033[0m"
+					echo -e "\033[31mError:\033[0m failed to remove the configuration: \033[93m"~/.config/LogDoctor"\033[0m"
 				fi
 				break
 			;;
@@ -130,14 +130,14 @@ then
 				break
 			;;
 			*)
-				echo "Invalid answer"
+				echo -e "Invalid answer"
 			;;
 		esac
 	done
 else
-	echo "\033[93mWarning:\033[0m configurations' folder not found"
+	echo -e "\033[93mWarning:\033[0m configurations' folder not found"
 fi
 
 
 # Uninstallation finished
-echo "\033[92m-->\033[0m \033[1mUninstallation finished\033[0m"
+echo -e "\033[92m-->\033[0m \033[1mUninstallation finished\033[0m"

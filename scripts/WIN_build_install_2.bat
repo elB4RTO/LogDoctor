@@ -8,12 +8,41 @@ SET actual_path=%1
 SET logdocdir=%~dp0
 SET logdocdir=%logdocdir:\=/%
 IF "%logdocdir:~-1%"=="/" SET logdocdir=%logdocdir:~0,-1%
+SET logdocdir=%logdocdir%/..
 cd %logdocdir%
 
 
+:: Check the existence of a previous installation
+IF NOT EXIST "C:\Program Files\LogDoctor\LogDoctor.exe" GOTO :step1
+
+:loop0
+ECHO:
+ECHO Warning: a previous installation already exists
+ECHO If you choose to continue, the actual content will be erased
+SET /P agree=Continue? [y/n] :
+
+IF "%agree%"=="y" (
+	GOTO :step1
+)
+IF "%agree%"=="Y" (
+	GOTO :step1
+)
+IF "%agree%"=="n" (
+	cd "%actual_path%"
+	EXIT /B 1
+)
+IF "%agree%"=="N" (
+	cd "%actual_path%"
+	EXIT /B 1
+)
+ECHO NOT A VALID ANSWER
+GOTO :loop0
+
+:step1
+
 SET exec_path=C:\Program Files\LogDoctor
 
-IF NOT EXIST "%exec_path%" GOTO :step1
+IF NOT EXIST "%exec_path%" GOTO :step2
 
 rmdir /S /Q "%exec_path%"
 IF ERRORLEVEL 1 (
@@ -24,7 +53,7 @@ IF ERRORLEVEL 1 (
 	EXIT /B 1
 )
 
-:step1
+:step2
 
 xcopy /E /I /V /Y build\LogDoctor "%exec_path%"
 IF ERRORLEVEL 1 (
@@ -38,7 +67,7 @@ IF ERRORLEVEL 1 (
 
 SET link_path=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\LogDoctor
 
-IF NOT EXIST "%link_path%" GOTO :step2
+IF NOT EXIST "%link_path%" GOTO :step3
 
 rmdir /S /Q "%link_path%"
 IF ERRORLEVEL 1 (
@@ -49,13 +78,13 @@ IF ERRORLEVEL 1 (
 	EXIT /B 1
 )
 
-:step2
+:step3
 
 mkdir "%link_path%"
 
 SET link_path=%link_path%\LogDoctor.exe
 
-IF NOT EXIST "%link_path%" GOTO :step3
+IF NOT EXIST "%link_path%" GOTO :step4
 
 del "%link_path%"
 IF ERRORLEVEL 1 (
@@ -66,7 +95,7 @@ IF ERRORLEVEL 1 (
 	EXIT /B 1
 )
 
-:step3
+:step4
 
 mklink "%link_path%" "%exec_path%\LogDoctor.exe"
 
@@ -81,8 +110,8 @@ IF ERRORLEVEL 1 (
 )
 
 
-:: Update finished
+:: Installation finished
 ECHO:
-ECHO "Update finished"
+ECHO Installation finished
 cd "%actual_path%"
 PAUSE

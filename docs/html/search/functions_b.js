@@ -6,5 +6,7 @@ var searchData=
   ['makepreview_3',['makePreview',['../classTextBrowser.html#a9678c99090d67310690f6a1146d70c06',1,'TextBrowser']]],
   ['menu_5factionenglishgb_5ftriggered_4',['menu_actionEnglishGb_triggered',['../classMainWindow.html#a42ea06a6c166e5c8243944d4e5159514',1,'MainWindow']]],
   ['move_5',['move',['../classFood.html#a840b4ae09993aea111403617f56988d1',1,'Food']]],
-  ['msgdatabasecreated_6',['msgDatabaseCreated',['../classDialogSec.html#ae916458257088da13a1a2bc885d5c71d',1,'DialogSec']]]
+  ['msgdatabasecreated_6',['msgDatabaseCreated',['../classDialogSec.html#ae916458257088da13a1a2bc885d5c71d',1,'DialogSec']]],
+  ['msgnofiletoparse_7',['msgNoFileToParse',['../classDialogSec.html#a38d096b5d4d6cae9d0af6224ff4b6ba9',1,'DialogSec']]],
+  ['msgnotenoughmemory_8',['msgNotEnoughMemory',['../classDialogSec.html#a9f29d5f5fc2b8dd92ab94942c6162026',1,'DialogSec']]]
 ];

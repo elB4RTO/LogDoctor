@@ -674,6 +674,42 @@ please follow the instruction on the repository page</translation>
         <source>Unrecognized entry</source>
         <translation>Unrecognized entry</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation>Duplicate file</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation>The file appears twice in the list of selections</translation>
+    </message>
+    <message>
+        <source>The list of files to parse is empty</source>
+        <translation>The list of files to parse is empty</translation>
+    </message>
+    <message>
+        <source>No file to parse</source>
+        <translation>No file to parse</translation>
+    </message>
+    <message>
+        <source>Available memory</source>
+        <translation>Available memory</translation>
+    </message>
+    <message>
+        <source>Size of the logs</source>
+        <translation>Size of the logs</translation>
+    </message>
+    <message>
+        <source>Not enough memory</source>
+        <translation>Not enough memory</translation>
+    </message>
+    <message>
+        <source>The total size of the selected files exceeds the available memory</source>
+        <translation>The total size of the selected files exceeds the available memory</translation>
+    </message>
+    <message>
+        <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
+        <translation>Please free some resources, parse the files in different steps or split them into smaller units</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

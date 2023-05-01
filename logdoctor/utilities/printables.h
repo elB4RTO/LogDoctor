@@ -4,8 +4,14 @@
 class QString;
 
 
+//! PrintSec
+/*!
+    Utilities to have printable stuff
+*/
 namespace PrintSec
 {
+
+namespace{ using size_t = unsigned long; }
 
 //! Formats the size including the suffix, for display purposes
 /*!
@@ -13,7 +19,7 @@ namespace PrintSec
     \return The string to be displayed
 */
 const QString printableSize(
-    const unsigned bytes
+    const size_t bytes
 );
 
 
@@ -24,7 +30,7 @@ const QString printableSize(
     \return The string to be displayed
 */
 const QString printableSpeed(
-    const float& bytes, const float& seconds
+    const double bytes, const double seconds
 );
 
 

@@ -4,17 +4,17 @@
 actual_path=$(pwd)
 
 # Get the path of LogDoctor-git's folder and move in
-docdir="$(dirname $0)"
+docdir="$(dirname $(dirname $0))"
 cd "$docdir"
 
 # Check the existence of a previous executable file
-if [ -e /Applications/LogDoctor.app ]
+if [ ! -e /Applications/LogDoctor.app ]
 then
-	echo "Warning: a previous installation exists, please run the 'update' script instead"
+	echo "Warning: no previous installation detected, please run the 'install' script instead"
 	exit 0
 fi
 
-# Check CMake availability
+# Check cmake availability
 which cmake &> /dev/null
 if [[ "$?" != "0" ]]
 then
@@ -31,7 +31,6 @@ then
 	echo "Tip: PATH+=:/path/of/Qt/bins"
 	exit 1
 fi
-
 
 # Start the compilation process
 echo "Starting compilation process"
@@ -68,57 +67,9 @@ fi
 wait
 echo "Compilation finished"
 
-
 # Start installing LogDoctor
-echo "Starting installation process"
+echo "Starting update process"
 cd ../installation_stuff/
-
-if [ -e ~/Lybrary/Preferences/LogDoctor ]
-then
-	if [ -e ~/Lybrary/Preferences/LogDoctor/logdoctor.conf ]
-	then
-		# A configuration file already exists
-		while true;
-		do
-			echo "Warning: a configuration file already exists"
-			printf "If you choose 'YES' the current file will be overwritten\nIf you choose 'NO' the current file will be kept\nOverwrite? [y/n] : "
-			read agree
-			case "$agree"
-			in
-				"y" | "Y" | [yY][eE][sS])
-					printf "\n"
-					cp ./logdoctor.conf ~/Lybrary/Preferences/LogDoctor/
-					if [[ "$?" != "0" ]]
-					then
-						# an error occured during compilation
-						echo "Error: failed to copy configuration file"
-						exit 1
-					fi
-					break
-				;;
-				"n" | "N" | [nN][oO])
-					break
-				;;
-				*)
-					echo "Invalid answer"
-				;;
-			esac
-		done
-	fi
-else
-	mkdir -p ~/Lybrary/Preferences/LogDoctor
-	if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to create directory: ~/Lybrary/Preferences/LogDoctor"
-		exit 1
-	fi
-	cp ./logdoctor.conf ~/Lybrary/Preferences/LogDoctor/
-	if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to copy configuration file"
-		exit 1
-	fi
-fi
 
 
 if [ ! -e ~/"Lybrary/Application Support/LogDoctor" ]
@@ -126,7 +77,7 @@ then
 	mkdir -p ~/"Lybrary/Application Support/LogDoctor"
 	if [[ "$?" != "0" ]]
 	then
-		echo "Error: failed to create directory: ~/Lybrary/Application Support/LogDoctor"
+		echo "Error: failed to create directory: '~/Lybrary/Application Support/LogDoctor'"
 		exit 1
 	fi
 fi
@@ -139,7 +90,7 @@ then
 		exit 1
 	fi
 fi
-cp -r ./logdocdata/help ~/"Lybrary/Application Support/LogDoctor/"
+cp -r ./logdocdata/help ~/"Lybrary/Application Support/LogDoctor"
 if [[ "$?" != "0" ]]
 then
 	echo "Error: failed to copy LogDoctor's data"
@@ -148,14 +99,11 @@ fi
 
 
 cp -r ./osx_bundle/{bin,doc,Resources,info.plist} ../build/LogDoctor.app/Contents/
-if [ -e /Applications/LogDoctor.app ]
+sudo rm -r /Applications/LogDoctor.app
+if [[ "$?" != "0" ]]
 then
-	sudo rm -r /Applications/LogDoctor.app
-	if [[ "$?" != "0" ]]
-	then
-		echo "Error: failed to remove old app bundle: /Applications/LogDoctor.app"
-		exit 1
-	fi
+	echo "Error: failed to remove the old app bundle"
+	exit 1
 fi
 sudo mv ../build/LogDoctor.app /Applications/
 if [[ "$?" != "0" ]]
@@ -165,6 +113,6 @@ then
 fi
 
 
-# Installation finished
-echo "Installation finished"
+# Update finished
+echo "Update finished"
 cd "$actual_path"

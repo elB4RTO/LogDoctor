@@ -7,5 +7,6 @@ var searchData=
   ['ai_5fupdateweights_4',['AI_updateWeights',['../classCrissCross.html#a8c8798850707c8090bc8bf3d0f313109',1,'CrissCross']]],
   ['apache_5falf_5',['APACHE_ALF',['../classFormatOps.html#a1dd258c0c0bb9091e25c2b36c47b5ad1',1,'FormatOps']]],
   ['apache_5fid_6',['APACHE_ID',['../classCraplog.html#a7cc687d9a8d0740a510c4640d506db43',1,'Craplog::APACHE_ID()'],['../classCraplogWorker.html#a71c7c7af6e03a6c45822a950278af947',1,'CraplogWorker::APACHE_ID()']]],
-  ['applycharttheme_7',['applyChartTheme',['../namespaceColorSec.html#aea8324d4e5357725a55e5ab670bbfb5c',1,'ColorSec']]]
+  ['applycharttheme_7',['applyChartTheme',['../namespaceColorSec.html#aea8324d4e5357725a55e5ab670bbfb5c',1,'ColorSec']]],
+  ['availablememory_8',['availableMemory',['../namespaceMemOps.html#abd8ae0f3a7ca827f25fad05a91b053b6',1,'MemOps']]]
 ];

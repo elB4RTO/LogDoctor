@@ -670,6 +670,42 @@ please follow the instruction on the repository page</source>
         <source>Unrecognized entry</source>
         <translation type="unfinished">認識されないエントリ</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation type="unfinished">重複ファイル</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation type="unfinished">選択リストにファイルが 2 回表示される</translation>
+    </message>
+    <message>
+        <source>The list of files to parse is empty</source>
+        <translation type="unfinished">解析するファイルのリストが空です</translation>
+    </message>
+    <message>
+        <source>No file to parse</source>
+        <translation type="unfinished">解析するファイルがありません</translation>
+    </message>
+    <message>
+        <source>Available memory</source>
+        <translation type="unfinished">使用可能なメモリ</translation>
+    </message>
+    <message>
+        <source>Size of the logs</source>
+        <translation type="unfinished">ログのサイズ</translation>
+    </message>
+    <message>
+        <source>Not enough memory</source>
+        <translation type="unfinished">メモリーが充分ではありません</translation>
+    </message>
+    <message>
+        <source>The total size of the selected files exceeds the available memory</source>
+        <translation type="unfinished">選択したファイルの合計サイズが使用可能なメモリを超えています</translation>
+    </message>
+    <message>
+        <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
+        <translation type="unfinished">いくつかのリソースを解放し、ファイルを別の手順で解析するか、ファイルを小さな単位に分割してください</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

@@ -208,6 +208,10 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>errDatabaseFai
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>choiceSelectedFileNotFound</b> (const QString &amp;file, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:aa15af4618bb471f4bb984a6bf1f6fcf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A log file which has been selected to be used is no more available. <br /></td></tr>
 <tr class="separator:aa15af4618bb471f4bb984a6bf1f6fcf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38d096b5d4d6cae9d0af6224ff4b6ba9"><td class="memItemLeft" align="right" valign="top"><a id="a38d096b5d4d6cae9d0af6224ff4b6ba9" name="a38d096b5d4d6cae9d0af6224ff4b6ba9"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>msgNoFileToParse</b> (QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a38d096b5d4d6cae9d0af6224ff4b6ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of files to parse is empty. <br /></td></tr>
+<tr class="separator:a38d096b5d4d6cae9d0af6224ff4b6ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9cf747999d28638f8bec00dba752271"><td class="memItemLeft" align="right" valign="top"><a id="ae9cf747999d28638f8bec00dba752271" name="ae9cf747999d28638f8bec00dba752271"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>warnInvalidItemBW</b> (QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:ae9cf747999d28638f8bec00dba752271"><td class="mdescLeft">&#160;</td><td class="mdescRight">An item can't be added to a warnlist/blacklist. <br /></td></tr>
@@ -218,16 +222,24 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedDefin
 <tr class="separator:a37b210d2f9a087eaf395a45ff2095ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ad145e1a537d7d8a4b9a9e36ab13917"><td class="memItemLeft" align="right" valign="top"><a id="a4ad145e1a537d7d8a4b9a9e36ab13917" name="a4ad145e1a537d7d8a4b9a9e36ab13917"></a>
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>choiceFileAlreadyUsed</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:a4ad145e1a537d7d8a4b9a9e36ab13917"><td class="mdescLeft">&#160;</td><td class="mdescRight">A log file has already been used. <br /></td></tr>
+<tr class="memdesc:a4ad145e1a537d7d8a4b9a9e36ab13917"><td class="mdescLeft">&#160;</td><td class="mdescRight">A selected log file has already been used. <br /></td></tr>
 <tr class="separator:a4ad145e1a537d7d8a4b9a9e36ab13917"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e6022a8d8882305f2d628c9b462651c"><td class="memItemLeft" align="right" valign="top"><a id="a5e6022a8d8882305f2d628c9b462651c" name="a5e6022a8d8882305f2d628c9b462651c"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>choiceDuplicateFile</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a5e6022a8d8882305f2d628c9b462651c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A selected log file appears twice in the selection. <br /></td></tr>
+<tr class="separator:a5e6022a8d8882305f2d628c9b462651c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad15349ac08ff1cee668b68d65b1c5985"><td class="memItemLeft" align="right" valign="top"><a id="ad15349ac08ff1cee668b68d65b1c5985" name="ad15349ac08ff1cee668b68d65b1c5985"></a>
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>choiceFileSizeWarning</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:ad15349ac08ff1cee668b68d65b1c5985"><td class="mdescLeft">&#160;</td><td class="mdescRight">A log file exceeds the warning size. <br /></td></tr>
+<tr class="memdesc:ad15349ac08ff1cee668b68d65b1c5985"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of a log file which has been selected to be parsed exceeds the warning size. <br /></td></tr>
 <tr class="separator:ad15349ac08ff1cee668b68d65b1c5985"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb8ef0d9047b8818a680d28628a3c363"><td class="memItemLeft" align="right" valign="top"><a id="afb8ef0d9047b8818a680d28628a3c363" name="afb8ef0d9047b8818a680d28628a3c363"></a>
 static const bool&#160;</td><td class="memItemRight" valign="bottom"><b>choiceFileSizeWarning2</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:afb8ef0d9047b8818a680d28628a3c363"><td class="mdescLeft">&#160;</td><td class="mdescRight">A log file exceeds the warning size. <br /></td></tr>
+<tr class="memdesc:afb8ef0d9047b8818a680d28628a3c363"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of a log file which has been selected to be displayed exceeds the warning size. <br /></td></tr>
 <tr class="separator:afb8ef0d9047b8818a680d28628a3c363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f29d5f5fc2b8dd92ab94942c6162026"><td class="memItemLeft" align="right" valign="top"><a id="a9f29d5f5fc2b8dd92ab94942c6162026" name="a9f29d5f5fc2b8dd92ab94942c6162026"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>msgNotEnoughMemory</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a9f29d5f5fc2b8dd92ab94942c6162026"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total size of the selected files to parse is greater than the available free memory of the system. <br /></td></tr>
+<tr class="separator:a9f29d5f5fc2b8dd92ab94942c6162026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cc898412f2debd5eff058aa8cd88c80"><td class="memItemLeft" align="right" valign="top"><a id="a3cc898412f2debd5eff058aa8cd88c80" name="a3cc898412f2debd5eff058aa8cd88c80"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errInvalidLogFormatString</b> (const QString &amp;msg, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a3cc898412f2debd5eff058aa8cd88c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Failed to process a logs format string. <br /></td></tr>

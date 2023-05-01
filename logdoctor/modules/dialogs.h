@@ -128,6 +128,9 @@ public:
     //! A log file which has been selected to be used is no more available
     static const int choiceSelectedFileNotFound( const QString& file, QWidget* parent=nullptr );
 
+    //! The list of files to parse is empty
+    static void msgNoFileToParse( QWidget* parent=nullptr );
+
 
     ////////////////////////////
     //// WARNLIST/BLACKLIST ////
@@ -145,17 +148,23 @@ public:
     ////////////////////
     //// LOG HASHES ////
 
-    //! A log file has already been used
+    //! A selected log file has already been used
     static const int choiceFileAlreadyUsed( const QString& msg, QWidget* parent=nullptr );
+
+    //! A selected log file appears twice in the selection
+    static const int choiceDuplicateFile( const QString& msg, QWidget* parent=nullptr );
 
     ///////////////////
     //// LOGS SIZE ////
 
-    //! A log file exceeds the warning size
+    //! The size of a log file which has been selected to be parsed exceeds the warning size
     static const int choiceFileSizeWarning( const QString& msg, QWidget* parent=nullptr );
 
-    //! A log file exceeds the warning size
+    //! The size of a log file which has been selected to be displayed exceeds the warning size
     static const bool choiceFileSizeWarning2( const QString& msg, QWidget* parent=nullptr );
+
+    //! The total size of the selected files to parse is greater than the available free memory of the system
+    static void msgNotEnoughMemory( const QString& msg, QWidget* parent=nullptr );
 
 
     /////////////////////

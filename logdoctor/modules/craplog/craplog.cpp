@@ -4,8 +4,10 @@
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
+#include "utilities/memory.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
+#include "utilities/vectors.h"
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
@@ -112,12 +114,12 @@ void Craplog::setHashesDatabasePath( const std::string& path )
     this->db_hashes_path = path + "/hashes.db";
 }
 
-const unsigned& Craplog::getWarningSize() const
+const size_t Craplog::getWarningSize() const
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const unsigned& new_size )
+void Craplog::setWarningSize(const size_t new_size )
 {
     this->warning_size = new_size;
 }
@@ -444,7 +446,7 @@ const std::vector<LogFile>& Craplog::getLogsList( const bool fresh )
 }
 
 
-// return the path of the file matching the given name
+// return the LogFile instance of the file matching the given name
 const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
     const auto& item{ std::find_if
@@ -459,14 +461,23 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 // set a file as selected
 const bool Craplog::setLogFileSelected( const QString& file_name )
 {
-    const auto& item{ std::find_if
+    const auto item{ std::find_if
         ( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& it){ return it.name()==file_name; } ) };
+          [&file_name]( const LogFile& it )
+                      { return it.name() == file_name; } ) };
     if ( item != this->logs_list.end() ) {
-        (*item).setSelected();
+        item->setSelected();
         return true;
     }
     return false;
+}
+
+void Craplog::clearLogFilesSelection()
+{
+    std::ignore = std::for_each(
+        this->logs_list.begin(), this->logs_list.end(),
+        []( LogFile& it )
+          { if (it.isSelected()) it.setUnselected(); } );
 }
 
 
@@ -482,7 +493,7 @@ void Craplog::scanLogsDir()
         }
         return;
     }
-    unsigned size;
+    size_t size;
     QString name;
     std::string path;
     // iterate over entries in the logs folder
@@ -679,6 +690,7 @@ const bool Craplog::checkStuff()
         }
     }
 
+    size_t logs_size{ 0ul };
     for ( const LogFile& file : this->logs_list ) {
 
         if ( ! this->proceed ) { break; }
@@ -710,10 +722,34 @@ const bool Craplog::checkStuff()
                 // shouldn't be here
                 throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
             }
+        } else {
+            // not used already, check for duplicates in the same list
+            if ( VecOps::contains( this->used_files_hashes, file.hash() ) ) {
+                // appears twice in the list
+                QString msg{ file.name() };
+                if ( this->dialogs_level == 2 ) {
+                        msg += "\n" + QString::fromStdString( file.hash() );
+                }
+                const int choice = DialogSec::choiceDuplicateFile( msg );
+                if ( choice == 0 ) {
+                        // choosed to abort all
+                        this->proceed &= false;
+                        break;
+                } else if ( choice == 1 ) {
+                        // choosed to discard the file and continue
+                        continue;
+                } else if ( choice == 2 ) {
+                        // choosed to ignore and use the file anyway
+                        ;
+                } else {
+                        // shouldn't be here
+                        throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
+                }
+            }
         }
 
         // check if the file respects the warning size
-        if ( this->warning_size > 0 ) {
+        if ( this->warning_size > 0ul ) {
             if ( file.size() > this->warning_size ) {
                 // exceeds the warning size
                 QString msg{ file.name() };
@@ -761,6 +797,32 @@ const bool Craplog::checkStuff()
             std::make_tuple( file.path(), file.hash() )
         );
         this->used_files_hashes.push_back( file.hash() );
+        logs_size += file.size();
+    }
+
+    // check if there are enough files to use
+    if ( this->proceed && this->log_files_to_use.size() == 0ul ) {
+        // no files left, abort
+        DialogSec::msgNoFileToParse();
+        this->proceed &= false;
+    }
+
+    // check if the total size of the files do not exceed the available RAM
+    if ( this->proceed && logs_size >= MemOps::availableMemory() ) {
+        // no files left, abort
+        QString msg;
+        if ( this->dialogs_level >= 1 ) {
+            msg += QString("\n\n%1: %2").arg(
+                DialogSec::tr("Available memory"),
+                PrintSec::printableSize( MemOps::availableMemory() ) );
+            if ( this->dialogs_level == 2 ) {
+                msg += QString("\n%1: %2").arg(
+                    DialogSec::tr("Size of the logs"),
+                    PrintSec::printableSize( logs_size ) );
+            }
+        }
+        DialogSec::msgNotEnoughMemory( msg );
+        this->proceed &= false;
     }
 
     return this->proceed;
@@ -771,12 +833,12 @@ void Craplog::startWorking()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->proceed |= true;
-    this->total_lines  = 0u;
-    this->parsed_lines = 0u;
-    this->total_size   = 0u;
-    this->parsed_size  = 0u;
-    this->warnlisted_size  = 0u;
-    this->blacklisted_size = 0u;
+    this->total_lines  = 0ul;
+    this->parsed_lines = 0ul;
+    this->total_size   = 0ul;
+    this->parsed_size  = 0ul;
+    this->warnlisted_size  = 0ul;
+    this->blacklisted_size = 0ul;
     // hire a worker
     CraplogWorker* worker{ new CraplogWorker(
         this->current_WS,
@@ -833,12 +895,12 @@ const bool Craplog::editedDatabase() const
 }
 
 
-const unsigned Craplog::getParsedSize()
+const size_t Craplog::getParsedSize()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-const unsigned Craplog::getParsedLines()
+const size_t Craplog::getParsedLines()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
@@ -850,13 +912,13 @@ const QString Craplog::getParsingSpeed()
         ? std::chrono::system_clock::now()
         : this->parsing_time_stop };
     return PrintSec::printableSpeed(
-        static_cast<float>(
+        static_cast<double>(
             this->parsed_size ),
-        static_cast<float>(
+        static_cast<double>(
             std::chrono::duration_cast<std::chrono::milliseconds>(
                 stop - this->parsing_time_start
             ).count()
-            ) * 0.001f
+            ) * 0.001
         );
 }
 
@@ -877,13 +939,13 @@ const bool Craplog::isParsing() const
     return this->is_parsing;
 }
 
-void Craplog::updatePerfData( const unsigned parsed_size, const unsigned parsed_lines )
+void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines )
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const unsigned total_size, const unsigned total_lines, const unsigned warnlisted_size, const unsigned blacklisted_size )
+void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t warnlisted_size, const size_t blacklisted_size )
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;
@@ -905,32 +967,32 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
     parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size + this->blacklisted_size ) );
-    const unsigned parsed_size{ this->parsed_size - this->warnlisted_size };
+    const size_t parsed_size{ this->parsed_size - this->warnlisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
-        parsed_size );
+        static_cast<qreal>( parsed_size ) );
     parsedSize_donut->append(
         "W@" + warning_slice_name + "@" + PrintSec::printableSize( this->warnlisted_size ),
-        this->warnlisted_size );
+        static_cast<qreal>( this->warnlisted_size ) );
     parsedSize_donut->append(
         "B@" + blacklisted_slice_name + "@" + PrintSec::printableSize( this->blacklisted_size ),
-        this->blacklisted_size );
+        static_cast<qreal>( this->blacklisted_size ) );
 
     // logs size donut chart
     QPieSeries* ignoredSize_donut{ new QPieSeries() };
-    const unsigned ignored_size{ this->total_size - this->parsed_size - this->blacklisted_size };
+    const size_t ignored_size{ this->total_size - this->parsed_size - this->blacklisted_size };
     QString printable_ignored_size{ PrintSec::printableSize( ignored_size ) };
     ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(
         "I@#" + ignored_slice_name + "@#" + printable_ignored_size,
-        ignored_size );
+        static_cast<qreal>( ignored_size ) );
     ignoredSize_donut->setLabelsVisible( false );
 
     DonutBreakdown* sizeBreakdown{ new DonutBreakdown() };
     sizeBreakdown->setTheme( theme );
     sizeBreakdown->setAnimationOptions( QChart::AllAnimations );
     sizeBreakdown->setTitle( size_chart_name );
-    if ( this->proceed && this->total_size > 0u ) {
+    if ( this->proceed && this->total_size > 0ul ) {
         sizeBreakdown->legend()->setAlignment( Qt::AlignRight );
         sizeBreakdown->addBreakdownSeries( parsedSize_donut, Qt::GlobalColor::darkCyan, fonts.at("main_small") );
         sizeBreakdown->addBreakdownSeries( ignoredSize_donut, Qt::GlobalColor::gray, fonts.at("main_small") );

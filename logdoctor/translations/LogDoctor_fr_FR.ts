@@ -674,6 +674,42 @@ Aborting</source>
 
 Abandon</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation type="unfinished">Fichier en double</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation type="unfinished">Le fichier apparaît deux fois dans la liste des sélections</translation>
+    </message>
+    <message>
+        <source>The list of files to parse is empty</source>
+        <translation type="unfinished">La liste des fichiers à analyser est vide</translation>
+    </message>
+    <message>
+        <source>No file to parse</source>
+        <translation type="unfinished">Aucun fichier à analyser</translation>
+    </message>
+    <message>
+        <source>Available memory</source>
+        <translation type="unfinished">Mémoire disponible</translation>
+    </message>
+    <message>
+        <source>Size of the logs</source>
+        <translation type="unfinished">Taille des les journaux</translation>
+    </message>
+    <message>
+        <source>Not enough memory</source>
+        <translation type="unfinished">Mémoire insuffisante</translation>
+    </message>
+    <message>
+        <source>The total size of the selected files exceeds the available memory</source>
+        <translation type="unfinished">La taille totale des fichiers sélectionnés dépasse la mémoire disponible</translation>
+    </message>
+    <message>
+        <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
+        <translation type="unfinished">Veuillez libérer des ressources, analyser les fichiers en différentes étapes ou les diviser en unités plus petites</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

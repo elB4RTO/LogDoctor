@@ -674,6 +674,42 @@ per favore segui le istruzioni nella pagina del repository</translation>
         <source>Unrecognized entry</source>
         <translation>Input non riconosciuto</translation>
     </message>
+    <message>
+        <source>Duplicate file</source>
+        <translation>File duplicato</translation>
+    </message>
+    <message>
+        <source>The file appears twice in the list of selections</source>
+        <translation>Il file appare due volte nella lista dei selezionati</translation>
+    </message>
+    <message>
+        <source>The list of files to parse is empty</source>
+        <translation>La lista dei file da analizzare è vuota</translation>
+    </message>
+    <message>
+        <source>No file to parse</source>
+        <translation>Nessun file da analizzare</translation>
+    </message>
+    <message>
+        <source>Available memory</source>
+        <translation>Memoria disponibile</translation>
+    </message>
+    <message>
+        <source>Size of the logs</source>
+        <translation>Dimensione dei log</translation>
+    </message>
+    <message>
+        <source>Not enough memory</source>
+        <translation>Memoria insufficiente</translation>
+    </message>
+    <message>
+        <source>The total size of the selected files exceeds the available memory</source>
+        <translation>La dimensione totale dei file selezionati supera quella della memoria disponibile</translation>
+    </message>
+    <message>
+        <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
+        <translation>Per favore rilascia qualche risorsa, analizza i file in diversi passaggi o dividili in unità più piccole</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
