@@ -4,18 +4,18 @@
 #include "modules/exceptions.h"
 
 #if defined( Q_OS_UNIX )
-    #include <unistd.h>
-    #if defined( Q_OS_BSD4 )
-        #include <sys/types.h>
-        #include <sys/sysctl.h>
-        #include <sys/vmmeter.h>
-    #elif defined( Q_OS_DARWIN )
-        #include <mach/mach.h>
-    #endif
+#   include <unistd.h>
+#   if defined( Q_OS_DARWIN )
+#       include <mach/mach.h>
+#   elif defined( Q_OS_BSD4 )
+#       include <sys/types.h>
+#       include <sys/sysctl.h>
+#       include <sys/vmmeter.h>
+#   endif
 #elif defined( Q_OS_WIN )
-    #include <windows.h>
+#   include <windows.h>
 #else
-    #error "System not supported"
+#   error "System not supported"
 #endif
 
 
@@ -59,7 +59,7 @@ const size_t availableMemory() {
     }
     return static_cast<size_t>( n_pages * page_size );
 #else
-    #error "System not supported"
+#   error "System not supported"
 #endif
 } // availableMemory()
 
