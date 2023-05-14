@@ -252,6 +252,7 @@ MainWindow::MainWindow(QWidget *parent)
         ColorSec::applyChartTheme(
             this->charts_theme_id, this->FONTS, chart );
     }
+    this->ui->listLogFiles->sortByColumn( 0, Qt::SortOrder::AscendingOrder );
 
 
     ///////////////
@@ -2367,6 +2368,8 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
         this->ui->listLogFiles->clear();
         this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
         // disable elements
+        this->ui->listLogFiles->setEnabled( false );
+        this->ui->checkBox_LogFiles_CheckAll->setEnabled( false );
         this->ui->button_LogFiles_RefreshList->setEnabled( false );
         this->ui->button_LogFiles_ViewFile->setEnabled( false );
         this->ui->button_LogFiles_Apache->setEnabled( false );
@@ -2380,7 +2383,7 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
 void MainWindow::appendToLogsList( const LogFile& log_file )
 {
     // new entry for the tree widget
-    QTreeWidgetItem* item{ new QTreeWidgetItem() };
+    CustomTreeWidgetItem* item{ new CustomTreeWidgetItem() };
 
     // preliminary check for file usage display
     if ( log_file.hasBeenUsed() ) {
@@ -2410,15 +2413,11 @@ void MainWindow::appendToLogsList( const LogFile& log_file )
 
 void MainWindow::refreshFinished()
 {
-    if ( this->craplog.getLogsListSize() > 0ul ) {
-        // sort the list alphabetically
-        this->ui->listLogFiles->sortByColumn(0, Qt::SortOrder::AscendingOrder );
-        this->ui->checkBox_LogFiles_CheckAll->setEnabled( true );
-    } else {
-        this->ui->checkBox_LogFiles_CheckAll->setCheckState( Qt::CheckState::Unchecked );
-        this->ui->checkBox_LogFiles_CheckAll->setEnabled( false );
-    }
     // refresh finished, back to normal state
+    if ( this->craplog.getLogsListSize() > 0ul ) {
+        this->ui->checkBox_LogFiles_CheckAll->setEnabled( true );
+        this->ui->listLogFiles->setEnabled( true );
+    }
     this->ui->button_LogFiles_RefreshList->setEnabled( true );
     this->ui->button_LogFiles_ViewFile->setEnabled( true );
     this->ui->button_LogFiles_Apache->setEnabled( true );
