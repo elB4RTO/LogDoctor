@@ -301,7 +301,7 @@ void CraplogParser::parseLogLines()
                         // process the field
 
                         // process the date to get year, month, day, hour and minute
-                        if ( fld.find("date_time") == 0ul ) {
+                        if ( fld.rfind("date_time",0ul) == 0ul ) {
                             const auto dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part
                             if ( ! dt.at( 0 ).empty() ) {
                                 // year
@@ -397,7 +397,7 @@ void CraplogParser::parseLogLines()
 
 
                         // process the time taken to convert to milliseconds
-                        } else if ( fld.find("time_taken_") == 0ul ) {
+                        } else if ( fld.rfind("time_taken_",0ul) == 0ul ) {
                             float t{ std::stof( fld_str ) };
                             const std::string u{ fld.substr( 11ul ) };
                             if ( u == "us" ) {
@@ -624,7 +624,7 @@ const bool CraplogParser::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 20 ) };
                 if ( std::any_of( bl_cli_list.cbegin(), bl_cli_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // append every field to ignored size
                     this->blacklisted_size += std::accumulate( row.cbegin(), row.cend(), 0ul,
                                                                []( size_t size, const auto& item )
@@ -641,7 +641,7 @@ const bool CraplogParser::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 20 ) };
                 if ( std::any_of( wl_cli_list.cbegin(), wl_cli_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // match found! put a warning on this line
                     warning |= true;
                 }
@@ -654,7 +654,7 @@ const bool CraplogParser::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 21 ) };
                 if ( std::any_of( wl_ua_list.cbegin(), wl_ua_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // match found! skip this line
                     warning |= true;
                 }
@@ -680,7 +680,7 @@ const bool CraplogParser::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 12 ) };
                 if ( std::any_of( wl_req_list.cbegin(), wl_req_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // match found! skip this line
                     warning |= true;
                 }

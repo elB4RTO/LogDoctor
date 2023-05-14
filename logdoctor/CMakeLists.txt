@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
     mainwindow.h
     mainwindow.cpp
 
+    customs/treewidgetitems.h
+
     utilities/checks.h
     utilities/checks.cpp
     utilities/colors.h

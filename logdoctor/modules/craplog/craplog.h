@@ -545,9 +545,9 @@ private:
         \see isFileNameValid()
     */
     struct LogName {
-        std::string starts;   //!< What should be initial part of the name
+        std::string starts;   //!< What should be the initial part of the name
         std::string contains; //!< What should be contained in the middle of the name
-        std::string ends;     //!< What should be final part of the name
+        std::string ends;     //!< What should be the final part of the name
     };
 
     std::unordered_map<unsigned, LogName> logs_base_names;

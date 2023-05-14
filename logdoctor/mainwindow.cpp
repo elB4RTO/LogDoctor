@@ -1,6 +1,8 @@
 
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include "customs/treewidgetitems.h"
 
 #include "utilities/checks.h"
 #include "utilities/colors.h"
@@ -14,6 +16,17 @@
 #include "modules/exceptions.h"
 #include "modules/shared.h"
 
+#include "modules/craphelp/craphelp.h"
+#include "modules/crapup/crapup.h"
+#include "modules/crapinfo/crapinfo.h"
+
+#include "tools/crapnote/crapnote.h"
+
+#include "games/crisscross/game.h"
+#include "games/snake/game.h"
+
+#include <QCloseEvent>
+#include <QTranslator>
 #include <QThread>
 #include <QTimer>
 #include <QTreeWidget>
@@ -2383,7 +2396,7 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
 void MainWindow::appendToLogsList( const LogFile& log_file )
 {
     // new entry for the tree widget
-    CustomTreeWidgetItem* item{ new CustomTreeWidgetItem() };
+    LogFileTreeWidgetItem* item{ new LogFileTreeWidgetItem() };
 
     // preliminary check for file usage display
     if ( log_file.hasBeenUsed() ) {
