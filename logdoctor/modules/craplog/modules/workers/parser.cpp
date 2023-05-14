@@ -1,5 +1,5 @@
 
-#include "worker.h"
+#include "parser.h"
 
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -9,14 +9,14 @@
 #include "modules/exceptions.h"
 
 #include "modules/craplog/craplog.h"
-#include "datetime.h"
+#include "modules/craplog/modules/datetime.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 
 
-CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
+CraplogParser::CraplogParser( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
     : QObject        { parent         }
     , wsID           { web_server_id  }
     , dialogs_level  { dialogs_level  }
@@ -31,7 +31,7 @@ CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialo
 }
 
 
-void CraplogWorker::sendPerfData()
+void CraplogParser::sendPerfData()
 {
     emit this->perfData(
         this->parsed_size,
@@ -39,7 +39,7 @@ void CraplogWorker::sendPerfData()
     );
 }
 
-void CraplogWorker::sendChartData()
+void CraplogParser::sendChartData()
 {
     emit this->chartData(
         this->total_size,
@@ -50,7 +50,7 @@ void CraplogWorker::sendChartData()
 }
 
 
-void CraplogWorker::work()
+void CraplogParser::work()
 {
     this->proceed |= true;
     this->db_edited &= false;
@@ -98,7 +98,7 @@ void CraplogWorker::work()
 }
 
 
-void CraplogWorker::joinLogLines()
+void CraplogParser::joinLogLines()
 {
     const auto cleanLines = [](std::vector<std::string>& lines) {
         std::vector<std::string> aux;
@@ -184,7 +184,7 @@ void CraplogWorker::joinLogLines()
 }
 
 
-void CraplogWorker::parseLogLines()
+void CraplogParser::parseLogLines()
 {
     const auto parseLine = [this]( const std::string& line ) {
         log_line_data_t data;
@@ -471,7 +471,7 @@ void CraplogWorker::parseLogLines()
 
 
 
-void CraplogWorker::storeLogLines()
+void CraplogParser::storeLogLines()
 {
     QString db_path{ QString::fromStdString( this->db_data_path ) };
     QString db_name{ QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
@@ -559,7 +559,7 @@ void CraplogWorker::storeLogLines()
 
 }
 
-const bool CraplogWorker::storeData( QSqlDatabase& db )
+const bool CraplogParser::storeData( QSqlDatabase& db )
 {
     const QString db_name{ QString::fromStdString(
         this->db_data_path.substr(

@@ -1,9 +1,9 @@
-#ifndef CRAPLOGWORKER_H
-#define CRAPLOGWORKER_H
+#ifndef CRAPLOGPARSER_H
+#define CRAPLOGPARSER_H
 
 #include <QObject>
 
-#include "lib.h"
+#include "modules/craplog/modules/lib.h"
 
 #include <unordered_map> // leave this here for OSX
 
@@ -12,7 +12,7 @@ class QSqlDatabase;
 typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for OSX
 
 
-class CraplogWorker : public QObject
+class CraplogParser : public QObject
 {
     Q_OBJECT
 
@@ -24,7 +24,7 @@ private:
 
 public:
 
-    explicit CraplogWorker(
+    explicit CraplogParser(
         const unsigned web_server_id,
         const unsigned dialogs_level,
         const std::string& db_data_path,
@@ -203,4 +203,4 @@ private:
 };
 
 
-#endif // CRAPLOGWORKER_H
+#endif // CRAPLOGPARSER_H
