@@ -47,6 +47,8 @@ public:
 
 signals:
 
+    void refreshLogs();
+
     void runCraplog();
 
 
@@ -90,7 +92,9 @@ private slots:
     /////////////////
     //// CRAPLOG ////
 
-    void refreshLogsList(); // CUSTOM
+    void appendToLogsList( const LogFile& log_file ); // CUSTOM
+
+    void refreshFinished(); // CUSTOM
 
     void updatePerfsLabels(); // CUSTOM
 

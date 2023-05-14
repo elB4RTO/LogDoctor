@@ -120,6 +120,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     /////////////////
     //// CRAPLOG ////
+    qRegisterMetaType<LogFile>();
+    connect( this, &MainWindow::refreshLogs, &this->craplog, &Craplog::scanLogsDir);
+    connect( &this->craplog, &Craplog::pushLogFile, this, &MainWindow::appendToLogsList);
+    connect( &this->craplog, &Craplog::finishedRefreshing, this, &MainWindow::refreshFinished);
     connect( this, &MainWindow::runCraplog, &this->craplog, &Craplog::startWorking);
     connect( &this->craplog, &Craplog::finishedWorking, this, &MainWindow::craplogFinished);
 
@@ -2369,50 +2373,44 @@ void MainWindow::on_button_LogFiles_RefreshList_clicked()
         this->ui->button_LogFiles_Nginx->setEnabled( false );
         this->ui->button_LogFiles_Iis->setEnabled( false );
         // start refreshing as thread
-        this->waiter_timer.reset( new QTimer(this) );
-        this->waiter_timer->setSingleShot( true );
-        connect( this->waiter_timer.get(), &QTimer::timeout,
-                 this, &MainWindow::refreshLogsList);
-        this->waiter_timer->start(250);
+        emit this->refreshLogs();
     }
 }
 
-void MainWindow::refreshLogsList()
+void MainWindow::appendToLogsList( const LogFile& log_file )
 {
-    std::string col;
-    // iterate over elements of list
-    for ( const LogFile& log_file : this->craplog.getLogsList(true) ) {
-        // new entry for the tree widget
-        QTreeWidgetItem* item{ new QTreeWidgetItem() };
+    // new entry for the tree widget
+    QTreeWidgetItem* item{ new QTreeWidgetItem() };
 
-        // preliminary check for file usage display
-        if ( log_file.hasBeenUsed() ) {
-            if ( this->hide_used_files ) {
-                // do not display
-                delete item;
-                continue;
-            }
-            // display with red foreground
-            item->setForeground( 0, this->COLORS.at( "red" ) );
+    // preliminary check for file usage display
+    if ( log_file.hasBeenUsed() ) {
+        if ( this->hide_used_files ) {
+            // do not display
+            delete item;
+            return;
         }
-
-        // preliminary check on file size
-        col = "grey";
-        if ( log_file.size() > this->craplog.getWarningSize() ) {
-            col = "orange";
-        }
-        item->setForeground( 1, this->COLORS.at( col ) );
-
-        // set the name
-        item->setText( 0, log_file.name() );
-        // set the size
-        item->setText( 1, PrintSec::printableSize( log_file.size() ) );
-        item->setFont( 1, this->FONTS.at("main_italic") );
-        // append the item (on top, forced)
-        item->setCheckState(0, Qt::CheckState::Unchecked );
-        this->ui->listLogFiles->addTopLevelItem( item );
+        // display with red foreground
+        item->setForeground( 0, this->COLORS.at( "red" ) );
     }
-    if ( this->craplog.getLogsListSize() > 0 ) {
+
+    // preliminary check on file size
+    item->setForeground( 1, this->COLORS.at( (log_file.size() > this->craplog.getWarningSize())
+                                             ? "orange"
+                                             : "grey" ) );
+
+    // set the name
+    item->setText( 0, log_file.name() );
+    // set the size
+    item->setText( 1, PrintSec::printableSize( log_file.size() ) );
+    item->setFont( 1, this->FONTS.at("main_italic") );
+    // append the item (on top, forced)
+    item->setCheckState(0, Qt::CheckState::Unchecked );
+    this->ui->listLogFiles->addTopLevelItem( item );
+}
+
+void MainWindow::refreshFinished()
+{
+    if ( this->craplog.getLogsListSize() > 0ul ) {
         // sort the list alphabetically
         this->ui->listLogFiles->sortByColumn(0, Qt::SortOrder::AscendingOrder );
         this->ui->checkBox_LogFiles_CheckAll->setEnabled( true );
@@ -2566,7 +2564,7 @@ void MainWindow::on_listLogFiles_itemDoubleClicked(QTreeWidgetItem *item, int co
 void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 {
     // control checked
-    int n_checked{ 0 };
+    size_t n_checked{ 0ul };
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
     while ( *i ) {
         if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
@@ -2574,7 +2572,7 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
         }
         ++i;
     }
-    if ( n_checked == 0 ) {
+    if ( n_checked == 0ul ) {
         this->ui->checkBox_LogFiles_CheckAll->setCheckState(Qt::CheckState::Unchecked);
     } else if ( n_checked == this->craplog.getLogsListSize() ) {
         this->ui->checkBox_LogFiles_CheckAll->setCheckState(Qt::CheckState::Checked);
