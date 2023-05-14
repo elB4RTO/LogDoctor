@@ -2,7 +2,7 @@ var searchData=
 [
   ['parentpath_0',['parentPath',['../classMainWindow.html#ab5bda9c91c183673c43f7467d5d07db2',1,'MainWindow']]],
   ['parsebooleanfilter_1',['parseBooleanFilter',['../classCrapview.html#ad18f037747f3d5f067f437b7bb5d7398',1,'Crapview']]],
-  ['parseloglines_2',['parseLogLines',['../classCraplogWorker.html#a48074625a7ace173ecd9930f70ba4074',1,'CraplogWorker']]],
+  ['parseloglines_2',['parseLogLines',['../classCraplogParser.html#a4e19f3c1f8478b545da627339d5bd9c0',1,'CraplogParser']]],
   ['parsenumericfilter_3',['parseNumericFilter',['../classCrapview.html#afd01bf9ef479f765f7495dd5cf7b86ec',1,'Crapview']]],
   ['parsetextualfilter_4',['parseTextualFilter',['../classCrapview.html#a5df4350740a5d4ebea00e9ded5f95c98',1,'Crapview']]],
   ['path_5',['path',['../classLogFile.html#a8633ce15a023fa3a9635d6c5e3aa18ad',1,'LogFile']]],

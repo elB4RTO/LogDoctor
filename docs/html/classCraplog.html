@@ -143,12 +143,12 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="memitem:a53191e73350c9fdf979a31e6a865f352"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a53191e73350c9fdf979a31e6a865f352">isFileNameValid</a> (const std::string &amp;name) const</td></tr>
 <tr class="memdesc:a53191e73350c9fdf979a31e6a865f352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a file name respects the relative criterions.  <br /></td></tr>
 <tr class="separator:a53191e73350c9fdf979a31e6a865f352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1eb091b4b41a3fe66c39fc200ddc7abf"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classLogFile.html">LogFile</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a1eb091b4b41a3fe66c39fc200ddc7abf">getLogsList</a> (const bool fresh=false)</td></tr>
-<tr class="memdesc:a1eb091b4b41a3fe66c39fc200ddc7abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of log files.  <br /></td></tr>
-<tr class="separator:a1eb091b4b41a3fe66c39fc200ddc7abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade189d5c2bd9441bafdb937c3c8b9107"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#ade189d5c2bd9441bafdb937c3c8b9107">getLogsListSize</a> () const</td></tr>
-<tr class="memdesc:ade189d5c2bd9441bafdb937c3c8b9107"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the amount of log files in the list.  <br /></td></tr>
-<tr class="separator:ade189d5c2bd9441bafdb937c3c8b9107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac15810ff1df0f2bf7c41dcbaefc52b4f"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classLogFile.html">LogFile</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#ac15810ff1df0f2bf7c41dcbaefc52b4f">getLogsList</a> () const</td></tr>
+<tr class="memdesc:ac15810ff1df0f2bf7c41dcbaefc52b4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of log files for the current WebServer.  <br /></td></tr>
+<tr class="separator:ac15810ff1df0f2bf7c41dcbaefc52b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3bd224f301091a6ff4bc3d50887a97"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#abb3bd224f301091a6ff4bc3d50887a97">getLogsListSize</a> () const</td></tr>
+<tr class="memdesc:abb3bd224f301091a6ff4bc3d50887a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the amount of log files in the list.  <br /></td></tr>
+<tr class="separator:abb3bd224f301091a6ff4bc3d50887a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03f799378a10ef054239a6ae807a8759"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classLogFile.html">LogFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a03f799378a10ef054239a6ae807a8759">getLogFileItem</a> (const QString &amp;file_name) const</td></tr>
 <tr class="memdesc:a03f799378a10ef054239a6ae807a8759"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classLogFile.html" title="Holds informations about a log file.">LogFile</a> instance of the given file.  <br /></td></tr>
 <tr class="separator:a03f799378a10ef054239a6ae807a8759"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -267,10 +267,6 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a5c91338a5331911ccf62a2a52dfeb1ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplog.html#a5c91338a5331911ccf62a2a52dfeb1ca">changeIisLogsBaseNames</a> (const int &amp;module_id)</td></tr>
 <tr class="memdesc:a5c91338a5331911ccf62a2a52dfeb1ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the name criterions for IIS logs files names depending on the given module.  <br /></td></tr>
 <tr class="separator:a5c91338a5331911ccf62a2a52dfeb1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9ba3931fad5aa0d42afef167f5dc474"><td class="memItemLeft" align="right" valign="top"><a id="aa9ba3931fad5aa0d42afef167f5dc474" name="aa9ba3931fad5aa0d42afef167f5dc474"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>scanLogsDir</b> ()</td></tr>
-<tr class="memdesc:aa9ba3931fad5aa0d42afef167f5dc474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scans the logs directory to get a list of log files. <br /></td></tr>
-<tr class="separator:aa9ba3931fad5aa0d42afef167f5dc474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -763,8 +759,8 @@ const unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>IIS_ID</b> 
 
 </div>
 </div>
-<a id="a1eb091b4b41a3fe66c39fc200ddc7abf" name="a1eb091b4b41a3fe66c39fc200ddc7abf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1eb091b4b41a3fe66c39fc200ddc7abf">&#9670;&#160;</a></span>getLogsList()</h2>
+<a id="ac15810ff1df0f2bf7c41dcbaefc52b4f" name="ac15810ff1df0f2bf7c41dcbaefc52b4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac15810ff1df0f2bf7c41dcbaefc52b4f">&#9670;&#160;</a></span>getLogsList()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -772,33 +768,26 @@ const unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>IIS_ID</b> 
         <tr>
           <td class="memname">const std::vector&lt; <a class="el" href="classLogFile.html">LogFile</a> &gt; &amp; Craplog::getLogsList </td>
           <td>(</td>
-          <td class="paramtype">const bool&#160;</td>
-          <td class="paramname"><em>fresh</em> = <code>false</code></td><td>)</td>
-          <td></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the list of log files. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fresh</td><td>Whether to refresh the list before to return it or not </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Returns the list of log files for the current WebServer. </p>
 <dl class="section return"><dt>Returns</dt><dd>The list of log files </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLogFile.html" title="Holds informations about a log file.">LogFile</a>, logs_list, <a class="el" href="classCraplog.html#aa9ba3931fad5aa0d42afef167f5dc474" title="Scans the logs directory to get a list of log files.">scanLogsDir()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLogFile.html" title="Holds informations about a log file.">LogFile</a>, logs_list </dd></dl>
 
 </div>
 </div>
-<a id="ade189d5c2bd9441bafdb937c3c8b9107" name="ade189d5c2bd9441bafdb937c3c8b9107"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade189d5c2bd9441bafdb937c3c8b9107">&#9670;&#160;</a></span>getLogsListSize()</h2>
+<a id="abb3bd224f301091a6ff4bc3d50887a97" name="abb3bd224f301091a6ff4bc3d50887a97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb3bd224f301091a6ff4bc3d50887a97">&#9670;&#160;</a></span>getLogsListSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int Craplog::getLogsListSize </td>
+          <td class="memname">const size_t Craplog::getLogsListSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
