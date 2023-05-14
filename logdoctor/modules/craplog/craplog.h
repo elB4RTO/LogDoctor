@@ -115,20 +115,19 @@ public:
     ///////////////////
     //// LOGS LIST ////
 
-    //! Returns the list of log files
+    //! Returns the list of log files for the current WebServer
     /*!
-        \param fresh Whether to refresh the list before to return it or not
         \return The list of log files
-        \see LogFile, logs_list, scanLogsDir()
+        \see LogFile, logs_list
     */
-    const std::vector<LogFile>& getLogsList( const bool fresh=false );
+    const std::vector<LogFile>& getLogsList() const;
 
     //! Returns the amount of log files in the list
     /*!
         \return The number of files actually in the list
         \see logs_list
     */
-    const int getLogsListSize() const;
+    const size_t getLogsListSize() const;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -418,10 +417,20 @@ public:
 
 signals:
 
+    void pushLogFile( const LogFile& log_file );
+
+    void finishedRefreshing();
+
     void finishedWorking();
 
 
 public slots:
+
+    void scanLogsDir();
+
+    void appendLogFile( const LogFile log_file );
+
+    void logsDirScanned();
 
     void startWorking();
 
@@ -557,9 +566,6 @@ private:
 
     // list of the log files found in the logs path
     std::vector<LogFile> logs_list;
-
-    //! Scans the logs directory to get a list of log files
-    void scanLogsDir();
 
 
     /////////////////////

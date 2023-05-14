@@ -15,7 +15,8 @@
 
 #include "modules/craplog/modules/donuts.h"
 #include "modules/craplog/modules/logs.h"
-#include "modules/craplog/modules/worker.h"
+#include "modules/craplog/modules/workers/lister.h"
+#include "modules/craplog/modules/workers/parser.h"
 
 #include <QUrl>
 #include <QPainter>
@@ -432,16 +433,14 @@ void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_pa
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-const int Craplog::getLogsListSize() const {
+const size_t Craplog::getLogsListSize() const
+{
     return this->logs_list.size();
 }
 
 // return the list. rescan if fresh is true
-const std::vector<LogFile>& Craplog::getLogsList( const bool fresh )
+const std::vector<LogFile>& Craplog::getLogsList() const
 {
-    if ( fresh ) {
-        this->scanLogsDir();
-    }
     return this->logs_list;
 }
 
@@ -485,90 +484,49 @@ void Craplog::clearLogFilesSelection()
 void Craplog::scanLogsDir()
 {
     this->logs_list.clear();
-    const std::string& logs_path{ this->logs_paths.at( this->current_WS ) };
-    if ( ! IOutils::isDir( logs_path ) ) {
-        // this directory doesn't exists
-        if ( IOutils::exists( logs_path ) ) {
-            DialogSec::errDirNotExists( QString::fromStdString( logs_path ) );
-        }
-        return;
-    }
-    size_t size;
-    QString name;
-    std::string path;
-    // iterate over entries in the logs folder
-    for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
-        // get the attributes
-        path = dir_entry.path().string();
-        name = QString::fromStdString( dir_entry.path().filename().string() );
+    // hire the worker
+    CraplogLister* worker{ new CraplogLister(
+        this->current_WS,
+        this->dialogs_level,
+        this->logs_paths.at( this->current_WS ),
+        this->logs_formats.at( this->current_WS ),
+        this->hashOps,
+        [this]( const std::string& file_name)
+              { return this->isFileNameValid( file_name ); }
+    ) };
+    QThread* worker_thread{ new QThread() };
+    worker->moveToThread( worker_thread );
+    // start the worker
+    connect( worker_thread, &QThread::started,
+             worker, &CraplogLister::work );
+    // receive a new log file
+    connect( worker, &CraplogLister::pushLogFile,
+             this, &Craplog::appendLogFile );
+    // worker finished its career
+    connect( worker, &CraplogLister::done,
+             this, &Craplog::logsDirScanned );
+    // stop the thread
+    connect( worker, &CraplogLister::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the worker
+    connect( worker, &CraplogLister::retire,
+             worker, &CraplogLister::deleteLater );
+    // plan deleting the thread
+    /*connect( worker, &CraplogLister::retire,
+             worker_thread, &QThread::deleteLater );*/
+    // make the worker work
+    worker_thread->start();
+}
 
-        // match only valid files names
-        if ( ! this->isFileNameValid( name.toStdString() ) ) {
-            continue;
-        }
+void Craplog::appendLogFile( const LogFile log_file )
+{
+    this->logs_list.push_back( std::move( log_file ) );
+    emit this->pushLogFile( this->logs_list.back() );
+}
 
-        // check if it is actually a file
-        if ( IOutils::checkFile( path ) ) {
-            // it's a file, check the readability
-            if ( ! IOutils::checkFile( path, true ) ) {
-                // not readable, skip
-                if ( this->dialogs_level == 2 ) {
-                    DialogSec::warnFileNotReadable( name );
-                }
-                continue;
-            }
-            // it's readable, get the size
-            size = dir_entry.file_size();
-        } else {
-            continue;
-        }
-
-        std::vector<std::string> content;
-        try {
-            // read 32 random lines
-            IOutils::randomLines( path, content, 32ul );
-
-        } catch ( GenericException& e ) {
-            // failed closing gzip file pointer
-            DialogSec::errGeneric( e.what() );
-            continue;
-        }
-
-        if ( content.empty() ) {
-            if ( this->dialogs_level == 2 ) {
-                DialogSec::warnEmptyFile( name );
-            }
-            continue;
-        }
-
-        const LogType log_type = LogOps::defineFileType(
-            content, this->logs_formats.at( this->current_WS ) );
-        content.clear();
-        switch ( log_type ) {
-            case LogType::Failed:
-                // failed to get the log type, do not append
-                DialogSec::errFailedDefiningLogType( name );
-            case LogType::Discarded:
-                // skip
-                continue;
-            default:
-                break;
-        }
-
-        std::string hash;
-        try {
-            this->hashOps.digestFile( path, hash );
-        } catch ( GenericException& e ) {
-            // failed to digest
-            DialogSec::errGeneric( e.what() );
-            continue;
-        }
-
-        // push in the list
-        this->logs_list.push_back( LogFile{
-            false, this->hashOps.hasBeenUsed( hash, this->current_WS ),
-            size, name, hash, path });
-    }
+void Craplog::logsDirScanned()
+{
+    emit this->finishedRefreshing();
 }
 
 
@@ -586,6 +544,7 @@ void Craplog::changeIisLogsBaseNames( const int& module_id )
             throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
     }
 }
+
 const bool Craplog::isFileNameValid( const std::string& name ) const
 {
     bool valid{ true };
@@ -840,7 +799,7 @@ void Craplog::startWorking()
     this->warnlisted_size  = 0ul;
     this->blacklisted_size = 0ul;
     // hire a worker
-    CraplogWorker* worker{ new CraplogWorker(
+    CraplogParser* worker{ new CraplogParser(
         this->current_WS,
         this->dialogs_level,
         this->db_stats_path,
@@ -854,28 +813,28 @@ void Craplog::startWorking()
     worker->moveToThread( worker_thread );
     // start the worker
     connect( worker_thread, &QThread::started,
-             worker, &CraplogWorker::work );
+             worker, &CraplogParser::work );
     // worker started parsing
-    connect( worker, &CraplogWorker::startedParsing,
+    connect( worker, &CraplogParser::startedParsing,
              this, &Craplog::workerStartedParsing );
     // worker finished parsing
-    connect( worker, &CraplogWorker::finishedParsing,
+    connect( worker, &CraplogParser::finishedParsing,
              this, &Craplog::workerFinishedParsing );
     // receive performance data
-    connect( worker, &CraplogWorker::perfData,
+    connect( worker, &CraplogParser::perfData,
              this, &Craplog::updatePerfData );
     // receive chart data, only received when worker has done
-    connect( worker, &CraplogWorker::chartData,
+    connect( worker, &CraplogParser::chartData,
              this, &Craplog::updateChartData );
     // worker finished its career
-    connect( worker, &CraplogWorker::done,
+    connect( worker, &CraplogParser::done,
              this, &Craplog::stopWorking );
     // plan deleting the thread
-    connect( worker, &CraplogWorker::retire,
+    connect( worker, &CraplogParser::retire,
              worker_thread, &QThread::quit );
     // plan deleting the worker
-    connect( worker, &CraplogWorker::retire,
-             worker, &CraplogWorker::deleteLater );
+    connect( worker, &CraplogParser::retire,
+             worker, &CraplogParser::deleteLater );
     // make the worker work
     worker_thread->start();
 }
