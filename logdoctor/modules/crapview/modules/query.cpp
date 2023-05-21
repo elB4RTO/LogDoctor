@@ -3,6 +3,8 @@
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
+
+#include "utilities/checks.h"
 #include "utilities/strings.h"
 
 #include <QSqlDatabase>
@@ -198,7 +200,10 @@ void DbQuery::refreshDates( std::optional<stats_dates_t>& result )
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -339,8 +344,6 @@ void DbQuery::refreshDates( std::optional<stats_dates_t>& result )
 // update the values for the warnings
 void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::tuple<int, int>>& updates ) const
 {
-    bool successful{ true };
-
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
         db = QSqlDatabase::database("qt_sql_default_connection");
@@ -349,7 +352,10 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        return;
+
+    } else if ( ! db.open() ) {
         // error opening database
         QString err_msg;
         if ( this->dialog_level == 2 ) {
@@ -360,11 +366,9 @@ void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::
     } else {
         if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
             // unexpected WebServer
-            successful = false;
             DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
 
-        if ( successful ) {
+        } else {
             // update the database
             QSqlQuery query{ db };
 
@@ -403,7 +407,10 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -553,7 +560,10 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -919,7 +929,10 @@ void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, const Q
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -1019,7 +1032,10 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -1257,7 +1273,10 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -1505,7 +1524,10 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -1907,7 +1929,10 @@ const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<i
     }
     db.setDatabaseName( QString::fromStdString( this->db_path ));
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;

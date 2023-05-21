@@ -1,6 +1,7 @@
 
 #include "parser.h"
 
+#include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/strings.h"
@@ -479,7 +480,10 @@ void CraplogParser::storeLogLines()
     QSqlDatabase db{ QSqlDatabase::addDatabase("QSQLITE") };
     db.setDatabaseName( db_path );
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( this->db_data_path, db_name ) ) {
+        this->proceed &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         this->proceed &= false;
         QString err_msg;
@@ -554,7 +558,9 @@ void CraplogParser::storeLogLines()
             }
         }
 
-        db.close();
+        if ( db.isOpen() ) {
+            db.close();
+        }
     }
 
 }

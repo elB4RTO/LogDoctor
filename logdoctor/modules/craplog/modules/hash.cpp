@@ -1,6 +1,7 @@
 
 #include "hash.h"
 
+#include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/vectors.h"
@@ -38,7 +39,10 @@ const bool HashOps::loadUsedHashesLists( const std::string& db_path )
     }
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
         successful &= false;
         QString err_msg;
@@ -69,7 +73,10 @@ const bool HashOps::loadUsedHashesLists( const std::string& db_path )
             if ( ! successful ) { break; }
         }
     }
-    db.close();
+
+    if ( db.isOpen() ) {
+        db.close();
+    }
     return successful;
 }
 
@@ -175,15 +182,18 @@ const bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, co
 
 const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id )
 {
-    bool proceed{ true };
+    bool successful{ true };
 
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
     QSqlDatabase db{ QSqlDatabase::addDatabase("QSQLITE") };
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
+        successful &= false;
+
+    } else if ( ! db.open() ) {
         // error opening database
-        proceed &= false;
+        successful &= false;
         QString err_msg;
         if ( this->dialog_level == 2 ) {
             err_msg = db.lastError().text();
@@ -194,7 +204,7 @@ const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vec
         QSqlQuery query{ db };
         if ( ! db.transaction() ) {
             // error opening database
-            proceed &= false;
+            successful &= false;
             QString stmt_msg, err_msg;
             if ( this->dialog_level > 0 ) {
                 stmt_msg = "db.transaction()";
@@ -208,18 +218,18 @@ const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vec
 
             try {
                 for ( const std::string& hash : hashes ) {
-                    proceed = this->insertUsedHash( query, db_name, hash, web_server_id );
-                    if ( ! proceed ) {
+                    successful = this->insertUsedHash( query, db_name, hash, web_server_id );
+                    if ( ! successful ) {
                         break;
                     }
                 }
                 query.finish();
 
-                if ( proceed ) {
+                if ( successful ) {
                     // commit the transaction
                     if ( ! db.commit() ) {
                         // error opening database
-                        proceed &= false;
+                        successful &= false;
                         QString stmt_msg, err_msg;
                         if ( this->dialog_level > 0 ) {
                             stmt_msg = "db.commit()";
@@ -230,14 +240,14 @@ const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vec
                         DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
                     }
                 }
-                if ( ! proceed ) {
+                if ( ! successful ) {
                     // rollback
                     throw (std::exception());
                 }
 
             } catch (...) {
                 // wrongthing w3nt some.,.
-                proceed &= false;
+                successful &= false;
                 bool err_shown{ false };
                 // rollback the transaction
                 if ( ! db.rollback() ) {
@@ -260,6 +270,8 @@ const bool HashOps::insertUsedHashes( const std::string& db_path, const std::vec
             }
         }
     }
-    db.close();
-    return proceed;
+    if ( db.isOpen() ) {
+        db.close();
+    }
+    return successful;
 }
