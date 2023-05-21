@@ -3715,13 +3715,9 @@ void MainWindow::resetStatsGlob()
     this->ui->label_StatsGlob_Work_Time_Count->setText( "-" );
     this->ui->label_StatsGlob_Work_Sent_Count->setText( "-" );
 
-    if ( this->ui->button_StatsGlob_Apache->isChecked() ) {
-        this->ui->button_StatsGlob_Apache->setChecked( false );
-    } else if ( this->ui->button_StatsGlob_Nginx->isChecked() ) {
-        this->ui->button_StatsGlob_Nginx->setChecked( false );
-    } else if ( this->ui->button_StatsGlob_Iis->isChecked() ) {
-        this->ui->button_StatsGlob_Iis->setChecked( false );
-    }
+    this->ui->button_StatsGlob_Apache->setFlat( true );
+    this->ui->button_StatsGlob_Nginx->setFlat( true );
+    this->ui->button_StatsGlob_Iis->setFlat( true );
 }
 
 
