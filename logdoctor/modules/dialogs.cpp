@@ -257,6 +257,17 @@ void DialogSec::msgDatabaseCreated( const QString& db_name, QWidget* parent )
     std::ignore = dialog.exec();
 }
 
+void DialogSec::errDatabaseNotFound( const QString& db_name, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("File not found"),
+        QString("%1:\n%2").arg(
+            DialogSec::tr("Failed to retrieve the database file"),
+            db_name ),
+        "", 2, parent };
+    std::ignore = dialog.exec();
+}
+
 void DialogSec::errDatabaseNotFile( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog{
