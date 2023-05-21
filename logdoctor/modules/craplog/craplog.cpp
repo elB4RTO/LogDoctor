@@ -505,15 +505,15 @@ void Craplog::scanLogsDir()
     // worker finished its career
     connect( worker, &CraplogLister::done,
              this, &Craplog::logsDirScanned );
-    // stop the thread
-    connect( worker, &CraplogLister::retire,
-             worker_thread, &QThread::quit );
     // plan deleting the worker
     connect( worker, &CraplogLister::retire,
              worker, &CraplogLister::deleteLater );
+    // quit the thread
+    connect( worker, &CraplogLister::retire,
+             worker_thread, &QThread::quit );
     // plan deleting the thread
-    /*connect( worker, &CraplogLister::retire,
-             worker_thread, &QThread::deleteLater );*/
+    connect( worker_thread, &QThread::finished,
+             worker_thread, &QThread::deleteLater );
     // make the worker work
     worker_thread->start();
 }
@@ -829,12 +829,15 @@ void Craplog::startWorking()
     // worker finished its career
     connect( worker, &CraplogParser::done,
              this, &Craplog::stopWorking );
-    // plan deleting the thread
-    connect( worker, &CraplogParser::retire,
-             worker_thread, &QThread::quit );
     // plan deleting the worker
     connect( worker, &CraplogParser::retire,
              worker, &CraplogParser::deleteLater );
+    // quit the thread
+    connect( worker, &CraplogParser::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the thread
+    connect( worker_thread, &QThread::finished,
+             worker_thread, &QThread::deleteLater );
     // make the worker work
     worker_thread->start();
 }
