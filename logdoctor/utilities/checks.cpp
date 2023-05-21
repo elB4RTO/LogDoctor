@@ -23,11 +23,11 @@ namespace /*private*/
 //! Checks the tables' names integrity
 /*!
   \param db Database object, already initialized
-  \param db_name Database's name, eventually used by the dialogs
+  \param db_name Database's name, used by the dialogs if necessary
   \return The result of the check: 0 if failed with an error, 1 if all the integrity checks passed, 2 if a rebuild is needed
   \see checkCollectionDatabase(), checkHashesDatabase(), newCollectionDatabase(), newHashesDatabase()
 */
-int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
+const int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
 {
     bool make_new{false}, ok{true};
     QSqlQuery query{ QSqlQuery( db ) };
@@ -82,20 +82,19 @@ int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
         } else {
             return 1;
         }
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 
 //! Builds a new database for the logs Collection
 /*!
   \param db Database object, already initialized
-  \param db_name Database's name, eventually used by the dialogs
+  \param db_name Database's name, used by the dialogs if necessary
   \return The result of the operation
   \see checkCollectionDatabase(), checkHashesDatabase()
 */
-bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
+const bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
 {
     bool successful{ true };
     // create the database
@@ -158,11 +157,11 @@ bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std:
 //! Builds a new database for the used log files' Hashes
 /*!
   \param db Database object, already initialized
-  \param db_name Database's name, eventually used by the dialogs
+  \param db_name Database's name, used by the dialogs if necessary
   \return The result of the operation
   \see checkCollectionDatabase(), checkHashesDatabase()
 */
-bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
+const bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
 {
     bool successful{ true };
     // create the database
@@ -206,7 +205,7 @@ bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vec
 } // namespace (private)
 
 
-bool checkCollectionDatabase( const std::string& db_path )
+const bool checkCollectionDatabase( const std::string& db_path )
 {
     bool make_new{false}, ok{true};
     std::error_code err;
@@ -224,22 +223,12 @@ bool checkCollectionDatabase( const std::string& db_path )
 
     // check the existence
     if ( IOutils::exists( db_path ) ) {
-        // database file exists
-        if ( ! IOutils::isFile( db_path ) ) {
-            // path doesn't point to a file
-            DialogSec::errDatabaseNotFile( QString(db_name) );
-            ok &= false;
-        } else if ( ! IOutils::checkFile( db_path, true ) ) {
-            // database not readable, abort
-            DialogSec::errDatabaseNotReadable( QString(db_name) );
-            ok &= false;
-        } else if ( ! IOutils::checkFile( db_path, false, true ) ) {
-            // database not writable, abort
-            DialogSec::errDatabaseNotWritable( QString(db_name) );
+        // check file type and permissions
+        if ( ! checkDatabaseFile( db_path, db_name ) ) {
             ok &= false;
 
         } else {
-            // database file has read and write permissions, now try to open
+            // database file seems ok, now try to open
             if ( ! db.open() ) {
                 // error opening database
                 ok &= false;
@@ -379,12 +368,14 @@ bool checkCollectionDatabase( const std::string& db_path )
         }
     }
 
-    db.close();
+    if ( db.isOpen() ) {
+        db.close();
+    }
     return ok;
 }
 
 
-bool checkHashesDatabase( const std::string& db_path )
+const bool checkHashesDatabase( const std::string& db_path )
 {
     bool make_new{false}, ok{true};
     std::error_code err;
@@ -402,22 +393,12 @@ bool checkHashesDatabase( const std::string& db_path )
 
     // check the existence
     if ( IOutils::exists( db_path ) ) {
-        // database file exists
-        if ( ! IOutils::isFile( db_path ) ) {
-            // path doesn't point to a file
-            DialogSec::errDatabaseNotFile( QString(db_name) );
-            ok &= false;
-        } else if ( ! IOutils::checkFile( db_path, true ) ) {
-            // database not readable, abort
-            DialogSec::errDatabaseNotReadable( QString(db_name) );
-            ok &= false;
-        } else if ( ! IOutils::checkFile( db_path, false, true ) ) {
-            // database not writable, abort
-            DialogSec::errDatabaseNotWritable( QString(db_name) );
+        // check file type and permissions
+        if ( ! checkDatabaseFile( db_path, db_name ) ) {
             ok &= false;
 
         } else {
-            // database file has read and write permissions, now try to open
+            // database file seems ok, now try to open
             if ( ! db.open() ) {
                 // error opening database
                 ok &= false;
@@ -425,7 +406,7 @@ bool checkHashesDatabase( const std::string& db_path )
 
             } else {
                 // database successfully opened, now check the tables
-                int check = checkDatabaseTablesNames( db, db_name );
+                const int check = checkDatabaseTablesNames( db, db_name );
                 if ( check == 0 ) {
                     ok &= false;
                 } else if ( check == 2 ) {
@@ -525,8 +506,33 @@ bool checkHashesDatabase( const std::string& db_path )
         }
     }
 
-    db.close();
+    if ( db.isOpen() ) {
+        db.close();
+    }
     return ok;
+}
+
+
+const bool checkDatabaseFile( const std::string& db_path, const QString& db_name )
+{
+    if ( ! IOutils::exists( db_path ) ) {
+        // path doesn't exists
+        DialogSec::errDatabaseNotFound( db_name );
+        return false;
+    } else if ( ! IOutils::isFile( db_path ) ) {
+        // path doesn't point to a file
+        DialogSec::errDatabaseNotFile( db_name );
+        return false;
+    } else if ( ! IOutils::checkFile( db_path, true ) ) {
+        // database not readable, abort
+        DialogSec::errDatabaseNotReadable( db_name );
+        return false;
+    } else if ( ! IOutils::checkFile( db_path, false, true ) ) {
+        // database not writable, abort
+        DialogSec::errDatabaseNotWritable( db_name );
+        return false;
+    }
+    return true;
 }
 
 } // namespace CheckSec
