@@ -301,35 +301,28 @@ void MainWindow::closeEvent( QCloseEvent *event )
 // os definition
 void MainWindow::defineOSspec()
 {
-    switch ( this->OS ) {
-        case 1:
-            // unix-like
-            /*this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
-            this->logdoc_path    = home_path + "/.local/share/LogDoctor";*/
-            this->db_data_path   = this->home_path + "/.local/share/LogDoctor";
-            this->db_hashes_path = this->home_path + "/.local/share/LogDoctor";
-            break;
+    #if defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
+        /*this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
+        this->logdoc_path    = home_path + "/.local/share/LogDoctor";*/
+        this->db_data_path   = this->home_path + "/.local/share/LogDoctor";
+        this->db_hashes_path = this->home_path + "/.local/share/LogDoctor";
 
-        case 2:
-            // windows
-            /*this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
-            this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";*/
-            this->db_data_path   = this->logdoc_path;
-            this->db_hashes_path = this->logdoc_path;
-            break;
+    #elif defined( Q_OS_WINDOWS )
+        /*this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
+        this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";*/
+        this->db_data_path   = this->logdoc_path;
+        this->db_hashes_path = this->logdoc_path;
 
-        case 3:
-            // darwin-based
-            /*this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
-            this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";*/
-            this->db_data_path   = this->logdoc_path;
-            this->db_hashes_path = this->logdoc_path;
-            break;
+    #elif defined( Q_OS_MACOS )
+        /*this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
+        this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";*/
+        this->db_data_path   = this->logdoc_path;
+        this->db_hashes_path = this->logdoc_path;
 
-        default:
-            // shouldn't be here
-            throw GenericException( "Unexpected OS ID: "+std::to_string( this->OS ), true );
-    }
+    #else
+        // shouldn't be here
+        throw GenericException( "Unexpected OS", true );
+    #endif
 }
 
 void MainWindow::readConfigs()

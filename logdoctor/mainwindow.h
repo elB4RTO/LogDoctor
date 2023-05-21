@@ -530,20 +530,14 @@ private:
 
     const std::string home_path{ StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), '/' ) };
 
-    // 1: linux, 2:windows, 3:mac
-    #if defined( Q_OS_DARWIN )
-        // Darwin-based systems: macOS, iOS, watchOS and tvOS.
-        const unsigned int OS{ 3 };
+    // 1: linux/bsd, 2:windows, 3:mac
+    #if defined( Q_OS_MACOS )
         const std::string configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
         const std::string logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
-    #elif defined( Q_OS_WIN )
-        // Microsoft Windows systems
-        const unsigned int OS{ 2 };
+    #elif defined( Q_OS_WINDOWS )
         const std::string configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
         const std::string logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
-    #elif defined( Q_OS_UNIX )
-        // Unix-like systems: Linux, BSD and SysV
-        const unsigned int OS{ 1 };
+    #elif defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
         const std::string configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
         const std::string logdoc_path  { "/usr/share/LogDoctor" };
     #else
