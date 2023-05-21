@@ -73,9 +73,10 @@ void Crapup::versionCheck( const float v )
     QByteArray ua{ QByteArray::fromStdString("LogDoctor/"+std::to_string(v)+" (version check)") };
     std::string content;
 
-    const std::string links[3] {"https://raw.githubusercontent.com/elB4RTO/LogDoctor/main/version.txt",
+    const std::string links[4] {"https://raw.githubusercontent.com/elB4RTO/LogDoctor/main/version.txt",
                                 "https://git.disroot.org/elB4RTO/LogDoctor/raw/branch//main/version.txt",
-                                "https://gitlab.com/elB4RTO/LogDoctor/-/raw/main/version.txt"};
+                                "https://gitlab.com/elB4RTO/LogDoctor/-/raw/main/version.txt",
+                                "https://bitbucket.org/elb4rto/logdoctor/src/main/version.txt"};
 
     QNetworkAccessManager networkMgr{ this };
 
