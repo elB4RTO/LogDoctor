@@ -67,13 +67,6 @@ public slots:
 
 private:
 
-    /////////////////////////
-    //// WEB SERVERS IDs ////
-
-    const unsigned APACHE_ID { 11 }; //!< ID of the Apache2 Web Server
-    const unsigned NGINX_ID  { 12 }; //!< ID of the Nginx Web Server
-    const unsigned IIS_ID    { 13 }; //!< ID of the IIS Web Server
-
     const unsigned wsID;
 
     const unsigned dialogs_level{ 2 };

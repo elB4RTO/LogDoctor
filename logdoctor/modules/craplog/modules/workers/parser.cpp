@@ -1,6 +1,8 @@
 
 #include "parser.h"
 
+#include "defines/web_servers.h"
+
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -148,7 +150,7 @@ void CraplogParser::joinLogLines()
             this->total_lines += content.size();
             this->total_size  += aux.size();
 
-            if ( this->wsID == this->IIS_ID ) {
+            if ( this->wsID == IIS_ID ) {
                 cleanLines( content );
             }
 
@@ -602,13 +604,13 @@ const bool CraplogParser::storeData( QSqlDatabase& db )
     // prepare the database related studd
     QString table;
     switch ( this->wsID ) {
-        case 11:
+        case APACHE_ID:
             table += "apache";
             break;
-        case 12:
+        case NGINX_ID:
             table += "nginx";
             break;
-        case 13:
+        case IIS_ID:
             table += "iis";
             break;
         default:
@@ -754,7 +756,7 @@ const bool CraplogParser::storeData( QSqlDatabase& db )
                 query_stmt += "NULL";
             } else {
                 // value found, bind it
-                if ( i == 21 && this->wsID == this->IIS_ID ) {
+                if ( i == 21 && this->wsID == IIS_ID ) {
                     // iis logs the user-agent using '+' instead of ' ' (spaces)
                     QString str = QString::fromStdString( row.at( i ) ).replace("+"," ");
                     query_stmt += QString("'%1'").arg( str.replace("'","''") );

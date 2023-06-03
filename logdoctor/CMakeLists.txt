@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
     mainwindow.h
     mainwindow.cpp
 
+    defines/web_servers.h
+
     customs/treewidgetitems.h
 
     utilities/checks.h

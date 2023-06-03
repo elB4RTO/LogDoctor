@@ -34,7 +34,7 @@ Craplog::Craplog()
     //// INITIALIZATION ////
     ////////////////////////
     // blacklists / whitelists
-    for ( unsigned i{this->APACHE_ID}; i<=this->IIS_ID; i++ ) {
+    for ( unsigned i{APACHE_ID}; i<=IIS_ID; i++ ) {
         this->warnlists.emplace(  i, std::unordered_map<int, BWlist>{} );
         this->blacklists.emplace( i, std::unordered_map<int, BWlist>{} );
         // default data
@@ -47,39 +47,39 @@ Craplog::Craplog()
 
     // default format strings
     this->logs_format_strings.emplace(
-        this->APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
+        APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
     this->logs_format_strings.emplace(
-        this->NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
+        NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
     this->logs_format_strings.emplace(
-        this->IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
+        IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
 
     // initialize formats
     this->logs_formats.emplace(
-        this->APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID) ) );
+        APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(APACHE_ID) ) );
     this->logs_formats.emplace(
-        this->NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID) ) );
+        NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(NGINX_ID) ) );
     this->logs_formats.emplace(
-        this->IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(this->IIS_ID), 0 ) );
+        IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(IIS_ID), 0 ) );
 
-    this->current_LF = this->logs_formats.at( this->APACHE_ID );
+    this->current_LF = this->logs_formats.at( APACHE_ID );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( this->APACHE_ID, "/var/log/apache2" );
+    this->logs_paths.emplace( APACHE_ID, "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( this->NGINX_ID, "/var/log/nginx" );
+    this->logs_paths.emplace( NGINX_ID, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( this->IIS_ID, "C:/inetpub/logs/LogFiles" );
+    this->logs_paths.emplace( IIS_ID, "C:/inetpub/logs/LogFiles" );
 
     // apache2 access/error log files' names
-    this->logs_base_names.emplace( this->APACHE_ID, LogName{ .starts   = "access.log.",
+    this->logs_base_names.emplace( APACHE_ID, LogName{ .starts   = "access.log.",
                                                              .contains = "",
                                                              .ends     = "" } );
     // nginx access/error log files' names
-    this->logs_base_names.emplace( this->NGINX_ID, LogName{ .starts   = "access.log.",
+    this->logs_base_names.emplace( NGINX_ID, LogName{ .starts   = "access.log.",
                                                             .contains = "",
                                                             .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( this->IIS_ID, LogName{ .starts   = "",
+    this->logs_base_names.emplace( IIS_ID, LogName{ .starts   = "",
                                                           .contains = "_ex",
                                                           .ends     = ".log" });
 
@@ -331,9 +331,9 @@ const bool Craplog::setApacheLogFormat( const std::string& format_string )
     // apache
     bool success{ true };
     try {
-        this->logs_formats.at( this->APACHE_ID ) =
+        this->logs_formats.at( APACHE_ID ) =
             this->formatOps.processApacheFormatString( format_string );
-        this->logs_format_strings.at( this->APACHE_ID ) = format_string;
+        this->logs_format_strings.at( APACHE_ID ) = format_string;
     } catch ( LogFormatException& e ) {
         success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -348,9 +348,9 @@ const bool Craplog::setNginxLogFormat( const std::string& format_string )
     // nginx
     bool success{ true };
     try {
-        this->logs_formats.at( this->NGINX_ID ) =
+        this->logs_formats.at( NGINX_ID ) =
             this->formatOps.processNginxFormatString( format_string );
-        this->logs_format_strings.at( this->NGINX_ID ) = format_string;
+        this->logs_format_strings.at( NGINX_ID ) = format_string;
     } catch ( LogFormatException& e ) {
         success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -365,9 +365,9 @@ const bool Craplog::setIisLogFormat( const std::string& format_string, const int
     // iis
     bool success{ true };
     try {
-        this->logs_formats.at( this->IIS_ID ) =
+        this->logs_formats.at( IIS_ID ) =
             this->formatOps.processIisFormatString( format_string, log_module );
-        this->logs_format_strings.at( this->IIS_ID ) = format_string;
+        this->logs_format_strings.at( IIS_ID ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
         success &= false;
@@ -381,15 +381,16 @@ const bool Craplog::setIisLogFormat( const std::string& format_string, const int
 
 const QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
 {
-    if ( web_server_id == this->APACHE_ID ) {
-        return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ) );
-    } else if ( web_server_id == this->NGINX_ID ) {
-        return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ) );
-    } else if ( web_server_id == this->IIS_ID ) {
-        return this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ) );
-    } else {
-        // unexpected WebServer
-        throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
+    switch ( web_server_id ) {
+        case APACHE_ID:
+            return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ) );
+        case NGINX_ID:
+            return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ) );
+        case IIS_ID:
+            return this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ) );
+        default:
+            // unexpected WebServer
+            throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
     }
 }
 
@@ -535,11 +536,11 @@ void Craplog::changeIisLogsBaseNames( const int module_id )
 {
     switch ( module_id ) {
         case 0: // W3C
-            this->logs_base_names.at( 13u ).contains = "_ex"; break;
+            this->logs_base_names.at( IIS_ID ).contains = "_ex"; break;
         case 1: // NCSA
-            this->logs_base_names.at( 13u ).contains = "_nc"; break;
+            this->logs_base_names.at( IIS_ID ).contains = "_nc"; break;
         case 2: // IIS
-            this->logs_base_names.at( 13u ).contains = "_in"; break;
+            this->logs_base_names.at( IIS_ID ).contains = "_in"; break;
 
         default: // shouldn't be reachable
             throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
@@ -569,7 +570,7 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
 
     switch ( this->current_WS ) {
         size_t start, stop;
-        case 11 | 12:
+        case APACHE_ID | NGINX_ID:
             // further checks for apache / nginx
             start = name.rfind(".log." );
             if ( start == std::string::npos ) {
@@ -590,9 +591,9 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
             }
             break;
 
-        case 13:
+        case IIS_ID:
             // further checks for iis
-            start = name.find( this->logs_base_names.at( 13u ).contains ) + 3ul;
+            start = name.find( this->logs_base_names.at( IIS_ID ).contains ) + 3ul;
             if ( start == std::string::npos ) {
                 valid &= false;
                 break;

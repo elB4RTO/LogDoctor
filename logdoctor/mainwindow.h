@@ -520,8 +520,6 @@ private:
     // current version of LogDoctor
     const float version{ 2.04 };
 
-    // web servers ID constants
-    const unsigned APACHE_ID{11}, NGINX_ID{12}, IIS_ID{13};
     const QString wsFromIndex( const int index ) const;
 
 

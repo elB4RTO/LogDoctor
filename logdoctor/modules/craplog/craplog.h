@@ -3,6 +3,8 @@
 
 #include <QtCharts>
 
+#include "defines/web_servers.h"
+
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/formats.h"
@@ -457,13 +459,6 @@ private:
     // quantity of information to display throught dialogs
     int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
-    /////////////////////////
-    //// WEB SERVERS IDs ////
-
-    const unsigned APACHE_ID { 11 }; //!< ID of the Apache2 Web Server
-    const unsigned NGINX_ID  { 12 }; //!< ID of the Nginx Web Server
-    const unsigned IIS_ID    { 13 }; //!< ID of the IIS Web Server
-
 
     ///////////////////
     //// DATABASES ////
@@ -543,7 +538,7 @@ private:
     //// WEB SERVER ////
 
     // currently used web server
-    unsigned current_WS{ this->APACHE_ID };
+    unsigned current_WS{ APACHE_ID };
 
     std::unordered_map<int, std::string> logs_paths;
 
