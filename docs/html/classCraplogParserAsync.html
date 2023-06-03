@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LogDoctor: CraplogParser Class Reference</title>
+<title>LogDoctor: CraplogParserAsync Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -73,35 +73,35 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="classCraplogParser-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">CraplogParser Class Reference</div></div>
+<a href="classCraplogParserAsync-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">CraplogParserAsync Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for CraplogParser:</div>
+Inheritance diagram for CraplogParserAsync:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classCraplogParser.png" alt=""/>
+  <img src="classCraplogParserAsync.png" alt=""/>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a0cab0465f65175011235f09fa0ff281d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParser.html#a0cab0465f65175011235f09fa0ff281d">joinLogLines</a> ()</td></tr>
-<tr class="memdesc:a0cab0465f65175011235f09fa0ff281d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the selected files and append the resulting lines to the list.  <br /></td></tr>
-<tr class="separator:a0cab0465f65175011235f09fa0ff281d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e19f3c1f8478b545da627339d5bd9c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParser.html#a4e19f3c1f8478b545da627339d5bd9c0">parseLogLines</a> ()</td></tr>
-<tr class="memdesc:a4e19f3c1f8478b545da627339d5bd9c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the lines in the list and stores their data in the data collection.  <br /></td></tr>
-<tr class="separator:a4e19f3c1f8478b545da627339d5bd9c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae867ec7dcef759f5758658d793b95f3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParser.html#ae867ec7dcef759f5758658d793b95f3f">storeLogLines</a> ()</td></tr>
-<tr class="memdesc:ae867ec7dcef759f5758658d793b95f3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the process of storing data in the database.  <br /></td></tr>
-<tr class="separator:ae867ec7dcef759f5758658d793b95f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c5d8aaa524759f96b9e0849903f8967"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParser.html#a9c5d8aaa524759f96b9e0849903f8967">storeData</a> (QSqlDatabase &amp;db)</td></tr>
-<tr class="memdesc:a9c5d8aaa524759f96b9e0849903f8967"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the data collection in the logs Collection database.  <br /></td></tr>
-<tr class="separator:a9c5d8aaa524759f96b9e0849903f8967"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd02045ed712c28cd006ace69b1e998e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParserAsync.html#acd02045ed712c28cd006ace69b1e998e">joinLogLines</a> (std::promise&lt; logs_lines_t &gt; &amp;log_lines, const logs_file_t &amp;logs_file)</td></tr>
+<tr class="memdesc:acd02045ed712c28cd006ace69b1e998e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the selected files and append the resulting lines to the list.  <br /></td></tr>
+<tr class="separator:acd02045ed712c28cd006ace69b1e998e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5796e6a2496181cba67553b85eea75b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParserAsync.html#af5796e6a2496181cba67553b85eea75b">parseLogLines</a> (std::future&lt; logs_lines_t &gt; &amp;log_lines)</td></tr>
+<tr class="memdesc:af5796e6a2496181cba67553b85eea75b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the lines in the list and stores their data in the data collection.  <br /></td></tr>
+<tr class="separator:af5796e6a2496181cba67553b85eea75b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bc816fb52cff3cf34d339b97fb67d11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParserAsync.html#a7bc816fb52cff3cf34d339b97fb67d11">storeLogLines</a> ()</td></tr>
+<tr class="memdesc:a7bc816fb52cff3cf34d339b97fb67d11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the process of storing data in the database.  <br /></td></tr>
+<tr class="separator:a7bc816fb52cff3cf34d339b97fb67d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e3678bf0f62c9ce92b3ac51661a18bf"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCraplogParserAsync.html#a7e3678bf0f62c9ce92b3ac51661a18bf">storeData</a> (QSqlDatabase &amp;db)</td></tr>
+<tr class="memdesc:a7e3678bf0f62c9ce92b3ac51661a18bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the data collection in the logs Collection database.  <br /></td></tr>
+<tr class="separator:a7e3678bf0f62c9ce92b3ac51661a18bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0cab0465f65175011235f09fa0ff281d" name="a0cab0465f65175011235f09fa0ff281d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0cab0465f65175011235f09fa0ff281d">&#9670;&#160;</a></span>joinLogLines()</h2>
+<a id="acd02045ed712c28cd006ace69b1e998e" name="acd02045ed712c28cd006ace69b1e998e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd02045ed712c28cd006ace69b1e998e">&#9670;&#160;</a></span>joinLogLines()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -110,10 +110,21 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CraplogParser::joinLogLines </td>
+          <td class="memname">void CraplogParserAsync::joinLogLines </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">std::promise&lt; logs_lines_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>log_lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const logs_file_t &amp;&#160;</td>
+          <td class="paramname"><em>logs_file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -133,8 +144,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4e19f3c1f8478b545da627339d5bd9c0" name="a4e19f3c1f8478b545da627339d5bd9c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e19f3c1f8478b545da627339d5bd9c0">&#9670;&#160;</a></span>parseLogLines()</h2>
+<a id="af5796e6a2496181cba67553b85eea75b" name="af5796e6a2496181cba67553b85eea75b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5796e6a2496181cba67553b85eea75b">&#9670;&#160;</a></span>parseLogLines()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,9 +154,10 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CraplogParser::parseLogLines </td>
+          <td class="memname">void CraplogParserAsync::parseLogLines </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">std::future&lt; logs_lines_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>log_lines</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -166,8 +178,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c5d8aaa524759f96b9e0849903f8967" name="a9c5d8aaa524759f96b9e0849903f8967"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c5d8aaa524759f96b9e0849903f8967">&#9670;&#160;</a></span>storeData()</h2>
+<a id="a7e3678bf0f62c9ce92b3ac51661a18bf" name="a7e3678bf0f62c9ce92b3ac51661a18bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e3678bf0f62c9ce92b3ac51661a18bf">&#9670;&#160;</a></span>storeData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,7 +188,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const bool CraplogParser::storeData </td>
+          <td class="memname">const bool CraplogParserAsync::storeData </td>
           <td>(</td>
           <td class="paramtype">QSqlDatabase &amp;&#160;</td>
           <td class="paramname"><em>db</em></td><td>)</td>
@@ -207,8 +219,8 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae867ec7dcef759f5758658d793b95f3f" name="ae867ec7dcef759f5758658d793b95f3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae867ec7dcef759f5758658d793b95f3f">&#9670;&#160;</a></span>storeLogLines()</h2>
+<a id="a7bc816fb52cff3cf34d339b97fb67d11" name="a7bc816fb52cff3cf34d339b97fb67d11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bc816fb52cff3cf34d339b97fb67d11">&#9670;&#160;</a></span>storeLogLines()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -217,7 +229,7 @@ Private Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CraplogParser::storeLogLines </td>
+          <td class="memname">void CraplogParserAsync::storeLogLines </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -231,13 +243,13 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Handles the process of storing data in the database. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCraplogParser.html#a9c5d8aaa524759f96b9e0849903f8967" title="Stores the data collection in the logs Collection database.">storeData()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCraplogParserAsync.html#a7e3678bf0f62c9ce92b3ac51661a18bf" title="Stores the data collection in the logs Collection database.">storeData()</a> </dd></dl>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>logdoctor/modules/craplog/modules/workers/parser.h</li>
-<li>logdoctor/modules/craplog/modules/workers/parser.cpp</li>
+<li>logdoctor/modules/craplog/modules/workers/parser_async.h</li>
+<li>logdoctor/modules/craplog/modules/workers/parser_async.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

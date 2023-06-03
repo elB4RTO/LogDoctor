@@ -5,5 +5,7 @@ var searchData=
   ['hashops_2',['HashOps',['../classHashOps.html',1,'']]],
   ['helplogsformat_3',['helpLogsFormat',['../classCraphelp.html#ad1b146944b75f1e4a2e0830aafa11865',1,'Craphelp']]],
   ['helplogsformatdefault_4',['helpLogsFormatDefault',['../classCraphelp.html#a1f922b4443070aaae995525a051113ec',1,'Craphelp']]],
-  ['hunt_5',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea3bc7db4877c4b58e8b8f5ed74ffc1abb',1,'SnakeGame']]]
+  ['hireasyncworker_5',['hireAsyncWorker',['../classCraplog.html#a290000f88b366470fbfa370eb6edf3ae',1,'Craplog']]],
+  ['hireworker_6',['hireWorker',['../classCraplog.html#a6b8118aa003315fb83fe7c7edac59d22',1,'Craplog']]],
+  ['hunt_7',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea3bc7db4877c4b58e8b8f5ed74ffc1abb',1,'SnakeGame']]]
 ];

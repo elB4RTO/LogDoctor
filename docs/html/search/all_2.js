@@ -1,7 +1,7 @@
 var searchData=
 [
   ['calcglobals_0',['calcGlobals',['../classCrapview.html#abfd79f3e98097fd7127620b25a664d2d',1,'Crapview']]],
-  ['changeiislogsbasenames_1',['changeIisLogsBaseNames',['../classCraplog.html#a5c91338a5331911ccf62a2a52dfeb1ca',1,'Craplog']]],
+  ['changeiislogsbasenames_1',['changeIisLogsBaseNames',['../classCraplog.html#aa3322c13abbee68d72eee2b1100c83f6',1,'Craplog']]],
   ['checkcollectiondatabase_2',['checkCollectionDatabase',['../namespaceCheckSec.html#a40a079f94457b2db16bdb63e8245b922',1,'CheckSec']]],
   ['checkcollision_3',['checkCollision',['../classSnakeGame.html#a937f69388e5c1dbf9d5f65ef7bf3b0d5',1,'SnakeGame']]],
   ['checkdatabasefile_4',['checkDatabaseFile',['../namespaceCheckSec.html#a4c615c8b5f8b4439a89da7ff22e34b42',1,'CheckSec']]],
@@ -32,7 +32,7 @@ var searchData=
   ['closeevent_29',['closeEvent',['../classCrapup.html#a1b3b1fa451669dc2791e5d14288a96e5',1,'Crapup']]],
   ['colorsec_30',['ColorSec',['../namespaceColorSec.html',1,'']]],
   ['contains_31',['contains',['../structCraplog_1_1LogName.html#a64fc39be93c9b1338ace87443ed597f3',1,'Craplog::LogName::contains()'],['../namespaceStringOps.html#ae46487946ef0fbf955cd6147993d803f',1,'StringOps::contains()'],['../namespaceVecOps.html#a17ff7fe02a008292a11e30d1a7d33c4e',1,'VecOps::contains()']]],
-  ['count_32',['count',['../namespaceStringOps.html#a47d404a4a7a4acd812051e925841c0dc',1,'StringOps::count(std::string_view str, const char flag)'],['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)']]],
+  ['count_32',['count',['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)'],['../namespaceStringOps.html#a47d404a4a7a4acd812051e925841c0dc',1,'StringOps::count(std::string_view str, const char flag)']]],
   ['countdays_33',['countDays',['../classDbQuery.html#aa3e09b4a90bfba6554c1807d291bea54',1,'DbQuery']]],
   ['countmonths_34',['countMonths',['../classDbQuery.html#a071c26b502f7b2662ba816f263f665ed',1,'DbQuery']]],
   ['craphelp_35',['Craphelp',['../classCraphelp.html',1,'']]],
@@ -40,9 +40,10 @@ var searchData=
   ['craplog_37',['Craplog',['../classCraplog.html',1,'']]],
   ['craploglister_38',['CraplogLister',['../classCraplogLister.html',1,'']]],
   ['craplogparser_39',['CraplogParser',['../classCraplogParser.html',1,'']]],
-  ['crapnote_40',['Crapnote',['../classCrapnote.html',1,'']]],
-  ['crapup_41',['Crapup',['../classCrapup.html#ab004aebc9dd40cc330e522f78f19471c',1,'Crapup::Crapup()'],['../classCrapup.html',1,'Crapup']]],
-  ['crapview_42',['Crapview',['../classCrapview.html',1,'']]],
-  ['crisscross_43',['CrissCross',['../classCrissCross.html',1,'']]],
-  ['crisscrossstylesheet_44',['crisscrossStyleSheet',['../namespaceGameSec.html#a4c9accc1b22b4d47dbe6f4b6f52c0985',1,'GameSec']]]
+  ['craplogparserasync_40',['CraplogParserAsync',['../classCraplogParserAsync.html',1,'']]],
+  ['crapnote_41',['Crapnote',['../classCrapnote.html',1,'']]],
+  ['crapup_42',['Crapup',['../classCrapup.html#ab004aebc9dd40cc330e522f78f19471c',1,'Crapup::Crapup()'],['../classCrapup.html',1,'Crapup']]],
+  ['crapview_43',['Crapview',['../classCrapview.html',1,'']]],
+  ['crisscross_44',['CrissCross',['../classCrissCross.html',1,'']]],
+  ['crisscrossstylesheet_45',['crisscrossStyleSheet',['../namespaceGameSec.html#a4c9accc1b22b4d47dbe6f4b6f52c0985',1,'GameSec']]]
 ];

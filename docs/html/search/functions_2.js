@@ -1,7 +1,7 @@
 var searchData=
 [
   ['calcglobals_0',['calcGlobals',['../classCrapview.html#abfd79f3e98097fd7127620b25a664d2d',1,'Crapview']]],
-  ['changeiislogsbasenames_1',['changeIisLogsBaseNames',['../classCraplog.html#a5c91338a5331911ccf62a2a52dfeb1ca',1,'Craplog']]],
+  ['changeiislogsbasenames_1',['changeIisLogsBaseNames',['../classCraplog.html#aa3322c13abbee68d72eee2b1100c83f6',1,'Craplog']]],
   ['checkcollectiondatabase_2',['checkCollectionDatabase',['../namespaceCheckSec.html#a40a079f94457b2db16bdb63e8245b922',1,'CheckSec']]],
   ['checkcollision_3',['checkCollision',['../classSnakeGame.html#a937f69388e5c1dbf9d5f65ef7bf3b0d5',1,'SnakeGame']]],
   ['checkdatabasefile_4',['checkDatabaseFile',['../namespaceCheckSec.html#a4c615c8b5f8b4439a89da7ff22e34b42',1,'CheckSec']]],
