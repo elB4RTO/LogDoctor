@@ -17,6 +17,7 @@
 #include "modules/craplog/modules/logs.h"
 #include "modules/craplog/modules/workers/lister.h"
 #include "modules/craplog/modules/workers/parser.h"
+#include "modules/craplog/modules/workers/parser_async.h"
 
 #include <QUrl>
 #include <QPainter>
@@ -359,7 +360,7 @@ const bool Craplog::setNginxLogFormat( const std::string& format_string )
     }
     return success;
 }
-const bool Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
+const bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module )
 {
     // iis
     bool success{ true };
@@ -530,7 +531,7 @@ void Craplog::logsDirScanned()
 }
 
 
-void Craplog::changeIisLogsBaseNames( const int& module_id )
+void Craplog::changeIisLogsBaseNames( const int module_id )
 {
     switch ( module_id ) {
         case 0: // W3C
@@ -787,6 +788,18 @@ const bool Craplog::checkStuff()
     return this->proceed;
 }
 
+const bool Craplog::shouldWorkAsync() const
+{
+    const size_t n_log_files{ this->log_files_to_use.size() };
+    const size_t average_size{
+        std::accumulate( this->logs_list.cbegin(), this->logs_list.cend(), 0ul,
+                         []( size_t sum, const LogFile& lf )
+                           { return lf.isSelected() ? sum+lf.size() : sum; })
+        / n_log_files
+    };
+    return (average_size > 1'048'576ul && n_log_files > 1)
+        || n_log_files > 150ul;
+}
 
 void Craplog::startWorking()
 {
@@ -799,6 +812,14 @@ void Craplog::startWorking()
     this->warnlisted_size  = 0ul;
     this->blacklisted_size = 0ul;
     // hire a worker
+    if ( this->shouldWorkAsync() ) {
+        this->hireAsyncWorker();
+    } else {
+        this->hireWorker();
+    }
+}
+void Craplog::hireWorker() const
+{
     CraplogParser* worker{ new CraplogParser(
         this->current_WS,
         this->dialogs_level,
@@ -834,6 +855,50 @@ void Craplog::startWorking()
              worker, &CraplogParser::deleteLater );
     // quit the thread
     connect( worker, &CraplogParser::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the thread
+    connect( worker_thread, &QThread::finished,
+             worker_thread, &QThread::deleteLater );
+    // make the worker work
+    worker_thread->start();
+}
+void Craplog::hireAsyncWorker() const
+{
+    CraplogParserAsync* worker{ new CraplogParserAsync(
+        this->current_WS,
+        this->dialogs_level,
+        this->db_stats_path,
+        this->db_hashes_path,
+        this->logs_formats.at( this->current_WS ),
+        this->blacklists.at( this->current_WS ),
+        this->warnlists.at( this->current_WS ),
+        this->log_files_to_use
+    ) };
+    QThread* worker_thread{ new QThread() };
+    worker->moveToThread( worker_thread );
+    // start the worker
+    connect( worker_thread, &QThread::started,
+             worker, &CraplogParserAsync::work );
+    // worker started parsing
+    connect( worker, &CraplogParserAsync::startedParsing,
+             this, &Craplog::workerStartedParsing );
+    // worker finished parsing
+    connect( worker, &CraplogParserAsync::finishedParsing,
+             this, &Craplog::workerFinishedParsing );
+    // receive performance data
+    connect( worker, &CraplogParserAsync::perfData,
+             this, &Craplog::updatePerfData );
+    // receive chart data, only received when worker has done
+    connect( worker, &CraplogParserAsync::chartData,
+             this, &Craplog::updateChartData );
+    // worker finished its career
+    connect( worker, &CraplogParserAsync::done,
+             this, &Craplog::stopWorking );
+    // plan deleting the worker
+    connect( worker, &CraplogParserAsync::retire,
+             worker, &CraplogParserAsync::deleteLater );
+    // quit the thread
+    connect( worker, &CraplogParserAsync::retire,
              worker_thread, &QThread::quit );
     // plan deleting the thread
     connect( worker_thread, &QThread::finished,

@@ -182,7 +182,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processIisFormatString()
     */
-    const bool setIisLogFormat( const std::string& format_string, const int& log_module );
+    const bool setIisLogFormat( const std::string& format_string, const int log_module );
 
     //! Returns the logs format string for the given Web Server
     /*!
@@ -481,6 +481,14 @@ private:
 
     std::mutex mutex;
 
+    //! Hires a worker to parse the selected logs
+    void hireWorker() const;
+    //! Hires a worker to parse the selected logs, asynchronously
+    void hireAsyncWorker() const;
+
+    //! Defines whether it's worth it working async or not
+    const bool shouldWorkAsync() const;
+
 
     //////////////////////
     //// PERFORMANCES ////
@@ -558,7 +566,7 @@ private:
         \throw GenericException
         \see LogName
     */
-    void changeIisLogsBaseNames( const int& module_id );
+    void changeIisLogsBaseNames( const int module_id );
 
 
     ///////////////////
