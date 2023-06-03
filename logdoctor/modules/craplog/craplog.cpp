@@ -72,27 +72,26 @@ Craplog::Craplog()
 
     // apache2 access/error log files' names
     this->logs_base_names.emplace( APACHE_ID, LogName{ .starts   = "access.log.",
-                                                             .contains = "",
-                                                             .ends     = "" } );
+                                                       .contains = "",
+                                                       .ends     = "" } );
     // nginx access/error log files' names
     this->logs_base_names.emplace( NGINX_ID, LogName{ .starts   = "access.log.",
-                                                            .contains = "",
-                                                            .ends     = "" });
+                                                      .contains = "",
+                                                      .ends     = "" });
     // iis access/error log files' names
     this->logs_base_names.emplace( IIS_ID, LogName{ .starts   = "",
-                                                          .contains = "_ex",
-                                                          .ends     = ".log" });
-
+                                                    .contains = "_ex",
+                                                    .ends     = ".log" });
 }
 
 
 //////////////////
 //// SETTINGS ////
-const int& Craplog::getDialogsLevel() const
+const int Craplog::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
-void Craplog::setDialogsLevel( const int& new_level )
+void Craplog::setDialogsLevel( const int new_level )
 {
     this->dialogs_level = new_level;
     this->hashOps.setDialogLevel( new_level );
@@ -129,20 +128,20 @@ void Craplog::setWarningSize(const size_t new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-const bool& Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+const bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
-const bool& Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+const bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
 
-void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used )
+void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
 {
     this->blacklists.at( web_server_id ).at( log_field_id ).used = used;
 }
-void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used )
+void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
 {
     this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
 }
@@ -281,7 +280,7 @@ const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::s
                 // only letters allowed
                 throw BWlistException("Invalid Method");
             }
-            sanitized_item = StringOps::toUpper( new_item );
+            sanitized_item = StringOps::toUpper( sanitized_item );
             break;
         case 12:
             sanitized_item = StringOps::lstrip( new_item );
@@ -396,13 +395,13 @@ const QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) cons
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( const unsigned& web_server_id )
+void Craplog::setCurrentWSID( const unsigned web_server_id )
 {
     this->current_WS = web_server_id;
     this->setCurrentLogFormat();
 }
 
-const unsigned& Craplog::getCurrentWSID() const
+const unsigned Craplog::getCurrentWSID() const
 {
     return this->current_WS;
 }

@@ -26,10 +26,10 @@ public:
     //// DIALOGS ////
 
     //! Returns the Dialogs level
-    const int& getDialogsLevel() const;
+    const int getDialogsLevel() const;
 
     //! Sets the new Dialogs level
-    void setDialogsLevel( const int& new_level );
+    void setDialogsLevel( const int new_level );
 
     ///////////////////
     //// DATABASES ////
@@ -60,13 +60,13 @@ public:
     /*!
         \param web_server_id The new currently used Web Server
     */
-    void setCurrentWSID( const unsigned& web_server_id );
+    void setCurrentWSID( const unsigned web_server_id );
 
     //! Returns the currently used Web Server ID
     /*!
         \return The Web Server ID
     */
-    const unsigned& getCurrentWSID() const;
+    const unsigned getCurrentWSID() const;
 
     //! Uses the current Web Server to set the relative logs format
     /*!
@@ -239,7 +239,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    const bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
@@ -248,7 +248,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    const bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative blacklist to be used or not
     /*!
@@ -257,7 +257,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used );
+    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used );
 
     //! Sets the relative warnlist to be used or not
     /*!
@@ -266,7 +266,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used );
+    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used );
 
     //! Returns the relative items list
     /*!

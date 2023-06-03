@@ -23,7 +23,7 @@ class Crapview : public QObject
 public:
 
     //! Returns the Dialogs level
-    const int& getDialogsLevel() const;
+    const int getDialogsLevel() const;
 
     //! Sets the new Dialogs level
     void setDialogsLevel( const int new_level );

@@ -8,7 +8,7 @@
 #include <QTableWidget>
 
 
-const int& Crapview::getDialogsLevel() const
+const int Crapview::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
