@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-
-xhost +
-docker run -e DISPLAY=$DISPLAY --pid=host
-xhost -
