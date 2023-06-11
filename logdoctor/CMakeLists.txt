@@ -172,6 +172,7 @@ if(WIN32)
         -static Qt${QT_VERSION_MAJOR}::Sql
         -static Qt${QT_VERSION_MAJOR}::Network)
 else()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
     target_link_libraries(LogDoctor PRIVATE
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Charts
