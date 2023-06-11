@@ -8,7 +8,7 @@ docdir="$(dirname $(dirname $(realpath $0)))"
 cd "$docdir"
 
 # Check the existence of a previous image
-docker images | grep LogDoctor &> /dev/null
+docker images | grep logdoctor &> /dev/null
 if [[ "$?" == "0" ]]
 then
 	echo "$(tput setaf 11)Warning:$(tput sgr0) an image already exists, please run the $(tput bold)update$(tput sgr0) script instead"
@@ -47,7 +47,7 @@ echo "$(tput setaf 10)-->$(tput sgr0) Checked succesfully"
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Building LogDoctor image$(tput sgr0)"
 
 # Build the docker image
-docker build -t LogDoctor:latest .
+docker build -t logdoctor:latest .
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to build the image"
@@ -58,11 +58,87 @@ fi
 wait
 echo "$(tput setaf 10)-->$(tput sgr0) Built succesfully"
 
+cd installation_stuff/docker
+
+# Create a volume to share data with the image
+echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Creating LogDoctor data volume$(tput sgr0)"
+
+# Create the volume
+docker create --name logdoctordata logdoctor
+if [[ "$?" != "0" ]]
+then
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to create volume"
+	exit 1
+fi
+
+# Copy the needed data
+function data_transfer_failed()
+{
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to transfer data to volume"
+	docker rm logdoctordata
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove volume after failure"
+		exit 1
+	fi
+	rmdir tmp
+	exit 1
+}
+test -e tmp && rm -rf tmp
+mkdir tmp
+docker cp ./tmp logdoctordata:/root/.config
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+docker cp ./tmp logdoctordata:/root/.config/LogDoctor
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+docker cp ./logdoctor.conf logdoctordata:/root/.config/LogDoctor/logdoctor.conf
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+docker cp ./tmp logdoctordata:/root/.local
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+docker cp ./tmp logdoctordata:/root/.local/share
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+docker cp ./tmp logdoctordata:/root/.local/share/LogDoctor
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+docker cp ./tmp logdoctordata:/root/logs
+if [[ "$?" != "0" ]]
+then
+	data_transfer_failed
+fi
+for folder in apache2 nginx iis
+do
+	docker cp ./tmp logdoctordata:/root/logs/$folder
+	if [[ "$?" != "0" ]]
+	then
+		data_transfer_failed
+	fi
+done
+rmdir tmp
+
+# Creation finished
+wait
+echo "$(tput setaf 10)-->$(tput sgr0) Created succesfully"
+
 # Start installing LogDoctor
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Installing$(tput sgr0)"
-cd installation_stuff
 
-chmod 644 ./LogDoctor.desktop
+chmod 644 ../LogDoctor.desktop
 sudo install -DC ./LogDoctor.desktop -t /usr/share/applications
 if [[ "$?" != "0" ]]
 then
@@ -70,8 +146,8 @@ then
 	exit 1
 fi
 
-chmod 755 ./logdoctor.DOCKER
-sudo install -DC ./logdoctor.DOCKER /usr/bin/logdoctor
+chmod 755 ./logdoctor
+sudo install -DC ./logdoctor /usr/bin/logdoctor
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy the executable"

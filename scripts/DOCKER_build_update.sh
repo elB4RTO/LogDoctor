@@ -16,7 +16,7 @@ then
 fi
 
 # Check the existence of a previous image
-docker images | grep LogDoctor &> /dev/null
+docker images | grep logdoctor &> /dev/null
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 11)Warning:$(tput sgr0) no previous image already found, please run the $(tput bold)install$(tput sgr0) script instead"
@@ -46,10 +46,10 @@ echo "$(tput setaf 10)-->$(tput sgr0) Checked succesfully"
 # Remove the old image
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Removing old LogDoctor image$(tput sgr0)"
 
-docker image rm LogDoctor:latest
+docker image rm logdoctor:latest
 if [[ "$?" != "0" ]]
 then
-	echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove LogDoctor:latest"
+	echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove logdoctor:latest"
 	exit 1
 fi
 
@@ -61,7 +61,7 @@ echo "$(tput setaf 10)-->$(tput sgr0) Removed succesfully"
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Building new LogDoctor image$(tput sgr0)"
 
 # Build the docker image
-docker build -t LogDoctor:latest .
+docker build -t logdoctor:latest .
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to build the image"
@@ -74,18 +74,19 @@ echo "$(tput setaf 10)-->$(tput sgr0) Built succesfully"
 
 # Start updating LogDoctor
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Updating$(tput sgr0)"
-cd installation_stuff
 
-chmod 644 ./LogDoctor.desktop
-sudo install -DC ./LogDoctor.desktop -t /usr/share/applications
+cd installation_stuff/docker
+
+chmod 644 ../LogDoctor.desktop
+sudo install -DC ../LogDoctor.desktop -t /usr/share/applications
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to create a menu entry"
 	exit 1
 fi
 
-chmod 755 ./logdoctor.DOCKER
-sudo install -DC ./logdoctor.DOCKER /usr/bin/logdoctor
+chmod 755 ./logdoctor
+sudo install -DC ./logdoctor /usr/bin/logdoctor
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to copy the executable"
