@@ -536,7 +536,7 @@ private:
     Ui::MainWindow* ui;
 
     // current version of LogDoctor
-    const float version{ 2.04 };
+    const float version{ 2.05 };
 
     const QString wsFromIndex( const int index ) const;
 
