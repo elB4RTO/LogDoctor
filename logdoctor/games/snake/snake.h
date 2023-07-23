@@ -2,6 +2,7 @@
 #define SNAKE_H
 
 #include <vector>
+#include <array> // leave this here for OSX
 
 #include <QPixmap>
 
