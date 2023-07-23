@@ -40,30 +40,6 @@ public:
     void setDbPath( const std::string& path );
 
 
-    //! Parses a filter for a database field with boolean type
-    /*!
-        Boolean filters are not locale-dependant,
-        meaning that English syntax must be used (TRUE,FALSE)
-        \param field_str The given filter
-        \return The resulting filter to apply to the query
-    */
-    const QString parseBooleanFilter( const QString& filter_str ) const;
-
-    //! Parses a filter for a log field with integer type
-    /*!
-        \param field_str The given filter
-        \return The resulting filter to apply to the query
-    */
-    const QString parseNumericFilter( const QString& filter_str ) const;
-
-    //! Parses a filter for a log field with text type
-    /*!
-        \param field_str The given filter
-        \return The resulting filter to apply to the query
-    */
-    const QString parseTextualFilter( const QString& filter_str ) const;
-
-
     //! Returns the printable log field corresponding to the given ID
     /*!
         The field gets translated to be printable before being returned
