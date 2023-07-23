@@ -12,7 +12,7 @@ var searchData=
   ['dialogmsg_9',['DialogMsg',['../classDialogMsg.html',1,'DialogMsg'],['../classDialogMsg.html#a3b19d4997ce6f582df582a0925a33122',1,'DialogMsg::DialogMsg()']]],
   ['dialogsec_10',['DialogSec',['../classDialogSec.html',1,'']]],
   ['digestfile_11',['digestFile',['../classHashOps.html#ac74504e76a2c8e20506e446d2887ab53',1,'HashOps']]],
-  ['direction_12',['direction',['../structBodyPart.html#ad732b10425a86790821523da2388910b',1,'BodyPart::direction()'],['../classSnake.html#a6152832ec0736c49fa6416ba30c46313',1,'Snake::direction()']]],
+  ['direction_12',['direction',['../structBodyPart.html#ad732b10425a86790821523da2388910b',1,'BodyPart::direction'],['../classSnake.html#a6152832ec0736c49fa6416ba30c46313',1,'Snake::direction()']]],
   ['donutbreakdown_13',['DonutBreakdown',['../classDonutBreakdown.html',1,'']]],
   ['draw_14',['draw',['../classCrissCross.html#a9f957e38250d4c58f2b232620891cb47',1,'CrissCross']]],
   ['drawcount_15',['drawCount',['../classCrapview.html#a0d654bcb031c3dc994e665c1d73a125a',1,'Crapview']]],
