@@ -888,14 +888,8 @@ const unsigned Snake::isDeadHole( const unsigned& start_x, const unsigned& start
             std::make_tuple( start_x, start_y )
         };
 
-        std::function<void(const bool&)> change_direction;
-        std::function<const bool(const unsigned& side_, const unsigned& front_, const bool& update)> tried_already;
-        std::function<const bool(const unsigned&, const unsigned&)> tile_blocked;
-        std::function<void()> check_deadhole;
 
-
-        change_direction = [&direction, &check_clockwise, &front_step, &front_check, &side_check, &front, &side]
-                           (const bool& clockwise)
+        const auto change_direction = [&] (const bool clockwise)
         {
             switch ( direction ) {
                 case Direction::UP:
@@ -952,8 +946,7 @@ const unsigned Snake::isDeadHole( const unsigned& start_x, const unsigned& start
         };
 
 
-        tried_already = [&direction, &tried_positions]
-                        (const unsigned& side_, const unsigned& front_, const bool update)
+        const auto tried_already = [&] (const unsigned side_, const unsigned front_, const bool update)
         {
             bool tried{ false };
             unsigned x, y;
@@ -987,8 +980,7 @@ const unsigned Snake::isDeadHole( const unsigned& start_x, const unsigned& start
         };
 
 
-        tile_blocked = [this, &tried_already, &direction, &front, &side, &steps]
-                       (const unsigned& side_, const unsigned& front_)
+        const auto tile_blocked = [&] (const unsigned side_, const unsigned front_)
         {
             bool blocked{ false };
             unsigned x, y, x_, y_;
@@ -1024,12 +1016,7 @@ const unsigned Snake::isDeadHole( const unsigned& start_x, const unsigned& start
         };
 
 
-        check_deadhole = [&tried_already, &tile_blocked, &change_direction,
-                          &start_direction, &start_x, &start_y,
-                          &front, &side, &aux_front, &aux_side,
-                          &front_step, &front_check, &side_check,
-                          &check_clockwise, &max_steps, &steps, &result]
-                         ()
+        const auto check_deadhole = [&] ()
         {
             switch ( start_direction ) {
                 case Direction::UP:
