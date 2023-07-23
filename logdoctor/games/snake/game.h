@@ -71,7 +71,7 @@ private:
 
     QScopedPointer<QGraphicsScene> field_scene;
 
-    QPixmap img_water{ ":/games/games/snake/water.png" };
+    const QPixmap img_water{ ":/games/games/snake/water.png" };
 
 
     //////////////

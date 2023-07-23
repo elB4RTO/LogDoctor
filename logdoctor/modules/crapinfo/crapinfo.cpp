@@ -9,7 +9,7 @@
 #include <QFontDatabase>
 
 
-Crapinfo::Crapinfo( const int& window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent )
+Crapinfo::Crapinfo( const int window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapinfo }
 {
@@ -47,7 +47,7 @@ Crapinfo::~Crapinfo()
 }
 
 
-void Crapinfo::getStyleSheet( QString& stylesheet, const int& theme_id ) const
+void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {

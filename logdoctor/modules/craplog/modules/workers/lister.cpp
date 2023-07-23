@@ -10,7 +10,7 @@
 #include "modules/craplog/modules/logs.h"
 
 
-CraplogLister::CraplogLister( const unsigned web_server_id, const unsigned dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const HashOps& hashOps, std::function<bool(const std::string&)> check_filename, QObject* parent )
+CraplogLister::CraplogLister( const unsigned web_server_id, const unsigned dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const HashOps& hashOps, const std::function<bool(const std::string&)> check_filename, QObject* parent )
     : QObject        { parent         }
     , wsID           { web_server_id  }
     , dialogs_level  { dialogs_level  }

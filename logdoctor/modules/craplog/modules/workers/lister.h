@@ -20,7 +20,7 @@ public:
         const std::string& logs_path,
         const LogsFormat& logs_format,
         const HashOps& hashOps,
-        std::function<bool(const std::string&)> check_filename,
+        const std::function<bool(const std::string&)> check_filename,
         QObject* parent=nullptr
     );
 
@@ -52,7 +52,7 @@ private:
 
     const HashOps& hashOps;
 
-    std::function<bool(const std::string&)> check_filename;
+    const std::function<bool(const std::string&)> check_filename;
 
 };
 

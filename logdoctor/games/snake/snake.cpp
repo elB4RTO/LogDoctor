@@ -1,20 +1,25 @@
 
 #include "snake.h"
 
+#include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+
+
+void BodyPart::update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) {
+    this->x = new_x;
+    this->y = new_y;
+    this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
+    this->prev_direction = this->direction;
+    this->direction = new_direction;
+}
 
 
 Snake::Snake( const bool is_adversary )
     : adversary( is_adversary )
 {
     if ( is_adversary ) {
-        for ( size_t x{0}; x<16ul; x++ ) {
-            this->field_map.push_back( std::vector<Tile>{} );
-            std::vector<Tile>& v = this->field_map.back();
-            for ( size_t y{0}; y<16ul; y++ ) {
-                v.push_back({ Entity::N, 0 });
-            }
-        }
+        // only AI needs to keep track of the field state
+        this->field_map.fill( std::array<Tile, 16ul>({Entity::N, 0}) );
     }
 }
 
@@ -366,23 +371,23 @@ void Snake::update( QGraphicsScene* field_scene, const bool dry , const bool is_
 }
 
 
-void Snake::move( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y )
+void Snake::move( const Snake& adv_snake, const unsigned food_x, const unsigned food_y )
 {
-    std::vector<Direction> classes{
+    const std::array<Direction,4> classes{
         Direction::UP,
         Direction::DOWN,
         Direction::LEFT,
         Direction::RIGHT,
     };
 
-    std::vector<std::vector<float>> dataset{
+    std::array<std::array<float,7>,4> dataset{{
         {0.f,0.f,0.f,0.f,0.f,0.f,0.f},
         {0.f,0.f,0.f,0.f,0.f,0.f,0.f},
         {0.f,0.f,0.f,0.f,0.f,0.f,0.f},
         {0.f,0.f,0.f,0.f,0.f,0.f,0.f}
-    };
+    }};
 
-    std::vector<float> weights{
+    const std::array<float,7> weights{
         -1.0f,   // blocked way
         -0.4f,   // dead way
          0.003f, // dead way steps
@@ -403,7 +408,7 @@ void Snake::move( const Snake& adv_snake, const unsigned& food_x, const unsigned
 }
 
 
-const Direction Snake::predictDirection( const std::vector<std::vector<float>>& data, const std::vector<float>& weights, const std::vector<Direction>& classes ) const
+const Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const
 {
     float results[]{ 1.f, 1.f, 1.f, 1.f };
     bool keep_current{ false };
@@ -411,7 +416,7 @@ const Direction Snake::predictDirection( const std::vector<std::vector<float>>& 
 
     // process data
     for ( size_t i{0}; i<4ul; i++ ) {
-        const std::vector<float>& d = data.at(i);
+        const std::array<float, 7>& d = data.at(i);
         float& r = results[i];
         for ( size_t j{0}; j<7ul; j++ ) {
             r += d.at(j) * weights.at(j);
@@ -460,7 +465,7 @@ const Direction Snake::predictDirection( const std::vector<std::vector<float>>& 
 }
 
 
-void Snake::collectData( std::vector<float>& data, Direction& direction, const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y ) const
+void Snake::collectData( std::array<float,7>& data, const Direction& direction, const Snake& adv_snake, const unsigned food_x, const unsigned food_y ) const
 {
     unsigned
         blocked_way        { 0 },
@@ -782,15 +787,15 @@ const bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const uns
 }
 
 
-const std::vector<unsigned> Snake::checkAround( const Direction& direction, const unsigned& x, const unsigned& y ) const
+const std::array<unsigned,8> Snake::checkAround( const Direction& direction, const unsigned x, const unsigned y ) const
 {
-    std::vector<unsigned> around{
+    std::array<unsigned,8> around{
         0u, 0u, 0u,
         0u,     0u,
         0u, 0u, 0u,
     };
 
-    std::vector<int> x_pattern, y_pattern;
+    std::array<int,8> x_pattern, y_pattern;
 
     switch ( direction ) {
         case Direction::UP:
@@ -854,7 +859,7 @@ const std::vector<unsigned> Snake::checkAround( const Direction& direction, cons
 }
 
 
-const unsigned Snake::isDeadHole( const unsigned& start_x, const unsigned& start_y, const Direction& start_direction ) const
+const unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y, const Direction& start_direction ) const
 {
     bool result{false}, check{false}, check_clockwise{false};
     Direction direction{ start_direction };

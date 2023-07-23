@@ -3,6 +3,8 @@
 
 #include "snake.h"
 
+#include <QGraphicsPixmapItem>
+
 
 Food::Food( const bool& can_move )
     : image{ new QGraphicsPixmapItem( (can_move) ? this->img_rat : this->img_egg ) }
@@ -29,11 +31,11 @@ const Food& Food::operator=( const Food& other )
 }
 
 
-const unsigned& Food::X() const
+const unsigned Food::X() const
 {
     return this->x;
 }
-const unsigned& Food::Y() const
+const unsigned Food::Y() const
 {
     return this->y;
 }
