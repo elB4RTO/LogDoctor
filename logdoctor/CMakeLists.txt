@@ -99,6 +99,8 @@ set(PROJECT_SOURCES
 
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
+    modules/crapview/modules/filters.h
+    modules/crapview/modules/filters.cpp
     modules/crapview/modules/query.h
     modules/crapview/modules/query.cpp
 
@@ -233,6 +235,8 @@ add_executable(LogDocTester
     modules/craplog/modules/formats.cpp
     modules/craplog/modules/logs.h
     modules/craplog/modules/logs.cpp
+    modules/crapview/modules/filters.h
+    modules/crapview/modules/filters.cpp
 )
 if(WIN32)
     target_link_libraries(LogDocTester PRIVATE
