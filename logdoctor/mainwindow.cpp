@@ -21,6 +21,7 @@
 #include "modules/craphelp/craphelp.h"
 #include "modules/crapup/crapup.h"
 #include "modules/crapinfo/crapinfo.h"
+#include "modules/crapview/modules/filters.h"
 
 #include "tools/crapnote/crapnote.h"
 
@@ -2969,11 +2970,11 @@ void MainWindow::drawStatsSpeed()
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
         this->ui->box_StatsSpeed_Day->currentText(),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ),
-        this->crapview.parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ),
-        this->crapview.parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ) );
+        FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ).value(),
+        FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ).value(),
+        FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ).value(),
+        FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).value(),
+        FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).value() );
     ColorSec::applyChartTheme(
         this->charts_theme_id, this->FONTS,
         this->ui->chart_StatsSpeed );
@@ -3377,14 +3378,26 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 }
 void MainWindow::drawStatsDay()
 {
+    using opt_t = std::optional<QString>;
     QString filter;
-    if ( this->ui->box_StatsDay_LogsField->currentIndex() == 0 ) {
-        filter = this->crapview.parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() );
-    } else if ( this->ui->box_StatsDay_LogsField->currentIndex() == 5 ) {
-        filter = this->crapview.parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
+    const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
+    if ( fld_i == 0 ) {
+        const opt_t aux{ FilterOps::parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() ) };
+        if ( aux.has_value() ) {
+            filter = aux.value();
+        }
+    } else if ( fld_i == 5 ) {
+        const opt_t aux{ FilterOps::parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() ) };
+        if ( aux.has_value() ) {
+            filter = aux.value();
+        }
     } else {
-        filter = this->crapview.parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
+        const opt_t aux{ FilterOps::parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() ) };
+        if ( aux.has_value() ) {
+            filter = aux.value();
+        }
     }
+    const bool period{ this->ui->checkBox_StatsDay_Period->isChecked() };
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->CHARTS_THEMES.at( this->charts_theme_id ),
@@ -3392,9 +3405,9 @@ void MainWindow::drawStatsDay()
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
         this->ui->box_StatsDay_FromDay->currentText(),
-        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToYear->currentText() : "",
-        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
-        ( this->ui->checkBox_StatsDay_Period->isChecked() ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
+        ( period ) ? this->ui->box_StatsDay_ToYear->currentText() : "",
+        ( period ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
+        ( period ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
         this->ui->box_StatsDay_LogsField->currentText(),
         filter );
     ColorSec::applyChartTheme(
@@ -3572,22 +3585,41 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 }
 void MainWindow::drawStatsRelat()
 {
-    int aux{ this->ui->box_StatsRelat_LogsField_1->currentIndex() };
+    using opt_t = std::optional<QString>;
     QString filter1, filter2;
-    if ( aux == 0 ) {
-        filter1 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
-    } else if ( aux >= 5 && aux <= 8 ) {
-        filter1 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_1->text() );
+    const int aux1{ this->ui->box_StatsRelat_LogsField_1->currentIndex() };
+    if ( aux1 == 0 ) {
+        const opt_t aux{ FilterOps::parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() ) };
+        if ( aux.has_value() ) {
+            filter1 = aux.value();
+        }
+    } else if ( aux1 >= 5 && aux1 <= 8 ) {
+        const opt_t aux{ FilterOps::parseNumericFilter( this->ui->inLine_StatsRelat_Filter_1->text() ) };
+        if ( aux.has_value() ) {
+            filter1 = aux.value();
+        }
     } else {
-        filter1 = this->ui->inLine_StatsRelat_Filter_1->text();
+        const opt_t aux{ FilterOps::parseTextualFilter( this->ui->inLine_StatsRelat_Filter_1->text() ) };
+        if ( aux.has_value() ) {
+            filter1 = aux.value();
+        }
     }
-    aux = this->ui->box_StatsRelat_LogsField_2->currentIndex();
-    if ( aux == 0 ) {
-        filter2 = this->crapview.parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
-    } else if ( aux >= 5 && aux <= 8 ) {
-        filter2 = this->crapview.parseNumericFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+    const int aux2{ this->ui->box_StatsRelat_LogsField_2->currentIndex() };
+    if ( aux2 == 0 ) {
+        const opt_t aux{ FilterOps::parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() ) };
+        if ( aux.has_value() ) {
+            filter2 = aux.value();
+        }
+    } else if ( aux2 >= 5 && aux2 <= 8 ) {
+        const opt_t aux{ FilterOps::parseNumericFilter( this->ui->inLine_StatsRelat_Filter_2->text() ) };
+        if ( aux.has_value() ) {
+            filter2 = aux.value();
+        }
     } else {
-        filter2 = this->crapview.parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() );
+        const opt_t aux{ FilterOps::parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() ) };
+        if ( aux.has_value() ) {
+            filter2 = aux.value();
+        }
     }
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
