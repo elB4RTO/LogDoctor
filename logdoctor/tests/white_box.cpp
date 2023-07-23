@@ -10,6 +10,8 @@
 #include "modules/craplog/modules/formats.h"
 #include "modules/craplog/modules/logs.h"
 
+#include "modules/crapview/modules/filters.h"
+
 #include <QTimeZone>
 
 
@@ -104,13 +106,13 @@ void testUtilities()
     T_PRINT("StringOps::strip");
 
     assert( StringOps::lstrip("___ok_", '_') == "ok_" );
-    assert( StringOps::lstrip("the three trees", " ehtr") == "s" );
-    assert( StringOps::lstrip("\n\n\t\r\ntest ") == "test " );
+    assert( StringOps::lstrip("the three trees", " ethr") == "s" );
+    assert( StringOps::lstrip(" \n\t\rtest ") == "test " );
     T_PRINT("StringOps::lstrip");
 
-    assert( StringOps::rstrip("_OK___", '_') == "_OK" );
+    assert( StringOps::rstrip("_ok___", '_') == "_ok" );
     assert( StringOps::rstrip("testTEST", "TEST") == "test" );
-    assert( StringOps::rstrip(" test\r\t\t ") == " test" );
+    assert( StringOps::rstrip(" test\r\t\n ") == " test" );
     T_PRINT("StringOps::rstrip");
 
     assert( StringOps::lstripUntil("is ok?", ' ') == "ok?" );
@@ -260,6 +262,176 @@ void testCraplogModules()
     assert( LogOps::defineFileType({}, lf) == LogType::Failed );
     }
     T_PRINT("LogOps::defineFileType");
+}
+
+
+void testCrapviewModules()
+{
+    //// FILTERS ////
+
+    assert( FilterOps::parseNull("  null   ").value() == "NULL" );
+    assert( FilterOps::parseNull("  not null   ").value() == "NOT NULL" );
+    assert( FilterOps::parseNull("not   null").value() == "NOT NULL" );
+    assert( FilterOps::parseNull("!    null").value() == "NOT NULL" );
+    assert( FilterOps::parseNull("null").value() == "NULL" );
+    assert( FilterOps::parseNull("NULL").value() == "NULL" );
+    assert( FilterOps::parseNull("not null").value() == "NOT NULL" );
+    assert( FilterOps::parseNull("NOT NULL").value() == "NOT NULL" );
+    assert( FilterOps::parseNull("!NULL").value() == "NOT NULL" );
+    assert( FilterOps::parseNull("! NULL").value() == "NOT NULL" );
+    assert( ! FilterOps::parseNull("").has_value() );
+    assert( ! FilterOps::parseNull("123").has_value() );
+    assert( ! FilterOps::parseNull("abc").has_value() );
+    assert( ! FilterOps::parseNull("*").has_value() );
+    assert( ! FilterOps::parseNull("null test").has_value() );
+    assert( ! FilterOps::parseNull("not null test").has_value() );
+    T_PRINT("FilterOps::parseNull");
+
+    assert( FilterOps::parseTextualFilter("").value() == "" );
+    assert( FilterOps::parseTextualFilter("null").value() == "NULL" );
+    assert( FilterOps::parseTextualFilter("not null").value() == "NOT NULL" );
+    assert( FilterOps::parseTextualFilter("*").value() == "NOT NULL" );
+    assert( FilterOps::parseTextualFilter("  a test string ").value() == "a test string" );
+    assert( FilterOps::parseTextualFilter("[test 123 #!?]").value() == "[test 123 #!?]" );
+    T_PRINT("FilterOps::parseTextualFilter");
+
+    assert( FilterOps::parseNumericFilter("").value() == "" );
+    assert( FilterOps::parseNumericFilter("null").value() == "NULL" );
+    assert( FilterOps::parseNumericFilter("not null").value() == "NOT NULL" );
+    assert( FilterOps::parseNumericFilter("   123 ").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter(" =   123 ").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter(" !   123 ").value() == "!= 123" );
+    assert( FilterOps::parseNumericFilter("123").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter("=123").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter("= 123").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter("==123").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter("== 123").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter("eq 123").value() == "= 123" );
+    assert( FilterOps::parseNumericFilter("!123").value() == "!= 123" );
+    assert( FilterOps::parseNumericFilter("!=123").value() == "!= 123" );
+    assert( FilterOps::parseNumericFilter("!= 123").value() == "!= 123" );
+    assert( FilterOps::parseNumericFilter("ne 123").value() == "!= 123" );
+    assert( FilterOps::parseNumericFilter(">123").value() == "> 123" );
+    assert( FilterOps::parseNumericFilter("> 123").value() == "> 123" );
+    assert( FilterOps::parseNumericFilter("gt 123").value() == "> 123" );
+    assert( FilterOps::parseNumericFilter(">=123").value() == ">= 123" );
+    assert( FilterOps::parseNumericFilter(">= 123").value() == ">= 123" );
+    assert( FilterOps::parseNumericFilter("ge 123").value() == ">= 123" );
+    assert( FilterOps::parseNumericFilter("<123").value() == "< 123" );
+    assert( FilterOps::parseNumericFilter("< 123").value() == "< 123" );
+    assert( FilterOps::parseNumericFilter("lt 123").value() == "< 123" );
+    assert( FilterOps::parseNumericFilter("<=123").value() == "<= 123" );
+    assert( FilterOps::parseNumericFilter("<= 123").value() == "<= 123" );
+    assert( FilterOps::parseNumericFilter("le 123").value() == "<= 123" );
+    // test for invalid filter
+    assert( ! FilterOps::parseNumericFilter("*").has_value() );
+    assert( ! FilterOps::parseNumericFilter("= =123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("= = 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("===123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("=== 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("eq123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("!>123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("!> 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("!<123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("!< 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("! =123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("! = 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("!==123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("!== 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("ne123").has_value() );
+    assert( ! FilterOps::parseNumericFilter(">>123").has_value() );
+    assert( ! FilterOps::parseNumericFilter(">> 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("gt123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("=>123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("=> 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter(">==123").has_value() );
+    assert( ! FilterOps::parseNumericFilter(">== 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter(">>=123").has_value() );
+    assert( ! FilterOps::parseNumericFilter(">>= 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("ge123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("<<123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("<< 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("lt123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("=<123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("=< 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("<==123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("<== 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("<<=123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("<<= 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("le123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("eq ").has_value() );
+    assert( ! FilterOps::parseNumericFilter("abc").has_value() );
+    assert( ! FilterOps::parseNumericFilter("abc xyz").has_value() );
+    assert( ! FilterOps::parseNumericFilter("abc 123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("123 abc").has_value() );
+    assert( ! FilterOps::parseNumericFilter("1a2b3c").has_value() );
+    assert( ! FilterOps::parseNumericFilter("123 456").has_value() );
+    assert( ! FilterOps::parseNumericFilter("+123").has_value() );
+    assert( ! FilterOps::parseNumericFilter("-123").has_value() );
+    T_PRINT("FilterOps::parseNumericFilter");
+
+    assert( FilterOps::parseBooleanFilter("").value() == "" );
+    assert( FilterOps::parseBooleanFilter("null").value() == "NULL" );
+    assert( FilterOps::parseBooleanFilter("not null").value() == "NOT NULL" );
+    // test for true
+    assert( FilterOps::parseBooleanFilter("1").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("true").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("TRUE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("=true").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("=TRUE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("= true").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("= TRUE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("==true").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("==TRUE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("== true").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("== TRUE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!=false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!=FALSE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!= false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!= FALSE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!FALSE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("! false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("! FALSE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!    false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("!    FALSE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("not false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("NOT FALSE").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("not   false").value() == "= 1" );
+    assert( FilterOps::parseBooleanFilter("NOT   FALSE").value() == "= 1" );
+    // test for false
+    assert( FilterOps::parseBooleanFilter("0").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("false").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("FALSE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("=false").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("=FALSE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("= false").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("= FALSE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("==false").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("==FALSE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("== false").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("== FALSE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!=true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!=TRUE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!= true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!= TRUE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!TRUE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("! true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("! TRUE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!    true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("!    TRUE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("not true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("NOT TRUE").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("not   true").value() == "= 0" );
+    assert( FilterOps::parseBooleanFilter("NOT   TRUE").value() == "= 0" );
+    // test for invalid filter
+    assert( ! FilterOps::parseBooleanFilter("*").has_value() );
+    assert( ! FilterOps::parseBooleanFilter("2").has_value() );
+    assert( ! FilterOps::parseBooleanFilter("0 1").has_value() );
+    assert( ! FilterOps::parseBooleanFilter("abc").has_value() );
+    assert( ! FilterOps::parseBooleanFilter("true false").has_value() );
+    T_PRINT("FilterOps::parseBooleanFilter");
 }
 
 
