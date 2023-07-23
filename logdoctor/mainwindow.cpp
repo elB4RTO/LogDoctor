@@ -1094,6 +1094,8 @@ void MainWindow::updateUiTheme()
             throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
             break;
     }
+    // fallback stylesheets
+    this->stylesheet_lineedit = QLineEdit().styleSheet();
     // fonts
     this->updateUiFonts();
 }
@@ -2891,7 +2893,12 @@ void MainWindow::checkStatsSpeedDrawable()
     if ( this->dbUsable() ) {
         if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
           && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
-          && this->ui->box_StatsSpeed_Day->currentIndex() >= 0 ) {
+          && this->ui->box_StatsSpeed_Day->currentIndex() >= 0
+          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ).has_value()
+          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ).has_value()
+          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ).has_value()
+          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).has_value()
+          && FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).has_value() ) {
             // enable the draw button
             this->ui->button_StatsSpeed_Draw->setEnabled( true );
         } else {
@@ -2944,6 +2951,66 @@ void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 {
+    this->checkStatsSpeedDrawable();
+}
+
+void MainWindow::on_inLine_StatsSpeed_Protocol_textChanged(const QString& arg1)
+{
+    if ( FilterOps::parseTextualFilter( arg1 ).has_value() ) {
+        this->ui->inLine_StatsSpeed_Protocol->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsSpeed_Protocol->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsSpeedDrawable();
+}
+
+void MainWindow::on_inLine_StatsSpeed_Method_textChanged(const QString& arg1)
+{
+    if ( FilterOps::parseTextualFilter( arg1 ).has_value() ) {
+        this->ui->inLine_StatsSpeed_Method->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsSpeed_Method->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsSpeedDrawable();
+}
+
+void MainWindow::on_inLine_StatsSpeed_Uri_textChanged(const QString& arg1)
+{
+    if ( FilterOps::parseTextualFilter( arg1 ).has_value() ) {
+        this->ui->inLine_StatsSpeed_Uri->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsSpeed_Uri->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsSpeedDrawable();
+}
+
+void MainWindow::on_inLine_StatsSpeed_Query_textChanged(const QString& arg1)
+{
+    if ( FilterOps::parseTextualFilter( arg1 ).has_value() ) {
+        this->ui->inLine_StatsSpeed_Query->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsSpeed_Query->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsSpeedDrawable();
+}
+
+void MainWindow::on_inLine_StatsSpeed_Response_textChanged(const QString& arg1)
+{
+    if ( FilterOps::parseNumericFilter( arg1 ).has_value() ) {
+        this->ui->inLine_StatsSpeed_Response->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsSpeed_Response->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
     this->checkStatsSpeedDrawable();
 }
 
@@ -3243,11 +3310,27 @@ void MainWindow::checkStatsDayDrawable()
         if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
             aux &= false;
         }
+        // check filter string validity
+        if ( !this->getStatsDayParsedFilter().has_value() ) {
+            aux &= false;
+        }
         this->ui->button_StatsDay_Draw->setEnabled( aux );
 
     } else {
         // db busy
         this->ui->button_StatsDay_Draw->setEnabled( false );
+    }
+}
+
+const std::optional<QString> MainWindow::getStatsDayParsedFilter() const
+{
+    const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
+    if ( fld_i == 0 ) {
+        return FilterOps::parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() );
+    } else if ( fld_i == 5 ) {
+        return FilterOps::parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
+    } else {
+        return FilterOps::parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
     }
 }
 
@@ -3364,6 +3447,17 @@ void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
     this->checkStatsDayDrawable();
 }
 
+void MainWindow::on_inLine_StatsDay_Filter_textChanged(const QString& arg1)
+{
+    if ( this->getStatsDayParsedFilter().has_value() ) {
+        this->ui->inLine_StatsDay_Filter->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsDay_Filter->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsDayDrawable();
+}
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
@@ -3378,25 +3472,6 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 }
 void MainWindow::drawStatsDay()
 {
-    using opt_t = std::optional<QString>;
-    QString filter;
-    const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
-    if ( fld_i == 0 ) {
-        const opt_t aux{ FilterOps::parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() ) };
-        if ( aux.has_value() ) {
-            filter = aux.value();
-        }
-    } else if ( fld_i == 5 ) {
-        const opt_t aux{ FilterOps::parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() ) };
-        if ( aux.has_value() ) {
-            filter = aux.value();
-        }
-    } else {
-        const opt_t aux{ FilterOps::parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() ) };
-        if ( aux.has_value() ) {
-            filter = aux.value();
-        }
-    }
     const bool period{ this->ui->checkBox_StatsDay_Period->isChecked() };
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
@@ -3409,7 +3484,7 @@ void MainWindow::drawStatsDay()
         ( period ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
         ( period ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
         this->ui->box_StatsDay_LogsField->currentText(),
-        filter );
+        this->getStatsDayParsedFilter().value() );
     ColorSec::applyChartTheme(
         this->charts_theme_id, this->FONTS,
         this->ui->chart_StatsDay );
@@ -3460,11 +3535,33 @@ void MainWindow::checkStatsRelatDrawable()
           || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
             aux &= false;
         }
+        // check filter string validity
+        if ( !this->getStatsRelatParsedFilter( 1 ).has_value()
+          || !this->getStatsRelatParsedFilter( 2 ).has_value() ) {
+            aux &= false;
+        }
         this->ui->button_StatsRelat_Draw->setEnabled( aux );
 
     } else {
         // db busy
         this->ui->button_StatsRelat_Draw->setEnabled( false );
+    }
+}
+
+const std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_num ) const
+{
+    const int fld_i{ ( filter_num == 1 )
+                     ? this->ui->box_StatsRelat_LogsField_1->currentIndex()
+                     : this->ui->box_StatsRelat_LogsField_2->currentIndex() };
+    const QString fld_t{ ( filter_num == 1 )
+                         ? this->ui->inLine_StatsRelat_Filter_1->text()
+                         : this->ui->inLine_StatsRelat_Filter_2->text() };
+    if ( fld_i == 0 ) {
+        return FilterOps::parseBooleanFilter( fld_t );
+    } else if ( fld_i >= 5 && fld_i <= 8 ) {
+        return FilterOps::parseNumericFilter( fld_t );
+    } else {
+        return FilterOps::parseTextualFilter( fld_t );
     }
 }
 
@@ -3571,6 +3668,30 @@ void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
     this->checkStatsRelatDrawable();
 }
 
+void MainWindow::on_inLine_StatsRelat_Filter_1_textChanged(const QString &arg1)
+{
+    if ( this->getStatsRelatParsedFilter( 1 ).has_value() ) {
+        this->ui->inLine_StatsRelat_Filter_1->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsRelat_Filter_1->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsRelatDrawable();
+}
+
+void MainWindow::on_inLine_StatsRelat_Filter_2_textChanged(const QString &arg1)
+{
+    if ( this->getStatsRelatParsedFilter( 2 ).has_value() ) {
+        this->ui->inLine_StatsRelat_Filter_2->setStyleSheet(
+            this->stylesheet_lineedit );
+    } else {
+        this->ui->inLine_StatsRelat_Filter_2->setStyleSheet(
+            this->stylesheet_lineedit_err );
+    }
+    this->checkStatsRelatDrawable();
+}
+
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
@@ -3585,42 +3706,6 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 }
 void MainWindow::drawStatsRelat()
 {
-    using opt_t = std::optional<QString>;
-    QString filter1, filter2;
-    const int aux1{ this->ui->box_StatsRelat_LogsField_1->currentIndex() };
-    if ( aux1 == 0 ) {
-        const opt_t aux{ FilterOps::parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_1->text() ) };
-        if ( aux.has_value() ) {
-            filter1 = aux.value();
-        }
-    } else if ( aux1 >= 5 && aux1 <= 8 ) {
-        const opt_t aux{ FilterOps::parseNumericFilter( this->ui->inLine_StatsRelat_Filter_1->text() ) };
-        if ( aux.has_value() ) {
-            filter1 = aux.value();
-        }
-    } else {
-        const opt_t aux{ FilterOps::parseTextualFilter( this->ui->inLine_StatsRelat_Filter_1->text() ) };
-        if ( aux.has_value() ) {
-            filter1 = aux.value();
-        }
-    }
-    const int aux2{ this->ui->box_StatsRelat_LogsField_2->currentIndex() };
-    if ( aux2 == 0 ) {
-        const opt_t aux{ FilterOps::parseBooleanFilter( this->ui->inLine_StatsRelat_Filter_2->text() ) };
-        if ( aux.has_value() ) {
-            filter2 = aux.value();
-        }
-    } else if ( aux2 >= 5 && aux2 <= 8 ) {
-        const opt_t aux{ FilterOps::parseNumericFilter( this->ui->inLine_StatsRelat_Filter_2->text() ) };
-        if ( aux.has_value() ) {
-            filter2 = aux.value();
-        }
-    } else {
-        const opt_t aux{ FilterOps::parseTextualFilter( this->ui->inLine_StatsRelat_Filter_2->text() ) };
-        if ( aux.has_value() ) {
-            filter2 = aux.value();
-        }
-    }
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
         this->CHARTS_THEMES.at( this->charts_theme_id ),
@@ -3631,8 +3716,10 @@ void MainWindow::drawStatsRelat()
         this->ui->box_StatsRelat_ToYear->currentText(),
         this->ui->box_StatsRelat_ToMonth->currentText(),
         this->ui->box_StatsRelat_ToDay->currentText(),
-        this->ui->box_StatsRelat_LogsField_1->currentText(), filter1,
-        this->ui->box_StatsRelat_LogsField_2->currentText(), filter2 );
+        this->ui->box_StatsRelat_LogsField_1->currentText(),
+        this->getStatsRelatParsedFilter( 1 ).value(),
+        this->ui->box_StatsRelat_LogsField_2->currentText(),
+        this->getStatsRelatParsedFilter( 2 ).value() );
     ColorSec::applyChartTheme(
         this->charts_theme_id, this->FONTS,
         this->ui->chart_StatsRelat );
@@ -3966,7 +4053,7 @@ void MainWindow::refreshChartsPreview()
 ///////////////////
 //// DATABASES ////
 // data collection
-void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1)
+void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
@@ -4010,7 +4097,7 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 }
 
 // usef files hashes
-void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1)
+void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
@@ -4124,7 +4211,7 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 ////////////////
 //// APACHE ////
 // paths
-void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString &arg1)
+void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString& arg1)
 {
     if ( arg1.size() > 0ul ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
@@ -4198,7 +4285,7 @@ void MainWindow::on_button_ConfApache_Format_Help_clicked()
 }
 
 // warnlists
-void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString &arg1)
+void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfApache_Warnlist_String->clear();
@@ -4336,7 +4423,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 
 
 // blacklist
-void MainWindow::on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString &arg1)
+void MainWindow::on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfApache_Blacklist_String->clear();
@@ -4476,7 +4563,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 ////////////////
 //// NGINX ////
 // paths
-void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1)
+void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
@@ -4550,7 +4637,7 @@ void MainWindow::on_button_ConfNginx_Format_Help_clicked()
 }
 
 // warnlists
-void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString &arg1)
+void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfNginx_Warnlist_String->clear();
@@ -4688,7 +4775,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 
 
 // blacklist
-void MainWindow::on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString &arg1)
+void MainWindow::on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfNginx_Blacklist_String->clear();
@@ -4828,7 +4915,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 ////////////////
 //// IIS ////
 // paths
-void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString &arg1)
+void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
@@ -4966,7 +5053,7 @@ void MainWindow::on_button_ConfIis_Format_Help_clicked()
 }
 
 // warnlists
-void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString &arg1)
+void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfIis_Warnlist_String->clear();
@@ -5104,7 +5191,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 
 
 // blacklist
-void MainWindow::on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString &arg1)
+void MainWindow::on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
         this->ui->inLine_ConfIis_Blacklist_String->clear();
@@ -5239,4 +5326,3 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
     this->ui->list_ConfIis_Blacklist_List->item( i )->setSelected( true );
     this->ui->list_ConfIis_Blacklist_List->setFocus();
 }
-

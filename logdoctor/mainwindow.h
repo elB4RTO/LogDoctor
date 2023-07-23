@@ -165,6 +165,16 @@ private slots:
 
     void on_box_StatsSpeed_Day_currentIndexChanged(int index);
 
+    void on_inLine_StatsSpeed_Protocol_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Method_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Uri_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Query_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Response_textChanged(const QString& arg1);
+
     void on_button_StatsSpeed_Draw_clicked();
 
     //// COUNTS ////
@@ -215,6 +225,8 @@ private slots:
 
     void on_box_StatsDay_ToDay_currentIndexChanged(int index);
 
+    void on_inLine_StatsDay_Filter_textChanged(const QString& arg1);
+
     void on_button_StatsDay_Draw_clicked();
 
     //// RELATIONAL ////
@@ -237,7 +249,13 @@ private slots:
 
     void on_box_StatsRelat_ToDay_currentIndexChanged(int index);
 
+    void on_inLine_StatsRelat_Filter_1_textChanged(const QString& arg1);
+
+    void on_inLine_StatsRelat_Filter_2_textChanged(const QString& arg1);
+
     void on_button_StatsRelat_Draw_clicked();
+
+    //// GLOBALS ////
 
     void on_button_StatsGlob_Apache_clicked();
 
@@ -279,13 +297,13 @@ private slots:
 
     //// DATABASES ////
 
-    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1);
+    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1);
 
     void on_inLine_ConfDatabases_Data_Path_returnPressed();
 
     void on_button_ConfDatabases_Data_Save_clicked();
 
-    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1);
+    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1);
 
     void on_inLine_ConfDatabases_Hashes_Path_returnPressed();
 
@@ -313,7 +331,7 @@ private slots:
 
     //// APACHE ////
 
-    void on_inLine_ConfApache_Path_String_textChanged(const QString &arg1);
+    void on_inLine_ConfApache_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfApache_Path_String_returnPressed();
 
@@ -329,7 +347,7 @@ private slots:
 
     void on_button_ConfApache_Format_Help_clicked();
 
-    void on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked);
 
@@ -347,7 +365,7 @@ private slots:
 
     void on_button_ConfApache_Warnlist_Down_clicked();
 
-    void on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked);
 
@@ -367,7 +385,7 @@ private slots:
 
     //// NGINX ////
 
-    void on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1);
+    void on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfNginx_Path_String_returnPressed();
 
@@ -383,7 +401,7 @@ private slots:
 
     void on_button_ConfNginx_Format_Help_clicked();
 
-    void on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked);
 
@@ -401,7 +419,7 @@ private slots:
 
     void on_button_ConfNginx_Warnlist_Down_clicked();
 
-    void on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked);
 
@@ -421,7 +439,7 @@ private slots:
 
     //// IIS ////
 
-    void on_inLine_ConfIis_Path_String_textChanged(const QString &arg1);
+    void on_inLine_ConfIis_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfIis_Path_String_returnPressed();
 
@@ -443,7 +461,7 @@ private slots:
 
     void on_button_ConfIis_Format_Help_clicked();
 
-    void on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked);
 
@@ -461,7 +479,7 @@ private slots:
 
     void on_button_ConfIis_Warnlist_Down_clicked();
 
-    void on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked);
 
@@ -668,6 +686,12 @@ private:
     QString alternative_font_family;
     QString script_font_family;
 
+    // fallback stylesheets
+    QString stylesheet_lineedit;
+
+    // errors stylesheets
+    const QString stylesheet_lineedit_err{ "QLineEdit{ background-color: rgb(223, 31, 31) }" };
+
 
     /////////////////////
     //// GENERAL USE ////
@@ -797,6 +821,12 @@ private:
     QString count_fld;
     void makeStatsCount();
     void resetStatsCountButtons();
+
+    // day-time
+    const std::optional<QString> getStatsDayParsedFilter() const;
+
+    // relational
+    const std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
 
     // globals
     QString glob_ws;
