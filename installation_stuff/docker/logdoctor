@@ -1,5 +1,5 @@
 #!/bin/bash
 
 xhost +local:
-docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix: -v logdoctordata:/ logdoctor:latest
+docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /var/log:/var/log -v logdoctordata:/root logdoctor:latest
 xhost -local:
