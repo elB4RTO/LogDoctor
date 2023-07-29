@@ -15,11 +15,22 @@ then
 	exit 1
 fi
 
+# Check the existence of a previous LogDoctor installation
+if [ -e /usr/bin/logdoctor ]
+then
+	grep "docker run" /usr/bin/logdoctor
+	if [[ "$?" != "0" ]]
+	then
+		echo "$(tput setaf 11)Warning:$(tput sgr0) a previous non-Docker installation exists, please $(tput bold)uninstall$(tput sgr0) it before to proceed"
+		exit 0
+	fi
+fi
+
 # Check the existence of a previous image
 docker images | grep logdoctor &> /dev/null
 if [[ "$?" != "0" ]]
 then
-	echo "$(tput setaf 11)Warning:$(tput sgr0) no previous image already found, please run the $(tput bold)install$(tput sgr0) script instead"
+	echo "$(tput setaf 11)Warning:$(tput sgr0) no previous image found, please run the $(tput bold)install$(tput sgr0) script instead"
 	exit 0
 fi
 
@@ -27,8 +38,31 @@ fi
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Checking base image$(tput sgr0)"
 
 # Check the existence of debian:latest image
+pull_updates=1
 docker images | grep debian | grep latest &> /dev/null
-if [[ "$?" != "0" ]]
+if [[ "$?" == "0" ]]
+then
+	while :
+	do
+		echo "A $(tput bold)debian:latest$(tput sgr0) image is already installed\nIt is recomended to build LogDoctor on top of an updated image\nPull the latest updates? [y/n] : "
+		read agree
+		case "$agree"
+		in
+			[yY] | [yY][eE][sS] )
+				break
+			;;
+			[nN] | [nN][oO] )
+				pull_updates=0
+				break
+			;;
+			*)
+				echo "$(tput setaf 11)Warning:$(tput sgr0) not a valid choice"
+				sleep 1
+			;;
+		esac
+	done
+fi
+if [[ "$pull_updates" == "1" ]]
 then
 	# Image not found, pull it
 	docker pull debian:latest
@@ -46,7 +80,7 @@ echo "$(tput setaf 10)-->$(tput sgr0) Checked succesfully"
 # Remove the old image
 echo "$(tput setaf 12)==>$(tput sgr0) $(tput bold)Removing old LogDoctor image$(tput sgr0)"
 
-docker image rm logdoctor:latest
+docker image rm --force logdoctor:latest
 if [[ "$?" != "0" ]]
 then
 	echo "$(tput setaf 1)Error:$(tput sgr0) failed to remove logdoctor:latest"
