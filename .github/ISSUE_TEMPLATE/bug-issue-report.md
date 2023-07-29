@@ -7,13 +7,13 @@ assignees: elB4RTO
 
 ---
 
-**Describe the Issue**
+**Description**
 
 A clear description of the issue you found
 
 <br/><br/>
 
-**System Infos**
+**System Infos** *(if needed)*
 
  - OS platform: *[ Linux / BSD / Windows / iOS ]*
  - Desktop environment (for Linux/BSD only): *[ KDE / Gnome / Xfce / ... ]*
@@ -23,12 +23,12 @@ A clear description of the issue you found
 
 <br/><br/>
 
-**Error Message**
+**Error Message** *(if any)*
 
 The error message, if any was thrown or a crash happened.
 
 How to get it:
-- try to run LogDoctor from a terminal and to reproduce the error in order it
+- run LogDoctor from a terminal and try to reproduce the error
 - or give a look at your system's *stdout*/*stderr* logs and try to find it
 
 <br/><br/>
@@ -38,10 +38,10 @@ How to get it:
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '...'  /  Do '...'
-3. See error
+3. See the error
 
 <br/><br/>
 
 **Expected Behavior**
 
-(OPTIONAL) A concise description of what you expected to happen.
+A concise description of what you expected to happen.

@@ -2,7 +2,7 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-2.04-fff"/>
+  <img src="https://img.shields.io/badge/version-2.05-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
   <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
   <br/>
@@ -114,17 +114,14 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
   `cd LogDoctor`<br/><br/>
 - Run the installation script
   - Linux:
-    - `chmod +x ./LINUX_build_install.sh`
-    - `./LINUX_build_install.sh`
+    - `bash scripts/LINUX_build_install.sh`
   - BSD:
-    - `chmod +x ./BSD_build_install.sh`
-    - `./BSD_build_install.sh`
+    - `bash scripts/BSD_build_install.sh`
   - Windows:
     - run `WIN_build_install_1.bat` as normal user
     - right-click on `WIN_build_install_2.bat` and select **Run as Administrator**
   - Mac OS:
-    - `chmod +x ./MAC_build_install.sh`
-    - `./MAC_build_install.sh`
+    - `bash scripts/MAC_build_install.sh`
 
 <br/>
 
@@ -156,6 +153,20 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
 - Run the installation executable, or the installation script if you prefer it
 
+<br/>
+
+#### As Docker image
+
+- Download and unzip this repo
+  <br/>*or*<br/>
+  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+- Step inside inside "*LogDoctor-main*"
+  <br/>*or*<br/>
+  `cd LogDoctor`<br/><br/>
+- Run the installation script
+  - Linux:
+    - `bash scripts/DOCKER_build_install.sh`
+
 <br/><br/>
 
 ### How to compile
@@ -179,7 +190,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 #### Additional steps
 
-- **Linux**:
+- **Linux** / **BSD**:
   - No additional steps. Once compiling is done, you can move the executable file wherever you want and execute it from there.<br/><br/>
 
 - **Windows**:
@@ -219,23 +230,20 @@ At the moment of writing, the only supported method is the manual update.<br/><b
 
 - Download and unzip this repo
   <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+  `git clone https://bitbucket.org/elb4rto/logdoctor`<br/><br/>
 - Step inside inside "*LogDoctor-main*"
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>
 - Run the update script
   - Linux:
-    - `chmod +x ./LINUX_build_update.sh`
-    - `./LINUX_build_update.sh`
+    - `bash LINUX_build_update.sh`
   - BSD:
-    - `chmod +x ./BSD_build_update.sh`
-    - `./BSD_build_update.sh`
+    - `bash BSD_build_update.sh`
   - Windows:
     - run `WIN_build_update_1.bat` as normal user
     - right-click on `WIN_build_update_2.bat` and select **Run as Administrator**
   - Mac OS:
-    - `chmod +x ./MAC_build_update.sh`
-    - `./MAC_build_update.sh`
+    - `bash MAC_build_update.sh`
 
 <br/>
 
@@ -249,6 +257,20 @@ Follow the same process as for installing
 
 - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)<br/>
 - Run the update script
+
+<br/>
+
+#### As Docker image
+
+- Download and unzip this repo
+  <br/>*or*<br/>
+  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+- Step inside inside "*LogDoctor-main*"
+  <br/>*or*<br/>
+  `cd LogDoctor`<br/><br/>
+- Run the update script
+  - Linux:
+    - `bash scripts/DOCKER_build_update.sh`
 
 <br/><br/><br/>
 
@@ -512,7 +534,7 @@ This is because it is unlikely (supposedly impossible) that a hash equals anothe
 
 ### Estimated working speed
 
-1~15 MB/s
+1~25 MB/s
 
 May be higher or lower depending on the complexity of the logs, the complexity of the blacklist/warnlists, your hardware and the workload of your system during the execution.
 
