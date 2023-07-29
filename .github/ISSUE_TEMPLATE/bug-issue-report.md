@@ -7,7 +7,7 @@ assignees: elB4RTO
 
 ---
 
-**Describe the Issue**
+**Description**
 
 A clear description of the issue you found
 
