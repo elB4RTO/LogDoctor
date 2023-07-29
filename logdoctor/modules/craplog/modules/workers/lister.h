@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-#include "modules/craplog/modules/lib.h"
-
+class LogsFormat;
+class LogFile;
 class HashOps;
 
 
@@ -39,9 +39,6 @@ public slots:
 
 private:
 
-    ////////////////////////
-    //// WEB SERVERS ID ////
-
     const unsigned wsID;
 
     const unsigned dialogs_level;
@@ -53,6 +50,8 @@ private:
     const HashOps& hashOps;
 
     const std::function<bool(const std::string&)> check_filename;
+
+    void quit();
 
 };
 

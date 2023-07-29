@@ -6,6 +6,7 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
+#include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/logs.h"
 
@@ -23,14 +24,19 @@ CraplogLister::CraplogLister( const unsigned web_server_id, const unsigned dialo
 }
 
 
+void CraplogLister::quit()
+{
+    emit this->done();
+    emit this->retire();
+}
+
 void CraplogLister::work()
 {
     const std::string& logs_path{ this->logs_path };
     if ( ! IOutils::isDir( logs_path ) ) {
         // this directory doesn't exists
-        if ( IOutils::exists( logs_path ) ) {
-            DialogSec::errDirNotExists( QString::fromStdString( logs_path ) );
-        }
+        DialogSec::errDirNotExists( QString::fromStdString( logs_path ) );
+        this->quit();
         return;
     }
     size_t size;
@@ -109,6 +115,5 @@ void CraplogLister::work()
             false, this->hashOps.hasBeenUsed( hash, this->wsID ),
             size, name, hash, path } );
     }
-    emit this->done();
-    emit this->retire();
+    this->quit();
 }
