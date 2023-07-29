@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['memops_0',['MemOps',['../namespaceMemOps.html',1,'']]]
+  ['logops_0',['LogOps',['../namespaceLogOps.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['printsec_0',['PrintSec',['../namespacePrintSec.html',1,'']]]
+  ['memops_0',['MemOps',['../namespaceMemOps.html',1,'']]]
 ];

@@ -1,18 +1,20 @@
-#ifndef CRAPLOGWORKER_H
-#define CRAPLOGWORKER_H
+#ifndef CRAPLOGPARSER_H
+#define CRAPLOGPARSER_H
 
 #include <QObject>
 
-#include "lib.h"
+#include "modules/craplog/modules/lib.h"
 
 #include <unordered_map> // leave this here for OSX
+
+enum class WorkerDialog;
 
 class QSqlDatabase;
 
 typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for OSX
 
 
-class CraplogWorker : public QObject
+class CraplogParser : public QObject
 {
     Q_OBJECT
 
@@ -24,7 +26,7 @@ private:
 
 public:
 
-    explicit CraplogWorker(
+    explicit CraplogParser(
         const unsigned web_server_id,
         const unsigned dialogs_level,
         const std::string& db_data_path,
@@ -49,6 +51,10 @@ signals:
         const size_t warnlisted_size,
         const size_t blacklisted_size );
 
+    void showDialog(
+        const WorkerDialog dialog_type,
+        const QStringList arg );
+
     void startedParsing();
 
     void finishedParsing();
@@ -66,13 +72,6 @@ public slots:
     void sendChartData();
 
 private:
-
-    /////////////////////////
-    //// WEB SERVERS IDs ////
-
-    const unsigned APACHE_ID { 11 }; //!< ID of the Apache2 Web Server
-    const unsigned NGINX_ID  { 12 }; //!< ID of the Nginx Web Server
-    const unsigned IIS_ID    { 13 }; //!< ID of the IIS Web Server
 
     const unsigned wsID;
 
@@ -203,4 +202,4 @@ private:
 };
 
 
-#endif // CRAPLOGWORKER_H
+#endif // CRAPLOGPARSER_H

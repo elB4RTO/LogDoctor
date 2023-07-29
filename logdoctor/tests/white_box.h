@@ -1,10 +1,23 @@
 #ifndef WHITE_BOX_H
 #define WHITE_BOX_H
 
+
+//! Testing
+/*!
+    Collection of whitebox tests
+*/
 namespace Testing
 {
-    void testUtilities();
-    void testCraplogModules();
-}
+
+//! A Test suit for the utilities
+void testUtilities();
+
+//! A Test suit for craplog's modules
+void testCraplogModules();
+
+//! A Test suit for crapview's modules
+void testCrapviewModules();
+
+} // namespace Testing
 
 #endif // WHITE_BOX_H

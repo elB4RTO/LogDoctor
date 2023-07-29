@@ -2,10 +2,11 @@
 #define SNAKE_H
 
 #include <vector>
+#include <array> // leave this here for OSX
 
 #include <QPixmap>
-#include <QGraphicsPixmapItem>
 
+class QGraphicsPixmapItem;
 class QGraphicsScene;
 
 
@@ -25,14 +26,8 @@ struct BodyPart {
     Direction direction;        //!< The current direction of the part
     Direction prev_direction;   //!< The previous direction of the part
     QGraphicsPixmapItem* image; //!< The image which graphically represents the part
-     //! Updates the position and direction of the part
-    void update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) {
-        this->x = new_x;
-        this->y = new_y;
-        this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
-        this->prev_direction = this->direction;
-        this->direction = new_direction;
-    }
+    //! Updates the position and direction of the part
+    void update( const unsigned new_x, const unsigned new_y, const Direction& new_direction );
 };
 
 
@@ -59,20 +54,20 @@ public:
     void willGrow();
 
     // [AI] Chooses a new direction for the snake
-    void move( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y );
+    void move( const Snake& adv_snake, const unsigned food_x, const unsigned food_y );
 
 
 private:
 
-    QPixmap img_snakeHead{ ":/games/games/snake/head.png" };
-    QPixmap img_snakeTail{ ":/games/games/snake/tail.png" };
-    QPixmap img_snakeBody{ ":/games/games/snake/body_s.png" };
-    QPixmap img_snakeCurve{ ":/games/games/snake/body_c.png" };
+    const QPixmap img_snakeHead   { ":/games/games/snake/head.png"   };
+    const QPixmap img_snakeTail   { ":/games/games/snake/tail.png"   };
+    const QPixmap img_snakeBody   { ":/games/games/snake/body_s.png" };
+    const QPixmap img_snakeCurve  { ":/games/games/snake/body_c.png" };
 
-    QPixmap img_snakeHead_{ ":/games/games/snake/head_.png" };
-    QPixmap img_snakeTail_{ ":/games/games/snake/tail_.png" };
-    QPixmap img_snakeBody_{ ":/games/games/snake/body_s_.png" };
-    QPixmap img_snakeCurve_{ ":/games/games/snake/body_c_.png" };
+    const QPixmap img_snakeHead_  { ":/games/games/snake/head_.png"   };
+    const QPixmap img_snakeTail_  { ":/games/games/snake/tail_.png"   };
+    const QPixmap img_snakeBody_  { ":/games/games/snake/body_s_.png" };
+    const QPixmap img_snakeCurve_ { ":/games/games/snake/body_c_.png" };
 
     Direction head_direction;
 
@@ -99,7 +94,7 @@ private:
         unsigned s_index;
     };
 
-    std::vector<std::vector<Tile>> field_map;
+    std::array<std::array<Tile, 16>, 16> field_map;
 
     // [AI] Updates the map of the field
     void updateFieldMap( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y );
@@ -111,16 +106,16 @@ private:
     const bool inTileMinusSteps( const unsigned x, const unsigned y, const unsigned steps ) const;
 
     // [AI] Checks which of the surrounding positions are blocked
-    const std::vector<unsigned> checkAround( const Direction& direction, const unsigned& x, const unsigned& y ) const;
+    const std::array<unsigned, 8> checkAround( const Direction& direction, const unsigned x, const unsigned y ) const;
 
     // [AI] Checks if a direction is a closed path and should be avoided
-    const unsigned isDeadHole( const unsigned& start_x, const unsigned& start_y, const Direction& start_direction ) const;
+    const unsigned isDeadHole( const unsigned start_x, const unsigned start_y, const Direction& start_direction ) const;
 
     // [AI] Collects data about the possible movements
-    void collectData( std::vector<float>& data, Direction& direction, const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y ) const;
+    void collectData( std::array<float, 7>& data, const Direction& direction, const Snake& adv_snake, const unsigned food_x, const unsigned food_y ) const;
 
     // [AI] Processes the collected data to predict the best movement
-    const Direction predictDirection( const std::vector<std::vector<float>>& data, const std::vector<float>& weights, const std::vector<Direction>& classes ) const;
+    const Direction predictDirection( const std::array<std::array<float, 7>, 4>& data, const std::array<float, 7>& weights, const std::array<Direction, 4>& classes ) const;
 };
 
 #endif // SNAKE_H

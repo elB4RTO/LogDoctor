@@ -20,7 +20,7 @@ Craphelp::~Craphelp()
 }
 
 
-const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int& scheme_id ) const
+const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int scheme_id ) const
 {
     switch ( scheme_id ) {
         case 0:
@@ -72,7 +72,7 @@ const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const i
 }
 
 
-void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int& color_scheme_id ) const
+void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const
 {
     std::unordered_map<std::string, QString> color_scheme{ this->getColorScheme( color_scheme_id ) };
     std::string aux;
@@ -116,7 +116,7 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
 }
 
 
-void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int &color_scheme_id ) const
+void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const
 {
     std::unordered_map<std::string, QString> color_scheme = this->getColorScheme( color_scheme_id );
     std::string aux;

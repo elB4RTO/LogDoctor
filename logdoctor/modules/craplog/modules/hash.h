@@ -1,6 +1,8 @@
 #ifndef HASH_H
 #define HASH_H
 
+#include "defines/web_servers.h"
+
 #include <vector>
 #include <unordered_map>
 
@@ -58,24 +60,19 @@ private:
     // Quantity of information to display throught dialogs
     int dialog_level{ 2 };
 
-    // id constants
-    const unsigned APACHE_ID { 11 };
-    const unsigned NGINX_ID  { 12 };
-    const unsigned IIS_ID    { 13 };
-
     // List of Web Servers names for database tables
     const std::unordered_map<unsigned, QString> ws_names{
-        {this->APACHE_ID, "apache"},
-        {this->NGINX_ID,  "nginx"},
-        {this->IIS_ID,    "iis"}
+        {APACHE_ID, "apache"},
+        {NGINX_ID,  "nginx"},
+        {IIS_ID,    "iis"}
     };
 
     // Lists of used files' hashes
     // { web_server_id : { hashes } }
     std::unordered_map<unsigned, std::vector<std::string>> hashes{
-        {this->APACHE_ID, {}},
-        {this->NGINX_ID,  {}},
-        {this->IIS_ID,    {}}
+        {APACHE_ID, {}},
+        {NGINX_ID,  {}},
+        {IIS_ID,    {}}
     };
 
 

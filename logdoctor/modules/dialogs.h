@@ -97,6 +97,9 @@ public:
     //! A column has an unexpected type parameter
     static const bool choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget* parent=nullptr );
 
+    //! The database path does not exists
+    static void errDatabaseNotFound( const QString& db_name, QWidget* parent=nullptr );
+
     //! The entry corresponding to the database path is not a file
     static void errDatabaseNotFile( const QString& db_name, QWidget* parent=nullptr );
 

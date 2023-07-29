@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['joinloglines_0',['joinLogLines',['../classCraplogWorker.html#a7d0b061d0741296686c42ff57e79fbd7',1,'CraplogWorker']]]
+  ['joinloglines_0',['joinLogLines',['../classCraplogParser.html#a0cab0465f65175011235f09fa0ff281d',1,'CraplogParser::joinLogLines()'],['../classCraplogParserAsync.html#acd02045ed712c28cd006ace69b1e998e',1,'CraplogParserAsync::joinLogLines()']]]
 ];

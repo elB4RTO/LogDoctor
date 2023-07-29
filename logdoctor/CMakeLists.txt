@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 2.04 LANGUAGES CXX)
+project(LogDoctor VERSION 2.05 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -30,6 +30,10 @@ set(PROJECT_SOURCES
     mainwindow.ui
     mainwindow.h
     mainwindow.cpp
+
+    defines/web_servers.h
+
+    customs/treewidgetitems.h
 
     utilities/checks.h
     utilities/checks.cpp
@@ -86,11 +90,18 @@ set(PROJECT_SOURCES
     modules/craplog/modules/logs.cpp
     modules/craplog/modules/sha256.h
     modules/craplog/modules/sha256.cpp
-    modules/craplog/modules/worker.h
-    modules/craplog/modules/worker.cpp
+    modules/craplog/modules/workers/lib.h
+    modules/craplog/modules/workers/lister.h
+    modules/craplog/modules/workers/lister.cpp
+    modules/craplog/modules/workers/parser.h
+    modules/craplog/modules/workers/parser.cpp
+    modules/craplog/modules/workers/parser_async.h
+    modules/craplog/modules/workers/parser_async.cpp
 
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
+    modules/crapview/modules/filters.h
+    modules/crapview/modules/filters.cpp
     modules/crapview/modules/query.h
     modules/crapview/modules/query.cpp
 
@@ -164,6 +175,7 @@ if(WIN32)
         -static Qt${QT_VERSION_MAJOR}::Sql
         -static Qt${QT_VERSION_MAJOR}::Network)
 else()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
     target_link_libraries(LogDoctor PRIVATE
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Charts
@@ -224,6 +236,8 @@ add_executable(LogDocTester
     modules/craplog/modules/formats.cpp
     modules/craplog/modules/logs.h
     modules/craplog/modules/logs.cpp
+    modules/crapview/modules/filters.h
+    modules/crapview/modules/filters.cpp
 )
 if(WIN32)
     target_link_libraries(LogDocTester PRIVATE

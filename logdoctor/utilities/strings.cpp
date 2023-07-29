@@ -103,7 +103,7 @@ const bool startsWith( std::string_view str, const char flag )
 
 const bool startsWith( std::string_view str, std::string_view flag )
 {
-    return str.find( flag ) == 0ul;
+    return str.rfind( flag, 0ul ) == 0ul;
 }
 
 

@@ -1,12 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "ui_mainwindow.h"
-
 #include <QMainWindow>
-#include <QCloseEvent>
-
-#include <QTranslator>
 
 #include "utilities/strings.h"
 
@@ -14,15 +9,17 @@
 
 #include "modules/craplog/craplog.h"
 #include "modules/crapview/crapview.h"
-#include "modules/craphelp/craphelp.h"
-#include "modules/crapup/crapup.h"
-#include "modules/crapinfo/crapinfo.h"
 
-#include "tools/crapnote/crapnote.h"
+class Craphelp;
+class Crapup;
+class Crapinfo;
+class Crapnote;
 
-#include "games/crisscross/game.h"
-#include "games/snake/game.h"
+class CrissCross;
+class SnakeGame;
 
+class QCloseEvent;
+class QTranslator;
 class QTreeWidgetItem;
 
 
@@ -46,6 +43,8 @@ public:
 
 
 signals:
+
+    void refreshLogs();
 
     void runCraplog();
 
@@ -90,7 +89,9 @@ private slots:
     /////////////////
     //// CRAPLOG ////
 
-    void refreshLogsList(); // CUSTOM
+    void appendToLogsList( const LogFile& log_file ); // CUSTOM
+
+    void refreshFinished(); // CUSTOM
 
     void updatePerfsLabels(); // CUSTOM
 
@@ -164,6 +165,16 @@ private slots:
 
     void on_box_StatsSpeed_Day_currentIndexChanged(int index);
 
+    void on_inLine_StatsSpeed_Protocol_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Method_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Uri_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Query_textChanged(const QString& arg1);
+
+    void on_inLine_StatsSpeed_Response_textChanged(const QString& arg1);
+
     void on_button_StatsSpeed_Draw_clicked();
 
     //// COUNTS ////
@@ -214,6 +225,8 @@ private slots:
 
     void on_box_StatsDay_ToDay_currentIndexChanged(int index);
 
+    void on_inLine_StatsDay_Filter_textChanged(const QString& arg1);
+
     void on_button_StatsDay_Draw_clicked();
 
     //// RELATIONAL ////
@@ -236,7 +249,13 @@ private slots:
 
     void on_box_StatsRelat_ToDay_currentIndexChanged(int index);
 
+    void on_inLine_StatsRelat_Filter_1_textChanged(const QString& arg1);
+
+    void on_inLine_StatsRelat_Filter_2_textChanged(const QString& arg1);
+
     void on_button_StatsRelat_Draw_clicked();
+
+    //// GLOBALS ////
 
     void on_button_StatsGlob_Apache_clicked();
 
@@ -278,13 +297,13 @@ private slots:
 
     //// DATABASES ////
 
-    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString &arg1);
+    void on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1);
 
     void on_inLine_ConfDatabases_Data_Path_returnPressed();
 
     void on_button_ConfDatabases_Data_Save_clicked();
 
-    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString &arg1);
+    void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1);
 
     void on_inLine_ConfDatabases_Hashes_Path_returnPressed();
 
@@ -312,7 +331,7 @@ private slots:
 
     //// APACHE ////
 
-    void on_inLine_ConfApache_Path_String_textChanged(const QString &arg1);
+    void on_inLine_ConfApache_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfApache_Path_String_returnPressed();
 
@@ -328,7 +347,7 @@ private slots:
 
     void on_button_ConfApache_Format_Help_clicked();
 
-    void on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfApache_Warnlist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked);
 
@@ -346,7 +365,7 @@ private slots:
 
     void on_button_ConfApache_Warnlist_Down_clicked();
 
-    void on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfApache_Blacklist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked);
 
@@ -366,7 +385,7 @@ private slots:
 
     //// NGINX ////
 
-    void on_inLine_ConfNginx_Path_String_textChanged(const QString &arg1);
+    void on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfNginx_Path_String_returnPressed();
 
@@ -382,7 +401,7 @@ private slots:
 
     void on_button_ConfNginx_Format_Help_clicked();
 
-    void on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked);
 
@@ -400,7 +419,7 @@ private slots:
 
     void on_button_ConfNginx_Warnlist_Down_clicked();
 
-    void on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked);
 
@@ -420,7 +439,7 @@ private slots:
 
     //// IIS ////
 
-    void on_inLine_ConfIis_Path_String_textChanged(const QString &arg1);
+    void on_inLine_ConfIis_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfIis_Path_String_returnPressed();
 
@@ -442,7 +461,7 @@ private slots:
 
     void on_button_ConfIis_Format_Help_clicked();
 
-    void on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked);
 
@@ -460,7 +479,7 @@ private slots:
 
     void on_button_ConfIis_Warnlist_Down_clicked();
 
-    void on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString &arg1);
+    void on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString& arg1);
 
     void on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked);
 
@@ -517,10 +536,8 @@ private:
     Ui::MainWindow* ui;
 
     // current version of LogDoctor
-    const float version{ 2.04 };
+    const float version{ 2.05 };
 
-    // web servers ID constants
-    const unsigned APACHE_ID{11}, NGINX_ID{12}, IIS_ID{13};
     const QString wsFromIndex( const int index ) const;
 
 
@@ -529,20 +546,14 @@ private:
 
     const std::string home_path{ StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), '/' ) };
 
-    // 1: linux, 2:windows, 3:mac
-    #if defined( Q_OS_DARWIN )
-        // Darwin-based systems: macOS, iOS, watchOS and tvOS.
-        const unsigned int OS{ 3 };
+    // 1: linux/bsd, 2:windows, 3:mac
+    #if defined( Q_OS_MACOS )
         const std::string configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
         const std::string logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
-    #elif defined( Q_OS_WIN )
-        // Microsoft Windows systems
-        const unsigned int OS{ 2 };
+    #elif defined( Q_OS_WINDOWS )
         const std::string configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
         const std::string logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
-    #elif defined( Q_OS_UNIX )
-        // Unix-like systems: Linux, BSD and SysV
-        const unsigned int OS{ 1 };
+    #elif defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
         const std::string configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
         const std::string logdoc_path  { "/usr/share/LogDoctor" };
     #else
@@ -675,6 +686,12 @@ private:
     QString alternative_font_family;
     QString script_font_family;
 
+    // fallback stylesheets
+    QString stylesheet_lineedit;
+
+    // errors stylesheets
+    const QString stylesheet_lineedit_err{ "QLineEdit{ background-color: rgb(223, 31, 31) }" };
+
 
     /////////////////////
     //// GENERAL USE ////
@@ -804,6 +821,12 @@ private:
     QString count_fld;
     void makeStatsCount();
     void resetStatsCountButtons();
+
+    // day-time
+    const std::optional<QString> getStatsDayParsedFilter() const;
+
+    // relational
+    const std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
 
     // globals
     QString glob_ws;

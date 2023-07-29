@@ -3,9 +3,13 @@
 
 #include <QtCharts>
 
+#include "defines/web_servers.h"
+
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/formats.h"
+
+#include "modules/craplog/modules/workers/lib.h"
 
 
 //! Craplog
@@ -24,10 +28,10 @@ public:
     //// DIALOGS ////
 
     //! Returns the Dialogs level
-    const int& getDialogsLevel() const;
+    const int getDialogsLevel() const;
 
     //! Sets the new Dialogs level
-    void setDialogsLevel( const int& new_level );
+    void setDialogsLevel( const int new_level );
 
     ///////////////////
     //// DATABASES ////
@@ -58,13 +62,13 @@ public:
     /*!
         \param web_server_id The new currently used Web Server
     */
-    void setCurrentWSID( const unsigned& web_server_id );
+    void setCurrentWSID( const unsigned web_server_id );
 
     //! Returns the currently used Web Server ID
     /*!
         \return The Web Server ID
     */
-    const unsigned& getCurrentWSID() const;
+    const unsigned getCurrentWSID() const;
 
     //! Uses the current Web Server to set the relative logs format
     /*!
@@ -115,20 +119,19 @@ public:
     ///////////////////
     //// LOGS LIST ////
 
-    //! Returns the list of log files
+    //! Returns the list of log files for the current WebServer
     /*!
-        \param fresh Whether to refresh the list before to return it or not
         \return The list of log files
-        \see LogFile, logs_list, scanLogsDir()
+        \see LogFile, logs_list
     */
-    const std::vector<LogFile>& getLogsList( const bool fresh=false );
+    const std::vector<LogFile>& getLogsList() const;
 
     //! Returns the amount of log files in the list
     /*!
         \return The number of files actually in the list
         \see logs_list
     */
-    const int getLogsListSize() const;
+    const size_t getLogsListSize() const;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -183,7 +186,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processIisFormatString()
     */
-    const bool setIisLogFormat( const std::string& format_string, const int& log_module );
+    const bool setIisLogFormat( const std::string& format_string, const int log_module );
 
     //! Returns the logs format string for the given Web Server
     /*!
@@ -238,7 +241,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    const bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
@@ -247,7 +250,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool& isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    const bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative blacklist to be used or not
     /*!
@@ -256,7 +259,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used );
+    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used );
 
     //! Sets the relative warnlist to be used or not
     /*!
@@ -265,7 +268,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used );
+    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used );
 
     //! Returns the relative items list
     /*!
@@ -418,10 +421,20 @@ public:
 
 signals:
 
+    void pushLogFile( const LogFile& log_file );
+
+    void finishedRefreshing();
+
     void finishedWorking();
 
 
 public slots:
+
+    void scanLogsDir();
+
+    void appendLogFile( const LogFile log_file );
+
+    void logsDirScanned();
 
     void startWorking();
 
@@ -439,6 +452,9 @@ public slots:
                           const size_t warnlisted_size,
                           const size_t blacklisted_size );
 
+    void showWorkerDialog( const WorkerDialog dialog_type,
+                           const QStringList args ) const;
+
 
 private:
 
@@ -447,13 +463,6 @@ private:
 
     // quantity of information to display throught dialogs
     int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
-
-    /////////////////////////
-    //// WEB SERVERS IDs ////
-
-    const unsigned APACHE_ID { 11 }; //!< ID of the Apache2 Web Server
-    const unsigned NGINX_ID  { 12 }; //!< ID of the Nginx Web Server
-    const unsigned IIS_ID    { 13 }; //!< ID of the IIS Web Server
 
 
     ///////////////////
@@ -471,6 +480,14 @@ private:
     bool is_parsing { false };
 
     std::mutex mutex;
+
+    //! Hires a worker to parse the selected logs
+    void hireWorker() const;
+    //! Hires a worker to parse the selected logs, asynchronously
+    void hireAsyncWorker() const;
+
+    //! Defines whether it's worth it working async or not
+    const bool shouldWorkAsync() const;
 
 
     //////////////////////
@@ -526,7 +543,7 @@ private:
     //// WEB SERVER ////
 
     // currently used web server
-    unsigned current_WS{ this->APACHE_ID };
+    unsigned current_WS{ APACHE_ID };
 
     std::unordered_map<int, std::string> logs_paths;
 
@@ -536,9 +553,9 @@ private:
         \see isFileNameValid()
     */
     struct LogName {
-        std::string starts;   //!< What should be initial part of the name
+        std::string starts;   //!< What should be the initial part of the name
         std::string contains; //!< What should be contained in the middle of the name
-        std::string ends;     //!< What should be final part of the name
+        std::string ends;     //!< What should be the final part of the name
     };
 
     std::unordered_map<unsigned, LogName> logs_base_names;
@@ -549,7 +566,7 @@ private:
         \throw GenericException
         \see LogName
     */
-    void changeIisLogsBaseNames( const int& module_id );
+    void changeIisLogsBaseNames( const int module_id );
 
 
     ///////////////////
@@ -557,9 +574,6 @@ private:
 
     // list of the log files found in the logs path
     std::vector<LogFile> logs_list;
-
-    //! Scans the logs directory to get a list of log files
-    void scanLogsDir();
 
 
     /////////////////////

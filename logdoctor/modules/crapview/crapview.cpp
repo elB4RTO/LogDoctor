@@ -8,7 +8,7 @@
 #include <QTableWidget>
 
 
-const int& Crapview::getDialogsLevel() const
+const int Crapview::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
@@ -21,82 +21,6 @@ void Crapview::setDialogsLevel( const int new_level )
 void Crapview::setDbPath( const std::string& path )
 {
     this->dbQuery.setDbPath( path + "/collection.db" );
-}
-
-
-const QString Crapview::parseBooleanFilter( const QString& filter_str ) const
-{
-    QString aux{ filter_str };
-    aux = aux.replace( "NOT TRUE",  "!= 1", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( "NOT FALSE", "!= 0", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( "TRUE",  "1", Qt::CaseSensitivity::CaseInsensitive );
-    aux = aux.replace( "FALSE", "0", Qt::CaseSensitivity::CaseInsensitive );
-    return this->parseNumericFilter( aux );
-}
-
-
-const QString Crapview::parseNumericFilter( const QString& filter_str ) const
-{
-    QString final_str;
-    if ( ! filter_str.isEmpty() ) {
-        QString aux_{ this->parseTextualFilter( filter_str ) };
-        if ( aux_ == "NULL" || aux_ == "NOT NULL" ) {
-            final_str = aux_;
-        } else {
-            std::vector<std::string> f_list;
-            StringOps::splitrip( f_list, filter_str.toStdString(), ' ' );
-            if ( ! f_list.empty() ) {
-                std::string& aux{ f_list.at(0) };
-                if ( StringOps::isNumeric( aux ) ) {
-                    // no symbol specified, set '=' as default
-                    final_str += "=";
-                    final_str += QString::fromStdString( aux );
-                } else {
-                    if ( StringOps::isNumeric( StringOps::lstrip( aux, "!<=>" ) ) ) {
-                        // symbol/value
-                        final_str += QString::fromStdString( aux ).replace("==","=");
-                    } else if ( StringOps::lstrip( aux, "!<=>" ).empty() ) {
-                        // symbol at first, maybe a value follows
-                        if ( f_list.size() > 1 ) {
-                            final_str += QString::fromStdString( aux ).replace("==","=");
-                            const size_t ck = final_str.size();
-                            const size_t max = f_list.size();
-                            for ( size_t i{1}; i<max; i++ ) {
-                                aux = f_list.at( i );
-                                if ( StringOps::isNumeric( aux ) ) {
-                                    final_str += QString::fromStdString( aux );
-                                    break;
-                                }
-                            }
-                            if ( final_str.size() == ck ) {
-                                final_str = "";
-                            }
-                        }
-
-                    }/* else {
-                        // skip
-                    }*/
-                }
-            }
-            f_list.clear();
-        }
-    }
-    return final_str.replace("==","=");
-}
-
-
-const QString Crapview::parseTextualFilter( const QString& filter_str ) const
-{
-    QString aux{ filter_str };
-    if ( ! filter_str.isEmpty() ) {
-        const std::string str{ StringOps::strip( filter_str.toUpper().toStdString() ) };
-        if ( str == "NULL" ) {
-            aux = "NULL";
-        } else if ( str == "NOT NULL" || str == "*" ) {
-            aux = "NOT NULL";
-        }
-    }
-    return aux;
 }
 
 

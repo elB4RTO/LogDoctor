@@ -1,6 +1,9 @@
 
-#include "worker.h"
+#include "parser_async.h"
 
+#include "defines/web_servers.h"
+
+#include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
 #include "utilities/strings.h"
@@ -9,14 +12,16 @@
 #include "modules/exceptions.h"
 
 #include "modules/craplog/craplog.h"
-#include "datetime.h"
+#include "modules/craplog/modules/datetime.h"
+
+#include <thread>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 
 
-CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
+CraplogParserAsync::CraplogParserAsync( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
     : QObject        { parent         }
     , wsID           { web_server_id  }
     , dialogs_level  { dialogs_level  }
@@ -31,7 +36,7 @@ CraplogWorker::CraplogWorker( const unsigned web_server_id, const unsigned dialo
 }
 
 
-void CraplogWorker::sendPerfData()
+void CraplogParserAsync::sendPerfData()
 {
     emit this->perfData(
         this->parsed_size,
@@ -39,7 +44,7 @@ void CraplogWorker::sendPerfData()
     );
 }
 
-void CraplogWorker::sendChartData()
+void CraplogParserAsync::sendChartData()
 {
     emit this->chartData(
         this->total_size,
@@ -50,37 +55,74 @@ void CraplogWorker::sendChartData()
 }
 
 
-void CraplogWorker::work()
+void CraplogParserAsync::work()
 {
-    this->proceed |= true;
-    this->db_edited &= false;
-    try {
-        if ( this->proceed ) {
-            // collect log lines
-            this->joinLogLines();
-        }
-        if ( this->proceed ) {
-            // parse the log lines to fill the collection
-            emit this->startedParsing();
-            this->parseLogLines();
-            emit this->finishedParsing();
-        }
-        // clear log lines data
-        this->logs_lines.clear();
+    const size_t n_files{ this->files_to_use.size() };
+    std::vector<std::promise<logs_lines_t>> pms_logs_lines;
+    std::vector<std::future<logs_lines_t>> ftr_logs_lines;
 
-        if ( this->proceed && this->parsed_size > 0ul ) {
+    auto joinLines = [this,&n_files,&pms_logs_lines]()
+    {
+        for ( size_t i{0ul}; i<n_files; i++ ) {
+            this->joinLogLines( pms_logs_lines.at( i ), this->files_to_use.at( i ) );
+            if ( !this->proceed.load() ) {
+                break;
+            }
+        }
+    };
+
+    auto parseLines = [this,&n_files,&ftr_logs_lines]()
+    {
+        bool first{ true };
+        for ( size_t i{0ul}; i<n_files; i++ ) {
+            ftr_logs_lines.at( i ).wait();
+            if ( first ) {
+                first &= false;
+                emit this->startedParsing();
+            }
+            this->parseLogLines( ftr_logs_lines.at( i ) );
+            if ( !this->proceed.load() ) {
+                break;
+            }
+        }
+        emit this->finishedParsing();
+    };
+
+    try {
+        ftr_logs_lines.reserve( n_files );
+        pms_logs_lines.reserve( n_files );
+        for ( size_t i{0ul}; i<n_files; i++ ) {
+            pms_logs_lines.push_back( std::promise<logs_lines_t>{} );
+            ftr_logs_lines.push_back( pms_logs_lines.back().get_future() );
+        }
+
+        // collect log lines
+        std::thread j{ joinLines };
+        // collect log data
+        std::thread p{ parseLines };
+        // wait for completion
+        j.join();
+        p.join();
+
+        // clear log lines data
+        pms_logs_lines.clear();
+        ftr_logs_lines.clear();
+
+        if ( this->proceed.load() && this->parsed_size > 0ul ) {
             // store the new data
             this->storeLogLines();
-            this->db_edited |= this->proceed;
+            this->db_edited |= this->proceed.load();
         }
 
     } catch ( GenericException& e ) {
-        DialogSec::errGeneric( e.what() );
-        this->proceed &= false;
+        emit this->showDialog( WorkerDialog::errGeneric,
+                               {e.what()} );
+        this->proceed.store( false );
 
     } catch ( LogParserException& e ) {
-        DialogSec::errFailedParsingLogs( e.what() );
-        this->proceed &= false;
+        emit this->showDialog( WorkerDialog::errFailedParsingLogs,
+                               {e.what()} );
+        this->proceed.store( false );
     }
     // send the final data
     if ( ! this->proceed ) {
@@ -98,7 +140,7 @@ void CraplogWorker::work()
 }
 
 
-void CraplogWorker::joinLogLines()
+void CraplogParserAsync::joinLogLines( std::promise<logs_lines_t>& log_lines, const logs_file_t& logs_file )
 {
     const auto cleanLines = [](std::vector<std::string>& lines) {
         std::vector<std::string> aux;
@@ -115,76 +157,71 @@ void CraplogWorker::joinLogLines()
 
 
     std::string aux;
-    std::vector<std::string> content;
-    for ( const auto& file : this->files_to_use ) {
+    logs_lines_t content;
 
-        if ( ! this->proceed ) { break; }
+    const std::string& file_path = std::get<0>( logs_file );
 
-        const std::string& file_path = std::get<0>( file );
-
-        // collect lines
+    // collect lines
+    try {
+        // try reading
         try {
-            // try reading
-            content.clear();
-            aux.clear();
-            try {
-                // try as gzip compressed archive first
-                GZutils::readFile( file_path, aux );
+            // try as gzip compressed archive first
+            GZutils::readFile( file_path, aux );
 
-            } catch ( const GenericException& ) {
-                // failed closing file pointer
-                throw;
-
-            } catch (...) {
-                // fallback on reading as normal file
-                if ( ! aux.empty() ) {
-                    aux.clear();
-                }
-                IOutils::readFile( file_path, aux );
-            }
-            StringOps::splitrip( content, aux );
-
-            this->total_lines += content.size();
-            this->total_size  += aux.size();
-
-            if ( this->wsID == this->IIS_ID ) {
-                cleanLines( content );
-            }
-
-        // re-catched in run()
         } catch ( const GenericException& ) {
-            // failed closing gzip file pointer
-            throw GenericException( QString("%1:\n%2").arg(
-                    DialogSec::tr("An error accured while reading the gzipped file"),
-                    QString::fromStdString( file_path )
-                ).toStdString() );
-
-        } catch ( const std::ios_base::failure& ) {
-            // failed reading as text
-            throw GenericException( QString("%1:\n%2").arg(
-                    DialogSec::tr("An error accured while reading the file"),
-                    QString::fromStdString( file_path )
-                ).toStdString() );
+            // failed closing file pointer
+            throw;
 
         } catch (...) {
-            // failed somehow
-            throw GenericException( QString("%1:\n%2").arg(
-                    DialogSec::tr("Something failed while handling the file"),
-                    QString::fromStdString( file_path )
-                ).toStdString() );
+            // fallback on reading as normal file
+            if ( ! aux.empty() ) {
+                aux.clear();
+            }
+            IOutils::readFile( file_path, aux );
+        }
+        StringOps::splitrip( content, aux );
+
+        this->total_lines += content.size();
+        this->total_size  += aux.size();
+
+        if ( this->wsID == IIS_ID ) {
+            cleanLines( content );
         }
 
-        // append to the relative list
-        this->logs_lines.insert( this->logs_lines.end(), content.begin(), content.end() );
+    // re-catched in run()
+    } catch ( const GenericException& ) {
+        // failed closing gzip file pointer
+        this->proceed.store( false );
+        throw GenericException( QString("%1:\n%2").arg(
+                DialogSec::tr("An error accured while reading the gzipped file"),
+                QString::fromStdString( file_path )
+            ).toStdString() );
+
+    } catch ( const std::ios_base::failure& ) {
+        // failed reading as text
+        this->proceed.store( false );
+        throw GenericException( QString("%1:\n%2").arg(
+                DialogSec::tr("An error accured while reading the file"),
+                QString::fromStdString( file_path )
+            ).toStdString() );
+
+    } catch (...) {
+        // failed somehow
+        this->proceed.store( false );
+        throw GenericException( QString("%1:\n%2").arg(
+                DialogSec::tr("Something failed while handling the file"),
+                QString::fromStdString( file_path )
+            ).toStdString() );
     }
-    this->files_to_use.clear();
-    if ( this->logs_lines.empty() ) {
-        this->proceed &= false;
+
+    // append to the relative list
+    if ( this->proceed.load() ) {
+        log_lines.set_value( std::move( content ) );
     }
 }
 
 
-void CraplogWorker::parseLogLines()
+void CraplogParserAsync::parseLogLines( std::future<logs_lines_t>& f_log_lines )
 {
     const auto parseLine = [this]( const std::string& line ) {
         log_line_data_t data;
@@ -301,7 +338,7 @@ void CraplogWorker::parseLogLines()
                         // process the field
 
                         // process the date to get year, month, day, hour and minute
-                        if ( fld.find("date_time") == 0ul ) {
+                        if ( fld.rfind("date_time",0ul) == 0ul ) {
                             const auto dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part
                             if ( ! dt.at( 0 ).empty() ) {
                                 // year
@@ -397,7 +434,7 @@ void CraplogWorker::parseLogLines()
 
 
                         // process the time taken to convert to milliseconds
-                        } else if ( fld.find("time_taken_") == 0ul ) {
+                        } else if ( fld.rfind("time_taken_",0ul) == 0ul ) {
                             float t{ std::stof( fld_str ) };
                             const std::string u{ fld.substr( 11ul ) };
                             if ( u == "us" ) {
@@ -426,7 +463,6 @@ void CraplogWorker::parseLogLines()
                 // this was the final separator
                 break;
             }
-
         }
 
         if ( add_pm ) {
@@ -447,21 +483,24 @@ void CraplogWorker::parseLogLines()
 
 
     // parse all the lines
-    if ( this->proceed ) {
-        const size_t n_lines{ this->logs_lines.size() };
+    if ( this->proceed.load() ) {
+        const logs_lines_t& log_lines{ f_log_lines.get() };
+        const size_t n_lines{ log_lines.size() };
         const size_t nl{ this->logs_format.new_lines };
         if ( nl == 0ul ) {
-            this->data_collection.reserve( n_lines );
-            for ( const std::string& line : this->logs_lines ) {
+            const size_t size{ this->data_collection.size() + n_lines };
+            this->data_collection.reserve( size );
+            for ( const std::string& line : log_lines ) {
                 parseLine( line );
             }
         } else {
-            this->data_collection.reserve( n_lines / (nl+1ul) );
+            const size_t size{ this->data_collection.size() + (n_lines/(nl+1ul)) };
+            this->data_collection.reserve( size );
             for ( size_t i{0ul}; i<n_lines; i++ ) {
-                std::string line = this->logs_lines.at( i );
+                std::string line = log_lines.at( i );
                 for ( size_t n{0ul}; n<nl; n++ ) {
                     i++;
-                    line += "\n" + this->logs_lines.at( i );
+                    line += "\n" + log_lines.at( i );
                 }
                 parseLine( line );
             }
@@ -471,7 +510,7 @@ void CraplogWorker::parseLogLines()
 
 
 
-void CraplogWorker::storeLogLines()
+void CraplogParserAsync::storeLogLines()
 {
     QString db_path{ QString::fromStdString( this->db_data_path ) };
     QString db_name{ QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
@@ -479,14 +518,18 @@ void CraplogWorker::storeLogLines()
     QSqlDatabase db{ QSqlDatabase::addDatabase("QSQLITE") };
     db.setDatabaseName( db_path );
 
-    if ( ! db.open() ) {
+    if ( ! CheckSec::checkDatabaseFile( this->db_data_path, db_name ) ) {
+        this->proceed.store( false );
+
+    } else if ( ! db.open() ) {
         // error opening database
-        this->proceed &= false;
+        this->proceed.store( false );
         QString err_msg;
         if ( this->dialogs_level == 2 ) {
             err_msg = db.lastError().text();
         }
-        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
+        emit this->showDialog( WorkerDialog::errDatabaseFailedOpening,
+                               {db_name, err_msg} );
 
     } else {
 
@@ -494,7 +537,7 @@ void CraplogWorker::storeLogLines()
             // ACID transaction
             if ( ! db.transaction() ) {
                 // error opening database
-                this->proceed &= false;
+                this->proceed.store( false );
                 QString stmt_msg, err_msg;
                 if ( this->dialogs_level > 0 ) {
                     stmt_msg = "db.transaction()";
@@ -502,18 +545,19 @@ void CraplogWorker::storeLogLines()
                         err_msg = db.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
+                emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                       {db_name, stmt_msg, err_msg} );
             }
 
             if ( this->proceed && !this->data_collection.empty() ) {
-                this->proceed &= this->storeData( db );
+                this->proceed.store( this->storeData( db ) );
             }
 
-            if ( this->proceed ) {
+            if ( this->proceed.load() ) {
                 // commit the transaction
                 if ( ! db.commit() ) {
                     // error opening database
-                    this->proceed &= false;
+                    this->proceed.store( false );
                     QString stmt_msg, err_msg;
                     if ( this->dialogs_level > 0 ) {
                         stmt_msg = "db.commit()";
@@ -521,7 +565,8 @@ void CraplogWorker::storeLogLines()
                             err_msg= db.lastError().text();
                         }
                     }
-                    DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
+                    emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                           {db_name, stmt_msg, err_msg} );
                 }
             }
             if ( ! proceed ) {
@@ -531,7 +576,7 @@ void CraplogWorker::storeLogLines()
 
         } catch (...) {
             // wrongthing w3nt some.,.
-            this->proceed &= false;
+            this->proceed.store( false );
             bool err_shown = false;
             // rollback the transaction
             if ( ! db.rollback() ) {
@@ -543,23 +588,28 @@ void CraplogWorker::storeLogLines()
                         err_msg = db.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
+                emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                       {db_name, stmt_msg, err_msg} );
                 err_shown = true;
             }
             if ( ! err_shown ) {
                 // show a message
-                DialogSec::errGeneric( QString("%1\n\n%2").arg(
-                    DialogSec::tr("An error occured while working on the database"),
-                    DialogSec::tr("Aborting") ) );
+                emit this->showDialog(
+                    WorkerDialog::errGeneric,
+                    {QString("%1\n\n%2").arg(
+                        DialogSec::tr("An error occured while working on the database"),
+                        DialogSec::tr("Aborting") )} );
             }
         }
 
-        db.close();
+        if ( db.isOpen() ) {
+            db.close();
+        }
     }
 
 }
 
-const bool CraplogWorker::storeData( QSqlDatabase& db )
+const bool CraplogParserAsync::storeData( QSqlDatabase& db )
 {
     const QString db_name{ QString::fromStdString(
         this->db_data_path.substr(
@@ -596,13 +646,13 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
     // prepare the database related studd
     QString table;
     switch ( this->wsID ) {
-        case 11:
+        case APACHE_ID:
             table += "apache";
             break;
-        case 12:
+        case NGINX_ID:
             table += "nginx";
             break;
-        case 13:
+        case IIS_ID:
             table += "iis";
             break;
         default:
@@ -624,7 +674,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 20 ) };
                 if ( std::any_of( bl_cli_list.cbegin(), bl_cli_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // append every field to ignored size
                     this->blacklisted_size += std::accumulate( row.cbegin(), row.cend(), 0ul,
                                                                []( size_t size, const auto& item )
@@ -641,7 +691,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 20 ) };
                 if ( std::any_of( wl_cli_list.cbegin(), wl_cli_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // match found! put a warning on this line
                     warning |= true;
                 }
@@ -654,7 +704,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 21 ) };
                 if ( std::any_of( wl_ua_list.cbegin(), wl_ua_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // match found! skip this line
                     warning |= true;
                 }
@@ -680,7 +730,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 const std::string& target{ row.at( 12 ) };
                 if ( std::any_of( wl_req_list.cbegin(), wl_req_list.cend(),
                                   [&target]( const std::string& item )
-                                           { return target.find( item ) == 0ul; }) ) {
+                                           { return target.rfind( item, 0ul ) == 0ul; }) ) {
                     // match found! skip this line
                     warning |= true;
                 }
@@ -748,7 +798,7 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                 query_stmt += "NULL";
             } else {
                 // value found, bind it
-                if ( i == 21 && this->wsID == this->IIS_ID ) {
+                if ( i == 21 && this->wsID == IIS_ID ) {
                     // iis logs the user-agent using '+' instead of ' ' (spaces)
                     QString str = QString::fromStdString( row.at( i ) ).replace("+"," ");
                     query_stmt += QString("'%1'").arg( str.replace("'","''") );
@@ -770,7 +820,8 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                     err_msg = query.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
+            emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                   {db_name, query_msg, err_msg} );
             return false;
         }
 
@@ -784,7 +835,8 @@ const bool CraplogWorker::storeData( QSqlDatabase& db )
                     err_msg = query.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
+            emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                   {db_name, query_msg, err_msg} );
             return false;
         }
 

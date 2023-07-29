@@ -15,7 +15,9 @@
 
 #include "modules/craplog/modules/donuts.h"
 #include "modules/craplog/modules/logs.h"
-#include "modules/craplog/modules/worker.h"
+#include "modules/craplog/modules/workers/lister.h"
+#include "modules/craplog/modules/workers/parser.h"
+#include "modules/craplog/modules/workers/parser_async.h"
 
 #include <QUrl>
 #include <QPainter>
@@ -32,7 +34,7 @@ Craplog::Craplog()
     //// INITIALIZATION ////
     ////////////////////////
     // blacklists / whitelists
-    for ( unsigned i{this->APACHE_ID}; i<=this->IIS_ID; i++ ) {
+    for ( unsigned i{APACHE_ID}; i<=IIS_ID; i++ ) {
         this->warnlists.emplace(  i, std::unordered_map<int, BWlist>{} );
         this->blacklists.emplace( i, std::unordered_map<int, BWlist>{} );
         // default data
@@ -45,52 +47,51 @@ Craplog::Craplog()
 
     // default format strings
     this->logs_format_strings.emplace(
-        this->APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
+        APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
     this->logs_format_strings.emplace(
-        this->NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
+        NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
     this->logs_format_strings.emplace(
-        this->IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
+        IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
 
     // initialize formats
     this->logs_formats.emplace(
-        this->APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(this->APACHE_ID) ) );
+        APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(APACHE_ID) ) );
     this->logs_formats.emplace(
-        this->NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(this->NGINX_ID) ) );
+        NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(NGINX_ID) ) );
     this->logs_formats.emplace(
-        this->IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(this->IIS_ID), 0 ) );
+        IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(IIS_ID), 0 ) );
 
-    this->current_LF = this->logs_formats.at( this->APACHE_ID );
+    this->current_LF = this->logs_formats.at( APACHE_ID );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( this->APACHE_ID, "/var/log/apache2" );
+    this->logs_paths.emplace( APACHE_ID, "/var/log/apache2" );
     // nginx access/error logs location
-    this->logs_paths.emplace( this->NGINX_ID, "/var/log/nginx" );
+    this->logs_paths.emplace( NGINX_ID, "/var/log/nginx" );
     // iis access/error logs location
-    this->logs_paths.emplace( this->IIS_ID, "C:/inetpub/logs/LogFiles" );
+    this->logs_paths.emplace( IIS_ID, "C:/inetpub/logs/LogFiles" );
 
     // apache2 access/error log files' names
-    this->logs_base_names.emplace( this->APACHE_ID, LogName{ .starts   = "access.log.",
-                                                             .contains = "",
-                                                             .ends     = "" } );
+    this->logs_base_names.emplace( APACHE_ID, LogName{ .starts   = "access.log.",
+                                                       .contains = "",
+                                                       .ends     = "" } );
     // nginx access/error log files' names
-    this->logs_base_names.emplace( this->NGINX_ID, LogName{ .starts   = "access.log.",
-                                                            .contains = "",
-                                                            .ends     = "" });
+    this->logs_base_names.emplace( NGINX_ID, LogName{ .starts   = "access.log.",
+                                                      .contains = "",
+                                                      .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( this->IIS_ID, LogName{ .starts   = "",
-                                                          .contains = "_ex",
-                                                          .ends     = ".log" });
-
+    this->logs_base_names.emplace( IIS_ID, LogName{ .starts   = "",
+                                                    .contains = "_ex",
+                                                    .ends     = ".log" });
 }
 
 
 //////////////////
 //// SETTINGS ////
-const int& Craplog::getDialogsLevel() const
+const int Craplog::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
-void Craplog::setDialogsLevel( const int& new_level )
+void Craplog::setDialogsLevel( const int new_level )
 {
     this->dialogs_level = new_level;
     this->hashOps.setDialogLevel( new_level );
@@ -127,20 +128,20 @@ void Craplog::setWarningSize(const size_t new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-const bool& Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+const bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
-const bool& Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+const bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
 
-void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used )
+void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
 {
     this->blacklists.at( web_server_id ).at( log_field_id ).used = used;
 }
-void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool& used )
+void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
 {
     this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
 }
@@ -279,7 +280,7 @@ const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::s
                 // only letters allowed
                 throw BWlistException("Invalid Method");
             }
-            sanitized_item = StringOps::toUpper( new_item );
+            sanitized_item = StringOps::toUpper( sanitized_item );
             break;
         case 12:
             sanitized_item = StringOps::lstrip( new_item );
@@ -329,9 +330,9 @@ const bool Craplog::setApacheLogFormat( const std::string& format_string )
     // apache
     bool success{ true };
     try {
-        this->logs_formats.at( this->APACHE_ID ) =
+        this->logs_formats.at( APACHE_ID ) =
             this->formatOps.processApacheFormatString( format_string );
-        this->logs_format_strings.at( this->APACHE_ID ) = format_string;
+        this->logs_format_strings.at( APACHE_ID ) = format_string;
     } catch ( LogFormatException& e ) {
         success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -346,9 +347,9 @@ const bool Craplog::setNginxLogFormat( const std::string& format_string )
     // nginx
     bool success{ true };
     try {
-        this->logs_formats.at( this->NGINX_ID ) =
+        this->logs_formats.at( NGINX_ID ) =
             this->formatOps.processNginxFormatString( format_string );
-        this->logs_format_strings.at( this->NGINX_ID ) = format_string;
+        this->logs_format_strings.at( NGINX_ID ) = format_string;
     } catch ( LogFormatException& e ) {
         success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -358,14 +359,14 @@ const bool Craplog::setNginxLogFormat( const std::string& format_string )
     }
     return success;
 }
-const bool Craplog::setIisLogFormat( const std::string& format_string, const int& log_module )
+const bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module )
 {
     // iis
     bool success{ true };
     try {
-        this->logs_formats.at( this->IIS_ID ) =
+        this->logs_formats.at( IIS_ID ) =
             this->formatOps.processIisFormatString( format_string, log_module );
-        this->logs_format_strings.at( this->IIS_ID ) = format_string;
+        this->logs_format_strings.at( IIS_ID ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
         success &= false;
@@ -379,27 +380,28 @@ const bool Craplog::setIisLogFormat( const std::string& format_string, const int
 
 const QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
 {
-    if ( web_server_id == this->APACHE_ID ) {
-        return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ) );
-    } else if ( web_server_id == this->NGINX_ID ) {
-        return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ) );
-    } else if ( web_server_id == this->IIS_ID ) {
-        return this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ) );
-    } else {
-        // unexpected WebServer
-        throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
+    switch ( web_server_id ) {
+        case APACHE_ID:
+            return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ) );
+        case NGINX_ID:
+            return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ) );
+        case IIS_ID:
+            return this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ) );
+        default:
+            // unexpected WebServer
+            throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
     }
 }
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( const unsigned& web_server_id )
+void Craplog::setCurrentWSID( const unsigned web_server_id )
 {
     this->current_WS = web_server_id;
     this->setCurrentLogFormat();
 }
 
-const unsigned& Craplog::getCurrentWSID() const
+const unsigned Craplog::getCurrentWSID() const
 {
     return this->current_WS;
 }
@@ -432,16 +434,14 @@ void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_pa
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-const int Craplog::getLogsListSize() const {
+const size_t Craplog::getLogsListSize() const
+{
     return this->logs_list.size();
 }
 
 // return the list. rescan if fresh is true
-const std::vector<LogFile>& Craplog::getLogsList( const bool fresh )
+const std::vector<LogFile>& Craplog::getLogsList() const
 {
-    if ( fresh ) {
-        this->scanLogsDir();
-    }
     return this->logs_list;
 }
 
@@ -485,107 +485,70 @@ void Craplog::clearLogFilesSelection()
 void Craplog::scanLogsDir()
 {
     this->logs_list.clear();
-    const std::string& logs_path{ this->logs_paths.at( this->current_WS ) };
-    if ( ! IOutils::isDir( logs_path ) ) {
-        // this directory doesn't exists
-        if ( IOutils::exists( logs_path ) ) {
-            DialogSec::errDirNotExists( QString::fromStdString( logs_path ) );
-        }
-        return;
-    }
-    size_t size;
-    QString name;
-    std::string path;
-    // iterate over entries in the logs folder
-    for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
-        // get the attributes
-        path = dir_entry.path().string();
-        name = QString::fromStdString( dir_entry.path().filename().string() );
+    // hire the worker
+    CraplogLister* worker{ new CraplogLister(
+        this->current_WS,
+        this->dialogs_level,
+        this->logs_paths.at( this->current_WS ),
+        this->logs_formats.at( this->current_WS ),
+        this->hashOps,
+        [this]( const std::string& file_name)
+              { return this->isFileNameValid( file_name ); }
+    ) };
+    QThread* worker_thread{ new QThread() };
+    worker->moveToThread( worker_thread );
+    // start the worker
+    connect( worker_thread, &QThread::started,
+             worker, &CraplogLister::work );
+    // receive a new log file
+    connect( worker, &CraplogLister::pushLogFile,
+             this, &Craplog::appendLogFile );
+    // show a dialog
+    connect( worker, &CraplogLister::showDialog,
+             this, &Craplog::showWorkerDialog );
+    // worker finished its career
+    connect( worker, &CraplogLister::done,
+             this, &Craplog::logsDirScanned );
+    // plan deleting the worker
+    connect( worker, &CraplogLister::retire,
+             worker, &CraplogLister::deleteLater );
+    // quit the thread
+    connect( worker, &CraplogLister::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the thread
+    connect( worker_thread, &QThread::finished,
+             worker_thread, &QThread::deleteLater );
+    // make the worker work
+    worker_thread->start();
+}
 
-        // match only valid files names
-        if ( ! this->isFileNameValid( name.toStdString() ) ) {
-            continue;
-        }
+void Craplog::appendLogFile( const LogFile log_file )
+{
+    this->logs_list.push_back( std::move( log_file ) );
+    emit this->pushLogFile( this->logs_list.back() );
+}
 
-        // check if it is actually a file
-        if ( IOutils::checkFile( path ) ) {
-            // it's a file, check the readability
-            if ( ! IOutils::checkFile( path, true ) ) {
-                // not readable, skip
-                if ( this->dialogs_level == 2 ) {
-                    DialogSec::warnFileNotReadable( name );
-                }
-                continue;
-            }
-            // it's readable, get the size
-            size = dir_entry.file_size();
-        } else {
-            continue;
-        }
-
-        std::vector<std::string> content;
-        try {
-            // read 32 random lines
-            IOutils::randomLines( path, content, 32ul );
-
-        } catch ( GenericException& e ) {
-            // failed closing gzip file pointer
-            DialogSec::errGeneric( e.what() );
-            continue;
-        }
-
-        if ( content.empty() ) {
-            if ( this->dialogs_level == 2 ) {
-                DialogSec::warnEmptyFile( name );
-            }
-            continue;
-        }
-
-        const LogType log_type = LogOps::defineFileType(
-            content, this->logs_formats.at( this->current_WS ) );
-        content.clear();
-        switch ( log_type ) {
-            case LogType::Failed:
-                // failed to get the log type, do not append
-                DialogSec::errFailedDefiningLogType( name );
-            case LogType::Discarded:
-                // skip
-                continue;
-            default:
-                break;
-        }
-
-        std::string hash;
-        try {
-            this->hashOps.digestFile( path, hash );
-        } catch ( GenericException& e ) {
-            // failed to digest
-            DialogSec::errGeneric( e.what() );
-            continue;
-        }
-
-        // push in the list
-        this->logs_list.push_back( LogFile{
-            false, this->hashOps.hasBeenUsed( hash, this->current_WS ),
-            size, name, hash, path });
-    }
+void Craplog::logsDirScanned()
+{
+    emit this->finishedRefreshing();
 }
 
 
-void Craplog::changeIisLogsBaseNames( const int& module_id )
+void Craplog::changeIisLogsBaseNames( const int module_id )
 {
     switch ( module_id ) {
         case 0: // W3C
-            this->logs_base_names.at( 13u ).contains = "_ex"; break;
+            this->logs_base_names.at( IIS_ID ).contains = "_ex"; break;
         case 1: // NCSA
-            this->logs_base_names.at( 13u ).contains = "_nc"; break;
+            this->logs_base_names.at( IIS_ID ).contains = "_nc"; break;
         case 2: // IIS
-            this->logs_base_names.at( 13u ).contains = "_in"; break;
+            this->logs_base_names.at( IIS_ID ).contains = "_in"; break;
 
         default: // shouldn't be reachable
             throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
     }
 }
+
 const bool Craplog::isFileNameValid( const std::string& name ) const
 {
     bool valid{ true };
@@ -609,7 +572,7 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
 
     switch ( this->current_WS ) {
         size_t start, stop;
-        case 11 | 12:
+        case APACHE_ID | NGINX_ID:
             // further checks for apache / nginx
             start = name.rfind(".log." );
             if ( start == std::string::npos ) {
@@ -630,9 +593,9 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
             }
             break;
 
-        case 13:
+        case IIS_ID:
             // further checks for iis
-            start = name.find( this->logs_base_names.at( 13u ).contains ) + 3ul;
+            start = name.find( this->logs_base_names.at( IIS_ID ).contains ) + 3ul;
             if ( start == std::string::npos ) {
                 valid &= false;
                 break;
@@ -828,6 +791,54 @@ const bool Craplog::checkStuff()
     return this->proceed;
 }
 
+void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringList args ) const
+{
+    switch ( dialog_type ) {
+        case WorkerDialog::errGeneric:
+            DialogSec::errGeneric( args.at(0) );
+            break;
+        case WorkerDialog::errDirNotExists:
+            DialogSec::errDirNotExists( args.at(0) );
+            break;
+        case WorkerDialog::errFailedDefiningLogType:
+            DialogSec::errFailedDefiningLogType( args.at(0) );
+            break;
+        case WorkerDialog::errFailedParsingLogs:
+            DialogSec::errFailedParsingLogs( args.at(0) );
+            break;
+        case WorkerDialog::errDatabaseFailedOpening:
+            if ( args.size() < 2 ) {
+                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
+            }
+            DialogSec::errDatabaseFailedOpening( args.at(0), args.at(1) );
+            break;
+        case WorkerDialog::errDatabaseFailedExecuting:
+            if ( args.size() < 3 ) {
+                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
+            }
+            DialogSec::errDatabaseFailedExecuting( args.at(0), args.at(1), args.at(2) );
+            break;
+        case WorkerDialog::warnFileNotReadable:
+            DialogSec::warnFileNotReadable( args.at(0) );
+            break;
+        case WorkerDialog::warnEmptyFile:
+            DialogSec::warnEmptyFile( args.at(0) );
+            break;
+    }
+}
+
+const bool Craplog::shouldWorkAsync() const
+{
+    const size_t n_log_files{ this->log_files_to_use.size() };
+    const size_t average_size{
+        std::accumulate( this->logs_list.cbegin(), this->logs_list.cend(), 0ul,
+                         []( size_t sum, const LogFile& lf )
+                           { return lf.isSelected() ? sum+lf.size() : sum; })
+        / n_log_files
+    };
+    return (average_size > 1'048'576ul && n_log_files > 1)
+        || n_log_files > 150ul;
+}
 
 void Craplog::startWorking()
 {
@@ -840,7 +851,15 @@ void Craplog::startWorking()
     this->warnlisted_size  = 0ul;
     this->blacklisted_size = 0ul;
     // hire a worker
-    CraplogWorker* worker{ new CraplogWorker(
+    if ( this->shouldWorkAsync() ) {
+        this->hireAsyncWorker();
+    } else {
+        this->hireWorker();
+    }
+}
+void Craplog::hireWorker() const
+{
+    CraplogParser* worker{ new CraplogParser(
         this->current_WS,
         this->dialogs_level,
         this->db_stats_path,
@@ -854,28 +873,81 @@ void Craplog::startWorking()
     worker->moveToThread( worker_thread );
     // start the worker
     connect( worker_thread, &QThread::started,
-             worker, &CraplogWorker::work );
+             worker, &CraplogParser::work );
     // worker started parsing
-    connect( worker, &CraplogWorker::startedParsing,
+    connect( worker, &CraplogParser::startedParsing,
              this, &Craplog::workerStartedParsing );
     // worker finished parsing
-    connect( worker, &CraplogWorker::finishedParsing,
+    connect( worker, &CraplogParser::finishedParsing,
              this, &Craplog::workerFinishedParsing );
     // receive performance data
-    connect( worker, &CraplogWorker::perfData,
+    connect( worker, &CraplogParser::perfData,
              this, &Craplog::updatePerfData );
     // receive chart data, only received when worker has done
-    connect( worker, &CraplogWorker::chartData,
+    connect( worker, &CraplogParser::chartData,
              this, &Craplog::updateChartData );
+    // show a dialog
+    connect( worker, &CraplogParser::showDialog,
+             this, &Craplog::showWorkerDialog );
     // worker finished its career
-    connect( worker, &CraplogWorker::done,
+    connect( worker, &CraplogParser::done,
              this, &Craplog::stopWorking );
-    // plan deleting the thread
-    connect( worker, &CraplogWorker::retire,
-             worker_thread, &QThread::quit );
     // plan deleting the worker
-    connect( worker, &CraplogWorker::retire,
-             worker, &CraplogWorker::deleteLater );
+    connect( worker, &CraplogParser::retire,
+             worker, &CraplogParser::deleteLater );
+    // quit the thread
+    connect( worker, &CraplogParser::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the thread
+    connect( worker_thread, &QThread::finished,
+             worker_thread, &QThread::deleteLater );
+    // make the worker work
+    worker_thread->start();
+}
+void Craplog::hireAsyncWorker() const
+{
+    CraplogParserAsync* worker{ new CraplogParserAsync(
+        this->current_WS,
+        this->dialogs_level,
+        this->db_stats_path,
+        this->db_hashes_path,
+        this->logs_formats.at( this->current_WS ),
+        this->blacklists.at( this->current_WS ),
+        this->warnlists.at( this->current_WS ),
+        this->log_files_to_use
+    ) };
+    QThread* worker_thread{ new QThread() };
+    worker->moveToThread( worker_thread );
+    // start the worker
+    connect( worker_thread, &QThread::started,
+             worker, &CraplogParserAsync::work );
+    // worker started parsing
+    connect( worker, &CraplogParserAsync::startedParsing,
+             this, &Craplog::workerStartedParsing );
+    // worker finished parsing
+    connect( worker, &CraplogParserAsync::finishedParsing,
+             this, &Craplog::workerFinishedParsing );
+    // receive performance data
+    connect( worker, &CraplogParserAsync::perfData,
+             this, &Craplog::updatePerfData );
+    // receive chart data, only received when worker has done
+    connect( worker, &CraplogParserAsync::chartData,
+             this, &Craplog::updateChartData );
+    // show a dialog
+    connect( worker, &CraplogParserAsync::showDialog,
+             this, &Craplog::showWorkerDialog );
+    // worker finished its career
+    connect( worker, &CraplogParserAsync::done,
+             this, &Craplog::stopWorking );
+    // plan deleting the worker
+    connect( worker, &CraplogParserAsync::retire,
+             worker, &CraplogParserAsync::deleteLater );
+    // quit the thread
+    connect( worker, &CraplogParserAsync::retire,
+             worker_thread, &QThread::quit );
+    // plan deleting the thread
+    connect( worker_thread, &QThread::finished,
+             worker_thread, &QThread::deleteLater );
     // make the worker work
     worker_thread->start();
 }

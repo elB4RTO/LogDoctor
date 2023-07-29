@@ -2,6 +2,7 @@
 #define CRAPLOG_LIB_H
 
 #include <QString>
+#include <QMetaType>
 
 #include <vector>
 
@@ -49,6 +50,7 @@ private:
     std::string hash_;
     std::string path_;
 };
+Q_DECLARE_METATYPE( LogFile )
 
 
 //! Holds informations about a log format

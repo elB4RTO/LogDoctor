@@ -15,9 +15,9 @@ public:
     const Food& operator=( const Food& other );
 
     //! Returns the position on the X-axis
-    const unsigned& X() const;
+    const unsigned X() const;
     //! Returns the position on the Y-axis
-    const unsigned& Y() const;
+    const unsigned Y() const;
 
     //!< Returns the image
     QGraphicsPixmapItem* getImageItem() const;
@@ -37,9 +37,9 @@ public:
 
 private:
 
-    QPixmap img_egg{ ":/games/games/snake/egg.png" };
+    const QPixmap img_egg{ ":/games/games/snake/egg.png" };
 
-    QPixmap img_rat{ ":/games/games/snake/rat.png" };
+    const QPixmap img_rat{ ":/games/games/snake/rat.png" };
 
     //!< The image which graphically represents the food
     QGraphicsPixmapItem* image = nullptr;

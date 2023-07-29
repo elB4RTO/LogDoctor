@@ -52,7 +52,7 @@ private:
 
     // players identity
     const bool p1_human{ static_cast<bool>( rand()%2 ) };
-    const bool p2_human{ (p1_human) ? false : true };
+    const bool p2_human{ !p1_human };
 
     // victory related
     std::vector<unsigned> victory_sequence;
