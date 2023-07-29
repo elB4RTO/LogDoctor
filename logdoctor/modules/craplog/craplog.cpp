@@ -503,6 +503,9 @@ void Craplog::scanLogsDir()
     // receive a new log file
     connect( worker, &CraplogLister::pushLogFile,
              this, &Craplog::appendLogFile );
+    // show a dialog
+    connect( worker, &CraplogLister::showDialog,
+             this, &Craplog::showWorkerDialog );
     // worker finished its career
     connect( worker, &CraplogLister::done,
              this, &Craplog::logsDirScanned );
@@ -788,6 +791,42 @@ const bool Craplog::checkStuff()
     return this->proceed;
 }
 
+void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringList args ) const
+{
+    switch ( dialog_type ) {
+        case WorkerDialog::errGeneric:
+            DialogSec::errGeneric( args.at(0) );
+            break;
+        case WorkerDialog::errDirNotExists:
+            DialogSec::errDirNotExists( args.at(0) );
+            break;
+        case WorkerDialog::errFailedDefiningLogType:
+            DialogSec::errFailedDefiningLogType( args.at(0) );
+            break;
+        case WorkerDialog::errFailedParsingLogs:
+            DialogSec::errFailedParsingLogs( args.at(0) );
+            break;
+        case WorkerDialog::errDatabaseFailedOpening:
+            if ( args.size() < 2 ) {
+                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
+            }
+            DialogSec::errDatabaseFailedOpening( args.at(0), args.at(1) );
+            break;
+        case WorkerDialog::errDatabaseFailedExecuting:
+            if ( args.size() < 3 ) {
+                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
+            }
+            DialogSec::errDatabaseFailedExecuting( args.at(0), args.at(1), args.at(2) );
+            break;
+        case WorkerDialog::warnFileNotReadable:
+            DialogSec::warnFileNotReadable( args.at(0) );
+            break;
+        case WorkerDialog::warnEmptyFile:
+            DialogSec::warnEmptyFile( args.at(0) );
+            break;
+    }
+}
+
 const bool Craplog::shouldWorkAsync() const
 {
     const size_t n_log_files{ this->log_files_to_use.size() };
@@ -847,6 +886,9 @@ void Craplog::hireWorker() const
     // receive chart data, only received when worker has done
     connect( worker, &CraplogParser::chartData,
              this, &Craplog::updateChartData );
+    // show a dialog
+    connect( worker, &CraplogParser::showDialog,
+             this, &Craplog::showWorkerDialog );
     // worker finished its career
     connect( worker, &CraplogParser::done,
              this, &Craplog::stopWorking );
@@ -891,6 +933,9 @@ void Craplog::hireAsyncWorker() const
     // receive chart data, only received when worker has done
     connect( worker, &CraplogParserAsync::chartData,
              this, &Craplog::updateChartData );
+    // show a dialog
+    connect( worker, &CraplogParserAsync::showDialog,
+             this, &Craplog::showWorkerDialog );
     // worker finished its career
     connect( worker, &CraplogParserAsync::done,
              this, &Craplog::stopWorking );

@@ -9,6 +9,8 @@
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/formats.h"
 
+#include "modules/craplog/modules/workers/lib.h"
+
 
 //! Craplog
 /*!
@@ -449,6 +451,9 @@ public slots:
                           const size_t total_lines,
                           const size_t warnlisted_size,
                           const size_t blacklisted_size );
+
+    void showWorkerDialog( const WorkerDialog dialog_type,
+                           const QStringList args ) const;
 
 
 private:

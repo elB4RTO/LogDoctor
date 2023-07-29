@@ -9,6 +9,8 @@
 #include <future>
 #include <unordered_map> // leave this here for OSX
 
+enum class WorkerDialog;
+
 class QSqlDatabase;
 
 typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for OSX
@@ -52,6 +54,10 @@ signals:
         const size_t total_lines,
         const size_t warnlisted_size,
         const size_t blacklisted_size );
+
+    void showDialog(
+        const WorkerDialog dialog_type,
+        const QStringList arg );
 
     void startedParsing();
 

@@ -7,6 +7,8 @@ class LogsFormat;
 class LogFile;
 class HashOps;
 
+enum class WorkerDialog;
+
 
 class CraplogLister : public QObject
 {
@@ -28,6 +30,9 @@ public:
 signals:
 
     void pushLogFile( const LogFile log_file );
+
+    void showDialog( const WorkerDialog dialog_type,
+                     const QStringList arg );
 
     void done();
 

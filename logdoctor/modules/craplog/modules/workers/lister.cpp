@@ -10,6 +10,8 @@
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/logs.h"
 
+#include "modules/craplog/modules/workers/lib.h"
+
 
 CraplogLister::CraplogLister( const unsigned web_server_id, const unsigned dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const HashOps& hashOps, const std::function<bool(const std::string&)> check_filename, QObject* parent )
     : QObject        { parent         }
@@ -35,7 +37,8 @@ void CraplogLister::work()
     const std::string& logs_path{ this->logs_path };
     if ( ! IOutils::isDir( logs_path ) ) {
         // this directory doesn't exists
-        DialogSec::errDirNotExists( QString::fromStdString( logs_path ) );
+        emit this->showDialog( WorkerDialog::errDirNotExists,
+                               {QString::fromStdString( logs_path )} );
         this->quit();
         return;
     }
@@ -59,7 +62,8 @@ void CraplogLister::work()
             if ( ! IOutils::checkFile( path, true ) ) {
                 // not readable, skip
                 if ( this->dialogs_level == 2 ) {
-                    DialogSec::warnFileNotReadable( name );
+                    emit this->showDialog( WorkerDialog::warnFileNotReadable,
+                                           {name} );
                 }
                 continue;
             }
@@ -76,13 +80,15 @@ void CraplogLister::work()
 
         } catch ( GenericException& e ) {
             // failed closing gzip file pointer
-            DialogSec::errGeneric( e.what() );
+            emit this->showDialog( WorkerDialog::errGeneric,
+                                   {e.what()} );
             continue;
         }
 
         if ( content.empty() ) {
             if ( this->dialogs_level == 2 ) {
-                DialogSec::warnEmptyFile( name );
+                emit this->showDialog( WorkerDialog::warnEmptyFile,
+                                       {name} );
             }
             continue;
         }
@@ -93,7 +99,8 @@ void CraplogLister::work()
         switch ( log_type ) {
         case LogType::Failed:
             // failed to get the log type, do not append
-            DialogSec::errFailedDefiningLogType( name );
+            emit this->showDialog( WorkerDialog::errFailedDefiningLogType,
+                                   {name} );
         case LogType::Discarded:
             // skip
             continue;
@@ -106,7 +113,8 @@ void CraplogLister::work()
             this->hashOps.digestFile( path, hash );
         } catch ( GenericException& e ) {
             // failed to digest
-            DialogSec::errGeneric( e.what() );
+            emit this->showDialog( WorkerDialog::errGeneric,
+                                   {e.what()} );
             continue;
         }
 

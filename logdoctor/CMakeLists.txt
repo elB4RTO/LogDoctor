@@ -90,6 +90,7 @@ set(PROJECT_SOURCES
     modules/craplog/modules/logs.cpp
     modules/craplog/modules/sha256.h
     modules/craplog/modules/sha256.cpp
+    modules/craplog/modules/workers/lib.h
     modules/craplog/modules/workers/lister.h
     modules/craplog/modules/workers/lister.cpp
     modules/craplog/modules/workers/parser.h

@@ -137,6 +137,7 @@ MainWindow::MainWindow(QWidget *parent)
     /////////////////
     //// CRAPLOG ////
     qRegisterMetaType<LogFile>();
+    qRegisterMetaType<WorkerDialog>();
     connect( this, &MainWindow::refreshLogs, &this->craplog, &Craplog::scanLogsDir);
     connect( &this->craplog, &Craplog::pushLogFile, this, &MainWindow::appendToLogsList);
     connect( &this->craplog, &Craplog::finishedRefreshing, this, &MainWindow::refreshFinished);

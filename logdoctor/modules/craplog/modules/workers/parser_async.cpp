@@ -115,11 +115,13 @@ void CraplogParserAsync::work()
         }
 
     } catch ( GenericException& e ) {
-        DialogSec::errGeneric( e.what() );
+        emit this->showDialog( WorkerDialog::errGeneric,
+                               {e.what()} );
         this->proceed.store( false );
 
     } catch ( LogParserException& e ) {
-        DialogSec::errFailedParsingLogs( e.what() );
+        emit this->showDialog( WorkerDialog::errFailedParsingLogs,
+                               {e.what()} );
         this->proceed.store( false );
     }
     // send the final data
@@ -526,7 +528,8 @@ void CraplogParserAsync::storeLogLines()
         if ( this->dialogs_level == 2 ) {
             err_msg = db.lastError().text();
         }
-        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
+        emit this->showDialog( WorkerDialog::errDatabaseFailedOpening,
+                               {db_name, err_msg} );
 
     } else {
 
@@ -542,7 +545,8 @@ void CraplogParserAsync::storeLogLines()
                         err_msg = db.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
+                emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                       {db_name, stmt_msg, err_msg} );
             }
 
             if ( this->proceed && !this->data_collection.empty() ) {
@@ -561,7 +565,8 @@ void CraplogParserAsync::storeLogLines()
                             err_msg= db.lastError().text();
                         }
                     }
-                    DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
+                    emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                           {db_name, stmt_msg, err_msg} );
                 }
             }
             if ( ! proceed ) {
@@ -583,14 +588,17 @@ void CraplogParserAsync::storeLogLines()
                         err_msg = db.lastError().text();
                     }
                 }
-                DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
+                emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                       {db_name, stmt_msg, err_msg} );
                 err_shown = true;
             }
             if ( ! err_shown ) {
                 // show a message
-                DialogSec::errGeneric( QString("%1\n\n%2").arg(
-                    DialogSec::tr("An error occured while working on the database"),
-                    DialogSec::tr("Aborting") ) );
+                emit this->showDialog(
+                    WorkerDialog::errGeneric,
+                    {QString("%1\n\n%2").arg(
+                        DialogSec::tr("An error occured while working on the database"),
+                        DialogSec::tr("Aborting") )} );
             }
         }
 
@@ -812,7 +820,8 @@ const bool CraplogParserAsync::storeData( QSqlDatabase& db )
                     err_msg = query.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
+            emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                   {db_name, query_msg, err_msg} );
             return false;
         }
 
@@ -826,7 +835,8 @@ const bool CraplogParserAsync::storeData( QSqlDatabase& db )
                     err_msg = query.lastError().text();
                 }
             }
-            DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
+            emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                   {db_name, query_msg, err_msg} );
             return false;
         }
 
