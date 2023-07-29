@@ -1,4 +1,14 @@
 
+# v2.05
+
+- Fixes
+- Code improvements
+- Performance improvements
+- Tests improvements
+- Docker support
+
+<br/><br/>
+
 # v2.04
 
 - Code improvements
