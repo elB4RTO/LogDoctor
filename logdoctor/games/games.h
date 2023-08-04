@@ -12,10 +12,10 @@ namespace GameSec
 {
 
 //! Provides the stylesheet for the CrissCross game
-void crisscrossStyleSheet( QString& stylesheet, const int& theme_id );
+void crisscrossStyleSheet( QString& stylesheet, const int theme_id );
 
 //! Provides the stylesheet for the Snake game
-void snakeStyleSheet( QString& stylesheet, const int& theme_id );
+void snakeStyleSheet( QString& stylesheet, const int theme_id );
 
 } // namespace GameSec
 

@@ -26,7 +26,7 @@ class SnakeGame : public QWidget
     Q_OBJECT
 
 public:
-    explicit SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
+    explicit SnakeGame( const int theme_id, const QFont& term_font, QWidget* parent=nullptr );
     ~SnakeGame();
 
 

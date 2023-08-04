@@ -11,13 +11,27 @@
 namespace GameSec
 {
 
-void crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
+void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {
         case 0:
             break;
         case 1:
+            style = {
+                {"window_base",
+                 "rgb( 170, 161, 137 )"},
+                {"tiles_base_hover",
+                 "rgb( 130, 121, 97 )"},
+                {"tiles_border_hover",
+                 "rgb( 140, 131, 107 )"},
+                {"lines_base",
+                 "rgb( 60, 51, 27 )"},
+                {"lines_border",
+                 "rgb( 170, 161, 137 )"}
+            };
+            break;
+        case 2:
             style = {
                 {"window_base",
                     "rgb( 32, 32, 32 )"},
@@ -29,48 +43,6 @@ void crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
                     "rgb( 192, 192, 192 )"},
                 {"lines_border",
                     "rgb( 16, 16, 16 )"}
-            };
-            break;
-        case 2:
-            style = {
-                {"window_base",
-                    "rgb( 255, 204, 143 )"},
-                {"tiles_base_hover",
-                    "rgb( 245, 172, 142 )"},
-                {"tiles_border_hover",
-                    "rgb( 255, 140, 141 )"},
-                {"lines_base",
-                    "rgb( 195, 80, 81 )"},
-                {"lines_border",
-                    "rgb( 255, 204, 143 )"}
-            };
-            break;
-        case 3:
-            style = {
-                {"window_base",
-                    "rgb( 14, 28, 0 )"},
-                {"tiles_base_hover",
-                    "rgb( 54, 78, 30 )"},
-                {"tiles_border_hover",
-                    "rgb( 94, 118, 70 )"},
-                {"lines_base",
-                    "rgb( 193, 175, 129 )"},
-                {"lines_border",
-                    "rgb( 14, 28, 0 )"}
-            };
-            break;
-        case 4:
-            style = {
-                {"window_base",
-                    "rgb( 170, 161, 137 )"},
-                {"tiles_base_hover",
-                    "rgb( 130, 121, 97 )"},
-                {"tiles_border_hover",
-                    "rgb( 140, 131, 107 )"},
-                {"lines_base",
-                    "rgb( 60, 51, 27 )"},
-                {"lines_border",
-                    "rgb( 170, 161, 137 )"}
             };
             break;
         default:
@@ -138,13 +110,47 @@ void crisscrossStyleSheet( QString& stylesheet, const int& theme_id )
 }
 
 
-void snakeStyleSheet( QString& stylesheet, const int& theme_id )
+void snakeStyleSheet( QString& stylesheet, const int theme_id )
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {
         case 0:
             break;
         case 1:
+            style = {
+                {"text",
+                 "rgb( 30, 21, 0 )"},
+                {"window_base_primary",
+                 "rgb( 170, 161, 137 )"},
+                {"window_base_secondary",
+                 "rgb( 230, 221, 197 )"},
+                {"window_border",
+                 "rgb( 80, 71, 47 )"},
+                {"gamemode_box_base",
+                 "rgb( 130, 121, 97 )"},
+                {"gamemode_box_base_selection",
+                 "rgb( 140, 131, 107 )"},
+                {"gamemode_box_border",
+                 "rgb( 90, 81, 57 )"},
+                {"play_button_base",
+                 "rgb( 130, 121, 97 )"},
+                {"play_button_base_hover",
+                 "rgb( 140, 131, 107 )"},
+                {"play_button_border",
+                 "rgb( 90, 81, 57 )"},
+                {"play_button_border_hover",
+                 "rgb( 80, 71, 47 )"},
+                {"score_frame_base",
+                 "rgb( 210, 201, 177 )"},
+                {"score_frame_border",
+                 "rgb( 170, 161, 137 )"},
+                {"score_text",
+                 "rgb( 30, 21, 0 )"},
+                {"score_base",
+                 "rgb( 230, 221, 197 )"}
+            };
+            break;
+        case 2:
             style = {
                 {"text",
                     "rgb( 248, 248, 248 )"},
@@ -176,108 +182,6 @@ void snakeStyleSheet( QString& stylesheet, const int& theme_id )
                     "rgb( 248, 248, 248 )"},
                 {"score_base",
                     "rgb( 0, 0, 0 )"}
-            };
-            break;
-        case 2:
-            style = {
-                {"text",
-                    "rgb( 45, 0, 30 )"},
-                {"window_base_primary",
-                    "rgb( 255, 140, 141 )"},
-                {"window_base_secondary",
-                    "rgb( 255, 204, 143 )"},
-                {"window_border",
-                    "rgb( 195, 80, 81 )"},
-                {"gamemode_box_base",
-                    "rgb( 114, 235, 115 )"},
-                {"gamemode_box_base_selection",
-                    "rgb( 154, 255, 155 )"},
-                {"gamemode_box_border",
-                    "rgb( 245, 172, 142 )"},
-                {"play_button_base",
-                    "rgb( 114, 235, 115 )"},
-                {"play_button_base_hover",
-                    "rgb( 154, 255, 155 )"},
-                {"play_button_border",
-                    "rgb( 245, 172, 142 )"},
-                {"play_button_border_hover",
-                    "rgb( 195, 80, 81 )"},
-                {"score_frame_base",
-                    "rgb( 245, 172, 142 )"},
-                {"score_frame_border",
-                    "rgb( 195, 80, 81 )"},
-                {"score_text",
-                    "rgb( 45, 0, 30 )"},
-                {"score_base",
-                    "rgb( 255, 210, 221 )"}
-            };
-            break;
-        case 3:
-            style = {
-                {"text",
-                    "rgb( 220, 211, 187 )"},
-                {"window_base_primary",
-                    "rgb( 14, 28, 0 )"},
-                {"window_base_secondary",
-                    "rgb( 24, 48, 0 )"},
-                {"window_border",
-                    "rgb( 163, 145, 99 )"},
-                {"gamemode_box_base",
-                    "rgb( 94, 118, 70 )"},
-                {"gamemode_box_base_selection",
-                    "rgb( 124, 148, 100 )"},
-                {"gamemode_box_border",
-                    "rgb( 163, 145, 99 )"},
-                {"play_button_base",
-                    "rgb( 94, 118, 70 )"},
-                {"play_button_base_hover",
-                    "rgb( 124, 148, 100 )"},
-                {"play_button_border",
-                    "rgb( 163, 145, 99 )"},
-                {"play_button_border_hover",
-                    "rgb( 193, 175, 129 )"},
-                {"score_frame_base",
-                    "rgb( 54, 78, 30 )"},
-                {"score_frame_border",
-                    "rgb( 163, 145, 99 )"},
-                {"score_text",
-                    "rgb( 193, 175, 129 )"},
-                {"score_base",
-                    "rgb( 14, 28, 0 )"}
-            };
-            break;
-        case 4:
-            style = {
-                {"text",
-                    "rgb( 30, 21, 0 )"},
-                {"window_base_primary",
-                    "rgb( 170, 161, 137 )"},
-                {"window_base_secondary",
-                    "rgb( 230, 221, 197 )"},
-                {"window_border",
-                    "rgb( 80, 71, 47 )"},
-                {"gamemode_box_base",
-                    "rgb( 130, 121, 97 )"},
-                {"gamemode_box_base_selection",
-                    "rgb( 140, 131, 107 )"},
-                {"gamemode_box_border",
-                    "rgb( 90, 81, 57 )"},
-                {"play_button_base",
-                    "rgb( 130, 121, 97 )"},
-                {"play_button_base_hover",
-                    "rgb( 140, 131, 107 )"},
-                {"play_button_border",
-                    "rgb( 90, 81, 57 )"},
-                {"play_button_border_hover",
-                    "rgb( 80, 71, 47 )"},
-                {"score_frame_base",
-                    "rgb( 210, 201, 177 )"},
-                {"score_frame_border",
-                    "rgb( 170, 161, 137 )"},
-                {"score_text",
-                    "rgb( 30, 21, 0 )"},
-                {"score_base",
-                    "rgb( 230, 221, 197 )"}
             };
             break;
         default:

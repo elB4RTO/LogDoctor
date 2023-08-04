@@ -15,7 +15,7 @@
 #include <unordered_map> // leave this for OSX
 
 
-Crapup::Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent )
+Crapup::Crapup( const int window_theme_id, const QString& icons_theme, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapup }
     , img_checking{ ":/icons/icons/"+icons_theme+"/checking.png" }
@@ -273,7 +273,7 @@ void Crapup::rotateImg()
 }
 
 
-void Crapup::getStyleSheet( QString& stylesheet, const int& theme_id ) const
+void Crapup::getStyleSheet( QString& stylesheet, const int theme_id ) const
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {
@@ -282,41 +282,21 @@ void Crapup::getStyleSheet( QString& stylesheet, const int& theme_id ) const
         case 1:
             style = {
                 {"text",
-                    "rgb( 248, 248, 248 )"},
+                 "rgb( 30, 21, 0 )"},
                 {"window_primary",
-                    "rgb( 16, 16, 16 )"},
+                 "rgb( 230, 221, 197 )"},
                 {"window_secondary",
-                    "rgb( 32, 32, 32 )"}
+                 "rgb( 170, 161, 137 )"}
             };
             break;
         case 2:
             style = {
                 {"text",
-                    "rgb( 45, 0, 30 )"},
+                    "rgb( 248, 248, 248 )"},
                 {"window_primary",
-                    "rgb( 255, 204, 143 )"},
+                    "rgb( 16, 16, 16 )"},
                 {"window_secondary",
-                    "rgb( 255, 140, 141 )"}
-            };
-            break;
-        case 3:
-            style = {
-                {"text",
-                    "rgb( 220, 211, 187 )"},
-                {"window_primary",
-                    "rgb( 14, 28, 0 )"},
-                {"window_secondary",
-                    "rgb( 24, 48, 0 )"}
-            };
-            break;
-        case 4:
-            style = {
-                {"text",
-                    "rgb( 30, 21, 0 )"},
-                {"window_primary",
-                    "rgb( 230, 221, 197 )"},
-                {"window_secondary",
-                    "rgb( 170, 161, 137 )"}
+                    "rgb( 32, 32, 32 )"}
             };
             break;
         default:

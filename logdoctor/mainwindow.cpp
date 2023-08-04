@@ -1054,14 +1054,10 @@ void MainWindow::detectIconsTheme()
             }
             break;
         case 1:
-        case 3:
-            // ash / herb
-            this->icons_theme = "light";
+            this->icons_theme = "dark";
             break;
         case 2:
-        case 4:
-            // candy / powder
-            this->icons_theme = "dark";
+            this->icons_theme = "light";
             break;
         default:
             throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
@@ -1080,7 +1076,7 @@ void MainWindow::updateUiTheme()
             // icons last
             this->updateUiIcons();
             break;
-        case 1: case 2: case 3: case 4:
+        case 1: case 2:
             {
             // icons first
             this->updateUiIcons();

@@ -8,7 +8,7 @@
 #include <QMessageBox>
 
 
-CrissCross::CrissCross( const int& theme_id, QWidget* parent )
+CrissCross::CrissCross( const int theme_id, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::CrissCross }
 {

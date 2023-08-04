@@ -29,7 +29,7 @@ public:
         \param icons theme The theme of the icons
         \param parent The parent Widget
     */
-    explicit Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent=nullptr );
+    explicit Crapup( const int window_theme_id, const QString& icons_theme, QWidget* parent=nullptr );
     ~Crapup();
 
 
@@ -71,7 +71,7 @@ private:
 
     QScopedPointer<QTimer> img_timer;
 
-    void getStyleSheet( QString& stylesheet, const int& theme_id ) const;
+    void getStyleSheet( QString& stylesheet, const int theme_id ) const;
 
     bool request_aborted;
 

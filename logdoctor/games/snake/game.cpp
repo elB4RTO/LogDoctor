@@ -11,7 +11,7 @@
 #include <QMessageBox>
 
 
-SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent )
+SnakeGame::SnakeGame( const int theme_id, const QFont& term_font, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::SnakeGame }
 {

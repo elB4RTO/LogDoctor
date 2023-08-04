@@ -20,7 +20,7 @@ class CrissCross : public QWidget
     Q_OBJECT
 
 public:
-    explicit CrissCross( const int& theme_id, QWidget* parent=nullptr );
+    explicit CrissCross( const int theme_id, QWidget* parent=nullptr );
     ~CrissCross();
 
 
