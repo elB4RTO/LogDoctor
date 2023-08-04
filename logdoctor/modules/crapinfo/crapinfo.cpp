@@ -51,9 +51,9 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
 {
     std::unordered_map<std::string, QString> style;
     switch ( theme_id ) {
-        case 0:
+        case 0: // native
             break;
-        case 1:
+        case 1: // light
             style = {
                 {"text",
                  "rgb( 30, 21, 0 )"},
@@ -91,7 +91,7 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
                  "rgb( 60, 51, 27 )"}
             };
             break;
-        case 2:
+        case 2: // dark
             style = {
                 {"text",
                     "rgb( 248, 248, 248 )"},

@@ -883,7 +883,7 @@ void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int t
 {
     std::unordered_map<std::string, QString> style_map;
     switch ( theme_id ) {
-        case 1:
+        case 1: // light
             style_map = {
                 {"text_primary",
                  "rgb( 30, 21, 0 )"},
@@ -1043,7 +1043,7 @@ void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int t
                  "rgb( 100, 91, 67 )"}
             };
             break;
-        case 2:
+        case 2: // dark
             style_map = {
                 {"text_primary",
                     "rgb( 248, 248, 248 )"},

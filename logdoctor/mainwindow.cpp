@@ -1045,18 +1045,18 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 void MainWindow::detectIconsTheme()
 {
     switch ( this->window_theme_id ) {
-        case 0:
-            // system default, use window color to determine the theme
+        case 0: // native
+            // use window color to determine the theme
             if ( this->palette().window().color().black() > 127 ) {
                 this->icons_theme = "light";
             } else {
                 this->icons_theme = "dark";
             }
             break;
-        case 1:
+        case 1: // light
             this->icons_theme = "dark";
             break;
-        case 2:
+        case 2: // dark
             this->icons_theme = "light";
             break;
         default:
@@ -1070,13 +1070,13 @@ void MainWindow::updateUiTheme()
 {
     // window and fonts
     switch ( this->window_theme_id ) {
-        case 0:
+        case 0: // native
             // window first
             this->setStyleSheet("");
             // icons last
             this->updateUiIcons();
             break;
-        case 1: case 2:
+        case 1: case 2: // light, dark
             {
             // icons first
             this->updateUiIcons();

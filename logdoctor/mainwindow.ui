@@ -5198,7 +5198,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>152</width>
+                      <width>151</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -6084,27 +6084,17 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </property>
                      <item>
                       <property name="text">
-                       <string>None (System)</string>
+                       <string>Native</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Ash</string>
+                       <string>Light</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Candy</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Herb</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Powder</string>
+                       <string>Dark</string>
                       </property>
                      </item>
                     </widget>
@@ -6201,7 +6191,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </property>
                      <item>
                       <property name="text">
-                       <string>Auto (Default)</string>
+                       <string>Auto</string>
                       </property>
                      </item>
                      <item>
