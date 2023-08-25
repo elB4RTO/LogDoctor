@@ -267,6 +267,10 @@ private slots:
     /////////////////
     //// CRAPSET ////
 
+    void on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column);
+
+    void on_tree_ConfSections_itemDoubleClicked(QTreeWidgetItem *item, int column);
+
     //// WINDOW ////
 
     void on_checkBox_ConfWindow_Geometry_clicked(bool checked);

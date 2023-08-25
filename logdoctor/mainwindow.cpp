@@ -188,7 +188,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->craplog.setCurrentWSID( this->default_ws );
 
 
-    // make the Configs initialize
+    // initialize the Configs
+    this->ui->splitter_Conf->setSizes( {128,1} );
+    this->ui->tree_ConfSections->expandAll();
+    this->ui->tree_ConfSections->itemAt(0,0)->child(0)->setSelected( true );
     // window
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
     this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme_id );
@@ -1117,7 +1120,7 @@ void MainWindow::updateUiIcons()
 
     if ( this->icons_theme != old_icons_theme ) {
         // main tabs
-        const int m_index{ this->ui->stacked_Tabs_Pages->currentIndex() };
+        const int m_index{ this->ui->stackedPages_Sections->currentIndex() };
         this->ui->button_Tab_Log->setIcon(
             QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
                 this->icons_theme,
@@ -1145,7 +1148,7 @@ void MainWindow::updateUiIcons()
         this->ui->icon_MakeStats_Speed->setPixmap(
             QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
         // stats
-        const int s_index{ this->ui->stacked_Stats_Pages->currentIndex() };
+        const int s_index{ this->ui->stackedPages_Stats->currentIndex() };
         // stats warn
         this->ui->button_Tab_StatsWarn->setIcon(
             QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
@@ -1186,29 +1189,81 @@ void MainWindow::updateUiIcons()
             QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
                 this->icons_theme,
                 (s_index==5) ? "on" : "off" )) );
-        // configs
+        // conf databases
         this->ui->button_ConfDatabases_Data_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfDatabases_Hashes_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+        // conf apache
         this->ui->button_ConfApache_Path_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfApache_Format_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfApache_Format_Help->setIcon(
             QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Warnlist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Warnlist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Warnlist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Warnlist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Blacklist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Blacklist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Blacklist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+        this->ui->button_ConfApache_Blacklist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+        // conf nginx
         this->ui->button_ConfNginx_Path_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfNginx_Format_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfNginx_Format_Help->setIcon(
             QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Warnlist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Warnlist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Warnlist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Warnlist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Blacklist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Blacklist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Blacklist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+        this->ui->button_ConfNginx_Blacklist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+        // conf iis
         this->ui->button_ConfIis_Path_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfIis_Format_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
         this->ui->button_ConfIis_Format_Help->setIcon(
             QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Warnlist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Warnlist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Warnlist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Warnlist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Blacklist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Blacklist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Blacklist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+        this->ui->button_ConfIis_Blacklist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+
     }
 }
 
@@ -1384,13 +1439,6 @@ void MainWindow::updateUiFonts()
     this->ui->label_StatsGlob_Work_Time_Count->setFont( font );
     this->ui->label_StatsGlob_Work_Sent->setFont( font );
     this->ui->label_StatsGlob_Work_Sent_Count->setFont( font );
-    // configs tab
-    this->ui->ConfTabs->tabBar()->setFont( big_font );
-    this->ui->tabs_ConfGeneral->tabBar()->setFont( font );
-    this->ui->tabs_ConfLogs->tabBar()->setFont( font );
-    this->ui->tabs_ConfApache->tabBar()->setFont( font );
-    this->ui->tabs_ConfNginx->tabBar()->setFont( font );
-    this->ui->tabs_ConfIis->tabBar()->setFont( font );
     // conf window
     this->ui->label_ConfWindow_Geometry->setFont( big_font );
     this->ui->checkBox_ConfWindow_Geometry->setFont( font );
@@ -1545,6 +1593,15 @@ void MainWindow::updateUiLanguage()
         this->ui->button_StatsCount_Cookie->setText(    this->crapview.getLogFieldString( 22 ) );
         this->ui->button_StatsCount_UserAgent->setText( this->crapview.getLogFieldString( 21 ) );
         this->ui->button_StatsCount_Client->setText(    this->crapview.getLogFieldString( 20 ) );
+        // configs
+        {
+            QTreeWidgetItemIterator it( this->ui->tree_ConfSections );
+            while (*it) {
+                (*it)->setText( 0, tr((*it)->text(0).toStdString().c_str()) );
+                ++it;
+            }
+
+        }
         // configs warn/black-lists
         {
             const QStringList wl{
@@ -2024,7 +2081,7 @@ void MainWindow::menu_actionSnake_triggered()
 //////////////
 void MainWindow::switchMainTab( const int new_index )
 {
-    const int old_index{ this->ui->stacked_Tabs_Pages->currentIndex() };
+    const int old_index{ this->ui->stackedPages_Sections->currentIndex() };
     // turn off the old icon
     switch ( old_index ) {
         case 0:
@@ -2073,7 +2130,7 @@ void MainWindow::switchMainTab( const int new_index )
             throw("Unexpected MainTabs index: "+std::to_string(new_index));
             break;
     }
-    this->ui->stacked_Tabs_Pages->setCurrentIndex( new_index );
+    this->ui->stackedPages_Sections->setCurrentIndex( new_index );
 }
 
 
@@ -2096,7 +2153,7 @@ void MainWindow::on_button_Tab_Conf_clicked()
 //// STATS ////
 void MainWindow::switchStatsTab( const int new_index )
 {
-    const int old_index{ this->ui->stacked_Stats_Pages->currentIndex() };
+    const int old_index{ this->ui->stackedPages_Stats->currentIndex() };
     // turn off the old icon
     switch ( old_index ) {
         case 0:
@@ -2181,7 +2238,7 @@ void MainWindow::switchStatsTab( const int new_index )
             throw("Unexpected StatsTabs index: "+std::to_string(new_index));
             break;
     }
-    this->ui->stacked_Stats_Pages->setCurrentIndex( new_index );
+    this->ui->stackedPages_Stats->setCurrentIndex( new_index );
 }
 
 
@@ -2236,7 +2293,7 @@ void MainWindow::setDbWorkingState( const bool working )
         this->ui->button_StatsGlob_Apache->setEnabled( true );
         this->ui->button_StatsGlob_Nginx->setEnabled(  true );
         this->ui->button_StatsGlob_Iis->setEnabled(    true );
-        this->ui->page_Tab_Conf->setEnabled( true );
+        this->ui->page_Section_Conf->setEnabled( true );
     } else {
         this->ui->button_MakeStats_Start->setEnabled(  false );
         this->ui->button_StatsWarn_Update->setEnabled( false );
@@ -2248,7 +2305,7 @@ void MainWindow::setDbWorkingState( const bool working )
         this->ui->button_StatsGlob_Apache->setEnabled( false );
         this->ui->button_StatsGlob_Nginx->setEnabled(  false );
         this->ui->button_StatsGlob_Iis->setEnabled(    false );
-        this->ui->page_Tab_Conf->setEnabled( false );
+        this->ui->page_Section_Conf->setEnabled( false );
     }
 }
 
@@ -2267,13 +2324,13 @@ const bool MainWindow::dbUsable()
 // switch pages
 void MainWindow::on_button_Logs_Down_clicked()
 {
-    this->ui->stacked_Logs_Pages->setCurrentIndex( 1 );
+    this->ui->stackedPages_Logs->setCurrentIndex( 1 );
 }
 
 
 void MainWindow::on_button_Logs_Up_clicked()
 {
-    this->ui->stacked_Logs_Pages->setCurrentIndex( 0 );
+    this->ui->stackedPages_Logs->setCurrentIndex( 0 );
 }
 
 
@@ -2694,7 +2751,7 @@ void MainWindow::craplogStarted()
     // reset perfs
     this->resetPerfsLabels();
     // disable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled( false );
+    this->ui->stackedPages_Logs->setEnabled( false );
     // disable things which needs database access
     this->setDbWorkingState( true );
 }
@@ -2729,7 +2786,7 @@ void MainWindow::craplogFinished()
 void MainWindow::afterCraplogFinished()
 {
     // enable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled( true );
+    this->ui->stackedPages_Logs->setEnabled( true );
     // enable back
     this->setDbWorkingState( false );
     if ( this->craplog.editedDatabase() ) {
@@ -3273,7 +3330,7 @@ void MainWindow::checkStatsDayDrawable()
             if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
               && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
               && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
-               aux &= false;
+                aux &= false;
             } else {
                 int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
                 int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
@@ -3874,6 +3931,75 @@ void MainWindow::on_button_StatsGlob_Iis_clicked()
 /////////////////////////
 //////// CONFIGS ////////
 /////////////////////////
+
+void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column)
+{
+    const QString section{ item->text(0) };
+    if ( section == tr("General") ) {
+        return;
+    } else if ( section == tr("Window") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(0);
+    } else if ( section == tr("Dialogs") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(1);
+    } else if ( section == tr("Charts") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(2);
+    } else if ( section == tr("TextBrowser") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(3);
+    } else if ( section == tr("Databases") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(4);
+    } else if ( section == tr("Logs") ) {
+        return;
+    } else if ( section == tr("Defaults") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(5);
+    } else if ( section == tr("Control") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(6);
+    } else if ( section == tr("Apache2") || section == tr("Nginx") || section == tr("IIS") ) {
+        return;
+    } else if ( section == tr("Path") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(7);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(11);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(15);
+        }
+    } else if ( section == tr("Format") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(8);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(12);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(16);
+        }
+    } else if ( section == tr("Warnlists") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(9);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(13);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(17);
+        }
+    } else if ( section == tr("Blacklists") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(10);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(14);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(18);
+        }
+    } else {
+        throw("Unexpected Conf section: "+section.toStdString());
+    }
+}
+
+void MainWindow::on_tree_ConfSections_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    this->on_tree_ConfSections_itemClicked( item, column );
+}
 
 /////////////////
 //// GENERAL ////
