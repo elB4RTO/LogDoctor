@@ -2837,10 +2837,18 @@ void MainWindow::checkStatsWarnDrawable()
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsWarn_Year->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsWarn_Year->addItems(
             this->crapview.getYears( this->wsFromIndex( index ) ));
         this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsWarn_Year->count() > 0 ) {
+        this->ui->box_StatsWarn_Year->setEnabled( true );
+        this->on_box_StatsWarn_Year_currentIndexChanged(
+            this->ui->box_StatsWarn_Year->currentIndex() );
+    } else {
+        this->ui->box_StatsWarn_Year->setEnabled( false );
+        this->on_box_StatsWarn_Year_currentIndexChanged( -1 );
     }
     this->checkStatsWarnDrawable();
 }
@@ -2848,12 +2856,21 @@ void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 void MainWindow::on_box_StatsWarn_Year_currentIndexChanged(int index)
 {
     this->ui->box_StatsWarn_Month->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsWarn_Month->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
                 this->ui->box_StatsWarn_Year->currentText() ) );
         this->ui->box_StatsWarn_Month->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsWarn_Month->count() > 0
+      && this->ui->box_StatsWarn_Year->isEnabled() ) {
+        this->ui->box_StatsWarn_Month->setEnabled( true );
+        this->on_box_StatsWarn_Month_currentIndexChanged(
+            this->ui->box_StatsWarn_Month->currentIndex() );
+    } else {
+        this->ui->box_StatsWarn_Month->setEnabled( false );
+        this->on_box_StatsWarn_Month_currentIndexChanged( -1 );
     }
     this->checkStatsWarnDrawable();
 }
@@ -2861,7 +2878,7 @@ void MainWindow::on_box_StatsWarn_Year_currentIndexChanged(int index)
 void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
 {
     this->ui->box_StatsWarn_Day->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsWarn_Day->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
@@ -2869,24 +2886,38 @@ void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
                 this->ui->box_StatsWarn_Month->currentText() ) );
         this->ui->box_StatsWarn_Day->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsWarn_Day->count() > 0
+      && this->ui->box_StatsWarn_Month->isEnabled() ) {
+        this->ui->box_StatsWarn_Day->setEnabled( true );
+        this->on_box_StatsWarn_Day_currentIndexChanged(
+            this->ui->box_StatsWarn_Day->currentIndex() );
+    } else {
+        this->ui->box_StatsWarn_Day->setEnabled( false );
+        this->on_box_StatsWarn_Day_currentIndexChanged( -1 );
+    }
     this->checkStatsWarnDrawable();
 }
 
 void MainWindow::on_box_StatsWarn_Day_currentIndexChanged(int index)
 {
-    if ( this->ui->checkBox_StatsWarn_Hour->isChecked() ) {
-        this->ui->box_StatsWarn_Hour->clear();
-        if ( index != -1 ) {
+    this->ui->box_StatsWarn_Hour->clear();
+    if ( this->ui->checkBox_StatsWarn_Hour->isChecked()
+      && this->ui->box_StatsWarn_Day->isEnabled() ) {
+        if ( index >= 0 ) {
             this->ui->box_StatsWarn_Hour->addItems( this->crapview.getHours() );
             this->ui->box_StatsWarn_Hour->setCurrentIndex( 0 );
+            this->ui->box_StatsWarn_Hour->setEnabled( true );
         }
+    } else {
+        this->ui->box_StatsWarn_Hour->setEnabled( false );
     }
     this->checkStatsWarnDrawable();
 }
 
 void MainWindow::on_checkBox_StatsWarn_Hour_stateChanged(int state)
 {
-    if ( state == Qt::CheckState::Checked ) {
+    if ( state == Qt::CheckState::Checked
+      && this->ui->box_StatsWarn_Day->isEnabled() ) {
         this->ui->box_StatsWarn_Hour->setEnabled( true );
         // add available dates
         this->on_box_StatsWarn_Day_currentIndexChanged( 0 );
@@ -2968,10 +2999,18 @@ void MainWindow::checkStatsSpeedDrawable()
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Year->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsSpeed_Year->addItems(
             this->crapview.getYears( this->wsFromIndex( index ) ) );
         this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsSpeed_Year->count() > 0 ) {
+        this->ui->box_StatsSpeed_Year->setEnabled( true );
+        this->on_box_StatsSpeed_Year_currentIndexChanged(
+            this->ui->box_StatsSpeed_Year->currentIndex() );
+    } else {
+        this->ui->box_StatsSpeed_Year->setEnabled( false );
+        this->on_box_StatsSpeed_Year_currentIndexChanged( -1 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -2979,12 +3018,20 @@ void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Month->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsSpeed_Month->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
                 this->ui->box_StatsSpeed_Year->currentText() ) );
         this->ui->box_StatsSpeed_Month->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsSpeed_Month->count() > 0 ) {
+        this->ui->box_StatsSpeed_Month->setEnabled( true );
+        this->on_box_StatsSpeed_Month_currentIndexChanged(
+            this->ui->box_StatsSpeed_Month->currentIndex() );
+    } else {
+        this->ui->box_StatsSpeed_Month->setEnabled( false );
+        this->on_box_StatsSpeed_Month_currentIndexChanged( -1 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -2992,13 +3039,21 @@ void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
 void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Day->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsSpeed_Day->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
                 this->ui->box_StatsSpeed_Year->currentText(),
                 this->ui->box_StatsSpeed_Month->currentText() ) );
         this->ui->box_StatsSpeed_Day->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsSpeed_Day->count() > 0 ) {
+        this->ui->box_StatsSpeed_Day->setEnabled( true );
+        this->on_box_StatsSpeed_Day_currentIndexChanged(
+            this->ui->box_StatsSpeed_Day->currentIndex() );
+    } else {
+        this->ui->box_StatsSpeed_Day->setEnabled( false );
+        this->on_box_StatsSpeed_Day_currentIndexChanged( -1 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -3126,11 +3181,19 @@ void MainWindow::checkStatsCountDrawable()
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Year->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsCount_Year->addItems(
             this->crapview.getYears( this->wsFromIndex( index ) ));
         this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
         this->resetStatsCountButtons();
+    }
+    if ( this->ui->box_StatsCount_Year->count() > 0 ) {
+        this->ui->box_StatsCount_Year->setEnabled( true );
+        this->on_box_StatsCount_Year_currentIndexChanged(
+            this->ui->box_StatsCount_Year->currentIndex() );
+    } else {
+        this->ui->box_StatsCount_Year->setEnabled( false );
+        this->on_box_StatsCount_Year_currentIndexChanged( -1 );
     }
     this->checkStatsCountDrawable();
 }
@@ -3138,12 +3201,20 @@ void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Month->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsCount_Month->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
                 this->ui->box_StatsCount_Year->currentText() ) );
         this->ui->box_StatsCount_Month->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsCount_Month->count() > 0 ) {
+        this->ui->box_StatsCount_Month->setEnabled( true );
+        this->on_box_StatsCount_Month_currentIndexChanged(
+            this->ui->box_StatsCount_Month->currentIndex() );
+    } else {
+        this->ui->box_StatsCount_Month->setEnabled( false );
+        this->on_box_StatsCount_Month_currentIndexChanged( -1 );
     }
     this->checkStatsCountDrawable();
 }
@@ -3151,13 +3222,21 @@ void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
 void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Day->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsCount_Day->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
                 this->ui->box_StatsCount_Year->currentText(),
                 this->ui->box_StatsCount_Month->currentText() ) );
         this->ui->box_StatsCount_Day->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsCount_Day->count() > 0 ) {
+        this->ui->box_StatsCount_Day->setEnabled( true );
+        this->on_box_StatsCount_Day_currentIndexChanged(
+            this->ui->box_StatsCount_Day->currentIndex() );
+    } else {
+        this->ui->box_StatsCount_Day->setEnabled( false );
+        this->on_box_StatsCount_Day_currentIndexChanged( -1 );
     }
     this->checkStatsCountDrawable();
 }
@@ -3393,7 +3472,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
     this->ui->box_StatsDay_LogsField->clear();
     this->ui->box_StatsDay_FromYear->clear();
     this->ui->box_StatsDay_ToYear->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         // refresh fields
         this->ui->box_StatsDay_LogsField->addItems(
             this->crapview.getFields( "Daytime" ));
@@ -3406,6 +3485,23 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
             this->ui->box_StatsDay_ToYear->addItems( years );
             this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
         }
+    }
+    if ( this->ui->box_StatsDay_FromYear->count() > 0 ) {
+        this->ui->box_StatsDay_FromYear->setEnabled( true );
+        this->on_box_StatsDay_FromYear_currentIndexChanged(
+            this->ui->box_StatsDay_FromYear->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_FromYear->setEnabled( false );
+        this->on_box_StatsDay_FromYear_currentIndexChanged( -1 );
+    }
+    if ( this->ui->checkBox_StatsDay_Period->isChecked()
+      && this->ui->box_StatsDay_ToYear->count() > 0 ) {
+        this->ui->box_StatsDay_ToYear->setEnabled( true );
+        this->on_box_StatsDay_ToYear_currentIndexChanged(
+            this->ui->box_StatsDay_ToYear->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_ToYear->setEnabled( false );
+        this->on_box_StatsDay_ToYear_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3420,12 +3516,20 @@ void MainWindow::on_box_StatsDay_LogsField_currentIndexChanged(int index)
 void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_FromMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_FromMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_FromYear->currentText() ) );
         this->ui->box_StatsDay_FromMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsDay_FromMonth->count() > 0 ) {
+        this->ui->box_StatsDay_FromMonth->setEnabled( true );
+        this->on_box_StatsDay_FromMonth_currentIndexChanged(
+            this->ui->box_StatsDay_FromMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_FromMonth->setEnabled( false );
+        this->on_box_StatsDay_FromMonth_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3433,13 +3537,21 @@ void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_FromDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_FromDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_FromYear->currentText(),
                 this->ui->box_StatsDay_FromMonth->currentText() ) );
         this->ui->box_StatsDay_FromDay->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsDay_FromDay->count() > 0 ) {
+        this->ui->box_StatsDay_FromDay->setEnabled( true );
+        this->on_box_StatsDay_FromDay_currentIndexChanged(
+            this->ui->box_StatsDay_FromDay->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_FromDay->setEnabled( false );
+        this->on_box_StatsDay_FromDay_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3456,9 +3568,18 @@ void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
         this->ui->box_StatsDay_ToMonth->setEnabled( true );
         this->ui->box_StatsDay_ToDay->setEnabled( true );
         // add available dates
+        this->ui->box_StatsDay_ToYear->clear();
         this->ui->box_StatsDay_ToYear->addItems( this->crapview.getYears(
             this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ) ) );
         this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+        if ( this->ui->box_StatsDay_ToYear->count() > 0 ) {
+            this->ui->box_StatsDay_ToYear->setEnabled( true );
+            this->on_box_StatsDay_ToYear_currentIndexChanged(
+                this->ui->box_StatsDay_ToYear->currentIndex() );
+        } else {
+            this->ui->box_StatsDay_ToYear->setEnabled( false );
+            this->on_box_StatsDay_ToYear_currentIndexChanged( -1 );
+        }
     } else {
         this->ui->box_StatsDay_ToYear->clear();
         this->ui->box_StatsDay_ToYear->setEnabled( false );
@@ -3472,12 +3593,20 @@ void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
 void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_ToMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_ToMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_ToYear->currentText() ) );
         this->ui->box_StatsDay_ToMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsDay_ToMonth->count() > 0 ) {
+        this->ui->box_StatsDay_ToMonth->setEnabled( true );
+        this->on_box_StatsDay_ToMonth_currentIndexChanged(
+            this->ui->box_StatsDay_ToMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_ToMonth->setEnabled( false );
+        this->on_box_StatsDay_ToMonth_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3485,13 +3614,21 @@ void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_ToDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_ToDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_ToYear->currentText(),
                 this->ui->box_StatsDay_ToMonth->currentText() ) );
         this->ui->box_StatsDay_ToDay->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsDay_ToDay->count() > 0 ) {
+        this->ui->box_StatsDay_ToDay->setEnabled( true );
+        this->on_box_StatsDay_ToDay_currentIndexChanged(
+            this->ui->box_StatsDay_ToDay->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_ToDay->setEnabled( false );
+        this->on_box_StatsDay_ToDay_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3625,7 +3762,7 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
     this->ui->box_StatsRelat_LogsField_2->clear();
     this->ui->box_StatsRelat_FromYear->clear();
     this->ui->box_StatsRelat_ToYear->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         // refresh fields
         QStringList fields{ this->crapview.getFields( "Relational" ) };
         this->ui->box_StatsRelat_LogsField_1->addItems( fields );
@@ -3642,6 +3779,22 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
         this->ui->box_StatsRelat_ToYear->clear();
         this->ui->box_StatsRelat_ToYear->addItems( years );
         this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_FromYear->count() > 0 ) {
+        this->ui->box_StatsRelat_FromYear->setEnabled( true );
+        this->on_box_StatsRelat_FromYear_currentIndexChanged(
+            this->ui->box_StatsRelat_FromYear->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_FromYear->setEnabled( false );
+        this->on_box_StatsRelat_FromYear_currentIndexChanged( -1 );
+    }
+    if ( this->ui->box_StatsRelat_ToYear->count() > 0 ) {
+        this->ui->box_StatsRelat_ToYear->setEnabled( true );
+        this->on_box_StatsRelat_ToYear_currentIndexChanged(
+            this->ui->box_StatsRelat_ToYear->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_ToYear->setEnabled( false );
+        this->on_box_StatsRelat_ToYear_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3661,12 +3814,20 @@ void MainWindow::on_box_StatsRelat_LogsField_2_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_FromMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_FromMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_FromYear->currentText() ) );
         this->ui->box_StatsRelat_FromMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_FromMonth->count() > 0 ) {
+        this->ui->box_StatsRelat_FromMonth->setEnabled( true );
+        this->on_box_StatsRelat_FromMonth_currentIndexChanged(
+            this->ui->box_StatsRelat_FromMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_FromMonth->setEnabled( false );
+        this->on_box_StatsRelat_FromMonth_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3674,13 +3835,21 @@ void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_FromDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_FromDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_FromYear->currentText(),
                 this->ui->box_StatsRelat_FromMonth->currentText() ) );
         this->ui->box_StatsRelat_FromDay->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_FromDay->count() > 0 ) {
+        this->ui->box_StatsRelat_FromDay->setEnabled( true );
+        this->on_box_StatsRelat_FromDay_currentIndexChanged(
+            this->ui->box_StatsRelat_FromDay->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_FromDay->setEnabled( false );
+        this->on_box_StatsRelat_FromDay_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3693,12 +3862,20 @@ void MainWindow::on_box_StatsRelat_FromDay_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_ToMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_ToMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_ToYear->currentText() ) );
         this->ui->box_StatsRelat_ToMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_ToMonth->count() > 0 ) {
+        this->ui->box_StatsRelat_ToMonth->setEnabled( true );
+        this->on_box_StatsRelat_ToMonth_currentIndexChanged(
+            this->ui->box_StatsRelat_ToMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_ToMonth->setEnabled( false );
+        this->on_box_StatsRelat_ToMonth_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3706,13 +3883,21 @@ void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_ToDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_ToDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_ToYear->currentText(),
                 this->ui->box_StatsRelat_ToMonth->currentText() ) );
         this->ui->box_StatsRelat_ToDay->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_ToDay->count() > 0 ) {
+        this->ui->box_StatsRelat_ToDay->setEnabled( true );
+        this->on_box_StatsRelat_ToDay_currentIndexChanged(
+            this->ui->box_StatsRelat_ToDay->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_ToDay->setEnabled( false );
+        this->on_box_StatsRelat_ToDay_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -4436,11 +4621,19 @@ void MainWindow::on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfApache_Warnlist_String->setEnabled( true );
         this->ui->list_ConfApache_Warnlist_List->setEnabled( true );
+        this->ui->button_ConfApache_Warnlist_Add->setFlat( false );
+        this->ui->button_ConfApache_Warnlist_Remove->setFlat( false );
+        this->ui->button_ConfApache_Warnlist_Up->setFlat( false );
+        this->ui->button_ConfApache_Warnlist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfApache_Warnlist_String->clear();
         this->ui->inLine_ConfApache_Warnlist_String->setEnabled( false );
         this->ui->list_ConfApache_Warnlist_List->clearSelection();
         this->ui->list_ConfApache_Warnlist_List->setEnabled( false );
+        this->ui->button_ConfApache_Warnlist_Add->setFlat( true );
+        this->ui->button_ConfApache_Warnlist_Remove->setFlat( true );
+        this->ui->button_ConfApache_Warnlist_Up->setFlat( true );
+        this->ui->button_ConfApache_Warnlist_Down->setFlat( true );
     }
 }
 
@@ -4574,11 +4767,19 @@ void MainWindow::on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfApache_Blacklist_String->setEnabled( true );
         this->ui->list_ConfApache_Blacklist_List->setEnabled( true );
+        this->ui->button_ConfApache_Blacklist_Add->setFlat( false );
+        this->ui->button_ConfApache_Blacklist_Remove->setFlat( false );
+        this->ui->button_ConfApache_Blacklist_Up->setFlat( false );
+        this->ui->button_ConfApache_Blacklist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfApache_Blacklist_String->clear();
         this->ui->inLine_ConfApache_Blacklist_String->setEnabled( false );
         this->ui->list_ConfApache_Blacklist_List->clearSelection();
         this->ui->list_ConfApache_Blacklist_List->setEnabled( false );
+        this->ui->button_ConfApache_Blacklist_Add->setFlat( true );
+        this->ui->button_ConfApache_Blacklist_Remove->setFlat( true );
+        this->ui->button_ConfApache_Blacklist_Up->setFlat( true );
+        this->ui->button_ConfApache_Blacklist_Down->setFlat( true );
     }
 }
 
@@ -4788,11 +4989,19 @@ void MainWindow::on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfNginx_Warnlist_String->setEnabled( true );
         this->ui->list_ConfNginx_Warnlist_List->setEnabled( true );
+        this->ui->button_ConfNginx_Warnlist_Add->setFlat( false );
+        this->ui->button_ConfNginx_Warnlist_Remove->setFlat( false );
+        this->ui->button_ConfNginx_Warnlist_Up->setFlat( false );
+        this->ui->button_ConfNginx_Warnlist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfNginx_Warnlist_String->clear();
         this->ui->inLine_ConfNginx_Warnlist_String->setEnabled( false );
         this->ui->list_ConfNginx_Warnlist_List->clearSelection();
         this->ui->list_ConfNginx_Warnlist_List->setEnabled( false );
+        this->ui->button_ConfNginx_Warnlist_Add->setFlat( true );
+        this->ui->button_ConfNginx_Warnlist_Remove->setFlat( true );
+        this->ui->button_ConfNginx_Warnlist_Up->setFlat( true );
+        this->ui->button_ConfNginx_Warnlist_Down->setFlat( true );
     }
 }
 
@@ -4926,11 +5135,19 @@ void MainWindow::on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfNginx_Blacklist_String->setEnabled( true );
         this->ui->list_ConfNginx_Blacklist_List->setEnabled( true );
+        this->ui->button_ConfNginx_Blacklist_Add->setFlat( false );
+        this->ui->button_ConfNginx_Blacklist_Remove->setFlat( false );
+        this->ui->button_ConfNginx_Blacklist_Up->setFlat( false );
+        this->ui->button_ConfNginx_Blacklist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfNginx_Blacklist_String->clear();
         this->ui->inLine_ConfNginx_Blacklist_String->setEnabled( false );
         this->ui->list_ConfNginx_Blacklist_List->clearSelection();
         this->ui->list_ConfNginx_Blacklist_List->setEnabled( false );
+        this->ui->button_ConfNginx_Blacklist_Add->setFlat( true );
+        this->ui->button_ConfNginx_Blacklist_Remove->setFlat( true );
+        this->ui->button_ConfNginx_Blacklist_Up->setFlat( true );
+        this->ui->button_ConfNginx_Blacklist_Down->setFlat( true );
     }
 }
 
@@ -5204,11 +5421,19 @@ void MainWindow::on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfIis_Warnlist_String->setEnabled( true );
         this->ui->list_ConfIis_Warnlist_List->setEnabled( true );
+        this->ui->button_ConfIis_Warnlist_Add->setFlat( false );
+        this->ui->button_ConfIis_Warnlist_Remove->setFlat( false );
+        this->ui->button_ConfIis_Warnlist_Up->setFlat( false );
+        this->ui->button_ConfIis_Warnlist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfIis_Warnlist_String->clear();
         this->ui->inLine_ConfIis_Warnlist_String->setEnabled( false );
         this->ui->list_ConfIis_Warnlist_List->clearSelection();
         this->ui->list_ConfIis_Warnlist_List->setEnabled( false );
+        this->ui->button_ConfIis_Warnlist_Add->setFlat( true );
+        this->ui->button_ConfIis_Warnlist_Remove->setFlat( true );
+        this->ui->button_ConfIis_Warnlist_Up->setFlat( true );
+        this->ui->button_ConfIis_Warnlist_Down->setFlat( true );
     }
 }
 
@@ -5342,11 +5567,19 @@ void MainWindow::on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfIis_Blacklist_String->setEnabled( true );
         this->ui->list_ConfIis_Blacklist_List->setEnabled( true );
+        this->ui->button_ConfIis_Blacklist_Add->setFlat( false );
+        this->ui->button_ConfIis_Blacklist_Remove->setFlat( false );
+        this->ui->button_ConfIis_Blacklist_Up->setFlat( false );
+        this->ui->button_ConfIis_Blacklist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfIis_Blacklist_String->clear();
         this->ui->inLine_ConfIis_Blacklist_String->setEnabled( false );
         this->ui->list_ConfIis_Blacklist_List->clearSelection();
         this->ui->list_ConfIis_Blacklist_List->setEnabled( false );
+        this->ui->button_ConfIis_Blacklist_Add->setFlat( true );
+        this->ui->button_ConfIis_Blacklist_Remove->setFlat( true );
+        this->ui->button_ConfIis_Blacklist_Up->setFlat( true );
+        this->ui->button_ConfIis_Blacklist_Down->setFlat( true );
     }
 }
 
