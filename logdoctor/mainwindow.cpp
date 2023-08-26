@@ -1051,9 +1051,9 @@ void MainWindow::detectIconsTheme()
         case 0: // native
             // use window color to determine the theme
             if ( this->palette().window().color().black() > 127 ) {
-                this->icons_theme = "light";
+                this->icons_theme = "light_native";
             } else {
-                this->icons_theme = "dark";
+                this->icons_theme = "dark_native";
             }
             break;
         case 1: // light
@@ -1108,10 +1108,14 @@ void MainWindow::updateUiIcons()
             this->detectIconsTheme();
             break;
         case 1:
-            this->icons_theme = "light";
+            this->icons_theme = ( this->window_theme_id == 0 )
+                                ? "light_native"
+                                : "light";
             break;
         case 2:
-            this->icons_theme = "dark";
+            this->icons_theme = ( this->window_theme_id == 0 )
+                                ? "dark_native"
+                                : "dark";
             break;
         default:
             throw GenericException( "Unexpected IconSet index: "+std::to_string(this->icons_theme_id), true );
@@ -1189,6 +1193,48 @@ void MainWindow::updateUiIcons()
             QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
                 this->icons_theme,
                 (s_index==5) ? "on" : "off" )) );
+        // configs tree
+        QTreeWidgetItemIterator it{ this->ui->tree_ConfSections };
+        while (*it) {
+            QString icon_name;
+            const QString text{ (*it)->text(0) };
+            if ( text == tr("General") ) {
+                icon_name = "conf_general";
+            } else if ( text == tr("Window") ) {
+                icon_name = "conf_window";
+            } else if ( text == tr("Dialogs") ) {
+                icon_name = "conf_dialogs";
+            } else if ( text == tr("Charts") ) {
+                icon_name = "conf_charts";
+            } else if ( text == tr("TextBrowser") ) {
+                icon_name = "conf_textbrowser";
+            } else if ( text == tr("Databases") ) {
+                icon_name = "conf_databases";
+            } else if ( text == tr("Logs") ) {
+                icon_name = "conf_logs";
+            } else if ( text == tr("Defaults") ) {
+                icon_name = "conf_defaults";
+            } else if ( text == tr("Control") ) {
+                icon_name = "conf_control";
+            } else if ( text == tr("Path") ) {
+                icon_name = "conf_path";
+            } else if ( text == tr("Format") ) {
+                icon_name = "conf_format";
+            } else if ( text == tr("Warnlists") ) {
+                icon_name = "conf_warnlists";
+            } else if ( text == tr("Blacklists") ) {
+                icon_name = "conf_blacklists";
+            } else if ( text == tr("Apache2")
+                     || text == tr("Nginx")
+                     || text == tr("IIS") ) {
+                icon_name = "conf_webservers";
+            } else {
+                throw GenericException( "Unexpected Configs section: "+text.toStdString(), true );
+            }
+            (*it)->setIcon(0,
+                QIcon(QString(":/icons/icons/%1/%2.png").arg(this->icons_theme, icon_name)) );
+            ++it;
+        }
         // conf databases
         this->ui->button_ConfDatabases_Data_Save->setIcon(
             QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
