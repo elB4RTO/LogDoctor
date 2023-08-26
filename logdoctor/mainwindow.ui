@@ -20,11 +20,9 @@
    <string notr="true">LogDoctor</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources/resources.qrc">
-    <normaloff>:/logo/logo/logdoctor.svg</normaloff>:/logo/logo/logdoctor.svg</iconset>
-  </property>
-  <property name="locale">
-   <locale language="English" country="UnitedStates"/>
+   <iconset>
+    <normalon>:/logo/logo/logdoctor.svg</normalon>
+   </iconset>
   </property>
   <widget class="QWidget" name="mainwidget">
    <property name="sizePolicy">
@@ -8523,7 +8521,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>

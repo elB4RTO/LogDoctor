@@ -20,8 +20,9 @@
    <string notr="true">LogDoctor - Updates</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../resources/resources.qrc">
-    <normaloff>:/logo/logo/logdoctor.svg</normaloff>:/logo/logo/logdoctor.svg</iconset>
+   <iconset>
+    <normalon>:/logo/logo/logdoctor.svg</normalon>
+   </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="1">
@@ -220,8 +221,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../resources/resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

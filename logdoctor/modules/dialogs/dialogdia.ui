@@ -23,8 +23,9 @@
    </font>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../resources/resources.qrc">
-    <normaloff>:/logo/logo/logdoctor.svg</normaloff>:/logo/logo/logdoctor.svg</iconset>
+   <iconset>
+    <normalon>:/logo/logo/logdoctor.svg</normalon>
+   </iconset>
   </property>
   <property name="modal">
    <bool>true</bool>
