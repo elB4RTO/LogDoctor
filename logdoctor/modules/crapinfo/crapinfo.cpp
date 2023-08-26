@@ -56,39 +56,41 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
         case 1: // light
             style = {
                 {"text",
-                 "rgb( 30, 21, 0 )"},
+                    "rgb( 22, 11, 0 )"},
                 {"text_unselected",
-                 "rgb( 60, 51, 27 )"},
+                    "rgb( 64, 60, 60 )"},
                 {"window_primary",
-                 "rgb( 170, 161, 137 )"},
+                    "rgb( 250, 250, 255 )"},
                 {"window_secondary",
-                 "rgb( 230, 221, 197 )"},
+                    "rgb( 230, 230, 230 )"},
                 {"border",
-                 "rgb( 80, 71, 47 )"},
+                    "rgb( 210, 210, 210 )"},
                 {"border_hover",
-                 "rgb( 60, 51, 27 )"},
+                    "rgb( 124, 119, 119 )"},
                 {"border_unselected",
-                 "rgb( 100, 91, 67 )"},
+                    "transparent"},
                 {"toolbox_tab_base",
-                 "rgb( 190, 181, 157 )"},
+                    "rgb( 210, 210, 210 )"},
                 {"toolbox_tab_base_selected",
-                 "rgb( 150, 141, 117 )"},
+                    "rgb( 240, 240, 245 )"},
                 {"scrollbar_base",
-                 "rgb( 100, 91, 67 )"},
+                    "rgb( 250, 250, 255 )"},
                 {"scrollbar_handler",
-                 "rgb( 210, 201, 177 )"},
+                    "rgb( 40, 185, 40 )"},
+                {"scrollbar_controls",
+                    "transparent"},
                 {"linedit_text",
-                 "rgb( 30, 21, 0 )"},
+                    "rgb( 88, 80, 80 )"},
                 {"linedit_base",
-                 "rgb( 210, 201, 177 )"},
+                    "rgb( 236, 236, 236 )"},
                 {"linedit_text_selection",
-                 "rgb( 30, 21, 0 )"},
+                    "rgb( 10, 10, 10 )"}, //!!!
                 {"linedit_base_selection",
-                 "rgb( 170, 161, 137 )"},
+                    "rgb( 197, 191, 185 )"},
                 {"paths_frame_base",
-                 "rgb( 190, 181, 157 )"},
-                {"lines",
-                 "rgb( 60, 51, 27 )"}
+                    "rgb( 240, 240, 245 )"},
+                {"separators",
+                    "rgb( 88, 80, 80 )"}
             };
             break;
         case 2: // dark
@@ -98,35 +100,37 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
                 {"text_unselected",
                     "rgb( 192, 192, 192 )"},
                 {"window_primary",
-                    "rgb( 32, 32, 32 )"},
+                    "rgb( 13, 14, 15 )"},
                 {"window_secondary",
-                    "rgb( 16, 16, 16 )"},
+                    "rgb( 27, 30, 33 )"},
                 {"border",
-                    "rgb( 96, 96, 96 )"},
+                    "rgb( 40, 45, 49 )"},
                 {"border_hover",
-                    "rgb( 128, 128, 128 )"},
-                {"border_unselected",
                     "rgb( 64, 64, 64 )"},
+                {"border_unselected",
+                    "transparent"},
                 {"toolbox_tab_base",
-                    "rgb( 24, 24, 24 )"},
+                    "rgb( 21, 23, 25 )"},
                 {"toolbox_tab_base_selected",
-                    "rgb( 48, 48, 48 )"},
+                    "rgb( 17, 18, 19 )"},
                 {"scrollbar_base",
-                    "rgb( 96, 96, 96 )"},
+                    "transparent"},
                 {"scrollbar_handler",
-                    "rgb( 192, 192, 192 )"},
+                    "rgb( 69, 177, 255 )"},
+                {"scrollbar_controls",
+                    "transparent"},
                 {"linedit_text",
-                    "rgb( 16, 16, 16 )"},
+                    "rgb( 210, 210, 210 )"},
                 {"linedit_base",
-                    "rgb( 216, 216, 216 )"},
+                    "rgb( 41, 44, 44 )"},
                 {"linedit_text_selection",
-                    "rgb( 16, 16, 16 )"},
+                    "rgb( 245, 245, 245 )"},
                 {"linedit_base_selection",
-                    "rgb( 192, 192, 192 )"},
+                    "rgb( 47, 99, 47 )"},
                 {"paths_frame_base",
-                    "rgb( 48, 48, 48 )"},
-                {"lines",
-                    "rgb( 192, 192, 192 )"}
+                    "rgb( 32, 35, 37 )"},
+                {"separators",
+                    "rgb( 96, 96, 96 )"}
             };
             break;
         default:
@@ -140,6 +144,7 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "   background-color: "+style.at("window_secondary")+";"
             "}"
             "QFrame {"
+            "   border: 0px;"
             "   background-color: transparent;"
             "}"
             "QLabel {"
@@ -160,7 +165,7 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "}"
             "QToolBox::tab {"
             "   border: 1px solid "+style.at("border_unselected")+";"
-            "   border-radius: 4px;"
+            "   border-radius: 8px;"
             "   color: "+style.at("text_unselected")+";"
             "   background-color: "+style.at("toolbox_tab_base")+";"
             "}"
@@ -178,17 +183,45 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "   color: "+style.at("text")+";"
             "   background-color: "+style.at("toolbox_tab_base_selected")+";"
             "}"
+            "QScrollBar {"
+            "   border: 0px solid transparent;"
+            "}"
             "QScrollBar:horizontal {"
             "   height: 12px;"
             "   background-color: "+style.at("scrollbar_base")+";"
             "}"
             "QScrollBar::handle:horizontal {"
             "   min-width: 16px;"
-            "   margin: 5px 12px 5px 12px;"
+            "   margin: 5px 0px 5px 0px;"
             "   background-color: "+style.at("scrollbar_handler")+";"
             "}"
             "QScrollBar::handle:horizontal:hover {"
-            "   margin: 4px 12px 4px 12px;"
+            "   margin: 4px 0px 4px 0px;"
+            "   border-radius: 2px;"
+            "}"
+            "QScrollBar:vertical {"
+            "   width: 12px;"
+            "   background-color: "+style.at("scrollbar_base")+";"
+            "}"
+            "QScrollBar::handle:vertical {"
+            "   min-width: 16px;"
+            "   margin: 0px 5px 0px 5px;"
+            "   background-color: "+style.at("scrollbar_handler")+";"
+            "}"
+            "QScrollBar::handle:vertical:hover {"
+            "   margin: 0px 4px 0px 4px;"
+            "   border-radius: 2px;"
+            "}"
+            "QScrollBar::add-line,"
+            "QScrollBar::sub-line,"
+            "QScrollBar::add-pae,"
+            "QScrollBar::sub-pae,"
+            "QScrollBar::up-arrow,"
+            "QScrollBar::down-arrow,"
+            "QScrollBar::left-arrow,"
+            "QScrollBar::right-arrow {"
+            "   border: 0px;"
+            "   background-color: "+style.at("scrollbar_controls")+";"
             "}"
             "QLineEdit {"
             "   border-radius: 4px;"
@@ -200,15 +233,13 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "QWidget#scrollAreaContents_Paths_Executable,"
             "QWidget#scrollAreaContents_Paths_ConfigFile,"
             "QWidget#scrollAreaContents_Paths_AppData {"
-            "   border-radius: 4px;"
+            "   border-radius: 8px;"
             "   background-color: "+style.at("paths_frame_base")+";"
             "}"
-            "QFrame#gline_Version,"
-            "QFrame#gline_StatsCount {"
-            "   border: 1px solid "+style.at("window_secondary")+";"
+            "QFrame#gline_Version {"
+            "   border: 1px solid "+style.at("window_primary")+";"
             "   margin: 2px 0px 3px 0px;"
-            "   background-color: "+style.at("lines")+";"
-            "}"
-            "";
+            "   background-color: "+style.at("separators")+";"
+            "}";
     }
 }

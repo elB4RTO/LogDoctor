@@ -282,11 +282,11 @@ void Crapup::getStyleSheet( QString& stylesheet, const int theme_id ) const
         case 1: // light
             style = {
                 {"text",
-                 "rgb( 30, 21, 0 )"},
+                 "rgb( 22, 11, 0 )"},
                 {"window_primary",
-                 "rgb( 230, 221, 197 )"},
+                 "rgb( 250, 250, 255 )"},
                 {"window_secondary",
-                 "rgb( 170, 161, 137 )"}
+                 "rgb( 230, 230, 230 )"}
             };
             break;
         case 2: // dark
@@ -294,9 +294,9 @@ void Crapup::getStyleSheet( QString& stylesheet, const int theme_id ) const
                 {"text",
                     "rgb( 248, 248, 248 )"},
                 {"window_primary",
-                    "rgb( 16, 16, 16 )"},
+                    "rgb( 13, 14, 15 )"},
                 {"window_secondary",
-                    "rgb( 32, 32, 32 )"}
+                    "rgb( 27, 30, 33 )"}
             };
             break;
         default:
@@ -309,10 +309,10 @@ void Crapup::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "   color: "+style.at("text")+";"
             "}"
             "QWidget#Crapup {"
-            "   background-color: "+style.at("window_primary")+";"
+            "   background-color: "+style.at("window_secondary")+";"
             "}"
             "QFrame {"
-            "   background-color: "+style.at("window_secondary")+";"
+            "   background-color: "+style.at("window_primary")+";"
             "}";
     }
 }
