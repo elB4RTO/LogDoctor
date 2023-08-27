@@ -32,8 +32,6 @@ public:
 
 private:
     Ui::Crapinfo *ui;
-
-    void getStyleSheet( QString& stylesheet, const int theme_id ) const;
 };
 
 #endif // CRAPINFO_H

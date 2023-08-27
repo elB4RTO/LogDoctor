@@ -71,8 +71,6 @@ private:
 
     QScopedPointer<QTimer> img_timer;
 
-    void getStyleSheet( QString& stylesheet, const int theme_id ) const;
-
     bool request_aborted;
 
     QScopedPointer<QTimer> request_timer;

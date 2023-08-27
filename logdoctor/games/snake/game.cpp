@@ -2,7 +2,7 @@
 #include "game.h"
 #include "ui_snake.h"
 
-#include "games/games.h"
+#include "modules/stylesheets.h"
 
 #include <QTimer>
 #include <QKeyEvent>
@@ -18,7 +18,7 @@ SnakeGame::SnakeGame( const int theme_id, const QFont& term_font, QWidget* paren
     this->ui->setupUi(this);
 
     QString stylesheet{ "" };
-    GameSec::snakeStyleSheet( stylesheet, theme_id );
+    StyleSec::Games::Snake::getStyleSheet( stylesheet, theme_id );
     this->setStyleSheet( stylesheet );
 
     QFont font{ term_font };

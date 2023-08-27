@@ -5,6 +5,8 @@
 
 #include <QString>
 
+#include <unordered_map>
+
 
 namespace /*private*/
 {
@@ -90,24 +92,348 @@ enum StyleId : uint32_t {
     CONFIGS_TREE_BASE
 };
 
+using StyleMap = std::unordered_map<StyleId, QString>;
+
+const StyleMap makeStyleMap( const int theme_id )
+{
+    switch ( theme_id ) {
+        case 1: // light
+            return {
+                {TEXT_PRIMARY,
+                    "rgb( 22, 11, 0 )"},
+                {TEXT_DISABLED,
+                    "rgb( 128, 128, 128 )"},
+                {TOOLTIPS_BASE,
+                    "rgb( 30, 35, 27 )"},
+                {TOOLTIPS_TEXT,
+                    "rgb( 220, 227, 213 )"},
+                {TOOLTIPS_BORDER,
+                    "rgb( 170, 176, 160 )"},
+                {MENU_TEXT,
+                    "rgb( 32, 32, 32 )"},
+                {MENU_BASE,
+                    "rgb( 200, 200, 200 )"},
+                {MENU_BASE_HOVER,
+                    "rgb( 210, 210, 210 )"},
+                {MENU_DROPDOWN_BASE,
+                    "rgb( 112, 112, 112 )"},
+                {MENU_DROPDOWN_BASE_SELECTION,
+                    "rgb( 128, 128, 128 )"},
+                {MENU_DROPDOWN_TEXT,
+                    "rgb( 250, 250, 255 )"},
+                {WINDOW_BASE_PRIMARY,
+                    "rgb( 250, 250, 255 )"},
+                {WINDOW_BASE_SECONDARY,
+                    "rgb( 230, 230, 230 )"},
+                {SECTIONS_LOG_HOVER,
+                    "rgb( 255, 188, 218 )"}, // 196, 7, 93
+                {SECTIONS_VIEW_HOVER,
+                    "rgb( 184, 255, 203 )"}, // 0, 226, 60
+                {SECTIONS_CONF_HOVER,
+                    "rgb( 179, 228, 255 )"}, // 0, 165, 255
+                {BORDER_PRIMARY,
+                    "rgb( 230, 230, 230 )"},
+                {BORDER_SECONDARY,
+                    "rgb( 124, 119, 119 )"},
+                {BORDER_TERTIARY,
+                    "rgb( 88, 80, 80 )"},
+                {SEPARATORS_BASE,
+                    "rgb( 88, 80, 80 )"},
+                {SEPARATORS_BORDER,
+                    "rgb( 250, 250, 255 )"},
+                {BUTTONS_BASE,
+                    "rgb( 99, 188, 255 )"},
+                {BUTTONS_BASE_HOVER,
+                    "rgb( 123, 201, 255 )"},
+                {BUTTONS_BASE_FLAT,
+                    "rgb( 200, 219, 238 )"},
+                {BUTTONS_BASE_DISABLED,
+                    "rgb( 200, 219, 238 )"},
+                {HELP_BUTTONS_BASE,
+                    "rgb( 230, 80, 80 )"},
+                {HELP_BUTTONS_BASE_HOVER,
+                    "rgb( 230, 112, 80 )"},
+                {WEB_SERVERS_BUTTONS_BASE,
+                    "rgb( 146, 234, 146 )"},
+                {WEB_SERVERS_BUTTONS_BASE_FLAT,
+                    "transparent"},
+                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
+                    "rgb( 246, 246, 246 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
+                    "rgb( 177, 177, 177 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
+                    "rgb( 146, 234, 146 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
+                    "rgb( 92, 92, 92 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
+                    "rgb( 40, 31, 7 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
+                    "rgb( 192, 192, 192 )"},
+                {STATS_SWITCH_BUTTONS,
+                    "rgb( 230, 80, 80 )"},
+                {STATS_SWITCH_BUTTONS_FLAT,
+                    "rgb( 250, 250, 255 )"},
+                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
+                    "rgb( 230, 230, 230 )"},
+                {STATS_GLOBALS_FRAMES,
+                    "rgb( 242, 242, 242 )"},
+                {BOXES_BASE_PRIMARY,
+                    "rgb( 230, 230, 230 )"},
+                {BOXES_BASE_SECONDARY,
+                    "rgb( 220, 220, 220 )"},
+                {BOXES_BASE_DISABLED,
+                    "rgb( 200, 200, 200 )"},
+                {BOXES_BASE_SELECTION,
+                    "rgb( 123, 201, 255 )"},
+                {BOXES_DECO,
+                    "rgb( 99, 188, 255 )"},
+                {LINEDIT_TEXT,
+                    "rgb( 88, 80, 80 )"},
+                {LINEDIT_BASE,
+                    "rgb( 236, 236, 236 )"},
+                {LINEDIT_BASE_FOCUS,
+                    "rgb( 230, 230, 230 )"},
+                {LINEDIT_BASE_SELECTION,
+                    "rgb( 197, 191, 185 )"},
+                {LINEDIT_BASE_DISABLED,
+                    "rgb( 247, 247, 247 )"},
+                {TABLES_HEADER,
+                    "rgb( 220, 220, 220 )"},
+                {TABLES_HEADER_HOVER,
+                    "rgb( 201, 239, 255 )"},
+                {TABLES_HEADER_SEPARATOR,
+                    "rgb( 170, 170, 170 )"},
+                {TABLES_BASE,
+                    "rgb( 242, 242, 242 )"},
+                {TABLES_BASE_DISABLED,
+                    "rgb( 247, 247, 247 )"},
+                {TABLES_BASE_SELECTION,
+                    "rgb( 201, 239, 255 )"},
+                {TABLES_GRIDLINE,
+                    "rgb( 170, 170, 170 )"},
+                {TABLES_TEXT_SELECTION,
+                    "rgb( 22, 11, 0 )"},
+                {TABLES_DECO,
+                    "rgb( 99, 188, 255 )"},
+                {CHARTS_CONTOUR,
+                    "rgb( 220, 220, 220 )"},
+                {TEXTBROWSER_TEXT,
+                    "rgb( 88, 80, 80 )"},
+                {TEXTBROWSER_BASE,
+                    "rgb( 236, 236, 236 )"},
+                {TEXTBROWSER_BORDER,
+                    "rgb( 236, 236, 236 )"},
+                {TEXTBROWSER_TEXT_SELECTION,
+                    "rgb( 68, 60, 60 )"},
+                {TEXTBROWSER_BASE_SELECTION,
+                    "rgb( 207, 201, 195 )"},
+                {SCROLLBAR_BASE,
+                    "transparent"},
+                {SCROLLBAR_HANDLER,
+                    "rgb( 40, 185, 40 )"},
+                {SCROLLBAR_CONTROLS,
+                    "transparent"},
+                {SLIDER_HANDLER,
+                    "rgb( 100, 91, 87 )"},
+                {SLIDER_BAR_ACTIVE,
+                    "rgb( 99, 188, 255 )"},
+                {SLIDER_BAR_INACTIVE,
+                    "rgb( 210, 203, 199 )"},
+                {SLIDER_BAR_ACTIVE_BORDER,
+                    "rgb( 123, 201, 255 )"},
+                {SLIDER_HANDLER_BORDER,
+                    "rgb( 220, 211, 187 )"},
+                {SLIDER_HANDLER_BORDER_HOVER,
+                    "rgb( 123, 201, 255 )"},
+                {BWLISTS_BUTTONS_BASE,
+                    "rgb( 99, 188, 255 )"},
+                {BWLISTS_BUTTONS_BASE_HOVER,
+                    "rgb( 123, 201, 255 )"},
+                {BWLISTS_BUTTONS_BASE_DISABLED,
+                    "rgb( 200, 219, 238 )"},
+                {BWLISTS_BUTTONS_BASE_FLAT,
+                    "rgb( 247, 247, 247 )"},
+                {CONFIGS_TREE_BASE,
+                    "rgb( 245, 245, 247 )"}
+            };
+            break;
+        case 2: // dark
+            return {
+                {TEXT_PRIMARY,
+                    "rgb( 248, 248, 248 )"},
+                {TEXT_DISABLED,
+                    "rgb( 128, 128, 128 )"},
+                {TOOLTIPS_BASE,
+                    "rgb( 160, 160, 160 )"},
+                {TOOLTIPS_TEXT,
+                    "rgb( 32, 32, 32 )"},
+                {TOOLTIPS_BORDER,
+                    "rgb( 144, 144, 144 )"},
+                {MENU_TEXT,
+                    "rgb( 174, 174, 174 )"},
+                {MENU_BASE,
+                    "rgb( 49, 54, 58 )"},
+                {MENU_BASE_HOVER,
+                    "rgb( 40, 45, 49 )"},
+                {MENU_DROPDOWN_BASE,
+                    "rgb( 144, 144, 144 )"},
+                {MENU_DROPDOWN_BASE_SELECTION,
+                    "rgb( 128, 128, 128 )"},
+                {MENU_DROPDOWN_TEXT,
+                    "rgb( 13, 14, 15 )"},
+                {WINDOW_BASE_PRIMARY,
+                    "rgb( 13, 14, 15 )"},
+                {WINDOW_BASE_SECONDARY,
+                    "rgb( 27, 30, 33 )"},
+                {SECTIONS_LOG_HOVER,
+                    "rgb( 82, 0, 37 )"}, // 196, 7, 93
+                {SECTIONS_VIEW_HOVER,
+                    "rgb( 0, 69, 18 )"}, // 0, 226, 60
+                {SECTIONS_CONF_HOVER,
+                    "rgb( 0, 57, 89 )"}, // 0, 165, 255
+                {BORDER_PRIMARY,
+                    "rgb( 40, 45, 49 )"},
+                {BORDER_SECONDARY,
+                    "rgb( 92, 92, 92 )"},
+                {BORDER_TERTIARY,
+                    "rgb( 128, 128, 128 )"},
+                {SEPARATORS_BASE,
+                    "rgb( 96, 96, 96 )"},
+                {SEPARATORS_BORDER,
+                    "rgb( 13, 14, 15 )"},
+                {BUTTONS_BASE,
+                    "rgb( 10, 155, 10 )"},
+                {BUTTONS_BASE_HOVER,
+                    "rgb( 33, 162, 33 )"},
+                {BUTTONS_BASE_FLAT,
+                    "rgb( 21, 71, 21 )"},
+                {BUTTONS_BASE_DISABLED,
+                    "rgb( 21, 71, 21 )"},
+                {HELP_BUTTONS_BASE,
+                    "rgb( 221, 75, 14 )"},
+                {HELP_BUTTONS_BASE_HOVER,
+                    "rgb( 221, 113, 14 )"},
+                {WEB_SERVERS_BUTTONS_BASE,
+                    "rgb( 0, 121, 115 )"},
+                {WEB_SERVERS_BUTTONS_BASE_FLAT,
+                    "transparent"},
+                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
+                    "rgb( 18, 20, 22 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
+                    "rgb( 54, 54, 54 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
+                    "rgb( 0, 121, 115 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
+                    "rgb( 108, 108, 108 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
+                    "rgb( 188, 188, 188 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
+                    "rgb( 42, 42, 42 )"},
+                {STATS_SWITCH_BUTTONS,
+                    "rgb( 221, 75, 14 )"},
+                {STATS_SWITCH_BUTTONS_FLAT,
+                    "rgb( 13, 14, 15 )"},
+                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
+                    "rgb( 27, 30, 33 )"},
+                {STATS_GLOBALS_FRAMES,
+                    "rgb( 29, 29, 29 )"},
+                {BOXES_BASE_PRIMARY,
+                    "rgb( 39, 42, 45 )"},
+                {BOXES_BASE_SECONDARY,
+                    "rgb( 45, 48, 51 )"},
+                {BOXES_BASE_DISABLED,
+                    "rgb( 27, 30, 33 )"},
+                {BOXES_BASE_SELECTION,
+                    "rgb( 33, 162, 33 )"},
+                {BOXES_DECO,
+                    "rgb( 10, 155, 10 )"},
+                {LINEDIT_TEXT,
+                    "rgb( 210, 210, 210 )"},
+                {LINEDIT_BASE,
+                    "rgb( 41, 44, 44 )"},
+                {LINEDIT_BASE_FOCUS,
+                    "rgb( 57, 60, 60 )"},
+                {LINEDIT_BASE_SELECTION,
+                    "rgb( 47, 99, 47 )"},
+                {LINEDIT_BASE_DISABLED,
+                    "rgb( 18, 20, 22 )"},
+                {TABLES_HEADER,
+                    "rgb( 50, 52, 50 )"},
+                {TABLES_HEADER_HOVER,
+                    "rgb( 43, 82, 43 )"},
+                {TABLES_HEADER_SEPARATOR,
+                    "rgb( 80, 80, 80 )"},
+                {TABLES_BASE,
+                    "rgb( 29, 29, 29 )"},
+                {TABLES_BASE_DISABLED,
+                    "rgb( 18, 20, 22 )"},
+                {TABLES_BASE_SELECTION,
+                    "rgb( 43, 82, 43 )"},
+                {TABLES_GRIDLINE,
+                    "rgb( 80, 80, 80 )"},
+                {TABLES_TEXT_SELECTION,
+                    "rgb( 248, 248, 248 )"},
+                {TABLES_DECO,
+                    "rgb( 10, 155, 10 )"},
+                {CHARTS_CONTOUR,
+                    "rgb( 50, 52, 50 )"},
+                {TEXTBROWSER_TEXT,
+                    "rgb( 210, 210, 210 )"},
+                {TEXTBROWSER_BASE,
+                    "rgb( 32, 32, 32 )"},
+                {TEXTBROWSER_BORDER,
+                    "rgb( 32, 32, 32 )"},
+                {TEXTBROWSER_TEXT_SELECTION,
+                    "rgb( 248, 248, 248 )"},
+                {TEXTBROWSER_BASE_SELECTION,
+                    "rgb( 64, 64, 64 )"},
+                {SCROLLBAR_BASE,
+                    "transparent"},
+                {SCROLLBAR_HANDLER,
+                    "rgb( 69, 177, 255 )"},
+                {SCROLLBAR_CONTROLS,
+                    "transparent"},
+                {SLIDER_HANDLER,
+                    "rgb( 112, 112, 112 )"},
+                {SLIDER_BAR_ACTIVE,
+                    "rgb( 10, 155, 10 )"},
+                {SLIDER_BAR_INACTIVE,
+                    "rgb( 64, 64, 64 )"},
+                {SLIDER_BAR_ACTIVE_BORDER,
+                    "rgb( 33, 162, 33 )"},
+                {SLIDER_HANDLER_BORDER,
+                    "rgb( 128, 128, 128 )"},
+                {SLIDER_HANDLER_BORDER_HOVER,
+                    "rgb( 33, 162, 33 )"},
+                {BWLISTS_BUTTONS_BASE,
+                    "rgb( 10, 155, 10 )"},
+                {BWLISTS_BUTTONS_BASE_HOVER,
+                    "rgb( 33, 162, 33 )"},
+                {BWLISTS_BUTTONS_BASE_DISABLED,
+                    "rgb( 21, 71, 21 )"},
+                {BWLISTS_BUTTONS_BASE_FLAT,
+                    "rgb( 18, 20, 22 )"},
+                {CONFIGS_TREE_BASE,
+                    "rgb( 20, 21, 22 )"}
+            };
+            break;
+        default:
+            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(theme_id), true );
+            break;
+    }
+}
+
 } // namespace (private)
 
 
 namespace StyleSec
 {
 
-namespace /*private*/
+void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id )
 {
-
-//! Builds the final stylesheet upon the generic model
-/*!
-    \param ss Will hold the stylesheet
-    \param style The key-value pairs to be applied to the template
-    \param theme The theme selected for the Icons
-*/
-void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &style, const QString& theme )
-{
-    ss= ////////////////
+    const StyleMap style{ makeStyleMap( theme_id ) };
+    stylesheet =
+        ////////////////
         //// SHARED ////
         "* {"
         "   color: "+style.at(TEXT_PRIMARY)+";"
@@ -146,13 +472,13 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   height: 13px;"
         "}"
         "QCheckBox::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_unchecked.png);"
         "}"
         "QCheckBox::indicator:indeterminate {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_semichecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_semichecked.png);"
         "}"
         "QCheckBox::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_checked.png);"
         "}"
         // radio buttons
         "QRadioButton::indicator {"
@@ -160,10 +486,10 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   height : 13px;"
         "}"
         "QRadioButton::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/radiobutton_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/radiobutton_unchecked.png);"
         "}"
         "QRadioButton::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/radiobutton_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/radiobutton_checked.png);"
         "}"
         // push buttons
         "QPushButton {"
@@ -223,7 +549,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QComboBox::down-arrow {"
-        "   image: url(:/icons/icons/"+theme+"/combobox_arrow.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/combobox_arrow.png);"
         "}"
         "QComboBox::down-arrow::disabled {"
         "   image: url();"
@@ -286,7 +612,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   width: 7px;"
         "   height: 7px;"
         "   padding: 2px;"
-        "   image: url(:/icons/icons/"+theme+"/spinbox_add.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/spinbox_add.png);"
         "}"
         "QSpinBox::up-arrow:off,"
         "QSpinBox::up-arrow:disabled {"
@@ -296,7 +622,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   width: 7px;"
         "   height: 7px;"
         "   padding: 2px;"
-        "   image: url(:/icons/icons/"+theme+"/spinbox_sub.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/spinbox_sub.png);"
         "}"
         "QSpinBox::down-arrow:off,"
         "QSpinBox::down-arrow:disabled {"
@@ -522,7 +848,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "}"
         "QPushButton#button_Logs_Down:hover {"
         "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
-        "   icon: url(:/icons/icons/"+theme+"/down.png);"
+        "   icon: url(:/icons/icons/"+icons_theme+"/down.png);"
         "}"
         "QPushButton#button_Logs_Up {"
         "   border-radius: 16px;"
@@ -530,7 +856,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "}"
         "QPushButton#button_Logs_Up::hover {"
         "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
-        "   icon: url(:/icons/icons/"+theme+"/up.png);"
+        "   icon: url(:/icons/icons/"+icons_theme+"/up.png);"
         "}"
         // web servers buttons
         "QPushButton#button_LogFiles_Apache,"
@@ -567,10 +893,10 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   margin-right: 4px;"
         "}"
         "QTreeWidget#listLogFiles::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_unchecked.png);"
         "}"
         "QTreeWidget#listLogFiles::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_checked.png);"
         "}"
         // view file button
         "QPushButton#button_LogFiles_ViewFile {"
@@ -639,10 +965,10 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   height: 13px;"
         "}"
         "QTableWidget#table_StatsWarn::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_unchecked.png);"
         "}"
         "QTableWidget#table_StatsWarn::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_checked.png);"
         "}"
         "QTableWidget#table_StatsWarn QScrollBar::handle:vertical {"
         "   padding: 12px;"
@@ -934,7 +1260,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "QPushButton#button_ConfIis_Warnlist_Add::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Add::disabled {"
         "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
-        "   icon: url(:/icons/icons/"+theme+"/list_add.png), #fff;"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_add.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Remove::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Remove::disabled,"
@@ -943,7 +1269,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "QPushButton#button_ConfIis_Warnlist_Remove::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Remove::disabled {"
         "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
-        "   icon: url(:/icons/icons/"+theme+"/list_rem.png), #fff;"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_rem.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Up::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Up::disabled,"
@@ -952,7 +1278,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "QPushButton#button_ConfIis_Warnlist_Up::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Up::disabled {"
         "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
-        "   icon: url(:/icons/icons/"+theme+"/list_up.png), #fff;"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_up.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Down::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Down::disabled,"
@@ -961,7 +1287,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "QPushButton#button_ConfIis_Warnlist_Down::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Down::disabled {"
         "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
-        "   icon: url(:/icons/icons/"+theme+"/list_down.png), #fff;"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_down.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Add::flat,"
         "QPushButton#button_ConfApache_Warnlist_Remove::flat,"
@@ -990,340 +1316,6 @@ void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &st
         "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_FLAT)+";"
         "   icon: none;"
         "}";
-}
-
-} // namespace (private)
-
-
-void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id )
-{
-    std::unordered_map<StyleId, QString> style_map;
-    switch ( theme_id ) {
-        case 1: // light
-            style_map = {
-                {TEXT_PRIMARY,
-                    "rgb( 22, 11, 0 )"},
-                {TEXT_DISABLED,
-                    "rgb( 128, 128, 128 )"},
-                {TOOLTIPS_BASE,
-                    "rgb( 30, 35, 27 )"},
-                {TOOLTIPS_TEXT,
-                    "rgb( 220, 227, 213 )"},
-                {TOOLTIPS_BORDER,
-                    "rgb( 170, 176, 160 )"},
-                {MENU_TEXT,
-                    "rgb( 32, 32, 32 )"},
-                {MENU_BASE,
-                    "rgb( 200, 200, 200 )"},
-                {MENU_BASE_HOVER,
-                    "rgb( 210, 210, 210 )"},
-                {MENU_DROPDOWN_BASE,
-                    "rgb( 112, 112, 112 )"},
-                {MENU_DROPDOWN_BASE_SELECTION,
-                    "rgb( 128, 128, 128 )"},
-                {MENU_DROPDOWN_TEXT,
-                    "rgb( 250, 250, 255 )"},
-                {WINDOW_BASE_PRIMARY,
-                    "rgb( 250, 250, 255 )"},
-                {WINDOW_BASE_SECONDARY,
-                    "rgb( 230, 230, 230 )"},
-                {SECTIONS_LOG_HOVER,
-                    "rgb( 255, 188, 218 )"}, // 196, 7, 93
-                {SECTIONS_VIEW_HOVER,
-                    "rgb( 184, 255, 203 )"}, // 0, 226, 60
-                {SECTIONS_CONF_HOVER,
-                    "rgb( 179, 228, 255 )"}, // 0, 165, 255
-                {BORDER_PRIMARY,
-                    "rgb( 230, 230, 230 )"},
-                {BORDER_SECONDARY,
-                    "rgb( 124, 119, 119 )"},
-                {BORDER_TERTIARY,
-                    "rgb( 88, 80, 80 )"},
-                {SEPARATORS_BASE,
-                    "rgb( 88, 80, 80 )"},
-                {SEPARATORS_BORDER,
-                    "rgb( 250, 250, 255 )"},
-                {BUTTONS_BASE,
-                    "rgb( 99, 188, 255 )"},
-                {BUTTONS_BASE_HOVER,
-                    "rgb( 123, 201, 255 )"},
-                {BUTTONS_BASE_FLAT,
-                    "rgb( 200, 219, 238 )"},
-                {BUTTONS_BASE_DISABLED,
-                    "rgb( 200, 219, 238 )"},
-                {HELP_BUTTONS_BASE,
-                    "rgb( 230, 80, 80 )"},
-                {HELP_BUTTONS_BASE_HOVER,
-                    "rgb( 230, 112, 80 )"},
-                {WEB_SERVERS_BUTTONS_BASE,
-                    "rgb( 146, 234, 146 )"},
-                {WEB_SERVERS_BUTTONS_BASE_FLAT,
-                    "transparent"},
-                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
-                    "rgb( 246, 246, 246 )"},
-                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
-                    "rgb( 177, 177, 177 )"},
-                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
-                    "rgb( 146, 234, 146 )"},
-                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
-                    "rgb( 92, 92, 92 )"},
-                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
-                    "rgb( 40, 31, 7 )"},
-                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
-                    "rgb( 192, 192, 192 )"},
-                {STATS_SWITCH_BUTTONS,
-                    "rgb( 230, 80, 80 )"},
-                {STATS_SWITCH_BUTTONS_FLAT,
-                    "rgb( 250, 250, 255 )"},
-                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
-                    "rgb( 230, 230, 230 )"},
-                {STATS_GLOBALS_FRAMES,
-                    "rgb( 242, 242, 242 )"},
-                {BOXES_BASE_PRIMARY,
-                    "rgb( 230, 230, 230 )"},
-                {BOXES_BASE_SECONDARY,
-                    "rgb( 220, 220, 220 )"},
-                {BOXES_BASE_DISABLED,
-                    "rgb( 200, 200, 200 )"},
-                {BOXES_BASE_SELECTION,
-                    "rgb( 123, 201, 255 )"},
-                {BOXES_DECO,
-                    "rgb( 99, 188, 255 )"},
-                {LINEDIT_TEXT,
-                    "rgb( 88, 80, 80 )"},
-                {LINEDIT_BASE,
-                    "rgb( 236, 236, 236 )"},
-                {LINEDIT_BASE_FOCUS,
-                    "rgb( 230, 230, 230 )"},
-                {LINEDIT_BASE_SELECTION,
-                    "rgb( 197, 191, 185 )"},
-                {LINEDIT_BASE_DISABLED,
-                    "rgb( 247, 247, 247 )"},
-                {TABLES_HEADER,
-                    "rgb( 220, 220, 220 )"},
-                {TABLES_HEADER_HOVER,
-                    "rgb( 201, 239, 255 )"},
-                {TABLES_HEADER_SEPARATOR,
-                    "rgb( 170, 170, 170 )"},
-                {TABLES_BASE,
-                    "rgb( 242, 242, 242 )"},
-                {TABLES_BASE_DISABLED,
-                    "rgb( 247, 247, 247 )"},
-                {TABLES_BASE_SELECTION,
-                    "rgb( 201, 239, 255 )"},
-                {TABLES_GRIDLINE,
-                    "rgb( 170, 170, 170 )"},
-                {TABLES_TEXT_SELECTION,
-                    "rgb( 22, 11, 0 )"},
-                {TABLES_DECO,
-                    "rgb( 99, 188, 255 )"},
-                {CHARTS_CONTOUR,
-                    "rgb( 220, 220, 220 )"},
-                {TEXTBROWSER_TEXT,
-                    "rgb( 88, 80, 80 )"},
-                {TEXTBROWSER_BASE,
-                    "rgb( 236, 236, 236 )"},
-                {TEXTBROWSER_BORDER,
-                    "rgb( 236, 236, 236 )"},
-                {TEXTBROWSER_TEXT_SELECTION,
-                    "rgb( 68, 60, 60 )"},
-                {TEXTBROWSER_BASE_SELECTION,
-                    "rgb( 207, 201, 195 )"},
-                {SCROLLBAR_BASE,
-                    "transparent"},
-                {SCROLLBAR_HANDLER,
-                    "rgb( 40, 185, 40 )"},
-                {SCROLLBAR_CONTROLS,
-                    "transparent"},
-                {SLIDER_HANDLER,
-                    "rgb( 100, 91, 87 )"},
-                {SLIDER_BAR_ACTIVE,
-                    "rgb( 99, 188, 255 )"},
-                {SLIDER_BAR_INACTIVE,
-                    "rgb( 210, 203, 199 )"},
-                {SLIDER_BAR_ACTIVE_BORDER,
-                    "rgb( 123, 201, 255 )"},
-                {SLIDER_HANDLER_BORDER,
-                    "rgb( 220, 211, 187 )"},
-                {SLIDER_HANDLER_BORDER_HOVER,
-                    "rgb( 123, 201, 255 )"},
-                {BWLISTS_BUTTONS_BASE,
-                    "rgb( 99, 188, 255 )"},
-                {BWLISTS_BUTTONS_BASE_HOVER,
-                    "rgb( 123, 201, 255 )"},
-                {BWLISTS_BUTTONS_BASE_DISABLED,
-                    "rgb( 200, 219, 238 )"},
-                {BWLISTS_BUTTONS_BASE_FLAT,
-                    "rgb( 247, 247, 247 )"},
-                {CONFIGS_TREE_BASE,
-                    "rgb( 245, 245, 247 )"}
-            };
-            break;
-        case 2: // dark
-            style_map = {
-                {TEXT_PRIMARY,
-                    "rgb( 248, 248, 248 )"},
-                {TEXT_DISABLED,
-                    "rgb( 128, 128, 128 )"},
-                {TOOLTIPS_BASE,
-                    "rgb( 160, 160, 160 )"},
-                {TOOLTIPS_TEXT,
-                    "rgb( 32, 32, 32 )"},
-                {TOOLTIPS_BORDER,
-                    "rgb( 144, 144, 144 )"},
-                {MENU_TEXT,
-                    "rgb( 174, 174, 174 )"},
-                {MENU_BASE,
-                    "rgb( 49, 54, 58 )"},
-                {MENU_BASE_HOVER,
-                    "rgb( 40, 45, 49 )"},
-                {MENU_DROPDOWN_BASE,
-                    "rgb( 144, 144, 144 )"},
-                {MENU_DROPDOWN_BASE_SELECTION,
-                    "rgb( 128, 128, 128 )"},
-                {MENU_DROPDOWN_TEXT,
-                    "rgb( 13, 14, 15 )"},
-                {WINDOW_BASE_PRIMARY,
-                    "rgb( 13, 14, 15 )"},
-                {WINDOW_BASE_SECONDARY,
-                    "rgb( 27, 30, 33 )"},
-                {SECTIONS_LOG_HOVER,
-                    "rgb( 82, 0, 37 )"}, // 196, 7, 93
-                {SECTIONS_VIEW_HOVER,
-                    "rgb( 0, 69, 18 )"}, // 0, 226, 60
-                {SECTIONS_CONF_HOVER,
-                    "rgb( 0, 57, 89 )"}, // 0, 165, 255
-                {BORDER_PRIMARY,
-                    "rgb( 40, 45, 49 )"},
-                {BORDER_SECONDARY,
-                    "rgb( 92, 92, 92 )"},
-                {BORDER_TERTIARY,
-                    "rgb( 128, 128, 128 )"},
-                {SEPARATORS_BASE,
-                    "rgb( 96, 96, 96 )"},
-                {SEPARATORS_BORDER,
-                    "rgb( 13, 14, 15 )"},
-                {BUTTONS_BASE,
-                    "rgb( 10, 155, 10 )"},
-                {BUTTONS_BASE_HOVER,
-                    "rgb( 33, 162, 33 )"},
-                {BUTTONS_BASE_FLAT,
-                    "rgb( 21, 71, 21 )"},
-                {BUTTONS_BASE_DISABLED,
-                    "rgb( 21, 71, 21 )"},
-                {HELP_BUTTONS_BASE,
-                    "rgb( 221, 75, 14 )"},
-                {HELP_BUTTONS_BASE_HOVER,
-                    "rgb( 221, 113, 14 )"},
-                {WEB_SERVERS_BUTTONS_BASE,
-                    "rgb( 0, 121, 115 )"},
-                {WEB_SERVERS_BUTTONS_BASE_FLAT,
-                    "transparent"},
-                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
-                    "rgb( 18, 20, 22 )"},
-                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
-                    "rgb( 54, 54, 54 )"},
-                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
-                    "rgb( 0, 121, 115 )"},
-                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
-                    "rgb( 108, 108, 108 )"},
-                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
-                    "rgb( 188, 188, 188 )"},
-                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
-                    "rgb( 42, 42, 42 )"},
-                {STATS_SWITCH_BUTTONS,
-                    "rgb( 221, 75, 14 )"},
-                {STATS_SWITCH_BUTTONS_FLAT,
-                    "rgb( 13, 14, 15 )"},
-                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
-                    "rgb( 27, 30, 33 )"},
-                {STATS_GLOBALS_FRAMES,
-                    "rgb( 29, 29, 29 )"},
-                {BOXES_BASE_PRIMARY,
-                    "rgb( 39, 42, 45 )"},
-                {BOXES_BASE_SECONDARY,
-                    "rgb( 45, 48, 51 )"},
-                {BOXES_BASE_DISABLED,
-                    "rgb( 27, 30, 33 )"},
-                {BOXES_BASE_SELECTION,
-                    "rgb( 33, 162, 33 )"},
-                {BOXES_DECO,
-                    "rgb( 10, 155, 10 )"},
-                {LINEDIT_TEXT,
-                    "rgb( 210, 210, 210 )"},
-                {LINEDIT_BASE,
-                    "rgb( 41, 44, 44 )"},
-                {LINEDIT_BASE_FOCUS,
-                    "rgb( 57, 60, 60 )"},
-                {LINEDIT_BASE_SELECTION,
-                    "rgb( 47, 99, 47 )"},
-                {LINEDIT_BASE_DISABLED,
-                    "rgb( 18, 20, 22 )"},
-                {TABLES_HEADER,
-                    "rgb( 50, 52, 50 )"},
-                {TABLES_HEADER_HOVER,
-                    "rgb( 43, 82, 43 )"},
-                {TABLES_HEADER_SEPARATOR,
-                    "rgb( 80, 80, 80 )"},
-                {TABLES_BASE,
-                    "rgb( 29, 29, 29 )"},
-                {TABLES_BASE_DISABLED,
-                    "rgb( 18, 20, 22 )"},
-                {TABLES_BASE_SELECTION,
-                    "rgb( 43, 82, 43 )"},
-                {TABLES_GRIDLINE,
-                    "rgb( 80, 80, 80 )"},
-                {TABLES_TEXT_SELECTION,
-                    "rgb( 248, 248, 248 )"},
-                {TABLES_DECO,
-                    "rgb( 10, 155, 10 )"},
-                {CHARTS_CONTOUR,
-                    "rgb( 50, 52, 50 )"},
-                {TEXTBROWSER_TEXT,
-                    "rgb( 210, 210, 210 )"},
-                {TEXTBROWSER_BASE,
-                    "rgb( 32, 32, 32 )"},
-                {TEXTBROWSER_BORDER,
-                    "rgb( 32, 32, 32 )"},
-                {TEXTBROWSER_TEXT_SELECTION,
-                    "rgb( 248, 248, 248 )"},
-                {TEXTBROWSER_BASE_SELECTION,
-                    "rgb( 64, 64, 64 )"},
-                {SCROLLBAR_BASE,
-                    "transparent"},
-                {SCROLLBAR_HANDLER,
-                    "rgb( 69, 177, 255 )"},
-                {SCROLLBAR_CONTROLS,
-                    "transparent"},
-                {SLIDER_HANDLER,
-                    "rgb( 112, 112, 112 )"},
-                {SLIDER_BAR_ACTIVE,
-                    "rgb( 10, 155, 10 )"},
-                {SLIDER_BAR_INACTIVE,
-                    "rgb( 64, 64, 64 )"},
-                {SLIDER_BAR_ACTIVE_BORDER,
-                    "rgb( 33, 162, 33 )"},
-                {SLIDER_HANDLER_BORDER,
-                    "rgb( 128, 128, 128 )"},
-                {SLIDER_HANDLER_BORDER_HOVER,
-                    "rgb( 33, 162, 33 )"},
-                {BWLISTS_BUTTONS_BASE,
-                    "rgb( 10, 155, 10 )"},
-                {BWLISTS_BUTTONS_BASE_HOVER,
-                    "rgb( 33, 162, 33 )"},
-                {BWLISTS_BUTTONS_BASE_DISABLED,
-                    "rgb( 21, 71, 21 )"},
-                {BWLISTS_BUTTONS_BASE_FLAT,
-                    "rgb( 18, 20, 22 )"},
-                {CONFIGS_TREE_BASE,
-                    "rgb( 20, 21, 22 )"}
-            };
-            break;
-        default:
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(theme_id), true );
-            break;
-    }
-    makeStyleSheet( stylesheet, style_map, icons_theme );
 }
 
 } // namespace StyleSec

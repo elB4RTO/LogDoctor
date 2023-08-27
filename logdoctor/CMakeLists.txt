@@ -112,21 +112,24 @@ set(PROJECT_SOURCES
     modules/crapup/crapup.ui
     modules/crapup/crapup.h
     modules/crapup/crapup.cpp
+    modules/crapup/modules/stylesheets.h
+    modules/crapup/modules/stylesheets.cpp
 
     modules/crapinfo/crapinfo.ui
     modules/crapinfo/crapinfo.h
     modules/crapinfo/crapinfo.cpp
+    modules/crapinfo/modules/stylesheets.h
+    modules/crapinfo/modules/stylesheets.cpp
 
     tools/crapnote/crapnote.ui
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
 
-    games/games.h
-    games/games.cpp
-
     games/crisscross/crisscross.ui
     games/crisscross/game.h
     games/crisscross/game.cpp
+    games/crisscross/modules/stylesheets.h
+    games/crisscross/modules/stylesheets.cpp
 
     games/snake/snake.ui
     games/snake/game.h
@@ -135,6 +138,8 @@ set(PROJECT_SOURCES
     games/snake/snake.cpp
     games/snake/food.h
     games/snake/food.cpp
+    games/snake/modules/stylesheets.h
+    games/snake/modules/stylesheets.cpp
 
     resources/resources.qrc
     ${TS_FILES}
