@@ -33,6 +33,6 @@ var searchData=
   ['countdays_30',['countDays',['../classDbQuery.html#aa3e09b4a90bfba6554c1807d291bea54',1,'DbQuery']]],
   ['countmonths_31',['countMonths',['../classDbQuery.html#a071c26b502f7b2662ba816f263f665ed',1,'DbQuery']]],
   ['crapinfo_32',['Crapinfo',['../classCrapinfo.html#a3707760e62f63ebd1f6ecf34f3d3191d',1,'Crapinfo']]],
-  ['crapup_33',['Crapup',['../classCrapup.html#ab004aebc9dd40cc330e522f78f19471c',1,'Crapup']]],
-  ['crisscrossstylesheet_34',['crisscrossStyleSheet',['../namespaceGameSec.html#a4c9accc1b22b4d47dbe6f4b6f52c0985',1,'GameSec']]]
+  ['crapup_33',['Crapup',['../classCrapup.html#a9c805a64ed0bff0c50b73f2ac4e4bc05',1,'Crapup']]],
+  ['crisscrossstylesheet_34',['crisscrossStyleSheet',['../namespaceGameSec.html#a697283d3fee01ba2dc11b8640b3d44a5',1,'GameSec']]]
 ];

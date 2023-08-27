@@ -28,7 +28,7 @@ var searchData=
   ['setwidelinesusage_25',['setWideLinesUsage',['../classTextBrowser.html#a4a15c0db1622bcd312d29f1900e4428c',1,'TextBrowser']]],
   ['shouldworkasync_26',['shouldWorkAsync',['../classCraplog.html#a9805c711a96ecb2b2e781911a119d7e4',1,'Craplog']]],
   ['size_27',['size',['../classLogFile.html#a3bdf3d39e71e0c347b8552c28eb37866',1,'LogFile']]],
-  ['snakestylesheet_28',['snakeStyleSheet',['../namespaceGameSec.html#a697ca81c4b2b3ef8f8fd0b5887da6085',1,'GameSec']]],
+  ['snakestylesheet_28',['snakeStyleSheet',['../namespaceGameSec.html#a4ac4e22db3bc225cd8d6295aea9b09d5',1,'GameSec']]],
   ['spawn_29',['spawn',['../classFood.html#a4322893c4935e218345e6373082f2ca6',1,'Food']]],
   ['split_30',['split',['../namespaceStringOps.html#adf152a1f72f20e4c6741d8e54f2945fb',1,'StringOps::split(std::vector&lt; std::string &gt; &amp;list, const std::string &amp;target_str, std::string_view separator)'],['../namespaceStringOps.html#ac6e367ab487e4c7b88988b452a454118',1,'StringOps::split(std::vector&lt; std::string &gt; &amp;list, const std::string &amp;target_str, const char separator=&apos;\n&apos;)']]],
   ['splitrip_31',['splitrip',['../namespaceStringOps.html#a091e46362ee6e0e1d196a9c5a4a47ac3',1,'StringOps::splitrip(std::vector&lt; std::string &gt; &amp;list, const std::string &amp;target_str, std::string_view separator, std::string_view strips=&quot; \n\t\b\r\v&quot;)'],['../namespaceStringOps.html#ac488bfd901b244955372575c89113cf1',1,'StringOps::splitrip(std::vector&lt; std::string &gt; &amp;list, const std::string &amp;target_str, const char separator=&apos;\n&apos;, std::string_view strips=&quot; \n\t\b\r\v&quot;)']]],
