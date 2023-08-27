@@ -974,10 +974,6 @@ please follow the instruction on the repository page</source>
         <translation type="unfinished">全般的</translation>
     </message>
     <message>
-        <source>General settings</source>
-        <translation type="unfinished">一般設定</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation type="unfinished">窓</translation>
     </message>
@@ -996,10 +992,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Theme</source>
         <translation type="unfinished">テーマ</translation>
-    </message>
-    <message>
-        <source>None (System)</source>
-        <translation type="unfinished">なし（システム）</translation>
     </message>
     <message>
         <source>Dark</source>
@@ -1094,10 +1086,6 @@ please follow the instruction on the repository page</source>
         <translation type="unfinished">チャート</translation>
     </message>
     <message>
-        <source>Default (Light)</source>
-        <translation type="unfinished">デフォルト（ライト）</translation>
-    </message>
-    <message>
         <source>Sand</source>
         <translation type="unfinished">砂</translation>
     </message>
@@ -1170,10 +1158,6 @@ please follow the instruction on the repository page</source>
         <translation type="unfinished">ログ</translation>
     </message>
     <message>
-        <source>Logs related settings</source>
-        <translation type="unfinished">ログ関連の設定</translation>
-    </message>
-    <message>
         <source>Defaults</source>
         <translation type="unfinished">デフォルト</translation>
     </message>
@@ -1184,10 +1168,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Control</source>
         <translation type="unfinished">コントロール</translation>
-    </message>
-    <message>
-        <source>Options about the log files usage control</source>
-        <translation type="unfinished">ログファイルの使用制御に関するオプション</translation>
     </message>
     <message>
         <source>Usage control</source>
@@ -1208,10 +1188,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Apache2</source>
         <translation type="unfinished">アパッチ2</translation>
-    </message>
-    <message>
-        <source>Configure Apache2 specific options</source>
-        <translation type="unfinished">Apache2 固有のオプションを構成する</translation>
     </message>
     <message>
         <source>Logs folder</source>
@@ -1296,16 +1272,8 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation type="unfinished">ニンクス</translation>
     </message>
     <message>
-        <source>Configure Nginx specific options</source>
-        <translation type="unfinished">Nginx 固有のオプションを構成する</translation>
-    </message>
-    <message>
         <source>IIS</source>
         <translation type="unfinished">IIS</translation>
-    </message>
-    <message>
-        <source>Configure IIS specific options</source>
-        <translation type="unfinished">IIS 固有のオプションを構成する</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1408,28 +1376,12 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">すべてのファイルを選択/選択解除</translation>
     </message>
     <message>
-        <source>Candy</source>
-        <translation type="unfinished">あめ</translation>
-    </message>
-    <message>
-        <source>Herb</source>
-        <translation type="unfinished">ハーブ</translation>
-    </message>
-    <message>
-        <source>Powder</source>
-        <translation type="unfinished">粉</translation>
-    </message>
-    <message>
         <source>warnlist</source>
         <translation type="unfinished">警告リスト</translation>
     </message>
     <message>
         <source>blacklist</source>
         <translation type="unfinished">ブラックリスト</translation>
-    </message>
-    <message>
-        <source>Ash</source>
-        <translation type="unfinished">灰</translation>
     </message>
     <message>
         <source>Games</source>
@@ -1452,10 +1404,6 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">スネークをプレイ</translation>
     </message>
     <message>
-        <source>Auto (Default)</source>
-        <translation type="unfinished">自動 (デフォルト)</translation>
-    </message>
-    <message>
         <source>Light</source>
         <translation type="unfinished">光</translation>
     </message>
@@ -1468,6 +1416,18 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     <message>
         <source>Icons</source>
         <translation type="unfinished">アイコン</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation type="unfinished">パス</translation>
+    </message>
+    <message>
+        <source>Native</source>
+        <translation type="unfinished">生れつき</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation type="unfinished">自動</translation>
     </message>
 </context>
 <context>
