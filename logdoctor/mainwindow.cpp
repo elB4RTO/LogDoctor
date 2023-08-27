@@ -4320,6 +4320,25 @@ void MainWindow::on_box_ConfCharts_Theme_currentIndexChanged(int index)
 {
     this->charts_theme_id = index;
     this->refreshChartsPreview();
+
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_MakeStats_Size );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsWarn );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsSpeed );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsCount );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsDay );
+    ColorSec::applyChartTheme(
+        this->charts_theme_id, this->FONTS,
+        this->ui->chart_StatsRelat );
 }
 void MainWindow::refreshChartsPreview()
 {
@@ -4337,20 +4356,41 @@ void MainWindow::refreshChartsPreview()
     QBarSet* bars_6{ new QBarSet( "" ) };
     bars_6->setColor( col );
 
+    const auto random_value = [] () -> int {
+        return (rand()%10 > 8) ? rand()%100 : (rand()%10 > 6) ? rand()%50 : rand()%30;
+    };
     int aux, max{0};
     for ( int i{0}; i<24; i++ ) {
-        aux = rand() %100; *bars_1 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_2 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_3 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_4 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_5 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_6 << aux;
-        if ( aux > max ) { max = aux; }
+        aux = random_value();
+        *bars_1 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_2 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_3 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_4 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_5 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_6 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
     }
 
     QBarSeries* bars{ new QBarSeries() };
