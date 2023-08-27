@@ -287,24 +287,24 @@ void CrissCross::AI_playTurn()
 void CrissCross::AI_updateWeights()
 {
     // reset the weights
-    for ( int i=0; i<9; i++ ) {
+    for ( size_t i{0ul}; i<9ul; i++ ) {
         this->board_weights[ i ] = 0;
     }
     // calculate the new weights
     unsigned win_streak, lose_streak;
-    std::vector<unsigned> empty_tiles;
+    std::vector<size_t> empty_tiles (3);
     for ( const auto& sequence : this->sequences ) {
         // reset data
         win_streak = lose_streak = 0;
         empty_tiles.clear();
         // check the tiles in the sequence
-        for ( const auto& index : sequence ) {
+        for ( const auto index : sequence ) {
             if ( this->board[ index ] == this->p_turn ) {
                 win_streak ++;
             } else if ( this->board[ index ] > 0 ) {
                 lose_streak ++;
             } else {
-                empty_tiles.push_back( index );
+                empty_tiles.emplace_back( std::move(index) );
             }
         }
         // set the new weight for the empty tiles
@@ -317,7 +317,6 @@ void CrissCross::AI_updateWeights()
             }
         }
     }
-
 }
 
 const unsigned CrissCross::AI_makeChoice() const

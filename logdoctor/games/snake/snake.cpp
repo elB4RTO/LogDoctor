@@ -951,7 +951,7 @@ const unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y
         };
 
 
-        const auto tried_already = [&] (const unsigned side_, const unsigned front_, const bool update)
+        const auto tried_already = [&] (const unsigned side_, const unsigned front_, const bool update) -> bool
         {
             bool tried{ false };
             unsigned x, y;
@@ -985,7 +985,7 @@ const unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y
         };
 
 
-        const auto tile_blocked = [&] (const unsigned side_, const unsigned front_)
+        const auto tile_blocked = [&] (const unsigned side_, const unsigned front_) -> bool
         {
             bool blocked{ false };
             unsigned x, y, x_, y_;
