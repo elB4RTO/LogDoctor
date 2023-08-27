@@ -17,11 +17,6 @@ DialogBool::DialogBool( const QString& title, const QString& text, QWidget *pare
     this->adjustSize();
 }
 
-DialogBool::~DialogBool()
-{
-    delete ui;
-}
-
 
 void DialogBool::on_button_NO_clicked()
 {

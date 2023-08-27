@@ -14,11 +14,6 @@ Craphelp::Craphelp(QWidget *parent)
     ui->setupUi(this);
 }
 
-Craphelp::~Craphelp()
-{
-    delete ui;
-}
-
 
 const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int scheme_id ) const
 {

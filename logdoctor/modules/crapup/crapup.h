@@ -63,7 +63,7 @@ private slots:
 
 
 private:
-    Ui::Crapup *ui;
+    QSharedPointer<Ui::Crapup> ui;
 
     QPixmap img_checking;
 

@@ -284,11 +284,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->waiter_timer->start(250);
 }
 
-MainWindow::~MainWindow()
-{
-    delete this->ui;
-}
-
 void MainWindow::closeEvent( QCloseEvent *event )
 {
     // save actual configurations

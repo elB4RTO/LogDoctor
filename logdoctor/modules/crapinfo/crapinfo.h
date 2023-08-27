@@ -28,10 +28,9 @@ public:
         \param parent The parent Widget
     */
     explicit Crapinfo( const int window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget* parent=nullptr );
-    ~Crapinfo();
 
 private:
-    Ui::Crapinfo *ui;
+    QSharedPointer<Ui::Crapinfo> ui;
 };
 
 #endif // CRAPINFO_H

@@ -26,7 +26,6 @@ public:
         \param parent The parent Widget
     */
     explicit DialogMsg( const QString& title, const QString& text, const QString& additional, const int type, QWidget *parent=nullptr );
-    ~DialogMsg();
 
 private slots:
 
@@ -37,7 +36,7 @@ private slots:
     void on_button_Ok_clicked();
 
 private:
-    Ui::DialogMsg* ui;
+    QSharedPointer<Ui::DialogMsg> ui;
 
     bool additional_shown{ false };
 

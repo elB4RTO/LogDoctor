@@ -31,11 +31,6 @@ DialogDia::DialogDia( const QString& title, const QString& text, const bool igno
     this->adjustSize();
 }
 
-DialogDia::~DialogDia()
-{
-    delete ui;
-}
-
 void DialogDia::on_button_IGNORE_clicked()
 {
     this->done( 2 );

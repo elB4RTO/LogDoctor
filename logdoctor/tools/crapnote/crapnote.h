@@ -18,7 +18,6 @@ class Crapnote : public QWidget
 
 public:
     explicit Crapnote( QWidget* parent=nullptr );
-    ~Crapnote();
 
     //! Sets the given font
     void setTextFont( const QFont& font );
@@ -40,7 +39,7 @@ private slots:
 
 
 private:
-    Ui::Crapnote* ui;
+    QSharedPointer<Ui::Crapnote> ui;
 
     int font_size{ 17 };
 };

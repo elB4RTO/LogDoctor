@@ -39,7 +39,6 @@ class MainWindow : public QMainWindow
 public:
 
     explicit MainWindow( QWidget* parent=nullptr );
-    ~MainWindow();
 
 
 signals:
@@ -537,7 +536,7 @@ private slots:
 
 
 private:
-    Ui::MainWindow* ui;
+    QSharedPointer<Ui::MainWindow> ui;
 
     // current version of LogDoctor
     const float version{ 2.05 };
@@ -853,7 +852,7 @@ private:
     //// CRAPHELP ////
     //////////////////
 
-    QScopedPointer<Craphelp> craphelp;
+    QSharedPointer<Craphelp> craphelp;
 
     void showHelp( const std::string& file_name );
 
@@ -862,30 +861,30 @@ private:
     //// CRAPUP ////
     ////////////////
 
-    QScopedPointer<Crapup> crapup;
+    QSharedPointer<Crapup> crapup;
 
 
     //////////////////
     //// CRAPNOTE ////
     //////////////////
 
-    QScopedPointer<Crapnote> crapnote;
+    QSharedPointer<Crapnote> crapnote;
 
 
     //////////////////
     //// CRAPINFO ////
     //////////////////
 
-    QScopedPointer<Crapinfo> crapinfo;
+    QSharedPointer<Crapinfo> crapinfo;
 
 
     ///////////////////
     //// CRAPGAMES ////
     ///////////////////
 
-    QScopedPointer<CrissCross> crisscross;
+    QSharedPointer<CrissCross> crisscross;
 
-    QScopedPointer<SnakeGame> snake;
+    QSharedPointer<SnakeGame> snake;
 
 };
 

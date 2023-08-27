@@ -42,11 +42,6 @@ CrissCross::CrissCross( const int theme_id, QWidget* parent )
 
 }
 
-CrissCross::~CrissCross()
-{
-    delete ui;
-}
-
 
 /////////////////////
 //// BOARD TILES ////

@@ -25,7 +25,6 @@ public:
         \param parent The parent Widget
     */
     explicit DialogBool( const QString& title, const QString& text, QWidget *parent=nullptr );
-    ~DialogBool();
 
 private slots:
 
@@ -36,7 +35,7 @@ private slots:
     void on_button_YES_clicked();
 
 private:
-    Ui::DialogBool* ui;
+    QSharedPointer<Ui::DialogBool> ui;
 };
 
 #endif // DIALOGBOOL_H

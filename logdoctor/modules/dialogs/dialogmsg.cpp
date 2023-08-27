@@ -51,11 +51,6 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
     this->adjustSize();
 }
 
-DialogMsg::~DialogMsg()
-{
-    delete ui;
-}
-
 
 void DialogMsg::on_button_ShowAdditional_clicked()
 {

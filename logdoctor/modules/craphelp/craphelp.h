@@ -20,7 +20,6 @@ class Craphelp : public QWidget
 
 public:
     explicit Craphelp( QWidget* parent=nullptr );
-    ~Craphelp();
 
     //! Provides help about log formats
     /*!
@@ -41,7 +40,7 @@ public:
     void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const;
 
 private:
-    Ui::Craphelp* ui;
+    QSharedPointer<Ui::Craphelp> ui;
 
     const std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
 

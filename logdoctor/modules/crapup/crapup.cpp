@@ -56,10 +56,6 @@ Crapup::Crapup( const int window_theme_id, const QString& icons_theme, QWidget* 
 
 Crapup::~Crapup()
 {
-    if ( this->ui != nullptr ) {
-        delete this->ui;
-        this->ui = nullptr;
-    }
     if ( !this->reply.isNull() ) {
         this->deleteReply();
     }

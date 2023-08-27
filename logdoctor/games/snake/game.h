@@ -27,7 +27,6 @@ class SnakeGame : public QWidget
 
 public:
     explicit SnakeGame( const int theme_id, const QFont& term_font, QWidget* parent=nullptr );
-    ~SnakeGame();
 
 
 private slots:
@@ -43,7 +42,7 @@ private slots:
 
 
 private:
-    Ui::SnakeGame* ui;
+    QSharedPointer<Ui::SnakeGame> ui;
 
     ////////////////////
     //// KEY EVENTS ////

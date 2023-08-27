@@ -21,7 +21,6 @@ class CrissCross : public QWidget
 
 public:
     explicit CrissCross( const int theme_id, QWidget* parent=nullptr );
-    ~CrissCross();
 
 
 private slots:
@@ -45,7 +44,7 @@ private slots:
 
 
 private:
-    Ui::CrissCross* ui;
+    QSharedPointer<Ui::CrissCross> ui;
 
     // player turn
     unsigned p_turn{ 1 };

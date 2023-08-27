@@ -37,11 +37,6 @@ SnakeGame::SnakeGame( const int theme_id, const QFont& term_font, QWidget* paren
     this->ui->view_Field->setScene( this->field_scene.get() );
 }
 
-SnakeGame::~SnakeGame()
-{
-    delete this->ui;
-}
-
 void SnakeGame::closeEvent( QCloseEvent* event )
 {
     if (this->game_loop) {

@@ -51,8 +51,3 @@ Crapinfo::Crapinfo( const int window_theme_id, const QString& version, const QSt
     this->ui->inLine_DataPath->setText( logdoc_path );
     this->ui->inLine_DataPath->setCursorPosition( 0 );
 }
-
-Crapinfo::~Crapinfo()
-{
-    delete ui;
-}
