@@ -9,6 +9,33 @@
 #include <QFontDatabase>
 
 
+namespace /*private*/
+{
+
+enum StyleId : uint32_t {
+    TEXT,
+    TEXT_UNSELECTED,
+    WINDOW_PRIMARY,
+    WINDOW_SECONDARY,
+    BORDER,
+    BORDER_HOVER,
+    BORDER_UNSELECTED,
+    TOOLBOX_TAB_BASE,
+    TOOLBOX_TAB_BASE_SELECTED,
+    SCROLLBAR_BASE,
+    SCROLLBAR_HANDLER,
+    SCROLLBAR_CONTROLS,
+    LINEDIT_TEXT,
+    LINEDIT_BASE,
+    LINEDIT_TEXT_SELECTION,
+    LINEDIT_BASE_SELECTION,
+    PATHS_FRAME_BASE,
+    SEPARATORS
+};
+
+} // namespace (private)
+
+
 Crapinfo::Crapinfo( const int window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapinfo }
@@ -49,87 +76,87 @@ Crapinfo::~Crapinfo()
 
 void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
 {
-    std::unordered_map<std::string, QString> style;
+    std::unordered_map<StyleId, QString> style;
     switch ( theme_id ) {
         case 0: // native
             break;
         case 1: // light
             style = {
-                {"text",
+                {TEXT,
                     "rgb( 22, 11, 0 )"},
-                {"text_unselected",
+                {TEXT_UNSELECTED,
                     "rgb( 64, 60, 60 )"},
-                {"window_primary",
+                {WINDOW_PRIMARY,
                     "rgb( 250, 250, 255 )"},
-                {"window_secondary",
+                {WINDOW_SECONDARY,
                     "rgb( 230, 230, 230 )"},
-                {"border",
+                {BORDER,
                     "rgb( 210, 210, 210 )"},
-                {"border_hover",
+                {BORDER_HOVER,
                     "rgb( 124, 119, 119 )"},
-                {"border_unselected",
+                {BORDER_UNSELECTED,
                     "transparent"},
-                {"toolbox_tab_base",
+                {TOOLBOX_TAB_BASE,
                     "rgb( 210, 210, 210 )"},
-                {"toolbox_tab_base_selected",
+                {TOOLBOX_TAB_BASE_SELECTED,
                     "rgb( 240, 240, 245 )"},
-                {"scrollbar_base",
+                {SCROLLBAR_BASE,
                     "rgb( 250, 250, 255 )"},
-                {"scrollbar_handler",
+                {SCROLLBAR_HANDLER,
                     "rgb( 40, 185, 40 )"},
-                {"scrollbar_controls",
+                {SCROLLBAR_CONTROLS,
                     "transparent"},
-                {"linedit_text",
+                {LINEDIT_TEXT,
                     "rgb( 88, 80, 80 )"},
-                {"linedit_base",
+                {LINEDIT_BASE,
                     "rgb( 236, 236, 236 )"},
-                {"linedit_text_selection",
-                    "rgb( 10, 10, 10 )"}, //!!!
-                {"linedit_base_selection",
+                {LINEDIT_TEXT_SELECTION,
+                    "rgb( 10, 10, 10 )"},
+                {LINEDIT_BASE_SELECTION,
                     "rgb( 197, 191, 185 )"},
-                {"paths_frame_base",
+                {PATHS_FRAME_BASE,
                     "rgb( 240, 240, 245 )"},
-                {"separators",
+                {SEPARATORS,
                     "rgb( 88, 80, 80 )"}
             };
             break;
         case 2: // dark
             style = {
-                {"text",
+                {TEXT,
                     "rgb( 248, 248, 248 )"},
-                {"text_unselected",
+                {TEXT_UNSELECTED,
                     "rgb( 192, 192, 192 )"},
-                {"window_primary",
+                {WINDOW_PRIMARY,
                     "rgb( 13, 14, 15 )"},
-                {"window_secondary",
+                {WINDOW_SECONDARY,
                     "rgb( 27, 30, 33 )"},
-                {"border",
+                {BORDER,
                     "rgb( 40, 45, 49 )"},
-                {"border_hover",
+                {BORDER_HOVER,
                     "rgb( 64, 64, 64 )"},
-                {"border_unselected",
+                {BORDER_UNSELECTED,
                     "transparent"},
-                {"toolbox_tab_base",
+                {TOOLBOX_TAB_BASE,
                     "rgb( 21, 23, 25 )"},
-                {"toolbox_tab_base_selected",
+                {TOOLBOX_TAB_BASE_SELECTED,
                     "rgb( 17, 18, 19 )"},
-                {"scrollbar_base",
+                {SCROLLBAR_BASE,
                     "transparent"},
-                {"scrollbar_handler",
+                {SCROLLBAR_HANDLER,
                     "rgb( 69, 177, 255 )"},
-                {"scrollbar_controls",
+                {SCROLLBAR_CONTROLS,
                     "transparent"},
-                {"linedit_text",
+                {LINEDIT_TEXT,
                     "rgb( 210, 210, 210 )"},
-                {"linedit_base",
+                {LINEDIT_BASE,
                     "rgb( 41, 44, 44 )"},
-                {"linedit_text_selection",
+                {LINEDIT_TEXT_SELECTION,
                     "rgb( 245, 245, 245 )"},
-                {"linedit_base_selection",
+                {LINEDIT_BASE_SELECTION,
                     "rgb( 47, 99, 47 )"},
-                {"paths_frame_base",
+                {PATHS_FRAME_BASE,
                     "rgb( 32, 35, 37 )"},
-                {"separators",
+                {SEPARATORS,
                     "rgb( 96, 96, 96 )"}
             };
             break;
@@ -140,60 +167,60 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
     if ( theme_id != 0 ) {
         stylesheet =
             "QWidget#Crapinfo {"
-            "   color: "+style.at("text")+";"
-            "   background-color: "+style.at("window_secondary")+";"
+            "   color: "+style.at(TEXT)+";"
+            "   background-color: "+style.at(WINDOW_SECONDARY)+";"
             "}"
             "QFrame {"
             "   border: 0px;"
             "   background-color: transparent;"
             "}"
             "QLabel {"
-            "   color: "+style.at("text")+";"
+            "   color: "+style.at(TEXT)+";"
             "}"
             "QPushButton:pressed {"
-            "   background-color: "+style.at("window_primary")+";"
+            "   background-color: "+style.at(WINDOW_PRIMARY)+";"
             "}"
             "QWidget#page_LogDoc,"
             "QWidget#page_Paths,"
             "QWidget#scrollAreaContents_LogDoc {"
-            "   border: 1px solid "+style.at("border")+";"
+            "   border: 1px solid "+style.at(BORDER)+";"
             "   border-top: 0px;"
             "   border-radius: 4px;"
             "   border-top-left-radius: 0px;"
             "   border-top-right-radius: 0px;"
-            "   background-color: "+style.at("window_primary")+";"
+            "   background-color: "+style.at(WINDOW_PRIMARY)+";"
             "}"
             "QToolBox::tab {"
-            "   border: 1px solid "+style.at("border_unselected")+";"
+            "   border: 1px solid "+style.at(BORDER_UNSELECTED)+";"
             "   border-radius: 8px;"
-            "   color: "+style.at("text_unselected")+";"
-            "   background-color: "+style.at("toolbox_tab_base")+";"
+            "   color: "+style.at(TEXT_UNSELECTED)+";"
+            "   background-color: "+style.at(TOOLBOX_TAB_BASE)+";"
             "}"
             "QToolBox::tab:!selected:hover {"
-            "   border-color: "+style.at("border_hover")+";"
-            "   color: "+style.at("text")+";"
-            "   background-color: "+style.at("toolbox_tab_base")+";"
+            "   border-color: "+style.at(BORDER_HOVER)+";"
+            "   color: "+style.at(TEXT)+";"
+            "   background-color: "+style.at(TOOLBOX_TAB_BASE)+";"
             "}"
             "QToolBox::tab:selected {"
-            "   border-color: "+style.at("border")+";"
-            "   border-top: 4px solid "+style.at("border")+";"
+            "   border-color: "+style.at(BORDER)+";"
+            "   border-top: 4px solid "+style.at(BORDER)+";"
             "   border-bottom: 0px;"
             "   border-bottom-left-radius: 0px;"
             "   border-bottom-right-radius: 0px;"
-            "   color: "+style.at("text")+";"
-            "   background-color: "+style.at("toolbox_tab_base_selected")+";"
+            "   color: "+style.at(TEXT)+";"
+            "   background-color: "+style.at(TOOLBOX_TAB_BASE_SELECTED)+";"
             "}"
             "QScrollBar {"
             "   border: 0px solid transparent;"
             "}"
             "QScrollBar:horizontal {"
             "   height: 12px;"
-            "   background-color: "+style.at("scrollbar_base")+";"
+            "   background-color: "+style.at(SCROLLBAR_BASE)+";"
             "}"
             "QScrollBar::handle:horizontal {"
             "   min-width: 16px;"
             "   margin: 5px 0px 5px 0px;"
-            "   background-color: "+style.at("scrollbar_handler")+";"
+            "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
             "}"
             "QScrollBar::handle:horizontal:hover {"
             "   margin: 4px 0px 4px 0px;"
@@ -201,12 +228,12 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "}"
             "QScrollBar:vertical {"
             "   width: 12px;"
-            "   background-color: "+style.at("scrollbar_base")+";"
+            "   background-color: "+style.at(SCROLLBAR_BASE)+";"
             "}"
             "QScrollBar::handle:vertical {"
             "   min-width: 16px;"
             "   margin: 0px 5px 0px 5px;"
-            "   background-color: "+style.at("scrollbar_handler")+";"
+            "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
             "}"
             "QScrollBar::handle:vertical:hover {"
             "   margin: 0px 4px 0px 4px;"
@@ -221,25 +248,25 @@ void Crapinfo::getStyleSheet( QString& stylesheet, const int theme_id ) const
             "QScrollBar::left-arrow,"
             "QScrollBar::right-arrow {"
             "   border: 0px;"
-            "   background-color: "+style.at("scrollbar_controls")+";"
+            "   background-color: "+style.at(SCROLLBAR_CONTROLS)+";"
             "}"
             "QLineEdit {"
             "   border-radius: 4px;"
-            "   color: "+style.at("linedit_text")+";"
-            "   selection-color: "+style.at("linedit_text_selection")+";"
-            "   background-color: "+style.at("linedit_base")+";"
-            "   selection-background-color: "+style.at("linedit_base_selection")+";"
+            "   color: "+style.at(LINEDIT_TEXT)+";"
+            "   selection-color: "+style.at(LINEDIT_TEXT_SELECTION)+";"
+            "   background-color: "+style.at(LINEDIT_BASE)+";"
+            "   selection-background-color: "+style.at(LINEDIT_BASE_SELECTION)+";"
             "}"
             "QWidget#scrollAreaContents_Paths_Executable,"
             "QWidget#scrollAreaContents_Paths_ConfigFile,"
             "QWidget#scrollAreaContents_Paths_AppData {"
             "   border-radius: 8px;"
-            "   background-color: "+style.at("paths_frame_base")+";"
+            "   background-color: "+style.at(PATHS_FRAME_BASE)+";"
             "}"
             "QFrame#gline_Version {"
-            "   border: 1px solid "+style.at("window_primary")+";"
+            "   border: 1px solid "+style.at(WINDOW_PRIMARY)+";"
             "   margin: 2px 0px 3px 0px;"
-            "   background-color: "+style.at("separators")+";"
+            "   background-color: "+style.at(SEPARATORS)+";"
             "}";
     }
 }

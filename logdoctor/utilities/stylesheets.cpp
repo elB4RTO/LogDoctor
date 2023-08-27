@@ -6,6 +6,93 @@
 #include <QString>
 
 
+namespace /*private*/
+{
+
+enum StyleId : uint32_t {
+    TEXT_PRIMARY,
+    TEXT_DISABLED,
+    TOOLTIPS_BASE,
+    TOOLTIPS_TEXT,
+    TOOLTIPS_BORDER,
+    MENU_TEXT,
+    MENU_BASE,
+    MENU_BASE_HOVER,
+    MENU_DROPDOWN_BASE,
+    MENU_DROPDOWN_BASE_SELECTION,
+    MENU_DROPDOWN_TEXT,
+    WINDOW_BASE_PRIMARY,
+    WINDOW_BASE_SECONDARY,
+    SECTIONS_LOG_HOVER,
+    SECTIONS_VIEW_HOVER,
+    SECTIONS_CONF_HOVER,
+    BORDER_PRIMARY,
+    BORDER_SECONDARY,
+    BORDER_TERTIARY,
+    SEPARATORS_BASE,
+    SEPARATORS_BORDER,
+    BUTTONS_BASE,
+    BUTTONS_BASE_HOVER,
+    BUTTONS_BASE_FLAT,
+    BUTTONS_BASE_DISABLED,
+    HELP_BUTTONS_BASE,
+    HELP_BUTTONS_BASE_HOVER,
+    WEB_SERVERS_BUTTONS_BASE,
+    WEB_SERVERS_BUTTONS_BASE_FLAT,
+    WEB_SERVERS_BUTTONS_BASE_DISABLED,
+    WEB_SERVERS_BUTTONS_BORDER_FLAT,
+    WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
+    WEB_SERVERS_BUTTONS_TEXT_FLAT,
+    WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
+    WEB_SERVERS_BUTTONS_TEXT_DISABLED,
+    STATS_SWITCH_BUTTONS,
+    STATS_SWITCH_BUTTONS_FLAT,
+    STATS_SWITCH_BUTTONS_FLAT_HOVER,
+    STATS_GLOBALS_FRAMES,
+    BOXES_BASE_PRIMARY,
+    BOXES_BASE_SECONDARY,
+    BOXES_BASE_DISABLED,
+    BOXES_BASE_SELECTION,
+    BOXES_DECO,
+    LINEDIT_TEXT,
+    LINEDIT_BASE,
+    LINEDIT_BASE_FOCUS,
+    LINEDIT_BASE_SELECTION,
+    LINEDIT_BASE_DISABLED,
+    TABLES_HEADER,
+    TABLES_HEADER_HOVER,
+    TABLES_HEADER_SEPARATOR,
+    TABLES_BASE,
+    TABLES_BASE_DISABLED,
+    TABLES_BASE_SELECTION,
+    TABLES_GRIDLINE,
+    TABLES_TEXT_SELECTION,
+    TABLES_DECO,
+    CHARTS_CONTOUR,
+    TEXTBROWSER_TEXT,
+    TEXTBROWSER_BASE,
+    TEXTBROWSER_BORDER,
+    TEXTBROWSER_TEXT_SELECTION,
+    TEXTBROWSER_BASE_SELECTION,
+    SCROLLBAR_BASE,
+    SCROLLBAR_HANDLER,
+    SCROLLBAR_CONTROLS,
+    SLIDER_HANDLER,
+    SLIDER_BAR_ACTIVE,
+    SLIDER_BAR_INACTIVE,
+    SLIDER_BAR_ACTIVE_BORDER,
+    SLIDER_HANDLER_BORDER,
+    SLIDER_HANDLER_BORDER_HOVER,
+    BWLISTS_BUTTONS_BASE,
+    BWLISTS_BUTTONS_BASE_HOVER,
+    BWLISTS_BUTTONS_BASE_DISABLED,
+    BWLISTS_BUTTONS_BASE_FLAT,
+    CONFIGS_TREE_BASE
+};
+
+} // namespace (private)
+
+
 namespace StyleSec
 {
 
@@ -15,15 +102,15 @@ namespace /*private*/
 //! Builds the final stylesheet upon the generic model
 /*!
     \param ss Will hold the stylesheet
-    \param style The key-value pairs to be applied at the generic
+    \param style The key-value pairs to be applied to the template
     \param theme The theme selected for the Icons
 */
-void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString> &style, const QString& theme )
+void makeStyleSheet( QString& ss, const std::unordered_map<StyleId, QString> &style, const QString& theme )
 {
     ss= ////////////////
         //// SHARED ////
         "* {"
-        "   color: "+style.at("text_primary")+";"
+        "   color: "+style.at(TEXT_PRIMARY)+";"
         "}"
         // frames
         "QFrame,"
@@ -47,10 +134,10 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         // tooltips
         "QToolTip {"
         "   padding: 2px;"
-        "   border: 1px solid "+style.at("tooltips_border")+";"
+        "   border: 1px solid "+style.at(TOOLTIPS_BORDER)+";"
         "   border-radius: 6px;"
-        "   color: "+style.at("tooltips_text")+";"
-        "   background-color: "+style.at("tooltips_base")+";"
+        "   color: "+style.at(TOOLTIPS_TEXT)+";"
+        "   background-color: "+style.at(TOOLTIPS_BASE)+";"
         "   font-size: 12px;"
         "}"
         // check boxes
@@ -82,40 +169,40 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton {"
         "   border: 0px;"
         "   border-radius: 12px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         "QPushButton:hover {"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_HOVER)+";"
         "}"
         "QPushButton::flat {"
-        "   background-color: "+style.at("buttons_base_flat")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_FLAT)+";"
         "}"
         "QPushButton::disabled {"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
         "}"
         // line edits
         "QLineEdit {"
         "   padding-left: 4px;"
         "   padding-right: 4px;"
         "   border-radius: 8px;"
-        "   color: "+style.at("linedit_text")+";"
-        "   selection-color: "+style.at("linedit_text")+";"
-        "   background-color: "+style.at("linedit_base")+";"
-        "   selection-background-color: "+style.at("linedit_base_selection")+";"
+        "   color: "+style.at(LINEDIT_TEXT)+";"
+        "   selection-color: "+style.at(LINEDIT_TEXT)+";"
+        "   background-color: "+style.at(LINEDIT_BASE)+";"
+        "   selection-background-color: "+style.at(LINEDIT_BASE_SELECTION)+";"
         "}"
         "QLineEdit::focus {"
-        "   background-color: "+style.at("linedit_base_focus")+";"
+        "   background-color: "+style.at(LINEDIT_BASE_FOCUS)+";"
         "}"
         "QLineEdit:disabled {"
-        "   background-color: "+style.at("linedit_base_disabled")+";"
+        "   background-color: "+style.at(LINEDIT_BASE_DISABLED)+";"
         "}"
         // combo boxes
         "QComboBox {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("boxes_base_primary")+";"
+        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
         "}"
         "QComboBox::disabled {"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QComboBox::drop-down {"
         "   border-top-right-radius: 8px;"
@@ -123,17 +210,17 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   border-left: 3px solid"
         "                QLinearGradient("
         "                   x0:0, y0:0, x1:0, y1:1,"
-        "                   stop:0 "+style.at("boxes_base_primary")+","
-        "                   stop:0.1 "+style.at("boxes_base_primary")+","
-        "                   stop:0.5 "+style.at("boxes_deco")+","
-        "                   stop:0.9 "+style.at("boxes_base_primary")+","
-        "                   stop:1 "+style.at("boxes_base_primary")+");"
-        "   background-color: "+style.at("boxes_base_primary")+";"
-        "   selection-background-color: "+style.at("boxes_base_primary")+";"
+        "                   stop:0 "+style.at(BOXES_BASE_PRIMARY)+","
+        "                   stop:0.1 "+style.at(BOXES_BASE_PRIMARY)+","
+        "                   stop:0.5 "+style.at(BOXES_DECO)+","
+        "                   stop:0.9 "+style.at(BOXES_BASE_PRIMARY)+","
+        "                   stop:1 "+style.at(BOXES_BASE_PRIMARY)+");"
+        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   selection-background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
         "}"
         "QComboBox::drop-down::disabled {"
-        "   border-left-color: "+style.at("boxes_base_disabled")+";"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   border-left-color: "+style.at(BOXES_BASE_DISABLED)+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QComboBox::down-arrow {"
         "   image: url(:/icons/icons/"+theme+"/combobox_arrow.png);"
@@ -143,13 +230,13 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "}"
         "QComboBox:on {"
         "   border-bottom-left-radius: 0px;"
-        "   border-bottom: 2px solid "+style.at("boxes_deco")+";"
-        "   background-color: "+style.at("boxes_base_secondary")+";"
+        "   border-bottom: 2px solid "+style.at(BOXES_DECO)+";"
+        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
         "}"
         "QComboBox::drop-down:on {"
         "   border-bottom-right-radius: 0px;"
         "   border-left-color: transparent;"
-        "   background-color: "+style.at("boxes_base_secondary")+";"
+        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
         "}"
         "QComboBox::down-arrow:on {"
         "   image: url();"
@@ -157,43 +244,43 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QComboBox QAbstractItemView {"
         "   border-bottom-left-radius: 8px;"
         "   border-bottom-right-radius: 8px;"
-        "   background-color: "+style.at("boxes_base_primary")+";"
-        "   selection-background-color: "+style.at("boxes_base_selection")+";"
+        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   selection-background-color: "+style.at(BOXES_BASE_SELECTION)+";"
         "}"
         // spin boxes
         "QSpinBox {"
         "   border-radius: 4px;"
-        "   color: "+style.at("linedit_text")+";"
-        "   background-color: "+style.at("linedit_base")+";"
-        "   selection-color: "+style.at("linedit_text")+";"
-        "   selection-background-color: "+style.at("linedit_base_selection")+";"
+        "   color: "+style.at(LINEDIT_TEXT)+";"
+        "   background-color: "+style.at(LINEDIT_BASE)+";"
+        "   selection-color: "+style.at(LINEDIT_TEXT)+";"
+        "   selection-background-color: "+style.at(LINEDIT_BASE_SELECTION)+";"
         "}"
         "QSpinBox::focus {"
-        "   background-color: "+style.at("linedit_base_focus")+";"
+        "   background-color: "+style.at(LINEDIT_BASE_FOCUS)+";"
         "}"
         "QSpinBox::disabled {"
-        "   border-color: "+style.at("boxes_base_disabled")+";"
-        "   color: "+style.at("text_disabled")+";"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   border-color: "+style.at(BOXES_BASE_DISABLED)+";"
+        "   color: "+style.at(TEXT_DISABLED)+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QSpinBox::up-button,"
         "QSpinBox::down-button {"
         "   padding: 2px;"
-        "   border-left: 2px solid "+style.at("boxes_deco")+";"
-        "   background-color: "+style.at("boxes_base_secondary")+";"
+        "   border-left: 2px solid "+style.at(BOXES_DECO)+";"
+        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
         "}"
         "QSpinBox::up-button:hover,"
         "QSpinBox::down-button:hover {"
-        "   background-color: "+style.at("boxes_base_selection")+";"
+        "   background-color: "+style.at(BOXES_BASE_SELECTION)+";"
         "}"
         "QSpinBox::up-button:off,"
         "QSpinBox::down-button:off {"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QSpinBox::up-button:disabled,"
         "QSpinBox::down-button:disabled {"
-        "   border-left-color: "+style.at("boxes_base_primary")+";"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   border-left-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QSpinBox::up-arrow {"
         "   width: 7px;"
@@ -218,12 +305,12 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         // scroll bars
         "QScrollBar:horizontal {"
         "   height: 12px;"
-        "   background-color: "+style.at("scrollbar_base")+";"
+        "   background-color: "+style.at(SCROLLBAR_BASE)+";"
         "}"
         "QScrollBar::handle:horizontal {"
         "   min-width: 16px;"
         "   margin: 5px 0px 5px 0px;"
-        "   background-color: "+style.at("scrollbar_handler")+";"
+        "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
         "}"
         "QScrollBar::handle:horizontal:hover {"
         "   margin: 4px 0px 4px 0px;"
@@ -231,12 +318,12 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "}"
         "QScrollBar:vertical {"
         "   width: 12px;"
-        "   background-color: "+style.at("scrollbar_base")+";"
+        "   background-color: "+style.at(SCROLLBAR_BASE)+";"
         "}"
         "QScrollBar::handle:vertical {"
         "   min-height: 16px;"
         "   margin: 0px 5px 0px 5px;"
-        "   background-color: "+style.at("scrollbar_handler")+";"
+        "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
         "}"
         "QScrollBar::handle:vertical:hover {"
         "   margin: 0px 4px 0px 4px;"
@@ -250,48 +337,48 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QScrollBar::left-arrow,"
         "QScrollBar::right-arrow {"
         "   border: 0px;"
-        "   background-color: "+style.at("scrollbar_controls")+";"
+        "   background-color: "+style.at(SCROLLBAR_CONTROLS)+";"
         "}"
         // slider
         "QSlider::groove:horizontal {"
         "   height: 2px;"
-        "   border: 1px solid "+style.at("slider_bar_active_border")+";"
-        "   background-color: "+style.at("slider_bar_active")+";"
+        "   border: 1px solid "+style.at(SLIDER_BAR_ACTIVE_BORDER)+";"
+        "   background-color: "+style.at(SLIDER_BAR_ACTIVE)+";"
         "}"
         "QSlider::add-page:horizontal {"
         "   border: 0px;"
-        "   background-color: "+style.at("slider_bar_inactive")+";"
+        "   background-color: "+style.at(SLIDER_BAR_INACTIVE)+";"
         "}"
         "QSlider::sub-page:horizontal {"
-        "   border: 1px solid "+style.at("slider_bar_active_border")+";"
-        "   background-color: "+style.at("slider_bar_active")+";"
+        "   border: 1px solid "+style.at(SLIDER_BAR_ACTIVE_BORDER)+";"
+        "   background-color: "+style.at(SLIDER_BAR_ACTIVE)+";"
         "}"
         "QSlider::handle:horizontal {"
         "   width: 12px;"
         "   margin: -5px 0px;"
-        "   border: 1px solid "+style.at("slider_handler_border")+";"
+        "   border: 1px solid "+style.at(SLIDER_HANDLER_BORDER)+";"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("slider_handler")+";"
+        "   background-color: "+style.at(SLIDER_HANDLER)+";"
         "}"
         "QSlider::handle:hover:horizontal {"
-        "   border: 1px solid "+style.at("slider_handler_border_hover")+";"
+        "   border: 1px solid "+style.at(SLIDER_HANDLER_BORDER_HOVER)+";"
         "}"
         // charts
         "QGraphicsView {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("charts_contour")+";"
+        "   background-color: "+style.at(CHARTS_CONTOUR)+";"
         "}"
         // tables, trees and headers
         "QTreeView,"
         "QListView,"
         "QTableView {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("tables_base")+";"
-        "   selection-color: "+style.at("tables_text_selection")+";"
-        "   selection-background-color: "+style.at("tables_base_selection")+";"
+        "   background-color: "+style.at(TABLES_BASE)+";"
+        "   selection-color: "+style.at(TABLES_TEXT_SELECTION)+";"
+        "   selection-background-color: "+style.at(TABLES_BASE_SELECTION)+";"
         "}"
         "QTableView {"
-        "   gridline-color: "+style.at("tables_gridline")+";"
+        "   gridline-color: "+style.at(TABLES_GRIDLINE)+";"
         "}"
         "QTreeView QScrollBar::handle:vertical,"
         "QTableView QScrollBar::handle:vertical,"
@@ -305,46 +392,46 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   height: 29px;"
         "   border: 0px;"
         "   border-top-right-radius: 8px;"
-        "   border-bottom: 2px solid "+style.at("tables_deco")+";"
-        "   background-color: "+style.at("tables_header")+";"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
         "}"
         "QHeaderView::section:first {"
         "   padding-left: 6px;"
         "   border-top-left-radius: 6px;"
-        "   border-right: 1px solid "+style.at("tables_header_separator")+";"
-        "   border-bottom: 2px solid "+style.at("tables_deco")+";"
-        "   background-color: "+style.at("tables_header")+";"
+        "   border-right: 1px solid "+style.at(TABLES_HEADER_SEPARATOR)+";"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
         "}"
         "QHeaderView::section:middle {"
         "   padding-left: 6px;"
         "   border-radius: 0px;" // leave this here or borders won't display
-        "   border-right: 1px solid "+style.at("tables_header_separator")+";"
-        "   border-bottom: 2px solid "+style.at("tables_deco")+";"
-        "   background-color: "+style.at("tables_header")+";"
+        "   border-right: 1px solid "+style.at(TABLES_HEADER_SEPARATOR)+";"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
         "}"
         "QHeaderView::section:last {"
         "   padding-left: 6px;"
         "   border-top-right-radius: 0px;"
-        "   border-bottom: 2px solid "+style.at("tables_deco")+";"
-        "   background-color: "+style.at("tables_header")+";"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
         "}"
         "QHeaderView::section:first::hover {"
-        "   background-color: "+style.at("tables_header_hover")+";"
+        "   background-color: "+style.at(TABLES_HEADER_HOVER)+";"
         "}"
         "QHeaderView::section:middle::hover {"
-        "   background-color: "+style.at("tables_header_hover")+";"
+        "   background-color: "+style.at(TABLES_HEADER_HOVER)+";"
         "}"
         "QHeaderView::section:last::hover {"
-        "   background-color: "+style.at("tables_header_hover")+";"
+        "   background-color: "+style.at(TABLES_HEADER_HOVER)+";"
         "}"
         // text browser
         "QTextBrowser {"
-        "   border: 4px solid "+style.at("textbrowser_border")+";"
+        "   border: 4px solid "+style.at(TEXTBROWSER_BORDER)+";"
         "   border-radius: 8px;"
-        "   color: "+style.at("textbrowser_text")+";"
-        "   background-color: "+style.at("textbrowser_base")+";"
-        "   selection-color: "+style.at("textbrowser_text_selection")+";"
-        "   selection-background-color: "+style.at("textbrowser_base_selection")+";"
+        "   color: "+style.at(TEXTBROWSER_TEXT)+";"
+        "   background-color: "+style.at(TEXTBROWSER_BASE)+";"
+        "   selection-color: "+style.at(TEXTBROWSER_TEXT_SELECTION)+";"
+        "   selection-background-color: "+style.at(TEXTBROWSER_BASE_SELECTION)+";"
         "}"
         "QTextBrowser QScrollBar::handle:vertical {"
         "   padding: 12px;"
@@ -352,17 +439,17 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         //////////////
         //// MENU ////
         "QMenuBar {"
-        "   color: "+style.at("menu_text")+";"
-        "   background-color: "+style.at("menu_base")+";"
+        "   color: "+style.at(MENU_TEXT)+";"
+        "   background-color: "+style.at(MENU_BASE)+";"
         "}"
         "QMenuBar::item:selected {"
-        "   color: "+style.at("menu_text")+";"
-        "   background-color: "+style.at("menu_base_hover")+";"
+        "   color: "+style.at(MENU_TEXT)+";"
+        "   background-color: "+style.at(MENU_BASE_HOVER)+";"
         "   border-radius: 4px;"
         "}"
         "QMenuBar::item:pressed {"
-        "   color: "+style.at("menu_dropdown_text")+";"
-        "   background-color: "+style.at("menu_dropdown_base")+";"
+        "   color: "+style.at(MENU_DROPDOWN_TEXT)+";"
+        "   background-color: "+style.at(MENU_DROPDOWN_BASE)+";"
         "   border-radius: 0px;"
         "   border-top-left-radius: 4px;"
         "   border-top-right-radius: 4px;"
@@ -372,77 +459,77 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   border-top-right-radius: 4px;"
         "   border-bottom-right-radius: 4px;"
         "   border-bottom-left-radius: 4px;"
-        "   color: "+style.at("menu_dropdown_text")+";"
-        "   background-color: "+style.at("menu_dropdown_base")+";"
+        "   color: "+style.at(MENU_DROPDOWN_TEXT)+";"
+        "   background-color: "+style.at(MENU_DROPDOWN_BASE)+";"
         "}"
         "QMenu::item:selected {"
-        "   background-color: "+style.at("menu_dropdown_base_selection")+";"
+        "   background-color: "+style.at(MENU_DROPDOWN_BASE_SELECTION)+";"
         "}"
         //////////////
         //// MAIN ////
         // window
         "QWidget#mainwidget {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         // tabs buttons
         "QFrame#frame_Tabs_Buttons {"
         "   border: 0px;"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         "QPushButton#button_Tab_Log,"
         "QPushButton#button_Tab_View,"
         "QPushButton#button_Tab_Conf {"
         "   border: 0px;"
         "   border-radius: 0px;"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Tab_Log::flat,"
         "QPushButton#button_Tab_View::flat,"
         "QPushButton#button_Tab_Conf::flat {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         "QPushButton#button_Tab_Log::flat:hover {"
         "   background-color: QLinearGradient("
         "      x1:0, y1:0.5, x2:1, y2:0.5,"
-        "      stop:0 "+style.at("sections_log_hover")+","
-        "      stop:0.4 "+style.at("sections_log_hover")+","
-        "      stop:1 "+style.at("window_base_secondary")+");"
+        "      stop:0 "+style.at(SECTIONS_LOG_HOVER)+","
+        "      stop:0.4 "+style.at(SECTIONS_LOG_HOVER)+","
+        "      stop:1 "+style.at(WINDOW_BASE_SECONDARY)+");"
         "}"
         "QPushButton#button_Tab_View::flat:hover {"
         "   background-color: QLinearGradient("
         "      x1:0, y1:0.5, x2:1, y2:0.5,"
-        "      stop:0 "+style.at("sections_view_hover")+","
-        "      stop:0.4 "+style.at("sections_view_hover")+","
-        "      stop:1 "+style.at("window_base_secondary")+");"
+        "      stop:0 "+style.at(SECTIONS_VIEW_HOVER)+","
+        "      stop:0.4 "+style.at(SECTIONS_VIEW_HOVER)+","
+        "      stop:1 "+style.at(WINDOW_BASE_SECONDARY)+");"
         "}"
         "QPushButton#button_Tab_Conf::flat:hover {"
         "   background-color: QLinearGradient("
         "      x1:0, y1:0.5, x2:1, y2:0.5,"
-        "      stop:0 "+style.at("sections_conf_hover")+","
-        "      stop:0.4 "+style.at("sections_conf_hover")+","
-        "      stop:1 "+style.at("window_base_secondary")+");"
+        "      stop:0 "+style.at(SECTIONS_CONF_HOVER)+","
+        "      stop:0.4 "+style.at(SECTIONS_CONF_HOVER)+","
+        "      stop:1 "+style.at(WINDOW_BASE_SECONDARY)+");"
         "}"
         // tabs pages
         "QStackedWidget#stackedPages_Sections {"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         //////////////
         //// LOGS ////
         // switcher buttons
         "QPushButton#button_Logs_Down {"
         "   border-radius: 16px;"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Logs_Down:hover {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "   icon: url(:/icons/icons/"+theme+"/down.png);"
         "}"
         "QPushButton#button_Logs_Up {"
         "   border-radius: 16px;"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Logs_Up::hover {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "   icon: url(:/icons/icons/"+theme+"/up.png);"
         "}"
         // web servers buttons
@@ -450,27 +537,27 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_LogFiles_Nginx,"
         "QPushButton#button_LogFiles_Iis {"
         "   border-radius: 16px;"
-        "   background-color: "+style.at("web_servers_buttons_base")+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_LogFiles_Apache::flat,"
         "QPushButton#button_LogFiles_Nginx::flat,"
         "QPushButton#button_LogFiles_Iis::flat {"
-        "   border: 1px solid "+style.at("web_servers_buttons_border_flat")+";"
-        "   color: "+style.at("web_servers_buttons_text_flat")+";"
-        "   background-color: "+style.at("web_servers_buttons_base_flat")+";"
+        "   border: 1px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_FLAT)+";"
         "}"
         "QPushButton#button_LogFiles_Apache::flat:hover,"
         "QPushButton#button_LogFiles_Nginx::flat:hover,"
         "QPushButton#button_LogFiles_Iis::flat:hover {"
-        "   border: 2px solid "+style.at("web_servers_buttons_border_flat_hover")+";"
-        "   color: "+style.at("web_servers_buttons_text_flat_hover")+";"
+        "   border: 2px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER)+";"
         "}"
         "QPushButton#button_LogFiles_Apache::disabled,"
         "QPushButton#button_LogFiles_Nginx::disabled,"
         "QPushButton#button_LogFiles_Iis::disabled {"
         "   border: 0px;"
-        "   color: "+style.at("web_servers_buttons_text_disabled")+";"
-        "   background-color: "+style.at("web_servers_buttons_base_disabled")+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_DISABLED)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_DISABLED)+";"
         "}"
         // logs list
         "QTreeWidget#listLogFiles::indicator {"
@@ -491,26 +578,26 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "}"
         // refresh button
         "QPushButton#button_LogFiles_RefreshList {"
-        "   border: 1px solid "+style.at("border_primary")+";"
+        "   border: 1px solid "+style.at(BORDER_PRIMARY)+";"
         "   border-radius: 16px;"
         "   background-color: transparent;"
         "}"
         "QPushButton#button_LogFiles_RefreshList:hover {"
-        "   border: 1px solid "+style.at("border_secondary")+";"
+        "   border: 1px solid "+style.at(BORDER_SECONDARY)+";"
         "}"
         // parse logs button
         "QPushButton#button_MakeStats_Start {"
         "   border-radius: 32px;"
         "}"
         "QPushButton#button_MakeStats_Start::disabled {"
-        "   color: "+style.at("text_disabled")+";"
+        "   color: "+style.at(TEXT_DISABLED)+";"
         "}"
         ///////////////
         //// STATS ////
         // statistics tabs buttons
         "QFrame#frame_Stats_Buttons {"
         "   border: 0px;"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Tab_StatsWarn,"
         "QPushButton#button_Tab_StatsSpeed,"
@@ -519,7 +606,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_Tab_StatsRelat,"
         "QPushButton#button_Tab_StatsGlob {"
         "   border-radius: 22px;"
-        "   background-color: "+style.at("stats_switch_buttons")+";"
+        "   background-color: "+style.at(STATS_SWITCH_BUTTONS)+";"
         "}"
         "QPushButton#button_Tab_StatsWarn::flat,"
         "QPushButton#button_Tab_StatsSpeed::flat,"
@@ -527,7 +614,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_Tab_StatsDay::flat,"
         "QPushButton#button_Tab_StatsRelat::flat,"
         "QPushButton#button_Tab_StatsGlob::flat {"
-        "   background-color: "+style.at("stats_switch_buttons_flat")+";"
+        "   background-color: "+style.at(STATS_SWITCH_BUTTONS_FLAT)+";"
         "}"
         "QPushButton#button_Tab_StatsWarn::flat:hover,"
         "QPushButton#button_Tab_StatsSpeed::flat:hover,"
@@ -535,11 +622,11 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_Tab_StatsDay::flat:hover,"
         "QPushButton#button_Tab_StatsRelat::flat:hover,"
         "QPushButton#button_Tab_StatsGlob::flat:hover {"
-        "   background-color: "+style.at("stats_switch_buttons_flat_hover")+";"
+        "   background-color: "+style.at(STATS_SWITCH_BUTTONS_FLAT_HOVER)+";"
         "}"
         // stacked pages
         "QStackedWidget#stackedPages_Stats {"
-        "   border-top: 2px solid "+style.at("stats_switch_buttons")+";"
+        "   border-top: 2px solid "+style.at(STATS_SWITCH_BUTTONS)+";"
         "   border-radius: 12px;"
         "}"
         // draw buttons
@@ -562,7 +649,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "}"
         // stats count
         "QScrollArea#scrollArea_StatsCount {"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QWidget#scrollAreaContent_StatsCount {"
         "   background-color: transparent;"
@@ -577,7 +664,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_StatsCount_UserAgent,"
         "QPushButton#button_StatsCount_Client {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
         "}"
         "QPushButton#button_StatsCount_Protocol::flat,"
         "QPushButton#button_StatsCount_Method::flat,"
@@ -588,7 +675,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_StatsCount_Cookie::flat,"
         "QPushButton#button_StatsCount_UserAgent::flat,"
         "QPushButton#button_StatsCount_Client::flat {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         "QPushButton#button_StatsCount_Protocol::flat:hover,"
         "QPushButton#button_StatsCount_Method::flat:hover,"
@@ -599,47 +686,47 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_StatsCount_Cookie::flat:hover,"
         "QPushButton#button_StatsCount_UserAgent::flat:hover,"
         "QPushButton#button_StatsCount_Client::flat:hover {"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         // stats globals
         "QPushButton#button_StatsGlob_Apache,"
         "QPushButton#button_StatsGlob_Nginx,"
         "QPushButton#button_StatsGlob_Iis {"
         "   border-radius: 16px;"
-        "   background-color: "+style.at("web_servers_buttons_base")+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_StatsGlob_Apache::flat,"
         "QPushButton#button_StatsGlob_Nginx::flat,"
         "QPushButton#button_StatsGlob_Iis::flat {"
-        "   border: 1px solid "+style.at("web_servers_buttons_border_flat")+";"
-        "   color: "+style.at("web_servers_buttons_text_flat")+";"
-        "   background-color: "+style.at("web_servers_buttons_base_flat")+";"
+        "   border: 1px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_FLAT)+";"
         "}"
         "QPushButton#button_StatsGlob_Apache::flat:hover,"
         "QPushButton#button_StatsGlob_Nginx::flat:hover,"
         "QPushButton#button_StatsGlob_Iis::flat:hover {"
-        "   border: 2px solid "+style.at("web_servers_buttons_border_flat_hover")+";"
-        "   color: "+style.at("web_servers_buttons_text_flat_hover")+";"
+        "   border: 2px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER)+";"
         "}"
         "QPushButton#button_StatsGlob_Apache::disabled,"
         "QPushButton#button_StatsGlob_Nginx::disabled,"
         "QPushButton#button_StatsGlob_Iis::disabled {"
         "   border: 0px;"
-        "   color: "+style.at("web_servers_buttons_text_disabled")+";"
-        "   background-color: "+style.at("web_servers_buttons_base_disabled")+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_DISABLED)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_DISABLED)+";"
         "}"
         "QScrollArea#scrollArea_StatsGlob_Recur,"
         "QScrollArea#scrollArea_StatsGlob_Perf,"
         "QScrollArea#scrollArea_StatsGlob_Traffic,"
         "QScrollArea#scrollArea_StatsGlob_Work {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("stats_globals_frames")+";"
+        "   background-color: "+style.at(STATS_GLOBALS_FRAMES)+";"
         "}"
         // styled frames
         "QFrame#frame_StatsWarn_Logs,"
         "QFrame#frame_StatsDay_Date,"
         "QFrame#frame_StatsRelat_Field {"
-        "   border: 1px solid "+style.at("border_tertiary")+";"
+        "   border: 1px solid "+style.at(BORDER_TERTIARY)+";"
         "}"
         // lines separators
         "QFrame#gline_StatsWarn_1,"
@@ -648,14 +735,14 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QFrame#gline_StatsDay_1,"
         "QFrame#gline_StatsDay_2,"
         "QFrame#gline_StatsRelat_1 {"
-        "   border: 1px solid "+style.at("separators_border")+";"
-        "   background-color: "+style.at("separators_base")+";"
+        "   border: 1px solid "+style.at(SEPARATORS_BORDER)+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
         "}"
         "QFrame#gline_StatsSpeed_1,"
         "QFrame#gline_StatsCount_1 {"
-        "   border: 1px solid "+style.at("separators_border")+";"
+        "   border: 1px solid "+style.at(SEPARATORS_BORDER)+";"
         "   margin: 2px 0px 3px 0px;"
-        "   background-color: "+style.at("separators_base")+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
         "}"
         "QFrame#gline_StatsGlob_Recur_1,"
         "QFrame#gline_StatsGlob_Recur_2,"
@@ -666,14 +753,14 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QFrame#gline_StatsGlob_Traffic_2,"
         "QFrame#gline_StatsGlob_Work_1,"
         "QFrame#gline_StatsGlob_Work_2 {"
-        "   border: 1px solid "+style.at("stats_globals_frames")+";"
-        "   background-color: "+style.at("separators_base")+";"
+        "   border: 1px solid "+style.at(STATS_GLOBALS_FRAMES)+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
         "}"
         /////////////////
         //// CONFIGS ////
         // sections
         "QTreeView#tree_ConfSections {"
-        "   background-color: "+style.at("conf_list_base")+";"
+        "   background-color: "+style.at(CONFIGS_TREE_BASE)+";"
         "}"
         "QTreeView#tree_ConfSections QScrollBar::sub-line:vertical {"
         "   margin-top: -12px;"
@@ -687,9 +774,9 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "}"
         // line separators
         "QFrame#gline_ConfTextBrowser {"
-        "   border: 2px solid "+style.at("separators_border")+";"
+        "   border: 2px solid "+style.at(SEPARATORS_BORDER)+";"
         "   margin: 13px 0px 14px 0px;"
-        "   background-color: "+style.at("separators_base")+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
         "}"
         // save buttons
         "QPushButton#button_ConfDatabases_Data_Save,"
@@ -701,7 +788,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfIis_Path_Save,"
         "QPushButton#button_ConfIis_Format_Save {"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfDatabases_Data_Save:hover,"
         "QPushButton#button_ConfDatabases_Hashes_Save:hover,"
@@ -711,7 +798,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Format_Save:hover,"
         "QPushButton#button_ConfIis_Path_Save:hover,"
         "QPushButton#button_ConfIis_Format_Save:hover {"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_HOVER)+";"
         "}"
         "QPushButton#button_ConfDatabases_Data_Save::disabled,"
         "QPushButton#button_ConfDatabases_Hashes_Save::disabled,"
@@ -721,7 +808,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Format_Save::disabled,"
         "QPushButton#button_ConfIis_Path_Save::disabled,"
         "QPushButton#button_ConfIis_Format_Save::disabled {"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
         "   icon: url(:/icons/icons/midtone/save.png);"
         "}"
         // sample buttons
@@ -729,33 +816,33 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Format_Sample,"
         "QPushButton#button_ConfIis_Format_Sample {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfApache_Format_Sample:hover,"
         "QPushButton#button_ConfNginx_Format_Sample:hover,"
         "QPushButton#button_ConfIis_Format_Sample:hover {"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_HOVER)+";"
         "}"
         // sample previews
         "QScrollArea#scrollArea_ConfApache_Format_Sample,"
         "QScrollArea#scrollArea_ConfNginx_Format_Sample,"
         "QScrollArea#scrollArea_ConfIis_Format_Sample {"
-        "   border: 1px solid "+style.at("border_secondary")+";"
+        "   border: 1px solid "+style.at(BORDER_SECONDARY)+";"
         "   border-top-left-radius: 4px;"
         "   border-top-right-radius: 4px;"
-        "   background-color: "+style.at("textbrowser_base")+";"
+        "   background-color: "+style.at(TEXTBROWSER_BASE)+";"
         "}"
         // help buttons
         "QPushButton#button_ConfApache_Format_Help,"
         "QPushButton#button_ConfNginx_Format_Help,"
         "QPushButton#button_ConfIis_Format_Help {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at("help_buttons_base")+";"
+        "   background-color: "+style.at(HELP_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfApache_Format_Help:hover,"
         "QPushButton#button_ConfNginx_Format_Help:hover,"
         "QPushButton#button_ConfIis_Format_Help:hover {"
-        "   background-color: "+style.at("help_buttons_base_hover")+";"
+        "   background-color: "+style.at(HELP_BUTTONS_BASE_HOVER)+";"
         "}"
         // warnlists / blacklists
         "QListWidget#list_ConfApache_Warnlist_List,"
@@ -765,7 +852,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QListWidget#list_ConfIis_Warnlist_List,"
         "QListWidget#list_ConfIis_Blacklist_List {"
         "   padding: 4px;"
-        "   border: 1px solid "+style.at("border_primary")+";"
+        "   border: 1px solid "+style.at(BORDER_PRIMARY)+";"
         "}"
         "QListWidget#list_ConfApache_Warnlist_List::disabled,"
         "QListWidget#list_ConfApache_Blacklist_List::disabled,"
@@ -774,9 +861,9 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QListWidget#list_ConfIis_Warnlist_List::disabled,"
         "QListWidget#list_ConfIis_Blacklist_List::disabled {"
         "   border: 0px;"
-        "   color: "+style.at("text_disabled")+";"
-        "   background-color: "+style.at("tables_base_disabled")+";"
-        "   selection-background-color: "+style.at("tables_base_disabled")+";"
+        "   color: "+style.at(TEXT_DISABLED)+";"
+        "   background-color: "+style.at(TABLES_BASE_DISABLED)+";"
+        "   selection-background-color: "+style.at(TABLES_BASE_DISABLED)+";"
         "}"
         "QListWidget#list_ConfApache_Warnlist_List::item,"
         "QListWidget#list_ConfApache_Blacklist_List::item,"
@@ -812,7 +899,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfIis_Blacklist_Up,"
         "QPushButton#button_ConfIis_Blacklist_Down {"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("bwlists_buttons_base")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Add:hover,"
         "QPushButton#button_ConfApache_Warnlist_Remove:hover,"
@@ -838,7 +925,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfIis_Blacklist_Remove:hover,"
         "QPushButton#button_ConfIis_Blacklist_Up:hover,"
         "QPushButton#button_ConfIis_Blacklist_Down:hover {"
-        "   background-color: "+style.at("bwlists_buttons_base_hover")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_HOVER)+";"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Add::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Add::disabled,"
@@ -846,7 +933,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Add::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Add::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Add::disabled {"
-        "   background-color: "+style.at("bwlists_buttons_base_disabled")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
         "   icon: url(:/icons/icons/"+theme+"/list_add.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Remove::disabled,"
@@ -855,7 +942,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Remove::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Remove::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Remove::disabled {"
-        "   background-color: "+style.at("bwlists_buttons_base_disabled")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
         "   icon: url(:/icons/icons/"+theme+"/list_rem.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Up::disabled,"
@@ -864,7 +951,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Up::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Up::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Up::disabled {"
-        "   background-color: "+style.at("bwlists_buttons_base_disabled")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
         "   icon: url(:/icons/icons/"+theme+"/list_up.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Down::disabled,"
@@ -873,7 +960,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Down::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Down::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Down::disabled {"
-        "   background-color: "+style.at("bwlists_buttons_base_disabled")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
         "   icon: url(:/icons/icons/"+theme+"/list_down.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Add::flat,"
@@ -900,7 +987,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfIis_Blacklist_Remove::flat,"
         "QPushButton#button_ConfIis_Blacklist_Up::flat,"
         "QPushButton#button_ConfIis_Blacklist_Down::flat {"
-        "   background-color: "+style.at("bwlists_buttons_base_flat")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_FLAT)+";"
         "   icon: none;"
         "}";
 }
@@ -910,325 +997,325 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
 
 void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id )
 {
-    std::unordered_map<std::string, QString> style_map;
+    std::unordered_map<StyleId, QString> style_map;
     switch ( theme_id ) {
         case 1: // light
             style_map = {
-                {"text_primary",
+                {TEXT_PRIMARY,
                     "rgb( 22, 11, 0 )"},
-                {"text_disabled",
+                {TEXT_DISABLED,
                     "rgb( 128, 128, 128 )"},
-                {"tooltips_base",
+                {TOOLTIPS_BASE,
                     "rgb( 30, 35, 27 )"},
-                {"tooltips_text",
+                {TOOLTIPS_TEXT,
                     "rgb( 220, 227, 213 )"},
-                {"tooltips_border",
+                {TOOLTIPS_BORDER,
                     "rgb( 170, 176, 160 )"},
-                {"menu_text",
+                {MENU_TEXT,
                     "rgb( 32, 32, 32 )"},
-                {"menu_base",
+                {MENU_BASE,
                     "rgb( 200, 200, 200 )"},
-                {"menu_base_hover",
+                {MENU_BASE_HOVER,
                     "rgb( 210, 210, 210 )"},
-                {"menu_dropdown_base",
+                {MENU_DROPDOWN_BASE,
                     "rgb( 112, 112, 112 )"},
-                {"menu_dropdown_base_selection",
+                {MENU_DROPDOWN_BASE_SELECTION,
                     "rgb( 128, 128, 128 )"},
-                {"menu_dropdown_text",
+                {MENU_DROPDOWN_TEXT,
                     "rgb( 250, 250, 255 )"},
-                {"window_base_primary",
+                {WINDOW_BASE_PRIMARY,
                     "rgb( 250, 250, 255 )"},
-                {"window_base_secondary",
+                {WINDOW_BASE_SECONDARY,
                     "rgb( 230, 230, 230 )"},
-                {"sections_log_hover",
+                {SECTIONS_LOG_HOVER,
                     "rgb( 255, 188, 218 )"}, // 196, 7, 93
-                {"sections_view_hover",
+                {SECTIONS_VIEW_HOVER,
                     "rgb( 184, 255, 203 )"}, // 0, 226, 60
-                {"sections_conf_hover",
+                {SECTIONS_CONF_HOVER,
                     "rgb( 179, 228, 255 )"}, // 0, 165, 255
-                {"border_primary",
+                {BORDER_PRIMARY,
                     "rgb( 230, 230, 230 )"},
-                {"border_secondary",
+                {BORDER_SECONDARY,
                     "rgb( 124, 119, 119 )"},
-                {"border_tertiary",
+                {BORDER_TERTIARY,
                     "rgb( 88, 80, 80 )"},
-                {"separators_base",
+                {SEPARATORS_BASE,
                     "rgb( 88, 80, 80 )"},
-                {"separators_border",
+                {SEPARATORS_BORDER,
                     "rgb( 250, 250, 255 )"},
-                {"buttons_base",
+                {BUTTONS_BASE,
                     "rgb( 99, 188, 255 )"},
-                {"buttons_base_hover",
+                {BUTTONS_BASE_HOVER,
                     "rgb( 123, 201, 255 )"},
-                {"buttons_base_flat",
+                {BUTTONS_BASE_FLAT,
                     "rgb( 200, 219, 238 )"},
-                {"buttons_base_disabled",
+                {BUTTONS_BASE_DISABLED,
                     "rgb( 200, 219, 238 )"},
-                {"help_buttons_base",
+                {HELP_BUTTONS_BASE,
                     "rgb( 230, 80, 80 )"},
-                {"help_buttons_base_hover",
+                {HELP_BUTTONS_BASE_HOVER,
                     "rgb( 230, 112, 80 )"},
-                {"web_servers_buttons_base",
+                {WEB_SERVERS_BUTTONS_BASE,
                     "rgb( 146, 234, 146 )"},
-                {"web_servers_buttons_base_flat",
+                {WEB_SERVERS_BUTTONS_BASE_FLAT,
                     "transparent"},
-                {"web_servers_buttons_base_disabled",
+                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
                     "rgb( 246, 246, 246 )"},
-                {"web_servers_buttons_border_flat",
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
                     "rgb( 177, 177, 177 )"},
-                {"web_servers_buttons_border_flat_hover",
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
                     "rgb( 146, 234, 146 )"},
-                {"web_servers_buttons_text_flat",
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
                     "rgb( 92, 92, 92 )"},
-                {"web_servers_buttons_text_flat_hover",
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
                     "rgb( 40, 31, 7 )"},
-                {"web_servers_buttons_text_disabled",
+                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
                     "rgb( 192, 192, 192 )"},
-                {"stats_switch_buttons",
+                {STATS_SWITCH_BUTTONS,
                     "rgb( 230, 80, 80 )"},
-                {"stats_switch_buttons_flat",
+                {STATS_SWITCH_BUTTONS_FLAT,
                     "rgb( 250, 250, 255 )"},
-                {"stats_switch_buttons_flat_hover",
+                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
                     "rgb( 230, 230, 230 )"},
-                {"stats_globals_frames",
+                {STATS_GLOBALS_FRAMES,
                     "rgb( 242, 242, 242 )"},
-                {"boxes_base_primary",
+                {BOXES_BASE_PRIMARY,
                     "rgb( 230, 230, 230 )"},
-                {"boxes_base_secondary",
+                {BOXES_BASE_SECONDARY,
                     "rgb( 220, 220, 220 )"},
-                {"boxes_base_disabled",
+                {BOXES_BASE_DISABLED,
                     "rgb( 200, 200, 200 )"},
-                {"boxes_base_selection",
+                {BOXES_BASE_SELECTION,
                     "rgb( 123, 201, 255 )"},
-                {"boxes_deco",
+                {BOXES_DECO,
                     "rgb( 99, 188, 255 )"},
-                {"linedit_text",
+                {LINEDIT_TEXT,
                     "rgb( 88, 80, 80 )"},
-                {"linedit_base",
+                {LINEDIT_BASE,
                     "rgb( 236, 236, 236 )"},
-                {"linedit_base_focus",
+                {LINEDIT_BASE_FOCUS,
                     "rgb( 230, 230, 230 )"},
-                {"linedit_base_selection",
+                {LINEDIT_BASE_SELECTION,
                     "rgb( 197, 191, 185 )"},
-                {"linedit_base_disabled",
+                {LINEDIT_BASE_DISABLED,
                     "rgb( 247, 247, 247 )"},
-                {"tables_header",
+                {TABLES_HEADER,
                     "rgb( 220, 220, 220 )"},
-                {"tables_header_hover",
+                {TABLES_HEADER_HOVER,
                     "rgb( 201, 239, 255 )"},
-                {"tables_header_separator",
+                {TABLES_HEADER_SEPARATOR,
                     "rgb( 170, 170, 170 )"},
-                {"tables_base",
+                {TABLES_BASE,
                     "rgb( 242, 242, 242 )"},
-                {"tables_base_disabled",
+                {TABLES_BASE_DISABLED,
                     "rgb( 247, 247, 247 )"},
-                {"tables_base_selection",
+                {TABLES_BASE_SELECTION,
                     "rgb( 201, 239, 255 )"},
-                {"tables_gridline",
+                {TABLES_GRIDLINE,
                     "rgb( 170, 170, 170 )"},
-                {"tables_text_selection",
+                {TABLES_TEXT_SELECTION,
                     "rgb( 22, 11, 0 )"},
-                {"tables_deco",
+                {TABLES_DECO,
                     "rgb( 99, 188, 255 )"},
-                {"charts_contour",
+                {CHARTS_CONTOUR,
                     "rgb( 220, 220, 220 )"},
-                {"textbrowser_text",
+                {TEXTBROWSER_TEXT,
                     "rgb( 88, 80, 80 )"},
-                {"textbrowser_base",
+                {TEXTBROWSER_BASE,
                     "rgb( 236, 236, 236 )"},
-                {"textbrowser_border",
+                {TEXTBROWSER_BORDER,
                     "rgb( 236, 236, 236 )"},
-                {"textbrowser_text_selection",
+                {TEXTBROWSER_TEXT_SELECTION,
                     "rgb( 68, 60, 60 )"},
-                {"textbrowser_base_selection",
+                {TEXTBROWSER_BASE_SELECTION,
                     "rgb( 207, 201, 195 )"},
-                {"scrollbar_base",
+                {SCROLLBAR_BASE,
                     "transparent"},
-                {"scrollbar_handler",
+                {SCROLLBAR_HANDLER,
                     "rgb( 40, 185, 40 )"},
-                {"scrollbar_controls",
+                {SCROLLBAR_CONTROLS,
                     "transparent"},
-                {"slider_handler",
+                {SLIDER_HANDLER,
                     "rgb( 100, 91, 87 )"},
-                {"slider_bar_active",
+                {SLIDER_BAR_ACTIVE,
                     "rgb( 99, 188, 255 )"},
-                {"slider_bar_inactive",
+                {SLIDER_BAR_INACTIVE,
                     "rgb( 210, 203, 199 )"},
-                {"slider_bar_active_border",
+                {SLIDER_BAR_ACTIVE_BORDER,
                     "rgb( 123, 201, 255 )"},
-                {"slider_handler_border",
+                {SLIDER_HANDLER_BORDER,
                     "rgb( 220, 211, 187 )"},
-                {"slider_handler_border_hover",
+                {SLIDER_HANDLER_BORDER_HOVER,
                     "rgb( 123, 201, 255 )"},
-                {"bwlists_buttons_base",
+                {BWLISTS_BUTTONS_BASE,
                     "rgb( 99, 188, 255 )"},
-                {"bwlists_buttons_base_hover",
+                {BWLISTS_BUTTONS_BASE_HOVER,
                     "rgb( 123, 201, 255 )"},
-                {"bwlists_buttons_base_disabled",
+                {BWLISTS_BUTTONS_BASE_DISABLED,
                     "rgb( 200, 219, 238 )"},
-                {"bwlists_buttons_base_flat",
+                {BWLISTS_BUTTONS_BASE_FLAT,
                     "rgb( 247, 247, 247 )"},
-                {"conf_list_base",
+                {CONFIGS_TREE_BASE,
                     "rgb( 245, 245, 247 )"}
             };
             break;
         case 2: // dark
             style_map = {
-                {"text_primary",
+                {TEXT_PRIMARY,
                     "rgb( 248, 248, 248 )"},
-                {"text_disabled",
+                {TEXT_DISABLED,
                     "rgb( 128, 128, 128 )"},
-                {"tooltips_base",
+                {TOOLTIPS_BASE,
                     "rgb( 160, 160, 160 )"},
-                {"tooltips_text",
+                {TOOLTIPS_TEXT,
                     "rgb( 32, 32, 32 )"},
-                {"tooltips_border",
+                {TOOLTIPS_BORDER,
                     "rgb( 144, 144, 144 )"},
-                {"menu_text",
+                {MENU_TEXT,
                     "rgb( 174, 174, 174 )"},
-                {"menu_base",
+                {MENU_BASE,
                     "rgb( 49, 54, 58 )"},
-                {"menu_base_hover",
+                {MENU_BASE_HOVER,
                     "rgb( 40, 45, 49 )"},
-                {"menu_dropdown_base",
+                {MENU_DROPDOWN_BASE,
                     "rgb( 144, 144, 144 )"},
-                {"menu_dropdown_base_selection",
+                {MENU_DROPDOWN_BASE_SELECTION,
                     "rgb( 128, 128, 128 )"},
-                {"menu_dropdown_text",
+                {MENU_DROPDOWN_TEXT,
                     "rgb( 13, 14, 15 )"},
-                {"window_base_primary",
+                {WINDOW_BASE_PRIMARY,
                     "rgb( 13, 14, 15 )"},
-                {"window_base_secondary",
+                {WINDOW_BASE_SECONDARY,
                     "rgb( 27, 30, 33 )"},
-                {"sections_log_hover",
+                {SECTIONS_LOG_HOVER,
                     "rgb( 82, 0, 37 )"}, // 196, 7, 93
-                {"sections_view_hover",
+                {SECTIONS_VIEW_HOVER,
                     "rgb( 0, 69, 18 )"}, // 0, 226, 60
-                {"sections_conf_hover",
+                {SECTIONS_CONF_HOVER,
                     "rgb( 0, 57, 89 )"}, // 0, 165, 255
-                {"border_primary",
+                {BORDER_PRIMARY,
                     "rgb( 40, 45, 49 )"},
-                {"border_secondary",
+                {BORDER_SECONDARY,
                     "rgb( 92, 92, 92 )"},
-                {"border_tertiary",
+                {BORDER_TERTIARY,
                     "rgb( 128, 128, 128 )"},
-                {"separators_base",
+                {SEPARATORS_BASE,
                     "rgb( 96, 96, 96 )"},
-                {"separators_border",
+                {SEPARATORS_BORDER,
                     "rgb( 13, 14, 15 )"},
-                {"buttons_base",
+                {BUTTONS_BASE,
                     "rgb( 10, 155, 10 )"},
-                {"buttons_base_hover",
+                {BUTTONS_BASE_HOVER,
                     "rgb( 33, 162, 33 )"},
-                {"buttons_base_flat",
+                {BUTTONS_BASE_FLAT,
                     "rgb( 21, 71, 21 )"},
-                {"buttons_base_disabled",
+                {BUTTONS_BASE_DISABLED,
                     "rgb( 21, 71, 21 )"},
-                {"help_buttons_base",
+                {HELP_BUTTONS_BASE,
                     "rgb( 221, 75, 14 )"},
-                {"help_buttons_base_hover",
+                {HELP_BUTTONS_BASE_HOVER,
                     "rgb( 221, 113, 14 )"},
-                {"web_servers_buttons_base",
+                {WEB_SERVERS_BUTTONS_BASE,
                     "rgb( 0, 121, 115 )"},
-                {"web_servers_buttons_base_flat",
+                {WEB_SERVERS_BUTTONS_BASE_FLAT,
                     "transparent"},
-                {"web_servers_buttons_base_disabled",
+                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
                     "rgb( 18, 20, 22 )"},
-                {"web_servers_buttons_border_flat",
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
                     "rgb( 54, 54, 54 )"},
-                {"web_servers_buttons_border_flat_hover",
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
                     "rgb( 0, 121, 115 )"},
-                {"web_servers_buttons_text_flat",
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
                     "rgb( 108, 108, 108 )"},
-                {"web_servers_buttons_text_flat_hover",
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
                     "rgb( 188, 188, 188 )"},
-                {"web_servers_buttons_text_disabled",
+                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
                     "rgb( 42, 42, 42 )"},
-                {"stats_switch_buttons",
+                {STATS_SWITCH_BUTTONS,
                     "rgb( 221, 75, 14 )"},
-                {"stats_switch_buttons_flat",
+                {STATS_SWITCH_BUTTONS_FLAT,
                     "rgb( 13, 14, 15 )"},
-                {"stats_switch_buttons_flat_hover",
+                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
                     "rgb( 27, 30, 33 )"},
-                {"stats_globals_frames",
+                {STATS_GLOBALS_FRAMES,
                     "rgb( 29, 29, 29 )"},
-                {"boxes_base_primary",
+                {BOXES_BASE_PRIMARY,
                     "rgb( 39, 42, 45 )"},
-                {"boxes_base_secondary",
+                {BOXES_BASE_SECONDARY,
                     "rgb( 45, 48, 51 )"},
-                {"boxes_base_disabled",
+                {BOXES_BASE_DISABLED,
                     "rgb( 27, 30, 33 )"},
-                {"boxes_base_selection",
+                {BOXES_BASE_SELECTION,
                     "rgb( 33, 162, 33 )"},
-                {"boxes_deco",
+                {BOXES_DECO,
                     "rgb( 10, 155, 10 )"},
-                {"linedit_text",
+                {LINEDIT_TEXT,
                     "rgb( 210, 210, 210 )"},
-                {"linedit_base",
+                {LINEDIT_BASE,
                     "rgb( 41, 44, 44 )"},
-                {"linedit_base_focus",
+                {LINEDIT_BASE_FOCUS,
                     "rgb( 57, 60, 60 )"},
-                {"linedit_base_selection",
+                {LINEDIT_BASE_SELECTION,
                     "rgb( 47, 99, 47 )"},
-                {"linedit_base_disabled",
+                {LINEDIT_BASE_DISABLED,
                     "rgb( 18, 20, 22 )"},
-                {"tables_header",
+                {TABLES_HEADER,
                     "rgb( 50, 52, 50 )"},
-                {"tables_header_hover",
+                {TABLES_HEADER_HOVER,
                     "rgb( 43, 82, 43 )"},
-                {"tables_header_separator",
+                {TABLES_HEADER_SEPARATOR,
                     "rgb( 80, 80, 80 )"},
-                {"tables_base",
+                {TABLES_BASE,
                     "rgb( 29, 29, 29 )"},
-                {"tables_base_disabled",
+                {TABLES_BASE_DISABLED,
                     "rgb( 18, 20, 22 )"},
-                {"tables_base_selection",
+                {TABLES_BASE_SELECTION,
                     "rgb( 43, 82, 43 )"},
-                {"tables_gridline",
+                {TABLES_GRIDLINE,
                     "rgb( 80, 80, 80 )"},
-                {"tables_text_selection",
+                {TABLES_TEXT_SELECTION,
                     "rgb( 248, 248, 248 )"},
-                {"tables_deco",
+                {TABLES_DECO,
                     "rgb( 10, 155, 10 )"},
-                {"charts_contour",
+                {CHARTS_CONTOUR,
                     "rgb( 50, 52, 50 )"},
-                {"textbrowser_text",
+                {TEXTBROWSER_TEXT,
                     "rgb( 210, 210, 210 )"},
-                {"textbrowser_base",
+                {TEXTBROWSER_BASE,
                     "rgb( 32, 32, 32 )"},
-                {"textbrowser_border",
+                {TEXTBROWSER_BORDER,
                     "rgb( 32, 32, 32 )"},
-                {"textbrowser_text_selection",
+                {TEXTBROWSER_TEXT_SELECTION,
                     "rgb( 248, 248, 248 )"},
-                {"textbrowser_base_selection",
+                {TEXTBROWSER_BASE_SELECTION,
                     "rgb( 64, 64, 64 )"},
-                {"scrollbar_base",
+                {SCROLLBAR_BASE,
                     "transparent"},
-                {"scrollbar_handler",
+                {SCROLLBAR_HANDLER,
                     "rgb( 69, 177, 255 )"},
-                {"scrollbar_controls",
+                {SCROLLBAR_CONTROLS,
                     "transparent"},
-                {"slider_handler",
+                {SLIDER_HANDLER,
                     "rgb( 112, 112, 112 )"},
-                {"slider_bar_active",
+                {SLIDER_BAR_ACTIVE,
                     "rgb( 10, 155, 10 )"},
-                {"slider_bar_inactive",
+                {SLIDER_BAR_INACTIVE,
                     "rgb( 64, 64, 64 )"},
-                {"slider_bar_active_border",
+                {SLIDER_BAR_ACTIVE_BORDER,
                     "rgb( 33, 162, 33 )"},
-                {"slider_handler_border",
+                {SLIDER_HANDLER_BORDER,
                     "rgb( 128, 128, 128 )"},
-                {"slider_handler_border_hover",
+                {SLIDER_HANDLER_BORDER_HOVER,
                     "rgb( 33, 162, 33 )"},
-                {"bwlists_buttons_base",
+                {BWLISTS_BUTTONS_BASE,
                     "rgb( 10, 155, 10 )"},
-                {"bwlists_buttons_base_hover",
+                {BWLISTS_BUTTONS_BASE_HOVER,
                     "rgb( 33, 162, 33 )"},
-                {"bwlists_buttons_base_disabled",
+                {BWLISTS_BUTTONS_BASE_DISABLED,
                     "rgb( 21, 71, 21 )"},
-                {"bwlists_buttons_base_flat",
+                {BWLISTS_BUTTONS_BASE_FLAT,
                     "rgb( 18, 20, 22 )"},
-                {"conf_list_base",
+                {CONFIGS_TREE_BASE,
                     "rgb( 20, 21, 22 )"}
             };
             break;

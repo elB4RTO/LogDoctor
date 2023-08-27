@@ -8,40 +8,54 @@
 #include <QString>
 
 
+namespace /*private*/
+{
+
+enum StyleId : uint32_t {
+    WINDOW_BASE,
+    TILES_BASE_HOVER,
+    TILES_BORDER_HOVER,
+    LINES_BASE,
+    LINES_BORDER
+};
+
+} // namespace (private)
+
+
 namespace GameSec
 {
 
 void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
 {
-    std::unordered_map<std::string, QString> style;
+    std::unordered_map<StyleId, QString> style;
     switch ( theme_id ) {
         case 0: // native
             break;
         case 1: // light
             style = {
-                {"window_base",
+                {WINDOW_BASE,
                     "rgb( 250, 250, 255 )"},
-                {"tiles_base_hover",
+                {TILES_BASE_HOVER,
                     "rgb( 230, 230, 230 )"},
-                {"tiles_border_hover",
+                {TILES_BORDER_HOVER,
                     "rgb( 124, 119, 119 )"},
-                {"lines_base",
+                {LINES_BASE,
                     "rgb( 88, 80, 80 )"},
-                {"lines_border",
+                {LINES_BORDER,
                     "rgb( 230, 230, 230 )"}
             };
             break;
         case 2: // dark
             style = {
-                {"window_base",
+                {WINDOW_BASE,
                     "rgb( 13, 14, 15 )"},
-                {"tiles_base_hover",
+                {TILES_BASE_HOVER,
                     "rgb( 27, 30, 33 )"},
-                {"tiles_border_hover",
+                {TILES_BORDER_HOVER,
                     "rgb( 40, 45, 49 )"},
-                {"lines_base",
+                {LINES_BASE,
                     "rgb( 96, 96, 96 )"},
-                {"lines_border",
+                {LINES_BORDER,
                     "rgb( 27, 30, 33 )"}
             };
             break;
@@ -52,7 +66,7 @@ void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
     if ( theme_id != 0 ) {
         stylesheet =
             "QWidget#CrissCross {"
-            "   background-color: "+style.at("window_base")+";"
+            "   background-color: "+style.at(WINDOW_BASE)+";"
             "}"
             "QPushButton#button_NE,"
             "QPushButton#button_N,"
@@ -64,8 +78,8 @@ void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
             "QPushButton#button_S,"
             "QPushButton#button_SW {"
             "   border-radius: 4px;"
-            "   border: 1px solid "+style.at("window_base")+";"
-            "   background-color: "+style.at("window_base")+";"
+            "   border: 1px solid "+style.at(WINDOW_BASE)+";"
+            "   background-color: "+style.at(WINDOW_BASE)+";"
             "}"
             "QPushButton#button_NE:hover,"
             "QPushButton#button_N:hover,"
@@ -76,8 +90,8 @@ void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
             "QPushButton#button_SE:hover,"
             "QPushButton#button_S:hover,"
             "QPushButton#button_SW:hover {"
-            "   border-color: "+style.at("tiles_border_hover")+";"
-            "   background-color: "+style.at("tiles_base_hover")+";"
+            "   border-color: "+style.at(TILES_BORDER_HOVER)+";"
+            "   background-color: "+style.at(TILES_BASE_HOVER)+";"
             "}"
             "QPushButton#button_NE::flat,"
             "QPushButton#button_N::flat,"
@@ -88,8 +102,8 @@ void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
             "QPushButton#button_SE::flat,"
             "QPushButton#button_S::flat,"
             "QPushButton#button_SW::flat {"
-            "   border-color: "+style.at("window_base")+";"
-            "   background-color: "+style.at("window_base")+";"
+            "   border-color: "+style.at(WINDOW_BASE)+";"
+            "   background-color: "+style.at(WINDOW_BASE)+";"
             "}"
             "QFrame#line_1,"
             "QFrame#line_2,"
@@ -103,8 +117,8 @@ void crisscrossStyleSheet( QString& stylesheet, const int theme_id )
             "QFrame#line_10,"
             "QFrame#line_11,"
             "QFrame#line_12 {"
-            "   border: 1px solid "+style.at("lines_border")+";"
-            "   background-color: "+style.at("lines_base")+";"
+            "   border: 1px solid "+style.at(LINES_BORDER)+";"
+            "   background-color: "+style.at(LINES_BASE)+";"
             "}";
     }
 }

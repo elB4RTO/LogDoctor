@@ -15,6 +15,18 @@
 #include <unordered_map> // leave this for OSX
 
 
+namespace /*private*/
+{
+
+enum StyleId : uint32_t {
+    TEXT,
+    WINDOW_PRIMARY,
+    WINDOW_SECONDARY
+};
+
+} // namespacce (private)
+
+
 Crapup::Crapup( const int window_theme_id, const QString& icons_theme, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapup }
@@ -275,27 +287,27 @@ void Crapup::rotateImg()
 
 void Crapup::getStyleSheet( QString& stylesheet, const int theme_id ) const
 {
-    std::unordered_map<std::string, QString> style;
+    std::unordered_map<StyleId, QString> style;
     switch ( theme_id ) {
         case 0: // native
             break;
         case 1: // light
             style = {
-                {"text",
+                {TEXT,
                  "rgb( 22, 11, 0 )"},
-                {"window_primary",
+                {WINDOW_PRIMARY,
                  "rgb( 250, 250, 255 )"},
-                {"window_secondary",
+                {WINDOW_SECONDARY,
                  "rgb( 230, 230, 230 )"}
             };
             break;
         case 2: // dark
             style = {
-                {"text",
+                {TEXT,
                     "rgb( 248, 248, 248 )"},
-                {"window_primary",
+                {WINDOW_PRIMARY,
                     "rgb( 13, 14, 15 )"},
-                {"window_secondary",
+                {WINDOW_SECONDARY,
                     "rgb( 27, 30, 33 )"}
             };
             break;
@@ -306,13 +318,13 @@ void Crapup::getStyleSheet( QString& stylesheet, const int theme_id ) const
     if ( theme_id != 0 ) {
         stylesheet =
             "* {"
-            "   color: "+style.at("text")+";"
+            "   color: "+style.at(TEXT)+";"
             "}"
             "QWidget#Crapup {"
-            "   background-color: "+style.at("window_secondary")+";"
+            "   background-color: "+style.at(WINDOW_SECONDARY)+";"
             "}"
             "QFrame {"
-            "   background-color: "+style.at("window_primary")+";"
+            "   background-color: "+style.at(WINDOW_PRIMARY)+";"
             "}";
     }
 }
