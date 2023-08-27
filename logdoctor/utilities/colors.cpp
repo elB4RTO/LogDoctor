@@ -84,29 +84,17 @@ void applyChartTheme( const int theme_id, const std::unordered_map<std::string, 
     const QFont& small_font{ fonts.at("main_small") };
     const QFont& font{ fonts.at("main") };
     switch ( theme_id ) {
-        case 0:
+        case 0: // light
             label_color.setRgb( 16, 16, 16 );
-            axis_pen.setColor( QColor( 32, 32, 32 ) );
-            grid_pen.setColor( QColor( 128, 128, 128 ) );
+            axis_pen.setColor( QColor( 56, 56, 56 ) );
+            grid_pen.setColor( QColor( 160, 160, 160 ) );
             background_brush.setColor( QColor( 248, 248, 248 ) );
             break;
-        case 1:
+        case 1: // dark
             label_color.setRgb( 248, 248, 248 );
-            axis_pen.setColor( QColor( 216, 216, 216 ) );
-            grid_pen.setColor( QColor( 128, 128, 128 ) );
-            background_brush.setColor( QColor( 40, 40, 40 ) );
-            break;
-        case 2:
-            label_color.setRgb( 40, 31, 7 );
-            axis_pen.setColor( QColor( 70, 61, 37 ) );
-            grid_pen.setColor( QColor( 100, 91, 67 ) );
-            background_brush.setColor( QColor( 230, 221, 197 ) );
-            break;
-        case 3:
-            label_color.setRgb( 220, 250, 124 );
-            axis_pen.setColor( QColor( 188, 224, 232 ) );
-            grid_pen.setColor( QColor( 134, 199, 214 ) );
-            background_brush.setColor( QColor( 0, 77, 94 ) );
+            axis_pen.setColor( QColor( 200, 200, 200 ) );
+            grid_pen.setColor( QColor( 96, 96, 96 ) );
+            background_brush.setColor( QColor( 24, 24, 24 ) );
             break;
         default:
             // shouldn't be here

@@ -2774,7 +2774,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>14</x>
+                    <x>0</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -6898,16 +6898,6 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <string>Dark</string>
                    </property>
                   </item>
-                  <item>
-                   <property name="text">
-                    <string>Sand</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Cerulean</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                 <item row="1" column="2">
@@ -8521,7 +8511,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>62</width>
+                     <width>98</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -9370,7 +9360,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>62</width>
+                     <width>98</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -10543,7 +10533,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>62</width>
+                     <width>98</width>
                      <height>54</height>
                     </rect>
                    </property>
