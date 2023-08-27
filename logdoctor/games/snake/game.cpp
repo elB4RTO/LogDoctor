@@ -44,7 +44,9 @@ SnakeGame::~SnakeGame()
 
 void SnakeGame::closeEvent( QCloseEvent* event )
 {
-    this->game_loop->stop();
+    if (this->game_loop) {
+        this->game_loop->stop();
+    }
     this->playing &= false;
 }
 
