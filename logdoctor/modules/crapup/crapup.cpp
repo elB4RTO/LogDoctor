@@ -12,7 +12,7 @@
 
 #include <string>
 #include <stdexcept>
-#include <unordered_map> // leave this for OSX
+#include <unordered_map> // leave this for clang
 
 
 namespace /*private*/

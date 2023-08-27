@@ -4,7 +4,7 @@
 
 #include "modules/exceptions.h"
 
-#include <unordered_map> // leave this here for OSX
+#include <unordered_map> // leave this here for clang
 
 #include <QFontDatabase>
 

@@ -78,7 +78,7 @@ void Snake::grow( const bool is_borning )
     const Direction d{  tail.direction };
     const Direction ld{ tail.prev_direction };
     if ( is_borning ) {
-        // one tile back
+        // one tile behind
         switch ( d ) {
             case Direction::UP:
                 y ++;

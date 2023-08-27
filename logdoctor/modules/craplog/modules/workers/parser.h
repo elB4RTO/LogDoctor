@@ -5,13 +5,13 @@
 
 #include "modules/craplog/modules/lib.h"
 
-#include <unordered_map> // leave this here for OSX
+#include <unordered_map> // leave this here for clang
 
 enum class WorkerDialog;
 
 class QSqlDatabase;
 
-typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for OSX
+typedef std::unordered_map<int, BWlist> bw_lists_t; // leave this here for clang
 
 
 class CraplogParser : public QObject
