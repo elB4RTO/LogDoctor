@@ -1504,7 +1504,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
         db.close();
     }
 
-    if ( ! successful ) {
+    if ( successful ) {
         result.emplace( data );
     }
 }
