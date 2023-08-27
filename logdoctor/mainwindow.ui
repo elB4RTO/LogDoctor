@@ -2774,7 +2774,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>0</x>
+                    <x>14</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -4573,7 +4573,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>181</width>
+                      <width>315</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4929,7 +4929,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>164</width>
+                      <width>315</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -5184,7 +5184,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>151</width>
+                      <width>431</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -5449,7 +5449,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>181</width>
+                      <width>431</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -8511,7 +8511,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>648</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -9360,7 +9360,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>648</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -10533,7 +10533,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>648</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -11447,6 +11447,195 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    <header>QtCharts</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>button_Tab_Log</tabstop>
+  <tabstop>button_Tab_View</tabstop>
+  <tabstop>button_Tab_Conf</tabstop>
+  <tabstop>button_Logs_Down</tabstop>
+  <tabstop>button_LogFiles_Apache</tabstop>
+  <tabstop>button_LogFiles_Nginx</tabstop>
+  <tabstop>button_LogFiles_Iis</tabstop>
+  <tabstop>checkBox_LogFiles_CheckAll</tabstop>
+  <tabstop>listLogFiles</tabstop>
+  <tabstop>button_LogFiles_RefreshList</tabstop>
+  <tabstop>button_LogFiles_ViewFile</tabstop>
+  <tabstop>textLogFiles</tabstop>
+  <tabstop>button_Logs_Up</tabstop>
+  <tabstop>button_MakeStats_Start</tabstop>
+  <tabstop>button_Tab_StatsWarn</tabstop>
+  <tabstop>button_Tab_StatsSpeed</tabstop>
+  <tabstop>button_Tab_StatsCount</tabstop>
+  <tabstop>button_Tab_StatsDay</tabstop>
+  <tabstop>button_Tab_StatsRelat</tabstop>
+  <tabstop>button_Tab_StatsGlob</tabstop>
+  <tabstop>box_StatsWarn_WebServer</tabstop>
+  <tabstop>box_StatsWarn_Year</tabstop>
+  <tabstop>box_StatsWarn_Month</tabstop>
+  <tabstop>box_StatsWarn_Day</tabstop>
+  <tabstop>checkBox_StatsWarn_Hour</tabstop>
+  <tabstop>box_StatsWarn_Hour</tabstop>
+  <tabstop>button_StatsWarn_Draw</tabstop>
+  <tabstop>table_StatsWarn</tabstop>
+  <tabstop>chart_StatsWarn</tabstop>
+  <tabstop>button_StatsWarn_Update</tabstop>
+  <tabstop>box_StatsSpeed_WebServer</tabstop>
+  <tabstop>box_StatsSpeed_Year</tabstop>
+  <tabstop>box_StatsSpeed_Month</tabstop>
+  <tabstop>box_StatsSpeed_Day</tabstop>
+  <tabstop>inLine_StatsSpeed_Protocol</tabstop>
+  <tabstop>inLine_StatsSpeed_Method</tabstop>
+  <tabstop>inLine_StatsSpeed_Uri</tabstop>
+  <tabstop>inLine_StatsSpeed_Query</tabstop>
+  <tabstop>inLine_StatsSpeed_Response</tabstop>
+  <tabstop>button_StatsSpeed_Draw</tabstop>
+  <tabstop>table_StatsSpeed</tabstop>
+  <tabstop>chart_StatsSpeed</tabstop>
+  <tabstop>box_StatsCount_WebServer</tabstop>
+  <tabstop>box_StatsCount_Year</tabstop>
+  <tabstop>box_StatsCount_Month</tabstop>
+  <tabstop>box_StatsCount_Day</tabstop>
+  <tabstop>scrollArea_StatsCount</tabstop>
+  <tabstop>button_StatsCount_Protocol</tabstop>
+  <tabstop>button_StatsCount_Method</tabstop>
+  <tabstop>button_StatsCount_Uri</tabstop>
+  <tabstop>button_StatsCount_Query</tabstop>
+  <tabstop>button_StatsCount_Response</tabstop>
+  <tabstop>button_StatsCount_Referrer</tabstop>
+  <tabstop>button_StatsCount_Cookie</tabstop>
+  <tabstop>button_StatsCount_UserAgent</tabstop>
+  <tabstop>button_StatsCount_Client</tabstop>
+  <tabstop>table_StatsCount</tabstop>
+  <tabstop>chart_StatsCount</tabstop>
+  <tabstop>box_StatsDay_WebServer</tabstop>
+  <tabstop>box_StatsDay_FromYear</tabstop>
+  <tabstop>box_StatsDay_FromMonth</tabstop>
+  <tabstop>box_StatsDay_FromDay</tabstop>
+  <tabstop>checkBox_StatsDay_Period</tabstop>
+  <tabstop>box_StatsDay_ToYear</tabstop>
+  <tabstop>box_StatsDay_ToMonth</tabstop>
+  <tabstop>box_StatsDay_ToDay</tabstop>
+  <tabstop>box_StatsDay_LogsField</tabstop>
+  <tabstop>inLine_StatsDay_Filter</tabstop>
+  <tabstop>button_StatsDay_Draw</tabstop>
+  <tabstop>chart_StatsDay</tabstop>
+  <tabstop>box_StatsRelat_WebServer</tabstop>
+  <tabstop>box_StatsRelat_FromYear</tabstop>
+  <tabstop>box_StatsRelat_FromMonth</tabstop>
+  <tabstop>box_StatsRelat_FromDay</tabstop>
+  <tabstop>box_StatsRelat_ToYear</tabstop>
+  <tabstop>box_StatsRelat_ToMonth</tabstop>
+  <tabstop>box_StatsRelat_ToDay</tabstop>
+  <tabstop>box_StatsRelat_LogsField_1</tabstop>
+  <tabstop>inLine_StatsRelat_Filter_1</tabstop>
+  <tabstop>box_StatsRelat_LogsField_2</tabstop>
+  <tabstop>inLine_StatsRelat_Filter_2</tabstop>
+  <tabstop>button_StatsRelat_Draw</tabstop>
+  <tabstop>chart_StatsRelat</tabstop>
+  <tabstop>button_StatsGlob_Apache</tabstop>
+  <tabstop>button_StatsGlob_Nginx</tabstop>
+  <tabstop>button_StatsGlob_Iis</tabstop>
+  <tabstop>scrollArea_StatsGlob_Recur</tabstop>
+  <tabstop>scrollArea_StatsGlob_Perf</tabstop>
+  <tabstop>scrollArea_StatsGlob_Traffic</tabstop>
+  <tabstop>scrollArea_StatsGlob_Work</tabstop>
+  <tabstop>tree_ConfSections</tabstop>
+  <tabstop>checkBox_ConfWindow_Geometry</tabstop>
+  <tabstop>box_ConfWindow_Theme</tabstop>
+  <tabstop>box_ConfWindow_Icons</tabstop>
+  <tabstop>slider_ConfDialogs_General</tabstop>
+  <tabstop>slider_ConfDialogs_Logs</tabstop>
+  <tabstop>slider_ConfDialogs_Stats</tabstop>
+  <tabstop>box_ConfCharts_Theme</tabstop>
+  <tabstop>chart_ConfCharts_Preview</tabstop>
+  <tabstop>box_ConfTextBrowser_Font</tabstop>
+  <tabstop>checkBox_ConfTextBrowser_WideLines</tabstop>
+  <tabstop>box_ConfTextBrowser_ColorScheme</tabstop>
+  <tabstop>textBrowser_ConfTextBrowser_Preview</tabstop>
+  <tabstop>inLine_ConfDatabases_Data_Path</tabstop>
+  <tabstop>button_ConfDatabases_Data_Save</tabstop>
+  <tabstop>inLine_ConfDatabases_Hashes_Path</tabstop>
+  <tabstop>button_ConfDatabases_Hashes_Save</tabstop>
+  <tabstop>checkBox_ConfDatabases_DoBackup</tabstop>
+  <tabstop>spinBox_ConfDatabases_NumBackups</tabstop>
+  <tabstop>radio_ConfDefaults_Apache</tabstop>
+  <tabstop>radio_ConfDefaults_Nginx</tabstop>
+  <tabstop>radio_ConfDefaults_Iis</tabstop>
+  <tabstop>checkBox_ConfControl_Usage</tabstop>
+  <tabstop>checkBox_ConfControl_Size</tabstop>
+  <tabstop>spinBox_ConfControl_Size</tabstop>
+  <tabstop>inLine_ConfApache_Path_String</tabstop>
+  <tabstop>button_ConfApache_Path_Save</tabstop>
+  <tabstop>inLine_ConfApache_Format_String</tabstop>
+  <tabstop>button_ConfApache_Format_Save</tabstop>
+  <tabstop>button_ConfApache_Format_Sample</tabstop>
+  <tabstop>scrollArea_ConfApache_Format_Sample</tabstop>
+  <tabstop>button_ConfApache_Format_Help</tabstop>
+  <tabstop>box_ConfApache_Warnlist_Field</tabstop>
+  <tabstop>checkBox_ConfApache_Warnlist_Used</tabstop>
+  <tabstop>inLine_ConfApache_Warnlist_String</tabstop>
+  <tabstop>button_ConfApache_Warnlist_Add</tabstop>
+  <tabstop>list_ConfApache_Warnlist_List</tabstop>
+  <tabstop>button_ConfApache_Warnlist_Remove</tabstop>
+  <tabstop>button_ConfApache_Warnlist_Up</tabstop>
+  <tabstop>button_ConfApache_Warnlist_Down</tabstop>
+  <tabstop>box_ConfApache_Blacklist_Field</tabstop>
+  <tabstop>checkBox_ConfApache_Blacklist_Used</tabstop>
+  <tabstop>inLine_ConfApache_Blacklist_String</tabstop>
+  <tabstop>button_ConfApache_Blacklist_Add</tabstop>
+  <tabstop>list_ConfApache_Blacklist_List</tabstop>
+  <tabstop>button_ConfApache_Blacklist_Remove</tabstop>
+  <tabstop>button_ConfApache_Blacklist_Up</tabstop>
+  <tabstop>button_ConfApache_Blacklist_Down</tabstop>
+  <tabstop>inLine_ConfNginx_Path_String</tabstop>
+  <tabstop>button_ConfNginx_Path_Save</tabstop>
+  <tabstop>inLine_ConfNginx_Format_String</tabstop>
+  <tabstop>button_ConfNginx_Format_Save</tabstop>
+  <tabstop>button_ConfNginx_Format_Sample</tabstop>
+  <tabstop>scrollArea_ConfNginx_Format_Sample</tabstop>
+  <tabstop>button_ConfNginx_Format_Help</tabstop>
+  <tabstop>box_ConfNginx_Warnlist_Field</tabstop>
+  <tabstop>checkBox_ConfNginx_Warnlist_Used</tabstop>
+  <tabstop>inLine_ConfNginx_Warnlist_String</tabstop>
+  <tabstop>button_ConfNginx_Warnlist_Add</tabstop>
+  <tabstop>list_ConfNginx_Warnlist_List</tabstop>
+  <tabstop>button_ConfNginx_Warnlist_Remove</tabstop>
+  <tabstop>button_ConfNginx_Warnlist_Up</tabstop>
+  <tabstop>button_ConfNginx_Warnlist_Down</tabstop>
+  <tabstop>box_ConfNginx_Blacklist_Field</tabstop>
+  <tabstop>checkBox_ConfNginx_Blacklist_Used</tabstop>
+  <tabstop>inLine_ConfNginx_Blacklist_String</tabstop>
+  <tabstop>button_ConfNginx_Blacklist_Add</tabstop>
+  <tabstop>list_ConfNginx_Blacklist_List</tabstop>
+  <tabstop>button_ConfNginx_Blacklist_Remove</tabstop>
+  <tabstop>button_ConfNginx_Blacklist_Up</tabstop>
+  <tabstop>button_ConfNginx_Blacklist_Down</tabstop>
+  <tabstop>inLine_ConfIis_Path_String</tabstop>
+  <tabstop>button_ConfIis_Path_Save</tabstop>
+  <tabstop>radio_ConfIis_Format_W3C</tabstop>
+  <tabstop>radio_ConfIis_Format_NCSA</tabstop>
+  <tabstop>radio_ConfIis_Format_IIS</tabstop>
+  <tabstop>inLine_ConfIis_Format_String</tabstop>
+  <tabstop>button_ConfIis_Format_Save</tabstop>
+  <tabstop>button_ConfIis_Format_Sample</tabstop>
+  <tabstop>scrollArea_ConfIis_Format_Sample</tabstop>
+  <tabstop>button_ConfIis_Format_Help</tabstop>
+  <tabstop>box_ConfIis_Warnlist_Field</tabstop>
+  <tabstop>checkBox_ConfIis_Warnlist_Used</tabstop>
+  <tabstop>inLine_ConfIis_Warnlist_String</tabstop>
+  <tabstop>button_ConfIis_Warnlist_Add</tabstop>
+  <tabstop>button_ConfIis_Warnlist_Remove</tabstop>
+  <tabstop>list_ConfIis_Warnlist_List</tabstop>
+  <tabstop>button_ConfIis_Warnlist_Up</tabstop>
+  <tabstop>button_ConfIis_Warnlist_Down</tabstop>
+  <tabstop>box_ConfIis_Blacklist_Field</tabstop>
+  <tabstop>checkBox_ConfIis_Blacklist_Used</tabstop>
+  <tabstop>inLine_ConfIis_Blacklist_String</tabstop>
+  <tabstop>button_ConfIis_Blacklist_Add</tabstop>
+  <tabstop>list_ConfIis_Blacklist_List</tabstop>
+  <tabstop>button_ConfIis_Blacklist_Remove</tabstop>
+  <tabstop>button_ConfIis_Blacklist_Down</tabstop>
+  <tabstop>button_ConfIis_Blacklist_Up</tabstop>
+ </tabstops>
  <resources>
   <include location="resources/resources.qrc"/>
  </resources>
