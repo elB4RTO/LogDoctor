@@ -2,6 +2,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "globals/global_configs.h"
+
 #include "defines/web_servers.h"
 
 #include "customs/treewidgetitems.h"
@@ -194,8 +196,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->tree_ConfSections->itemAt(0,0)->child(0)->setSelected( true );
     // window
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
-    this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme_id );
-    this->ui->box_ConfWindow_Icons->setCurrentIndex( this->icons_theme_id );
+    this->ui->box_ConfWindow_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::window_theme) );
+    this->ui->box_ConfWindow_Icons->setCurrentIndex( static_cast<int>(GlobalConfigs::icons_theme) );
     // dialogs
     this->ui->slider_ConfDialogs_General->setValue( this->dialogs_level );
     this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
@@ -206,7 +208,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( this->TB.getColorSchemeID() );
     this->refreshTextBrowserPreview();
     // charts
-    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->charts_theme_id );
+    this->ui->box_ConfCharts_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::charts_theme) );
     this->refreshChartsPreview();
     // databases
     this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
@@ -270,7 +272,7 @@ MainWindow::MainWindow(QWidget *parent)
     };
     for ( auto* chart : charts ) {
         ColorSec::applyChartTheme(
-            this->charts_theme_id, this->FONTS, chart );
+            this->FONTS, chart );
     }
     this->ui->listLogFiles->sortByColumn( 0, Qt::SortOrder::AscendingOrder );
 
@@ -432,13 +434,13 @@ void MainWindow::readConfigs()
                     this->setGeometryFromString( val );
 
                 } else if ( var == "WindowTheme" ) {
-                    this->window_theme_id = std::stoi( val );
+                    GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
 
                 } else if ( var == "ChartsTheme" ) {
-                    this->charts_theme_id = std::stoi( val );
+                    GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
 
                 } else if ( var == "IconsTheme" ) {
-                    this->icons_theme_id = std::stoi( val );
+                    GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
 
                 } else if ( var == "MainDialogLevel" ) {
                     this->dialogs_level = std::stoi( val );
@@ -778,9 +780,9 @@ void MainWindow::writeConfigs()
         configs += "\nLanguage=" + this->language;
         configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
         configs += "\nGeometry=" + this->geometryToString();
-        configs += "\nWindowTheme=" + std::to_string( this->window_theme_id );
-        configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
-        configs += "\nIconsTheme=" + std::to_string( this->icons_theme_id );
+        configs += "\nWindowTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::window_theme) );
+        configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
+        configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
         configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
@@ -1042,8 +1044,8 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 //////////////////
 void MainWindow::detectIconsTheme()
 {
-    switch ( this->window_theme_id ) {
-        case 0: // native
+    switch ( GlobalConfigs::window_theme ) {
+        case WindowTheme::Native:
             // use window color to determine the theme
             if ( this->palette().window().color().black() > 127 ) {
                 this->icons_theme = "light_native";
@@ -1051,14 +1053,14 @@ void MainWindow::detectIconsTheme()
                 this->icons_theme = "dark_native";
             }
             break;
-        case 1: // light
+        case WindowTheme::Light:
             this->icons_theme = "dark";
             break;
-        case 2: // dark
+        case WindowTheme::Dark:
             this->icons_theme = "light";
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
             break;
     }
 }
@@ -1067,26 +1069,27 @@ void MainWindow::detectIconsTheme()
 void MainWindow::updateUiTheme()
 {
     // window and fonts
-    switch ( this->window_theme_id ) {
-        case 0: // native
+    switch ( GlobalConfigs::window_theme ) {
+        case WindowTheme::Native:
             // window first
             this->setStyleSheet("");
             // icons last
             this->updateUiIcons();
             break;
-        case 1: case 2: // light, dark
+        case WindowTheme::Light:
+        case WindowTheme::Dark:
             {
             // icons first
             this->updateUiIcons();
             // window last
             QString ss;
-            StyleSec::getStyleSheet( ss, this->icons_theme, this->window_theme_id );
+            StyleSec::getStyleSheet( ss, this->icons_theme );
             this->setStyleSheet( ss );
             break;
             }
         default:
             // wrong
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
             break;
     }
     // fallback stylesheets
@@ -1098,22 +1101,22 @@ void MainWindow::updateUiTheme()
 void MainWindow::updateUiIcons()
 {
     const QString old_icons_theme{ this->icons_theme };
-    switch ( this->icons_theme_id ) {
-        case 0:
+    switch ( GlobalConfigs::icons_theme ) {
+        case IconsTheme::Auto:
             this->detectIconsTheme();
             break;
-        case 1:
-            this->icons_theme = ( this->window_theme_id == 0 )
+        case IconsTheme::Light:
+            this->icons_theme = ( GlobalConfigs::window_theme == WindowTheme::Native )
                                 ? "light_native"
                                 : "light";
             break;
-        case 2:
-            this->icons_theme = ( this->window_theme_id == 0 )
+        case IconsTheme::Dark:
+            this->icons_theme = ( GlobalConfigs::window_theme == WindowTheme::Native )
                                 ? "dark_native"
                                 : "dark";
             break;
         default:
-            throw GenericException( "Unexpected IconSet index: "+std::to_string(this->icons_theme_id), true );
+            throw GenericException( "Unexpected IconsTheme index: "+std::to_string(static_cast<themes_t>(GlobalConfigs::icons_theme)), true );
             break;
     }
 
@@ -2067,7 +2070,6 @@ void MainWindow::menu_actionBlockNote_triggered()
 void MainWindow::menu_actionInfos_triggered()
 {
     this->crapinfo.reset( new Crapinfo(
-        this->window_theme_id,
         QString::number( this->version ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->configs_path ),
@@ -2082,7 +2084,7 @@ void MainWindow::menu_actionCheckUpdates_triggered()
 
     } else {
         this->crapup.reset( new Crapup(
-            this->window_theme_id,
+            //this->window_theme_id,
             this->icons_theme ) );
         this->crapup->show();
         this->crapup->versionCheck( this->version );
@@ -2096,8 +2098,7 @@ void MainWindow::menu_actionCrissCross_triggered()
         this->crisscross->activateWindow();
 
     } else {
-        this->crisscross.reset( new CrissCross(
-            this->window_theme_id ) );
+        this->crisscross.reset( new CrissCross() );
         this->crisscross->show();
     }
 }
@@ -2109,7 +2110,6 @@ void MainWindow::menu_actionSnake_triggered()
 
     } else {
         this->snake.reset( new SnakeGame(
-            this->window_theme_id,
             this->FONTS.at("script") ) );
         this->snake->show();
     }
@@ -2806,10 +2806,11 @@ void MainWindow::craplogFinished()
         this->force_updating_labels &= false;
         // draw the chart
         this->craplog.makeChart(
-            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+            this->FONTS,
             this->ui->chart_MakeStats_Size );
         ColorSec::applyChartTheme(
-            this->charts_theme_id, this->FONTS,
+            this->FONTS,
             this->ui->chart_MakeStats_Size );
         this->db_edited = this->craplog.editedDatabase();
         // refresh the logs section
@@ -2990,14 +2991,14 @@ void MainWindow::drawStatsWarn()
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
         this->ui->box_StatsWarn_Day->currentText(),
         (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsWarn );
     this->setDbWorkingState( false );
 }
@@ -3182,7 +3183,7 @@ void MainWindow::drawStatsSpeed()
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_StatsSpeed,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
@@ -3193,7 +3194,7 @@ void MainWindow::drawStatsSpeed()
         FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).value(),
         FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).value() );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsSpeed );
     this->setDbWorkingState( false );
 }
@@ -3424,14 +3425,14 @@ void MainWindow::drawStatsCount()
     this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(),
         this->ui->box_StatsCount_Month->currentText(),
         this->ui->box_StatsCount_Day->currentText(),
         this->count_fld );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsCount );
     this->ui->chart_StatsCount->chart()->setTitleFont(
         this->FONTS.at( "main_big" ) );
@@ -3707,7 +3708,7 @@ void MainWindow::drawStatsDay()
     const bool period{ this->ui->checkBox_StatsDay_Period->isChecked() };
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
@@ -3718,7 +3719,7 @@ void MainWindow::drawStatsDay()
         this->ui->box_StatsDay_LogsField->currentText(),
         this->getStatsDayParsedFilter().value() );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsDay );
     this->setDbWorkingState( false );
 }
@@ -3988,7 +3989,7 @@ void MainWindow::drawStatsRelat()
 {
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
         this->ui->box_StatsRelat_FromYear->currentText(),
         this->ui->box_StatsRelat_FromMonth->currentText(),
@@ -4001,7 +4002,7 @@ void MainWindow::drawStatsRelat()
         this->ui->box_StatsRelat_LogsField_2->currentText(),
         this->getStatsRelatParsedFilter( 2 ).value() );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsRelat );
     this->setDbWorkingState( false );
 }
@@ -4240,13 +4241,13 @@ void MainWindow::on_checkBox_ConfWindow_Geometry_clicked(bool checked)
 
 void MainWindow::on_box_ConfWindow_Theme_currentIndexChanged(int index)
 {
-    this->window_theme_id = index;
+    GlobalConfigs::window_theme = static_cast<WindowTheme>(index);
     this->updateUiTheme();
 }
 
 void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
 {
-    this->icons_theme_id = index;
+    GlobalConfigs::icons_theme = static_cast<IconsTheme>(index);
     this->updateUiIcons();
 }
 
@@ -4318,26 +4319,26 @@ void MainWindow::refreshTextBrowserPreview()
 //// CHARTS ////
 void MainWindow::on_box_ConfCharts_Theme_currentIndexChanged(int index)
 {
-    this->charts_theme_id = index;
+    GlobalConfigs::charts_theme = static_cast<ChartsTheme>(index);
     this->refreshChartsPreview();
 
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_MakeStats_Size );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsWarn );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsSpeed );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsCount );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsDay );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsRelat );
 }
 void MainWindow::refreshChartsPreview()
@@ -4400,7 +4401,7 @@ void MainWindow::refreshChartsPreview()
 
     QChart* t_chart{ new QChart() };
     // apply the theme
-    t_chart->setTheme( this->CHARTS_THEMES.at( this->charts_theme_id ) );
+    t_chart->setTheme( this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ) );
     // add the bars
     t_chart->addSeries( bars );
     t_chart->setTitle( "Sample preview" );
@@ -4434,7 +4435,7 @@ void MainWindow::refreshChartsPreview()
     this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
 
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_ConfCharts_Preview );
 }
 

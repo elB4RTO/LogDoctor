@@ -6,7 +6,7 @@ class QString;
 namespace StyleSec::Crapup
 {
 
-void getStyleSheet( QString& stylesheet, const int theme_id );
+void getStyleSheet( QString& stylesheet );
 
 } // namespacce StyleSec::Crapup
 

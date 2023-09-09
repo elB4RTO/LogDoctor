@@ -12,14 +12,14 @@
 #include <QGraphicsPixmapItem>
 
 
-SnakeGame::SnakeGame( const int theme_id, const QFont& term_font, QWidget* parent )
+SnakeGame::SnakeGame( const QFont& term_font, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::SnakeGame }
 {
     this->ui->setupUi(this);
 
     QString stylesheet{ "" };
-    StyleSec::Games::Snake::getStyleSheet( stylesheet, theme_id );
+    StyleSec::Games::Snake::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
     QFont font{ term_font };

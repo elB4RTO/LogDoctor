@@ -6,7 +6,7 @@ class QString;
 namespace StyleSec::Games::CrissCross
 {
 
-void getStyleSheet( QString& stylesheet, const int theme_id );
+void getStyleSheet( QString& stylesheet );
 
 } // namespace StyleSec::Games::CrissCross
 

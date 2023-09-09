@@ -7,14 +7,14 @@
 #include <QFontDatabase>
 
 
-Crapinfo::Crapinfo( const int window_theme_id, const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent )
+Crapinfo::Crapinfo( const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget *parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapinfo }
 {
     ui->setupUi(this);
 
     QString stylesheet;
-    StyleSec::Crapinfo::getStyleSheet( stylesheet, window_theme_id );
+    StyleSec::Crapinfo::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
     // fonts

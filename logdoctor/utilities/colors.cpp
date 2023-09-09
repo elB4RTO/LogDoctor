@@ -1,5 +1,8 @@
 
 #include "colors.h"
+
+#include "globals/global_configs.h"
+
 #include "modules/exceptions.h"
 
 #include <QPalette>
@@ -74,7 +77,7 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> getColor
 }
 
 
-void applyChartTheme( const int theme_id, const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
+void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
 {
     QPen axis_pen;
     QPen grid_pen;
@@ -83,14 +86,14 @@ void applyChartTheme( const int theme_id, const std::unordered_map<std::string, 
     QBrush background_brush{ chart_view->backgroundBrush() };
     const QFont& small_font{ fonts.at("main_small") };
     const QFont& font{ fonts.at("main") };
-    switch ( theme_id ) {
-        case 0: // light
+    switch ( GlobalConfigs::charts_theme ) {
+        case ChartsTheme::Light:
             label_color.setRgb( 16, 16, 16 );
             axis_pen.setColor( QColor( 56, 56, 56 ) );
             grid_pen.setColor( QColor( 160, 160, 160 ) );
             background_brush.setColor( QColor( 248, 248, 248 ) );
             break;
-        case 1: // dark
+        case ChartsTheme::Dark:
             label_color.setRgb( 248, 248, 248 );
             axis_pen.setColor( QColor( 200, 200, 200 ) );
             grid_pen.setColor( QColor( 96, 96, 96 ) );
@@ -98,7 +101,7 @@ void applyChartTheme( const int theme_id, const std::unordered_map<std::string, 
             break;
         default:
             // shouldn't be here
-            throw GenericException( "Unexpeced ChartsTheme ID: "+std::to_string(theme_id), true );
+            throw GenericException( "Unexpeced ChartsTheme ID: "+std::to_string(static_cast<themes_t>(GlobalConfigs::charts_theme)), true );
             break;
     }
     axis_pen.setWidthF( 1.1 );

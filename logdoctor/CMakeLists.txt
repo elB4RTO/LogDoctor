@@ -31,6 +31,9 @@ set(PROJECT_SOURCES
     mainwindow.h
     mainwindow.cpp
 
+    globals/global_configs.h
+    globals/global_configs.cpp
+
     defines/web_servers.h
 
     customs/treewidgetitems.h

@@ -1,6 +1,8 @@
 
 #include "stylesheets.h"
 
+#include "globals/global_configs.h"
+
 #include "modules/exceptions.h"
 
 #include <QString>
@@ -21,10 +23,10 @@ enum StyleId : uint32_t {
 
 using StyleMap = std::unordered_map<StyleId, QString>;
 
-const StyleMap makeStyleMap( const int theme_id )
+const StyleMap makeStyleMap()
 {
-    switch ( theme_id ) {
-        case 1: // light
+    switch ( GlobalConfigs::window_theme ) {
+        case WindowTheme::Light:
             return {
                 {WINDOW_BASE,
                     "rgb( 250, 250, 255 )"},
@@ -38,7 +40,7 @@ const StyleMap makeStyleMap( const int theme_id )
                     "rgb( 230, 230, 230 )"}
             };
             break;
-        case 2: // dark
+        case WindowTheme::Dark:
             return {
                 {WINDOW_BASE,
                     "rgb( 13, 14, 15 )"},
@@ -53,7 +55,7 @@ const StyleMap makeStyleMap( const int theme_id )
             };
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(theme_id), true );
+            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
             break;
     }
 }
@@ -64,10 +66,10 @@ const StyleMap makeStyleMap( const int theme_id )
 namespace StyleSec::Games::CrissCross
 {
 
-void getStyleSheet( QString& stylesheet, const int theme_id )
+void getStyleSheet( QString& stylesheet )
 {
-    if ( theme_id != 0 ) {
-        const StyleMap style{ makeStyleMap( theme_id ) };
+    if ( GlobalConfigs::window_theme != WindowTheme::Native ) {
+        const StyleMap style{ makeStyleMap() };
         stylesheet =
             "QWidget#CrissCross {"
             "   background-color: "+style.at(WINDOW_BASE)+";"

@@ -6,7 +6,7 @@ class QString;
 namespace StyleSec::Games::Snake
 {
 
-void getStyleSheet( QString& stylesheet, const int theme_id );
+void getStyleSheet( QString& stylesheet );
 
 } // namespace StyleSec::Games::Snake
 

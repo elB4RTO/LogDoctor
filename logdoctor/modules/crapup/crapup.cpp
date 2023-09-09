@@ -29,7 +29,7 @@ enum class ErrCode : uint8_t {
 } // namespacce (private)
 
 
-Crapup::Crapup( const int window_theme_id, const QString& icons_theme, QWidget* parent )
+Crapup::Crapup( const QString& icons_theme, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapup }
     , img_checking{ ":/icons/icons/"+icons_theme+"/checking.png" }
@@ -37,7 +37,7 @@ Crapup::Crapup( const int window_theme_id, const QString& icons_theme, QWidget* 
     this->ui->setupUi(this);
 
     QString stylesheet;
-    StyleSec::Crapup::getStyleSheet( stylesheet, window_theme_id );
+    StyleSec::Crapup::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
     // fonts

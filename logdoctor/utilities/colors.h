@@ -26,11 +26,10 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> getColor
 
 //! Applies the choosen theme to the given chart
 /*!
-  \param theme_id The ID of the theme to apply
   \param fonts The fonts set
   \param chart_view The chart on which the theme will be applied
 */
-void applyChartTheme( const int theme_id, const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view );
+void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view );
 
 } // namespace ColorSec
 

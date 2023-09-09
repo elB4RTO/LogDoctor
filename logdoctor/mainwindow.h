@@ -645,11 +645,6 @@ private:
     // remember window position and sizes
     bool remember_window{ true };
 
-    // themes
-    int window_theme_id { 0 };
-    int charts_theme_id { 0 };
-    int icons_theme_id  { 0 };
-
     QString icons_theme;
 
     //! Auto-detects the icon-set to use depending on the current window theme

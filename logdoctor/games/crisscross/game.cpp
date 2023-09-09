@@ -2,6 +2,8 @@
 #include "game.h"
 #include "ui_crisscross.h"
 
+#include "globals/global_configs.h"
+
 #include "modules/stylesheets.h"
 
 #include "modules/dialogs/dialogmsg.h"
@@ -9,14 +11,14 @@
 #include <QPushButton>
 
 
-CrissCross::CrissCross( const int theme_id, QWidget* parent )
+CrissCross::CrissCross( QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::CrissCross }
 {
     this->ui->setupUi(this);
 
     QString stylesheet{ "" };
-    StyleSec::Games::CrissCross::getStyleSheet( stylesheet, theme_id );
+    StyleSec::Games::CrissCross::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
     // verify that one player is human and the other is not
