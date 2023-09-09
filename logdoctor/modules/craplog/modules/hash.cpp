@@ -19,7 +19,7 @@
 #include <QSqlError>
 
 
-void HashOps::setDialogLevel( const int& new_level )
+void HashOps::setDialogLevel( const int new_level )
 {
     this->dialog_level = new_level;
 }

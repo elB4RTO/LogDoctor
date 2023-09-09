@@ -6,7 +6,7 @@
 #include <QGraphicsPixmapItem>
 
 
-Food::Food( const bool& can_move )
+Food::Food( const bool can_move )
     : image{ new QGraphicsPixmapItem( (can_move) ? this->img_rat : this->img_egg ) }
     , movable{ can_move }
     , x{ 0 }

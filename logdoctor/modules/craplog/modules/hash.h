@@ -20,7 +20,7 @@ class HashOps
 public:
 
     //! Sets the new Dialogs level
-    void setDialogLevel( const int& new_level );
+    void setDialogLevel( const int new_level );
 
     //! Retrieves the lists of hashes from the database file
     /*!

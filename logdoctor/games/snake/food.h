@@ -10,7 +10,7 @@ class QGraphicsPixmapItem;
 class Food
 {
 public:
-    explicit Food( const bool& can_move=false );
+    explicit Food( const bool can_move=false );
     explicit Food( const Food& other );
     const Food& operator=( const Food& other );
 
