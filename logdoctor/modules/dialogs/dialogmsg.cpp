@@ -9,7 +9,7 @@
 #include <QPixmap>
 
 
-DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& additional, const int type, QWidget* parent )
+DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& additional, const MsgType type, QWidget* parent )
     : QDialog{ parent }
     , ui{ new Ui::DialogMsg }
 {
@@ -17,21 +17,18 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
 
     // icon
     switch (type) {
-        case 0:
-            // info message
+        case MsgType::Info:
             this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/info.png") );
             break;
-        case 1:
-            // warning message
+        case MsgType::Warning:
             this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/warn.png") );
             break;
-        case 2:
-            // error message
+        case MsgType::Error:
             this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/err.png") );
             break;
         default:
             // shouldn't be here
-            throw GenericException("Unexpected dialog type: "+ std::to_string(type));
+            throw GenericException("Unexpected dialog type: "+ std::to_string(static_cast<int>(type)));
     }
 
     // insert the given text

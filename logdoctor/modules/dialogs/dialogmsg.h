@@ -4,6 +4,13 @@
 #include <QDialog>
 
 
+enum class MsgType {
+    Info    = 0,
+    Warning = 1,
+    Error   = 2
+};
+
+
 namespace Ui {
     class DialogMsg;
 }
@@ -25,7 +32,7 @@ public:
         \param additional Additional informations, usually an error message
         \param parent The parent Widget
     */
-    explicit DialogMsg( const QString& title, const QString& text, const QString& additional, const int type, QWidget *parent=nullptr );
+    explicit DialogMsg( const QString& title, const QString& text, const QString& additional, const MsgType type, QWidget *parent=nullptr );
 
 private slots:
 
