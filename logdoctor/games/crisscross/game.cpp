@@ -4,8 +4,9 @@
 
 #include "modules/stylesheets.h"
 
+#include "modules/dialogs/dialogmsg.h"
+
 #include <QPushButton>
-#include <QMessageBox>
 
 
 CrissCross::CrissCross( const int theme_id, QWidget* parent )
@@ -233,10 +234,14 @@ void CrissCross::victory()
         // AI won
         message = CrissCross::tr("This time you lost!");
     }
-    QMessageBox::about(
-        this,
+    DialogMsg dialog(
         CrissCross::tr("Victory"),
-        message );
+        message,
+        "",
+        MsgType::Game,
+        this
+    );
+    std::ignore = dialog.exec();
 }
 
 
@@ -264,10 +269,14 @@ void CrissCross::draw()
     }
 
     // display a dialog
-    QMessageBox::about(
-        this,
+    DialogMsg dialog(
         CrissCross::tr("Draw"),
-        CrissCross::tr("Nice match") );
+        CrissCross::tr("Nice match"),
+        "",
+        MsgType::Game,
+        this
+    );
+    std::ignore = dialog.exec();
 }
 
 

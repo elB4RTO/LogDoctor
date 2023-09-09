@@ -4,11 +4,12 @@
 
 #include "modules/stylesheets.h"
 
+#include "modules/dialogs/dialogmsg.h"
+
 #include <QTimer>
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
-#include <QMessageBox>
 
 
 SnakeGame::SnakeGame( const int theme_id, const QFont& term_font, QWidget* parent )
@@ -233,10 +234,14 @@ void SnakeGame::processGameLogic()
     if ( game_over ) {
         this->game_loop->stop();
         this->playing &= false;
-        QMessageBox::about(
-            this,
+        DialogMsg dialog(
             SnakeGame::tr("Game Over"),
-            this->game_over_msg );
+            this->game_over_msg,
+            "",
+            MsgType::Game,
+            this
+            );
+        std::ignore = dialog.exec();
     } else {
 
 

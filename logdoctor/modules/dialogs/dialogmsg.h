@@ -7,7 +7,8 @@
 enum class MsgType {
     Info    = 0,
     Warning = 1,
-    Error   = 2
+    Error   = 2,
+    Game    = 3
 };
 
 

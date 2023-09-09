@@ -77,7 +77,7 @@ private:
     //// GAME ////
 
     //! Enumerates the available game modes
-    enum GameMode {
+    enum class GameMode {
         Classic, //!< Classic snake game
         Hunt,    //!< Game variant in which the food moves too
         Battle   //!< Game variant in which you play against another snake
