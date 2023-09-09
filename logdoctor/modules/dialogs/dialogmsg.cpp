@@ -27,7 +27,7 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
             this->ui->label_Icon->setPixmap( QPixmap(":/icons/icons/dialogs/err.png") );
             break;
         case MsgType::Game:
-            this->ui->label_Icon->setPixmap( QPixmap(":/logo/logo/logdoctor.svg") );
+            this->ui->label_Icon->setPixmap( QPixmap(":/logo/logo/logdoctor.svg").scaled( QSize(64,64) ) );
             break;
         default:
             // shouldn't be here
