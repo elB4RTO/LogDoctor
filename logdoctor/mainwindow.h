@@ -661,9 +661,7 @@ private:
 
     const std::vector<QChart::ChartTheme> CHARTS_THEMES{
         QChart::ChartTheme::ChartThemeLight,
-        QChart::ChartTheme::ChartThemeDark,
-        QChart::ChartTheme::ChartThemeBrownSand,
-        QChart::ChartTheme::ChartThemeBlueCerulean
+        QChart::ChartTheme::ChartThemeDark
     };
 
     // color schemes
