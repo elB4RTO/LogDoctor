@@ -4,9 +4,9 @@
 
 #include "globals/global_configs.h"
 
-#include "modules/stylesheets.h"
+#include "games/game_dialog.h"
 
-#include "modules/dialogs/dialogmsg.h"
+#include "modules/stylesheets.h"
 
 #include <QPushButton>
 
@@ -227,20 +227,19 @@ void CrissCross::victory()
     }
 
     // display a dialog
-    QString message;
+    QString title, message;
     if ( (this->p_turn == 1 && this->p1_human)
       || (this->p_turn == 2 && this->p2_human) ) {
         // user won
+        title = CrissCross::tr("Victory");
         message = CrissCross::tr("You beated me!");
     } else {
         // AI won
         message = CrissCross::tr("This time you lost!");
     }
-    DialogMsg dialog(
-        CrissCross::tr("Victory"),
+    GameDialog dialog(
+        title,
         message,
-        "",
-        MsgType::Game,
         this
     );
     std::ignore = dialog.exec();
@@ -271,11 +270,9 @@ void CrissCross::draw()
     }
 
     // display a dialog
-    DialogMsg dialog(
+    GameDialog dialog(
         CrissCross::tr("Draw"),
         CrissCross::tr("Nice match"),
-        "",
-        MsgType::Game,
         this
     );
     std::ignore = dialog.exec();

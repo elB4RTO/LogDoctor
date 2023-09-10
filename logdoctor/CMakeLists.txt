@@ -130,6 +130,9 @@ set(PROJECT_SOURCES
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
 
+    games/game_dialog.ui
+    games/game_dialog.h
+    games/game_dialog.cpp
     games/crisscross/crisscross.ui
     games/crisscross/game.h
     games/crisscross/game.cpp

@@ -4,7 +4,7 @@
 
 #include "modules/stylesheets.h"
 
-#include "modules/dialogs/dialogmsg.h"
+#include "games/game_dialog.h"
 
 #include <QTimer>
 #include <QKeyEvent>
@@ -234,13 +234,11 @@ void SnakeGame::processGameLogic()
     if ( game_over ) {
         this->game_loop->stop();
         this->playing &= false;
-        DialogMsg dialog(
+        GameDialog dialog(
             SnakeGame::tr("Game Over"),
             this->game_over_msg,
-            "",
-            MsgType::Game,
             this
-            );
+        );
         std::ignore = dialog.exec();
     } else {
 
