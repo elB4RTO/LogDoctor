@@ -68,15 +68,15 @@ set(PROJECT_SOURCES
 
     modules/dialogs.h
     modules/dialogs.cpp
-    modules/dialogs/dialogmsg.ui
-    modules/dialogs/dialogmsg.h
-    modules/dialogs/dialogmsg.cpp
-    modules/dialogs/dialogbool.ui
-    modules/dialogs/dialogbool.h
-    modules/dialogs/dialogbool.cpp
-    modules/dialogs/dialogdia.ui
-    modules/dialogs/dialogdia.h
-    modules/dialogs/dialogdia.cpp
+    modules/dialogs/message_dialog.ui
+    modules/dialogs/message_dialog.h
+    modules/dialogs/message_dialog.cpp
+    modules/dialogs/boolean_dialog.ui
+    modules/dialogs/boolean_dialog.h
+    modules/dialogs/boolean_dialog.cpp
+    modules/dialogs/ida_dialog.ui
+    modules/dialogs/ida_dialog.h
+    modules/dialogs/ida_dialog.cpp
 
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp

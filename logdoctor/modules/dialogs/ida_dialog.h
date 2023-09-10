@@ -1,18 +1,18 @@
-#ifndef DIALOGDIA_H
-#define DIALOGDIA_H
+#ifndef DIALOGIDA_H
+#define DIALOGIDA_H
 
 #include <QDialog>
 
 
 namespace Ui {
-    class DialogDia;
+    class DialogIda;
 }
 
-//! DialogDia
+//! DialogIda
 /*!
-    DISCARD/IGNORE/ABORT choice dialog
+    IGNORE/DISCARD/ABORT choice dialog
 */
-class DialogDia : public QDialog
+class DialogIda : public QDialog
 {
     Q_OBJECT
 
@@ -27,7 +27,7 @@ public:
         \param abort Whether to show the ABORT button or not
         \param parent The parent Widget
     */
-    explicit DialogDia( const QString& title, const QString& text, const bool ignore=true, const bool discard=true, const bool abort=true, QWidget* parent=nullptr );
+    explicit DialogIda( const QString& title, const QString& text, const bool ignore=true, const bool discard=true, const bool abort=true, QWidget* parent=nullptr );
 
 private slots:
 
@@ -41,7 +41,7 @@ private slots:
     void on_button_ABORT_clicked();
 
 private:
-    QSharedPointer<Ui::DialogDia> ui;
+    QSharedPointer<Ui::DialogIda> ui;
 };
 
-#endif // DIALOGDIA_H
+#endif // DIALOGIDA_H

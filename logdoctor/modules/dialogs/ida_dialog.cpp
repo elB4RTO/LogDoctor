@@ -1,11 +1,11 @@
 
-#include "dialogdia.h"
-#include "ui_dialogdia.h"
+#include "ida_dialog.h"
+#include "ui_ida_dialog.h"
 
 
-DialogDia::DialogDia( const QString& title, const QString& text, const bool ignore, const bool discard, const bool abort, QWidget* parent )
+DialogIda::DialogIda( const QString& title, const QString& text, const bool ignore, const bool discard, const bool abort, QWidget* parent )
     : QDialog{ parent }
-    , ui{ new Ui::DialogDia }
+    , ui{ new Ui::DialogIda }
 {
     ui->setupUi(this);
 
@@ -31,17 +31,17 @@ DialogDia::DialogDia( const QString& title, const QString& text, const bool igno
     this->adjustSize();
 }
 
-void DialogDia::on_button_IGNORE_clicked()
+void DialogIda::on_button_IGNORE_clicked()
 {
     this->done( 2 );
 }
 
-void DialogDia::on_button_DISCARD_clicked()
+void DialogIda::on_button_DISCARD_clicked()
 {
     this->done( 1 );
 }
 
-void DialogDia::on_button_ABORT_clicked()
+void DialogIda::on_button_ABORT_clicked()
 {
     this->done( 0 );
 }

@@ -1,6 +1,6 @@
 
-#include "dialogbool.h"
-#include "ui_dialogbool.h"
+#include "boolean_dialog.h"
+#include "ui_boolean_dialog.h"
 
 
 DialogBool::DialogBool( const QString& title, const QString& text, QWidget *parent )

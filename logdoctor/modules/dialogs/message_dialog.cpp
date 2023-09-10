@@ -1,6 +1,6 @@
 
-#include "dialogmsg.h"
-#include "ui_dialogmsg.h"
+#include "message_dialog.h"
+#include "ui_message_dialog.h"
 
 #include "modules/exceptions.h"
 
@@ -28,7 +28,7 @@ DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& a
             break;
         default:
             // shouldn't be here
-            throw GenericException("Unexpected dialog type: "+ std::to_string(static_cast<int>(type)));
+            throw GenericException("Unexpected MsgType: "+ std::to_string(static_cast<int>(type)));
     }
 
     // insert the given text

@@ -1,9 +1,9 @@
 
 #include "dialogs.h"
 
-#include "modules/dialogs/dialogmsg.h"
-#include "modules/dialogs/dialogbool.h"
-#include "modules/dialogs/dialogdia.h"
+#include "modules/dialogs/message_dialog.h"
+#include "modules/dialogs/boolean_dialog.h"
+#include "modules/dialogs/ida_dialog.h"
 
 
 //////////////////
@@ -427,7 +427,7 @@ void DialogSec::errFailedDefiningLogType( const QString& file, QWidget* parent )
 
 const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent )
 {
-    DialogDia dialog{
+    DialogIda dialog{
         DialogSec::tr("File already used"),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file has probably been used already"),
@@ -440,7 +440,7 @@ const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent 
 
 const int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
 {
-    DialogDia dialog{
+    DialogIda dialog{
         DialogSec::tr("Duplicate file"),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file appears twice in the list of selections"),
@@ -453,7 +453,7 @@ const int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
 
 const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
 {
-    DialogDia dialog{
+    DialogIda dialog{
         DialogSec::tr("File exceeds warning size"),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file's size exceeds the warning size"),
@@ -551,7 +551,7 @@ void DialogSec::warnFileNotReadable( const QString& file, QWidget* parent )
 
 const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* parent )
 {
-    DialogDia dialog{
+    DialogIda dialog{
         DialogSec::tr("File not found"),
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("Failed to retrieve the selected file"),
