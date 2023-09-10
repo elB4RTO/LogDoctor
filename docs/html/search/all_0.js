@@ -6,6 +6,6 @@ var searchData=
   ['ai_5fplayturn_3',['AI_playTurn',['../classCrissCross.html#aefa21dcac38b6729af095fdc70be9ca9',1,'CrissCross']]],
   ['ai_5fupdateweights_4',['AI_updateWeights',['../classCrissCross.html#a8c8798850707c8090bc8bf3d0f313109',1,'CrissCross']]],
   ['apache_5falf_5',['APACHE_ALF',['../classFormatOps.html#a1dd258c0c0bb9091e25c2b36c47b5ad1',1,'FormatOps']]],
-  ['applycharttheme_6',['applyChartTheme',['../namespaceColorSec.html#aea8324d4e5357725a55e5ab670bbfb5c',1,'ColorSec']]],
+  ['applycharttheme_6',['applyChartTheme',['../namespaceColorSec.html#a644fd4c3fa0b01f4645faaa530b6a195',1,'ColorSec']]],
   ['availablememory_7',['availableMemory',['../namespaceMemOps.html#abd8ae0f3a7ca827f25fad05a91b053b6',1,'MemOps']]]
 ];

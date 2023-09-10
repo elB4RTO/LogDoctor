@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['gamedraw_0',['gameDraw',['../classCrissCross.html#a07e20e37027e9f9093565bb712c0a69a',1,'CrissCross']]],
-  ['gamemode_1',['GameMode',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2e',1,'SnakeGame']]],
-  ['gamesec_2',['GameSec',['../namespaceGameSec.html',1,'']]],
+  ['gamedialog_0',['GameDialog',['../classGameDialog.html',1,'GameDialog'],['../classGameDialog.html#a64c49481c662dc6de69d7e3039d90218',1,'GameDialog::GameDialog()']]],
+  ['gamedraw_1',['gameDraw',['../classCrissCross.html#a07e20e37027e9f9093565bb712c0a69a',1,'CrissCross']]],
+  ['gamemode_2',['GameMode',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2e',1,'SnakeGame']]],
   ['genericexception_3',['GenericException',['../classGenericException.html',1,'']]],
   ['geometrytostring_4',['geometryToString',['../classMainWindow.html#a076797e4b9e1cd44091e280f3ff0a055',1,'MainWindow']]],
   ['getapachelogsample_5',['getApacheLogSample',['../classFormatOps.html#ae7c90d46883854c88eed04cb166b00d3',1,'FormatOps']]],
@@ -46,12 +46,13 @@ var searchData=
   ['getrelationalcountsperiod_43',['getRelationalCountsPeriod',['../classDbQuery.html#a9dd64837bce2294c32866c85795db085',1,'DbQuery']]],
   ['getspeeddata_44',['getSpeedData',['../classDbQuery.html#aab00855f73578e2cc83b4c2ffa2c04e9',1,'DbQuery']]],
   ['getstatsdatabasepath_45',['getStatsDatabasePath',['../classCraplog.html#aa0740b5c11c9aa123bbb32326c494e31',1,'Craplog']]],
-  ['getstylesheet_46',['getStyleSheet',['../namespaceStyleSec.html#ab01712f6b5f0eff110561b0acd7eee5e',1,'StyleSec']]],
+  ['getstylesheet_46',['getStyleSheet',['../namespaceStyleSec.html#ac80ae7ce6ca669d26ca3ddca25e2398b',1,'StyleSec']]],
   ['getwarncounts_47',['getWarnCounts',['../classDbQuery.html#a202b946c47e35d86f62e09cd1653479d',1,'DbQuery']]],
   ['getwarningsize_48',['getWarningSize',['../classCraplog.html#ad7c333916cd655226f93195a7d6966d5',1,'Craplog']]],
   ['getwarnlist_49',['getWarnlist',['../classCraplog.html#a8985d13c8fc2eed3b0d27f2f457f0c4e',1,'Craplog']]],
   ['getwidelinesusage_50',['getWideLinesUsage',['../classTextBrowser.html#ade5b96da2d52fae0308eb5ede5963c7a',1,'TextBrowser']]],
   ['getyears_51',['getYears',['../classCrapview.html#a611cd7a9aaaa445cfb6b774815a533b8',1,'Crapview']]],
-  ['grow_52',['grow',['../classSnake.html#abe575cf3bd5b5d86a50029485d259ac4',1,'Snake']]],
-  ['gzutils_53',['GZutils',['../namespaceGZutils.html',1,'']]]
+  ['globalconfigs_52',['GlobalConfigs',['../namespaceGlobalConfigs.html',1,'']]],
+  ['grow_53',['grow',['../classSnake.html#abe575cf3bd5b5d86a50029485d259ac4',1,'Snake']]],
+  ['gzutils_54',['GZutils',['../namespaceGZutils.html',1,'']]]
 ];

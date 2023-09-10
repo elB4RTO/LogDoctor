@@ -32,7 +32,6 @@ var searchData=
   ['count_29',['count',['../namespaceStringOps.html#a47d404a4a7a4acd812051e925841c0dc',1,'StringOps::count(std::string_view str, const char flag)'],['../namespaceStringOps.html#ae870d18fd8f50ebf3ee6cc1e29237fca',1,'StringOps::count(std::string_view str, std::string_view flag)']]],
   ['countdays_30',['countDays',['../classDbQuery.html#aa3e09b4a90bfba6554c1807d291bea54',1,'DbQuery']]],
   ['countmonths_31',['countMonths',['../classDbQuery.html#a071c26b502f7b2662ba816f263f665ed',1,'DbQuery']]],
-  ['crapinfo_32',['Crapinfo',['../classCrapinfo.html#a3707760e62f63ebd1f6ecf34f3d3191d',1,'Crapinfo']]],
-  ['crapup_33',['Crapup',['../classCrapup.html#a9c805a64ed0bff0c50b73f2ac4e4bc05',1,'Crapup']]],
-  ['crisscrossstylesheet_34',['crisscrossStyleSheet',['../namespaceGameSec.html#a697283d3fee01ba2dc11b8640b3d44a5',1,'GameSec']]]
+  ['crapinfo_32',['Crapinfo',['../classCrapinfo.html#a8dcb2ce3d5d374f14aef725e94971d7d',1,'Crapinfo']]],
+  ['crapup_33',['Crapup',['../classCrapup.html#adc4e169000cdeb4e82db0bddfc7778a7',1,'Crapup']]]
 ];

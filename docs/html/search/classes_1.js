@@ -6,8 +6,9 @@ var searchData=
   ['craploglister_3',['CraplogLister',['../classCraplogLister.html',1,'']]],
   ['craplogparser_4',['CraplogParser',['../classCraplogParser.html',1,'']]],
   ['craplogparserasync_5',['CraplogParserAsync',['../classCraplogParserAsync.html',1,'']]],
-  ['crapnote_6',['Crapnote',['../classCrapnote.html',1,'']]],
-  ['crapup_7',['Crapup',['../classCrapup.html',1,'']]],
-  ['crapview_8',['Crapview',['../classCrapview.html',1,'']]],
-  ['crisscross_9',['CrissCross',['../classCrissCross.html',1,'']]]
+  ['craplogparserinterface_6',['CraplogParserInterface',['../classCraplogParserInterface.html',1,'']]],
+  ['crapnote_7',['Crapnote',['../classCrapnote.html',1,'']]],
+  ['crapup_8',['Crapup',['../classCrapup.html',1,'']]],
+  ['crapview_9',['Crapview',['../classCrapview.html',1,'']]],
+  ['crisscross_10',['CrissCross',['../classCrissCross.html',1,'']]]
 ];

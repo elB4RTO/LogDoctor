@@ -90,16 +90,16 @@ const std::unordered_map&lt; std::string, QColor &gt;&#160;</td><td class="memIt
 const std::unordered_map&lt; int, std::unordered_map&lt; std::string, QString &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getColorSchemes</b> ()</td></tr>
 <tr class="memdesc:a4ad467469ba6b81fd0827f73ac53b6f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a map with pre-made color-schemes for the <a class="el" href="classTextBrowser.html" title="TextBrowser.">TextBrowser</a>. <br /></td></tr>
 <tr class="separator:a4ad467469ba6b81fd0827f73ac53b6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea8324d4e5357725a55e5ab670bbfb5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceColorSec.html#aea8324d4e5357725a55e5ab670bbfb5c">applyChartTheme</a> (const int theme_id, const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, QtCharts::QChartView *chart_view)</td></tr>
-<tr class="memdesc:aea8324d4e5357725a55e5ab670bbfb5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the choosen theme to the given chart.  <br /></td></tr>
-<tr class="separator:aea8324d4e5357725a55e5ab670bbfb5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a644fd4c3fa0b01f4645faaa530b6a195"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceColorSec.html#a644fd4c3fa0b01f4645faaa530b6a195">applyChartTheme</a> (const std::unordered_map&lt; std::string, QFont &gt; &amp;fonts, QtCharts::QChartView *chart_view)</td></tr>
+<tr class="memdesc:a644fd4c3fa0b01f4645faaa530b6a195"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the choosen theme to the given chart.  <br /></td></tr>
+<tr class="separator:a644fd4c3fa0b01f4645faaa530b6a195"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespaceColorSec.html" title="ColorSec.">ColorSec</a>. </p>
 <p>Utilities for the colors </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="aea8324d4e5357725a55e5ab670bbfb5c" name="aea8324d4e5357725a55e5ab670bbfb5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea8324d4e5357725a55e5ab670bbfb5c">&#9670;&#160;</a></span>applyChartTheme()</h2>
+<a id="a644fd4c3fa0b01f4645faaa530b6a195" name="a644fd4c3fa0b01f4645faaa530b6a195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a644fd4c3fa0b01f4645faaa530b6a195">&#9670;&#160;</a></span>applyChartTheme()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -107,12 +107,6 @@ const std::unordered_map&lt; int, std::unordered_map&lt; std::string, QString &g
         <tr>
           <td class="memname">void ColorSec::applyChartTheme </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>theme_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const std::unordered_map&lt; std::string, QFont &gt; &amp;&#160;</td>
           <td class="paramname"><em>fonts</em>, </td>
         </tr>
@@ -133,7 +127,6 @@ const std::unordered_map&lt; int, std::unordered_map&lt; std::string, QString &g
 <p>Applies the choosen theme to the given chart. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">theme_id</td><td>The ID of the theme to apply </td></tr>
     <tr><td class="paramname">fonts</td><td>The fonts set </td></tr>
     <tr><td class="paramname">chart_view</td><td>The chart on which the theme will be applied </td></tr>
   </table>

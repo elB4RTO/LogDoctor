@@ -108,5 +108,4 @@ var menudata={children:[
 {text:"x",url:"functions_func_x.html#index_x"},
 {text:"y",url:"functions_func_y.html#index_y"}]},
 {text:"Variables",url:"functions_vars.html"},
-{text:"Enumerations",url:"functions_enum.html"},
-{text:"Enumerator",url:"functions_eval.html"}]}]}]}
+{text:"Enumerations",url:"functions_enum.html"}]}]}]}

@@ -7,5 +7,5 @@ var searchData=
   ['helplogsformatdefault_4',['helpLogsFormatDefault',['../classCraphelp.html#acf0dd64949a11297fb23aa97971e241a',1,'Craphelp']]],
   ['hireasyncworker_5',['hireAsyncWorker',['../classCraplog.html#a290000f88b366470fbfa370eb6edf3ae',1,'Craplog']]],
   ['hireworker_6',['hireWorker',['../classCraplog.html#a6b8118aa003315fb83fe7c7edac59d22',1,'Craplog']]],
-  ['hunt_7',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea3bc7db4877c4b58e8b8f5ed74ffc1abb',1,'SnakeGame']]]
+  ['hunt_7',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea85dd070c26938d7a4184269c6ddacd1f',1,'SnakeGame']]]
 ];
