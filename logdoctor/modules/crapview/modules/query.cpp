@@ -612,7 +612,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"protocol\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"protocol\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"protocol\" LIKE '%1'")
                         .arg( QString(protocol_f).replace("'","''") );
                 }
             }
@@ -624,7 +624,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"method\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"method\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"method\" LIKE '%1'")
                         .arg( QString(method_f).replace("'","''") );
                 }
             }
@@ -636,7 +636,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"uri\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"uri\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"uri\" LIKE '%1'")
                         .arg( QString(uri_f).replace("'","''") );
                 }
             }
@@ -648,7 +648,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"query\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"query\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"query\" LIKE '%1'")
                         .arg( QString(query_f).replace("'","''") );
                 }
             }
@@ -1117,7 +1117,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                                       filter.replace("'","''") );
 
                         } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            stmt += QString(" AND \"%1\" LIKE '%2'")
                                 .arg( log_field.replace("'","''"),
                                       filter.replace("'","''") );
                         }
@@ -1193,7 +1193,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
 
                             } else {
                                 // only values starting-with
-                                stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                                stmt += QString(" AND \"%1\" LIKE '%2'")
                                     .arg( log_field.replace("'","''"),
                                           filter.replace("'","''") );
                             }
@@ -1348,7 +1348,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
                     } else {
                         // only values starting-with
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_1.replace("'","''"),
                                   filter.replace("'","''") );
                     }
@@ -1383,7 +1383,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
                     } else {
                         // only values starting-with
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_2.replace("'","''"),
                                   QString(field_filter_2).replace("'","''") );
                     }
@@ -1601,7 +1601,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                               filter.replace("'","''") );
 
                     } else {
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_1.replace("'","''"),
                                   filter.replace("'","''") );
                     }
@@ -1627,7 +1627,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                               filter.replace("'","''") );
 
                     } else {
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_2.replace("'","''"),
                                   QString(field_filter_2).replace("'","''") );
                     }
@@ -1777,7 +1777,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                       filter.replace("'","''") );
 
                         } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            stmt += QString(" AND \"%1\" LIKE '%2'")
                                 .arg( log_field_1.replace("'","''"),
                                       filter.replace("'","''") );
                         }
@@ -1803,7 +1803,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                       filter.replace("'","''") );
 
                         } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            stmt += QString(" AND \"%1\" LIKE '%2'")
                                 .arg( log_field_2.replace("'","''"),
                                       QString(field_filter_2).replace("'","''") );
                         }
