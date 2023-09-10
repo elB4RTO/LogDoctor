@@ -333,7 +333,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
         // set-up the count values axis (Y)
         QValueAxis* axisY{ new QValueAxis() };
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_count < 8 ) ? max_count : 8 );
+        axisY->setTickCount( ( max_count < 9 ) ? max_count+1 : 9 );
         axisY->setRange( 0, max_count );
         b_chart->addAxis( axisY, Qt::AlignLeft );
         for ( auto* s : b_series ) {
@@ -469,7 +469,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         // set-up the count values axis (Y)
         QValueAxis* axisY{ new QValueAxis() };
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_value < 8 ) ? max_value : 8 );
+        axisY->setTickCount( ( max_value < 9 ) ? max_value+1 : 9 );
         axisY->setMinorTickCount( 4 );
         if ( max_value == 1 ) {
             max_value = 0;
@@ -652,7 +652,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
         // set-up the count values axis (Y)
         QValueAxis* axisY{ new QValueAxis() };
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_count < 8 ) ? max_count : 8 );
+        axisY->setTickCount( ( max_count < 9 ) ? max_count+1 : 9 );
         axisY->setRange( 0, max_count );
         b_chart->addAxis( axisY, Qt::AlignLeft );
         bars->attachAxis( axisY) ;
@@ -769,7 +769,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
         // set-up the count values axis (Y)
         QValueAxis* axisY{ new QValueAxis() };
         axisY->setLabelFormat( "%d" );
-        axisY->setTickCount( ( max_count < 8 ) ? max_count : 8 );
+        axisY->setTickCount( ( max_count < 9 ) ? max_count+1 : 9 );
         axisY->setRange( 0, max_count );
         a_chart->addAxis( axisY, Qt::AlignLeft );
         area->attachAxis( axisY) ;
