@@ -369,6 +369,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         const size_t max_i{ items.size() };
         int value{0}, aux_value, max_value{0}, n_rows{0};
         long long time /* xD */, aux_time, count{1};
+        bool first_count{ true };
         time = std::get<0>(items.at(0));
         QDateTime dt;
         std::vector<QString> data;
@@ -388,6 +389,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
                 time = aux_time;
                 value = aux_value;
                 count = 1;
+                first_count |= true;
                 if ( i == max_i ) {
                     // final
                     line->append( time, value );
@@ -396,7 +398,11 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
                     }
                 }
             } else {
-                count ++;
+                if ( first_count ) {
+                    first_count &= false;
+                } else {
+                    count ++;
+                }
                 value += aux_value;
                 if ( i == max_i ) {
                     // final
@@ -437,7 +443,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
         gradient.setColorAt(0.3, col1.lighter( 90 ) );
         gradient.setColorAt(0.7, col2.lighter( 90 ) );
         gradient.setColorAt(1.0, col3.lighter( 90 ) );
-        gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+        gradient.setCoordinateMode(QGradient::ObjectMode);
 
         QPen pen{ line->pen() };
         pen.setBrush( gradient );
