@@ -115,18 +115,6 @@ Veuillez visiter le référentiel de LogDoctor et en obtenir une nouvelle versio
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
-marqueur initial pas trouvé</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
-marqueur final pas trouvé</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
 version malformée</translation>
@@ -136,6 +124,12 @@ version malformée</translation>
 malformed upstream version</source>
         <translation type="unfinished">Une erreur s&apos;est produite lors de la comparaison:
 version online malformée</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">Une erreur s&apos;est produite lors de l&apos;analyse:
+marqueur pas trouvé</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ version online malformée</translation>
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">Ignorer</translation>
@@ -712,6 +706,13 @@ Abandon</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -1100,14 +1101,6 @@ Abandon</translation>
     <message>
         <source>Charts</source>
         <translation type="unfinished">Graphiques</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">Sable</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">Azuré</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>

@@ -115,18 +115,6 @@ Visite o repositório e baixe novamente</translation>
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">Um erro ocorreu ao analisar:
-marcador inicial no encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">Um erro ocorreu ao analisar:
-marcador final não encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Um erro ocorreu ao analisar:
 versão mal formada</translation>
@@ -136,6 +124,12 @@ versão mal formada</translation>
 malformed upstream version</source>
         <translation type="unfinished">Um erro ocorreu ao comparar:
 versão online mal formada</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">Um erro ocorreu ao analisar:
+marcador no encontrado</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ versão online mal formada</translation>
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">Ignorar</translation>
@@ -712,6 +706,13 @@ Abortado</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -1106,14 +1107,6 @@ Com números, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; ou &apos;&gt;&ap
     <message>
         <source>Charts</source>
         <translation type="unfinished">Gráficos</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">Areia</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">Azul claro</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>

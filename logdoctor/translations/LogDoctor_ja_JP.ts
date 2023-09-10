@@ -98,10 +98,10 @@
 Your version is beyond the current upstream version
 Are you running the original LogDoctor?
 Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
-        <translation>あなたは未来からのバージョンを実行しています!
+        <translation type="unfinished">あなたは未来からのバージョンを実行しています!
 お使いのバージョンは現在のアップストリーム バージョンを超えています
 元の LogDoctor を実行していますか?
-LogDoctor のリポジトリにアクセスして、新しいバージョンを入手してください。</translation>
+LogDoctor のリポジトリにアクセスして、新しいバージョンを入手してください</translation>
     </message>
     <message>
         <source>Version check failed</source>
@@ -109,29 +109,27 @@ LogDoctor のリポジトリにアクセスして、新しいバージョンを�
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">解析中にエラーが発生しました: 初期バージョン マークが見つかりません</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">解析中にエラーが発生しました: 最終バージョン マークが見つかりません</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
-        <translation type="unfinished">解析中にエラーが発生しました: バージョンの形式が正しくありません</translation>
+        <translation type="unfinished">解析中にエラーが発生しました:
+バージョンの形式が正しくありません</translation>
     </message>
     <message>
         <source>An error occured while comparing:
 malformed upstream version</source>
-        <translation type="unfinished">比較中にエラーが発生しました: アップストリーム バージョンの形式が正しくありません</translation>
+        <translation type="unfinished">比較中にエラーが発生しました:
+アップストリーム バージョンの形式が正しくありません</translation>
     </message>
     <message>
         <source>A new version is available!
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
-        <translation>新しいバージョンが利用可能です!
-LogDoctor の git リポジトリにアクセスし、更新方法に関する指示に従ってください。</translation>
+        <translation type="unfinished">新しいバージョンが利用可能です!
+LogDoctor の git リポジトリにアクセスし、更新方法に関する指示に従ってください</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">解析中にエラーが発生しました:
+バージョン マークが見つかりません</translation>
     </message>
 </context>
 <context>
@@ -169,7 +167,7 @@ LogDoctor の git リポジトリにアクセスし、更新方法に関する�
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">無視</translation>
@@ -708,6 +706,13 @@ please follow the instruction on the repository page</source>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -1084,14 +1089,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Charts</source>
         <translation type="unfinished">チャート</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">砂</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">セルリアン</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>
@@ -1620,7 +1617,7 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     </message>
     <message>
         <source>URI</source>
-        <translation>URI</translation>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Query</source>

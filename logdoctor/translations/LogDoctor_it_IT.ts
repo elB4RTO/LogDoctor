@@ -109,18 +109,6 @@ Sei sicuro di avere la versione originale di LogDoctor?
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation>È avvenuto un errore durante l&apos;analisi:
-marcatore iniziale non trovato</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation>È avvenuto un errore durante l&apos;analisi:
-marcatore finale non trovato</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation>È avvenuto un errore durante l&apos;analisi:
 versione malformata</translation>
@@ -136,6 +124,12 @@ versione upstream malformata</translation>
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
         <translation>È disponibile una nuova versione!
 Visita il repository di LogDoctor e segui le istruzioni su come aggiornare</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation>È avvenuto un errore durante l&apos;analisi:
+marcatore non trovato</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ Visita il repository di LogDoctor e segui le istruzioni su come aggiornare</tran
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation>Ignora</translation>
@@ -712,6 +706,13 @@ per favore segui le istruzioni nella pagina del repository</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -1089,14 +1090,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
     <message>
         <source>Charts</source>
         <translation>Grafici</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation>Sabbia</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation>Ceruleo</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>

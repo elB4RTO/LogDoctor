@@ -115,18 +115,6 @@ Visita el repositorio de LogDoctor y descargalo una otra vez</translation>
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">Ocurrió un error al analizar:
-marcador inicial no encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">Ocurrió un error al analizar:
-marcador final no encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Ocurrió un error al analizar:
 versión mal formada</translation>
@@ -136,6 +124,12 @@ versión mal formada</translation>
 malformed upstream version</source>
         <translation type="unfinished">Ocurrió un error al comparar:
 versión online mal formada</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">Ocurrió un error al analizar:
+marcador no encontrado</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ versión online mal formada</translation>
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">Ignorar</translation>
@@ -712,6 +706,13 @@ Anulado</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -1100,14 +1101,6 @@ Anulado</translation>
     <message>
         <source>Charts</source>
         <translation type="unfinished">Gráficos</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">Arena</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">Azul claro</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>

@@ -87,7 +87,7 @@
     </message>
     <message>
         <source>LogDoctor is up-to-date</source>
-        <translation>No update found</translation>
+        <translation>LogDoctor is up-to-date</translation>
     </message>
     <message>
         <source>:/</source>
@@ -109,18 +109,6 @@ Please visit the LogDoctor&apos;s repository and get a fresh version of it</tran
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation>An error occured while parsing:
-initial version mark not found</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation>An error occured while parsing:
-final version mark not found</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation>An error occured while parsing:
 malformed version</translation>
@@ -136,6 +124,12 @@ malformed upstream version</translation>
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
         <translation>A new version is available!
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation>An error occured while parsing:
+version mark not found</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ Please visit LogDoctor&apos;s git repository and follow the instruction about ho
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation>Ignore</translation>
@@ -712,6 +706,13 @@ please follow the instruction on the repository page</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -1088,14 +1089,6 @@ please follow the instruction on the repository page</translation>
     <message>
         <source>Charts</source>
         <translation>Charts</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation>Sand</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation>Cerulean</translation>
     </message>
     <message>
         <source>Theme to use for the Charts</source>
