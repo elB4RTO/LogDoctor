@@ -1038,8 +1038,8 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
-    parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size + this->blacklisted_size ) );
-    const size_t parsed_size{ this->parsed_size - this->warnlisted_size };
+    parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size ) );
+    const size_t parsed_size{ this->parsed_size - this->warnlisted_size - this->blacklisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         static_cast<qreal>( parsed_size ) );
@@ -1052,7 +1052,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* ignoredSize_donut{ new QPieSeries() };
-    const size_t ignored_size{ this->total_size - this->parsed_size - this->blacklisted_size };
+    const size_t ignored_size{ this->total_size - this->parsed_size };
     QString printable_ignored_size{ PrintSec::printableSize( ignored_size ) };
     ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(
