@@ -187,10 +187,6 @@
           <height>32</height>
          </size>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/icons/down.png</normaloff>:/icons/icons/down.png</iconset>
-        </property>
         <property name="iconSize">
          <size>
           <width>32</width>
