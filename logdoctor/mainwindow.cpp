@@ -1048,16 +1048,16 @@ void MainWindow::detectIconsTheme()
         case WindowTheme::Native:
             // use window color to determine the theme
             if ( this->palette().window().color().black() > 127 ) {
-                this->icons_theme = "light_native";
+                GlobalConfigs::icons_set = "light_native";
             } else {
-                this->icons_theme = "dark_native";
+                GlobalConfigs::icons_set = "dark_native";
             }
             break;
         case WindowTheme::Light:
-            this->icons_theme = "dark";
+            GlobalConfigs::icons_set = "dark";
             break;
         case WindowTheme::Dark:
-            this->icons_theme = "light";
+            GlobalConfigs::icons_set = "light";
             break;
         default:
             throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
@@ -1083,7 +1083,7 @@ void MainWindow::updateUiTheme()
             this->updateUiIcons();
             // window last
             QString ss;
-            StyleSec::getStyleSheet( ss, this->icons_theme );
+            StyleSec::getStyleSheet( ss );
             this->setStyleSheet( ss );
             break;
             }
@@ -1100,96 +1100,96 @@ void MainWindow::updateUiTheme()
 
 void MainWindow::updateUiIcons()
 {
-    const QString old_icons_theme{ this->icons_theme };
+    const QString old_icons_set{ GlobalConfigs::icons_set };
     switch ( GlobalConfigs::icons_theme ) {
         case IconsTheme::Auto:
             this->detectIconsTheme();
             break;
         case IconsTheme::Light:
-            this->icons_theme = ( GlobalConfigs::window_theme == WindowTheme::Native )
-                                ? "light_native"
-                                : "light";
+            GlobalConfigs::icons_set = ( GlobalConfigs::window_theme == WindowTheme::Native )
+                                       ? "light_native"
+                                       : "light";
             break;
         case IconsTheme::Dark:
-            this->icons_theme = ( GlobalConfigs::window_theme == WindowTheme::Native )
-                                ? "dark_native"
-                                : "dark";
+            GlobalConfigs::icons_set = ( GlobalConfigs::window_theme == WindowTheme::Native )
+                                       ? "dark_native"
+                                       : "dark";
             break;
         default:
             throw GenericException( "Unexpected IconsTheme index: "+std::to_string(static_cast<themes_t>(GlobalConfigs::icons_theme)), true );
             break;
     }
 
-    if ( this->icons_theme != old_icons_theme ) {
+    if ( GlobalConfigs::icons_set != old_icons_set ) {
         // main tabs
         const int m_index{ this->ui->stackedPages_Sections->currentIndex() };
         this->ui->button_Tab_Log->setIcon(
             QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (m_index==0) ? "on" : "off" )) );
         this->ui->button_Tab_View->setIcon(
             QIcon(QString(":/icons/icons/%1/view_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (m_index==1) ? "on" : "off" )) );
         this->ui->button_Tab_Conf->setIcon(
             QIcon(QString(":/icons/icons/%1/conf_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (m_index==2) ? "on" : "off" )) );
         // view logs
         this->ui->button_LogFiles_ViewFile->setIcon(
-            QIcon(QString(":/icons/icons/%1/show_file.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/show_file.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_LogFiles_RefreshList->setIcon(
-            QIcon(QString(":/icons/icons/%1/refresh.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/refresh.png").arg(GlobalConfigs::icons_set)) );
         // parse logs
         this->ui->icon_MakeStats_Size->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Lines->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Time->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Speed->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(GlobalConfigs::icons_set)) );
         // stats
         const int s_index{ this->ui->stackedPages_Stats->currentIndex() };
         // stats warn
         this->ui->button_Tab_StatsWarn->setIcon(
             QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==0) ? "on" : "off" )) );
         this->ui->button_StatsWarn_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_StatsWarn_Update->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         // stats speed
         this->ui->button_Tab_StatsSpeed->setIcon(
             QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==1) ? "on" : "off" )) );
         this->ui->button_StatsSpeed_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats count
         this->ui->button_Tab_StatsCount->setIcon(
             QIcon(QString(":/icons/icons/%1/count_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==2) ? "on" : "off" )) );
         // stats daytime
         this->ui->button_Tab_StatsDay->setIcon(
             QIcon(QString(":/icons/icons/%1/daytime_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==3) ? "on" : "off" )) );
         this->ui->button_StatsDay_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats relational
         this->ui->button_Tab_StatsRelat->setIcon(
             QIcon(QString(":/icons/icons/%1/relational_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==4) ? "on" : "off" )) );
         this->ui->button_StatsRelat_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats globals
         this->ui->button_Tab_StatsGlob->setIcon(
             QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==5) ? "on" : "off" )) );
         // configs tree
         QTreeWidgetItemIterator it{ this->ui->tree_ConfSections };
@@ -1230,83 +1230,83 @@ void MainWindow::updateUiIcons()
                 throw GenericException( "Unexpected Configs section: "+text.toStdString(), true );
             }
             (*it)->setIcon(0,
-                QIcon(QString(":/icons/icons/%1/%2.png").arg(this->icons_theme, icon_name)) );
+                QIcon(QString(":/icons/icons/%1/%2.png").arg(GlobalConfigs::icons_set, icon_name)) );
             ++it;
         }
         // conf databases
         this->ui->button_ConfDatabases_Data_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfDatabases_Hashes_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         // conf apache
         this->ui->button_ConfApache_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Warnlist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Warnlist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Warnlist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Warnlist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Blacklist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Blacklist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Blacklist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Blacklist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
         // conf nginx
         this->ui->button_ConfNginx_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Warnlist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Warnlist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Warnlist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Warnlist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Blacklist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Blacklist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Blacklist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Blacklist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
         // conf iis
         this->ui->button_ConfIis_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Warnlist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Warnlist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Warnlist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Warnlist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Blacklist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Blacklist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Blacklist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Blacklist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
 
     }
 }
@@ -2083,9 +2083,7 @@ void MainWindow::menu_actionCheckUpdates_triggered()
         this->crapup->activateWindow();
 
     } else {
-        this->crapup.reset( new Crapup(
-            //this->window_theme_id,
-            this->icons_theme ) );
+        this->crapup.reset( new Crapup() );
         this->crapup->show();
         this->crapup->versionCheck( this->version );
     }
@@ -2129,19 +2127,19 @@ void MainWindow::switchMainTab( const int new_index )
             // make
             this->ui->button_Tab_Log->setFlat( true );
             this->ui->button_Tab_Log->setIcon(
-                QIcon(QString(":/icons/icons/%1/log_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/log_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // view
             this->ui->button_Tab_View->setFlat( true );
             this->ui->button_Tab_View->setIcon(
-                QIcon(QString(":/icons/icons/%1/view_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/view_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // config
             this->ui->button_Tab_Conf->setFlat( true );
             this->ui->button_Tab_Conf->setIcon(
-                QIcon(QString(":/icons/icons/%1/conf_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/conf_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected Tabs index: "+std::to_string(old_index));
@@ -2153,19 +2151,19 @@ void MainWindow::switchMainTab( const int new_index )
             // make
             this->ui->button_Tab_Log->setFlat( false );
             this->ui->button_Tab_Log->setIcon(
-                QIcon(QString(":/icons/icons/%1/log_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/log_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // view
             this->ui->button_Tab_View->setFlat( false );
             this->ui->button_Tab_View->setIcon(
-                QIcon(QString(":/icons/icons/%1/view_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/view_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // config
             this->ui->button_Tab_Conf->setFlat( false );
             this->ui->button_Tab_Conf->setIcon(
-                QIcon(QString(":/icons/icons/%1/conf_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/conf_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected MainTabs index: "+std::to_string(new_index));
@@ -2201,37 +2199,37 @@ void MainWindow::switchStatsTab( const int new_index )
             // warning
             this->ui->button_Tab_StatsWarn->setFlat( true );
             this->ui->button_Tab_StatsWarn->setIcon(
-                QIcon(QString(":/icons/icons/%1/warn_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/warn_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // speed
             this->ui->button_Tab_StatsSpeed->setFlat( true );
             this->ui->button_Tab_StatsSpeed->setIcon(
-                QIcon(QString(":/icons/icons/%1/speed_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/speed_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // counts
             this->ui->button_Tab_StatsCount->setFlat( true );
             this->ui->button_Tab_StatsCount->setIcon(
-                QIcon(QString(":/icons/icons/%1/count_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/count_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 3:
             // daytime
             this->ui->button_Tab_StatsDay->setFlat( true );
             this->ui->button_Tab_StatsDay->setIcon(
-                QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 4:
             // relational
             this->ui->button_Tab_StatsRelat->setFlat( true );
             this->ui->button_Tab_StatsRelat->setIcon(
-                QIcon(QString(":/icons/icons/%1/relational_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/relational_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 5:
             // globals
             this->ui->button_Tab_StatsGlob->setFlat( true );
             this->ui->button_Tab_StatsGlob->setIcon(
-                QIcon(QString(":/icons/icons/%1/global_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/global_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected StatsTabs index: "+std::to_string(old_index));
@@ -2243,37 +2241,37 @@ void MainWindow::switchStatsTab( const int new_index )
             // warning
             this->ui->button_Tab_StatsWarn->setFlat( false );
             this->ui->button_Tab_StatsWarn->setIcon(
-                QIcon(QString(":/icons/icons/%1/warn_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/warn_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // speed
             this->ui->button_Tab_StatsSpeed->setFlat( false );
             this->ui->button_Tab_StatsSpeed->setIcon(
-                QIcon(QString(":/icons/icons/%1/speed_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/speed_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // counts
             this->ui->button_Tab_StatsCount->setFlat( false );
             this->ui->button_Tab_StatsCount->setIcon(
-                QIcon(QString(":/icons/icons/%1/count_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/count_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 3:
             // daytime
             this->ui->button_Tab_StatsDay->setFlat( false );
             this->ui->button_Tab_StatsDay->setIcon(
-                QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 4:
             // relational
             this->ui->button_Tab_StatsRelat->setFlat( false );
             this->ui->button_Tab_StatsRelat->setIcon(
-                QIcon(QString(":/icons/icons/%1/relational_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/relational_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 5:
             // globals
             this->ui->button_Tab_StatsGlob->setFlat( false );
             this->ui->button_Tab_StatsGlob->setIcon(
-                QIcon(QString(":/icons/icons/%1/global_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/global_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected StatsTabs index: "+std::to_string(new_index));

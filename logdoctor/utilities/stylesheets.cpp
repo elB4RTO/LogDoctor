@@ -431,8 +431,9 @@ const StyleMap makeStyleMap()
 namespace StyleSec
 {
 
-void getStyleSheet( QString& stylesheet, const QString& icons_theme )
+void getStyleSheet( QString& stylesheet )
 {
+    const QString icons_theme{ GlobalConfigs::icons_set };
     const StyleMap style{ makeStyleMap() };
     stylesheet =
         ////////////////

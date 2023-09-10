@@ -645,8 +645,6 @@ private:
     // remember window position and sizes
     bool remember_window{ true };
 
-    QString icons_theme;
-
     //! Auto-detects the icon-set to use depending on the current window theme
     void detectIconsTheme();
 

@@ -1,6 +1,7 @@
 #ifndef GLOBAL_CONFIGS_H
 #define GLOBAL_CONFIGS_H
 
+#include <QString>
 
 typedef unsigned char themes_t;
 
@@ -37,6 +38,8 @@ namespace GlobalConfigs {
     extern IconsTheme icons_theme;
 
     extern ChartsTheme charts_theme;
+
+    extern QString icons_set;
 
 } // namespace GlobalConfigs
 

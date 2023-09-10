@@ -25,10 +25,9 @@ public:
 
     //! Class constructor
     /*!
-        \param icons_theme The theme of the icons
         \param parent The parent Widget
     */
-    explicit Crapup( const QString& icons_theme, QWidget* parent=nullptr );
+    explicit Crapup( QWidget* parent=nullptr );
     ~Crapup();
 
 

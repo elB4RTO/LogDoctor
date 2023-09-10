@@ -2,6 +2,8 @@
 #include "crapup.h"
 #include "ui_crapup.h"
 
+#include "globals/global_configs.h"
+
 #include "modules/stylesheets.h"
 
 #include "modules/exceptions.h"
@@ -29,10 +31,10 @@ enum class ErrCode : uint8_t {
 } // namespacce (private)
 
 
-Crapup::Crapup( const QString& icons_theme, QWidget* parent )
+Crapup::Crapup( QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapup }
-    , img_checking{ ":/icons/icons/"+icons_theme+"/checking.png" }
+    , img_checking{ ":/icons/icons/"+GlobalConfigs::icons_set+"/checking.png" }
 {
     this->ui->setupUi(this);
 

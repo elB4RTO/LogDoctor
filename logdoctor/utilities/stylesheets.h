@@ -14,9 +14,8 @@ namespace StyleSec
 //! Provides the requested stylesheet
 /*!
     \param stylesheet Will hold the stylesheet
-    \param icons_theme The theme selected for the Icons
 */
-void getStyleSheet( QString& stylesheet, const QString& icons_theme );
+void getStyleSheet( QString& stylesheet );
 
 } // namespace StyleSec
 
