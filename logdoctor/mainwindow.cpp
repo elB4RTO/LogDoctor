@@ -436,13 +436,13 @@ void MainWindow::readConfigs()
                 } else if ( var == "WindowTheme" ) {
                     GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
 
-                } else if ( var == "ChartsTheme" ) {
-                    GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
-
                 } else if ( var == "IconsTheme" ) {
                     GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
 
-                } else if ( var == "MainDialogLevel" ) {
+                } else if ( var == "ChartsTheme" ) {
+                    GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
+
+                } else if ( var == "MainDialogsLevel" ) {
                     this->dialogs_level = std::stoi( val );
 
                 } else if ( var == "DefaultWebServer" ) {
@@ -469,7 +469,7 @@ void MainWindow::readConfigs()
                 } else if ( var == "ColorScheme" ) {
                     this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
 
-                } else if ( var == "CraplogDialogLevel" ) {
+                } else if ( var == "CraplogDialogsLevel" ) {
                     this->craplog.setDialogsLevel( std::stoi( val ) );
 
                 } else if ( var == "HideUsedFiles" ) {
@@ -635,7 +635,7 @@ void MainWindow::readConfigs()
                 } else if ( var == "IisBlacklistClientUsed" ) {
                     this->craplog.setBlacklistUsed( IIS_ID, 20, this->s2b.at( val ) );
 
-                } else if ( var == "CrapviewDialogLevel" ) {
+                } else if ( var == "CrapviewDialogsLevel" ) {
                     this->crapview.setDialogsLevel( std::stoi( val ) );
 
                 }/* else {
@@ -781,9 +781,9 @@ void MainWindow::writeConfigs()
         configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
         configs += "\nGeometry=" + this->geometryToString();
         configs += "\nWindowTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::window_theme) );
-        configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
         configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
-        configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
+        configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
+        configs += "\nMainDialogsLevel=" + std::to_string( this->dialogs_level );
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
         configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
@@ -796,7 +796,7 @@ void MainWindow::writeConfigs()
         configs += "\nColorScheme=" + std::to_string( this->TB.getColorSchemeID() );
         //// CRAPLOG ////
         configs += "\n\n[Craplog]";
-        configs += "\nCraplogDialogLevel=" + std::to_string( this->craplog.getDialogsLevel() );
+        configs += "\nCraplogDialogsLevel=" + std::to_string( this->craplog.getDialogsLevel() );
         configs += "\nHideUsedFiles=" + this->b2s.at( this->hide_used_files );
         configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
         //// APACHE2 ////
@@ -850,7 +850,7 @@ void MainWindow::writeConfigs()
         configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( IIS_ID, 20 ) );
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
-        configs += "\nCrapviewDialogLevel=" + std::to_string( this->crapview.getDialogsLevel() );
+        configs += "\nCrapviewDialogsLevel=" + std::to_string( this->crapview.getDialogsLevel() );
 
         // write on file
         try {
