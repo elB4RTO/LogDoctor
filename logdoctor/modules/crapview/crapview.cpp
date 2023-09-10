@@ -536,7 +536,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
             QPieSlice* slice = pie->slices().at( pie->count()-1 );
             slice->setBrush( Qt::gray );
         }
-        pie->setPieSize( 0.65 );
+        pie->setPieSize( 0.60 );
         pie->setLabelsVisible( false );
         connect( pie, &QPieSeries::clicked, this, &Crapview::sliceClicked );
 
