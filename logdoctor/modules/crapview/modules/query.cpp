@@ -1241,7 +1241,13 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                 // divide the count by the number of days to get the mean value
                 for ( const auto& [h,data_] : data ) {
                     for ( const auto& [m,c] : data_ ) {
-                        data.at( h ).at( m ) /= n_days;
+                        int& count{ data.at( h ).at( m ) };
+                        if ( count > 0 ) {
+                            count /= n_days;
+                            if ( count == 0 ) {
+                                count++;
+                            }
+                        }
                     }
                 }
             }
