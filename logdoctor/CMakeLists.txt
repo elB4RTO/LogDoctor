@@ -96,6 +96,8 @@ set(PROJECT_SOURCES
     modules/craplog/modules/workers/lib.h
     modules/craplog/modules/workers/lister.h
     modules/craplog/modules/workers/lister.cpp
+    modules/craplog/modules/workers/parser_interface.h
+    modules/craplog/modules/workers/parser_interface.cpp
     modules/craplog/modules/workers/parser.h
     modules/craplog/modules/workers/parser.cpp
     modules/craplog/modules/workers/parser_async.h
