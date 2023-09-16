@@ -1,5 +1,6 @@
-#ifndef STYLESHEETS_H
-#define STYLESHEETS_H
+#ifndef LOGDOCTOR__UTILITIES__STYLESHEETS_H
+#define LOGDOCTOR__UTILITIES__STYLESHEETS_H
+
 
 class QString;
 
@@ -19,4 +20,5 @@ void getStyleSheet( QString& stylesheet );
 
 } // namespace StyleSec
 
-#endif // STYLESHEETS_H
+
+#endif // LOGDOCTOR__UTILITIES__STYLESHEETS_H

@@ -1,5 +1,6 @@
-#ifndef FOOD_H
-#define FOOD_H
+#ifndef LOGDOCTOR__GAMES__SNAKE__FOOD_H
+#define LOGDOCTOR__GAMES__SNAKE__FOOD_H
+
 
 #include <QPixmap>
 
@@ -54,4 +55,5 @@ private:
     unsigned y;
 };
 
-#endif // FOOD_H
+
+#endif // LOGDOCTOR__GAMES__SNAKE__FOOD_H

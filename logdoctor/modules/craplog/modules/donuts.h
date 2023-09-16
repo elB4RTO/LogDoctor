@@ -1,5 +1,6 @@
-#ifndef DONUTS_H
-#define DONUTS_H
+#ifndef LOGDOCTOR__CRAPLOG__DONUTS_H
+#define LOGDOCTOR__CRAPLOG__DONUTS_H
+
 
 #include <QGraphicsView>
 #include <QtCharts>
@@ -82,4 +83,5 @@ private:
     QString m_name;
 };
 
-#endif // DONUTS_H
+
+#endif // LOGDOCTOR__CRAPLOG__DONUTS_H

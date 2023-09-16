@@ -1,5 +1,6 @@
-#ifndef DIALOGIDA_H
-#define DIALOGIDA_H
+#ifndef LOGDOCTOR__DIALOGS__IDA_DIALOG_H
+#define LOGDOCTOR__DIALOGS__IDA_DIALOG_H
+
 
 #include <QDialog>
 
@@ -7,6 +8,7 @@
 namespace Ui {
     class DialogIda;
 }
+
 
 //! DialogIda
 /*!
@@ -44,4 +46,5 @@ private:
     QSharedPointer<Ui::DialogIda> ui;
 };
 
-#endif // DIALOGIDA_H
+
+#endif // LOGDOCTOR__DIALOGS__IDA_DIALOG_H

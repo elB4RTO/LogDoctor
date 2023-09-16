@@ -1,5 +1,6 @@
-#ifndef CRAPUP_H
-#define CRAPUP_H
+#ifndef LOGDOCTOR__CRAPUP_H
+#define LOGDOCTOR__CRAPUP_H
+
 
 #include <QWidget>
 
@@ -83,4 +84,5 @@ private:
     bool quitting{ false };
 };
 
-#endif // CRAPUP_H
+
+#endif // LOGDOCTOR__CRAPUP_H

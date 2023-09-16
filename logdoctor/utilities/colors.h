@@ -1,5 +1,6 @@
-#ifndef COLORS_H
-#define COLORS_H
+#ifndef LOGDOCTOR__UTILITIES__COLORS_H
+#define LOGDOCTOR__UTILITIES__COLORS_H
+
 
 #include <QtCharts>
 
@@ -33,4 +34,5 @@ void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QtCha
 
 } // namespace ColorSec
 
-#endif // COLORS_H
+
+#endif // LOGDOCTOR__UTILITIES__COLORS_H

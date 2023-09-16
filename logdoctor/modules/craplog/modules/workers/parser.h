@@ -1,5 +1,6 @@
-#ifndef CRAPLOGPARSER_H
-#define CRAPLOGPARSER_H
+#ifndef LOGDOCTOR__CRAPLOG__WORKERS__PARSER_H
+#define LOGDOCTOR__CRAPLOG__WORKERS__PARSER_H
+
 
 #include "parser_interface.h"
 
@@ -60,4 +61,4 @@ private:
 };
 
 
-#endif // CRAPLOGPARSER_H
+#endif // LOGDOCTOR__CRAPLOG__WORKERS__PARSER_H

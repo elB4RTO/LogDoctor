@@ -1,5 +1,6 @@
-#ifndef SNAKE_GAME_H
-#define SNAKE_GAME_H
+#ifndef LOGDOCTOR__GAMES__SNAKE__GAME_H
+#define LOGDOCTOR__GAMES__SNAKE__GAME_H
+
 
 #include "snake.h"
 #include "food.h"
@@ -16,6 +17,7 @@ class QGraphicsScene;
 namespace Ui {
     class SnakeGame;
 }
+
 
 //! Snake
 /*!
@@ -136,4 +138,5 @@ private:
 
 };
 
-#endif // SNAKE_GAME_H
+
+#endif // LOGDOCTOR__GAMES__SNAKE__GAME_H

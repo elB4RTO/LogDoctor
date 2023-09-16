@@ -1,5 +1,6 @@
-#ifndef DIALOGS_H
-#define DIALOGS_H
+#ifndef LOGDOCTOR__DIALOGS_H
+#define LOGDOCTOR__DIALOGS_H
+
 
 #include <QWidget>
 
@@ -253,4 +254,4 @@ private:
 };
 
 
-#endif // DIALOGS_H
+#endif // LOGDOCTOR__DIALOGS_H

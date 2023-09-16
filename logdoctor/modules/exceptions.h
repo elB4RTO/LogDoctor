@@ -1,5 +1,6 @@
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef LOGDOCTOR__EXCEPTIONS_H
+#define LOGDOCTOR__EXCEPTIONS_H
+
 
 #include <QString>
 
@@ -89,4 +90,5 @@ private:
     QString msg;*/
 };
 
-#endif // EXCEPTIONS_H
+
+#endif // LOGDOCTOR__EXCEPTIONS_H

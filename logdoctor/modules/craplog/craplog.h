@@ -1,5 +1,6 @@
-#ifndef CRAPLOG_H
-#define CRAPLOG_H
+#ifndef LOGDOCTOR__CRAPLOG_H
+#define LOGDOCTOR__CRAPLOG_H
+
 
 #include <QtCharts>
 
@@ -591,4 +592,4 @@ private:
 };
 
 
-#endif // CRAPLOG_H
+#endif // LOGDOCTOR__CRAPLOG_H

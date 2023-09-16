@@ -1,5 +1,6 @@
-#ifndef CRAPVIEW_H
-#define CRAPVIEW_H
+#ifndef LOGDOCTOR__CRAPVIEW_H
+#define LOGDOCTOR__CRAPVIEW_H
+
 
 #include <QHash>
 #include <QtCharts>
@@ -289,35 +290,36 @@ private:
 
     // convert log fields to log fields IDs
     const QHash<QString, int> LogFields_s2i{
-            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(13)), 13},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(14)), 14},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(15)), 15},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(16)), 16},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(17)), 17},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(18)), 18},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(20)), 20},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(21)), 21},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(22)), 22}};
+        {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(13)), 13},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(14)), 14},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(15)), 15},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(16)), 16},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(17)), 17},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(18)), 18},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(20)), 20},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(21)), 21},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(22)), 22}};
 
     // convert months names to months numbers
     const QHash<QString, int> Months_s2i{
-            {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(4)),   4},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(5)),   5},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(6)),   6},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(7)),   7},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(8)),   8},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(9)),   9},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(10)), 10},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(11)), 11},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(12)), 12}};
+        {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(4)),   4},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(5)),   5},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(6)),   6},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(7)),   7},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(8)),   8},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(9)),   9},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(10)), 10},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(11)), 11},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(12)), 12}};
 
 };
 
-#endif // CRAPVIEW_H
+
+#endif // LOGDOCTOR__CRAPVIEW_H

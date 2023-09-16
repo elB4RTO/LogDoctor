@@ -1,5 +1,5 @@
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef LOGDOCTOR__UTILITIES__MEMORY_H
+#define LOGDOCTOR__UTILITIES__MEMORY_H
 
 
 //! MemOps
@@ -19,4 +19,5 @@ const size_t availableMemory();
 
 } // namespace MemOps
 
-#endif // MEMORY_H
+
+#endif // LOGDOCTOR__UTILITIES__MEMORY_H

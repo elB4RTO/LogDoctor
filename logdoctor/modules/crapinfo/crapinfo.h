@@ -1,5 +1,6 @@
-#ifndef CRAPINFO_H
-#define CRAPINFO_H
+#ifndef LOGDOCTOR__CRAPINFO_H
+#define LOGDOCTOR__CRAPINFO_H
+
 
 #include <QWidget>
 
@@ -7,6 +8,7 @@
 namespace Ui {
     class Crapinfo;
 }
+
 
 //! Crapinfo
 /*!
@@ -32,4 +34,5 @@ private:
     QSharedPointer<Ui::Crapinfo> ui;
 };
 
-#endif // CRAPINFO_H
+
+#endif // LOGDOCTOR__CRAPINFO_H

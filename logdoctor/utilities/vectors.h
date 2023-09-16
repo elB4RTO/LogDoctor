@@ -1,5 +1,6 @@
-#ifndef VECOPS_H
-#define VECOPS_H
+#ifndef LOGDOCTOR__VECOPS_H
+#define LOGDOCTOR__VECOPS_H
+
 
 #include <vector>
 #include <algorithm>
@@ -26,6 +27,7 @@ inline const bool contains( const std::vector<T>& list, const T& flag )
                                { return item == flag; } );
 }
 
-}
+} // namespace VecOps
 
-#endif // VECOPS_H
+
+#endif // LOGDOCTOR__UTILITIES__VECOPS_H

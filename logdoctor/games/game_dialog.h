@@ -1,5 +1,6 @@
-#ifndef GAMEDIALOG_H
-#define GAMEDIALOG_H
+#ifndef LOGDOCTOR__GAMES__GAME_DIALOG_H
+#define LOGDOCTOR__GAMES__GAME_DIALOG_H
+
 
 #include <QDialog>
 
@@ -7,6 +8,7 @@
 namespace Ui {
     class GameDialog;
 }
+
 
 //! GameDialog
 /*!
@@ -35,4 +37,5 @@ private:
     QSharedPointer<Ui::GameDialog> ui;
 };
 
-#endif // GAMEDIALOG_H
+
+#endif // LOGDOCTOR__GAMES__GAME_DIALOG_H

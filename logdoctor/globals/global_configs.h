@@ -1,5 +1,6 @@
-#ifndef GLOBAL_CONFIGS_H
-#define GLOBAL_CONFIGS_H
+#ifndef LOGDOCTOR__GLOBALS__GLOBAL_CONFIGS_H
+#define LOGDOCTOR__GLOBALS__GLOBAL_CONFIGS_H
+
 
 #include <QString>
 
@@ -43,4 +44,5 @@ namespace GlobalConfigs {
 
 } // namespace GlobalConfigs
 
-#endif // GLOBAL_CONFIGS_H
+
+#endif // LOGDOCTOR__GLOBALS__GLOBAL_CONFIGS_H

@@ -1,5 +1,6 @@
-#ifndef SNAKE_H
-#define SNAKE_H
+#ifndef LOGDOCTOR__GAMES__SNAKE__SNAKE_H
+#define LOGDOCTOR__GAMES__SNAKE__SNAKE_H
+
 
 #include <vector>
 #include <array> // leave this here for clang
@@ -118,4 +119,5 @@ private:
     const Direction predictDirection( const std::array<std::array<float, 7>, 4>& data, const std::array<float, 7>& weights, const std::array<Direction, 4>& classes ) const;
 };
 
-#endif // SNAKE_H
+
+#endif // LOGDOCTOR__GAMES__SNAKE__SNAKE_H

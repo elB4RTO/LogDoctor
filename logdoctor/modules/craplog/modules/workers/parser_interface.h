@@ -1,12 +1,12 @@
-#ifndef CRAPLOGPARSER_INTERFACE_H
-#define CRAPLOGPARSER_INTERFACE_H
+#ifndef LOGDOCTOR__CRAPLOG__WORKERS__PARSER_INTERFACE_H
+#define LOGDOCTOR__CRAPLOG__WORKERS__PARSER_INTERFACE_H
+
 
 #include <QObject>
 
 #include "modules/craplog/modules/lib.h"
 
 #include <unordered_map> // leave this here for clang
-
 
 enum class WorkerDialog;
 
@@ -175,4 +175,5 @@ protected:
 
 };
 
-#endif // CRAPLOGPARSER_INTERFACE_H
+
+#endif // LOGDOCTOR__CRAPLOG__WORKERS__PARSER_INTERFACE_H

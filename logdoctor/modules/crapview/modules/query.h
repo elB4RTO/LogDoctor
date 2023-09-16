@@ -1,5 +1,6 @@
-#ifndef QUERY_H
-#define QUERY_H
+#ifndef LOGDOCTOR__CRAPVIEW__QUERY_H
+#define LOGDOCTOR__CRAPVIEW__QUERY_H
+
 
 #include "modules/shared.h"
 
@@ -357,4 +358,5 @@ private:
         const int to_year,   const int to_month );
 };
 
-#endif // QUERY_H
+
+#endif // LOGDOCTOR__CRAPVIEW__QUERY_H

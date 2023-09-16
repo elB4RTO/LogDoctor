@@ -1,5 +1,6 @@
-#ifndef CRAPLOGWORKER_H
-#define CRAPLOGWORKER_H
+#ifndef LOGDOCTOR__CRAPLOG__WORKERS__LISTER_H
+#define LOGDOCTOR__CRAPLOG__WORKERS__LISTER_H
+
 
 #include <QObject>
 
@@ -61,4 +62,4 @@ private:
 };
 
 
-#endif // CRAPLOGWORKER_H
+#endif // LOGDOCTOR__CRAPLOG__WORKERS__LISTER_H

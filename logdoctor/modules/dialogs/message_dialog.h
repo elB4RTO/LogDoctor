@@ -1,5 +1,6 @@
-#ifndef DIALOGMSG_H
-#define DIALOGMSG_H
+#ifndef LOGDOCTOR__DIALOGS__MESSAGE_DIALOG_H
+#define LOGDOCTOR__DIALOGS__MESSAGE_DIALOG_H
+
 
 #include <QDialog>
 
@@ -14,6 +15,7 @@ enum class MsgType {
 namespace Ui {
     class DialogMsg;
 }
+
 
 //! DialogMsg
 /*!
@@ -51,4 +53,5 @@ private:
     int additional_height { 0 };
 };
 
-#endif // DIALOGMSG_H
+
+#endif // LOGDOCTOR__DIALOGS__MESSAGE_DIALOG_H

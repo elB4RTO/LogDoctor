@@ -1,5 +1,6 @@
-#ifndef DATETIME_H
-#define DATETIME_H
+#ifndef LOGDOCTOR__CRAPLOG__DATETIME_H
+#define LOGDOCTOR__CRAPLOG__DATETIME_H
+
 
 #include <string>
 #include <vector>
@@ -23,4 +24,5 @@ const std::vector<std::string> processDateTime( std::string_view datetime, std::
 
 } // namespace DateTimeOps
 
-#endif // DATETIME_H
+
+#endif // LOGDOCTOR__CRAPLOG__DATETIME_H

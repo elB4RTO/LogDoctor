@@ -1,5 +1,6 @@
-#ifndef LOGFILESTB_H
-#define LOGFILESTB_H
+#ifndef LOGDOCTOR__MODULES__TB_H
+#define LOGDOCTOR__MODULES__TB_H
+
 
 #include <QFont>
 
@@ -72,4 +73,5 @@ private:
     QFont   font;
 };
 
-#endif // LOGFILESTB_H
+
+#endif // LOGDOCTOR__MODULES__TB_H

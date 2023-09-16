@@ -1,5 +1,6 @@
-#ifndef CRAPLOG_LIB_H
-#define CRAPLOG_LIB_H
+#ifndef LOGDOCTOR__CRAPLOG__LIB_H
+#define LOGDOCTOR__CRAPLOG__LIB_H
+
 
 #include <QString>
 #include <QMetaType>
@@ -76,4 +77,4 @@ struct BWlist {
 };
 
 
-#endif // CRAPLOG_LIB_H
+#endif // LOGDOCTOR__CRAPLOG__LIB_H

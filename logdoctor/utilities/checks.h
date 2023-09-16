@@ -1,5 +1,6 @@
-#ifndef CHECKS_H
-#define CHECKS_H
+#ifndef LOGDOCTOR__UTILITIES__CHECKS_H
+#define LOGDOCTOR__UTILITIES__CHECKS_H
+
 
 #include <string>
 
@@ -40,4 +41,5 @@ const bool checkHashesDatabase( const std::string& db_path );
 
 } // namespace CheckSec
 
-#endif // CHECKS_H
+
+#endif // LOGDOCTOR__UTILITIES__CHECKS_H

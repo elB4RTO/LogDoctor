@@ -1,5 +1,6 @@
-#ifndef RTF_H
-#define RTF_H
+#ifndef LOGDOCTOR__UTILITIES__RTF_H
+#define LOGDOCTOR__UTILITIES__RTF_H
+
 
 #include <QObject>
 
@@ -47,4 +48,5 @@ public:
     static void richLogsFailure( QString& rich_str );
 };
 
-#endif // RTF_H
+
+#endif // LOGDOCTOR__UTILITIES__RTF_H

@@ -1,5 +1,6 @@
-#ifndef CRAPHELP_H
-#define CRAPHELP_H
+#ifndef LOGDOCTOR__CRAPHELP_H
+#define LOGDOCTOR__CRAPHELP_H
+
 
 #include <QWidget>
 
@@ -9,6 +10,7 @@
 namespace Ui {
     class Craphelp;
 }
+
 
 //! Craphelp
 /*!
@@ -49,4 +51,5 @@ private:
     void defaultIisFormat( std::string& str ) const;
 };
 
-#endif // CRAPHELP_H
+
+#endif // LOGDOCTOR__CRAPHELP_H

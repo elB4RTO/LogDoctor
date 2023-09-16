@@ -1,5 +1,6 @@
-#ifndef FORMATS_H
-#define FORMATS_H
+#ifndef LOGDOCTOR__CRAPLOG__FORMATS_H
+#define LOGDOCTOR__CRAPLOG__FORMATS_H
+
 
 #include <QString>
 
@@ -426,4 +427,4 @@ private:
 };
 
 
-#endif // FORMATS_H
+#endif // LOGDOCTOR__CRAPLOG__FORMATS_H

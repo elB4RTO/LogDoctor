@@ -1,5 +1,6 @@
-#ifndef STRINGS_H
-#define STRINGS_H
+#ifndef LOGDOCTOR__UTILITIES__STRINGS_H
+#define LOGDOCTOR__UTILITIES__STRINGS_H
+
 
 #include <string>
 #include <vector>
@@ -248,4 +249,5 @@ const std::string toLower( std::string_view str );
 
 } // namespace StringOps
 
-#endif // STRINGS_H
+
+#endif // LOGDOCTOR__UTILITIES__STRINGS_H

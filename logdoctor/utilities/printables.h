@@ -1,5 +1,6 @@
-#ifndef PRINTSEC_H
-#define PRINTSEC_H
+#ifndef LOGDOCTOR__UTILITIES__PRINTABLES_H
+#define LOGDOCTOR__UTILITIES__PRINTABLES_H
+
 
 class QString;
 
@@ -93,4 +94,5 @@ const QString printableBool(
 
 } // namespace PrintSec
 
-#endif // PRINTSEC_H
+
+#endif // LOGDOCTOR__UTILITIES__PRINTABLES_H

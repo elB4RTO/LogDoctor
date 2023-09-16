@@ -1,7 +1,9 @@
-#ifndef CRAPUP_STYLESHEETS_H
-#define CRAPUP_STYLESHEETS_H
+#ifndef LOGDOCTOR__CRAPUP__STYLESHEETS_H
+#define LOGDOCTOR__CRAPUP__STYLESHEETS_H
+
 
 class QString;
+
 
 namespace StyleSec::Crapup
 {
@@ -10,4 +12,5 @@ void getStyleSheet( QString& stylesheet );
 
 } // namespacce StyleSec::Crapup
 
-#endif // CRAPUP_STYLESHEETS_H
+
+#endif // LOGDOCTOR__CRAPUP__STYLESHEETS_H

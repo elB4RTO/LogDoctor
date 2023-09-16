@@ -1,5 +1,6 @@
-#ifndef IO_H
-#define IO_H
+#ifndef LOGDOCTOR__UTILITIES__IO_H
+#define LOGDOCTOR__UTILITIES__IO_H
+
 
 #include <string>
 #include <vector>
@@ -92,4 +93,5 @@ void writeOnFile( const std::string& path, std::string_view content );
 
 } // namespace IOutils
 
-#endif // IO_H
+
+#endif // LOGDOCTOR__UTILITIES__IO_H

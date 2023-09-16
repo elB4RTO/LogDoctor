@@ -1,12 +1,14 @@
-#ifndef CRAPNOTE_H
-#define CRAPNOTE_H
+#ifndef LOGDOCTOR__CRAPNOTE_H
+#define LOGDOCTOR__CRAPNOTE_H
+
 
 #include <QWidget>
 
 
 namespace Ui {
-class Crapnote;
+    class Crapnote;
 }
+
 
 //! Crapnote
 /*!
@@ -44,4 +46,5 @@ private:
     int font_size{ 17 };
 };
 
-#endif // CRAPNOTE_H
+
+#endif // LOGDOCTOR__CRAPNOTE_H

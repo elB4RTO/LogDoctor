@@ -1,5 +1,6 @@
-#ifndef DIALOGBOOL_H
-#define DIALOGBOOL_H
+#ifndef LOGDOCTOR__DIALOGS__BOOLEAN_DIALOG_H
+#define LOGDOCTOR__DIALOGS__BOOLEAN_DIALOG_H
+
 
 #include <QDialog>
 
@@ -38,4 +39,5 @@ private:
     QSharedPointer<Ui::DialogBool> ui;
 };
 
-#endif // DIALOGBOOL_H
+
+#endif // LOGDOCTOR__DIALOGS__BOOLEAN_DIALOG_H

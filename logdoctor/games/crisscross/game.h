@@ -1,5 +1,6 @@
-#ifndef CRISSCROSS_H
-#define CRISSCROSS_H
+#ifndef LOGDOCTOR__GAMES__CRISSCROSS__GAME_H
+#define LOGDOCTOR__GAMES__CRISSCROSS__GAME_H
+
 
 #include <QIcon>
 #include <QWidget>
@@ -10,6 +11,7 @@ class QPushButton;
 namespace Ui {
     class CrissCross;
 }
+
 
 //! CrissCross
 /*!
@@ -131,4 +133,5 @@ private:
 
 };
 
-#endif // CRISSCROSS_H
+
+#endif // LOGDOCTOR__GAMES__CRISSCROSS__GAME_H

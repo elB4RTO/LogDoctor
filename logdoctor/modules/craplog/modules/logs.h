@@ -1,5 +1,6 @@
-#ifndef LOGS_H
-#define LOGS_H
+#ifndef LOGDOCTOR__CRAPLOG__LOGS_H
+#define LOGDOCTOR__CRAPLOG__LOGS_H
+
 
 #include "lib.h"
 
@@ -25,4 +26,5 @@ const LogType defineFileType(
 
 } // namespace LogOps
 
-#endif // LOGS_H
+
+#endif // LOGDOCTOR__CRAPLOG__LOGS_H

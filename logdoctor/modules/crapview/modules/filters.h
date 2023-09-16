@@ -1,5 +1,6 @@
-#ifndef FILTERS_H
-#define FILTERS_H
+#ifndef LOGDOCTOR__CRAPVIEW__FILTERS_H
+#define LOGDOCTOR__CRAPVIEW__FILTERS_H
+
 
 #include <optional>
 
@@ -56,4 +57,5 @@ const std::optional<QString> parseTextualFilter( const QString& filter_str );
 
 }
 
-#endif // FILTERS_H
+
+#endif // LOGDOCTOR__CRAPVIEW__FILTERS_H

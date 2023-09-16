@@ -1,5 +1,6 @@
-#ifndef WORKERS_LIB_H
-#define WORKERS_LIB_H
+#ifndef LOGDOCTOR__CRAPLOG__WORKERS__LIB_H
+#define LOGDOCTOR__CRAPLOG__WORKERS__LIB_H
+
 
 enum class WorkerDialog {
     errGeneric,
@@ -14,4 +15,5 @@ enum class WorkerDialog {
 
 Q_DECLARE_METATYPE(WorkerDialog);
 
-#endif // WORKERS_LIB_H
+
+#endif // LOGDOCTOR__CRAPLOG__WORKERS__LIB_H

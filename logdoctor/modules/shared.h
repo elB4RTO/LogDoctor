@@ -1,5 +1,6 @@
-#ifndef SHARED_H
-#define SHARED_H
+#ifndef LOGDOCTOR__SHARED_H
+#define LOGDOCTOR__SHARED_H
+
 
 #include <QObject>
 
@@ -58,4 +59,4 @@ const std::string DAYS__FRIDAY    { TR::tr("Friday").toStdString()    };
 const std::string DAYS__SATURDAY  { TR::tr("Saturday").toStdString()  };
 
 
-#endif // SHARED_H
+#endif // LOGDOCTOR__SHARED_H

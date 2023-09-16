@@ -1,5 +1,6 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef LOGDOCTOR__CRAPLOG__HASH_H
+#define LOGDOCTOR__CRAPLOG__HASH_H
+
 
 #include "defines/web_servers.h"
 
@@ -83,4 +84,4 @@ private:
 };
 
 
-#endif // HASH_H
+#endif // LOGDOCTOR__CRAPLOG__HASH_H

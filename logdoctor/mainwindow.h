@@ -1,5 +1,6 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef LOGDOCTOR__MAINWINDOW_H
+#define LOGDOCTOR__MAINWINDOW_H
+
 
 #include <QMainWindow>
 
@@ -880,4 +881,4 @@ private:
 };
 
 
-#endif // MAINWINDOW_H
+#endif // LOGDOCTOR__MAINWINDOW_H
