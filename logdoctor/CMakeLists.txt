@@ -203,6 +203,12 @@ endif()
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
+if(MSVC)
+    add_compile_options(/W2)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
 
 if(APPLE)
     set_target_properties(LogDoctor PROPERTIES
