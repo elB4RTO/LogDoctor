@@ -181,7 +181,7 @@ void CrissCross::nextTurn()
 }
 
 
-const bool CrissCross::checkVictory()
+bool CrissCross::checkVictory()
 {
     bool result{ false };
     unsigned streak;
@@ -246,7 +246,7 @@ void CrissCross::victory()
 }
 
 
-const bool CrissCross::gameDraw() const
+bool CrissCross::gameDraw() const
 {
     bool result{ false };
     unsigned empty_tiles{ 9 };
@@ -322,7 +322,7 @@ void CrissCross::AI_updateWeights()
     }
 }
 
-const unsigned CrissCross::AI_makeChoice() const
+unsigned CrissCross::AI_makeChoice() const
 {
     // get a list of the heaviest tiles
     std::vector<unsigned> moves;

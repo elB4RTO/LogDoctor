@@ -67,7 +67,7 @@ public:
         \return The number of months in the period
         \throw DateTimeException
     */
-    const int countMonths(
+    int countMonths(
         const QString& from_year,
         const QString& from_month,
         const QString& to_year,
@@ -242,7 +242,7 @@ public:
         \param req_count Will hold the number of requests examined by the query
         \return Whether the operation has been successful or not
     */
-    const bool getGlobalCounts(
+    bool getGlobalCounts(
         const QString& web_server,
         const std::map<int, std::map<int, std::vector<int>>>& dates,
         std::vector<std::unordered_map<QString, unsigned>>& recurs,
@@ -297,7 +297,7 @@ private:
         \param tr_fld The log field, hendles translated text
         \return The database field
     */
-    const QString getDbField( const QString& tr_fld ) const;
+    QString getDbField( const QString& tr_fld ) const;
 
     /*const int getLogFieldID ( const QString& field_str );*/
 
@@ -309,7 +309,7 @@ private:
         \return The gap index
         \throw DateTimeException
     */
-    static const int getMinuteGap( const int minute, const int gap=10 );
+    static int getMinuteGap( const int minute, const int gap=10 );
 
 
     //! Returns the number of days for a given month
@@ -319,14 +319,14 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    static const int getMonthDays( const int year, const int month );
+    static int getMonthDays( const int year, const int month );
 
     //! Returns the month number in the year
     /*!
         \param month_str The month
         \return The month number
     */
-    const int getMonthNumber( const QString& month_str ) const;
+    int getMonthNumber( const QString& month_str ) const;
 
 
     //! Returns the number of days in a given period
@@ -340,7 +340,7 @@ private:
         \return The number of days
         \throw DateTimeException
     */
-    static const int countDays(
+    static int countDays(
         const int from_year, const int from_month, const int from_day,
         const int to_year, const int to_month, const int to_day );
 
@@ -353,7 +353,7 @@ private:
         \param to_month The final month
         \return The number of months in the period
     */
-    static const int countMonths(
+    static int countMonths(
         const int from_year, const int from_month,
         const int to_year,   const int to_month );
 };

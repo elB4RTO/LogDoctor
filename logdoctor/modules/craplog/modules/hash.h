@@ -28,7 +28,7 @@ public:
         \param db_path The path of the log files' Hashes database
         \return Whether the operation has been successful or not
     */
-    const bool loadUsedHashesLists( const std::string& db_path );
+    bool loadUsedHashesLists( const std::string& db_path );
 
     //! Returns the hash resulting from the content of the given file
     /*!
@@ -45,7 +45,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the hash is already in the list or not
     */
-    const bool hasBeenUsed( const std::string& file_hash, const unsigned& web_server_id ) const;
+    bool hasBeenUsed( const std::string& file_hash, const unsigned& web_server_id ) const;
 
     //! Inserts multiple hashes in the corresponding database table
     /*!
@@ -54,7 +54,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the operation has been successful or not
     */
-    const bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id );
+    bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id );
 
 private:
 
@@ -79,7 +79,7 @@ private:
 
     // Called by insertUsedHashes()
     // Inserts a hash in the corresponding database table
-    const bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id );
+    bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id );
 
 };
 

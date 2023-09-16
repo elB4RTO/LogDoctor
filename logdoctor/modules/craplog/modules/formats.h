@@ -24,7 +24,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processApacheFormatString( const std::string& format_string ) const;
+    LogsFormat processApacheFormatString( const std::string& format_string ) const;
 
     //! Processes the given string to extrapolate the format for Nginx
     /*!
@@ -33,7 +33,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processNginxFormatString( const std::string& format_string ) const;
+    LogsFormat processNginxFormatString( const std::string& format_string ) const;
 
     //! Processes the given string to extrapolate the format for the IIS
     /*!
@@ -43,7 +43,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processIisFormatString( const std::string& format_string, const int& log_module ) const;
+    LogsFormat processIisFormatString( const std::string& format_string, const int& log_module ) const;
 
 
     /////////////////
@@ -55,7 +55,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getApacheLogSample( const LogsFormat& log_format ) const;
+    QString getApacheLogSample( const LogsFormat& log_format ) const;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -63,7 +63,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getNginxLogSample( const LogsFormat& log_format ) const;
+    QString getNginxLogSample( const LogsFormat& log_format ) const;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -71,7 +71,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getIisLogSample( const LogsFormat& log_format ) const;
+    QString getIisLogSample( const LogsFormat& log_format ) const;
 
 
 private:
@@ -122,48 +122,48 @@ private:
                 {"User-agent", "user_agent"},
                 {"Referer",    "referer"}}},
         {"t", { /* not actually date-time fields but text, used as separators
-                {"\%n",        "NONE"}, // NEW LINE
-                {"\%t",        "NONE"}, // HORIZONTAL TAB
-                {"\%%",        "NONE"},*/
+                {"%n",         "NONE"}, // NEW LINE
+                {"%t",         "NONE"}, // HORIZONTAL TAB
+                {"%%",         "NONE"},*/
                 {"sec",        "date_time_epoch_s"},
                 {"msec",       "date_time_epoch_ms"},
                 {"usec",       "date_time_epoch_us"},
                 {"msec_frac",  "NONE"},
                 {"usec_frac",  "NONE"},
-                {"\%a",        "NONE"},
-                {"\%A",        "NONE"},
-                {"\%b",        "date_time_month_str"},
-                {"\%B",        "date_time_month_str"},
-                {"\%c",        "date_time_mcs"},
-                {"\%C",        "NONE"},
-                {"\%d",        "date_time_day"},
-                {"\%D",        "date_time_MMDDYY"},
-                {"\%e",        "date_time_day"},
-                {"\%F",        "date_time_YYYYMMDD"},
-                {"\%g",        "NONE"},
-                {"\%G",        "NONE"},
-                {"\%h",        "date_time_month_str"},
-                {"\%H",        "date_time_hour"},
-                {"\%I",        "NONE"},
-                {"\%j",        "NONE"},
-                {"\%m",        "date_time_month"},
-                {"\%M",        "date_time_minute"},
-                {"\%p",        "NONE"},
-                {"\%r",        "date_time_clock_12"},
-                {"\%R",        "date_time_clock_short"},
-                {"\%S",        "date_time_second"},
-                {"\%T",        "date_time_clock_24"},
-                {"\%u",        "NONE"},
-                {"\%U",        "NONE"},
-                {"\%V",        "NONE"},
-                {"\%w",        "NONE"},
-                {"\%W",        "NONE"},
-                {"\%x",        "date_time_MMDDYY"},
-                {"\%X",        "date_time_clock_24"},
-                {"\%y",        "date_time_year_short"},
-                {"\%Y",        "date_time_year"},
-                {"\%z",        "NONE"},
-                {"\%Z",        "NONE"}}},
+                {"%a",         "NONE"},
+                {"%A",         "NONE"},
+                {"%b",         "date_time_month_str"},
+                {"%B",         "date_time_month_str"},
+                {"%c",         "date_time_mcs"},
+                {"%C",         "NONE"},
+                {"%d",         "date_time_day"},
+                {"%D",         "date_time_MMDDYY"},
+                {"%e",         "date_time_day"},
+                {"%F",         "date_time_YYYYMMDD"},
+                {"%g",         "NONE"},
+                {"%G",         "NONE"},
+                {"%h",         "date_time_month_str"},
+                {"%H",         "date_time_hour"},
+                {"%I",         "NONE"},
+                {"%j",         "NONE"},
+                {"%m",         "date_time_month"},
+                {"%M",         "date_time_minute"},
+                {"%p",         "NONE"},
+                {"%r",         "date_time_clock_12"},
+                {"%R",         "date_time_clock_short"},
+                {"%S",         "date_time_second"},
+                {"%T",         "date_time_clock_24"},
+                {"%u",         "NONE"},
+                {"%U",         "NONE"},
+                {"%V",         "NONE"},
+                {"%w",         "NONE"},
+                {"%W",         "NONE"},
+                {"%x",         "date_time_MMDDYY"},
+                {"%X",         "date_time_clock_24"},
+                {"%y",         "date_time_year_short"},
+                {"%Y",         "date_time_year"},
+                {"%z",         "NONE"},
+                {"%Z",         "NONE"}}},
         {"T", { {"s",          "time_taken_s"},
                 {"ms",         "time_taken_ms"},
                 {"us",         "time_taken_us"}}},

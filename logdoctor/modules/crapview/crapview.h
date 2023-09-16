@@ -24,7 +24,7 @@ class Crapview : public QObject
 public:
 
     //! Returns the Dialogs level
-    const int getDialogsLevel() const;
+    int getDialogsLevel() const;
 
     //! Sets the new Dialogs level
     void setDialogsLevel( const int new_level );
@@ -47,14 +47,14 @@ public:
         \param field_id The ID of the log fiels
         \return The printable field
     */
-    const QString getLogFieldString ( const int field_id ) const;
+    QString getLogFieldString ( const int field_id ) const;
 
     //! Returns the log field ID corresponding to the given printable field
     /*!
         \param field_str The log field
         \return The ID of the log field
     */
-    const int getLogFieldID ( const QString& field_str ) const;
+    int getLogFieldID ( const QString& field_str ) const;
 
 
     //! Returns the month number corresponding to the given printable month
@@ -62,7 +62,7 @@ public:
         \param month_Str The printable month name
         \return The month number
     */
-    const int getMonthNumber( const QString& month_str ) const;
+    int getMonthNumber( const QString& month_str ) const;
 
 
     //! Refreshes the list of the dates which are available in the database
@@ -77,7 +77,7 @@ public:
         \param web_server The printable Web Server name
         \return The list of yearss which are avaliable
     */
-    const QStringList getYears(  const QString& web_server ) const;
+    QStringList getYears(  const QString& web_server ) const;
 
     //! Returns le list of available months in the given year, for the given web server
     /*!
@@ -85,7 +85,7 @@ public:
         \param year The year
         \return The list of printable month names which are avaliable
     */
-    const QStringList getMonths( const QString& web_server, const QString& year ) const;
+    QStringList getMonths( const QString& web_server, const QString& year ) const;
 
     //! Returns le list of available days in the given month and year, for the given web server
     /*!
@@ -94,13 +94,13 @@ public:
         \param month The printable month name
         \return The list of days which are avaliable
     */
-    const QStringList getDays( const QString& web_server, const QString& year, const QString& month ) const;
+    QStringList getDays( const QString& web_server, const QString& year, const QString& month ) const;
 
     //! Returns all the hours of the day
     /*!
         \return The list of all the hours
     */
-    const QStringList getHours() const;
+    QStringList getHours() const;
 
 
     //! Returns a list of the fields for the given tab
@@ -108,7 +108,7 @@ public:
         \param tab The stats tab
         \return The list of fields
     */
-    const QStringList getFields( const std::string& tab ) const;
+    QStringList getFields( const std::string& tab ) const;
 
 
     //! Updates the database applying the changes which have been made to the table
@@ -245,7 +245,7 @@ public:
         \param web_server The printable Web Server name
         \return Whether the operation has been successful or not
     */
-    const bool calcGlobals(
+    bool calcGlobals(
         std::vector<std::tuple<QString,QString>>& recur_list,
         std::vector<std::tuple<QString,QString>>& traffic_list,
         std::vector<std::tuple<QString,QString>>& perf_list,

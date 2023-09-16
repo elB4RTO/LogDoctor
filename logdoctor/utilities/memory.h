@@ -15,7 +15,7 @@ namespace{ using size_t = unsigned long; }
 /*!
     \return The amount of memory in Bytes
 */
-const size_t availableMemory();
+size_t availableMemory();
 
 } // namespace MemOps
 

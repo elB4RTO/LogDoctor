@@ -21,7 +21,7 @@ namespace CheckSec
   \return The result of the check
   \see IOutils::exists(), IOutils::isFile(), IOutils::checkFile()
 */
-const bool checkDatabaseFile( const std::string& db_path, const QString& db_name );
+bool checkDatabaseFile( const std::string& db_path, const QString& db_name );
 
 //! Checks the structure's integrity of the Collection database
 /*!
@@ -29,7 +29,7 @@ const bool checkDatabaseFile( const std::string& db_path, const QString& db_name
   \return The result of the check
   \see checkDatabaseTablesNames(), newCollectionDatabase(), newHashesDatabase()
 */
-const bool checkCollectionDatabase( const std::string& db_path );
+bool checkCollectionDatabase( const std::string& db_path );
 
 //! Checks the structure's integrity of the Hashes database
 /*!
@@ -37,7 +37,7 @@ const bool checkCollectionDatabase( const std::string& db_path );
   \return The result of the check
   \see checkDatabaseTablesNames(), newCollectionDatabase(), newHashesDatabase()
 */
-const bool checkHashesDatabase( const std::string& db_path );
+bool checkHashesDatabase( const std::string& db_path );
 
 } // namespace CheckSec
 

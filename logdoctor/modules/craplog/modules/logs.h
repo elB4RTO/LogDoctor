@@ -19,7 +19,7 @@ namespace LogOps
     \return The resulting file type
     \see LogType, deepTypeCheck(), FormatOps::LogsFormat
 */
-const LogType defineFileType(
+LogType defineFileType(
     const std::vector<std::string>& lines,
     const LogsFormat& format
 );

@@ -13,7 +13,7 @@
 namespace ColorSec
 {
 
-const std::unordered_map<std::string, QColor> getColors()
+std::unordered_map<std::string, QColor> getColors()
 {
     return {
         // greyscale
@@ -30,7 +30,7 @@ const std::unordered_map<std::string, QColor> getColors()
 }
 
 
-const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes()
+std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes()
 {
     return {
         // none

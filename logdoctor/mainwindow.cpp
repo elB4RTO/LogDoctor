@@ -219,7 +219,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_ConfDatabases_DoBackup->setChecked( this->db_do_backup );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
-    this->ui->spinBox_ConfControl_Size->setValue( this->craplog.getWarningSize() / 1'048'576 );
+    this->ui->spinBox_ConfControl_Size->setValue( static_cast<int>(this->craplog.getWarningSize() / 1'048'576ul) );
     if ( this->craplog.getWarningSize() > 0 ) {
         this->ui->checkBox_ConfControl_Size->setChecked( true );
     } else {
@@ -980,7 +980,7 @@ void MainWindow::backupDatabase() const
 }
 
 
-const std::string MainWindow::geometryToString() const
+std::string MainWindow::geometryToString() const
 {
     QRect geometry{ this->geometry() };
     std::string string;
@@ -1008,7 +1008,7 @@ void MainWindow::setGeometryFromString( const std::string& geometry )
 }
 
 
-const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
+std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
 {
     if ( user_agent ) {
         return std::accumulate(
@@ -1023,7 +1023,7 @@ const std::string MainWindow::list2string( const std::vector<std::string>& list,
               { return s += str + " "; } );
     }
 }
-const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
+std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
 {
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, ' ' );
@@ -1852,7 +1852,7 @@ void MainWindow::makeInitialChecks()
 }
 
 
-const bool MainWindow::checkDataDB()
+bool MainWindow::checkDataDB()
 {
     bool ok{ false };
     if ( ! this->initiating ) { // avoid recursions
@@ -1893,7 +1893,7 @@ const bool MainWindow::checkDataDB()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
-const QString MainWindow::wsFromIndex(const int index ) const
+QString MainWindow::wsFromIndex(const int index ) const
 {
     switch (index) {
     case 0:
@@ -1907,7 +1907,7 @@ const QString MainWindow::wsFromIndex(const int index ) const
     }
 }
 
-const std::string MainWindow::resolvePath( const std::string& path ) const
+std::string MainWindow::resolvePath( const std::string& path ) const
 {
     std::string p;
     try {
@@ -1917,7 +1917,7 @@ const std::string MainWindow::resolvePath( const std::string& path ) const
     }
     return p;
 }
-const std::string MainWindow::parentPath( const std::string& path ) const
+std::string MainWindow::parentPath( const std::string& path ) const
 {
     return path.substr( 0, path.rfind( '/' ) );
 }
@@ -2348,7 +2348,7 @@ void MainWindow::setDbWorkingState( const bool working )
     }
 }
 
-const bool MainWindow::dbUsable()
+bool MainWindow::dbUsable()
 {
     if ( !this->db_working ) {
         return this->checkDataDB();
@@ -3495,7 +3495,7 @@ void MainWindow::checkStatsDayDrawable()
     }
 }
 
-const std::optional<QString> MainWindow::getStatsDayParsedFilter() const
+std::optional<QString> MainWindow::getStatsDayParsedFilter() const
 {
     const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
     if ( fld_i == 0 ) {
@@ -3779,7 +3779,7 @@ void MainWindow::checkStatsRelatDrawable()
     }
 }
 
-const std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_num ) const
+std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_num ) const
 {
     const int fld_i{ ( filter_num == 1 )
                      ? this->ui->box_StatsRelat_LogsField_1->currentIndex()
@@ -5373,15 +5373,14 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 }
 
 // formats
-const int MainWindow::getIisLogsModule() const
+int MainWindow::getIisLogsModule() const
 {
-    int module{ 0 };
     if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
-        module += 1;
+        return 1;
     } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
-        module += 2;
+        return 2;
     }
-    return module;
+    return 0;
 }
 
 void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)

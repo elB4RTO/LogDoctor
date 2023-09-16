@@ -13,7 +13,12 @@
     File types used to decide whether a file should be considered valid or not
     \see LogOps::defineFileType()
 */
-enum class LogType : __INT8_TYPE__ {
+enum class LogType
+#ifdef _MSC_VER
+    : __int8 {
+#else
+    : __INT8_TYPE__ {
+#endif
     Failed    = -1, //!< Failed to determine the type
     Discarded =  0, //!< Not a valid file, will be discarded
     Access    =  1  //!< Valid access logs file type
@@ -27,15 +32,15 @@ public:
     explicit LogFile
         (const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt)
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
-    const bool isSelected() const   //!< Wheter the file has been selected to be use or not
+    bool isSelected() const   //!< Wheter the file has been selected to be use or not
         { return this->selected; }
     void setSelected()              //!< Sets the file as selected
         { this->selected |= true; }
     void setUnselected()            //!< Sets the file as unselected
         { this->selected &= false; }
-    const bool hasBeenUsed() const  //!< Wheter the file has been used already or not
+    bool hasBeenUsed() const  //!< Wheter the file has been used already or not
         { return this->used_already; }
-    const size_t size() const     //!< The size of the file
+    size_t size() const     //!< The size of the file
         { return this->size_; }
     const QString& name() const     //!< The name of the file, to be displayed in the list
         { return this->name_; }

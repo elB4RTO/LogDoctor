@@ -44,7 +44,7 @@ public:
 private:
     QSharedPointer<Ui::Craphelp> ui;
 
-    const std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
+    std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
 
     void defaultApacheFormat( std::string& str ) const;
     void defaultNginxFormat( std::string& str ) const;

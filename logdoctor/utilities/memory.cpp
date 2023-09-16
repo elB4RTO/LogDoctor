@@ -21,7 +21,7 @@
 
 namespace MemOps {
 
-const size_t availableMemory() {
+size_t availableMemory() {
 #if defined( Q_OS_WIN )
     MEMORYSTATUSEX mem_statexs;
     mem_statexs.dwLength = sizeof( mem_statexs );

@@ -20,10 +20,10 @@ namespace ColorSec
 {
 
 //! Provides a map with pre-made colors
-const std::unordered_map<std::string, QColor> getColors();
+std::unordered_map<std::string, QColor> getColors();
 
 //! Provides a map with pre-made color-schemes for the TextBrowser
-const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes();
+std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes();
 
 //! Applies the choosen theme to the given chart
 /*!

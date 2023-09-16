@@ -20,7 +20,7 @@ namespace DateTimeOps
     \throw DateTimeException
     \return The list of items
 */
-const std::vector<std::string> processDateTime( std::string_view datetime, std::string_view format );
+std::vector<std::string> processDateTime( std::string_view datetime, std::string_view format );
 
 } // namespace DateTimeOps
 

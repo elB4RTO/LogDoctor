@@ -56,7 +56,7 @@ private:
         \return Whether the operation has been successful or not
         \throw WebServerException
     */
-    const bool storeData( QSqlDatabase& db );
+    bool storeData( QSqlDatabase& db );
 
 };
 

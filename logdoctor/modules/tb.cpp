@@ -3,12 +3,12 @@
 
 
 // getters
-const bool TextBrowser::getWideLinesUsage() const
+bool TextBrowser::getWideLinesUsage() const
 {
     return this->wide_lines;
 }
 
-const int TextBrowser::getColorSchemeID() const
+int TextBrowser::getColorSchemeID() const
 {
     return this->color_scheme_id;
 }

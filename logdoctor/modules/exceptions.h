@@ -18,6 +18,7 @@ public:
 
 private:
     QString msg;
+    using std::exception::what;
 };
 
 
@@ -31,7 +32,8 @@ public:
     /*const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
+    using std::exception::what;*/
 };
 
 
@@ -46,6 +48,7 @@ public:
 
 private:
     QString msg;
+    using std::exception::what;
 };
 
 
@@ -60,6 +63,7 @@ public:
 
 private:
     QString msg;
+    using std::exception::what;
 };
 
 
@@ -73,7 +77,8 @@ public:
     /*const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
+    using std::exception::what;*/
 };
 
 
@@ -87,7 +92,8 @@ public:
     /*const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
+    using std::exception::what;*/
 };
 
 

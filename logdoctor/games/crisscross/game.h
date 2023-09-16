@@ -95,15 +95,12 @@ private:
     //! Switches to the next turn
     void nextTurn();
 
-    //! Checks whether it's the human player turn or not
-    const bool isPlayerTurn();
-
 
     //! Checks whether somebody won or not
-    const bool checkVictory();
+    bool checkVictory();
 
     //! Checks whether the game is draw or not
-    const bool gameDraw() const;
+    bool gameDraw() const;
 
     //! Someone won, process the victory
     void victory();
@@ -129,7 +126,7 @@ private:
         \return The tile to select
         \see AI_playTurn();
     */
-    const unsigned AI_makeChoice() const;
+    unsigned AI_makeChoice() const;
 
 };
 

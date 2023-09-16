@@ -8,7 +8,7 @@
 #include <QTableWidget>
 
 
-const int Crapview::getDialogsLevel() const
+int Crapview::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
@@ -25,12 +25,12 @@ void Crapview::setDbPath( const std::string& path )
 
 
 
-const QString Crapview::getLogFieldString ( const int field_id ) const
+QString Crapview::getLogFieldString ( const int field_id ) const
 {
     return TR::tr( this->dbQuery.FIELDS.at( field_id ).c_str() );
 }
 
-const int Crapview::getLogFieldID ( const QString& field_str ) const
+int Crapview::getLogFieldID ( const QString& field_str ) const
 {
     int f{ 0 };
     for ( const auto& [id,str] : this->dbQuery.FIELDS ) {
@@ -43,7 +43,7 @@ const int Crapview::getLogFieldID ( const QString& field_str ) const
 }
 
 
-const int Crapview::getMonthNumber( const QString& month_str ) const
+int Crapview::getMonthNumber( const QString& month_str ) const
 {
     int m{ 0 };
     for ( const auto& [num,str] : this->dbQuery.MONTHS ) {
@@ -72,7 +72,7 @@ void Crapview::clearDates()
     this->dates.clear();
 }
 
-const QStringList Crapview::getYears( const QString& web_server ) const
+QStringList Crapview::getYears( const QString& web_server ) const
 {
     QStringList years;
     if ( ! this->dates.empty() ) {
@@ -86,7 +86,7 @@ const QStringList Crapview::getYears( const QString& web_server ) const
     }
     return years;
 }
-const QStringList Crapview::getMonths( const QString& web_server, const QString& year ) const
+QStringList Crapview::getMonths( const QString& web_server, const QString& year ) const
 {
     QStringList months;
     if ( ! this->dates.empty() ) {
@@ -104,7 +104,7 @@ const QStringList Crapview::getMonths( const QString& web_server, const QString&
     }
     return months;
 }
-const QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month ) const
+QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month ) const
 {
     QStringList days;
     if ( ! this->dates.empty() ) {
@@ -124,12 +124,12 @@ const QStringList Crapview::getDays( const QString& web_server, const QString& y
     }
     return days;
 }
-const QStringList Crapview::getHours() const
+QStringList Crapview::getHours() const
 {
     return QStringList{"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};
 }
 
-const QStringList Crapview::getFields( const std::string& tab ) const
+QStringList Crapview::getFields( const std::string& tab ) const
 {
     QStringList list;
     const auto& f{ this->fields.at( tab ) };
@@ -788,7 +788,7 @@ void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme&
 
 
 // calculate global informations
-const bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server ) const
+bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString& web_server ) const
 {
     bool result{ false };
 

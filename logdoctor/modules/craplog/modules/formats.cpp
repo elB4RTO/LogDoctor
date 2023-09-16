@@ -28,7 +28,7 @@ unsigned countNewLines( std::string_view initial, std::string_view final, const 
     for ( const std::string& sep : separators ) {
         nl += StringOps::count( sep, '\n' );
     }
-    return nl;
+    return static_cast<unsigned>(nl);
 }
 
 
@@ -249,7 +249,7 @@ void checkIisString( std::string_view string )
 
 
 
-const LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) const
+LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) const
 {
     const auto& f_map   { this->APACHE_ALF   };
     const auto& f_map_v { this->APACHE_ALF_V };
@@ -522,7 +522,7 @@ const LogsFormat FormatOps::processApacheFormatString( const std::string& f_str 
 
 }
 // sample
-const QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
+QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
 {
     QString sample;
     const auto& map{ this->APACHE_ALF_SAMPLES };
@@ -545,7 +545,7 @@ const QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) cons
 
 
 
-const LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
+LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
 {
     const auto& f_map{ this->NGINX_ALF };
 
@@ -618,7 +618,7 @@ const LogsFormat FormatOps::processNginxFormatString( const std::string& f_str )
         countNewLines( initial, final, separators ) );
 }
 // sample
-const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
+QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 {
     QString sample;
     const auto& map{ this->NGINX_ALF_SAMPLES };
@@ -641,7 +641,7 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 
 
 
-const LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
+LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
 {
     checkIisString( f_str );
     std::string initial, final;
@@ -712,7 +712,7 @@ const LogsFormat FormatOps::processIisFormatString( const std::string& f_str, co
         f_str, initial, final, separators, fields, 0 );
 }
 // sample
-const QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
+QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
 {
     QString sample;
     const auto& map{ this->IIS_ALF_SAMPLES };

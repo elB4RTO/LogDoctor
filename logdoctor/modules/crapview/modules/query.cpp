@@ -30,7 +30,7 @@ void DbQuery::setDbPath( const std::string& path )
 }
 
 
-const int DbQuery::getMinuteGap( const int minute, const int gap )
+int DbQuery::getMinuteGap( const int minute, const int gap )
 {
     int m{ -1 };
     if ( minute < 0 || minute >= 60 ) {
@@ -48,7 +48,7 @@ const int DbQuery::getMinuteGap( const int minute, const int gap )
     return m;
 }
 
-const int DbQuery::getMonthDays( const int year, const int month )
+int DbQuery::getMonthDays( const int year, const int month )
 {
     int n_days;
     switch (month) {
@@ -72,7 +72,7 @@ const int DbQuery::getMonthDays( const int year, const int month )
 }
 
 
-const int DbQuery::getMonthNumber( const QString& month_str ) const
+int DbQuery::getMonthNumber( const QString& month_str ) const
 {
     int m{ 0 };
     for ( const auto& [num,str] : this->MONTHS ) {
@@ -85,7 +85,7 @@ const int DbQuery::getMonthNumber( const QString& month_str ) const
 }
 
 
-const int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
+int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
 {
     int n_days{ 1 };
     if ( from_year == to_year ) {
@@ -121,7 +121,7 @@ const int DbQuery::countDays( const int from_year, const int from_month, const i
     return n_days;
 }
 
-const int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month )
+int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month )
 {
     int n_months{ 0 };
     if ( from_year == to_year ) {
@@ -142,7 +142,7 @@ const int DbQuery::countMonths( const int from_year, const int from_month, const
     return n_months;
 }
 
-const int DbQuery::countMonths( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month ) const
+int DbQuery::countMonths( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month ) const
 {
     int from_year_, from_month_, to_year_, to_month_;
     try {
@@ -170,7 +170,7 @@ const int DbQuery::countMonths( const QString& from_year, const QString& from_mo
     return f;
 }*/
 
-const QString DbQuery::getDbField( const QString& tr_fld ) const
+QString DbQuery::getDbField( const QString& tr_fld ) const
 {
     QString f;
     for ( const auto& [id,str] : this->FIELDS ) {
@@ -1142,7 +1142,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                             // append the day as newly found if not found yet
                             days_l[ day ] ++;
                         }
-                        n_days += days_l.size();
+                        n_days += static_cast<int>(days_l.size());
                     } catch (...) {
                         // something failed
                         successful &= false;
@@ -1221,7 +1221,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                                 // append the day as newly found if not found yet
                                 days_l[ day ] ++;
                             }
-                            n_days += days_l.size();
+                            n_days += static_cast<int>(days_l.size());
                             month ++;
                             if ( month > 12 ) {
                                 month = 1;
@@ -1923,7 +1923,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
 
 
-const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, std::map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, unsigned>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
+bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, std::map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, unsigned>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
 {
     bool successful{ true };
 

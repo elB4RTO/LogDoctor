@@ -548,7 +548,7 @@ void CraplogParser::storeLogLines()
 
 }
 
-const bool CraplogParser::storeData( QSqlDatabase& db )
+bool CraplogParser::storeData( QSqlDatabase& db )
 {
     const QString db_name{ QString::fromStdString(
         this->db_data_path.substr(

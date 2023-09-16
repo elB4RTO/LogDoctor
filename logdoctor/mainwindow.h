@@ -540,9 +540,9 @@ private:
     QSharedPointer<Ui::MainWindow> ui;
 
     // current version of LogDoctor
-    const float version{ 2.05 };
+    const float version{ 2.05f };
 
-    const QString wsFromIndex( const int index ) const;
+    QString wsFromIndex( const int index ) const;
 
 
     //////////////////////////
@@ -586,7 +586,7 @@ private:
         \return The resulting string
         \see writeConfigs()
     */
-    const std::string list2string( const std::vector<std::string>& list, const bool user_agent=false ) const;
+    std::string list2string( const std::vector<std::string>& list, const bool user_agent=false ) const;
 
     //! Retrieves a list of items from the given string
     /*!
@@ -595,7 +595,7 @@ private:
         \return The resulting list
         \see readConfigs()
     */
-    const std::vector<std::string> string2list( const std::string& string, const bool user_agent=false ) const;
+    std::vector<std::string> string2list( const std::string& string, const bool user_agent=false ) const;
 
     // string to bool and vice versa
     const std::unordered_map<std::string, bool> s2b{ {"true",true}, {"false",false} };
@@ -620,7 +620,7 @@ private:
     /*!
         \see writeConfigs()
     */
-    const std::string geometryToString() const;
+    std::string geometryToString() const;
 
     //! Retrieves the window geometry from the given string
     /*!
@@ -698,10 +698,10 @@ private:
 
 
     //! Resolves the given path and returns the canonical path
-    const std::string resolvePath( const std::string& path ) const;
+    std::string resolvePath( const std::string& path ) const;
 
     //! Returns the parent folder of the given path
-    const std::string parentPath( const std::string& path ) const;
+    std::string parentPath( const std::string& path ) const;
 
 
     ////////////////
@@ -716,7 +716,7 @@ private:
     void makeInitialChecks();
 
     //! Checks the integrity of the logs data collection database
-    const bool checkDataDB();
+    bool checkDataDB();
 
 
     ///////////////////
@@ -741,7 +741,7 @@ private:
     //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool working );
 
-    const bool dbUsable();
+    bool dbUsable();
 
 
     //////////////////
@@ -818,10 +818,10 @@ private:
     void resetStatsCountButtons();
 
     // day-time
-    const std::optional<QString> getStatsDayParsedFilter() const;
+    std::optional<QString> getStatsDayParsedFilter() const;
 
     // relational
-    const std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
+    std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
 
     // globals
     QString glob_ws;
@@ -837,7 +837,7 @@ private:
 
     void refreshChartsPreview();
 
-    const int getIisLogsModule() const;
+    int getIisLogsModule() const;
 
 
     //////////////////

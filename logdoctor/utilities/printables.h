@@ -19,7 +19,7 @@ namespace{ using size_t = unsigned long; }
     \param bytes The size in bytes
     \return The string to be displayed
 */
-const QString printableSize(
+QString printableSize(
     const size_t bytes
 );
 
@@ -30,7 +30,7 @@ const QString printableSize(
     \param seconds The number of seconds
     \return The string to be displayed
 */
-const QString printableSpeed(
+QString printableSpeed(
     const double bytes, const double seconds
 );
 
@@ -40,7 +40,7 @@ const QString printableSpeed(
     \param seconds The number of seconds
     \return The string to be displayed
 */
-const QString printableTime(
+QString printableTime(
     const unsigned seconds
 );
 
@@ -52,7 +52,7 @@ const QString printableTime(
     \param second The second
     \return The printable time
 */
-const QString printableTime(
+QString printableTime(
     const int hour, const int minute, const int second
 );
 
@@ -65,7 +65,7 @@ const QString printableTime(
     \param day The day
     \return The printable date
 */
-const QString printableDate(
+QString printableDate(
     const QString& year, const int month, const QString& day
 );
 
@@ -77,7 +77,7 @@ const QString printableDate(
     \param day The day
     \return The printable date
 */
-const QString printableDate(
+QString printableDate(
     const int year, const int month, const int day
 );
 
@@ -88,7 +88,7 @@ const QString printableDate(
     \param value The value to convert
     \return The corresponding printable string
 */
-const QString printableBool(
+QString printableBool(
     const int value
 );
 

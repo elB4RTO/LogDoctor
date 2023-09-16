@@ -15,7 +15,7 @@ Craphelp::Craphelp(QWidget *parent)
 }
 
 
-const std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int scheme_id ) const
+std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int scheme_id ) const
 {
     switch ( scheme_id ) {
         case 0:

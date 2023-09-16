@@ -31,11 +31,11 @@ const Food& Food::operator=( const Food& other )
 }
 
 
-const unsigned Food::X() const
+unsigned Food::X() const
 {
     return this->x;
 }
-const unsigned Food::Y() const
+unsigned Food::Y() const
 {
     return this->y;
 }
@@ -47,7 +47,7 @@ QGraphicsPixmapItem* Food::getImageItem() const
 }
 
 
-const bool Food::inTile(  const unsigned x, const unsigned y  ) const
+bool Food::inTile(  const unsigned x, const unsigned y  ) const
 {
     if ( this->x == x && this->y == y ) {
         return true;

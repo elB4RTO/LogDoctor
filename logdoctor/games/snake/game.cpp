@@ -314,7 +314,7 @@ void SnakeGame::processNextKeyEvent()
 void SnakeGame::updateGameScore()
 {
     this->game_score += this->score_step;
-    this->ui->lcd_Score->setDigitCount( std::to_string(this->game_score).size() );
+    this->ui->lcd_Score->setDigitCount( static_cast<int>(std::to_string(this->game_score).size()) );
     this->ui->lcd_Score->display( this->game_score );
 }
 

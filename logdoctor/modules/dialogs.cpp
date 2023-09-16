@@ -174,7 +174,7 @@ void DialogSec::errSqlDriverNotFound( const QString& driver, QWidget* parent )
     std::ignore = dialog.exec();
 }
 
-const bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget* parent )
+bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("File not found"),
@@ -186,7 +186,7 @@ const bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget* p
     return dialog.exec();
 }
 
-const bool DialogSec::choiceDatabaseWrongTable(const QString& db_name, const QString& table_name, QWidget* parent )
+bool DialogSec::choiceDatabaseWrongTable(const QString& db_name, const QString& table_name, QWidget* parent )
 {
     QString msg{ QString("%1:\n%2 -> %3").arg(
         DialogSec::tr("The database contains an unexpected table"),
@@ -196,7 +196,7 @@ const bool DialogSec::choiceDatabaseWrongTable(const QString& db_name, const QSt
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseMissingTable( const QString& db_name, const QString& table_name, QWidget* parent )
+bool DialogSec::choiceDatabaseMissingTable( const QString& db_name, const QString& table_name, QWidget* parent )
 {
     QString msg{ QString("%1:\n%2 -> %3").arg(
         DialogSec::tr("It seems that the database is missing a table"),
@@ -206,7 +206,7 @@ const bool DialogSec::choiceDatabaseMissingTable( const QString& db_name, const 
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseWrongColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent )
+bool DialogSec::choiceDatabaseWrongColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent )
 {
     QString msg{ QString("%1:\n%2 -> %3 -> %4").arg(
         DialogSec::tr("The database contains an unexpected column"),
@@ -216,7 +216,7 @@ const bool DialogSec::choiceDatabaseWrongColumn( const QString& db_name, const Q
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseMissingColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent )
+bool DialogSec::choiceDatabaseMissingColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent )
 {
     QString msg{ QString("%1:\n%2 -> %3 -> %4").arg(
         DialogSec::tr("It seems that the table is missing a column"),
@@ -226,7 +226,7 @@ const bool DialogSec::choiceDatabaseMissingColumn( const QString& db_name, const
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget* parent )
+bool DialogSec::choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget* parent )
 {
     QString msg{ QString("%1:\n%2 -> %3 -> %4 -> %5").arg(
         DialogSec::tr("A column has an unexpected data-type"),
@@ -236,7 +236,7 @@ const bool DialogSec::choiceDatabaseWrongDataType( const QString& db_name, const
         msg,
         parent );
 }
-const bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent )
+bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent )
 {
     DialogBool dialog{
         title,
@@ -425,7 +425,7 @@ void DialogSec::errFailedDefiningLogType( const QString& file, QWidget* parent )
 }
 
 
-const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent )
+int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("File already used"),
@@ -438,7 +438,7 @@ const int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent 
 }
 
 
-const int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
+int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("Duplicate file"),
@@ -451,7 +451,7 @@ const int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
 }
 
 
-const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
+int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("File exceeds warning size"),
@@ -462,7 +462,7 @@ const int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent 
         true, true, true, parent };
     return dialog.exec();
 }
-const bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget* parent )
+bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("File exceeds warning size"),
@@ -549,7 +549,7 @@ void DialogSec::warnFileNotReadable( const QString& file, QWidget* parent )
 
 
 
-const int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* parent )
+int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("File not found"),
@@ -660,7 +660,7 @@ void DialogSec::errFailedMakeDir( const QString& msg, const QString& err, QWidge
 //////////////////
 //// GENERICS ////
 //////////////////
-const bool DialogSec::choiceDirNotDir( const QString& path, QWidget* parent )
+bool DialogSec::choiceDirNotDir( const QString& path, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("Not a folder"),
@@ -671,7 +671,7 @@ const bool DialogSec::choiceDirNotDir( const QString& path, QWidget* parent )
         parent };
     return dialog.exec();
 }
-const bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
+bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("Not a file"),

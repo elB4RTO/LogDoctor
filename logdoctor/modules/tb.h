@@ -20,10 +20,10 @@ public:
     //// GETTERS ////
 
     //! Returns whether the wide lines option is set to be used or not
-    const bool getWideLinesUsage() const;
+    bool getWideLinesUsage() const;
 
     //! Returns the ID of the color scheme in use
-    const int getColorSchemeID() const;
+    int getColorSchemeID() const;
 
     //! Returns the color scheme in use
     const std::unordered_map<std::string, QString>& getColorScheme() const;

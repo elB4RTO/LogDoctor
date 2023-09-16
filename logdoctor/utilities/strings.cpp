@@ -6,12 +6,12 @@
 namespace StringOps
 {
 
-const size_t count( std::string_view str, const char flag )
+size_t count( std::string_view str, const char flag )
 {
     return static_cast<size_t>( std::count( str.cbegin(), str.cend(), flag ) );
 }
 
-const size_t count( std::string_view str, std::string_view flag )
+size_t count( std::string_view str, std::string_view flag )
 {
     const size_t flg_size{ flag.size() };
     size_t count{ 0ul };
@@ -22,12 +22,12 @@ const size_t count( std::string_view str, std::string_view flag )
 }
 
 
-const bool isNumeric( const char& chr )
+bool isNumeric( const char& chr )
 {
     return chr > 47 && chr < 58;
 }
 
-const bool isNumeric( std::string_view str )
+bool isNumeric( std::string_view str )
 {
     if ( str.empty() ) {
         return false;
@@ -38,13 +38,13 @@ const bool isNumeric( std::string_view str )
 }
 
 
-const bool isAlphabetic( const char& chr )
+bool isAlphabetic( const char& chr )
 {
     return (chr > 64 && chr < 91)
         || (chr > 96 && chr < 123);
 }
 
-const bool isAlphabetic( std::string_view str )
+bool isAlphabetic( std::string_view str )
 {
     if ( str.empty() ) {
         return false;
@@ -55,13 +55,13 @@ const bool isAlphabetic( std::string_view str )
 }
 
 
-const bool isAlnum( const char& chr )
+bool isAlnum( const char& chr )
 {
     return isNumeric( chr )
         || isAlphabetic( chr );
 }
 
-const bool isAlnum( std::string_view str )
+bool isAlnum( std::string_view str )
 {
     if ( str.empty() ) {
         return false;
@@ -72,7 +72,7 @@ const bool isAlnum( std::string_view str )
 }
 
 
-const bool isHex( const char& chr )
+bool isHex( const char& chr )
 {
     return (chr > 47 && chr < 58)
         || (chr > 64 && chr < 71)
@@ -80,7 +80,7 @@ const bool isHex( const char& chr )
 }
 
 
-const bool isIP( std::string_view str )
+bool isIP( std::string_view str )
 {
     if ( str.empty() ) {
         return false;
@@ -96,35 +96,35 @@ const bool isIP( std::string_view str )
 }
 
 
-const bool startsWith( std::string_view str, const char flag )
+bool startsWith( std::string_view str, const char flag )
 {
     return str.front() == flag;
 }
 
-const bool startsWith( std::string_view str, std::string_view flag )
+bool startsWith( std::string_view str, std::string_view flag )
 {
     return str.rfind( flag, 0ul ) == 0ul;
 }
 
 
-const bool endsWith( std::string_view str, const char flag )
+bool endsWith( std::string_view str, const char flag )
 {
     return str.back() == flag;
 }
 
-const bool endsWith( std::string_view str, std::string_view flag )
+bool endsWith( std::string_view str, std::string_view flag )
 {
     return str.rfind( flag ) == str.size()-flag.size();
 }
 
 
-const bool contains( std::string_view str, std::string_view flag )
+bool contains( std::string_view str, std::string_view flag )
 {
     return str.find( flag ) != std::string::npos;
 }
 
 
-const std::string strip( const std::string& str, const char chr )
+std::string strip( const std::string& str, const char chr )
 {
     size_t start{ str.find_first_not_of( chr ) };
     size_t stop{ str.find_last_not_of( chr ) };
@@ -137,7 +137,7 @@ const std::string strip( const std::string& str, const char chr )
     return str.substr( start, stop-start+1ul );
 }
 
-const std::string strip( const std::string& str, std::string_view chars )
+std::string strip( const std::string& str, std::string_view chars )
 {
     size_t start{ str.find_first_not_of( chars ) };
     size_t stop{ str.find_last_not_of( chars ) };
@@ -151,7 +151,7 @@ const std::string strip( const std::string& str, std::string_view chars )
 }
 
 
-const std::string lstrip( const std::string& str, const char chr )
+std::string lstrip( const std::string& str, const char chr )
 {
     const size_t start{ str.find_first_not_of( chr ) };
     if ( start != std::string::npos ) {
@@ -160,7 +160,7 @@ const std::string lstrip( const std::string& str, const char chr )
     return std::string{};
 }
 
-const std::string lstrip( const std::string& str, std::string_view chars )
+std::string lstrip( const std::string& str, std::string_view chars )
 {
     const size_t start{ str.find_first_not_of( chars ) };
     if ( start != std::string::npos ) {
@@ -170,7 +170,7 @@ const std::string lstrip( const std::string& str, std::string_view chars )
 }
 
 
-const std::string rstrip( const std::string &str, const char chr )
+std::string rstrip( const std::string &str, const char chr )
 {
     const size_t stop{ str.find_last_not_of( chr ) };
     if ( stop != std::string::npos ) {
@@ -179,7 +179,7 @@ const std::string rstrip( const std::string &str, const char chr )
     return std::string{};
 }
 
-const std::string rstrip( const std::string& str, std::string_view chars )
+std::string rstrip( const std::string& str, std::string_view chars )
 {
     const size_t stop{ str.find_last_not_of( chars ) };
     if ( stop != std::string::npos ) {
@@ -189,7 +189,7 @@ const std::string rstrip( const std::string& str, std::string_view chars )
 }
 
 
-const std::string lstripUntil( const std::string& str, const char delim, const bool inclusive, const bool consecutives )
+std::string lstripUntil( const std::string& str, const char delim, const bool inclusive, const bool consecutives )
 {
     size_t start{ str.find( delim ) };
     if ( start == std::string::npos ) {
@@ -263,7 +263,7 @@ void splitrip( std::vector<std::string>& list, const std::string& target_str, st
 }
 
 
-const std::string replace( std::string_view str, std::string_view target, std::string_view replace )
+std::string replace( std::string_view str, std::string_view target, std::string_view replace )
 {
     std::string s{ str };
     const size_t t_size{ target.size()  };
@@ -277,7 +277,7 @@ const std::string replace( std::string_view str, std::string_view target, std::s
 }
 
 
-const std::string toUpper( std::string_view str )
+std::string toUpper( std::string_view str )
 {
     std::string up{ str };
     std::transform( up.begin(), up.end(), up.begin(),
@@ -287,7 +287,7 @@ const std::string toUpper( std::string_view str )
 }
 
 
-const std::string toLower( std::string_view str )
+std::string toLower( std::string_view str )
 {
     std::string low{ str };
     std::transform( low.begin(), low.end(), low.begin(),
