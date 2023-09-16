@@ -43,9 +43,9 @@ void DialogSec::warnConfFileNotFound( const QString& file, QWidget* parent )
         DialogSec::tr("Configuration file not found"),
         QString("%1%2\n\n%3").arg(
             DialogSec::tr("Unable to retrieve the configuration file"),
-            (file=="") ? file : ":\n"+file,
+            (file.isEmpty()) ? file : ":\n"+file,
             DialogSec::tr("Skipping") ),
-         "", MsgType::Warning, parent };
+        "", MsgType::Warning, parent };
     std::ignore = dialog.exec();
 }
 
@@ -55,7 +55,7 @@ void DialogSec::errConfFailedWriting( const QString& msg, const QString& err, QW
         DialogSec::tr("Failed to write the configuration file"),
         QString("%1%2\n\n%3").arg(
             DialogSec::tr("An error occured while handling the configuration file"),
-            (msg=="") ? msg : ":\n"+msg,
+            (msg.isEmpty()) ? msg : ":\n"+msg,
             DialogSec::tr("Current configuration not saved") ),
         err, MsgType::Warning, parent };
     std::ignore = dialog.exec();
@@ -68,7 +68,7 @@ void DialogSec::errConfFileNotReadable( const QString& file, const QString& err,
         QString("%1\n\n%2%3").arg(
             DialogSec::tr("An error occured while handling the configuration file"),
             DialogSec::tr("The file is not readable"),
-            (file=="") ? file : ":\n"+file ),
+            (file.isEmpty()) ? file : ":\n"+file ),
         err, MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -79,7 +79,7 @@ void DialogSec::errConfFileNotWritable( const QString& file, const QString& err,
         QString("%1\n\n%2%3").arg(
             DialogSec::tr("An error occured while handling the configuration file"),
             DialogSec::tr("The file is not writable"),
-            (file=="") ? file : ":\n"+file ),
+            (file.isEmpty()) ? file : ":\n"+file ),
         err, MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -92,7 +92,7 @@ void DialogSec::errConfDirNotWritable( const QString& dir, const QString& err, Q
         QString("%1\n\n%2%3").arg(
             DialogSec::tr("An error occured while handling the configuration file"),
             DialogSec::tr("The directory is not writable"),
-            (dir=="") ? dir : ":\n"+dir ),
+            (dir.isEmpty()) ? dir : ":\n"+dir ),
         err, MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -103,7 +103,7 @@ void DialogSec::errFailedApplyingConfigs( const QString& msg, QWidget* parent )
     DialogMsg dialog{
         DialogSec::tr("Failed applying configuration"),
         QString("%1\n%2").arg(
-            (msg=="") ? msg : QString("%1\n").arg(msg),
+            (msg.isEmpty()) ? msg : QString("%1\n").arg(msg),
             DialogSec::tr("Aborting") ),
         "", MsgType::Error, parent };
     std::ignore = dialog.exec();
@@ -120,9 +120,9 @@ void DialogSec::errHelpFailed( const QString& link, const QString& msg, QWidget*
         DialogSec::tr("Failed to retrieve the help file"),
         QString("%1%2\n\n%3%4").arg(
             DialogSec::tr("An error occured while getting the help file"),
-            (msg=="") ? msg : ":\n"+msg,
+            (msg.isEmpty()) ? msg : ":\n"+msg,
             DialogSec::tr("Additional resources can be downloaded from the git repo"),
-            (link=="") ? link : ":\n"+link ),
+            (link.isEmpty()) ? link : ":\n"+link ),
         "", MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -687,7 +687,7 @@ const bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
 
 /*void DialogSec::warnGeneric( const QString& msg, const bool report_msg, QWidget* parent )
 {
-    QString footer = "";
+    QString footer;
     if ( report_msg ) {
         footer += "\n\n" + DialogSec::tr("Please report this issue");
     }

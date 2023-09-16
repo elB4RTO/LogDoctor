@@ -18,7 +18,7 @@ SnakeGame::SnakeGame( const QFont& term_font, QWidget* parent )
 {
     this->ui->setupUi(this);
 
-    QString stylesheet{ "" };
+    QString stylesheet;
     StyleSec::Games::Snake::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 

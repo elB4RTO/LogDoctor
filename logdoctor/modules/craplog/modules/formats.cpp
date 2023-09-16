@@ -254,7 +254,7 @@ const LogsFormat FormatOps::processApacheFormatString( const std::string& f_str 
     const auto& f_map   { this->APACHE_ALF   };
     const auto& f_map_v { this->APACHE_ALF_V };
 
-    std::string initial{""}, final{""};
+    std::string initial, final;
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
     int n_fld{ 0 };
@@ -524,8 +524,8 @@ const LogsFormat FormatOps::processApacheFormatString( const std::string& f_str 
 // sample
 const QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
 {
-    QString sample{ "" };
-    const std::unordered_map<std::string, QString>& map{ this->APACHE_ALF_SAMPLES };
+    QString sample;
+    const auto& map{ this->APACHE_ALF_SAMPLES };
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
@@ -549,7 +549,7 @@ const LogsFormat FormatOps::processNginxFormatString( const std::string& f_str )
 {
     const auto& f_map{ this->NGINX_ALF };
 
-    std::string initial{""}, final{""};
+    std::string initial, final;
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
     bool finished{ false };
@@ -620,8 +620,8 @@ const LogsFormat FormatOps::processNginxFormatString( const std::string& f_str )
 // sample
 const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 {
-    QString sample{ "" };
-    const std::unordered_map<std::string, QString>& map{ this->NGINX_ALF_SAMPLES };
+    QString sample;
+    const auto& map{ this->NGINX_ALF_SAMPLES };
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
@@ -644,7 +644,7 @@ const QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 const LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
 {
     checkIisString( f_str );
-    std::string initial{""}, final{""};
+    std::string initial, final;
     std::vector<std::string> separators, fields;
     switch ( l_mod ) {
         case 2:
@@ -714,8 +714,8 @@ const LogsFormat FormatOps::processIisFormatString( const std::string& f_str, co
 // sample
 const QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
 {
-    QString sample{ "" };
-    const std::unordered_map<std::string, QString>& map{ this->IIS_ALF_SAMPLES };
+    QString sample;
+    const auto& map{ this->IIS_ALF_SAMPLES };
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );

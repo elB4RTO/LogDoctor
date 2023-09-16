@@ -230,7 +230,7 @@ void Crapup::versionCheck( const float v )
                     "malformed upstream version" ) );
                 break;
             default:
-                throw GenericException("Unexpected ErrCode in VersionCheck: "+static_cast<uint8_t>(err));
+                throw GenericException("Unexpected ErrCode in VersionCheck: "+std::to_string(static_cast<uint8_t>(err)));
                 break;
         }
     }

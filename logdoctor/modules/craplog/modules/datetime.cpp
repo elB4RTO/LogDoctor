@@ -60,7 +60,7 @@ const std::string convertMonth( std::string_view month )
 const std::vector<std::string> processDateTime( std::string_view datetime_, std::string_view format )
 {
     std::string aux, datetime{datetime_};
-    std::string year{""}, month{""}, day{""}, hour{""}, minute{""}, second{""};
+    std::string year, month, day, hour, minute, second;
 
     if ( format == "ncsa" ) {
         datetime = StringOps::strip( datetime, "[ ]" );

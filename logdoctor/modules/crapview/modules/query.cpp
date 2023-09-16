@@ -214,7 +214,7 @@ void DbQuery::refreshDates( std::optional<stats_dates_t>& result )
 
     } else {
         // recursively query years, months and days for every WebServer
-        std::vector<std::tuple<int, QString>> tables{
+        const std::vector<std::tuple<int, QString>> tables{
             std::make_tuple(11,"apache"),
             std::make_tuple(12,"nginx"),
             std::make_tuple(13,"iis") };

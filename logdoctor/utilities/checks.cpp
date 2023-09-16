@@ -209,7 +209,7 @@ const bool checkCollectionDatabase( const std::string& db_path )
 {
     bool make_new{false}, ok{true};
     std::error_code err;
-    QString err_msg{ "" };
+    QString err_msg;
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) ) };
     const std::vector<QString> ws_names{ "apache", "nginx", "iis" };
 
@@ -379,7 +379,7 @@ const bool checkHashesDatabase( const std::string& db_path )
 {
     bool make_new{false}, ok{true};
     std::error_code err;
-    QString err_msg{ "" };
+    QString err_msg;
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) ) };
     const std::vector<QString> ws_names { "apache", "nginx", "iis" };
 

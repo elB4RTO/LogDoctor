@@ -17,7 +17,7 @@ CrissCross::CrissCross( QWidget* parent )
 {
     this->ui->setupUi(this);
 
-    QString stylesheet{ "" };
+    QString stylesheet;
     StyleSec::Games::CrissCross::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
