@@ -106,7 +106,7 @@ std::string parseApacheEscapes( std::string_view string , const bool strftime=fa
                         i++;
                     } else if ( cc == 'r' ) {
                         // not supported
-                        throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'." );
+                        throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'" );
                     } else if ( cc == 't' ) {
                         str2.push_back( '\t' );
                         i++;
@@ -183,7 +183,7 @@ std::string parseNginxEscapes( std::string_view string )
                 i++;
             } else if ( cc == 'r' ) {
                 // not supported
-                throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'." );
+                throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'" );
             } else if ( cc == 't' ) {
                 str.push_back( '\t' );
                 i++;
@@ -237,10 +237,10 @@ size_t findNginxFieldEnd( std::string_view string, const size_t start )
 */
 void checkIisString( std::string_view string )
 {
-    for ( const char& chr : string ) {
+    for ( const char chr : string ) {
         if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == ',' || chr == ':' || chr == '(' || chr == ')' || chr == '[' || chr == ']') ) {
             // unwanted character
-            throw LogFormatException( "Unexpected character found: "+std::string{chr} );
+            throw LogFormatException( "Unexpected character found: '"+std::string{chr}+"'" );
         }
     }
 }
@@ -257,6 +257,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
     std::string initial, final;
     std::vector<std::string> separators, fields;
     // parse the string to convert keyargs in craplog's fields format
+    bool is_strftime_sep;
     int n_fld{ 0 };
     size_t start, stop{0ul}, aux, aux_start, aux_stop;
     const size_t max{ f_str.size()-1ul };
@@ -265,7 +266,6 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
     while (true) {
         // start after the last found field
         start = stop;
-        cur_sep.clear();
         if ( cur_fld == "date_time_ncsa" ) {
             // NCAS time format is always enclosed inside brackets
             cur_sep += "]";
@@ -278,27 +278,26 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                 // check if false positive
                 if ( aux == max ) {
                     // invalid, can't end with a single '%'
-                    throw LogFormatException( "Invalid format string: ending with a single '%'." );
+                    throw LogFormatException( "Invalid format string: ending with a single '%'" );
 
                 } else if ( aux != std::string::npos ) {
                     // apache only escapes a format field using the double percent sign
                     // backslashes are valid for control-characters only, or get reduced
                     // single percent-signs are considered invalid
-                    const char& c{ f_str.at(aux+1ul) };
-                    if ( c == ',' || c == '{' || c == '<' || c == '>' ) {
-                        // in the first case: status code(s) may follow, or may not
-                        // in the second case: a composed format code may follow
-                        // in the third and fourth cases: expressing a status code field
+                    const char c{ f_str.at(aux+1ul) };
+                    if ( c == '{' || c == '<' || c == '>' || c == '!' || c == ',' ) {
+                        // in the first case: a composed format code must follow
+                        // in the second case: expressing a status code format field
+                        // in the last two cases: status code(s) may follow (or may not), which must be followed by a composed format code
                         // in any case is considered valid
-                        ;
+                        break;
                     } else if ( c == '%' ) {
                         // the percent sign character, will be used as separator, skip
                         stop = aux + 2ul;
                         continue;
                     } else if ( ! StringOps::isAlnum( c ) ) {
                         // invalid, there must be a field code, a status code or a percent sign after a '%'
-                        const std::string chr( 1, c );
-                        throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%'.\nFound: '%"+chr+"'." );
+                        throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%', found: '%"+std::string{c}+"'" );
                     }
                 }
                 break;
@@ -317,7 +316,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
             char c = f_str.at( aux );
             // remove the per-status directives (if any)
-            if ( StringOps::isNumeric( c ) || c == ',' ) {
+            if ( StringOps::isNumeric( c ) || c == '!' || c == ',' ) {
                 // per-status, not important for LogDoctor
                 size_t aux_aux{ aux+1ul };
                 while (true) {
@@ -325,7 +324,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                         break;
                     }
                     c = f_str.at( aux_aux );
-                    if ( StringOps::isNumeric( c ) || c == ',' ) {
+                    if ( StringOps::isNumeric( c ) || c == '!' || c == ',' ) {
                         // skip these chars
                         aux_aux ++;
                         continue;
@@ -345,7 +344,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                 aux = f_str.find( '}', aux_start );
                 if ( aux == std::string::npos ) {
                     // closer bracket not found, resulting in an invalid field
-                    throw LogFormatException( "Invalid format code, no closing bracket found: '%{'." );
+                    throw LogFormatException( "Invalid format code, no closing bracket found: '%{...'" );
                 }
                 aux_stop = aux + 2ul;
                 // get the varname(s)
@@ -356,48 +355,49 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     aux_stop += 2ul;
                     aux_fld_v = f_str.substr( aux+1ul, 3ul );
                 }
-                if ( f_map_v.find( aux_fld_v ) == f_map_v.end() ) {
+                if ( f_map_v.find( aux_fld_v ) == f_map_v.cend() ) {
                     // invalid module, abort
-                    throw LogFormatException( "Invalid format code found: '%{...}"+aux_fld_v+"'." );
+                    throw LogFormatException( "Invalid format code found: '%{...}"+aux_fld_v+"'" );
                 } else {
                     // module is valud
                     const auto& aux_map{ f_map_v.at( aux_fld_v ) };
                     if ( aux_map.empty() ) {
                         // module not considered and always giving out something, even if invalid varname is passed
-                        fields.push_back( "NONE" );
-                        separators.push_back( parseApacheEscapes( cur_sep ) );
-                        cur_sep.clear();
+                        cur_fld = "NONE";
+
+                    } else if ( aux_fld.empty() ) {
+                        // no need to check further, the dafault is used in this case
+                        cur_fld = aux_map.at( aux_fld );
+                        if ( aux_fld_v == "t" ) {
+                            cur_sep += "[";
+                        }
 
                     } else if ( aux_fld_v == "p" || aux_fld_v == "P" || aux_fld_v == "T" ) {
                         // still not considered (except 'T'), but invalid fields get used as text
                         // field concatenation not allowed, whole content used as varname
                         if ( aux_map.find( aux_fld ) != aux_map.end() ) {
                             // valid varname
-                            fields.push_back( aux_map.at( aux_fld ) );
+                            cur_fld = aux_map.at( aux_fld );
                         } else {
                             // invalid varname, use as text
-                            fields.push_back( "NONE" );
                             cur_sep += aux_fld;
+                            start = stop = aux_stop;
+                            continue;
                         }
-                        separators.push_back( parseApacheEscapes( cur_sep ) );
-                        cur_sep.clear();
 
                     } else if ( aux_fld_v == "a" || aux_fld_v == "h" ) {
-                        // client, in any case
-                        fields.push_back( "client" );
-                        separators.push_back( parseApacheEscapes( cur_sep ) );
-                        cur_sep.clear();
+                        // whatever the varname is (valid, invalid, empty), always returns the client
+                        // field concatenation not allowed, the entire content is used as varname
+                        cur_fld = "client" ;
 
                     } else if ( aux_fld_v == "i" ) {
-                        // always giving a result, may the varname be valid or not ('-' if invalid)
+                        // always giving a result, may the varname be valid or not ('-' if invalid/empty)
                         // field concatenation not allowed, the entire content is used as varname
                         if ( aux_map.find( aux_fld ) != aux_map.end() ) {
-                            fields.push_back( aux_map.at( aux_fld ) );
+                            cur_fld = aux_map.at( aux_fld );
                         } else {
-                            fields.push_back( "NONE" );
+                            cur_fld = "NONE";
                         }
-                        separators.push_back( parseApacheEscapes( cur_sep ) );
-                        cur_sep.clear();
 
                     } else /*if ( aux_fld_v == "t" )*/ {
                         // only 't' remaining
@@ -407,12 +407,13 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                             // whole content used as varname
                             if ( aux_map.find( aux_fld ) != aux_map.end() ) {
                                 // valid
-                                fields.push_back( aux_map.at( aux_fld ) );
-                                separators.push_back( parseApacheEscapes( cur_sep, true ) );
-                                cur_sep.clear();
+                                cur_fld = aux_map.at( aux_fld );
+                                is_strftime_sep = true;
                             } else {
-                                // invalid, append to current separator and restart hunting
+                                // invalid, append to current separator
                                 cur_sep += aux_fld;
+                                start = stop = aux_stop;
+                                continue;
                             }
 
                         } else {
@@ -428,8 +429,13 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                                     aux_aux = aux_fld.find( '%', aux_aux_stop );
                                     // check if false positive
                                     if ( aux_aux != std::string::npos ) {
+                                        const size_t aux_aux_{ aux_aux+1ul };
+                                        if ( aux_aux_ >= aux_fld.size() ) {
+                                            aux_aux = std::string::npos;
+                                            break;
+                                        }
                                         // same escape rules as before, but single percent-signs are considered valid and treated as text
-                                        const char c_ = aux_fld.at( aux_aux+1 );
+                                        const char c_ = aux_fld.at( aux_aux_ );
                                         if ( c_ == '%' || c_ == 'n' || c_ == 't' ) {
                                             // control characters, will be used as separator, skip
                                             aux_aux_stop = aux_aux + 2ul;
@@ -441,12 +447,12 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
                                 if ( aux_aux == std::string::npos ) {
                                     // no more fields, append the last section as separator
-                                    cur_sep += aux_fld.substr( aux_aux_start );
+                                    cur_sep += parseApacheEscapes( aux_fld.substr( aux_aux_start ), true );
                                     break;
                                 }
 
-                                // append the current separator
-                                cur_sep += aux_fld.substr( aux_aux_start, aux_aux-aux_aux_start );
+                                // append to the current separator
+                                cur_sep += parseApacheEscapes( aux_fld.substr( aux_aux_start, aux_aux-aux_aux_start ), true );
                                 // and get the possible field
                                 aux_aux_fld = aux_fld.substr( aux_aux, 2ul );
                                 aux_aux_stop = aux_aux+2ul;
@@ -454,21 +460,34 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                                 if ( aux_map.find( aux_aux_fld ) != aux_map.end() ) {
                                     // valid, append
                                     cur_fld = aux_map.at( aux_aux_fld );
-                                    fields.push_back( cur_fld );
-                                    // append to separators list
-                                    separators.push_back( parseApacheEscapes( cur_sep, true ) );
+                                    // append the separator
+                                    if ( n_fld == 0 ) {
+                                        // first field found, assign the separator as the initial one
+                                        initial = cur_sep;
+
+                                    } else {
+                                        // append to separators list
+                                        if ( cur_sep.empty() ) {
+                                            throw LogFormatException( "Empty separator found, it may be impossible to distinguish two contiguous fields" );
+                                        }
+                                        separators.push_back( cur_sep );
+                                    }
                                     cur_sep.clear();
+                                    // append the field
+                                    fields.push_back( cur_fld );
+                                    n_fld ++;
 
                                 } else {
                                     // invalid, append as separator and keep hunting
-                                    cur_sep += aux_aux_fld;
+                                    cur_sep += parseApacheEscapes( aux_aux_fld, true );
                                 }
                             }
+                            start = stop = aux_stop; // everything appended already, restart hunting
+                            continue;
                         }
                     }
-                    // items already appended as needed, next main hunting loop round
-                    start = stop = aux_stop; // re-starting after the previously found module
-                    continue;
+                    stop = aux_stop; // re-starting after the previously found module
+                    break;
                 }
 
             } else {
@@ -491,7 +510,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     break;
                 } else {
                     // invalid format field, abort
-                    throw LogFormatException( "Invalid format code found: '%"+aux_fld+"'." );
+                    throw LogFormatException( "Invalid format code found: '%"+aux_fld+"'" );
                 }
             }
         }
@@ -499,17 +518,33 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
         if ( n_fld < 0 ) {
             // final reached, stop looping
-            final = parseApacheEscapes( cur_sep );
+            if ( fields.empty() ) {
+                initial = parseApacheEscapes( cur_sep, is_strftime_sep );
+            } else {
+                final = parseApacheEscapes( cur_sep, is_strftime_sep );
+            }
             break;
+        }
 
-        } else if ( n_fld == 0 ) {
+        if ( cur_fld.empty() ) {
+            // invalid field, used as text (namely, added to current separator)
+            continue;
+        }
+
+        // append the separator
+        if ( n_fld == 0 ) {
             // first field found, assign the separator as the initial one
-            initial = parseApacheEscapes( cur_sep );
+            initial = parseApacheEscapes( cur_sep, is_strftime_sep );
 
         } else {
             // append to separators list
-            separators.push_back( parseApacheEscapes( cur_sep ) );
+            if ( cur_sep.empty() ) {
+                throw LogFormatException( "Empty separator found, it may be impossible to distinguish two contiguous fields" );
+            }
+            separators.push_back( parseApacheEscapes( cur_sep, is_strftime_sep ) );
         }
+        cur_sep.clear();
+        is_strftime_sep = false;
 
         // append the field
         fields.push_back( cur_fld );
@@ -609,7 +644,7 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
             }
         } else {
             // invalid, abort
-            throw LogFormatException( "Invalid format code found: '$"+cur_fld+"'." );
+            throw LogFormatException( "Invalid format code found: '$"+cur_fld+"'" );
         }
     }
 
@@ -696,7 +731,7 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
                         }
                     } else {
                         // invalid, abort
-                        throw LogFormatException( "Invalid format code found: '"+cur_fld+"'." );
+                        throw LogFormatException( "Invalid format code found: '"+cur_fld+"'" );
                     }
                 }
             }
