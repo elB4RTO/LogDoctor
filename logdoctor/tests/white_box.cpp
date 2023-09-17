@@ -1,10 +1,13 @@
 
 #include <iostream>
 #include <assert.h>
+#include <sstream>
 
 #include "utilities/io.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
+
+#include "modules/exceptions.h"
 
 #include "modules/craplog/modules/datetime.h"
 #include "modules/craplog/modules/formats.h"
@@ -16,6 +19,22 @@
 
 
 #define T_PRINT(ARG) std::cout << "  [PASSED] " ARG "()" << std::endl;
+
+#define REDIRECT_STDOUT()\
+    std::streambuf* out{ std::cout.rdbuf() };\
+    std::stringstream out_;\
+    std::cout.rdbuf( out_.rdbuf() );
+
+#define RESTORE_STDOUT()\
+    std::cout.rdbuf( out );
+
+#define REDIRECT_STDERR()\
+    std::streambuf* err{ std::cerr.rdbuf() };\
+    std::stringstream err_;\
+    std::cerr.rdbuf( err_.rdbuf() );
+
+#define RESTORE_STDERR()\
+    std::cerr.rdbuf( err );
 
 
 namespace Testing
@@ -185,9 +204,9 @@ void testCraplogModules()
 
     {
     QTimeZone tz{ QTimeZone::systemTimeZone() };
-    int e{ 946771199 - tz.standardTimeOffset( QDateTime::fromSecsSinceEpoch(946771199) ) };
-    std::string e_str{ std::to_string( e ) };
-    std::string epochs[4]{ e_str, e_str+".000", e_str+"000", e_str+"000000" };
+    const int e{ 946771199 - tz.standardTimeOffset( QDateTime::fromSecsSinceEpoch(946771199) ) };
+    const std::string e_str{ std::to_string( e ) };
+    const std::string epochs[4]{ e_str, e_str+".000", e_str+"000", e_str+"000000" };
     std::vector<std::string> target{"2000","01","01","23","59","59"};
     assert( DateTimeOps::processDateTime("[01/Jan/2000:23:59:59 +0000]", "ncsa") == target );
     assert( DateTimeOps::processDateTime("Sat Jan 01 23:59:59 2000", "mcs") == target );
@@ -228,27 +247,172 @@ void testCraplogModules()
 
     //// FORMATS ////
 
-    FormatOps fo;
-
     {
-    std::vector<std::string> f{"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
-    assert( fo.processApacheFormatString("%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"").fields == f );
+    FormatOps fo;
+    std::string format_string{"%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\""};
+    std::vector<std::string> fields{"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
+    std::vector<std::string> separators{" "," "," [","] \"","\" "," "," \"","\" \""};
+    LogsFormat lf{ fo.processApacheFormatString(format_string) };
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "\"" );
+    // test all simple fields
+    format_string = "%%%h %% %t\t%r\n%H %m [%U%%%q} <%s> %<s %>s %O %I %T %D %a %A %b %B %e %f %k %l %L %p %P %R %S %u %v %V %% %X%%";
+    fields = {"client","date_time_ncsa","request_full","request_protocol","request_method","request_uri","request_query","response_code","response_code","response_code","bytes_sent","bytes_received","time_taken_s","time_taken_ms","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    separators = {" % [","]\t","\n"," "," [","%","} <","> "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," % "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "%" );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "%" );
+    // test non-existing/invalid simple fields
+    for ( auto& fs : {"%","%c","%d","%E","%Q","%w","%Z","%! ","%, ","%h%r"} ) {
+        REDIRECT_STDOUT()
+        REDIRECT_STDERR()
+        try {
+            std::ignore = fo.processApacheFormatString(fs);
+            RESTORE_STDOUT()
+            RESTORE_STDERR()
+            assert( false );
+        } catch (const LogFormatException& e) {}
+        RESTORE_STDOUT()
+        RESTORE_STDERR()
+    }
+    // test client related composed fields
+    format_string = "%{}a %{c}a %{}h %{c}h %{Cookie}i %200{Cookie}i %{User-agent}i %302,400{User-agent}i %!200{Referer}i %,200{Referer}i %{Referer}i";
+    fields = {"client","client","client","client","cookie","cookie","user_agent","user_agent","referer","referer","referer"};
+    separators = {" "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test unexisting/unsupported client related composed fields
+    format_string = "%{ }a %{x}a %{NOPE}a %{ }h %{y}h %{NOPE}h %{}i %{ }i %{Random}i %{Cookies}i";
+    fields = {"client","client","client","client","client","client","NONE","NONE","NONE","NONE"};
+    separators = {" "," "," "," "," "," "," "," "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test date-time composed fields
+    format_string = "%{%%}t %{%n}t %{%t}t %{}t %{sec}t %{msec}t %{usec}t %{msec_frac}t %{usec_frac}t %{%a}t %{%A}t %{%b}t %{%B}t %{%c}t %{%C}t %{%d}t %{%D}t %{%e}t %{%F}t %{%g}t %{%G}t %{%h}t %{%H}t %{%I}t %{%j}t %{%k}t %{%m}t %{%M}t %{%p}t %{%r}t %{%R}t %{%S}t %{%T}t %{%u}t %{%U}t %{%V}t %{%w}t %{%W}t %{%x}t %{%X}t %{%y}t %{%Y}t %{%z}t %{%Z}t";
+    fields = {"date_time_ncsa","date_time_epoch_s","date_time_epoch_ms","date_time_epoch_us","NONE","NONE","NONE","NONE","date_time_month_str","date_time_month_str","date_time_mcs","NONE","date_time_day","date_time_MMDDYY","date_time_day","date_time_YYYYMMDD","NONE","NONE","date_time_month_str","date_time_hour","NONE","NONE","date_time_hour","date_time_month","date_time_minute","NONE","date_time_clock_12","date_time_clock_short","date_time_second","date_time_clock_24","NONE","NONE","NONE","NONE","NONE","date_time_MMDDYY","date_time_clock_24","date_time_year_short","date_time_year","NONE","NONE"};
+    separators = {"] "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "% \n \t [" );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test date-time composed fields, with one field only
+    format_string = "%{}t";
+    fields = {"date_time_ncsa"};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "[" );
+    assert( lf.fields == fields );
+    assert( lf.separators.empty() );
+    assert( lf.final == "]" );
+    // test date-time composed fields, with many aggreagated fields
+    format_string = "%{%%%Y_%m_%e%t%H@%M@%S%%}t";
+    fields = {"date_time_year","date_time_month","date_time_day","date_time_hour","date_time_minute","date_time_second"};
+    separators = {"_","_","\t","@","@"};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "%" );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "%" );
+    // test date-time composed fields, with all fields aggeregated in one
+    format_string = "%{%% %n %t %a %A %b %B %c %C %d %D %e %F %g %G %h %H %I %j %k %m %M %p %r %R %S %T %u %U %V %w %W %x %X %y %Y %z %Z}t";
+    fields = {"NONE","NONE","date_time_month_str","date_time_month_str","date_time_mcs","NONE","date_time_day","date_time_MMDDYY","date_time_day","date_time_YYYYMMDD","NONE","NONE","date_time_month_str","date_time_hour","NONE","NONE","date_time_hour","date_time_month","date_time_minute","NONE","date_time_clock_12","date_time_clock_short","date_time_second","date_time_clock_24","NONE","NONE","NONE","NONE","NONE","date_time_MMDDYY","date_time_clock_24","date_time_year_short","date_time_year","NONE","NONE"};
+    separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "% \n \t " );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test unexisting/unsupported date-time composed fields
+    format_string = "%{ }t %{nope}t %{%}t %{%?}t %{%E}t %{%q}t";
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "  nope % %? %E %q" );
+    assert( lf.fields.empty() );
+    assert( lf.separators.empty() );
+    assert( lf.final.empty() );
+    // test invalid date-time composed fields
+    for ( auto& fs : {"%{%H}t%{%M}t%{%S}t","%{%d%m%y}t"} ) {
+        REDIRECT_STDOUT()
+        REDIRECT_STDERR()
+        try {
+            std::ignore = fo.processApacheFormatString(fs);
+            RESTORE_STDOUT()
+            RESTORE_STDERR()
+            assert( false );
+        } catch (const LogFormatException& e) {}
+        RESTORE_STDOUT()
+        RESTORE_STDERR()
+    }
+    // test time taken related composed fields
+    format_string = "%{}T %{s}T %{ms}T %{us}T";
+    fields = {"time_taken_s","time_taken_s","time_taken_ms","time_taken_us"};
+    separators = {" "," "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test unexisting/unsupported time taken related composed fields
+    format_string = "%{ }T %{%s}T %{msec}T";
+    fields = {};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial == "  %s msec" );
+    assert( lf.fields.empty() );
+    assert( lf.separators.empty() );
+    assert( lf.final.empty() );
+    // test unused composed fields
+    format_string = "%{}C %{}e %{}L %{}n %{}o %{}p %{canonical}p %{local}p %{remote}p %{}P %{pid}P %{tid}P %{hextid}P %{}^ti %{}^to";
+    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test unused composed fields, with random content
+    format_string = "%{TEST}C %{TEST}e %{TEST}L %{TEST}n %{TEST}o %{TEST}p %{TEST}P %{TEST}^ti %{TEST}^to";
+    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    separators = {" "," "," "," "," TEST TEST "," "};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
     }
     T_PRINT("FormatOps::processApacheFormatString");
 
     {
-    std::vector<std::string> f{"client","NONE","date_time_ncsa","request_full","response_code","bytes_sent","referer","user_agent"};
-    assert( fo.processNginxFormatString("$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"").fields == f );
+    FormatOps fo;
+    std::string format_string{"$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\""};
+    std::vector<std::string> fields{"client","NONE","date_time_ncsa","request_full","response_code","bytes_sent","referer","user_agent"};
+    assert( fo.processNginxFormatString(format_string).fields == fields );
     }
     T_PRINT("FormatOps::processNginxFormatString");
 
     {
-    std::vector<std::string> f{"date_time_utc_d","date_time_utc_t","NONE","request_method","request_uri","request_query","NONE","NONE","client","user_agent","referer","response_code","NONE","NONE","time_taken_ms"};
-    assert( fo.processIisFormatString("date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken", 0).fields == f );
-    f = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","bytes_sent"};
-    assert( fo.processIisFormatString("", 1).fields == f );
-    f = {"client","NONE","date_time_MDYYYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
-    assert( fo.processIisFormatString("", 2).fields == f );
+    FormatOps fo;
+    std::string format_string{"date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken"};
+    std::vector<std::string> fields{"date_time_utc_d","date_time_utc_t","NONE","request_method","request_uri","request_query","NONE","NONE","client","user_agent","referer","response_code","NONE","NONE","time_taken_ms"};
+    assert( fo.processIisFormatString(format_string, 0).fields == fields );
+    format_string = "some random useless text";
+    fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","bytes_sent"};
+    assert( fo.processIisFormatString(format_string, 1).fields == fields );
+    format_string.erase();
+    assert( fo.processIisFormatString(format_string, 1).fields == fields );
+    format_string = "some random useless text";
+    fields = {"client","NONE","date_time_MDYYYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
+    assert( fo.processIisFormatString(format_string, 2).fields == fields );
+    format_string.erase();
+    assert( fo.processIisFormatString(format_string, 2).fields == fields );
     }
     T_PRINT("FormatOps::processIisFormatString");
 
