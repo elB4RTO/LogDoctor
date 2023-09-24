@@ -11,8 +11,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
+
+if(${QT_VERSION_MAJOR} LESS 6)
+    message("Error: Qt6 or greater required")
+    return()
+endif()
 
 
 set(TS_FILES
@@ -153,32 +158,11 @@ set(PROJECT_SOURCES
     ${TS_FILES}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(LogDoctor
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET LogDoctor APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-else()
-    if(ANDROID)
-        add_library(LogDoctor SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(LogDoctor
-            ${PROJECT_SOURCES}
-        )
-    endif()
-
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-endif()
+qt_add_executable(LogDoctor
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
+qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lgcc -lstdc++ -lwinpthread")
@@ -186,14 +170,16 @@ if(WIN32)
         -static Qt${QT_VERSION_MAJOR}::Widgets
         -static Qt${QT_VERSION_MAJOR}::Charts
         -static Qt${QT_VERSION_MAJOR}::Sql
-        -static Qt${QT_VERSION_MAJOR}::Network)
+        -static Qt${QT_VERSION_MAJOR}::Network
+    )
 else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
     target_link_libraries(LogDoctor PRIVATE
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Charts
         Qt${QT_VERSION_MAJOR}::Sql
-        Qt${QT_VERSION_MAJOR}::Network)
+        Qt${QT_VERSION_MAJOR}::Network
+    )
     # Include zlib
     find_package(ZLIB REQUIRED)
     include_directories(${ZLIB_INCLUDE_DIRS})
@@ -210,7 +196,11 @@ else()
 endif()
 
 
-if(APPLE)
+if(WIN32)
+    set_target_properties(LogDoctor PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+elseif(APPLE)
     set_target_properties(LogDoctor PROPERTIES
         MACOSX_BUNDLE TRUE
         #MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -219,16 +209,10 @@ if(APPLE)
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     )
-elseif(WIN32)
-    set_target_properties(LogDoctor PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
 endif()
 
+qt_finalize_executable(LogDoctor)
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(LogDoctor)
-endif()
 
 
 # CTest
