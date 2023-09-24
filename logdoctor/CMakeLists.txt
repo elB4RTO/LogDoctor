@@ -11,6 +11,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(MSVC)
+    add_compile_options(/W2)
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "/Os")
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+endif()
+
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
 
@@ -184,15 +194,6 @@ else()
     find_package(ZLIB REQUIRED)
     include_directories(${ZLIB_INCLUDE_DIRS})
     target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
-endif()
-
-set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-
-if(MSVC)
-    add_compile_options(/W2)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 
