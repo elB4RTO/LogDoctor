@@ -21,8 +21,8 @@ else()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 endif()
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Widgets Charts LinguistTools Sql Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Charts LinguistTools Sql Network)
 
 if(${QT_VERSION_MAJOR} LESS 6)
     message("Error: Qt6 or greater required")
@@ -177,6 +177,7 @@ qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lgcc -lstdc++ -lwinpthread")
     target_link_libraries(LogDoctor PRIVATE
+        -static Qt${QT_VERSION_MAJOR}::Core
         -static Qt${QT_VERSION_MAJOR}::Widgets
         -static Qt${QT_VERSION_MAJOR}::Charts
         -static Qt${QT_VERSION_MAJOR}::Sql
@@ -185,6 +186,7 @@ if(WIN32)
 else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
     target_link_libraries(LogDoctor PRIVATE
+        Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Charts
         Qt${QT_VERSION_MAJOR}::Sql

@@ -5,9 +5,10 @@
 
 #include "modules/exceptions.h"
 
+#include <QtCharts>
 #include <QPalette>
-#include <QColor>
 #include <QString>
+#include <QColor>
 
 
 namespace ColorSec
@@ -77,7 +78,7 @@ std::unordered_map<int, std::unordered_map<std::string, QString>> getColorScheme
 }
 
 
-void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
+void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QChartView* chart_view )
 {
     QPen axis_pen;
     QPen grid_pen;

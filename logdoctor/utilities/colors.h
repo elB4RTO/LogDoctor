@@ -2,11 +2,10 @@
 #define LOGDOCTOR__UTILITIES__COLORS_H
 
 
-#include <QtCharts>
-
 #include <string>
 #include <unordered_map>
 
+class QChartView;
 class QString;
 class QColor;
 class QFont;
@@ -30,7 +29,7 @@ std::unordered_map<int, std::unordered_map<std::string, QString>> getColorScheme
   \param fonts The fonts set
   \param chart_view The chart on which the theme will be applied
 */
-void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view );
+void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QChartView* chart_view );
 
 } // namespace ColorSec
 

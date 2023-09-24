@@ -143,7 +143,7 @@ QStringList Crapview::getFields( const std::string& tab ) const
 ////////////////
 //// CHARTS ////
 ////////////////
-void Crapview::sliceClicked( QtCharts::QPieSlice* slice )
+void Crapview::sliceClicked( QPieSlice* slice )
 {
     slice->setExploded( !slice->isExploded() );
     slice->setLabelVisible( !slice->isLabelVisible() );
@@ -166,7 +166,7 @@ void Crapview::updateWarn( QTableWidget* table , const QString& web_server ) con
     this->dbQuery.updateWarnings( web_server, updates );
 }
 
-void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour ) const
+void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour ) const
 {
     std::optional<stats_warn_items_t> result;
     this->dbQuery.getWarnCounts(
@@ -348,7 +348,7 @@ void Crapview::drawWarn( QTableWidget* table, QtCharts::QChartView* chart, const
 
 
 
-void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response ) const
+void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response ) const
 {
     std::optional<stats_speed_items_t> result;
     this->dbQuery.getSpeedData(
@@ -492,7 +492,7 @@ void Crapview::drawSpeed( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 
 
-void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field ) const
+void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& field ) const
 {
     std::optional<stats_count_items_t> result;
     this->dbQuery.getItemsCount(
@@ -553,7 +553,7 @@ void Crapview::drawCount( QTableWidget* table, QtCharts::QChartView* chart, cons
 
 
 
-void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter ) const
+void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field , const QString& filter ) const
 {
     std::optional<stats_day_items_t> result;
     this->dbQuery.getDaytimeCounts(
@@ -671,7 +671,7 @@ void Crapview::drawDay( QtCharts::QChartView* chart, const QChart::ChartTheme& t
 
 
 
-void Crapview::drawRelat( QtCharts::QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 ) const
+void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 ) const
 {
     bool period{ true };
     std::optional<stats_relat_items_t> result;

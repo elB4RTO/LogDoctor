@@ -138,8 +138,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     /////////////////
     //// CRAPLOG ////
-    qRegisterMetaType<LogFile>();
-    qRegisterMetaType<WorkerDialog>();
     connect( this, &MainWindow::refreshLogs, &this->craplog, &Craplog::scanLogsDir);
     connect( &this->craplog, &Craplog::pushLogFile, this, &MainWindow::appendToLogsList);
     connect( &this->craplog, &Craplog::finishedRefreshing, this, &MainWindow::refreshFinished);
@@ -1013,14 +1011,14 @@ std::string MainWindow::list2string( const std::vector<std::string>& list, const
     if ( user_agent ) {
         return std::accumulate(
             list.begin(), list.end(), std::string{},
-            []( auto& s, auto str ) -> std::string&
-              { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
+            [&]( auto s, auto str ) -> std::string
+               { return s + StringOps::replace( str, " ", "%@#" ) + " "; } );
 
     } else {
         return std::accumulate(
             list.begin(), list.end(), std::string{},
-            []( auto& s, auto str ) -> std::string&
-              { return s += str + " "; } );
+            []( auto s, auto str ) -> std::string
+              { return s + str + " "; } );
     }
 }
 std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
