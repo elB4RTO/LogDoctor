@@ -47,7 +47,7 @@ public:
         \param field_id The ID of the log fiels
         \return The printable field
     */
-    QString getLogFieldString ( const int field_id ) const;
+    QString getLogFieldString ( const size_t field_id ) const;
 
     //! Returns the log field ID corresponding to the given printable field
     /*!

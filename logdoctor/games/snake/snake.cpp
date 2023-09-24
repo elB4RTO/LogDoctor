@@ -19,7 +19,7 @@ Snake::Snake( const bool is_adversary )
 {
     if ( is_adversary ) {
         // only AI needs to keep track of the field state
-        this->field_map.fill( std::array<Tile, 16ul>({Entity::N, 0}) );
+        this->field_map.fill( std::array<Tile, 16ul>{} );
     }
 }
 
@@ -780,10 +780,10 @@ bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned 
             if ( this->field_map.at(x).at(y).s_index > steps ) {
                 return true;
             }
+            return false;
         default:
             return false;
     }
-    return false;
 }
 
 

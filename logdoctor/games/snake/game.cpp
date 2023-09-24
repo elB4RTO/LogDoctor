@@ -40,6 +40,7 @@ SnakeGame::SnakeGame( const QFont& term_font, QWidget* parent )
 
 void SnakeGame::closeEvent( QCloseEvent* event )
 {
+    Q_UNUSED(event)
     if (this->game_loop) {
         this->game_loop->stop();
     }

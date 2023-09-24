@@ -18,12 +18,12 @@ Crapinfo::Crapinfo( const QString& version, const QString& exec_path, const QStr
     this->setStyleSheet( stylesheet );
 
     // fonts
-    const QString& ff{ QFontDatabase::applicationFontFamilies(
+    const QString ff{ QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/Metropolis")).at(0) };
     const QFont font{ ff, 13 };
     const QFont font_big{ ff, 15 };
     const QFont font_bigger{ ff, 17 };
-    const QString& ff_s{ QFontDatabase::applicationFontFamilies(
+    const QString ff_s{ QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/Hack")).at(0) };
     const QFont font_script{ ff_s, 12 };
     const QFont font_script_small{ ff_s, 10 };

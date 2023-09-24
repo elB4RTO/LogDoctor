@@ -89,7 +89,7 @@ protected:
     LogsFormat logs_format;
 
     // the selected log files to be parsed during the process
-    worker_files_t files_to_use;
+    const worker_files_t files_to_use;
 
     // collection of logs items, each item results from a log line
     /* structure
@@ -118,8 +118,8 @@ protected:
     //// BLACKLIST / WARNLIST ////
 
     // { log_field_id : BWlist }
-    bw_lists_t blacklists;
-    bw_lists_t warnlists;
+    const bw_lists_t blacklists;
+    const bw_lists_t warnlists;
 
     ////////////////////////
     //// LOG FIELDS IDs ////

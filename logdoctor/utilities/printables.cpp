@@ -126,7 +126,7 @@ QString printableDate( const QString& year, const int month, const QString& day 
         (month<10)
             ? QString("0%1").arg( month )
             : QString::number( month ),
-        (day.size()<2ul)
+        (day.size()<2)
             ? QString("0%1").arg( day )
             : day
     );

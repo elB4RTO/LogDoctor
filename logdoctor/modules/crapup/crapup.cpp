@@ -43,7 +43,7 @@ Crapup::Crapup( QWidget* parent )
     this->setStyleSheet( stylesheet );
 
     // fonts
-    const QString& ff{ QFontDatabase::applicationFontFamilies(
+    const QString ff{ QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/Metropolis")).at(0) };
     const QFont font{ ff, 13 };
     const QFont font_big{ ff, 16 };
@@ -65,6 +65,7 @@ Crapup::~Crapup()
 
 void Crapup::closeEvent( QCloseEvent* event )
 {
+    Q_UNUSED(event)
     this->quitting |= true;
     if ( !this->img_timer.isNull() ) {
         if ( this->img_timer->isActive() ) {

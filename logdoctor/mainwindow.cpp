@@ -268,7 +268,7 @@ MainWindow::MainWindow(QWidget *parent)
         this->ui->chart_StatsDay,
         this->ui->chart_StatsRelat
     };
-    for ( auto* chart : charts ) {
+    for ( auto chart : charts ) {
         ColorSec::applyChartTheme(
             this->FONTS, chart );
     }
@@ -286,6 +286,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::closeEvent( QCloseEvent *event )
 {
+    Q_UNUSED(event)
     // save actual configurations
     this->writeConfigs();
     // backup the database
@@ -1012,13 +1013,13 @@ std::string MainWindow::list2string( const std::vector<std::string>& list, const
         return std::accumulate(
             list.begin(), list.end(), std::string{},
             [&]( auto s, auto str ) -> std::string
-               { return s + StringOps::replace( str, " ", "%@#" ) + " "; } );
+               { return std::move(s) + StringOps::replace( str, " ", "%@#" ) + " "; } );
 
     } else {
         return std::accumulate(
             list.begin(), list.end(), std::string{},
             []( auto s, auto str ) -> std::string
-              { return s + str + " "; } );
+              { return std::move(s) + std::move(str) + " "; } );
     }
 }
 std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
@@ -1029,7 +1030,8 @@ std::vector<std::string> MainWindow::string2list( const std::string& string, con
         list.reserve( aux.size() );
         std::transform( aux.cbegin(), aux.cend(),
                         std::back_inserter( list ),
-                        [](auto str){ return StringOps::replace( str, "%@#", " " ); } );
+                        [&]( auto str )
+                           { return StringOps::replace( str, "%@#", " " ); } );
         return list;
     } else {
         return aux;
@@ -2658,12 +2660,16 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
 void MainWindow::on_listLogFiles_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
+    Q_UNUSED(item)
+    Q_UNUSED(column)
     this->on_button_LogFiles_ViewFile_clicked();
 }
 
 
 void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 {
+    Q_UNUSED(item)
+    Q_UNUSED(column)
     // control checked
     size_t n_checked{ 0ul };
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
@@ -2967,6 +2973,7 @@ void MainWindow::on_checkBox_StatsWarn_Hour_stateChanged(int state)
 
 void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsWarnDrawable();
 }
 
@@ -3098,6 +3105,7 @@ void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsSpeedDrawable();
 }
 
@@ -3281,6 +3289,7 @@ void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsCount_Day_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsCountDrawable();
 }
 
@@ -3547,6 +3556,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsDay_LogsField_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->ui->inLine_StatsDay_Filter->clear();
     this->checkStatsDayDrawable();
 }
@@ -3596,6 +3606,7 @@ void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsDay_FromDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsDayDrawable();
 }
 
@@ -3673,11 +3684,13 @@ void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_inLine_StatsDay_Filter_textChanged(const QString& arg1)
 {
+    Q_UNUSED(arg1)
     if ( this->getStatsDayParsedFilter().has_value() ) {
         this->ui->inLine_StatsDay_Filter->setStyleSheet(
             this->stylesheet_lineedit );
@@ -3839,12 +3852,14 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsRelat_LogsField_1_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->ui->inLine_StatsRelat_Filter_1->clear();
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_LogsField_2_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->ui->inLine_StatsRelat_Filter_2->clear();
     this->checkStatsRelatDrawable();
 }
@@ -3894,6 +3909,7 @@ void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsRelat_FromDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsRelatDrawable();
 }
 
@@ -3942,11 +3958,13 @@ void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
 
 void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_inLine_StatsRelat_Filter_1_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
     if ( this->getStatsRelatParsedFilter( 1 ).has_value() ) {
         this->ui->inLine_StatsRelat_Filter_1->setStyleSheet(
             this->stylesheet_lineedit );
@@ -3959,6 +3977,7 @@ void MainWindow::on_inLine_StatsRelat_Filter_1_textChanged(const QString &arg1)
 
 void MainWindow::on_inLine_StatsRelat_Filter_2_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
     if ( this->getStatsRelatParsedFilter( 2 ).has_value() ) {
         this->ui->inLine_StatsRelat_Filter_2->setStyleSheet(
             this->stylesheet_lineedit );
@@ -4157,6 +4176,7 @@ void MainWindow::on_button_StatsGlob_Iis_clicked()
 
 void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column)
 {
+    Q_UNUSED(column)
     const QString section{ item->text(0) };
     if ( section == tr("General") ) {
         return;
@@ -4557,14 +4577,17 @@ void MainWindow::on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1)
 //// DEFAULTS ////
 void MainWindow::on_radio_ConfDefaults_Apache_toggled(bool checked)
 {
+    Q_UNUSED(checked)
     this->default_ws = APACHE_ID;
 }
 void MainWindow::on_radio_ConfDefaults_Nginx_toggled(bool checked)
 {
+    Q_UNUSED(checked)
     this->default_ws = NGINX_ID;
 }
 void MainWindow::on_radio_ConfDefaults_Iis_toggled(bool checked)
 {
+    Q_UNUSED(checked)
     this->default_ws = IIS_ID;
 }
 
@@ -4599,7 +4622,7 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 // paths
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString& arg1)
 {
-    if ( arg1.size() > 0ul ) {
+    if ( arg1.size() > 0 ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
@@ -4637,6 +4660,7 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
 // formats
 void MainWindow::on_inLine_ConfApache_Format_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( true );
     } else {
@@ -4717,6 +4741,7 @@ void MainWindow::on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfApache_Warnlist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfApache_Warnlist_Add->setEnabled( true );
     } else {
@@ -4756,7 +4781,7 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfApache_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfApache_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfApache_Warnlist_Up->setEnabled( false );
@@ -4780,7 +4805,7 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4790,7 +4815,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4803,7 +4828,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4863,6 +4888,7 @@ void MainWindow::on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfApache_Blacklist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfApache_Blacklist_Add->setEnabled( true );
     } else {
@@ -4902,7 +4928,7 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfApache_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfApache_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfApache_Blacklist_Up->setEnabled( false );
@@ -4926,7 +4952,7 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -4936,7 +4962,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -4949,7 +4975,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -5005,6 +5031,7 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
 // formats
 void MainWindow::on_inLine_ConfNginx_Format_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( true );
     } else {
@@ -5085,6 +5112,7 @@ void MainWindow::on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfNginx_Warnlist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfNginx_Warnlist_Add->setEnabled( true );
     } else {
@@ -5124,7 +5152,7 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfNginx_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfNginx_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfNginx_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfNginx_Warnlist_Up->setEnabled( false );
@@ -5148,7 +5176,7 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -5158,7 +5186,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -5171,7 +5199,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -5231,6 +5259,7 @@ void MainWindow::on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfNginx_Blacklist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfNginx_Blacklist_Add->setEnabled( true );
     } else {
@@ -5270,7 +5299,7 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfNginx_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfNginx_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfNginx_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfNginx_Blacklist_Up->setEnabled( false );
@@ -5294,7 +5323,7 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -5304,7 +5333,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -5317,7 +5346,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -5435,6 +5464,7 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
 
 void MainWindow::on_inLine_ConfIis_Format_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( true );
     } else {
@@ -5516,6 +5546,7 @@ void MainWindow::on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfIis_Warnlist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfIis_Warnlist_Add->setEnabled( true );
     } else {
@@ -5555,7 +5586,7 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfIis_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfIis_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfIis_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfIis_Warnlist_Up->setEnabled( false );
@@ -5579,7 +5610,7 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5589,7 +5620,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5602,7 +5633,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5662,6 +5693,7 @@ void MainWindow::on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked)
 
 void MainWindow::on_inLine_ConfIis_Blacklist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfIis_Blacklist_Add->setEnabled( true );
     } else {
@@ -5701,7 +5733,7 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfIis_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfIis_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfIis_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfIis_Blacklist_Up->setEnabled( false );
@@ -5725,7 +5757,7 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
@@ -5735,7 +5767,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
@@ -5748,7 +5780,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),

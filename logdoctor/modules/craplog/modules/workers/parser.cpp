@@ -155,7 +155,6 @@ void CraplogParser::joinLogLines()
         // append to the relative list
         this->logs_lines.insert( this->logs_lines.end(), content.begin(), content.end() );
     }
-    this->files_to_use.clear();
     if ( this->logs_lines.empty() ) {
         this->proceed &= false;
     }
