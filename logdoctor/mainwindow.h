@@ -540,7 +540,7 @@ private:
     QSharedPointer<Ui::MainWindow> ui;
 
     // current version of LogDoctor
-    const float version{ 2.05f };
+    const float version{ 3.00f };
 
     QString wsFromIndex( const int index ) const;
 
