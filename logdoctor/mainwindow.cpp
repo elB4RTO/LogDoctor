@@ -2507,6 +2507,7 @@ void MainWindow::appendToLogsList( const LogFile& log_file )
 
     // set the name
     item->setText( 0, log_file.name() );
+    item->setFont( 0, this->FONTS.at("main") );
     // set the size
     item->setText( 1, PrintSec::printableSize( log_file.size() ) );
     item->setFont( 1, this->FONTS.at("main_italic") );
