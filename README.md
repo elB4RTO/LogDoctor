@@ -4,7 +4,7 @@
   <br/>
   <img src="https://img.shields.io/badge/version-3.00-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-20-blue"/>
-  <img src="https://img.shields.io/badge/Qt-6.5-blue"/>
+  <img src="https://img.shields.io/badge/Qt-6-blue"/>
   <br/>
   <img src="https://img.shields.io/badge/Linux-supported-31c653"/>
   <img src="https://img.shields.io/badge/BSD-supported-31c653"/>
@@ -84,7 +84,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 - **From binary**:
   - C++ 20
-  - Qt6 *(Framework 6.5+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
+  - Qt6 *(Framework 6.2+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From source**:
   - *all the above*
   - Cmake
