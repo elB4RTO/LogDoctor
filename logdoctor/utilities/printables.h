@@ -2,6 +2,8 @@
 #define LOGDOCTOR__UTILITIES__PRINTABLES_H
 
 
+#include <stddef.h>
+
 class QString;
 
 
@@ -11,8 +13,6 @@ class QString;
 */
 namespace PrintSec
 {
-
-namespace{ using size_t = unsigned long; }
 
 //! Formats the size including the suffix, for display purposes
 /*!
