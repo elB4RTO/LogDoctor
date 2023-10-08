@@ -2,9 +2,9 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-2.05-fff"/>
-  <img src="https://img.shields.io/badge/C%2B%2B-17-blue"/>
-  <img src="https://img.shields.io/badge/Qt-5.15-blue"/>
+  <img src="https://img.shields.io/badge/version-3.00-fff"/>
+  <img src="https://img.shields.io/badge/C%2B%2B-20-blue"/>
+  <img src="https://img.shields.io/badge/Qt-6.5-blue"/>
   <br/>
   <img src="https://img.shields.io/badge/Linux-supported-31c653"/>
   <img src="https://img.shields.io/badge/BSD-supported-31c653"/>
@@ -83,12 +83,12 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 ### Requirements / Dependencies
 
 - **From binary**:
-  - C++ 17
-  - Qt5 *(Framework 5.15+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
+  - C++ 20
+  - Qt6 *(Framework 6.5+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From source**:
   - *all the above*
   - Cmake
-  - g++ / gcc / clang<br/><br/>
+  - gcc / clang / msvc<br/><br/>
 
 <br/>
 
@@ -108,7 +108,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 - Download and unzip this repo
   <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
 - Step inside inside "*LogDoctor-main*"
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>
@@ -136,7 +136,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
   - Using **yay**:
     - `yay -S logdoctor`<br/>
   - Manually:
-    - `git clone https://aur.archlinux.org/logdoctor.git`
+    - `git clone https://aur.archlinux.org/logdoctor.git -b master --depth 1`
     - `cd logdoctor`
     - `makepkg -sci`<br/><br/>
 
@@ -159,7 +159,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 - Download and unzip this repo
   <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
 - Step inside inside "*LogDoctor-main*"
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>
@@ -171,10 +171,10 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 ### How to compile
 
-- Install the *dependencies* you're missing (usually the list reduces to just *Qt*, and *cmake* at least).<br/><br/>
+- Install the *dependencies* you're missing.<br/><br/>
 - Download and unzip this repo
   <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
 - Open a terminal inside "*LogDoctor-main/*"
   <br/>*or*<br/>
   `cd LogDoctor/`<br/><br/>
@@ -230,7 +230,7 @@ At the moment of writing, the only supported method is the manual update.<br/><b
 
 - Download and unzip this repo
   <br/>*or*<br/>
-  `git clone https://bitbucket.org/elb4rto/logdoctor`<br/><br/>
+  `git clone https://bitbucket.org/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
 - Step inside inside "*LogDoctor-main*"
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>
@@ -264,7 +264,7 @@ Follow the same process as for installing
 
 - Download and unzip this repo
   <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor`<br/><br/>
+  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
 - Step inside inside "*LogDoctor-main*"
   <br/>*or*<br/>
   `cd LogDoctor`<br/><br/>

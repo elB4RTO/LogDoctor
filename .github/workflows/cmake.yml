@@ -7,7 +7,7 @@ on:
 #    branches: [ "main" ]
 
 env:
-  QT_VERSION: '5.15.2'
+  QT_VERSION: '6.5.*'
   BUILD_TYPE: 'MinSizeRel'
 
 jobs:
@@ -18,16 +18,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest,  arch: gcc_64        }
-          - { os: windows-latest, arch: win64_mingw81 }
-          - { os: macos-latest,   arch: clang_64      }
+          - { os: ubuntu-latest,  arch: gcc_64            }
+          - { os: windows-latest, arch: win64_msvc2019_64 }
+          - { os: macos-latest,   arch: clang_64          }
 
     steps:
     - name: Get LogDoctor
       uses: actions/checkout@v3
 
     
-    - name: Install Qt5
+    - name: Install Qt6
       uses: jurplel/install-qt-action@v3
       with:
         target: 'desktop'
@@ -38,6 +38,11 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
+    
+    
+    - name: Get MSVC (WIN)
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1.12.1
     
     
     - name: Append PATHs (WIN)
@@ -54,7 +59,7 @@ jobs:
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=cl.exe"
 
 
     - name: Build

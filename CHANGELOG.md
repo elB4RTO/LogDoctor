@@ -1,4 +1,16 @@
 
+# v3.00
+
+- Upgrade to C++20
+- Upgrade to Qt6
+- Restyled themes
+- Redesigned configs section
+- Code improvements
+- Tests improvements
+- Fixes
+
+<br/><br/>
+
 # v2.05
 
 - Fixes
