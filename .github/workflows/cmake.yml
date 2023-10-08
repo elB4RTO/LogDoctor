@@ -7,7 +7,7 @@ on:
 #    branches: [ "main" ]
 
 env:
-  QT_VERSION: '6.2.*'
+  QT_VERSION: '6.5.*'
   BUILD_TYPE: 'MinSizeRel'
 
 jobs:
@@ -18,9 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest,  arch: gcc_64        }
-          - { os: windows-latest, arch: win64_mingw81 }
-          - { os: macos-latest,   arch: clang_64      }
+          - { os: ubuntu-latest,  arch: gcc_64            }
+          - { os: windows-latest, arch: win64_msvc2019_64 }
+          - { os: macos-latest,   arch: clang_64          }
 
     steps:
     - name: Get LogDoctor
@@ -54,7 +54,7 @@ jobs:
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=g++.exe"
+      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=cl.exe"
 
 
     - name: Build
