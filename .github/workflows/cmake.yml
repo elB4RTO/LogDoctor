@@ -7,7 +7,7 @@ on:
 #    branches: [ "main" ]
 
 env:
-  QT_VERSION: '6.5.*'
+  QT_VERSION: '5.15.2'
   BUILD_TYPE: 'MinSizeRel'
 
 jobs:
@@ -38,6 +38,11 @@ jobs:
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
         setup-python: 'false'
+    
+    
+    - name: Get MSVC (WIN)
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1.12.1
     
     
     - name: Append PATHs (WIN)
