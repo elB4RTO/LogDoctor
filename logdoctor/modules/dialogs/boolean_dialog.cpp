@@ -6,6 +6,8 @@
 
 #include "modules/exceptions.h"
 
+#include <unordered_map> // leave this here for clang
+
 
 namespace /*private*/
 {

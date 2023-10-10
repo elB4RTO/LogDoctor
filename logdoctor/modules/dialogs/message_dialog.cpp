@@ -10,6 +10,8 @@
 #include <QIcon>
 #include <QPixmap>
 
+#include <unordered_map> // leave this here for clang
+
 
 namespace /*private*/
 {
