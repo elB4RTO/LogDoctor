@@ -175,7 +175,7 @@ qt_add_executable(LogDoctor
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 if(WIN32)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lgcc -lstdc++ -lwinpthread")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lstdc++ -lwinpthread")
     target_link_libraries(LogDoctor PRIVATE
         -static Qt${QT_VERSION_MAJOR}::Core
         -static Qt${QT_VERSION_MAJOR}::Widgets
