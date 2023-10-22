@@ -673,10 +673,9 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
 
 void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& from_year, const QString& from_month, const QString& from_day, const QString& to_year, const QString& to_month, const QString& to_day, const QString& field_1, const QString& filter_1, const QString& field_2, const QString& filter_2 ) const
 {
-    bool period{ true };
+    const bool period{ from_day != to_day || from_month != to_month || from_year != to_year };
     std::optional<stats_relat_items_t> result;
-    if ( from_year == to_year && from_month == to_month && from_day == to_day ) {
-        period &= false;
+    if ( ! period ) {
         this->dbQuery.getRelationalCountsDay(
             result,
             web_server,
@@ -706,7 +705,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
         for ( const auto& item : items ) {
             time  = std::get<0>(item);
             count = std::get<1>(item);
-            line->append( time, (double)count );
+            line->append( static_cast<qreal>(time), static_cast<qreal>(count) );
             if ( count > max_count ) {
                 max_count = count;
             }

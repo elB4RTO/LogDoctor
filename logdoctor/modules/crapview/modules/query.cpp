@@ -1320,7 +1320,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
             QString log_field_1{ this->getDbField( log_field_1_ ) },
                     log_field_2{ this->getDbField( log_field_2_ ) };
 
-            // 1 month, no need to loop
+            // 1 day, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                 .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
@@ -1707,7 +1707,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                         // append the last count
                         time.setDate( QDate( year, month , day ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                        // append any missing day from the last found until 1 day fater the last one
+                        // append any missing day from the last found until 1 day before the last one
                         day++;
                         if ( day > getMonthDays( year, month ) ) {
                             month ++;
