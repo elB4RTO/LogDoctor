@@ -49,16 +49,23 @@ void readFile( const std::string& path, std::string& content )
     }
 
     if ( successful ) {
-        FILE* file = fopen ( path.c_str(), "rb" );
+#ifdef _MSC_VER
+        FILE* file;
+        const int err{ fopen_s( &file, path.c_str(), "rb" ) };
         /*FILE *dest = fopen ( out_path.c_str(), "wb" );*/
+        if ( file == NULL || err != 0 ) {
+#else
+        FILE* file = fopen( path.c_str(), "rb" );
+        /*FILE *dest = fopen( out_path.c_str(), "wb" );*/
         if ( file == NULL ) {
+#endif
             // unable to open the file
             //throw("cannot read");
             return;
         }
         // decompress until deflate stream ends or end of file is reached
         do {
-            strm.avail_in = fread( in, 1, CHUNK, file );
+            strm.avail_in = static_cast<unsigned>(fread( in, 1, CHUNK, file ));
             if ( ferror( file ) ) {
                 // error reading
                 (void)inflateEnd( &strm );
@@ -91,7 +98,7 @@ void readFile( const std::string& path, std::string& content )
                     successful = false;
                     break;
                 }*/
-                for ( int i=0; i<have; i++ ) {
+                for ( unsigned i{0u}; i<have; i++ ) {
                     content.push_back( out[i] );
                 }
 

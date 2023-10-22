@@ -30,7 +30,7 @@ void DbQuery::setDbPath( const std::string& path )
 }
 
 
-const int DbQuery::getMinuteGap( const int minute, const int gap )
+int DbQuery::getMinuteGap( const int minute, const int gap )
 {
     int m{ -1 };
     if ( minute < 0 || minute >= 60 ) {
@@ -48,7 +48,7 @@ const int DbQuery::getMinuteGap( const int minute, const int gap )
     return m;
 }
 
-const int DbQuery::getMonthDays( const int year, const int month )
+int DbQuery::getMonthDays( const int year, const int month )
 {
     int n_days;
     switch (month) {
@@ -72,7 +72,7 @@ const int DbQuery::getMonthDays( const int year, const int month )
 }
 
 
-const int DbQuery::getMonthNumber( const QString& month_str ) const
+int DbQuery::getMonthNumber( const QString& month_str ) const
 {
     int m{ 0 };
     for ( const auto& [num,str] : this->MONTHS ) {
@@ -85,7 +85,7 @@ const int DbQuery::getMonthNumber( const QString& month_str ) const
 }
 
 
-const int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
+int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
 {
     int n_days{ 1 };
     if ( from_year == to_year ) {
@@ -121,7 +121,7 @@ const int DbQuery::countDays( const int from_year, const int from_month, const i
     return n_days;
 }
 
-const int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month )
+int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month )
 {
     int n_months{ 0 };
     if ( from_year == to_year ) {
@@ -142,7 +142,7 @@ const int DbQuery::countMonths( const int from_year, const int from_month, const
     return n_months;
 }
 
-const int DbQuery::countMonths( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month ) const
+int DbQuery::countMonths( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month ) const
 {
     int from_year_, from_month_, to_year_, to_month_;
     try {
@@ -170,7 +170,7 @@ const int DbQuery::countMonths( const QString& from_year, const QString& from_mo
     return f;
 }*/
 
-const QString DbQuery::getDbField( const QString& tr_fld ) const
+QString DbQuery::getDbField( const QString& tr_fld ) const
 {
     QString f;
     for ( const auto& [id,str] : this->FIELDS ) {
@@ -214,7 +214,7 @@ void DbQuery::refreshDates( std::optional<stats_dates_t>& result )
 
     } else {
         // recursively query years, months and days for every WebServer
-        std::vector<std::tuple<int, QString>> tables{
+        const std::vector<std::tuple<int, QString>> tables{
             std::make_tuple(11,"apache"),
             std::make_tuple(12,"nginx"),
             std::make_tuple(13,"iis") };
@@ -612,7 +612,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"protocol\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"protocol\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"protocol\" LIKE '%1'")
                         .arg( QString(protocol_f).replace("'","''") );
                 }
             }
@@ -624,7 +624,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"method\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"method\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"method\" LIKE '%1'")
                         .arg( QString(method_f).replace("'","''") );
                 }
             }
@@ -636,7 +636,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"uri\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"uri\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"uri\" LIKE '%1'")
                         .arg( QString(uri_f).replace("'","''") );
                 }
             }
@@ -648,7 +648,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // only select non-NULL values
                     stmt += QString(" AND \"query\" IS NOT NULL");
                 } else {
-                    stmt += QString(" AND \"query\" LIKE '%1' || '%'")
+                    stmt += QString(" AND \"query\" LIKE '%1'")
                         .arg( QString(query_f).replace("'","''") );
                 }
             }
@@ -1117,7 +1117,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                                       filter.replace("'","''") );
 
                         } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            stmt += QString(" AND \"%1\" LIKE '%2'")
                                 .arg( log_field.replace("'","''"),
                                       filter.replace("'","''") );
                         }
@@ -1142,7 +1142,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                             // append the day as newly found if not found yet
                             days_l[ day ] ++;
                         }
-                        n_days += days_l.size();
+                        n_days += static_cast<int>(days_l.size());
                     } catch (...) {
                         // something failed
                         successful &= false;
@@ -1193,7 +1193,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
 
                             } else {
                                 // only values starting-with
-                                stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                                stmt += QString(" AND \"%1\" LIKE '%2'")
                                     .arg( log_field.replace("'","''"),
                                           filter.replace("'","''") );
                             }
@@ -1221,7 +1221,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                                 // append the day as newly found if not found yet
                                 days_l[ day ] ++;
                             }
-                            n_days += days_l.size();
+                            n_days += static_cast<int>(days_l.size());
                             month ++;
                             if ( month > 12 ) {
                                 month = 1;
@@ -1241,7 +1241,13 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                 // divide the count by the number of days to get the mean value
                 for ( const auto& [h,data_] : data ) {
                     for ( const auto& [m,c] : data_ ) {
-                        data.at( h ).at( m ) /= n_days;
+                        int& count{ data.at( h ).at( m ) };
+                        if ( count > 0 ) {
+                            count /= n_days;
+                            if ( count == 0 ) {
+                                count++;
+                            }
+                        }
                     }
                 }
             }
@@ -1314,7 +1320,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
             QString log_field_1{ this->getDbField( log_field_1_ ) },
                     log_field_2{ this->getDbField( log_field_2_ ) };
 
-            // 1 month, no need to loop
+            // 1 day, no need to loop
             stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                 .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
@@ -1348,7 +1354,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
                     } else {
                         // only values starting-with
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_1.replace("'","''"),
                                   filter.replace("'","''") );
                     }
@@ -1383,7 +1389,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
                     } else {
                         // only values starting-with
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_2.replace("'","''"),
                                   QString(field_filter_2).replace("'","''") );
                     }
@@ -1504,7 +1510,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
         db.close();
     }
 
-    if ( ! successful ) {
+    if ( successful ) {
         result.emplace( data );
     }
 }
@@ -1601,7 +1607,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                               filter.replace("'","''") );
 
                     } else {
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_1.replace("'","''"),
                                   filter.replace("'","''") );
                     }
@@ -1627,7 +1633,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                               filter.replace("'","''") );
 
                     } else {
-                        stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                        stmt += QString(" AND \"%1\" LIKE '%2'")
                             .arg( log_field_2.replace("'","''"),
                                   QString(field_filter_2).replace("'","''") );
                     }
@@ -1701,7 +1707,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                         // append the last count
                         time.setDate( QDate( year, month , day ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                        // append any missing day from the last found until 1 day fater the last one
+                        // append any missing day from the last found until 1 day before the last one
                         day++;
                         if ( day > getMonthDays( year, month ) ) {
                             month ++;
@@ -1777,7 +1783,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                       filter.replace("'","''") );
 
                         } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            stmt += QString(" AND \"%1\" LIKE '%2'")
                                 .arg( log_field_1.replace("'","''"),
                                       filter.replace("'","''") );
                         }
@@ -1803,7 +1809,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                       filter.replace("'","''") );
 
                         } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2' || '%'")
+                            stmt += QString(" AND \"%1\" LIKE '%2'")
                                 .arg( log_field_2.replace("'","''"),
                                       QString(field_filter_2).replace("'","''") );
                         }
@@ -1917,7 +1923,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
 
 
-const bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, std::map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, unsigned>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
+bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, std::map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, unsigned>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
 {
     bool successful{ true };
 

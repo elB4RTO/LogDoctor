@@ -1,5 +1,6 @@
-#ifndef CRAPVIEW_H
-#define CRAPVIEW_H
+#ifndef LOGDOCTOR__CRAPVIEW_H
+#define LOGDOCTOR__CRAPVIEW_H
+
 
 #include <QHash>
 #include <QtCharts>
@@ -23,7 +24,7 @@ class Crapview : public QObject
 public:
 
     //! Returns the Dialogs level
-    const int getDialogsLevel() const;
+    int getDialogsLevel() const;
 
     //! Sets the new Dialogs level
     void setDialogsLevel( const int new_level );
@@ -46,14 +47,14 @@ public:
         \param field_id The ID of the log fiels
         \return The printable field
     */
-    const QString getLogFieldString ( const int field_id ) const;
+    QString getLogFieldString ( const size_t field_id ) const;
 
     //! Returns the log field ID corresponding to the given printable field
     /*!
         \param field_str The log field
         \return The ID of the log field
     */
-    const int getLogFieldID ( const QString& field_str ) const;
+    int getLogFieldID ( const QString& field_str ) const;
 
 
     //! Returns the month number corresponding to the given printable month
@@ -61,7 +62,7 @@ public:
         \param month_Str The printable month name
         \return The month number
     */
-    const int getMonthNumber( const QString& month_str ) const;
+    int getMonthNumber( const QString& month_str ) const;
 
 
     //! Refreshes the list of the dates which are available in the database
@@ -76,7 +77,7 @@ public:
         \param web_server The printable Web Server name
         \return The list of yearss which are avaliable
     */
-    const QStringList getYears(  const QString& web_server ) const;
+    QStringList getYears(  const QString& web_server ) const;
 
     //! Returns le list of available months in the given year, for the given web server
     /*!
@@ -84,7 +85,7 @@ public:
         \param year The year
         \return The list of printable month names which are avaliable
     */
-    const QStringList getMonths( const QString& web_server, const QString& year ) const;
+    QStringList getMonths( const QString& web_server, const QString& year ) const;
 
     //! Returns le list of available days in the given month and year, for the given web server
     /*!
@@ -93,13 +94,13 @@ public:
         \param month The printable month name
         \return The list of days which are avaliable
     */
-    const QStringList getDays( const QString& web_server, const QString& year, const QString& month ) const;
+    QStringList getDays( const QString& web_server, const QString& year, const QString& month ) const;
 
     //! Returns all the hours of the day
     /*!
         \return The list of all the hours
     */
-    const QStringList getHours() const;
+    QStringList getHours() const;
 
 
     //! Returns a list of the fields for the given tab
@@ -107,7 +108,7 @@ public:
         \param tab The stats tab
         \return The list of fields
     */
-    const QStringList getFields( const std::string& tab ) const;
+    QStringList getFields( const std::string& tab ) const;
 
 
     //! Updates the database applying the changes which have been made to the table
@@ -133,7 +134,7 @@ public:
         \param hout The hour
     */
     void drawWarn(
-        QTableWidget* table, QtCharts::QChartView* chart,
+        QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day, const QString& hour
@@ -156,7 +157,7 @@ public:
         \param response The given filter for the Response
     */
     void drawSpeed(
-        QTableWidget* table, QtCharts::QChartView* chart,
+        QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
@@ -176,7 +177,7 @@ public:
         \param field The printable log field
     */
     void drawCount(
-        QTableWidget* table, QtCharts::QChartView* chart,
+        QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString& web_server,
         const QString& year, const QString& month, const QString& day,
@@ -199,7 +200,7 @@ public:
         \param filter The give filter string
     */
     void drawDay(
-        QtCharts::QChartView* chart,
+        QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
@@ -225,7 +226,7 @@ public:
         \param filter_2 The give filter string for the second field
     */
     void drawRelat(
-        QtCharts::QChartView* chart,
+        QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString& web_server,
         const QString& from_year, const QString& from_month, const QString& from_day,
@@ -244,7 +245,7 @@ public:
         \param web_server The printable Web Server name
         \return Whether the operation has been successful or not
     */
-    const bool calcGlobals(
+    bool calcGlobals(
         std::vector<std::tuple<QString,QString>>& recur_list,
         std::vector<std::tuple<QString,QString>>& traffic_list,
         std::vector<std::tuple<QString,QString>>& perf_list,
@@ -255,7 +256,7 @@ public:
 
 private slots:
 
-    void sliceClicked( QtCharts::QPieSlice* slice );
+    void sliceClicked( QPieSlice* slice );
 
 
 private:
@@ -289,35 +290,36 @@ private:
 
     // convert log fields to log fields IDs
     const QHash<QString, int> LogFields_s2i{
-            {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(13)), 13},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(14)), 14},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(15)), 15},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(16)), 16},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(17)), 17},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(18)), 18},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(20)), 20},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(21)), 21},
-            {QString::fromStdString(this->dbQuery.FIELDS.at(22)), 22}};
+        {QString::fromStdString(this->dbQuery.FIELDS.at( 0)),  0},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(10)), 10},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(11)), 11},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(12)), 12},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(13)), 13},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(14)), 14},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(15)), 15},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(16)), 16},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(17)), 17},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(18)), 18},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(20)), 20},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(21)), 21},
+        {QString::fromStdString(this->dbQuery.FIELDS.at(22)), 22}};
 
     // convert months names to months numbers
     const QHash<QString, int> Months_s2i{
-            {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(4)),   4},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(5)),   5},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(6)),   6},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(7)),   7},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(8)),   8},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(9)),   9},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(10)), 10},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(11)), 11},
-            {QString::fromStdString(this->dbQuery.MONTHS.at(12)), 12}};
+        {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(4)),   4},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(5)),   5},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(6)),   6},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(7)),   7},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(8)),   8},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(9)),   9},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(10)), 10},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(11)), 11},
+        {QString::fromStdString(this->dbQuery.MONTHS.at(12)), 12}};
 
 };
 
-#endif // CRAPVIEW_H
+
+#endif // LOGDOCTOR__CRAPVIEW_H

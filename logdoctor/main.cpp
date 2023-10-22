@@ -6,10 +6,11 @@
 
 int main(int argc, char *argv[])
 {
-    qRegisterMetaType<size_t>("size_t");
-
-    QApplication::setAttribute( Qt::AA_EnableHighDpiScaling );
     QApplication a(argc, argv);
+
+    qRegisterMetaType<size_t>();
+    qRegisterMetaType<LogFile>();
+    qRegisterMetaType<WorkerDialog>();
 
     MainWindow w;
     w.show();

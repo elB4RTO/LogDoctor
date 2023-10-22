@@ -115,18 +115,6 @@ Visite o repositório e baixe novamente</translation>
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">Um erro ocorreu ao analisar:
-marcador inicial no encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">Um erro ocorreu ao analisar:
-marcador final não encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Um erro ocorreu ao analisar:
 versão mal formada</translation>
@@ -136,6 +124,12 @@ versão mal formada</translation>
 malformed upstream version</source>
         <translation type="unfinished">Um erro ocorreu ao comparar:
 versão online mal formada</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">Um erro ocorreu ao analisar:
+marcador no encontrado</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ versão online mal formada</translation>
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">Ignorar</translation>
@@ -644,7 +638,7 @@ por favor reporte este problema</translation>
     </message>
     <message>
         <source>An error occured while parsing the format string</source>
-        <translation type="unfinished">Erro ao analisar string de formato</translation>
+        <translation type="unfinished">Erro ao analisar texto de formato</translation>
     </message>
     <message>
         <source>Size of the file</source>
@@ -709,6 +703,13 @@ Abortado</translation>
     <message>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation type="unfinished">Por favor libere alguns recursos, analise os arquivos em diferentes etapas ou divida-os em unidades menores</translation>
+    </message>
+</context>
+<context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
     </message>
 </context>
 <context>
@@ -986,10 +987,6 @@ Abortado</translation>
         <translation type="unfinished">Geral</translation>
     </message>
     <message>
-        <source>General settings</source>
-        <translation type="unfinished">Configuração geral</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation type="unfinished">Janela</translation>
     </message>
@@ -1010,10 +1007,6 @@ Abortado</translation>
         <translation type="unfinished">Tema</translation>
     </message>
     <message>
-        <source>None (System)</source>
-        <translation type="unfinished">Ninguno (Sistema)</translation>
-    </message>
-    <message>
         <source>Dark</source>
         <translation type="unfinished">Escuro</translation>
     </message>
@@ -1022,25 +1015,10 @@ Abortado</translation>
         <translation type="unfinished">Diálogos</translation>
     </message>
     <message>
-        <source>Candy</source>
-        <translation type="unfinished">Doce</translation>
-    </message>
-    <message>
         <source>With strings, only the lines in which the field is starting with this string will be used.
 With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&apos; to declare what to use</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Herb</source>
-        <translation type="unfinished">Erva</translation>
-    </message>
-    <message>
-        <source>Powder</source>
-        <translation type="unfinished">Polvo</translation>
-    </message>
-    <message>
-        <source>Auto (Default)</source>
-        <translation type="unfinished">Auto (Predeterminado)</translation>
+        <translation type="unfinished">Com texto, serão utilizadas apenas as linhas em que o campo começa com esta string.
+Com números, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; ou &apos;&gt;&apos; para declarar o que usar</translation>
     </message>
     <message>
         <source>Light</source>
@@ -1131,18 +1109,6 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">Gráficos</translation>
     </message>
     <message>
-        <source>Default (Light)</source>
-        <translation type="unfinished">Predeterminado (Claro)</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">Areia</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">Azul claro</translation>
-    </message>
-    <message>
         <source>Theme to use for the Charts</source>
         <translation type="unfinished">Tema para usar em gráficos</translation>
     </message>
@@ -1207,10 +1173,6 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">Logs</translation>
     </message>
     <message>
-        <source>Logs related settings</source>
-        <translation type="unfinished">Configuração relacionada a logs</translation>
-    </message>
-    <message>
         <source>Defaults</source>
         <translation type="unfinished">Padrões</translation>
     </message>
@@ -1221,10 +1183,6 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
     <message>
         <source>Control</source>
         <translation type="unfinished">Controlar</translation>
-    </message>
-    <message>
-        <source>Options about the log files usage control</source>
-        <translation type="unfinished">Opções de controle de uso do arquivo de log</translation>
     </message>
     <message>
         <source>Usage control</source>
@@ -1245,7 +1203,7 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
     <message>
         <source>Generate a sample log line from the currently saved string, to check if it gets formatted correctly.
 Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</source>
-        <translation type="unfinished">Gere uma linha de log de amostra a partir da string atualmente salva, para verificar se ela está formatada corretamente.
+        <translation type="unfinished">Gere uma linha de log de amostra a partir do texto atualmente salva, para verificar se ela está formatada corretamente.
 Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&apos;</translation>
     </message>
     <message>
@@ -1274,7 +1232,7 @@ Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&a
     </message>
     <message>
         <source>Only use lines in which the field is starting with this string</source>
-        <translation type="unfinished">Use apenas linhas onde o campo começa com esta string</translation>
+        <translation type="unfinished">Use apenas linhas onde o campo começa com esto texto</translation>
     </message>
     <message>
         <source>Only use lines in which the field is matching this statement.
@@ -1289,10 +1247,6 @@ Use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&apos; para decla
     <message>
         <source>Remember position and size</source>
         <translation type="unfinished">Lembre-se de posição e tamanho</translation>
-    </message>
-    <message>
-        <source>Ash</source>
-        <translation type="unfinished">Cinza</translation>
     </message>
     <message>
         <source>Icons</source>
@@ -1319,28 +1273,24 @@ Use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&apos; para decla
         <translation type="unfinished">Diálogos emitidos ao visualizar estatísticas</translation>
     </message>
     <message>
-        <source>Configure Apache2 specific options</source>
-        <translation type="unfinished">Configurar opções específicas do Apache2</translation>
-    </message>
-    <message>
         <source>Logs folder</source>
         <translation type="unfinished">Pasta de registros</translation>
     </message>
     <message>
         <source>Logs format string</source>
-        <translation type="unfinished">String de formato de registro</translation>
+        <translation type="unfinished">Texto de formato de registro</translation>
     </message>
     <message>
         <source>Format string</source>
-        <translation type="unfinished">String de formato</translation>
+        <translation type="unfinished">Texto de formato</translation>
     </message>
     <message>
         <source>Insert the format string you&apos;re using</source>
-        <translation type="unfinished">Insira a string de formato que você está usando</translation>
+        <translation type="unfinished">Insira o texto de formato que você está usando</translation>
     </message>
     <message>
         <source>Apply the current string</source>
-        <translation type="unfinished">Aplicar string atual</translation>
+        <translation type="unfinished">Aplicar texto atual</translation>
     </message>
     <message>
         <source>Generate sample</source>
@@ -1405,20 +1355,12 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <translation type="unfinished">Nginx</translation>
     </message>
     <message>
-        <source>Configure Nginx specific options</source>
-        <translation type="unfinished">Configurar opções específicas de Nginx</translation>
-    </message>
-    <message>
         <source>IIS</source>
         <translation type="unfinished">IIS</translation>
     </message>
     <message>
         <source>Format</source>
         <translation type="unfinished">Formato</translation>
-    </message>
-    <message>
-        <source>Configure IIS specific options</source>
-        <translation type="unfinished">Configurar opções específicas de IIS</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1471,6 +1413,18 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
     <message>
         <source>copies</source>
         <translation type="unfinished">copias</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation type="unfinished">Rota</translation>
+    </message>
+    <message>
+        <source>Native</source>
+        <translation type="unfinished">Nativo</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation type="unfinished">Auto</translation>
     </message>
 </context>
 <context>

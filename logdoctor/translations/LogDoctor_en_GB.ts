@@ -87,7 +87,7 @@
     </message>
     <message>
         <source>LogDoctor is up-to-date</source>
-        <translation>No update found</translation>
+        <translation>LogDoctor is up-to-date</translation>
     </message>
     <message>
         <source>:/</source>
@@ -109,18 +109,6 @@ Please visit the LogDoctor&apos;s repository and get a fresh version of it</tran
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation>An error occured while parsing:
-initial version mark not found</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation>An error occured while parsing:
-final version mark not found</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation>An error occured while parsing:
 malformed version</translation>
@@ -136,6 +124,12 @@ malformed upstream version</translation>
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
         <translation>A new version is available!
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation>An error occured while parsing:
+version mark not found</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ Please visit LogDoctor&apos;s git repository and follow the instruction about ho
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation>Ignore</translation>
@@ -712,6 +706,13 @@ please follow the instruction on the repository page</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -978,10 +979,6 @@ please follow the instruction on the repository page</translation>
         <translation>General</translation>
     </message>
     <message>
-        <source>General settings</source>
-        <translation>General settings</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>Window</translation>
     </message>
@@ -1000,10 +997,6 @@ please follow the instruction on the repository page</translation>
     <message>
         <source>Theme</source>
         <translation>Theme</translation>
-    </message>
-    <message>
-        <source>None (System)</source>
-        <translation>None (System)</translation>
     </message>
     <message>
         <source>Dark</source>
@@ -1098,18 +1091,6 @@ please follow the instruction on the repository page</translation>
         <translation>Charts</translation>
     </message>
     <message>
-        <source>Default (Light)</source>
-        <translation>Default (Light)</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation>Sand</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation>Cerulean</translation>
-    </message>
-    <message>
         <source>Theme to use for the Charts</source>
         <translation>Theme to use for the Charts</translation>
     </message>
@@ -1174,10 +1155,6 @@ please follow the instruction on the repository page</translation>
         <translation>Logs</translation>
     </message>
     <message>
-        <source>Logs related settings</source>
-        <translation>Logs related settings</translation>
-    </message>
-    <message>
         <source>Defaults</source>
         <translation>Defaults</translation>
     </message>
@@ -1188,10 +1165,6 @@ please follow the instruction on the repository page</translation>
     <message>
         <source>Control</source>
         <translation>Control</translation>
-    </message>
-    <message>
-        <source>Options about the log files usage control</source>
-        <translation>Options about the log files usage control</translation>
     </message>
     <message>
         <source>Usage control</source>
@@ -1212,10 +1185,6 @@ please follow the instruction on the repository page</translation>
     <message>
         <source>Apache2</source>
         <translation>Apache2</translation>
-    </message>
-    <message>
-        <source>Configure Apache2 specific options</source>
-        <translation>Configure Apache2 specific options</translation>
     </message>
     <message>
         <source>Logs folder</source>
@@ -1300,16 +1269,8 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation>Nginx</translation>
     </message>
     <message>
-        <source>Configure Nginx specific options</source>
-        <translation>Configure Nginx specific options</translation>
-    </message>
-    <message>
         <source>IIS</source>
         <translation>IIS</translation>
-    </message>
-    <message>
-        <source>Configure IIS specific options</source>
-        <translation>Configure IIS specific options</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1412,28 +1373,12 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation>Select/deselect all the files</translation>
     </message>
     <message>
-        <source>Candy</source>
-        <translation>Candy</translation>
-    </message>
-    <message>
-        <source>Herb</source>
-        <translation>Herb</translation>
-    </message>
-    <message>
-        <source>Powder</source>
-        <translation>Powder</translation>
-    </message>
-    <message>
         <source>warnlist</source>
         <translation>warnlist</translation>
     </message>
     <message>
         <source>blacklist</source>
         <translation>blacklist</translation>
-    </message>
-    <message>
-        <source>Ash</source>
-        <translation>Ash</translation>
     </message>
     <message>
         <source>Games</source>
@@ -1456,10 +1401,6 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation>Play Snake</translation>
     </message>
     <message>
-        <source>Auto (Default)</source>
-        <translation>Auto (Default)</translation>
-    </message>
-    <message>
         <source>Light</source>
         <translation>Light</translation>
     </message>
@@ -1472,6 +1413,18 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
     <message>
         <source>Icons</source>
         <translation>Icons</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation>Path</translation>
+    </message>
+    <message>
+        <source>Native</source>
+        <translation>Native</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation>Auto</translation>
     </message>
 </context>
 <context>

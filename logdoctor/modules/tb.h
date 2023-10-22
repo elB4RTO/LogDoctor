@@ -1,5 +1,6 @@
-#ifndef LOGFILESTB_H
-#define LOGFILESTB_H
+#ifndef LOGDOCTOR__MODULES__TB_H
+#define LOGDOCTOR__MODULES__TB_H
+
 
 #include <QFont>
 
@@ -19,10 +20,10 @@ public:
     //// GETTERS ////
 
     //! Returns whether the wide lines option is set to be used or not
-    const bool getWideLinesUsage() const;
+    bool getWideLinesUsage() const;
 
     //! Returns the ID of the color scheme in use
-    const int getColorSchemeID() const;
+    int getColorSchemeID() const;
 
     //! Returns the color scheme in use
     const std::unordered_map<std::string, QString>& getColorScheme() const;
@@ -72,4 +73,5 @@ private:
     QFont   font;
 };
 
-#endif // LOGFILESTB_H
+
+#endif // LOGDOCTOR__MODULES__TB_H

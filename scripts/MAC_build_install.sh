@@ -53,7 +53,7 @@ then
 fi
 
 # Build the project
-cmake --build ./ --target all
+cmake --build ./ --target all -j$(sysctl -n hw.ncpu)
 if [[ "$?" == "0" ]]
 then
 	# compiled succesfully

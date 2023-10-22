@@ -87,7 +87,7 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-const int Craplog::getDialogsLevel() const
+int Craplog::getDialogsLevel() const
 {
     return this->dialogs_level;
 }
@@ -115,7 +115,7 @@ void Craplog::setHashesDatabasePath( const std::string& path )
     this->db_hashes_path = path + "/hashes.db";
 }
 
-const size_t Craplog::getWarningSize() const
+size_t Craplog::getWarningSize() const
 {
     return this->warning_size;
 }
@@ -128,11 +128,11 @@ void Craplog::setWarningSize(const size_t new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-const bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
-const bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
@@ -208,7 +208,7 @@ void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_fiel
     list.pop_back();
 }
 
-const int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 1 };
@@ -223,7 +223,7 @@ const int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& lo
     }
     return static_cast<int>( i );
 }
-const int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 1 };
@@ -239,7 +239,7 @@ const int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log
     return static_cast<int>( i );
 }
 
-const int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 0 };
@@ -254,7 +254,7 @@ const int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& 
     }
     return static_cast<int>( i );
 }
-const int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 0 };
@@ -270,7 +270,7 @@ const int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& l
     return static_cast<int>( i );
 }
 
-const std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
+std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
 {
     std::string sanitized_item;
     switch ( log_field_id ) {
@@ -325,7 +325,7 @@ const LogsFormat& Craplog::getLogsFormat(const unsigned& web_server_id ) const
 }
 
 // set the logs format
-const bool Craplog::setApacheLogFormat( const std::string& format_string )
+bool Craplog::setApacheLogFormat( const std::string& format_string )
 {
     // apache
     bool success{ true };
@@ -342,7 +342,7 @@ const bool Craplog::setApacheLogFormat( const std::string& format_string )
     }
     return success;
 }
-const bool Craplog::setNginxLogFormat( const std::string& format_string )
+bool Craplog::setNginxLogFormat( const std::string& format_string )
 {
     // nginx
     bool success{ true };
@@ -359,7 +359,7 @@ const bool Craplog::setNginxLogFormat( const std::string& format_string )
     }
     return success;
 }
-const bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module )
+bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module )
 {
     // iis
     bool success{ true };
@@ -378,7 +378,7 @@ const bool Craplog::setIisLogFormat( const std::string& format_string, const int
     return success;
 }
 
-const QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
+QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
 {
     switch ( web_server_id ) {
         case APACHE_ID:
@@ -401,7 +401,7 @@ void Craplog::setCurrentWSID( const unsigned web_server_id )
     this->setCurrentLogFormat();
 }
 
-const unsigned Craplog::getCurrentWSID() const
+unsigned Craplog::getCurrentWSID() const
 {
     return this->current_WS;
 }
@@ -434,7 +434,7 @@ void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_pa
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-const size_t Craplog::getLogsListSize() const
+size_t Craplog::getLogsListSize() const
 {
     return this->logs_list.size();
 }
@@ -459,7 +459,7 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 
 
 // set a file as selected
-const bool Craplog::setLogFileSelected( const QString& file_name )
+bool Craplog::setLogFileSelected( const QString& file_name )
 {
     const auto item{ std::find_if
         ( this->logs_list.begin(), this->logs_list.end(),
@@ -549,7 +549,7 @@ void Craplog::changeIisLogsBaseNames( const int module_id )
     }
 }
 
-const bool Craplog::isFileNameValid( const std::string& name ) const
+bool Craplog::isFileNameValid( const std::string& name ) const
 {
     bool valid{ true };
     if ( ! this->logs_base_names.at( this->current_WS ).starts.empty() ) {
@@ -638,7 +638,7 @@ const bool Craplog::isFileNameValid( const std::string& name ) const
 
 ///////////////
 //// WORKK ////
-const bool Craplog::checkStuff()
+bool Craplog::checkStuff()
 {
     this->proceed |= true;
     {
@@ -827,7 +827,7 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
     }
 }
 
-const bool Craplog::shouldWorkAsync() const
+bool Craplog::shouldWorkAsync() const
 {
     const size_t n_log_files{ this->log_files_to_use.size() };
     const size_t average_size{
@@ -961,23 +961,23 @@ void Craplog::stopWorking( const bool successful )
     emit this->finishedWorking();
 }
 
-const bool Craplog::editedDatabase() const
+bool Craplog::editedDatabase() const
 {
     return this->db_edited;
 }
 
 
-const size_t Craplog::getParsedSize()
+size_t Craplog::getParsedSize()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-const size_t Craplog::getParsedLines()
+size_t Craplog::getParsedLines()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
 }
-const QString Craplog::getParsingSpeed()
+QString Craplog::getParsingSpeed()
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     auto stop{ ( is_parsing )
@@ -1006,7 +1006,7 @@ void Craplog::workerFinishedParsing()
     this->parsing_time_stop = std::chrono::system_clock::now();
     this->is_parsing &= false;
 }
-const bool Craplog::isParsing() const
+bool Craplog::isParsing() const
 {
     return this->is_parsing;
 }
@@ -1038,8 +1038,8 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
-    parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size + this->blacklisted_size ) );
-    const size_t parsed_size{ this->parsed_size - this->warnlisted_size };
+    parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size ) );
+    const size_t parsed_size{ this->parsed_size - this->warnlisted_size - this->blacklisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         static_cast<qreal>( parsed_size ) );
@@ -1052,7 +1052,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* ignoredSize_donut{ new QPieSeries() };
-    const size_t ignored_size{ this->total_size - this->parsed_size - this->blacklisted_size };
+    const size_t ignored_size{ this->total_size - this->parsed_size };
     QString printable_ignored_size{ PrintSec::printableSize( ignored_size ) };
     ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(

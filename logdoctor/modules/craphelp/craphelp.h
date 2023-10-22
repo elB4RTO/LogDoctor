@@ -1,5 +1,6 @@
-#ifndef CRAPHELP_H
-#define CRAPHELP_H
+#ifndef LOGDOCTOR__CRAPHELP_H
+#define LOGDOCTOR__CRAPHELP_H
+
 
 #include <QWidget>
 
@@ -9,6 +10,7 @@
 namespace Ui {
     class Craphelp;
 }
+
 
 //! Craphelp
 /*!
@@ -20,7 +22,6 @@ class Craphelp : public QWidget
 
 public:
     explicit Craphelp( QWidget* parent=nullptr );
-    ~Craphelp();
 
     //! Provides help about log formats
     /*!
@@ -41,13 +42,14 @@ public:
     void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const;
 
 private:
-    Ui::Craphelp* ui;
+    QSharedPointer<Ui::Craphelp> ui;
 
-    const std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
+    std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
 
     void defaultApacheFormat( std::string& str ) const;
     void defaultNginxFormat( std::string& str ) const;
     void defaultIisFormat( std::string& str ) const;
 };
 
-#endif // CRAPHELP_H
+
+#endif // LOGDOCTOR__CRAPHELP_H

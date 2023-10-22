@@ -1,5 +1,6 @@
-#ifndef DATETIME_H
-#define DATETIME_H
+#ifndef LOGDOCTOR__CRAPLOG__DATETIME_H
+#define LOGDOCTOR__CRAPLOG__DATETIME_H
+
 
 #include <string>
 #include <vector>
@@ -19,8 +20,9 @@ namespace DateTimeOps
     \throw DateTimeException
     \return The list of items
 */
-const std::vector<std::string> processDateTime( std::string_view datetime, std::string_view format );
+std::vector<std::string> processDateTime( std::string_view datetime, std::string_view format );
 
 } // namespace DateTimeOps
 
-#endif // DATETIME_H
+
+#endif // LOGDOCTOR__CRAPLOG__DATETIME_H

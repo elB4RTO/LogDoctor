@@ -1,5 +1,6 @@
-#ifndef GZIP_H
-#define GZIP_H
+#ifndef LOGDOCTOR__UTILITIES__GZIP_H
+#define LOGDOCTOR__UTILITIES__GZIP_H
+
 
 #include <string>
 
@@ -20,4 +21,5 @@ void readFile( const std::string& path, std::string& content );
 
 } // namespace GZutils
 
-#endif // GZIP_H
+
+#endif // LOGDOCTOR__UTILITIES__GZIP_H

@@ -1,5 +1,6 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef LOGDOCTOR__MAINWINDOW_H
+#define LOGDOCTOR__MAINWINDOW_H
+
 
 #include <QMainWindow>
 
@@ -23,9 +24,9 @@ class QTranslator;
 class QTreeWidgetItem;
 
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+namespace Ui {
+    class MainWindow;
+}
 
 
 //! MainWindow
@@ -39,7 +40,6 @@ class MainWindow : public QMainWindow
 public:
 
     explicit MainWindow( QWidget* parent=nullptr );
-    ~MainWindow();
 
 
 signals:
@@ -266,6 +266,10 @@ private slots:
 
     /////////////////
     //// CRAPSET ////
+
+    void on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column);
+
+    void on_tree_ConfSections_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
     //// WINDOW ////
 
@@ -533,12 +537,12 @@ private slots:
 
 
 private:
-    Ui::MainWindow* ui;
+    QSharedPointer<Ui::MainWindow> ui;
 
     // current version of LogDoctor
-    const float version{ 2.05 };
+    const float version{ 3.00f };
 
-    const QString wsFromIndex( const int index ) const;
+    QString wsFromIndex( const int index ) const;
 
 
     //////////////////////////
@@ -582,7 +586,7 @@ private:
         \return The resulting string
         \see writeConfigs()
     */
-    const std::string list2string( const std::vector<std::string>& list, const bool user_agent=false ) const;
+    std::string list2string( const std::vector<std::string>& list, const bool user_agent=false ) const;
 
     //! Retrieves a list of items from the given string
     /*!
@@ -591,7 +595,7 @@ private:
         \return The resulting list
         \see readConfigs()
     */
-    const std::vector<std::string> string2list( const std::string& string, const bool user_agent=false ) const;
+    std::vector<std::string> string2list( const std::string& string, const bool user_agent=false ) const;
 
     // string to bool and vice versa
     const std::unordered_map<std::string, bool> s2b{ {"true",true}, {"false",false} };
@@ -616,7 +620,7 @@ private:
     /*!
         \see writeConfigs()
     */
-    const std::string geometryToString() const;
+    std::string geometryToString() const;
 
     //! Retrieves the window geometry from the given string
     /*!
@@ -642,13 +646,6 @@ private:
     // remember window position and sizes
     bool remember_window{ true };
 
-    // themes
-    int window_theme_id { 0 };
-    int charts_theme_id { 0 };
-    int icons_theme_id  { 0 };
-
-    QString icons_theme;
-
     //! Auto-detects the icon-set to use depending on the current window theme
     void detectIconsTheme();
 
@@ -663,9 +660,7 @@ private:
 
     const std::vector<QChart::ChartTheme> CHARTS_THEMES{
         QChart::ChartTheme::ChartThemeLight,
-        QChart::ChartTheme::ChartThemeDark,
-        QChart::ChartTheme::ChartThemeBrownSand,
-        QChart::ChartTheme::ChartThemeBlueCerulean
+        QChart::ChartTheme::ChartThemeDark
     };
 
     // color schemes
@@ -703,10 +698,10 @@ private:
 
 
     //! Resolves the given path and returns the canonical path
-    const std::string resolvePath( const std::string& path ) const;
+    std::string resolvePath( const std::string& path ) const;
 
     //! Returns the parent folder of the given path
-    const std::string parentPath( const std::string& path ) const;
+    std::string parentPath( const std::string& path ) const;
 
 
     ////////////////
@@ -721,7 +716,7 @@ private:
     void makeInitialChecks();
 
     //! Checks the integrity of the logs data collection database
-    const bool checkDataDB();
+    bool checkDataDB();
 
 
     ///////////////////
@@ -746,7 +741,7 @@ private:
     //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool working );
 
-    const bool dbUsable();
+    bool dbUsable();
 
 
     //////////////////
@@ -823,10 +818,10 @@ private:
     void resetStatsCountButtons();
 
     // day-time
-    const std::optional<QString> getStatsDayParsedFilter() const;
+    std::optional<QString> getStatsDayParsedFilter() const;
 
     // relational
-    const std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
+    std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
 
     // globals
     QString glob_ws;
@@ -842,14 +837,14 @@ private:
 
     void refreshChartsPreview();
 
-    const int getIisLogsModule() const;
+    int getIisLogsModule() const;
 
 
     //////////////////
     //// CRAPHELP ////
     //////////////////
 
-    QScopedPointer<Craphelp> craphelp;
+    QSharedPointer<Craphelp> craphelp;
 
     void showHelp( const std::string& file_name );
 
@@ -858,32 +853,32 @@ private:
     //// CRAPUP ////
     ////////////////
 
-    QScopedPointer<Crapup> crapup;
+    QSharedPointer<Crapup> crapup;
 
 
     //////////////////
     //// CRAPNOTE ////
     //////////////////
 
-    QScopedPointer<Crapnote> crapnote;
+    QSharedPointer<Crapnote> crapnote;
 
 
     //////////////////
     //// CRAPINFO ////
     //////////////////
 
-    QScopedPointer<Crapinfo> crapinfo;
+    QSharedPointer<Crapinfo> crapinfo;
 
 
     ///////////////////
     //// CRAPGAMES ////
     ///////////////////
 
-    QScopedPointer<CrissCross> crisscross;
+    QSharedPointer<CrissCross> crisscross;
 
-    QScopedPointer<SnakeGame> snake;
+    QSharedPointer<SnakeGame> snake;
 
 };
 
 
-#endif // MAINWINDOW_H
+#endif // LOGDOCTOR__MAINWINDOW_H

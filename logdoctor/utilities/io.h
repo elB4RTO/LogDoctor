@@ -1,5 +1,6 @@
-#ifndef IO_H
-#define IO_H
+#ifndef LOGDOCTOR__UTILITIES__IO_H
+#define LOGDOCTOR__UTILITIES__IO_H
+
 
 #include <string>
 #include <vector>
@@ -18,21 +19,21 @@ namespace IOutils
     \param path The path of the entry
     \return The result of the check
 */
-const bool exists( std::string_view path );
+bool exists( std::string_view path );
 
 //! Checks if a path exists and points to a file
 /*!
     \param path The path of the entry
     \return The result of the check
 */
-const bool isFile( std::string_view path );
+bool isFile( std::string_view path );
 
 //! Checks if a path exists and points to a directory
 /*!
     \param path The path of the entry
     \return The result of the checks
 */
-const bool isDir( std::string_view path );
+bool isDir( std::string_view path );
 
 //! Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it
 /*!
@@ -41,7 +42,7 @@ const bool isDir( std::string_view path );
     \param writable Set to true to check for writability
     \return The result of the checks
 */
-const bool checkFile( std::string_view path, const bool readable=false, const bool writable=false );
+bool checkFile( std::string_view path, const bool readable=false, const bool writable=false );
 
 //! Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it
 /*!
@@ -50,14 +51,14 @@ const bool checkFile( std::string_view path, const bool readable=false, const bo
     \param writable Set to true to check for writability
     \return The result of the checks
 */
-const bool checkDir( std::string_view path, const bool readable=false, const bool writable=false );
+bool checkDir( std::string_view path, const bool readable=false, const bool writable=false );
 
 //! Creates a directory
 /*!
     \param path The path of the new entry
     \return Wheter the operation was successful or not
 */
-const bool makeDir( std::string_view path, std::error_code& err ) noexcept(true);
+bool makeDir( std::string_view path, std::error_code& err ) noexcept(true);
 
 //! Renames an entry with a trailing '.copy'
 /*!
@@ -65,7 +66,7 @@ const bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
     \param err Will hold the error, if any
     \return Wheter the operation was successful or not
 */
-const bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true);
+bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true);
 
 //! Randomly pick lines from a file
 /*!
@@ -92,4 +93,5 @@ void writeOnFile( const std::string& path, std::string_view content );
 
 } // namespace IOutils
 
-#endif // IO_H
+
+#endif // LOGDOCTOR__UTILITIES__IO_H

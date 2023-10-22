@@ -3,12 +3,12 @@
         <file>logo/logdoctor.svg</file>
     </qresource>
     <qresource prefix="/translations">
+        <file alias="en_GB">translations/LogDoctor_en_GB.qm</file>
         <file alias="es_ES">translations/LogDoctor_es_ES.qm</file>
         <file alias="fr_FR">translations/LogDoctor_fr_FR.qm</file>
         <file alias="it_IT">translations/LogDoctor_it_IT.qm</file>
         <file alias="ja_JP">translations/LogDoctor_ja_JP.qm</file>
         <file alias="pt_BR">translations/LogDoctor_pt_BR.qm</file>
-        <file alias="en_GB">translations/LogDoctor_en_GB.qm</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="3270">fonts/3270.ttf</file>
@@ -16,58 +16,27 @@
         <file alias="Metropolis">fonts/Metropolis.ttf</file>
     </qresource>
     <qresource prefix="/icons">
-        <file>icons/add.png</file>
-        <file>icons/rem.png</file>
-        <file>icons/down.png</file>
-        <file>icons/up.png</file>
-        <file>icons/err.png</file>
-        <file>icons/dialogs/err.png</file>
-        <file>icons/dialogs/info.png</file>
-        <file>icons/dialogs/quest.png</file>
-        <file>icons/dialogs/warn.png</file>
-        <file>icons/light/checkbox_checked.png</file>
-        <file>icons/light/checkbox_semichecked.png</file>
-        <file>icons/light/checkbox_unchecked.png</file>
-        <file>icons/light/checking.png</file>
-        <file>icons/light/conf_off.png</file>
-        <file>icons/light/conf_on.png</file>
-        <file>icons/light/count_off.png</file>
-        <file>icons/light/count_on.png</file>
-        <file>icons/light/daytime_off.png</file>
-        <file>icons/light/daytime_on.png</file>
-        <file>icons/light/down.png</file>
-        <file>icons/light/draw.png</file>
-        <file>icons/light/global_off.png</file>
-        <file>icons/light/global_on.png</file>
-        <file>icons/light/help.png</file>
-        <file>icons/light/log_off.png</file>
-        <file>icons/light/log_on.png</file>
-        <file>icons/light/mk_lines.png</file>
-        <file>icons/light/mk_size.png</file>
-        <file>icons/light/mk_speed.png</file>
-        <file>icons/light/mk_time.png</file>
-        <file>icons/light/radiobutton_checked.png</file>
-        <file>icons/light/radiobutton_unchecked.png</file>
-        <file>icons/light/refresh.png</file>
-        <file>icons/light/relational_off.png</file>
-        <file>icons/light/relational_on.png</file>
-        <file>icons/light/save.png</file>
-        <file>icons/light/show_file.png</file>
-        <file>icons/light/speed_off.png</file>
-        <file>icons/light/speed_on.png</file>
-        <file>icons/light/spinbox_add.png</file>
-        <file>icons/light/spinbox_sub.png</file>
-        <file>icons/light/up.png</file>
-        <file>icons/light/view_off.png</file>
-        <file>icons/light/view_on.png</file>
-        <file>icons/light/warn_off.png</file>
-        <file>icons/light/warn_on.png</file>
         <file>icons/dark/checkbox_checked.png</file>
         <file>icons/dark/checkbox_semichecked.png</file>
         <file>icons/dark/checkbox_unchecked.png</file>
         <file>icons/dark/checking.png</file>
+        <file>icons/dark/combobox_arrow.png</file>
+        <file>icons/dark/conf_blacklists.png</file>
+        <file>icons/dark/conf_charts.png</file>
+        <file>icons/dark/conf_control.png</file>
+        <file>icons/dark/conf_databases.png</file>
+        <file>icons/dark/conf_defaults.png</file>
+        <file>icons/dark/conf_dialogs.png</file>
+        <file>icons/dark/conf_format.png</file>
+        <file>icons/dark/conf_general.png</file>
+        <file>icons/dark/conf_logs.png</file>
         <file>icons/dark/conf_off.png</file>
         <file>icons/dark/conf_on.png</file>
+        <file>icons/dark/conf_path.png</file>
+        <file>icons/dark/conf_textbrowser.png</file>
+        <file>icons/dark/conf_warnlists.png</file>
+        <file>icons/dark/conf_webservers.png</file>
+        <file>icons/dark/conf_window.png</file>
         <file>icons/dark/count_off.png</file>
         <file>icons/dark/count_on.png</file>
         <file>icons/dark/daytime_off.png</file>
@@ -77,6 +46,10 @@
         <file>icons/dark/global_off.png</file>
         <file>icons/dark/global_on.png</file>
         <file>icons/dark/help.png</file>
+        <file>icons/dark/list_add.png</file>
+        <file>icons/dark/list_down.png</file>
+        <file>icons/dark/list_rem.png</file>
+        <file>icons/dark/list_up.png</file>
         <file>icons/dark/log_off.png</file>
         <file>icons/dark/log_on.png</file>
         <file>icons/dark/mk_lines.png</file>
@@ -99,19 +72,176 @@
         <file>icons/dark/view_on.png</file>
         <file>icons/dark/warn_off.png</file>
         <file>icons/dark/warn_on.png</file>
+        <file>icons/dark_native/checking.png</file>
+        <file>icons/dark_native/conf_blacklists.png</file>
+        <file>icons/dark_native/conf_charts.png</file>
+        <file>icons/dark_native/conf_control.png</file>
+        <file>icons/dark_native/conf_databases.png</file>
+        <file>icons/dark_native/conf_defaults.png</file>
+        <file>icons/dark_native/conf_dialogs.png</file>
+        <file>icons/dark_native/conf_format.png</file>
+        <file>icons/dark_native/conf_general.png</file>
+        <file>icons/dark_native/conf_logs.png</file>
+        <file>icons/dark_native/conf_off.png</file>
+        <file>icons/dark_native/conf_on.png</file>
+        <file>icons/dark_native/conf_path.png</file>
+        <file>icons/dark_native/conf_textbrowser.png</file>
+        <file>icons/dark_native/conf_warnlists.png</file>
+        <file>icons/dark_native/conf_webservers.png</file>
+        <file>icons/dark_native/conf_window.png</file>
+        <file>icons/dark_native/count_off.png</file>
+        <file>icons/dark_native/count_on.png</file>
+        <file>icons/dark_native/daytime_off.png</file>
+        <file>icons/dark_native/daytime_on.png</file>
+        <file>icons/dark_native/down.png</file>
+        <file>icons/dark_native/draw.png</file>
+        <file>icons/dark_native/global_off.png</file>
+        <file>icons/dark_native/global_on.png</file>
+        <file>icons/dark_native/help.png</file>
+        <file>icons/dark_native/list_add.png</file>
+        <file>icons/dark_native/list_down.png</file>
+        <file>icons/dark_native/list_rem.png</file>
+        <file>icons/dark_native/list_up.png</file>
+        <file>icons/dark_native/log_off.png</file>
+        <file>icons/dark_native/log_on.png</file>
+        <file>icons/dark_native/mk_lines.png</file>
+        <file>icons/dark_native/mk_size.png</file>
+        <file>icons/dark_native/mk_speed.png</file>
+        <file>icons/dark_native/mk_time.png</file>
+        <file>icons/dark_native/refresh.png</file>
+        <file>icons/dark_native/relational_off.png</file>
+        <file>icons/dark_native/relational_on.png</file>
+        <file>icons/dark_native/save.png</file>
+        <file>icons/dark_native/show_file.png</file>
+        <file>icons/dark_native/speed_off.png</file>
+        <file>icons/dark_native/speed_on.png</file>
+        <file>icons/dark_native/up.png</file>
+        <file>icons/dark_native/view_off.png</file>
+        <file>icons/dark_native/view_on.png</file>
+        <file>icons/dark_native/warn_off.png</file>
+        <file>icons/dark_native/warn_on.png</file>
+        <file>icons/dialogs/err.png</file>
+        <file>icons/dialogs/info.png</file>
+        <file>icons/dialogs/quest.png</file>
+        <file>icons/dialogs/warn.png</file>
+        <file>icons/err.png</file>
+        <file>icons/light/checkbox_checked.png</file>
+        <file>icons/light/checkbox_semichecked.png</file>
+        <file>icons/light/checkbox_unchecked.png</file>
+        <file>icons/light/checking.png</file>
+        <file>icons/light/combobox_arrow.png</file>
+        <file>icons/light/conf_blacklists.png</file>
+        <file>icons/light/conf_charts.png</file>
+        <file>icons/light/conf_control.png</file>
+        <file>icons/light/conf_databases.png</file>
+        <file>icons/light/conf_defaults.png</file>
+        <file>icons/light/conf_dialogs.png</file>
+        <file>icons/light/conf_format.png</file>
+        <file>icons/light/conf_general.png</file>
+        <file>icons/light/conf_logs.png</file>
+        <file>icons/light/conf_off.png</file>
+        <file>icons/light/conf_on.png</file>
+        <file>icons/light/conf_path.png</file>
+        <file>icons/light/conf_textbrowser.png</file>
+        <file>icons/light/conf_warnlists.png</file>
+        <file>icons/light/conf_webservers.png</file>
+        <file>icons/light/conf_window.png</file>
+        <file>icons/light/count_off.png</file>
+        <file>icons/light/count_on.png</file>
+        <file>icons/light/daytime_off.png</file>
+        <file>icons/light/daytime_on.png</file>
+        <file>icons/light/down.png</file>
+        <file>icons/light/draw.png</file>
+        <file>icons/light/global_off.png</file>
+        <file>icons/light/global_on.png</file>
+        <file>icons/light/help.png</file>
+        <file>icons/light/list_add.png</file>
+        <file>icons/light/list_down.png</file>
+        <file>icons/light/list_rem.png</file>
+        <file>icons/light/list_up.png</file>
+        <file>icons/light/log_off.png</file>
+        <file>icons/light/log_on.png</file>
+        <file>icons/light/mk_lines.png</file>
+        <file>icons/light/mk_size.png</file>
+        <file>icons/light/mk_speed.png</file>
+        <file>icons/light/mk_time.png</file>
+        <file>icons/light/radiobutton_checked.png</file>
+        <file>icons/light/radiobutton_unchecked.png</file>
+        <file>icons/light/refresh.png</file>
+        <file>icons/light/relational_off.png</file>
+        <file>icons/light/relational_on.png</file>
+        <file>icons/light/save.png</file>
+        <file>icons/light/show_file.png</file>
+        <file>icons/light/speed_off.png</file>
+        <file>icons/light/speed_on.png</file>
+        <file>icons/light/spinbox_add.png</file>
+        <file>icons/light/spinbox_sub.png</file>
+        <file>icons/light/up.png</file>
+        <file>icons/light/view_off.png</file>
+        <file>icons/light/view_on.png</file>
+        <file>icons/light/warn_off.png</file>
+        <file>icons/light/warn_on.png</file>
+        <file>icons/light_native/checking.png</file>
+        <file>icons/light_native/conf_blacklists.png</file>
+        <file>icons/light_native/conf_charts.png</file>
+        <file>icons/light_native/conf_control.png</file>
+        <file>icons/light_native/conf_databases.png</file>
+        <file>icons/light_native/conf_defaults.png</file>
+        <file>icons/light_native/conf_dialogs.png</file>
+        <file>icons/light_native/conf_format.png</file>
+        <file>icons/light_native/conf_general.png</file>
+        <file>icons/light_native/conf_logs.png</file>
+        <file>icons/light_native/conf_off.png</file>
+        <file>icons/light_native/conf_on.png</file>
+        <file>icons/light_native/conf_path.png</file>
+        <file>icons/light_native/conf_textbrowser.png</file>
+        <file>icons/light_native/conf_warnlists.png</file>
+        <file>icons/light_native/conf_webservers.png</file>
+        <file>icons/light_native/conf_window.png</file>
+        <file>icons/light_native/count_off.png</file>
+        <file>icons/light_native/count_on.png</file>
+        <file>icons/light_native/daytime_off.png</file>
+        <file>icons/light_native/daytime_on.png</file>
+        <file>icons/light_native/down.png</file>
+        <file>icons/light_native/draw.png</file>
+        <file>icons/light_native/global_off.png</file>
+        <file>icons/light_native/global_on.png</file>
+        <file>icons/light_native/help.png</file>
+        <file>icons/light_native/list_add.png</file>
+        <file>icons/light_native/list_down.png</file>
+        <file>icons/light_native/list_rem.png</file>
+        <file>icons/light_native/list_up.png</file>
+        <file>icons/light_native/log_off.png</file>
+        <file>icons/light_native/log_on.png</file>
+        <file>icons/light_native/mk_lines.png</file>
+        <file>icons/light_native/mk_size.png</file>
+        <file>icons/light_native/mk_speed.png</file>
+        <file>icons/light_native/mk_time.png</file>
+        <file>icons/light_native/refresh.png</file>
+        <file>icons/light_native/relational_off.png</file>
+        <file>icons/light_native/relational_on.png</file>
+        <file>icons/light_native/save.png</file>
+        <file>icons/light_native/show_file.png</file>
+        <file>icons/light_native/speed_off.png</file>
+        <file>icons/light_native/speed_on.png</file>
+        <file>icons/light_native/up.png</file>
+        <file>icons/light_native/view_off.png</file>
+        <file>icons/light_native/view_on.png</file>
+        <file>icons/light_native/warn_off.png</file>
+        <file>icons/light_native/warn_on.png</file>
         <file>icons/midtone/down.png</file>
-        <file>icons/midtone/up.png</file>
         <file>icons/midtone/save.png</file>
         <file>icons/midtone/spinbox_add.png</file>
         <file>icons/midtone/spinbox_sub.png</file>
+        <file>icons/midtone/up.png</file>
     </qresource>
     <qresource prefix="/flags">
+        <file>flags/br.png</file>
         <file>flags/es.png</file>
         <file>flags/fr.png</file>
-        <file>flags/it.png</file>
-        <file>flags/br.png</file>
-        <file>flags/jp.png</file>
         <file>flags/gb.png</file>
+        <file>flags/it.png</file>
+        <file>flags/jp.png</file>
     </qresource>
     <qresource prefix="/games">
         <file>games/crisscross/o.png</file>

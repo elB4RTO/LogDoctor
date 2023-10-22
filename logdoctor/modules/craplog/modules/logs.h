@@ -1,5 +1,6 @@
-#ifndef LOGS_H
-#define LOGS_H
+#ifndef LOGDOCTOR__CRAPLOG__LOGS_H
+#define LOGDOCTOR__CRAPLOG__LOGS_H
+
 
 #include "lib.h"
 
@@ -18,11 +19,12 @@ namespace LogOps
     \return The resulting file type
     \see LogType, deepTypeCheck(), FormatOps::LogsFormat
 */
-const LogType defineFileType(
+LogType defineFileType(
     const std::vector<std::string>& lines,
     const LogsFormat& format
 );
 
 } // namespace LogOps
 
-#endif // LOGS_H
+
+#endif // LOGDOCTOR__CRAPLOG__LOGS_H

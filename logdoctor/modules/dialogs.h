@@ -1,5 +1,6 @@
-#ifndef DIALOGS_H
-#define DIALOGS_H
+#ifndef LOGDOCTOR__DIALOGS_H
+#define LOGDOCTOR__DIALOGS_H
+
 
 #include <QWidget>
 
@@ -14,7 +15,7 @@ class DialogSec : public QObject
     Q_OBJECT
 
 public:
-    explicit DialogSec();
+    explicit DialogSec() = default;
 
     /////////////////
     //// GENERIC ////
@@ -80,22 +81,22 @@ public:
     static void errSqlDriverNotFound( const QString& driver, QWidget* parent=nullptr );
 
     //! Database file not found
-    static const bool choiceDatabaseNotFound( const QString& db_name, QWidget* parent=nullptr );
+    static bool choiceDatabaseNotFound( const QString& db_name, QWidget* parent=nullptr );
 
     //! A database contains an unexpected table
-    static const bool choiceDatabaseWrongTable( const QString& db_name, const QString& table_name, QWidget* parent=nullptr );
+    static bool choiceDatabaseWrongTable( const QString& db_name, const QString& table_name, QWidget* parent=nullptr );
 
     //! A table is missing from the database
-    static const bool choiceDatabaseMissingTable( const QString& db_name, const QString& table_name, QWidget* parent=nullptr );
+    static bool choiceDatabaseMissingTable( const QString& db_name, const QString& table_name, QWidget* parent=nullptr );
 
     //! A database contains a table with an unexpected column
-    static const bool choiceDatabaseWrongColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent=nullptr );
+    static bool choiceDatabaseWrongColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent=nullptr );
 
     //! A column is missing from table of the database
-    static const bool choiceDatabaseMissingColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent=nullptr );
+    static bool choiceDatabaseMissingColumn( const QString& db_name, const QString& table_name, const QString& column_name, QWidget* parent=nullptr );
 
     //! A column has an unexpected type parameter
-    static const bool choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget* parent=nullptr );
+    static bool choiceDatabaseWrongDataType( const QString& db_name, const QString& table_name, const QString& column_name, const QString& data_type, QWidget* parent=nullptr );
 
     //! The database path does not exists
     static void errDatabaseNotFound( const QString& db_name, QWidget* parent=nullptr );
@@ -129,7 +130,7 @@ public:
     //// LOGS-LIST ////
 
     //! A log file which has been selected to be used is no more available
-    static const int choiceSelectedFileNotFound( const QString& file, QWidget* parent=nullptr );
+    static int choiceSelectedFileNotFound( const QString& file, QWidget* parent=nullptr );
 
     //! The list of files to parse is empty
     static void msgNoFileToParse( QWidget* parent=nullptr );
@@ -152,19 +153,19 @@ public:
     //// LOG HASHES ////
 
     //! A selected log file has already been used
-    static const int choiceFileAlreadyUsed( const QString& msg, QWidget* parent=nullptr );
+    static int choiceFileAlreadyUsed( const QString& msg, QWidget* parent=nullptr );
 
     //! A selected log file appears twice in the selection
-    static const int choiceDuplicateFile( const QString& msg, QWidget* parent=nullptr );
+    static int choiceDuplicateFile( const QString& msg, QWidget* parent=nullptr );
 
     ///////////////////
     //// LOGS SIZE ////
 
     //! The size of a log file which has been selected to be parsed exceeds the warning size
-    static const int choiceFileSizeWarning( const QString& msg, QWidget* parent=nullptr );
+    static int choiceFileSizeWarning( const QString& msg, QWidget* parent=nullptr );
 
     //! The size of a log file which has been selected to be displayed exceeds the warning size
-    static const bool choiceFileSizeWarning2( const QString& msg, QWidget* parent=nullptr );
+    static bool choiceFileSizeWarning2( const QString& msg, QWidget* parent=nullptr );
 
     //! The total size of the selected files to parse is greater than the available free memory of the system
     static void msgNotEnoughMemory( const QString& msg, QWidget* parent=nullptr );
@@ -238,19 +239,19 @@ public:
     //// CHOICES ////
 
     //! An entry was supposed to be a directory but it's not
-    static const bool choiceDirNotDir( const QString& path, QWidget* parent=nullptr );
+    static bool choiceDirNotDir( const QString& path, QWidget* parent=nullptr );
 
     //! An entry was supposed to be a file but it's not
-    static const bool choiceFileNotFile( const QString& path, QWidget* parent=nullptr );
+    static bool choiceFileNotFile( const QString& path, QWidget* parent=nullptr );
 
 
 
 private:
 
     //! Asks to renew a database
-    static const bool choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent=nullptr );
+    static bool choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent=nullptr );
 
 };
 
 
-#endif // DIALOGS_H
+#endif // LOGDOCTOR__DIALOGS_H

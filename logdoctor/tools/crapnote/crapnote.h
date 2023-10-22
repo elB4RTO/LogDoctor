@@ -1,12 +1,14 @@
-#ifndef CRAPNOTE_H
-#define CRAPNOTE_H
+#ifndef LOGDOCTOR__CRAPNOTE_H
+#define LOGDOCTOR__CRAPNOTE_H
+
 
 #include <QWidget>
 
 
 namespace Ui {
-class Crapnote;
+    class Crapnote;
 }
+
 
 //! Crapnote
 /*!
@@ -18,7 +20,6 @@ class Crapnote : public QWidget
 
 public:
     explicit Crapnote( QWidget* parent=nullptr );
-    ~Crapnote();
 
     //! Sets the given font
     void setTextFont( const QFont& font );
@@ -40,9 +41,10 @@ private slots:
 
 
 private:
-    Ui::Crapnote* ui;
+    QSharedPointer<Ui::Crapnote> ui;
 
     int font_size{ 17 };
 };
 
-#endif // CRAPNOTE_H
+
+#endif // LOGDOCTOR__CRAPNOTE_H

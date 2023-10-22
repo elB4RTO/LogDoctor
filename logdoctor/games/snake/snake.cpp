@@ -19,7 +19,7 @@ Snake::Snake( const bool is_adversary )
 {
     if ( is_adversary ) {
         // only AI needs to keep track of the field state
-        this->field_map.fill( std::array<Tile, 16ul>({Entity::N, 0}) );
+        this->field_map.fill( std::array<Tile, 16ul>{} );
     }
 }
 
@@ -34,7 +34,7 @@ const QPixmap& Snake::getHeadImage() const
 }
 
 
-const bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const
+bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const
 {
     if ( this->size() > 0 ) {
         size_t i{ 0 };
@@ -78,7 +78,7 @@ void Snake::grow( const bool is_borning )
     const Direction d{  tail.direction };
     const Direction ld{ tail.prev_direction };
     if ( is_borning ) {
-        // one tile back
+        // one tile behind
         switch ( d ) {
             case Direction::UP:
                 y ++;
@@ -408,7 +408,7 @@ void Snake::move( const Snake& adv_snake, const unsigned food_x, const unsigned 
 }
 
 
-const Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const
+Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const
 {
     float results[]{ 1.f, 1.f, 1.f, 1.f };
     bool keep_current{ false };
@@ -577,7 +577,7 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
                     } else if ( adv_snake.direction() == this->head_direction ) {
                         if ( this->inTileAdv( x+2u, y )
                           || this->inTileAdv( x-2u, y ) ) {
-                            if ( !rand()%this->aggressiveness ) {
+                            if ( rand()%this->aggressiveness == 0 ) {
                                 aggressive_way = 1u;
                             }
                         }
@@ -596,7 +596,7 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
                     } else if ( adv_snake.direction() == this->head_direction ) {
                         if ( this->inTileAdv( x+2u, y )
                           || this->inTileAdv( x-2u, y ) ) {
-                            if ( !rand()%this->aggressiveness ) {
+                            if ( rand()%this->aggressiveness == 0 ) {
                                 aggressive_way = 1u;
                             }
                         }
@@ -615,7 +615,7 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
                     } else if ( adv_snake.direction() == this->head_direction ) {
                         if ( this->inTileAdv( x, y+2u )
                           || this->inTileAdv( x, y-2u ) ) {
-                            if ( !rand()%this->aggressiveness ) {
+                            if ( rand()%this->aggressiveness == 0 ) {
                                 aggressive_way = 1u;
                             }
                         }
@@ -634,7 +634,7 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
                     } else if ( adv_snake.direction() == this->head_direction ) {
                         if ( this->inTileAdv( x, y+2u )
                           || this->inTileAdv( x, y-2u ) ) {
-                            if ( !rand()%this->aggressiveness ) {
+                            if ( rand()%this->aggressiveness == 0 ) {
                                 aggressive_way = 1u;
                             }
                         }
@@ -759,7 +759,7 @@ void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, cons
 }
 
 
-const bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
+bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
 {
     if ( x < 16 && y < 16 ) {
         switch ( this->field_map.at(x).at(y).entity ) {
@@ -772,7 +772,7 @@ const bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
     return false;
 }
 
-const bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned steps ) const
+bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned steps ) const
 {
     switch ( this->field_map.at(x).at(y).entity ) {
         case Entity::S:
@@ -780,14 +780,14 @@ const bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const uns
             if ( this->field_map.at(x).at(y).s_index > steps ) {
                 return true;
             }
+            return false;
         default:
             return false;
     }
-    return false;
 }
 
 
-const std::array<unsigned,8> Snake::checkAround( const Direction& direction, const unsigned x, const unsigned y ) const
+std::array<unsigned,8> Snake::checkAround( const Direction& direction, const unsigned x, const unsigned y ) const
 {
     std::array<unsigned,8> around{
         0u, 0u, 0u,
@@ -859,7 +859,7 @@ const std::array<unsigned,8> Snake::checkAround( const Direction& direction, con
 }
 
 
-const unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y, const Direction& start_direction ) const
+unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y, const Direction& start_direction ) const
 {
     bool result{false}, check{false}, check_clockwise{false};
     Direction direction{ start_direction };
@@ -951,7 +951,7 @@ const unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y
         };
 
 
-        const auto tried_already = [&] (const unsigned side_, const unsigned front_, const bool update)
+        const auto tried_already = [&] (const unsigned side_, const unsigned front_, const bool update) -> bool
         {
             bool tried{ false };
             unsigned x, y;
@@ -985,7 +985,7 @@ const unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y
         };
 
 
-        const auto tile_blocked = [&] (const unsigned side_, const unsigned front_)
+        const auto tile_blocked = [&] (const unsigned side_, const unsigned front_) -> bool
         {
             bool blocked{ false };
             unsigned x, y, x_, y_;

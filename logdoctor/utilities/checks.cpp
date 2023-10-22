@@ -27,7 +27,7 @@ namespace /*private*/
   \return The result of the check: 0 if failed with an error, 1 if all the integrity checks passed, 2 if a rebuild is needed
   \see checkCollectionDatabase(), checkHashesDatabase(), newCollectionDatabase(), newHashesDatabase()
 */
-const int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
+int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
 {
     bool make_new{false}, ok{true};
     QSqlQuery query{ QSqlQuery( db ) };
@@ -94,7 +94,7 @@ const int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
   \return The result of the operation
   \see checkCollectionDatabase(), checkHashesDatabase()
 */
-const bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
+bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
 {
     bool successful{ true };
     // create the database
@@ -161,7 +161,7 @@ const bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, cons
   \return The result of the operation
   \see checkCollectionDatabase(), checkHashesDatabase()
 */
-const bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
+bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
 {
     bool successful{ true };
     // create the database
@@ -205,11 +205,11 @@ const bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const st
 } // namespace (private)
 
 
-const bool checkCollectionDatabase( const std::string& db_path )
+bool checkCollectionDatabase( const std::string& db_path )
 {
     bool make_new{false}, ok{true};
     std::error_code err;
-    QString err_msg{ "" };
+    QString err_msg;
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) ) };
     const std::vector<QString> ws_names{ "apache", "nginx", "iis" };
 
@@ -375,11 +375,11 @@ const bool checkCollectionDatabase( const std::string& db_path )
 }
 
 
-const bool checkHashesDatabase( const std::string& db_path )
+bool checkHashesDatabase( const std::string& db_path )
 {
     bool make_new{false}, ok{true};
     std::error_code err;
-    QString err_msg{ "" };
+    QString err_msg;
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1 ) ) };
     const std::vector<QString> ws_names { "apache", "nginx", "iis" };
 
@@ -513,7 +513,7 @@ const bool checkHashesDatabase( const std::string& db_path )
 }
 
 
-const bool checkDatabaseFile( const std::string& db_path, const QString& db_name )
+bool checkDatabaseFile( const std::string& db_path, const QString& db_name )
 {
     if ( ! IOutils::exists( db_path ) ) {
         // path doesn't exists

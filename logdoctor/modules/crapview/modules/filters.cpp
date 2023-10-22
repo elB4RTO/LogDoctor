@@ -9,7 +9,7 @@
 namespace FilterOps
 {
 
-const std::optional<QString> parseNull( const QString& filter_str, const bool to_clean )
+std::optional<QString> parseNull( const QString& filter_str, const bool to_clean )
 {
     std::optional<QString> result;
     const QString aux{ ( to_clean )
@@ -26,7 +26,7 @@ const std::optional<QString> parseNull( const QString& filter_str, const bool to
 }
 
 
-const std::optional<QString> parseBooleanFilter( const QString& filter_str )
+std::optional<QString> parseBooleanFilter( const QString& filter_str )
 {
     using opt_t = std::optional<QString>;
     opt_t result;
@@ -61,7 +61,7 @@ const std::optional<QString> parseBooleanFilter( const QString& filter_str )
 }
 
 
-const std::optional<QString> parseNumericFilter( const QString& filter_str )
+std::optional<QString> parseNumericFilter( const QString& filter_str )
 {
     using opt_t = std::optional<QString>;
     opt_t result;
@@ -140,7 +140,7 @@ const std::optional<QString> parseNumericFilter( const QString& filter_str )
 }
 
 
-const std::optional<QString> parseTextualFilter( const QString& filter_str )
+std::optional<QString> parseTextualFilter( const QString& filter_str )
 {
     using opt_t =std::optional<QString>;
     opt_t result;

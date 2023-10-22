@@ -1,5 +1,6 @@
-#ifndef CRAPLOG_H
-#define CRAPLOG_H
+#ifndef LOGDOCTOR__CRAPLOG_H
+#define LOGDOCTOR__CRAPLOG_H
+
 
 #include <QtCharts>
 
@@ -28,7 +29,7 @@ public:
     //// DIALOGS ////
 
     //! Returns the Dialogs level
-    const int getDialogsLevel() const;
+    int getDialogsLevel() const;
 
     //! Sets the new Dialogs level
     void setDialogsLevel( const int new_level );
@@ -68,7 +69,7 @@ public:
     /*!
         \return The Web Server ID
     */
-    const unsigned getCurrentWSID() const;
+    unsigned getCurrentWSID() const;
 
     //! Uses the current Web Server to set the relative logs format
     /*!
@@ -113,7 +114,7 @@ public:
         \return Wheter it does respect the criterions or not
         \see LogName
     */
-    const bool isFileNameValid( const std::string& name ) const;
+    bool isFileNameValid( const std::string& name ) const;
 
 
     ///////////////////
@@ -131,7 +132,7 @@ public:
         \return The number of files actually in the list
         \see logs_list
     */
-    const size_t getLogsListSize() const;
+    size_t getLogsListSize() const;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -150,7 +151,7 @@ public:
         \return Wheter the given file name has been found in the list
         \see LogFile, logs_list
     */
-    const bool setLogFileSelected( const QString& file_name );
+    bool setLogFileSelected( const QString& file_name );
 
     //! Sets all files in the list as unselected
     /*!
@@ -169,7 +170,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processApacheFormatString()
     */
-    const bool setApacheLogFormat( const std::string& format_string );
+    bool setApacheLogFormat( const std::string& format_string );
 
     //! Sets the Nginx LogsFormat from the given format string
     /*!
@@ -177,7 +178,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processNginxFormatString()
     */
-    const bool setNginxLogFormat( const std::string& format_string );
+    bool setNginxLogFormat( const std::string& format_string );
 
     //! Sets the IIS LogsFormat from the given format string
     /*!
@@ -186,7 +187,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processIisFormatString()
     */
-    const bool setIisLogFormat( const std::string& format_string, const int log_module );
+    bool setIisLogFormat( const std::string& format_string, const int log_module );
 
     //! Returns the logs format string for the given Web Server
     /*!
@@ -211,7 +212,7 @@ public:
         \throw WebServerException
         \see FormatOps::getApacheLogSample(), FormatOps::getNginxLogSample(), FormatOps::getIisLogSample()
     */
-    const QString getLogsFormatSample( const unsigned& web_server_id ) const;
+    QString getLogsFormatSample( const unsigned& web_server_id ) const;
 
 
 
@@ -219,7 +220,7 @@ public:
     //// WARNING SIZE ////
 
     //! Returns the currently set warning size for the log files
-    const size_t getWarningSize() const;
+    size_t getWarningSize() const;
 
     //! Sets the new warning size for the log files
     void setWarningSize( const size_t new_size );
@@ -241,7 +242,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
@@ -250,7 +251,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    const bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
 
     //! Sets the relative blacklist to be used or not
     /*!
@@ -349,7 +350,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position up in the relative list
     /*!
@@ -358,7 +359,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position down in the relative list
     /*!
@@ -367,7 +368,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
     //! Moves an item one position down in the relative list
     /*!
@@ -376,7 +377,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    const int warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
 
 
     //////////////
@@ -388,26 +389,26 @@ public:
         \return Whether the checks has been successful or not
         \throw GenericException
     */
-    const bool checkStuff();
+    bool checkStuff();
 
     //! Returns whether the database has been edited or not during the process
-    const bool isParsing() const;
+    bool isParsing() const;
 
     //! Returns whether the database has been edited or not during the process
-    const bool editedDatabase() const;
+    bool editedDatabase() const;
 
 
     //////////////////////
     //// PERFORMANCES ////
 
     //! Returns the total logs size
-    const size_t getParsedSize();
+    size_t getParsedSize();
 
     //! Returns the parsed logs lines
-    const size_t getParsedLines();
+    size_t getParsedLines();
 
     //! Returns the speed on parsing logs
-    const QString getParsingSpeed();
+    QString getParsingSpeed();
 
     //! Builds and draws the chart to be displayed in the main window
     /*!
@@ -487,7 +488,7 @@ private:
     void hireAsyncWorker() const;
 
     //! Defines whether it's worth it working async or not
-    const bool shouldWorkAsync() const;
+    bool shouldWorkAsync() const;
 
 
     //////////////////////
@@ -527,7 +528,7 @@ private:
     std::unordered_map<unsigned, std::unordered_map<int, BWlist>> blacklists;
     std::unordered_map<unsigned, std::unordered_map<int, BWlist>> warnlists;
 
-    //! Ssnitizes an item removing the unwanted elements
+    //! Sanitizes an item removing the unwanted elements
     /*!
         Called when adding a new item to a list
         \param log_field_id The ID of the log field
@@ -536,7 +537,7 @@ private:
         \throw BWlistException, GenericException
         \see BWlist
     */
-    const std::string sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const;
+    std::string sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const;
 
 
     ////////////////////
@@ -591,4 +592,4 @@ private:
 };
 
 
-#endif // CRAPLOG_H
+#endif // LOGDOCTOR__CRAPLOG_H

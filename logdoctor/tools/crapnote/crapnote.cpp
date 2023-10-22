@@ -12,11 +12,6 @@ Crapnote::Crapnote(QWidget *parent)
     ui->setupUi(this);
 }
 
-Crapnote::~Crapnote()
-{
-    delete ui;
-}
-
 
 void Crapnote::setTextFont( const QFont& font )
 {

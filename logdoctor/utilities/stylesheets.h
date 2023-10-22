@@ -1,7 +1,6 @@
-#ifndef STYLESHEETS_H
-#define STYLESHEETS_H
+#ifndef LOGDOCTOR__UTILITIES__STYLESHEETS_H
+#define LOGDOCTOR__UTILITIES__STYLESHEETS_H
 
-#include <unordered_map>
 
 class QString;
 
@@ -16,11 +15,10 @@ namespace StyleSec
 //! Provides the requested stylesheet
 /*!
     \param stylesheet Will hold the stylesheet
-    \param icons_theme The theme selected for the Icons
-    \param theme_id The theme selected for the Window
 */
-void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id );
+void getStyleSheet( QString& stylesheet );
 
 } // namespace StyleSec
 
-#endif // STYLESHEETS_H
+
+#endif // LOGDOCTOR__UTILITIES__STYLESHEETS_H

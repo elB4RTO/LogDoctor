@@ -1,5 +1,6 @@
-#ifndef FILTERS_H
-#define FILTERS_H
+#ifndef LOGDOCTOR__CRAPVIEW__FILTERS_H
+#define LOGDOCTOR__CRAPVIEW__FILTERS_H
+
 
 #include <optional>
 
@@ -22,7 +23,7 @@ namespace FilterOps
     \param to_clean Whether the filter_str should be cleaned before parsing (trimmed and uppercased)
     \return The resulting filter to apply to the query, if valid
 */
-const std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true );
+std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true );
 
 //! Parses a filter for a database field with boolean type
 /*!
@@ -32,7 +33,7 @@ const std::optional<QString> parseNull( const QString& filter_str, const bool to
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-const std::optional<QString> parseBooleanFilter( const QString& filter_str );
+std::optional<QString> parseBooleanFilter( const QString& filter_str );
 
 //! Parses a filter for a log field with integer type
 /*!
@@ -43,7 +44,7 @@ const std::optional<QString> parseBooleanFilter( const QString& filter_str );
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-const std::optional<QString> parseNumericFilter( const QString& filter_str );
+std::optional<QString> parseNumericFilter( const QString& filter_str );
 
 //! Parses a filter for a log field with text type
 /*!
@@ -52,8 +53,9 @@ const std::optional<QString> parseNumericFilter( const QString& filter_str );
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-const std::optional<QString> parseTextualFilter( const QString& filter_str );
+std::optional<QString> parseTextualFilter( const QString& filter_str );
 
 }
 
-#endif // FILTERS_H
+
+#endif // LOGDOCTOR__CRAPVIEW__FILTERS_H

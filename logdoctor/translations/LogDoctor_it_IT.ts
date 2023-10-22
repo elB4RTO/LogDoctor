@@ -109,18 +109,6 @@ Sei sicuro di avere la versione originale di LogDoctor?
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation>È avvenuto un errore durante l&apos;analisi:
-marcatore iniziale non trovato</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation>È avvenuto un errore durante l&apos;analisi:
-marcatore finale non trovato</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation>È avvenuto un errore durante l&apos;analisi:
 versione malformata</translation>
@@ -136,6 +124,12 @@ versione upstream malformata</translation>
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
         <translation>È disponibile una nuova versione!
 Visita il repository di LogDoctor e segui le istruzioni su come aggiornare</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation>È avvenuto un errore durante l&apos;analisi:
+marcatore non trovato</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ Visita il repository di LogDoctor e segui le istruzioni su come aggiornare</tran
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation>Ignora</translation>
@@ -712,6 +706,13 @@ per favore segui le istruzioni nella pagina del repository</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -978,10 +979,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
         <translation>Generale</translation>
     </message>
     <message>
-        <source>General settings</source>
-        <translation>Impostazioni generali</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>Finestra</translation>
     </message>
@@ -1000,10 +997,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>None (System)</source>
-        <translation>Nessuno (Sistema)</translation>
     </message>
     <message>
         <source>Dark</source>
@@ -1099,18 +1092,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
         <translation>Grafici</translation>
     </message>
     <message>
-        <source>Default (Light)</source>
-        <translation>Predefinito (Chiaro)</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation>Sabbia</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation>Ceruleo</translation>
-    </message>
-    <message>
         <source>Theme to use for the Charts</source>
         <translation>Tema da usare per i Grafici</translation>
     </message>
@@ -1175,10 +1156,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
         <translation>Logs</translation>
     </message>
     <message>
-        <source>Logs related settings</source>
-        <translation>Impostazioni relative ai logs</translation>
-    </message>
-    <message>
         <source>Defaults</source>
         <translation>Predefiniti</translation>
     </message>
@@ -1189,10 +1166,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
     <message>
         <source>Control</source>
         <translation>Controllo</translation>
-    </message>
-    <message>
-        <source>Options about the log files usage control</source>
-        <translation>Opzioni riguardo l&apos;uso dei files di log</translation>
     </message>
     <message>
         <source>Usage control</source>
@@ -1213,10 +1186,6 @@ per favore segui le istruzioni nella pagina del repository</translation>
     <message>
         <source>Apache2</source>
         <translation>Apache2</translation>
-    </message>
-    <message>
-        <source>Configure Apache2 specific options</source>
-        <translation>Configura le opzioni specifiche per Apache2</translation>
     </message>
     <message>
         <source>Logs folder</source>
@@ -1301,16 +1270,8 @@ I campi marcati come &apos;DISCARDED&apos; sono stati applicati correttamente, m
         <translation>Nginx</translation>
     </message>
     <message>
-        <source>Configure Nginx specific options</source>
-        <translation>Configura le opzioni specifiche per Nginx</translation>
-    </message>
-    <message>
         <source>IIS</source>
         <translation>IIS</translation>
-    </message>
-    <message>
-        <source>Configure IIS specific options</source>
-        <translation>Configura le opzioni specifiche per IIS</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1413,28 +1374,12 @@ Per i numeri, usa &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation>Seleziona/deseleziona tutti i files</translation>
     </message>
     <message>
-        <source>Candy</source>
-        <translation>Caramella</translation>
-    </message>
-    <message>
-        <source>Herb</source>
-        <translation>Erba</translation>
-    </message>
-    <message>
-        <source>Powder</source>
-        <translation>Polvere</translation>
-    </message>
-    <message>
         <source>warnlist</source>
         <translation>warnlist</translation>
     </message>
     <message>
         <source>blacklist</source>
         <translation>blacklist</translation>
-    </message>
-    <message>
-        <source>Ash</source>
-        <translation>Cenere</translation>
     </message>
     <message>
         <source>Games</source>
@@ -1457,10 +1402,6 @@ Per i numeri, usa &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation>Gioca a Snake</translation>
     </message>
     <message>
-        <source>Auto (Default)</source>
-        <translation>Auto (Default)</translation>
-    </message>
-    <message>
         <source>Light</source>
         <translation>Chiaro</translation>
     </message>
@@ -1473,6 +1414,18 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
     <message>
         <source>Icons</source>
         <translation>Icone</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation>Percorso</translation>
+    </message>
+    <message>
+        <source>Native</source>
+        <translation>Nativo</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation>Auto</translation>
     </message>
 </context>
 <context>

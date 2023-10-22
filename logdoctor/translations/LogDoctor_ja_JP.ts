@@ -98,10 +98,10 @@
 Your version is beyond the current upstream version
 Are you running the original LogDoctor?
 Please visit the LogDoctor&apos;s repository and get a fresh version of it</source>
-        <translation>あなたは未来からのバージョンを実行しています!
+        <translation type="unfinished">あなたは未来からのバージョンを実行しています!
 お使いのバージョンは現在のアップストリーム バージョンを超えています
 元の LogDoctor を実行していますか?
-LogDoctor のリポジトリにアクセスして、新しいバージョンを入手してください。</translation>
+LogDoctor のリポジトリにアクセスして、新しいバージョンを入手してください</translation>
     </message>
     <message>
         <source>Version check failed</source>
@@ -109,29 +109,27 @@ LogDoctor のリポジトリにアクセスして、新しいバージョンを�
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">解析中にエラーが発生しました: 初期バージョン マークが見つかりません</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">解析中にエラーが発生しました: 最終バージョン マークが見つかりません</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
-        <translation type="unfinished">解析中にエラーが発生しました: バージョンの形式が正しくありません</translation>
+        <translation type="unfinished">解析中にエラーが発生しました:
+バージョンの形式が正しくありません</translation>
     </message>
     <message>
         <source>An error occured while comparing:
 malformed upstream version</source>
-        <translation type="unfinished">比較中にエラーが発生しました: アップストリーム バージョンの形式が正しくありません</translation>
+        <translation type="unfinished">比較中にエラーが発生しました:
+アップストリーム バージョンの形式が正しくありません</translation>
     </message>
     <message>
         <source>A new version is available!
 Please visit LogDoctor&apos;s git repository and follow the instruction about how to update</source>
-        <translation>新しいバージョンが利用可能です!
-LogDoctor の git リポジトリにアクセスし、更新方法に関する指示に従ってください。</translation>
+        <translation type="unfinished">新しいバージョンが利用可能です!
+LogDoctor の git リポジトリにアクセスし、更新方法に関する指示に従ってください</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">解析中にエラーが発生しました:
+バージョン マークが見つかりません</translation>
     </message>
 </context>
 <context>
@@ -169,7 +167,7 @@ LogDoctor の git リポジトリにアクセスし、更新方法に関する�
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">無視</translation>
@@ -708,6 +706,13 @@ please follow the instruction on the repository page</source>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -974,10 +979,6 @@ please follow the instruction on the repository page</source>
         <translation type="unfinished">全般的</translation>
     </message>
     <message>
-        <source>General settings</source>
-        <translation type="unfinished">一般設定</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation type="unfinished">窓</translation>
     </message>
@@ -996,10 +997,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Theme</source>
         <translation type="unfinished">テーマ</translation>
-    </message>
-    <message>
-        <source>None (System)</source>
-        <translation type="unfinished">なし（システム）</translation>
     </message>
     <message>
         <source>Dark</source>
@@ -1094,18 +1091,6 @@ please follow the instruction on the repository page</source>
         <translation type="unfinished">チャート</translation>
     </message>
     <message>
-        <source>Default (Light)</source>
-        <translation type="unfinished">デフォルト（ライト）</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">砂</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">セルリアン</translation>
-    </message>
-    <message>
         <source>Theme to use for the Charts</source>
         <translation type="unfinished">チャートに使用するテーマ</translation>
     </message>
@@ -1170,10 +1155,6 @@ please follow the instruction on the repository page</source>
         <translation type="unfinished">ログ</translation>
     </message>
     <message>
-        <source>Logs related settings</source>
-        <translation type="unfinished">ログ関連の設定</translation>
-    </message>
-    <message>
         <source>Defaults</source>
         <translation type="unfinished">デフォルト</translation>
     </message>
@@ -1184,10 +1165,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Control</source>
         <translation type="unfinished">コントロール</translation>
-    </message>
-    <message>
-        <source>Options about the log files usage control</source>
-        <translation type="unfinished">ログファイルの使用制御に関するオプション</translation>
     </message>
     <message>
         <source>Usage control</source>
@@ -1208,10 +1185,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Apache2</source>
         <translation type="unfinished">アパッチ2</translation>
-    </message>
-    <message>
-        <source>Configure Apache2 specific options</source>
-        <translation type="unfinished">Apache2 固有のオプションを構成する</translation>
     </message>
     <message>
         <source>Logs folder</source>
@@ -1296,16 +1269,8 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation type="unfinished">ニンクス</translation>
     </message>
     <message>
-        <source>Configure Nginx specific options</source>
-        <translation type="unfinished">Nginx 固有のオプションを構成する</translation>
-    </message>
-    <message>
         <source>IIS</source>
         <translation type="unfinished">IIS</translation>
-    </message>
-    <message>
-        <source>Configure IIS specific options</source>
-        <translation type="unfinished">IIS 固有のオプションを構成する</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1408,28 +1373,12 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">すべてのファイルを選択/選択解除</translation>
     </message>
     <message>
-        <source>Candy</source>
-        <translation type="unfinished">あめ</translation>
-    </message>
-    <message>
-        <source>Herb</source>
-        <translation type="unfinished">ハーブ</translation>
-    </message>
-    <message>
-        <source>Powder</source>
-        <translation type="unfinished">粉</translation>
-    </message>
-    <message>
         <source>warnlist</source>
         <translation type="unfinished">警告リスト</translation>
     </message>
     <message>
         <source>blacklist</source>
         <translation type="unfinished">ブラックリスト</translation>
-    </message>
-    <message>
-        <source>Ash</source>
-        <translation type="unfinished">灰</translation>
     </message>
     <message>
         <source>Games</source>
@@ -1452,10 +1401,6 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">スネークをプレイ</translation>
     </message>
     <message>
-        <source>Auto (Default)</source>
-        <translation type="unfinished">自動 (デフォルト)</translation>
-    </message>
-    <message>
         <source>Light</source>
         <translation type="unfinished">光</translation>
     </message>
@@ -1468,6 +1413,18 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     <message>
         <source>Icons</source>
         <translation type="unfinished">アイコン</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation type="unfinished">パス</translation>
+    </message>
+    <message>
+        <source>Native</source>
+        <translation type="unfinished">生れつき</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation type="unfinished">自動</translation>
     </message>
 </context>
 <context>
@@ -1660,7 +1617,7 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     </message>
     <message>
         <source>URI</source>
-        <translation>URI</translation>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Query</source>

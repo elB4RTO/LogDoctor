@@ -1,5 +1,6 @@
-#ifndef SNAKE_GAME_H
-#define SNAKE_GAME_H
+#ifndef LOGDOCTOR__GAMES__SNAKE__GAME_H
+#define LOGDOCTOR__GAMES__SNAKE__GAME_H
+
 
 #include "snake.h"
 #include "food.h"
@@ -17,6 +18,7 @@ namespace Ui {
     class SnakeGame;
 }
 
+
 //! Snake
 /*!
     A reproduction of the timeless classic game
@@ -26,8 +28,7 @@ class SnakeGame : public QWidget
     Q_OBJECT
 
 public:
-    explicit SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent=nullptr );
-    ~SnakeGame();
+    explicit SnakeGame( const QFont& term_font, QWidget* parent=nullptr );
 
 
 private slots:
@@ -43,7 +44,7 @@ private slots:
 
 
 private:
-    Ui::SnakeGame* ui;
+    QSharedPointer<Ui::SnakeGame> ui;
 
     ////////////////////
     //// KEY EVENTS ////
@@ -78,7 +79,7 @@ private:
     //// GAME ////
 
     //! Enumerates the available game modes
-    enum GameMode {
+    enum class GameMode {
         Classic, //!< Classic snake game
         Hunt,    //!< Game variant in which the food moves too
         Battle   //!< Game variant in which you play against another snake
@@ -137,4 +138,5 @@ private:
 
 };
 
-#endif // SNAKE_GAME_H
+
+#endif // LOGDOCTOR__GAMES__SNAKE__GAME_H

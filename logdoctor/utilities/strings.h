@@ -1,5 +1,6 @@
-#ifndef STRINGS_H
-#define STRINGS_H
+#ifndef LOGDOCTOR__UTILITIES__STRINGS_H
+#define LOGDOCTOR__UTILITIES__STRINGS_H
+
 
 #include <string>
 #include <vector>
@@ -18,7 +19,7 @@ namespace StringOps
     \param flag The character to find
     \return The number of occurrences
 */
-const size_t count( std::string_view str, const char flag );
+size_t count( std::string_view str, const char flag );
 
 //! Count the occurrences of the given sequence in the given string
 /*!
@@ -26,7 +27,7 @@ const size_t count( std::string_view str, const char flag );
     \param flag The string to find
     \return The number of occurrences
 */
-const size_t count( std::string_view str, std::string_view flag );
+size_t count( std::string_view str, std::string_view flag );
 
 //! Checks whether character is numeric
 /*!
@@ -34,14 +35,14 @@ const size_t count( std::string_view str, std::string_view flag );
     \return The result of the check
     \see isNumeric()
 */
-const bool isNumeric( const char& chr );
+bool isNumeric( const char& chr );
 
 //! Checks whether a string only contains numeric characters
 /*!
     \param str The target string
     \return The result of the check
 */
-const bool isNumeric( std::string_view str );
+bool isNumeric( std::string_view str );
 
 //! Checks whether a character is alphabetic
 /*!
@@ -49,14 +50,14 @@ const bool isNumeric( std::string_view str );
     \return The result of the check
     \see isAlphabetic()
 */
-const bool isAlphabetic( const char& chr );
+bool isAlphabetic( const char& chr );
 
 //! Checks whether a string only contains alphabetic characters
 /*!
     \param str The target string
     \return The result of the check
 */
-const bool isAlphabetic( std::string_view str );
+bool isAlphabetic( std::string_view str );
 
 //! Checks whether a character is alpha-numeric
 /*!
@@ -64,21 +65,21 @@ const bool isAlphabetic( std::string_view str );
     \return The result of the check
     \see isAlnum
 */
-const bool isAlnum( const char& chr );
+bool isAlnum( const char& chr );
 
 //! Checks whether a string only contains alpha-numeric characters
 /*!
     \param str The target string
     \return The result of the check
 */
-const bool isAlnum( std::string_view str );
+bool isAlnum( std::string_view str );
 
 //! Checks whether a string only contains hexadecimal characters
 /*!
     \param str The target character
     \return The result of the check
 */
-const bool isHex( const char& chr );
+bool isHex( const char& chr );
 
 //! Checks whether a string contains only IPv4/IPv6 chars
 /*!
@@ -87,7 +88,7 @@ const bool isHex( const char& chr );
     \param str The target string
     \return The result of the check
 */
-const bool isIP( std::string_view str );
+bool isIP( std::string_view str );
 
 //! Checks if a string starts with the given sequence
 /*!
@@ -95,7 +96,7 @@ const bool isIP( std::string_view str );
     \param flag The character to search for
     \return The result of the check
 */
-const bool startsWith( std::string_view str, const char flag );
+bool startsWith( std::string_view str, const char flag );
 
 //! Checks if a string starts with the given sequence
 /*!
@@ -104,7 +105,7 @@ const bool startsWith( std::string_view str, const char flag );
     \param flag The sequence to search for
     \return The result of the check
 */
-const bool startsWith( std::string_view str, std::string_view flag );
+bool startsWith( std::string_view str, std::string_view flag );
 
 //! Checks if a string ends with the given sequence
 /*!
@@ -112,7 +113,7 @@ const bool startsWith( std::string_view str, std::string_view flag );
     \param flag The character to search for
     \return The result of the check
 */
-const bool endsWith( std::string_view str, const char flag );
+bool endsWith( std::string_view str, const char flag );
 
 //! Checks if a string ends with the given sequence
 /*!
@@ -121,7 +122,7 @@ const bool endsWith( std::string_view str, const char flag );
     \param flag The sequence to search for
     \return The result of the check
 */
-const bool endsWith( std::string_view str, std::string_view flag );
+bool endsWith( std::string_view str, std::string_view flag );
 
 //! Checks if a string contains the given sequence
 /*!
@@ -129,7 +130,7 @@ const bool endsWith( std::string_view str, std::string_view flag );
     \param flag The sequence to search for
     \return The result of the check
 */
-const bool contains( std::string_view str, std::string_view flag );
+bool contains( std::string_view str, std::string_view flag );
 
 //!  Strips the given character from both the left and the right side of a string
 /*!
@@ -137,7 +138,7 @@ const bool contains( std::string_view str, std::string_view flag );
     \param chr The character to strip away
     \return The result string
 */
-const std::string strip( const std::string& str, const char chr );
+std::string strip( const std::string& str, const char chr );
 
 //!  Strips the given characters from both the left and the right side of a string
 /*!
@@ -145,7 +146,7 @@ const std::string strip( const std::string& str, const char chr );
     \param chars The characters to strip away
     \return The result string
 */
-const std::string strip( const std::string& str, std::string_view chars=" \n\t\b\r\v" );
+std::string strip( const std::string& str, std::string_view chars=" \n\t\b\r\v" );
 
 //!  Strips the given character from the left side of a string
 /*!
@@ -153,7 +154,7 @@ const std::string strip( const std::string& str, std::string_view chars=" \n\t\b
     \param chr The character to strip away
     \return The result string
 */
-const std::string lstrip( const std::string& str, const char chr );
+std::string lstrip( const std::string& str, const char chr );
 
 //!  Strips the given characters from the left side of a string
 /*!
@@ -161,7 +162,7 @@ const std::string lstrip( const std::string& str, const char chr );
     \param chars The characters to strip away
     \return The result string
 */
-const std::string lstrip( const std::string& str, std::string_view chars=" \n\t\b\r\v" );
+std::string lstrip( const std::string& str, std::string_view chars=" \n\t\b\r\v" );
 
 //! Strips the given character from the right side of a string
 /*!
@@ -169,7 +170,7 @@ const std::string lstrip( const std::string& str, std::string_view chars=" \n\t\
     \param chr The character to strip away
     \return The result string
 */
-const std::string rstrip( const std::string &str, const char chr );
+std::string rstrip( const std::string &str, const char chr );
 
 //! Strips the given characters from the right side of a string
 /*!
@@ -177,7 +178,7 @@ const std::string rstrip( const std::string &str, const char chr );
     \param chars The characters to strip away
     \return The result string
 */
-const std::string rstrip( const std::string& str, std::string_view chars=" \n\t\b\r\v" );
+std::string rstrip( const std::string& str, std::string_view chars=" \n\t\b\r\v" );
 
 //! Strips everything from a string starting from the left side untill the delimiter is found (a.k.a. cut)
 /*!
@@ -187,7 +188,7 @@ const std::string rstrip( const std::string& str, std::string_view chars=" \n\t\
     \param consecutives Whether to strip all the occurrences of the delimiter if they're consecutive, only applies if inclusive
     \return The result string
 */
-const std::string lstripUntil( const std::string& str, const char delim, const bool inclusive=true, const bool consecutives=true );
+std::string lstripUntil( const std::string& str, const char delim, const bool inclusive=true, const bool consecutives=true );
 
 //! Splits a string using a separator
 /*!
@@ -230,22 +231,23 @@ void splitrip( std::vector<std::string>& list, const std::string& target_str, st
     \param replace The sequence to be used to replace the target
     \return The result string
 */
-const std::string replace( std::string_view str, std::string_view target, std::string_view replace );
+std::string replace( std::string_view str, std::string_view target, std::string_view replace );
 
 //! Converts a string to upper case
 /*!
     \param str The target string
     \return The result string
 */
-const std::string toUpper( std::string_view str );
+std::string toUpper( std::string_view str );
 
 //! Converts a string to lower case
 /*!
     \param str The target string
     \return The result string
 */
-const std::string toLower( std::string_view str );
+std::string toLower( std::string_view str );
 
 } // namespace StringOps
 
-#endif // STRINGS_H
+
+#endif // LOGDOCTOR__UTILITIES__STRINGS_H

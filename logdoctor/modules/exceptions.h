@@ -1,5 +1,6 @@
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef LOGDOCTOR__EXCEPTIONS_H
+#define LOGDOCTOR__EXCEPTIONS_H
+
 
 #include <QString>
 
@@ -17,6 +18,7 @@ public:
 
 private:
     QString msg;
+    using std::exception::what;
 };
 
 
@@ -30,7 +32,8 @@ public:
     /*const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
+    using std::exception::what;*/
 };
 
 
@@ -45,6 +48,7 @@ public:
 
 private:
     QString msg;
+    using std::exception::what;
 };
 
 
@@ -59,6 +63,7 @@ public:
 
 private:
     QString msg;
+    using std::exception::what;
 };
 
 
@@ -72,7 +77,8 @@ public:
     /*const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
+    using std::exception::what;*/
 };
 
 
@@ -86,7 +92,9 @@ public:
     /*const QString& what();
 
 private:
-    QString msg;*/
+    QString msg;
+    using std::exception::what;*/
 };
 
-#endif // EXCEPTIONS_H
+
+#endif // LOGDOCTOR__EXCEPTIONS_H

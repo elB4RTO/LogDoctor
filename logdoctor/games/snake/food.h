@@ -1,5 +1,6 @@
-#ifndef FOOD_H
-#define FOOD_H
+#ifndef LOGDOCTOR__GAMES__SNAKE__FOOD_H
+#define LOGDOCTOR__GAMES__SNAKE__FOOD_H
+
 
 #include <QPixmap>
 
@@ -10,20 +11,20 @@ class QGraphicsPixmapItem;
 class Food
 {
 public:
-    explicit Food( const bool& can_move=false );
+    explicit Food( const bool can_move=false );
     explicit Food( const Food& other );
     const Food& operator=( const Food& other );
 
     //! Returns the position on the X-axis
-    const unsigned X() const;
+    unsigned X() const;
     //! Returns the position on the Y-axis
-    const unsigned Y() const;
+    unsigned Y() const;
 
     //!< Returns the image
     QGraphicsPixmapItem* getImageItem() const;
 
     //! Checks whether is there a part of the snake in the given position
-    const bool inTile( const unsigned x, const unsigned y ) const;
+    bool inTile( const unsigned x, const unsigned y ) const;
 
     //! Spawns the egg/rat in a new position
     void spawn( const Snake& snake, const Snake& snake_ );
@@ -54,4 +55,5 @@ private:
     unsigned y;
 };
 
-#endif // FOOD_H
+
+#endif // LOGDOCTOR__GAMES__SNAKE__FOOD_H

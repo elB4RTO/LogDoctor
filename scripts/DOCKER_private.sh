@@ -32,7 +32,7 @@ then
 fi
 
 # Build the project
-cmake --build ./ --target all
+cmake --build ./ --target all -j$(nproc)
 if [[ "$?" == "0" ]]
 then
 	# compiled succesfully

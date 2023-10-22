@@ -15,7 +15,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
     const bool wide_lines{ TB.getWideLinesUsage() };
     // enrich the text
     rich_content.clear();
-    rich_content.reserve( content.size()*2ul );
+    rich_content.reserve( static_cast<int>(content.size()*2ul) );
     rich_content += "<!DOCTYPE html><html><head></head><body";
     if ( color_scheme > 0 ) {
         rich_content += QString(" style=\"background:%1; color:%2\"")

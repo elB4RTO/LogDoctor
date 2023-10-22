@@ -1,7 +1,7 @@
 FROM debian:latest
 
 RUN apt-get update
-RUN apt-get install -y build-essential cmake zlib1g-dev qttools5-dev-tools libqt5core5a libqt5gui5 libqt5widgets5 libqt5charts5-dev libqt5sql5 libqt5network5 qttools5-dev
+RUN apt-get install -y build-essential cmake zlib1g-dev qt6-tools-dev qt6-tools-dev-tools qt6-charts-dev libqt6core6 libqt6gui6 libqt6widgets6 libqt6charts6 libqt6sql6 libqt6network6
 RUN apt-get clean
 
 WORKDIR /tmp/logdoctor
@@ -12,6 +12,6 @@ RUN bash -c "scripts/DOCKER_private.sh"
 WORKDIR /
 RUN rm -rf /tmp/logdoctor
 
-LABEL logdoctor.version=2.05
+LABEL logdoctor.version=3.00
 
 ENTRYPOINT /usr/bin/logdoctor

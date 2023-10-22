@@ -1,5 +1,5 @@
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef LOGDOCTOR__UTILITIES__MEMORY_H
+#define LOGDOCTOR__UTILITIES__MEMORY_H
 
 
 //! MemOps
@@ -15,8 +15,9 @@ namespace{ using size_t = unsigned long; }
 /*!
     \return The amount of memory in Bytes
 */
-const size_t availableMemory();
+size_t availableMemory();
 
 } // namespace MemOps
 
-#endif // MEMORY_H
+
+#endif // LOGDOCTOR__UTILITIES__MEMORY_H

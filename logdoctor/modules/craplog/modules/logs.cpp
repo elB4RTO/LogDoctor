@@ -20,7 +20,7 @@ namespace /*private*/
     \return Whether the line respects the format or not
     \see defineFileType(), FormatOps::LogsFormat
 */
-const bool deepTypeCheck( const std::string& line, const LogsFormat& format )
+bool deepTypeCheck( const std::string& line, const LogsFormat& format )
 {
     size_t n_sep{ format.separators.size() },
            n_sep_found{0}, n_blank_sep{0},
@@ -112,7 +112,7 @@ const bool deepTypeCheck( const std::string& line, const LogsFormat& format )
 } // namespace (private)
 
 
-const LogType defineFileType( const std::vector<std::string>& lines, const LogsFormat& format )
+LogType defineFileType( const std::vector<std::string>& lines, const LogsFormat& format )
 {
     if ( lines.empty() ) {
         // empty file, already handled by craplog, should be unreachable

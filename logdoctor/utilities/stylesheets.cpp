@@ -1,33 +1,450 @@
 
 #include "stylesheets.h"
 
+#include "globals/global_configs.h"
+
 #include "modules/exceptions.h"
 
 #include <QString>
+
+#include <unordered_map>
+
+
+namespace /*private*/
+{
+
+enum StyleId : uint32_t {
+    TEXT_PRIMARY,
+    TEXT_DISABLED,
+    TOOLTIPS_BASE,
+    TOOLTIPS_TEXT,
+    TOOLTIPS_BORDER,
+    MENU_TEXT,
+    MENU_BASE,
+    MENU_BASE_HOVER,
+    MENU_DROPDOWN_BASE,
+    MENU_DROPDOWN_BASE_SELECTION,
+    MENU_DROPDOWN_TEXT,
+    WINDOW_BASE_PRIMARY,
+    WINDOW_BASE_SECONDARY,
+    SECTIONS_LOG_HOVER,
+    SECTIONS_VIEW_HOVER,
+    SECTIONS_CONF_HOVER,
+    BORDER_PRIMARY,
+    BORDER_SECONDARY,
+    BORDER_TERTIARY,
+    SEPARATORS_BASE,
+    SEPARATORS_BORDER,
+    BUTTONS_BASE,
+    BUTTONS_BASE_HOVER,
+    BUTTONS_BASE_FLAT,
+    BUTTONS_BASE_DISABLED,
+    HELP_BUTTONS_BASE,
+    HELP_BUTTONS_BASE_HOVER,
+    WEB_SERVERS_BUTTONS_BASE,
+    WEB_SERVERS_BUTTONS_BASE_FLAT,
+    WEB_SERVERS_BUTTONS_BASE_DISABLED,
+    WEB_SERVERS_BUTTONS_BORDER_FLAT,
+    WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
+    WEB_SERVERS_BUTTONS_TEXT_FLAT,
+    WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
+    WEB_SERVERS_BUTTONS_TEXT_DISABLED,
+    STATS_SWITCH_BUTTONS,
+    STATS_SWITCH_BUTTONS_FLAT,
+    STATS_SWITCH_BUTTONS_FLAT_HOVER,
+    STATS_GLOBALS_FRAMES,
+    BOXES_BASE_PRIMARY,
+    BOXES_BASE_SECONDARY,
+    BOXES_BASE_DISABLED,
+    BOXES_BASE_SELECTION,
+    BOXES_DECO,
+    LINEDIT_TEXT,
+    LINEDIT_BASE,
+    LINEDIT_BASE_FOCUS,
+    LINEDIT_BASE_SELECTION,
+    LINEDIT_BASE_DISABLED,
+    TABLES_HEADER,
+    TABLES_HEADER_HOVER,
+    TABLES_HEADER_SEPARATOR,
+    TABLES_BASE,
+    TABLES_BASE_DISABLED,
+    TABLES_BASE_SELECTION,
+    TABLES_GRIDLINE,
+    TABLES_TEXT_SELECTION,
+    TABLES_DECO,
+    CHARTS_CONTOUR,
+    TEXTBROWSER_TEXT,
+    TEXTBROWSER_BASE,
+    TEXTBROWSER_BORDER,
+    TEXTBROWSER_TEXT_SELECTION,
+    TEXTBROWSER_BASE_SELECTION,
+    SCROLLBAR_BASE,
+    SCROLLBAR_HANDLER,
+    SCROLLBAR_CONTROLS,
+    SLIDER_HANDLER,
+    SLIDER_BAR_ACTIVE,
+    SLIDER_BAR_INACTIVE,
+    SLIDER_BAR_ACTIVE_BORDER,
+    SLIDER_HANDLER_BORDER,
+    SLIDER_HANDLER_BORDER_HOVER,
+    BWLISTS_BUTTONS_BASE,
+    BWLISTS_BUTTONS_BASE_HOVER,
+    BWLISTS_BUTTONS_BASE_DISABLED,
+    BWLISTS_BUTTONS_BASE_FLAT,
+    CONFIGS_TREE_BASE
+};
+
+using StyleMap = std::unordered_map<StyleId, QString>;
+
+const StyleMap makeStyleMap()
+{
+    switch ( GlobalConfigs::window_theme ) {
+        case WindowTheme::Light:
+            return {
+                {TEXT_PRIMARY,
+                    "rgb( 22, 11, 0 )"},
+                {TEXT_DISABLED,
+                    "rgb( 128, 128, 128 )"},
+                {TOOLTIPS_BASE,
+                    "rgb( 30, 35, 27 )"},
+                {TOOLTIPS_TEXT,
+                    "rgb( 220, 227, 213 )"},
+                {TOOLTIPS_BORDER,
+                    "rgb( 170, 176, 160 )"},
+                {MENU_TEXT,
+                    "rgb( 32, 32, 32 )"},
+                {MENU_BASE,
+                    "rgb( 200, 200, 200 )"},
+                {MENU_BASE_HOVER,
+                    "rgb( 210, 210, 210 )"},
+                {MENU_DROPDOWN_BASE,
+                    "rgb( 112, 112, 112 )"},
+                {MENU_DROPDOWN_BASE_SELECTION,
+                    "rgb( 128, 128, 128 )"},
+                {MENU_DROPDOWN_TEXT,
+                    "rgb( 250, 250, 255 )"},
+                {WINDOW_BASE_PRIMARY,
+                    "rgb( 250, 250, 255 )"},
+                {WINDOW_BASE_SECONDARY,
+                    "rgb( 230, 230, 230 )"},
+                {SECTIONS_LOG_HOVER,
+                    "rgb( 255, 188, 218 )"}, // 196, 7, 93
+                {SECTIONS_VIEW_HOVER,
+                    "rgb( 184, 255, 203 )"}, // 0, 226, 60
+                {SECTIONS_CONF_HOVER,
+                    "rgb( 179, 228, 255 )"}, // 0, 165, 255
+                {BORDER_PRIMARY,
+                    "rgb( 230, 230, 230 )"},
+                {BORDER_SECONDARY,
+                    "rgb( 124, 119, 119 )"},
+                {BORDER_TERTIARY,
+                    "rgb( 88, 80, 80 )"},
+                {SEPARATORS_BASE,
+                    "rgb( 88, 80, 80 )"},
+                {SEPARATORS_BORDER,
+                    "rgb( 250, 250, 255 )"},
+                {BUTTONS_BASE,
+                    "rgb( 99, 188, 255 )"},
+                {BUTTONS_BASE_HOVER,
+                    "rgb( 123, 201, 255 )"},
+                {BUTTONS_BASE_FLAT,
+                    "rgb( 200, 219, 238 )"},
+                {BUTTONS_BASE_DISABLED,
+                    "rgb( 200, 219, 238 )"},
+                {HELP_BUTTONS_BASE,
+                    "rgb( 230, 80, 80 )"},
+                {HELP_BUTTONS_BASE_HOVER,
+                    "rgb( 230, 112, 80 )"},
+                {WEB_SERVERS_BUTTONS_BASE,
+                    "rgb( 146, 234, 146 )"},
+                {WEB_SERVERS_BUTTONS_BASE_FLAT,
+                    "transparent"},
+                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
+                    "rgb( 246, 246, 246 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
+                    "rgb( 177, 177, 177 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
+                    "rgb( 146, 234, 146 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
+                    "rgb( 92, 92, 92 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
+                    "rgb( 40, 31, 7 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
+                    "rgb( 192, 192, 192 )"},
+                {STATS_SWITCH_BUTTONS,
+                    "rgb( 230, 80, 80 )"},
+                {STATS_SWITCH_BUTTONS_FLAT,
+                    "rgb( 250, 250, 255 )"},
+                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
+                    "rgb( 230, 230, 230 )"},
+                {STATS_GLOBALS_FRAMES,
+                    "rgb( 242, 242, 242 )"},
+                {BOXES_BASE_PRIMARY,
+                    "rgb( 230, 230, 230 )"},
+                {BOXES_BASE_SECONDARY,
+                    "rgb( 220, 220, 220 )"},
+                {BOXES_BASE_DISABLED,
+                    "rgb( 200, 200, 200 )"},
+                {BOXES_BASE_SELECTION,
+                    "rgb( 123, 201, 255 )"},
+                {BOXES_DECO,
+                    "rgb( 99, 188, 255 )"},
+                {LINEDIT_TEXT,
+                    "rgb( 88, 80, 80 )"},
+                {LINEDIT_BASE,
+                    "rgb( 236, 236, 236 )"},
+                {LINEDIT_BASE_FOCUS,
+                    "rgb( 230, 230, 230 )"},
+                {LINEDIT_BASE_SELECTION,
+                    "rgb( 197, 191, 185 )"},
+                {LINEDIT_BASE_DISABLED,
+                    "rgb( 247, 247, 247 )"},
+                {TABLES_HEADER,
+                    "rgb( 220, 220, 220 )"},
+                {TABLES_HEADER_HOVER,
+                    "rgb( 201, 239, 255 )"},
+                {TABLES_HEADER_SEPARATOR,
+                    "rgb( 170, 170, 170 )"},
+                {TABLES_BASE,
+                    "rgb( 242, 242, 242 )"},
+                {TABLES_BASE_DISABLED,
+                    "rgb( 247, 247, 247 )"},
+                {TABLES_BASE_SELECTION,
+                    "rgb( 201, 239, 255 )"},
+                {TABLES_GRIDLINE,
+                    "rgb( 170, 170, 170 )"},
+                {TABLES_TEXT_SELECTION,
+                    "rgb( 22, 11, 0 )"},
+                {TABLES_DECO,
+                    "rgb( 99, 188, 255 )"},
+                {CHARTS_CONTOUR,
+                    "rgb( 220, 220, 220 )"},
+                {TEXTBROWSER_TEXT,
+                    "rgb( 88, 80, 80 )"},
+                {TEXTBROWSER_BASE,
+                    "rgb( 236, 236, 236 )"},
+                {TEXTBROWSER_BORDER,
+                    "rgb( 236, 236, 236 )"},
+                {TEXTBROWSER_TEXT_SELECTION,
+                    "rgb( 68, 60, 60 )"},
+                {TEXTBROWSER_BASE_SELECTION,
+                    "rgb( 207, 201, 195 )"},
+                {SCROLLBAR_BASE,
+                    "transparent"},
+                {SCROLLBAR_HANDLER,
+                    "rgb( 40, 185, 40 )"},
+                {SCROLLBAR_CONTROLS,
+                    "transparent"},
+                {SLIDER_HANDLER,
+                    "rgb( 100, 91, 87 )"},
+                {SLIDER_BAR_ACTIVE,
+                    "rgb( 99, 188, 255 )"},
+                {SLIDER_BAR_INACTIVE,
+                    "rgb( 210, 203, 199 )"},
+                {SLIDER_BAR_ACTIVE_BORDER,
+                    "rgb( 123, 201, 255 )"},
+                {SLIDER_HANDLER_BORDER,
+                    "rgb( 220, 211, 187 )"},
+                {SLIDER_HANDLER_BORDER_HOVER,
+                    "rgb( 123, 201, 255 )"},
+                {BWLISTS_BUTTONS_BASE,
+                    "rgb( 99, 188, 255 )"},
+                {BWLISTS_BUTTONS_BASE_HOVER,
+                    "rgb( 123, 201, 255 )"},
+                {BWLISTS_BUTTONS_BASE_DISABLED,
+                    "rgb( 200, 219, 238 )"},
+                {BWLISTS_BUTTONS_BASE_FLAT,
+                    "rgb( 247, 247, 247 )"},
+                {CONFIGS_TREE_BASE,
+                    "rgb( 245, 245, 247 )"}
+            };
+            break;
+        case WindowTheme::Dark:
+            return {
+                {TEXT_PRIMARY,
+                    "rgb( 248, 248, 248 )"},
+                {TEXT_DISABLED,
+                    "rgb( 128, 128, 128 )"},
+                {TOOLTIPS_BASE,
+                    "rgb( 160, 160, 160 )"},
+                {TOOLTIPS_TEXT,
+                    "rgb( 32, 32, 32 )"},
+                {TOOLTIPS_BORDER,
+                    "rgb( 144, 144, 144 )"},
+                {MENU_TEXT,
+                    "rgb( 174, 174, 174 )"},
+                {MENU_BASE,
+                    "rgb( 49, 54, 58 )"},
+                {MENU_BASE_HOVER,
+                    "rgb( 40, 45, 49 )"},
+                {MENU_DROPDOWN_BASE,
+                    "rgb( 144, 144, 144 )"},
+                {MENU_DROPDOWN_BASE_SELECTION,
+                    "rgb( 128, 128, 128 )"},
+                {MENU_DROPDOWN_TEXT,
+                    "rgb( 13, 14, 15 )"},
+                {WINDOW_BASE_PRIMARY,
+                    "rgb( 13, 14, 15 )"},
+                {WINDOW_BASE_SECONDARY,
+                    "rgb( 27, 30, 33 )"},
+                {SECTIONS_LOG_HOVER,
+                    "rgb( 82, 0, 37 )"}, // 196, 7, 93
+                {SECTIONS_VIEW_HOVER,
+                    "rgb( 0, 69, 18 )"}, // 0, 226, 60
+                {SECTIONS_CONF_HOVER,
+                    "rgb( 0, 57, 89 )"}, // 0, 165, 255
+                {BORDER_PRIMARY,
+                    "rgb( 40, 45, 49 )"},
+                {BORDER_SECONDARY,
+                    "rgb( 92, 92, 92 )"},
+                {BORDER_TERTIARY,
+                    "rgb( 128, 128, 128 )"},
+                {SEPARATORS_BASE,
+                    "rgb( 96, 96, 96 )"},
+                {SEPARATORS_BORDER,
+                    "rgb( 13, 14, 15 )"},
+                {BUTTONS_BASE,
+                    "rgb( 10, 155, 10 )"},
+                {BUTTONS_BASE_HOVER,
+                    "rgb( 33, 162, 33 )"},
+                {BUTTONS_BASE_FLAT,
+                    "rgb( 21, 71, 21 )"},
+                {BUTTONS_BASE_DISABLED,
+                    "rgb( 21, 71, 21 )"},
+                {HELP_BUTTONS_BASE,
+                    "rgb( 221, 75, 14 )"},
+                {HELP_BUTTONS_BASE_HOVER,
+                    "rgb( 221, 113, 14 )"},
+                {WEB_SERVERS_BUTTONS_BASE,
+                    "rgb( 0, 121, 115 )"},
+                {WEB_SERVERS_BUTTONS_BASE_FLAT,
+                    "transparent"},
+                {WEB_SERVERS_BUTTONS_BASE_DISABLED,
+                    "rgb( 18, 20, 22 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT,
+                    "rgb( 54, 54, 54 )"},
+                {WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER,
+                    "rgb( 0, 121, 115 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT,
+                    "rgb( 108, 108, 108 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER,
+                    "rgb( 188, 188, 188 )"},
+                {WEB_SERVERS_BUTTONS_TEXT_DISABLED,
+                    "rgb( 42, 42, 42 )"},
+                {STATS_SWITCH_BUTTONS,
+                    "rgb( 221, 75, 14 )"},
+                {STATS_SWITCH_BUTTONS_FLAT,
+                    "rgb( 13, 14, 15 )"},
+                {STATS_SWITCH_BUTTONS_FLAT_HOVER,
+                    "rgb( 27, 30, 33 )"},
+                {STATS_GLOBALS_FRAMES,
+                    "rgb( 29, 29, 29 )"},
+                {BOXES_BASE_PRIMARY,
+                    "rgb( 39, 42, 45 )"},
+                {BOXES_BASE_SECONDARY,
+                    "rgb( 45, 48, 51 )"},
+                {BOXES_BASE_DISABLED,
+                    "rgb( 27, 30, 33 )"},
+                {BOXES_BASE_SELECTION,
+                    "rgb( 33, 162, 33 )"},
+                {BOXES_DECO,
+                    "rgb( 10, 155, 10 )"},
+                {LINEDIT_TEXT,
+                    "rgb( 210, 210, 210 )"},
+                {LINEDIT_BASE,
+                    "rgb( 41, 44, 44 )"},
+                {LINEDIT_BASE_FOCUS,
+                    "rgb( 57, 60, 60 )"},
+                {LINEDIT_BASE_SELECTION,
+                    "rgb( 47, 99, 47 )"},
+                {LINEDIT_BASE_DISABLED,
+                    "rgb( 18, 20, 22 )"},
+                {TABLES_HEADER,
+                    "rgb( 50, 52, 50 )"},
+                {TABLES_HEADER_HOVER,
+                    "rgb( 43, 82, 43 )"},
+                {TABLES_HEADER_SEPARATOR,
+                    "rgb( 80, 80, 80 )"},
+                {TABLES_BASE,
+                    "rgb( 29, 29, 29 )"},
+                {TABLES_BASE_DISABLED,
+                    "rgb( 18, 20, 22 )"},
+                {TABLES_BASE_SELECTION,
+                    "rgb( 43, 82, 43 )"},
+                {TABLES_GRIDLINE,
+                    "rgb( 80, 80, 80 )"},
+                {TABLES_TEXT_SELECTION,
+                    "rgb( 248, 248, 248 )"},
+                {TABLES_DECO,
+                    "rgb( 10, 155, 10 )"},
+                {CHARTS_CONTOUR,
+                    "rgb( 50, 52, 50 )"},
+                {TEXTBROWSER_TEXT,
+                    "rgb( 210, 210, 210 )"},
+                {TEXTBROWSER_BASE,
+                    "rgb( 32, 32, 32 )"},
+                {TEXTBROWSER_BORDER,
+                    "rgb( 32, 32, 32 )"},
+                {TEXTBROWSER_TEXT_SELECTION,
+                    "rgb( 248, 248, 248 )"},
+                {TEXTBROWSER_BASE_SELECTION,
+                    "rgb( 64, 64, 64 )"},
+                {SCROLLBAR_BASE,
+                    "transparent"},
+                {SCROLLBAR_HANDLER,
+                    "rgb( 69, 177, 255 )"},
+                {SCROLLBAR_CONTROLS,
+                    "transparent"},
+                {SLIDER_HANDLER,
+                    "rgb( 112, 112, 112 )"},
+                {SLIDER_BAR_ACTIVE,
+                    "rgb( 10, 155, 10 )"},
+                {SLIDER_BAR_INACTIVE,
+                    "rgb( 64, 64, 64 )"},
+                {SLIDER_BAR_ACTIVE_BORDER,
+                    "rgb( 33, 162, 33 )"},
+                {SLIDER_HANDLER_BORDER,
+                    "rgb( 128, 128, 128 )"},
+                {SLIDER_HANDLER_BORDER_HOVER,
+                    "rgb( 33, 162, 33 )"},
+                {BWLISTS_BUTTONS_BASE,
+                    "rgb( 10, 155, 10 )"},
+                {BWLISTS_BUTTONS_BASE_HOVER,
+                    "rgb( 33, 162, 33 )"},
+                {BWLISTS_BUTTONS_BASE_DISABLED,
+                    "rgb( 21, 71, 21 )"},
+                {BWLISTS_BUTTONS_BASE_FLAT,
+                    "rgb( 18, 20, 22 )"},
+                {CONFIGS_TREE_BASE,
+                    "rgb( 20, 21, 22 )"}
+            };
+            break;
+        default:
+            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            break;
+    }
+}
+
+} // namespace (private)
 
 
 namespace StyleSec
 {
 
-namespace /*private*/
+void getStyleSheet( QString& stylesheet )
 {
-
-//! Builds the final stylesheet upon the generic model
-/*!
-    \param ss Will hold the stylesheet
-    \param style The key-value pairs to be applied at the generic
-    \param theme The theme selected for the Icons
-*/
-void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString> &style, const QString& theme )
-{
-    ss= ////////////////
+    const QString icons_theme{ GlobalConfigs::icons_set };
+    const StyleMap style{ makeStyleMap() };
+    stylesheet =
+        ////////////////
         //// SHARED ////
         "* {"
-        "   color: "+style.at("text_primary")+";"
+        "   color: "+style.at(TEXT_PRIMARY)+";"
         "}"
         // frames
         "QFrame,"
         "QWidget {"
+        "   border: 0px;"
         "   background-color: transparent;"
         "}"
         // tab widgets
@@ -45,9 +462,12 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "}"
         // tooltips
         "QToolTip {"
-        "   border: 1px solid "+style.at("tooltips_border")+";"
-        "   color: "+style.at("tooltips_text")+";"
-        "   background-color: "+style.at("tooltips_base")+";"
+        "   padding: 2px;"
+        "   border: 1px solid "+style.at(TOOLTIPS_BORDER)+";"
+        "   border-radius: 6px;"
+        "   color: "+style.at(TOOLTIPS_TEXT)+";"
+        "   background-color: "+style.at(TOOLTIPS_BASE)+";"
+        "   font-size: 12px;"
         "}"
         // check boxes
         "QCheckBox::indicator {"
@@ -55,13 +475,13 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   height: 13px;"
         "}"
         "QCheckBox::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_unchecked.png);"
         "}"
         "QCheckBox::indicator:indeterminate {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_semichecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_semichecked.png);"
         "}"
         "QCheckBox::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_checked.png);"
         "}"
         // radio buttons
         "QRadioButton::indicator {"
@@ -69,75 +489,133 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   height : 13px;"
         "}"
         "QRadioButton::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/radiobutton_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/radiobutton_unchecked.png);"
         "}"
         "QRadioButton::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/radiobutton_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/radiobutton_checked.png);"
+        "}"
+        // push buttons
+        "QPushButton {"
+        "   border: 0px;"
+        "   border-radius: 12px;"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: "+style.at(BUTTONS_BASE_HOVER)+";"
+        "}"
+        "QPushButton::flat {"
+        "   background-color: "+style.at(BUTTONS_BASE_FLAT)+";"
+        "}"
+        "QPushButton::disabled {"
+        "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
         "}"
         // line edits
         "QLineEdit {"
-        "   color: "+style.at("linedit_text")+";"
-        "   selection-color: "+style.at("linedit_text")+";"
-        "   background-color: "+style.at("linedit_base")+";"
-        "   selection-background-color: "+style.at("linedit_base_selection")+";"
+        "   padding-left: 4px;"
+        "   padding-right: 4px;"
+        "   border-radius: 8px;"
+        "   color: "+style.at(LINEDIT_TEXT)+";"
+        "   selection-color: "+style.at(LINEDIT_TEXT)+";"
+        "   background-color: "+style.at(LINEDIT_BASE)+";"
+        "   selection-background-color: "+style.at(LINEDIT_BASE_SELECTION)+";"
         "}"
         "QLineEdit::focus {"
-        "   background-color: "+style.at("linedit_base_focus")+";"
+        "   background-color: "+style.at(LINEDIT_BASE_FOCUS)+";"
         "}"
         "QLineEdit:disabled {"
-        "   background-color: "+style.at("linedit_base_disabled")+";"
+        "   background-color: "+style.at(LINEDIT_BASE_DISABLED)+";"
         "}"
         // combo boxes
         "QComboBox {"
-        "   background-color: "+style.at("boxes_base_primary")+";"
-        "   selection-background-color: "+style.at("boxes_base_secondary")+";"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
         "}"
         "QComboBox::disabled {"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
+        "}"
+        "QComboBox::drop-down {"
+        "   border-top-right-radius: 8px;"
+        "   border-bottom-right-radius: 8px;"
+        "   border-left: 3px solid"
+        "                QLinearGradient("
+        "                   x0:0, y0:0, x1:0, y1:1,"
+        "                   stop:0 "+style.at(BOXES_BASE_PRIMARY)+","
+        "                   stop:0.1 "+style.at(BOXES_BASE_PRIMARY)+","
+        "                   stop:0.5 "+style.at(BOXES_DECO)+","
+        "                   stop:0.9 "+style.at(BOXES_BASE_PRIMARY)+","
+        "                   stop:1 "+style.at(BOXES_BASE_PRIMARY)+");"
+        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   selection-background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "}"
+        "QComboBox::drop-down::disabled {"
+        "   border-left-color: "+style.at(BOXES_BASE_DISABLED)+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
+        "}"
+        "QComboBox::down-arrow {"
+        "   image: url(:/icons/icons/"+icons_theme+"/combobox_arrow.png);"
+        "}"
+        "QComboBox::down-arrow::disabled {"
+        "   image: url();"
+        "}"
+        "QComboBox:on {"
+        "   border-bottom-left-radius: 0px;"
+        "   border-bottom: 2px solid "+style.at(BOXES_DECO)+";"
+        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
+        "}"
+        "QComboBox::drop-down:on {"
+        "   border-bottom-right-radius: 0px;"
+        "   border-left-color: transparent;"
+        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
+        "}"
+        "QComboBox::down-arrow:on {"
+        "   image: url();"
         "}"
         "QComboBox QAbstractItemView {"
-        "   border: 1px solid "+style.at("boxes_base_tertiary")+";"
-        "   background-color: "+style.at("boxes_base_primary")+";"
+        "   border-bottom-left-radius: 8px;"
+        "   border-bottom-right-radius: 8px;"
+        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   selection-background-color: "+style.at(BOXES_BASE_SELECTION)+";"
         "}"
         // spin boxes
         "QSpinBox {"
-        "   border: 1px solid "+style.at("boxes_base_secondary")+";"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("boxes_base_primary")+";"
-        "   selection-background-color: "+style.at("boxes_base_secondary")+";"
+        "   color: "+style.at(LINEDIT_TEXT)+";"
+        "   background-color: "+style.at(LINEDIT_BASE)+";"
+        "   selection-color: "+style.at(LINEDIT_TEXT)+";"
+        "   selection-background-color: "+style.at(LINEDIT_BASE_SELECTION)+";"
         "}"
         "QSpinBox::focus {"
-        "   border-color: "+style.at("boxes_border_focus")+";"
+        "   background-color: "+style.at(LINEDIT_BASE_FOCUS)+";"
         "}"
         "QSpinBox::disabled {"
-        "   border-color: "+style.at("boxes_base_off")+";"
-        "   color: "+style.at("text_disabled")+";"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   border-color: "+style.at(BOXES_BASE_DISABLED)+";"
+        "   color: "+style.at(TEXT_DISABLED)+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QSpinBox::up-button,"
         "QSpinBox::down-button {"
         "   padding: 2px;"
-        "   border-left: 1px solid "+style.at("boxes_border_focus")+";"
-        "   background-color: "+style.at("boxes_base_secondary")+";"
+        "   border-left: 2px solid "+style.at(BOXES_DECO)+";"
+        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
         "}"
         "QSpinBox::up-button:hover,"
         "QSpinBox::down-button:hover {"
-        "   background-color: "+style.at("boxes_base_tertiary")+";"
+        "   background-color: "+style.at(BOXES_BASE_SELECTION)+";"
         "}"
         "QSpinBox::up-button:off,"
         "QSpinBox::down-button:off {"
-        "   background-color: "+style.at("boxes_base_off")+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QSpinBox::up-button:disabled,"
         "QSpinBox::down-button:disabled {"
-        "   border-left-color: "+style.at("boxes_base_primary")+";"
-        "   background-color: "+style.at("boxes_base_disabled")+";"
+        "   border-left-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   background-color: "+style.at(BOXES_BASE_DISABLED)+";"
         "}"
         "QSpinBox::up-arrow {"
         "   width: 7px;"
         "   height: 7px;"
         "   padding: 2px;"
-        "   image: url(:/icons/icons/"+theme+"/spinbox_add.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/spinbox_add.png);"
         "}"
         "QSpinBox::up-arrow:off,"
         "QSpinBox::up-arrow:disabled {"
@@ -147,7 +625,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   width: 7px;"
         "   height: 7px;"
         "   padding: 2px;"
-        "   image: url(:/icons/icons/"+theme+"/spinbox_sub.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/spinbox_sub.png);"
         "}"
         "QSpinBox::down-arrow:off,"
         "QSpinBox::down-arrow:disabled {"
@@ -156,78 +634,136 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         // scroll bars
         "QScrollBar:horizontal {"
         "   height: 12px;"
-        "   background-color: "+style.at("scrollbar_base")+";"
+        "   background-color: "+style.at(SCROLLBAR_BASE)+";"
         "}"
         "QScrollBar::handle:horizontal {"
         "   min-width: 16px;"
-        "   margin: 5px 12px 5px 12px;"
-        "   background-color: "+style.at("scrollbar_handler")+";"
+        "   margin: 5px 0px 5px 0px;"
+        "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
         "}"
         "QScrollBar::handle:horizontal:hover {"
-        "   margin: 4px 12px 4px 12px;"
+        "   margin: 4px 0px 4px 0px;"
+        "   border-radius: 2px;"
         "}"
         "QScrollBar:vertical {"
         "   width: 12px;"
-        "   background-color: "+style.at("scrollbar_base")+";"
+        "   background-color: "+style.at(SCROLLBAR_BASE)+";"
         "}"
         "QScrollBar::handle:vertical {"
         "   min-height: 16px;"
-        "   margin: 12px 5px 12px 5px;"
-        "   background-color: "+style.at("scrollbar_handler")+";"
+        "   margin: 0px 5px 0px 5px;"
+        "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
         "}"
         "QScrollBar::handle:vertical:hover {"
-        "   margin:12px 4px 12px 4px;"
+        "   margin: 0px 4px 0px 4px;"
+        "}"
+        "QScrollBar::add-line,"
+        "QScrollBar::sub-line,"
+        "QScrollBar::add-pae,"
+        "QScrollBar::sub-pae,"
+        "QScrollBar::up-arrow,"
+        "QScrollBar::down-arrow,"
+        "QScrollBar::left-arrow,"
+        "QScrollBar::right-arrow {"
+        "   border: 0px;"
+        "   background-color: "+style.at(SCROLLBAR_CONTROLS)+";"
         "}"
         // slider
         "QSlider::groove:horizontal {"
         "   height: 2px;"
-        "   border: 1px solid "+style.at("slider_bar_active_border")+";"
-        "   background-color: "+style.at("slider_bar_active")+";"
+        "   border: 1px solid "+style.at(SLIDER_BAR_ACTIVE_BORDER)+";"
+        "   background-color: "+style.at(SLIDER_BAR_ACTIVE)+";"
         "}"
         "QSlider::add-page:horizontal {"
         "   border: 0px;"
-        "   background-color: "+style.at("slider_bar_inactive")+";"
+        "   background-color: "+style.at(SLIDER_BAR_INACTIVE)+";"
         "}"
         "QSlider::sub-page:horizontal {"
-        "   border: 1px solid "+style.at("slider_bar_active_border")+";"
-        "   background-color: "+style.at("slider_bar_active")+";"
+        "   border: 1px solid "+style.at(SLIDER_BAR_ACTIVE_BORDER)+";"
+        "   background-color: "+style.at(SLIDER_BAR_ACTIVE)+";"
         "}"
         "QSlider::handle:horizontal {"
         "   width: 12px;"
         "   margin: -5px 0px;"
-        "   border: 1px solid "+style.at("slider_handler_border")+";"
+        "   border: 1px solid "+style.at(SLIDER_HANDLER_BORDER)+";"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("slider_handler")+";"
+        "   background-color: "+style.at(SLIDER_HANDLER)+";"
         "}"
         "QSlider::handle:hover:horizontal {"
-        "   border: 1px solid "+style.at("slider_handler_border_hover")+";"
+        "   border: 1px solid "+style.at(SLIDER_HANDLER_BORDER_HOVER)+";"
         "}"
         // charts
         "QGraphicsView {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("charts_contour")+";"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(CHARTS_CONTOUR)+";"
         "}"
         // tables, trees and headers
-        "QTreeWidget,"
-        "QListWidget,"
-        "QTableWidget {"
-        "   background-color: "+style.at("tables_base")+";"
-        "   selection-color: "+style.at("tables_text_selection")+";"
-        "   selection-background-color: "+style.at("tables_base_selection")+";"
+        "QTreeView,"
+        "QListView,"
+        "QTableView {"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(TABLES_BASE)+";"
+        "   selection-color: "+style.at(TABLES_TEXT_SELECTION)+";"
+        "   selection-background-color: "+style.at(TABLES_BASE_SELECTION)+";"
         "}"
-        "QTreeWidget QScrollBar::handle:vertical,"
-        "QTableWidget QScrollBar::handle:vertical {"
-        "   padding: 12px;"
+        "QTableView {"
+        "   gridline-color: "+style.at(TABLES_GRIDLINE)+";"
         "}"
-        "QHeaderView {"
-        "   background-color: "+style.at("tables_header")+";"
+        "QTreeView QScrollBar::handle:vertical,"
+        "QTableView QScrollBar::handle:vertical,"
+        "QTreeView QScrollBar::handle:vertical:hover,"
+        "QTableView QScrollBar::handle:vertical:hover {"
+        "   margin-top: 32px;"
+        "}"
+        "QTreeView QScrollBar::sub-line:vertical,"
+        "QTableView QScrollBar::sub-line:vertical {"
+        "   margin-top: -12px;"
+        "   height: 24px;"
+        "   border: 0px;"
+        "   border-top-right-radius: 8px;"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
+        "}"
+        "QHeaderView::section {"
+        "   height: 24px;"
+        "}"
+        "QHeaderView::section:first {"
+        "   padding-left: 6px;"
+        "   border-top-left-radius: 6px;"
+        "   border-right: 1px solid "+style.at(TABLES_HEADER_SEPARATOR)+";"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
+        "}"
+        "QHeaderView::section:middle {"
+        "   padding-left: 6px;"
+        "   border-radius: 0px;" // leave this here or borders won't display
+        "   border-right: 1px solid "+style.at(TABLES_HEADER_SEPARATOR)+";"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
+        "}"
+        "QHeaderView::section:last {"
+        "   padding-left: 6px;"
+        "   border-top-right-radius: 0px;"
+        "   border-bottom: 2px solid "+style.at(TABLES_DECO)+";"
+        "   background-color: "+style.at(TABLES_HEADER)+";"
+        "}"
+        "QHeaderView::section:first::hover {"
+        "   background-color: "+style.at(TABLES_HEADER_HOVER)+";"
+        "}"
+        "QHeaderView::section:middle::hover {"
+        "   background-color: "+style.at(TABLES_HEADER_HOVER)+";"
+        "}"
+        "QHeaderView::section:last::hover {"
+        "   background-color: "+style.at(TABLES_HEADER_HOVER)+";"
         "}"
         // text browser
         "QTextBrowser {"
-        "   color: "+style.at("textbrowser_text")+";"
-        "   background-color: "+style.at("textbrowser_base")+";"
-        "   selection-color: "+style.at("textbrowser_text_selection")+";"
-        "   selection-background-color: "+style.at("textbrowser_base_selection")+";"
+        "   border: 4px solid "+style.at(TEXTBROWSER_BORDER)+";"
+        "   border-radius: 8px;"
+        "   color: "+style.at(TEXTBROWSER_TEXT)+";"
+        "   background-color: "+style.at(TEXTBROWSER_BASE)+";"
+        "   selection-color: "+style.at(TEXTBROWSER_TEXT_SELECTION)+";"
+        "   selection-background-color: "+style.at(TEXTBROWSER_BASE_SELECTION)+";"
         "}"
         "QTextBrowser QScrollBar::handle:vertical {"
         "   padding: 12px;"
@@ -235,104 +771,125 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         //////////////
         //// MENU ////
         "QMenuBar {"
-        "   color: "+style.at("menu_text")+";"
-        "   background-color: "+style.at("menu_base")+";"
+        "   color: "+style.at(MENU_TEXT)+";"
+        "   background-color: "+style.at(MENU_BASE)+";"
         "}"
         "QMenuBar::item:selected {"
-        "   color: "+style.at("menu_text")+";"
-        "   background-color: "+style.at("menu_base_hover")+";"
+        "   color: "+style.at(MENU_TEXT)+";"
+        "   background-color: "+style.at(MENU_BASE_HOVER)+";"
         "   border-radius: 4px;"
         "}"
         "QMenuBar::item:pressed {"
-        "   color: "+style.at("menu_base")+";"
-        "   background-color: "+style.at("menu_text")+";"
+        "   color: "+style.at(MENU_DROPDOWN_TEXT)+";"
+        "   background-color: "+style.at(MENU_DROPDOWN_BASE)+";"
         "   border-radius: 0px;"
         "   border-top-left-radius: 4px;"
         "   border-top-right-radius: 4px;"
         "}"
         // menu dropdown
         "QMenu {"
-        "   color: "+style.at("menu_base")+";"
-        "   background-color: "+style.at("menu_text")+";"
+        "   border-top-right-radius: 4px;"
+        "   border-bottom-right-radius: 4px;"
+        "   border-bottom-left-radius: 4px;"
+        "   color: "+style.at(MENU_DROPDOWN_TEXT)+";"
+        "   background-color: "+style.at(MENU_DROPDOWN_BASE)+";"
         "}"
         "QMenu::item:selected {"
-        "   background-color: "+style.at("menu_base_dropdown_selection")+";"
+        "   background-color: "+style.at(MENU_DROPDOWN_BASE_SELECTION)+";"
         "}"
         //////////////
         //// MAIN ////
         // window
         "QWidget#mainwidget {"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         // tabs buttons
         "QFrame#frame_Tabs_Buttons {"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   border: 0px;"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         "QPushButton#button_Tab_Log,"
         "QPushButton#button_Tab_View,"
         "QPushButton#button_Tab_Conf {"
-        "   border-top-left-radius: 8px;"
-        "   border-bottom-left-radius: 8px;"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   border: 0px;"
+        "   border-radius: 0px;"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Tab_Log::flat,"
         "QPushButton#button_Tab_View::flat,"
         "QPushButton#button_Tab_Conf::flat {"
-        "   background-color: "+style.at("window_base_primary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
-        "QPushButton#button_Tab_Log::flat:hover,"
-        "QPushButton#button_Tab_View::flat:hover,"
+        "QPushButton#button_Tab_Log::flat:hover {"
+        "   background-color: QLinearGradient("
+        "      x1:0, y1:0.5, x2:1, y2:0.5,"
+        "      stop:0 "+style.at(SECTIONS_LOG_HOVER)+","
+        "      stop:0.4 "+style.at(SECTIONS_LOG_HOVER)+","
+        "      stop:1 "+style.at(WINDOW_BASE_SECONDARY)+");"
+        "}"
+        "QPushButton#button_Tab_View::flat:hover {"
+        "   background-color: QLinearGradient("
+        "      x1:0, y1:0.5, x2:1, y2:0.5,"
+        "      stop:0 "+style.at(SECTIONS_VIEW_HOVER)+","
+        "      stop:0.4 "+style.at(SECTIONS_VIEW_HOVER)+","
+        "      stop:1 "+style.at(WINDOW_BASE_SECONDARY)+");"
+        "}"
         "QPushButton#button_Tab_Conf::flat:hover {"
-        "   background-color: "+style.at("window_base_tertiary")+";"
+        "   background-color: QLinearGradient("
+        "      x1:0, y1:0.5, x2:1, y2:0.5,"
+        "      stop:0 "+style.at(SECTIONS_CONF_HOVER)+","
+        "      stop:0.4 "+style.at(SECTIONS_CONF_HOVER)+","
+        "      stop:1 "+style.at(WINDOW_BASE_SECONDARY)+");"
         "}"
         // tabs pages
-        "QStackedWidget#stacked_Tabs_Pages {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "QStackedWidget#stackedPages_Sections {"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         //////////////
         //// LOGS ////
         // switcher buttons
-        "QFrame#frame_Logs_Down {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "QPushButton#button_Logs_Down {"
+        "   border-radius: 16px;"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Logs_Down:hover {"
-        "   border-radius: 16px;"
-        "   background-color: "+style.at("logs_switch_buttons_base_hover")+";"
-        "   icon: url(:/icons/icons/"+theme+"/down.png);"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
+        "   icon: url(:/icons/icons/"+icons_theme+"/down.png);"
         "}"
-        "QFrame#frame_Logs_Up {"
-        "   background-color: "+style.at("window_base_secondary")+";"
-        "}"
-        "QPushButton#button_Logs_Up::flat:hover {"
+        "QPushButton#button_Logs_Up {"
         "   border-radius: 16px;"
-        "   background-color: "+style.at("logs_switch_buttons_base_hover")+";"
-        "   icon: url(:/icons/icons/"+theme+"/up.png);"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
+        "}"
+        "QPushButton#button_Logs_Up::hover {"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
+        "   icon: url(:/icons/icons/"+icons_theme+"/up.png);"
         "}"
         // web servers buttons
         "QPushButton#button_LogFiles_Apache,"
         "QPushButton#button_LogFiles_Nginx,"
         "QPushButton#button_LogFiles_Iis {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   border-radius: 16px;"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_LogFiles_Apache::flat,"
         "QPushButton#button_LogFiles_Nginx::flat,"
         "QPushButton#button_LogFiles_Iis::flat {"
-        "   border: 1px solid "+style.at("buttons_base")+";"
-        "   color: "+style.at("text_secondary")+";"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   border: 1px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_FLAT)+";"
         "}"
         "QPushButton#button_LogFiles_Apache::flat:hover,"
         "QPushButton#button_LogFiles_Nginx::flat:hover,"
         "QPushButton#button_LogFiles_Iis::flat:hover {"
-        "   border: 1px solid "+style.at("border_secondary")+";"
-        "   color: "+style.at("text_primary")+";"
+        "   border: 2px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER)+";"
         "}"
         "QPushButton#button_LogFiles_Apache::disabled,"
         "QPushButton#button_LogFiles_Nginx::disabled,"
         "QPushButton#button_LogFiles_Iis::disabled {"
-        "   color: "+style.at("text_disabled")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   border: 0px;"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_DISABLED)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_DISABLED)+";"
         "}"
         // logs list
         "QTreeWidget#listLogFiles::indicator {"
@@ -342,52 +899,37 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   margin-right: 4px;"
         "}"
         "QTreeWidget#listLogFiles::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_unchecked.png);"
         "}"
         "QTreeWidget#listLogFiles::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_checked.png);"
         "}"
         // view file button
         "QPushButton#button_LogFiles_ViewFile {"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
-        "}"
-        "QPushButton#button_LogFiles_ViewFile:hover {"
-        "   border: 1px solid "+style.at("border_primary")+";"
-        "}"
-        "QPushButton#button_LogFiles_ViewFile::disabled {"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
         "}"
         // refresh button
         "QPushButton#button_LogFiles_RefreshList {"
-        "   border: 1px solid "+style.at("buttons_base_disabled")+";"
+        "   border: 1px solid "+style.at(BORDER_PRIMARY)+";"
         "   border-radius: 16px;"
         "   background-color: transparent;"
         "}"
         "QPushButton#button_LogFiles_RefreshList:hover {"
-        "   border: 1px solid "+style.at("border_primary")+";"
+        "   border: 1px solid "+style.at(BORDER_SECONDARY)+";"
         "}"
         // parse logs button
         "QPushButton#button_MakeStats_Start {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
-        "}"
-        "QPushButton#button_MakeStats_Start:hover {"
-        "   border: 1px solid "+style.at("border_primary")+";"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   border-radius: 32px;"
         "}"
         "QPushButton#button_MakeStats_Start::disabled {"
-        "   color: "+style.at("text_disabled")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   color: "+style.at(TEXT_DISABLED)+";"
         "}"
         ///////////////
         //// STATS ////
         // statistics tabs buttons
         "QFrame#frame_Stats_Buttons {"
-        "   border: 2px solid "+style.at("stats_switch_buttons_frame_border")+";"
-        "   border-bottom-left-radius: 4px;"
-        "   border-bottom-right-radius: 4px;"
-        "   background-color: "+style.at("stats_switch_buttons_frame_base")+";"
+        "   border: 0px;"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QPushButton#button_Tab_StatsWarn,"
         "QPushButton#button_Tab_StatsSpeed,"
@@ -395,8 +937,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_Tab_StatsDay,"
         "QPushButton#button_Tab_StatsRelat,"
         "QPushButton#button_Tab_StatsGlob {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("stats_switch_buttons_base")+";"
+        "   border-radius: 22px;"
+        "   background-color: "+style.at(STATS_SWITCH_BUTTONS)+";"
         "}"
         "QPushButton#button_Tab_StatsWarn::flat,"
         "QPushButton#button_Tab_StatsSpeed::flat,"
@@ -404,7 +946,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_Tab_StatsDay::flat,"
         "QPushButton#button_Tab_StatsRelat::flat,"
         "QPushButton#button_Tab_StatsGlob::flat {"
-        "   background-color: transparent;"
+        "   background-color: "+style.at(STATS_SWITCH_BUTTONS_FLAT)+";"
         "}"
         "QPushButton#button_Tab_StatsWarn::flat:hover,"
         "QPushButton#button_Tab_StatsSpeed::flat:hover,"
@@ -412,33 +954,15 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_Tab_StatsDay::flat:hover,"
         "QPushButton#button_Tab_StatsRelat::flat:hover,"
         "QPushButton#button_Tab_StatsGlob::flat:hover {"
-        "   border: 1px solid "+style.at("stats_switch_buttons_base_border_hover")+";"
-        "   background-color: "+style.at("stats_switch_buttons_base_hover")+";"
+        "   background-color: "+style.at(STATS_SWITCH_BUTTONS_FLAT_HOVER)+";"
+        "}"
+        // stacked pages
+        "QStackedWidget#stackedPages_Stats {"
+        "   border-top: 2px solid "+style.at(STATS_SWITCH_BUTTONS)+";"
+        "   border-radius: 12px;"
         "}"
         // draw buttons
-        "QPushButton#button_StatsWarn_Update,"
-        "QPushButton#button_StatsWarn_Draw,"
-        "QPushButton#button_StatsSpeed_Draw,"
-        "QPushButton#button_StatsCount_Draw,"
-        "QPushButton#button_StatsDay_Draw,"
-        "QPushButton#button_StatsRelat_Draw,"
-        "QPushButton#button_StatsGlob_Draw {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
-        "}"
-        "QPushButton#button_StatsWarn_Update:hover,"
-        "QPushButton#button_StatsWarn_Draw:hover,"
-        "QPushButton#button_StatsSpeed_Draw:hover,"
-        "QPushButton#button_StatsCount_Draw:hover,"
-        "QPushButton#button_StatsDay_Draw:hover,"
-        "QPushButton#button_StatsRelat_Draw:hover,"
-        "QPushButton#button_StatsGlob_Draw:hover {"
-        "   border: 1px solid "+style.at("border_secondary")+";"
-        "   background-color: "+style.at("buttons_base_hover")+";"
-        "}"
         "QPushButton#button_StatsWarn_Update::disabled {"
-        "   border: 1px solid "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
         "   icon: url(:/icons/icons/midtone/save.png);"
         "}"
         // stats warn
@@ -447,17 +971,17 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "   height: 13px;"
         "}"
         "QTableWidget#table_StatsWarn::indicator:unchecked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_unchecked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_unchecked.png);"
         "}"
         "QTableWidget#table_StatsWarn::indicator:checked {"
-        "   image: url(:/icons/icons/"+theme+"/checkbox_checked.png);"
+        "   image: url(:/icons/icons/"+icons_theme+"/checkbox_checked.png);"
         "}"
         "QTableWidget#table_StatsWarn QScrollBar::handle:vertical {"
         "   padding: 12px;"
         "}"
         // stats count
         "QScrollArea#scrollArea_StatsCount {"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
         "}"
         "QWidget#scrollAreaContent_StatsCount {"
         "   background-color: transparent;"
@@ -471,8 +995,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_StatsCount_Cookie,"
         "QPushButton#button_StatsCount_UserAgent,"
         "QPushButton#button_StatsCount_Client {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("border_primary")+";"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
         "}"
         "QPushButton#button_StatsCount_Protocol::flat,"
         "QPushButton#button_StatsCount_Method::flat,"
@@ -483,8 +1007,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_StatsCount_Cookie::flat,"
         "QPushButton#button_StatsCount_UserAgent::flat,"
         "QPushButton#button_StatsCount_Client::flat {"
-        "   border: 1px solid "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
         "}"
         "QPushButton#button_StatsCount_Protocol::flat:hover,"
         "QPushButton#button_StatsCount_Method::flat:hover,"
@@ -495,51 +1018,47 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_StatsCount_Cookie::flat:hover,"
         "QPushButton#button_StatsCount_UserAgent::flat:hover,"
         "QPushButton#button_StatsCount_Client::flat:hover {"
-        "   border: 1px solid "+style.at("border_primary")+";"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         // stats globals
-        "QFrame#frame_StatsGlob_WebServers {"
-        "   border-radius: 4px;"
-        "   border: 1px solid "+style.at("buttons_base")+";"
-        "}"
         "QPushButton#button_StatsGlob_Apache,"
         "QPushButton#button_StatsGlob_Nginx,"
         "QPushButton#button_StatsGlob_Iis {"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   border-radius: 16px;"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_StatsGlob_Apache::flat,"
         "QPushButton#button_StatsGlob_Nginx::flat,"
         "QPushButton#button_StatsGlob_Iis::flat {"
-        "   border: 1px solid "+style.at("buttons_base")+";"
-        "   color: "+style.at("text_secondary")+";"
-        "   background-color: "+style.at("window_base_secondary")+";"
+        "   border: 1px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_FLAT)+";"
         "}"
         "QPushButton#button_StatsGlob_Apache::flat:hover,"
         "QPushButton#button_StatsGlob_Nginx::flat:hover,"
         "QPushButton#button_StatsGlob_Iis::flat:hover {"
-        "   border: 1px solid "+style.at("border_secondary")+";"
-        "   color: "+style.at("text_primary")+";"
+        "   border: 2px solid "+style.at(WEB_SERVERS_BUTTONS_BORDER_FLAT_HOVER)+";"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_FLAT_HOVER)+";"
         "}"
         "QPushButton#button_StatsGlob_Apache::disabled,"
         "QPushButton#button_StatsGlob_Nginx::disabled,"
         "QPushButton#button_StatsGlob_Iis::disabled {"
-        "   color: "+style.at("text_disabled")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   border: 0px;"
+        "   color: "+style.at(WEB_SERVERS_BUTTONS_TEXT_DISABLED)+";"
+        "   background-color: "+style.at(WEB_SERVERS_BUTTONS_BASE_DISABLED)+";"
         "}"
         "QScrollArea#scrollArea_StatsGlob_Recur,"
         "QScrollArea#scrollArea_StatsGlob_Perf,"
         "QScrollArea#scrollArea_StatsGlob_Traffic,"
         "QScrollArea#scrollArea_StatsGlob_Work {"
-        "   border: 1px solid "+style.at("globals_frames_border")+";"
-        "   background-color: "+style.at("globals_frames_base")+";"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(STATS_GLOBALS_FRAMES)+";"
         "}"
         // styled frames
         "QFrame#frame_StatsWarn_Logs,"
         "QFrame#frame_StatsDay_Date,"
         "QFrame#frame_StatsRelat_Field {"
-        "   border: 1px solid "+style.at("border_tertiary")+";"
+        "   border: 1px solid "+style.at(BORDER_TERTIARY)+";"
         "}"
         // lines separators
         "QFrame#gline_StatsWarn_1,"
@@ -547,7 +1066,16 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QFrame#gline_StatsWarn_3,"
         "QFrame#gline_StatsDay_1,"
         "QFrame#gline_StatsDay_2,"
-        "QFrame#gline_StatsRelat_1,"
+        "QFrame#gline_StatsRelat_1 {"
+        "   border: 1px solid "+style.at(SEPARATORS_BORDER)+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
+        "}"
+        "QFrame#gline_StatsSpeed_1,"
+        "QFrame#gline_StatsCount_1 {"
+        "   border: 1px solid "+style.at(SEPARATORS_BORDER)+";"
+        "   margin: 2px 0px 3px 0px;"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
+        "}"
         "QFrame#gline_StatsGlob_Recur_1,"
         "QFrame#gline_StatsGlob_Recur_2,"
         "QFrame#gline_StatsGlob_Recur_3,"
@@ -557,127 +1085,30 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QFrame#gline_StatsGlob_Traffic_2,"
         "QFrame#gline_StatsGlob_Work_1,"
         "QFrame#gline_StatsGlob_Work_2 {"
-        "   border: 1px solid "+style.at("globals_frames_base")+";"
-        "   background-color: "+style.at("globals_frames_lines")+";"
-        "}"
-        "QFrame#gline_StatsSpeed_1,"
-        "QFrame#gline_StatsCount_1 {"
-        "   border: 1px solid "+style.at("globals_frames_base")+";"
-        "   margin: 2px 0px 3px 0px;"
-        "   background-color: "+style.at("globals_frames_lines")+";"
+        "   border: 1px solid "+style.at(STATS_GLOBALS_FRAMES)+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
         "}"
         /////////////////
         //// CONFIGS ////
-        // outer tabs
-        "QTabWidget#ConfTabs QTabBar::tab {"
-        "   margin-bottom: 4px;"
-        "   padding: 8px 6px;"
-        "   border: 1px solid "+style.at("outer-tabs_tab_border")+";"
-        "   border-left: 4px solid "+style.at("outer-tabs_tab_border")+";"
-        "   border-right: 0px;"
-        "   border-top-left-radius: 4px;"
-        "   border-bottom-left-radius: 4px;"
+        // sections
+        "QTreeView#tree_ConfSections {"
+        "   background-color: "+style.at(CONFIGS_TREE_BASE)+";"
         "}"
-        "QTabWidget#ConfTabs QTabBar::tab:selected {"
-        "   color: "+style.at("outer-tabs_tab_text_selected")+";"
-        "}"
-        "QTabWidget#ConfTabs QTabBar::tab:!selected {"
-        "   border-color: "+style.at("outer-tabs_tab_border_unselected")+";"
-        "   border-left: 1px solid "+style.at("outer-tabs_tab_border_unselected")+";"
-        "   color: "+style.at("outer-tabs_tab_text_unselected")+";"
-        "}"
-        "QTabWidget#ConfTabs QTabBar::tab:!selected:hover {"
-        "   border-color: "+style.at("outer-tabs_tab_border")+";"
-        "   color: "+style.at("outer-tabs_tab_text_hover")+";"
-        "}"
-        // inner tabs
-        "QTabWidget#tabs_ConfGeneral QTabBar::tab,"
-        "QTabWidget#tabs_ConfLogs QTabBar::tab {"
-        "   margin: 0px;"
-        "   margin-right: 4px;"
-        "   padding: 6px 8px;"
-        "   border: 1px solid "+style.at("inner-tabs_border")+";"
-        "   border-bottom: 0px;"
-        "   border-top-left-radius: 4px;"
-        "   border-bottom-left-radius: 0px;"
-        "   border-top-right-radius: 4px;"
-        "   background-color: "+style.at("inner-tabs_tab_base")+";"
-        "}"
-        "QTabWidget#tabs_ConfGeneral QTabBar::tab:!selected,"
-        "QTabWidget#tabs_ConfLogs QTabBar::tab:!selected {"
-        "   background-color: "+style.at("inner-tabs_tab_base_unselected")+";"
-        "}"
-        "QTabWidget#tabs_ConfGeneral::pane,"
-        "QTabWidget#tabs_ConfLogs::pane {"
-        "   border: 1px solid "+style.at("inner-tabs_border")+";"
-        "   border-top-right-radius: 4px;"
-        "   border-bottom-left-radius: 4px;"
-        "   border-bottom-right-radius: 4px;"
-        "   background-color: "+style.at("inner-tabs_pane_base")+";"
-        "}"
-        // sub tabs
-        "QTabWidget#tabs_ConfApache QTabBar,"
-        "QTabWidget#tabs_ConfNginx QTabBar,"
-        "QTabWidget#tabs_ConfIis QTabBar {"
+        "QTreeView#tree_ConfSections QScrollBar::sub-line:vertical {"
+        "   margin-top: -12px;"
         "   border: 0px;"
+        "   border-top-right-radius: 8px;"
+        "   background-color: transparent;"
         "}"
-        "QTabWidget#tabs_ConfApache QTabBar::tab,"
-        "QTabWidget#tabs_ConfNginx QTabBar::tab,"
-        "QTabWidget#tabs_ConfIis QTabBar::tab {"
-        "   background-color: "+style.at("sub-tabs_tab_base")+";"
-        "}"
-        "QTabWidget#tabs_ConfApache QTabBar::tab:!selected,"
-        "QTabWidget#tabs_ConfNginx QTabBar::tab:!selected,"
-        "QTabWidget#tabs_ConfIis QTabBar::tab:!selected {"
-        "   border: 1px solid "+style.at("sub-tabs_tab_border_unselected")+";"
-        "   background-color: "+style.at("sub-tabs_tab_base_unselected")+";"
-        "}"
-        "QTabWidget#tabs_ConfApache::pane,"
-        "QTabWidget#tabs_ConfNginx::pane,"
-        "QTabWidget#tabs_ConfIis::pane {"
-        "   border: 1px solid "+style.at("sub-tabs_border")+";"
-        "   background-color: "+style.at("sub-tabs_pane_base")+";"
-        "}"
-        // panes
-        "QWidget#confGeneral,"
-        "QWidget#confLogs {"
-        "   border: 1px solid "+style.at("outer-tabs_tab_border")+";"
-        "   border-top-right-radius: 4px;"
-        "   border-bottom-left-radius: 4px;"
-        "   border-bottom-right-radius: 4px;"
-        "   background-color: "+style.at("outer-tabs_base")+";"
-        "}"
-        "QWidget#tab_confWindow,"
-        "QWidget#tab_confTextBrowser,"
-        "QWidget#tab_confCharts,"
-        "QWidget#tab_confDatabases,"
-        "QWidget#tab_confLogs_Default,"
-        "QWidget#tab_confLogs_Control,"
-        "QWidget#tab_confLogs_Apache,"
-        "QWidget#tab_confLogs_Nginx,"
-        "QWidget#tab_confLogs_Iis {"
-        "   border: 0px;"
-        "   background-color: "+style.at("inner-tabs_base")+";"
-        "}"
-        "QWidget#tab_confApache_Paths,"
-        "QWidget#tab_confApache_Formats,"
-        "QWidget#tab_confApache_Warnlists,"
-        "QWidget#tab_confApache_Blacklists,"
-        "QWidget#tab_confNginx_Paths,"
-        "QWidget#tab_confNginx_Formats,"
-        "QWidget#tab_confNginx_Warnlists,"
-        "QWidget#tab_confNginx_Blacklists,"
-        "QWidget#tab_confIis_Paths,"
-        "QWidget#tab_confIis_Formats,"
-        "QWidget#tab_confIis_Warnlists,"
-        "QWidget#tab_confIis_Blacklists {"
-        "   background-color: "+style.at("sub-tabs_base")+";"
+        "QTreeView#tree_ConfSections QScrollBar::handle:vertical,"
+        "QTreeView#tree_ConfSections QScrollBar::handle:vertical:hover {"
+        "   margin-top: 0px;"
         "}"
         // line separators
         "QFrame#gline_ConfTextBrowser {"
-        "   border: 2px solid "+style.at("inner-tabs_base")+";"
+        "   border: 2px solid "+style.at(SEPARATORS_BORDER)+";"
         "   margin: 13px 0px 14px 0px;"
-        "   background-color: "+style.at("inner-tabs_lines")+";"
+        "   background-color: "+style.at(SEPARATORS_BASE)+";"
         "}"
         // save buttons
         "QPushButton#button_ConfDatabases_Data_Save,"
@@ -688,9 +1119,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Format_Save,"
         "QPushButton#button_ConfIis_Path_Save,"
         "QPushButton#button_ConfIis_Format_Save {"
-        "   border: 1px solid "+style.at("border_primary")+";"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfDatabases_Data_Save:hover,"
         "QPushButton#button_ConfDatabases_Hashes_Save:hover,"
@@ -700,8 +1130,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Format_Save:hover,"
         "QPushButton#button_ConfIis_Path_Save:hover,"
         "QPushButton#button_ConfIis_Format_Save:hover {"
-        "   border-color: "+style.at("border_secondary")+";"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_HOVER)+";"
         "}"
         "QPushButton#button_ConfDatabases_Data_Save::disabled,"
         "QPushButton#button_ConfDatabases_Hashes_Save::disabled,"
@@ -711,44 +1140,41 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Format_Save::disabled,"
         "QPushButton#button_ConfIis_Path_Save::disabled,"
         "QPushButton#button_ConfIis_Format_Save::disabled {"
-        "   border-color: "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
         "   icon: url(:/icons/icons/midtone/save.png);"
         "}"
         // sample buttons
         "QPushButton#button_ConfApache_Format_Sample,"
         "QPushButton#button_ConfNginx_Format_Sample,"
         "QPushButton#button_ConfIis_Format_Sample {"
-        "   border: 1px solid "+style.at("border_primary")+";"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfApache_Format_Sample:hover,"
         "QPushButton#button_ConfNginx_Format_Sample:hover,"
         "QPushButton#button_ConfIis_Format_Sample:hover {"
-        "   border-color: "+style.at("border_secondary")+";"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(BUTTONS_BASE_HOVER)+";"
         "}"
         // sample previews
-        "QWidget#scrollAreaContent_ConfApache_Format_Sample,"
-        "QWidget#scrollAreaContent_ConfNginx_Format_Sample,"
-        "QWidget#scrollAreaContent_ConfIis_Format_Sample {"
-        "   border: 1px solid "+style.at("border_primary")+";"
-        "   background-color: "+style.at("textbrowser_base")+";"
+        "QScrollArea#scrollArea_ConfApache_Format_Sample,"
+        "QScrollArea#scrollArea_ConfNginx_Format_Sample,"
+        "QScrollArea#scrollArea_ConfIis_Format_Sample {"
+        "   border: 1px solid "+style.at(BORDER_SECONDARY)+";"
+        "   border-top-left-radius: 4px;"
+        "   border-top-right-radius: 4px;"
+        "   background-color: "+style.at(TEXTBROWSER_BASE)+";"
         "}"
         // help buttons
         "QPushButton#button_ConfApache_Format_Help,"
         "QPushButton#button_ConfNginx_Format_Help,"
         "QPushButton#button_ConfIis_Format_Help {"
-        "   border: 1px solid "+style.at("border_primary")+";"
-        "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   border-radius: 8px;"
+        "   background-color: "+style.at(HELP_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfApache_Format_Help:hover,"
         "QPushButton#button_ConfNginx_Format_Help:hover,"
         "QPushButton#button_ConfIis_Format_Help:hover {"
-        "   border-color: "+style.at("border_secondary")+";"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(HELP_BUTTONS_BASE_HOVER)+";"
         "}"
         // warnlists / blacklists
         "QListWidget#list_ConfApache_Warnlist_List,"
@@ -758,7 +1184,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QListWidget#list_ConfIis_Warnlist_List,"
         "QListWidget#list_ConfIis_Blacklist_List {"
         "   padding: 4px;"
-        "   border: 1px solid "+style.at("tables_border")+";"
+        "   border: 1px solid "+style.at(BORDER_PRIMARY)+";"
         "}"
         "QListWidget#list_ConfApache_Warnlist_List::disabled,"
         "QListWidget#list_ConfApache_Blacklist_List::disabled,"
@@ -766,9 +1192,10 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QListWidget#list_ConfNginx_Blacklist_List::disabled,"
         "QListWidget#list_ConfIis_Warnlist_List::disabled,"
         "QListWidget#list_ConfIis_Blacklist_List::disabled {"
-        "   border: 1px solid "+style.at("tables_border_disabled")+";"
-        "   color: "+style.at("tables_text_disabled")+";"
-        "   background-color: "+style.at("tables_base_disabled")+";"
+        "   border: 0px;"
+        "   color: "+style.at(TEXT_DISABLED)+";"
+        "   background-color: "+style.at(TABLES_BASE_DISABLED)+";"
+        "   selection-background-color: "+style.at(TABLES_BASE_DISABLED)+";"
         "}"
         "QListWidget#list_ConfApache_Warnlist_List::item,"
         "QListWidget#list_ConfApache_Blacklist_List::item,"
@@ -803,9 +1230,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfIis_Blacklist_Remove,"
         "QPushButton#button_ConfIis_Blacklist_Up,"
         "QPushButton#button_ConfIis_Blacklist_Down {"
-        "   border: 1px solid "+style.at("border_primary")+";"
         "   border-radius: 4px;"
-        "   background-color: "+style.at("buttons_base")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE)+";"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Add:hover,"
         "QPushButton#button_ConfApache_Warnlist_Remove:hover,"
@@ -831,8 +1257,7 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfIis_Blacklist_Remove:hover,"
         "QPushButton#button_ConfIis_Blacklist_Up:hover,"
         "QPushButton#button_ConfIis_Blacklist_Down:hover {"
-        "   border-color: "+style.at("border_secondary")+";"
-        "   background-color: "+style.at("buttons_base_hover")+";"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_HOVER)+";"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Add::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Add::disabled,"
@@ -840,9 +1265,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Add::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Add::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Add::disabled {"
-        "   border-color: "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
-        "   icon: url(:/icons/icons/add.png), #fff;"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_add.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Remove::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Remove::disabled,"
@@ -850,9 +1274,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Remove::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Remove::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Remove::disabled {"
-        "   border-color: "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
-        "   icon: url(:/icons/icons/rem.png), #fff;"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_rem.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Up::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Up::disabled,"
@@ -860,9 +1283,8 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Up::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Up::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Up::disabled {"
-        "   border-color: "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
-        "   icon: url(:/icons/icons/up.png), #fff;"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_up.png), #fff;"
         "}"
         "QPushButton#button_ConfApache_Warnlist_Down::disabled,"
         "QPushButton#button_ConfApache_Blacklist_Down::disabled,"
@@ -870,664 +1292,36 @@ void makeStyleSheet( QString& ss, const std::unordered_map<std::string, QString>
         "QPushButton#button_ConfNginx_Blacklist_Down::disabled,"
         "QPushButton#button_ConfIis_Warnlist_Down::disabled,"
         "QPushButton#button_ConfIis_Blacklist_Down::disabled {"
-        "   border-color: "+style.at("buttons_base")+";"
-        "   background-color: "+style.at("buttons_base_disabled")+";"
-        "   icon: url(:/icons/icons/down.png), #fff;"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_DISABLED)+";"
+        "   icon: url(:/icons/icons/"+icons_theme+"/list_down.png), #fff;"
+        "}"
+        "QPushButton#button_ConfApache_Warnlist_Add::flat,"
+        "QPushButton#button_ConfApache_Warnlist_Remove::flat,"
+        "QPushButton#button_ConfApache_Warnlist_Up::flat,"
+        "QPushButton#button_ConfApache_Warnlist_Down::flat,"
+        "QPushButton#button_ConfApache_Blacklist_Add::flat,"
+        "QPushButton#button_ConfApache_Blacklist_Remove::flat,"
+        "QPushButton#button_ConfApache_Blacklist_Up::flat,"
+        "QPushButton#button_ConfApache_Blacklist_Down::flat,"
+        "QPushButton#button_ConfNginx_Warnlist_Add::flat,"
+        "QPushButton#button_ConfNginx_Warnlist_Remove::flat,"
+        "QPushButton#button_ConfNginx_Warnlist_Up::flat,"
+        "QPushButton#button_ConfNginx_Warnlist_Down::flat,"
+        "QPushButton#button_ConfNginx_Blacklist_Add::flat,"
+        "QPushButton#button_ConfNginx_Blacklist_Remove::flat,"
+        "QPushButton#button_ConfNginx_Blacklist_Up::flat,"
+        "QPushButton#button_ConfNginx_Blacklist_Down::flat,"
+        "QPushButton#button_ConfIis_Warnlist_Add::flat,"
+        "QPushButton#button_ConfIis_Warnlist_Remove::flat,"
+        "QPushButton#button_ConfIis_Warnlist_Up::flat,"
+        "QPushButton#button_ConfIis_Warnlist_Down::flat,"
+        "QPushButton#button_ConfIis_Blacklist_Add::flat,"
+        "QPushButton#button_ConfIis_Blacklist_Remove::flat,"
+        "QPushButton#button_ConfIis_Blacklist_Up::flat,"
+        "QPushButton#button_ConfIis_Blacklist_Down::flat {"
+        "   background-color: "+style.at(BWLISTS_BUTTONS_BASE_FLAT)+";"
+        "   icon: none;"
         "}";
-}
-
-} // namespace (private)
-
-
-void getStyleSheet( QString& stylesheet, const QString& icons_theme, const int theme_id )
-{
-    std::unordered_map<std::string, QString> style_map;
-    switch ( theme_id ) {
-        case 1:
-            style_map = {
-                {"text_primary",
-                    "rgb( 248, 248, 248 )"},
-                {"text_secondary",
-                    "rgb( 144, 144, 144 )"},
-                {"text_disabled",
-                    "rgb( 128, 128, 128 )"},
-                {"tooltips_base",
-                    "rgb( 4, 4, 4 )"},
-                {"tooltips_text",
-                    "rgb( 248, 248, 248 )"},
-                {"tooltips_border",
-                    "rgb( 144, 144, 144 )"},
-                {"menu_text",
-                    "rgb( 144, 144, 144 )"},
-                {"menu_base",
-                    "rgb( 32, 32, 32 )"},
-                {"menu_base_hover",
-                    "rgb( 64, 64, 64 )"},
-                {"menu_base_dropdown_selection",
-                    "rgb( 192, 192, 192 )"},
-                {"window_base_primary",
-                    "rgb( 32, 32, 32 )"},
-                {"window_base_secondary",
-                    "rgb( 16, 16, 16 )"},
-                {"window_base_tertiary",
-                    "rgb( 64, 64, 64 )"},
-                {"border_primary",
-                    "rgb( 96, 96, 96 )"},
-                {"border_secondary",
-                    "rgb( 128, 128, 128 )"},
-                {"border_tertiary",
-                    "rgb( 128, 128, 128 )"},
-                {"buttons_base",
-                    "rgb( 64, 64, 64 )"},
-                {"buttons_base_hover",
-                    "rgb( 82, 82, 82 )"},
-                {"buttons_base_disabled",
-                    "rgb( 40, 40, 40 )"},
-                {"logs_switch_buttons_base_hover",
-                    "rgb( 24, 24, 24 )"},
-                {"stats_switch_buttons_frame_base",
-                    "rgb( 16, 16, 16 )"},
-                {"stats_switch_buttons_frame_border",
-                    "rgb( 32, 32, 32 )"},
-                {"stats_switch_buttons_base",
-                    "rgb( 64, 64, 64 )"},
-                {"stats_switch_buttons_base_hover",
-                    "rgb( 24, 24, 24 )"},
-                {"stats_switch_buttons_base_border_hover",
-                    "rgb( 48, 48, 48 )"},
-                {"globals_frames_base",
-                    "rgb( 16, 16, 16 )"},
-                {"globals_frames_border",
-                    "rgb( 128, 128, 128 )"},
-                {"globals_frames_lines",
-                    "rgb( 192, 192, 192 )"},
-                {"boxes_base_primary",
-                    "rgb( 64, 64, 64 )"},
-                {"boxes_base_secondary",
-                    "rgb( 96, 96, 96 )"},
-                {"boxes_base_tertiary",
-                    "rgb( 128, 128, 128 )"},
-                {"boxes_border_focus",
-                    "rgb( 192, 192, 192 )"},
-                {"boxes_base_disabled",
-                    "rgb( 40, 40, 40 )"},
-                {"boxes_base_off",
-                    "rgb( 48, 48, 48 )"},
-                {"linedit_text",
-                    "rgb( 16, 16, 16 )"},
-                {"linedit_base",
-                    "rgb( 216, 216, 216 )"},
-                {"linedit_base_focus",
-                    "rgb( 248, 248, 248 )"},
-                {"linedit_base_selection",
-                    "rgb( 192, 192, 192 )"},
-                {"linedit_base_disabled",
-                    "rgb( 96, 96, 96 )"},
-                {"tables_header",
-                    "rgb( 64, 64, 64 )"},
-                {"tables_base",
-                    "rgb( 32, 32, 32 )"},
-                {"tables_text_selection",
-                    "rgb( 248, 248, 248 )"},
-                {"tables_base_selection",
-                    "rgb( 64, 64, 64 )"},
-                {"tables_border",
-                    "rgb( 96, 96, 96 )"},
-                {"tables_base_disabled",
-                    "rgb( 96, 96, 96 )"},
-                {"tables_text_disabled",
-                    "rgb( 128, 128, 128 )"},
-                {"tables_border_disabled",
-                    "rgb( 64, 64, 64 )"},
-                {"charts_contour",
-                    "rgb( 32, 32, 32 )"},
-                {"textbrowser_text",
-                    "rgb( 192, 192, 192 )"},
-                {"textbrowser_base",
-                    "rgb( 32, 32, 32 )"},
-                {"textbrowser_text_selection",
-                    "rgb( 248, 248, 248 )"},
-                {"textbrowser_base_selection",
-                    "rgb( 64, 64, 64 )"},
-                {"scrollbar_base",
-                    "rgb( 96, 96, 96 )"},
-                {"scrollbar_handler",
-                    "rgb( 192, 192, 192 )"},
-                {"slider_handler",
-                    "rgb( 48, 48, 48 )"},
-                {"slider_bar_active",
-                    "rgb( 128, 128, 128 )"},
-                {"slider_bar_inactive",
-                    "rgb( 82, 82, 82 )"},
-                {"slider_bar_active_border",
-                    "rgb( 144, 144, 144 )"},
-                {"slider_handler_border",
-                    "rgb( 192, 192, 192 )"},
-                {"slider_handler_border_hover",
-                    "rgb( 248, 248, 248 )"},
-                {"outer-tabs_base",
-                    "rgb( 16, 16, 16 )"},
-                {"inner-tabs_base",
-                    "rgb( 32, 32, 32 )"},
-                {"sub-tabs_base",
-                    "rgb( 48, 48, 48 )"},
-                {"outer-tabs_tab_text_selected",
-                    "rgb( 248, 248, 248 )"},
-                {"outer-tabs_tab_text_unselected",
-                    "rgb( 128, 128, 128 )"},
-                {"outer-tabs_tab_text_hover",
-                    "rgb( 192, 192, 192 )"},
-                {"outer-tabs_tab_border",
-                    "rgb( 96, 96, 96 )"},
-                {"outer-tabs_tab_border_unselected",
-                    "rgb( 48, 48, 48 )"},
-                {"inner-tabs_tab_base",
-                    "rgb( 32, 32, 32 )"},
-                {"inner-tabs_tab_base_unselected",
-                    "rgb( 24, 24, 24 )"},
-                {"inner-tabs_pane_base",
-                    "rgb( 32, 32, 32 )"},
-                {"inner-tabs_border",
-                    "rgb( 96, 96, 96 )"},
-                {"inner-tabs_lines",
-                    "rgb( 192, 192, 192 )"},
-                {"sub-tabs_tab_base",
-                    "rgb( 48, 48, 48 )"},
-                {"sub-tabs_tab_base_unselected",
-                    "rgb( 40, 40, 40 )"},
-                {"sub-tabs_pane_base",
-                    "rgb( 48, 48, 48 )"},
-                {"sub-tabs_border",
-                    "rgb( 96, 96, 96 )"},
-                {"sub-tabs_tab_border_unselected",
-                    "rgb( 64, 64, 64 )"}
-            };
-            break;
-        case 2:
-            style_map = {
-                {"text_primary",
-                    "rgb( 45, 0, 30 )"},
-                {"text_secondary",
-                    "rgb( 115, 30, 70 )"},
-                {"text_disabled",
-                    "rgb( 255, 204, 143 )"},
-                {"tooltips_base",
-                    "rgb( 45, 0, 30 )"},
-                {"tooltips_text",
-                    "rgb( 255, 204, 143 )"},
-                {"tooltips_border",
-                    "rgb( 145, 100, 130 )"},
-                {"menu_text",
-                    "rgb( 45, 0, 30 )"},
-                {"menu_base",
-                    "rgb( 205, 154, 93 )"},
-                {"menu_base_hover",
-                    "rgb( 165, 114, 63 )"},
-                {"menu_base_dropdown_selection",
-                    "rgb( 145, 100, 130 )"},
-                {"window_base_primary",
-                    "rgb( 255, 204, 143 )"},
-                {"window_base_secondary",
-                    "rgb( 255, 140, 141 )"},
-                {"window_base_tertiary",
-                    "rgb( 245, 172, 142 )"},
-                {"border_primary",
-                    "rgb( 195, 80, 81 )"},
-                {"border_secondary",
-                    "rgb( 195, 80, 81 )"},
-                {"border_tertiary",
-                    "rgb( 255, 204, 143 )"},
-                {"buttons_base",
-                    "rgb( 114, 235, 115 )"},
-                {"buttons_base_hover",
-                    "rgb( 154, 255, 155 )"},
-                {"buttons_base_disabled",
-                    "rgb( 195, 80, 81 )"},
-                {"logs_switch_buttons_base_hover",
-                    "rgb( 245, 172, 142 )"},
-                {"stats_switch_buttons_frame_base",
-                    "rgb( 245, 172, 142 )"},
-                {"stats_switch_buttons_frame_border",
-                    "rgb( 255, 204, 143 )"},
-                {"stats_switch_buttons_base",
-                    "rgb( 255, 140, 141 )"},
-                {"stats_switch_buttons_base_hover",
-                    "rgb( 245, 172, 142 )"},
-                {"stats_switch_buttons_base_border_hover",
-                    "rgb( 255, 204, 143 )"},
-                {"globals_frames_base",
-                    "rgb( 255, 210, 221 )"},
-                {"globals_frames_border",
-                    "rgb( 195, 80, 81 )"},
-                {"globals_frames_lines",
-                    "rgb( 145, 100, 130 )"},
-                {"boxes_base_primary",
-                    "rgb( 164, 255, 165 )"},
-                {"boxes_base_secondary",
-                    "rgb( 114, 235, 115 )"},
-                {"boxes_base_tertiary",
-                    "rgb( 154, 245, 155 )"},
-                {"boxes_border_focus",
-                    "rgb( 195, 80, 81 )"},
-                {"boxes_base_disabled",
-                    "rgb( 195, 80, 81 )"},
-                {"boxes_base_off",
-                    "rgb( 195, 80, 81 )"},
-                {"linedit_text",
-                    "rgb( 45, 0, 30 )"},
-                {"linedit_base",
-                    "rgb( 113, 154, 225 )"},
-                {"linedit_base_focus",
-                    "rgb( 143, 184, 255 )"},
-                {"linedit_base_selection",
-                    "rgb( 145, 100, 130 )"},
-                {"linedit_base_disabled",
-                    "rgb( 195, 80, 81 )"},
-                {"tables_header",
-                    "rgb( 195, 140, 141 )"},
-                {"tables_base",
-                    "rgb( 255, 210, 221 )"},
-                {"tables_text_selection",
-                    "rgb( 45, 0, 30 )"},
-                {"tables_base_selection",
-                    "rgb( 145, 100, 130 )"},
-                {"tables_border",
-                    "rgb( 195, 80, 81 )"},
-                {"tables_base_disabled",
-                    "rgb( 195, 80, 81 )"},
-                {"tables_text_disabled",
-                    "rgb( 195, 140, 141 )"},
-                {"tables_border_disabled",
-                    "rgb( 165, 114, 63 )"},
-                {"charts_contour",
-                    "rgb( 113, 154, 225 )"},
-                {"textbrowser_text",
-                    "rgb( 45, 0, 30 )"},
-                {"textbrowser_base",
-                    "rgb( 255, 210, 221 )"},
-                {"textbrowser_text_selection",
-                    "rgb( 255, 204, 143 )"},
-                {"textbrowser_base_selection",
-                    "rgb( 145, 100, 130 )"},
-                {"scrollbar_base",
-                    "rgb( 145, 100, 130 )"},
-                {"scrollbar_handler",
-                    "rgb( 45, 0, 30 )"},
-                {"slider_handler",
-                    "rgb( 113, 154, 225 )"},
-                {"slider_bar_active",
-                    "rgb( 114, 235, 115 )"},
-                {"slider_bar_inactive",
-                    "rgb( 165, 114, 63 )"},
-                {"slider_bar_active_border",
-                    "rgb( 154, 245, 155 )"},
-                {"slider_handler_border",
-                    "rgb( 195, 140, 141 )"},
-                {"slider_handler_border_hover",
-                    "rgb( 255, 210, 221 )"},
-                {"outer-tabs_base",
-                    "rgb( 255, 140, 141 )"},
-                {"inner-tabs_base",
-                    "rgb( 255, 204, 143 )"},
-                {"sub-tabs_base",
-                    "rgb( 255, 140, 141 )"},
-                {"outer-tabs_tab_text_selected",
-                    "rgb( 45, 0, 30 )"},
-                {"outer-tabs_tab_text_unselected",
-                    "rgb( 115, 30, 70 )"},
-                {"outer-tabs_tab_text_hover",
-                    "rgb( 45, 0, 30 )"},
-                {"outer-tabs_tab_border",
-                    "rgb( 255, 204, 143 )"},
-                {"outer-tabs_tab_border_unselected",
-                    "rgb( 165, 114, 63 )"},
-                {"inner-tabs_tab_base",
-                    "rgb( 255, 204, 143 )"},
-                {"inner-tabs_tab_base_unselected",
-                    "rgb( 245, 172, 142 )"},
-                {"inner-tabs_pane_base",
-                    "rgb( 255, 204, 143 )"},
-                {"inner-tabs_border",
-                    "rgb( 195, 80, 81 )"},
-                {"inner-tabs_lines",
-                    "rgb( 195, 80, 81 )"},
-                {"sub-tabs_tab_base",
-                    "rgb( 255, 140, 141 )"},
-                {"sub-tabs_tab_base_unselected",
-                    "rgb( 245, 172, 142 )"},
-                {"sub-tabs_pane_base",
-                    "rgb( 255, 140, 141 )"},
-                {"sub-tabs_border",
-                    "rgb( 195, 80, 81 )"},
-                {"sub-tabs_tab_border_unselected",
-                    "rgb( 165, 114, 63 )"}
-            };
-            break;
-        case 3:
-            style_map = {
-                {"text_primary",
-                    "rgb( 220, 211, 187 )"},
-                {"text_secondary",
-                    "rgb( 193, 175, 129 )"},
-                {"text_disabled",
-                    "rgb( 163, 145, 99 )"},
-                {"tooltips_base",
-                    "rgb( 193, 175, 129 )"},
-                {"tooltips_text",
-                    "rgb( 14, 28, 0 )"},
-                {"tooltips_border",
-                    "rgb( 163, 145, 99 )"},
-                {"menu_text",
-                    "rgb( 163, 145, 99 )"},
-                {"menu_base",
-                    "rgb( 24, 48, 0 )"},
-                {"menu_base_hover",
-                    "rgb( 54, 78, 30 )"},
-                {"menu_base_dropdown_selection",
-                    "rgb( 74, 98, 50 )"},
-                {"window_base_primary",
-                    "rgb( 24, 48, 0 )"},
-                {"window_base_secondary",
-                    "rgb( 14, 28, 0 )"},
-                {"window_base_tertiary",
-                    "rgb( 54, 78, 30 )"},
-                {"border_primary",
-                    "rgb( 163, 145, 99 )"},
-                {"border_secondary",
-                    "rgb( 193, 175, 129 )"},
-                {"border_tertiary",
-                    "rgb( 193, 175, 129 )"},
-                {"buttons_base",
-                    "rgb( 94, 118, 70 )"},
-                {"buttons_base_hover",
-                    "rgb( 124, 148, 100 )"},
-                {"buttons_base_disabled",
-                    "rgb( 54, 78, 30 )"},
-                {"logs_switch_buttons_base_hover",
-                    "rgb( 24, 38, 0 )"},
-                {"stats_switch_buttons_frame_base",
-                    "rgb( 14, 28, 0 )"},
-                {"stats_switch_buttons_frame_border",
-                    "rgb( 24, 48, 0 )"},
-                {"stats_switch_buttons_base",
-                    "rgb( 54, 78, 30 )"},
-                {"stats_switch_buttons_base_hover",
-                    "rgb( 24, 48, 0 )"},
-                {"stats_switch_buttons_base_border_hover",
-                    "rgb( 94, 118, 70 )"},
-                {"globals_frames_base",
-                    "rgb( 4, 18, 0 )"},
-                {"globals_frames_border",
-                    "rgb( 128, 128, 128 )"},
-                {"globals_frames_lines",
-                    "rgb( 124, 148, 100 )"},
-                {"boxes_base_primary",
-                    "rgb( 94, 118, 70 )"},
-                {"boxes_base_secondary",
-                    "rgb( 104, 128, 80 )"},
-                {"boxes_base_tertiary",
-                    "rgb( 124, 148, 100 )"},
-                {"boxes_border_focus",
-                    "rgb( 193, 175, 129 )"},
-                {"boxes_base_disabled",
-                    "rgb( 54, 78, 30 )"},
-                {"boxes_base_off",
-                    "rgb( 74, 98, 50 )"},
-                {"linedit_text",
-                    "rgb( 4, 18, 0 )"},
-                {"linedit_base",
-                    "rgb( 193, 175, 129 )"},
-                {"linedit_base_focus",
-                    "rgb( 223, 215, 159 )"},
-                {"linedit_base_selection",
-                    "rgb( 173, 155, 109 )"},
-                {"linedit_base_disabled",
-                    "rgb( 54, 78, 30 )"},
-                {"tables_header",
-                    "rgb( 63, 65, 19 )"},
-                {"tables_base",
-                    "rgb( 33, 35, 0 )"},
-                {"tables_text_selection",
-                    "rgb( 33, 35, 0 )"},
-                {"tables_base_selection",
-                    "rgb( 133, 135, 89 )"},
-                {"tables_border",
-                    "rgb( 133, 135, 89 )"},
-                {"tables_base_disabled",
-                    "rgb( 54, 78, 30 )"},
-                {"tables_text_disabled",
-                    "rgb( 163, 145, 99 )"},
-                {"tables_border_disabled",
-                    "rgb( 83, 85, 39 )"},
-                {"charts_contour",
-                    "rgb( 94, 118, 70 )"},
-                {"textbrowser_text",
-                    "rgb( 193, 175, 129 )"},
-                {"textbrowser_base",
-                    "rgb( 33, 35, 0 )"},
-                {"textbrowser_text_selection",
-                    "rgb( 223, 205, 159 )"},
-                {"textbrowser_base_selection",
-                    "rgb( 133, 135, 89 )"},
-                {"scrollbar_base",
-                    "rgb( 94, 118, 70 )"},
-                {"scrollbar_handler",
-                    "rgb( 174, 198, 150 )"},
-                {"slider_handler",
-                    "rgb( 94, 118, 70 )"},
-                {"slider_bar_active",
-                    "rgb( 163, 145, 99 )"},
-                {"slider_bar_inactive",
-                    "rgb( 113, 95, 49 )"},
-                {"slider_bar_active_border",
-                    "rgb( 183, 165, 119 )"},
-                {"slider_handler_border",
-                    "rgb( 163, 145, 99 )"},
-                {"slider_handler_border_hover",
-                    "rgb( 193, 175, 129 )"},
-                {"outer-tabs_base",
-                    "rgb( 14, 28, 0 )"},
-                {"inner-tabs_base",
-                    "rgb( 24, 48, 0 )"},
-                {"sub-tabs_base",
-                    "rgb( 34, 58, 10 )"},
-                {"outer-tabs_tab_text_selected",
-                    "rgb( 220, 211, 187 )"},
-                {"outer-tabs_tab_text_unselected",
-                    "rgb( 163, 145, 99 )"},
-                {"outer-tabs_tab_text_hover",
-                    "rgb( 193, 175, 129 )"},
-                {"outer-tabs_tab_border",
-                    "rgb( 220, 211, 187 )"},
-                {"outer-tabs_tab_border_unselected",
-                    "rgb( 163, 145, 99 )"},
-                {"inner-tabs_tab_base",
-                    "rgb( 24, 48, 0 )"},
-                {"inner-tabs_tab_base_unselected",
-                    "rgb( 14, 28, 0 )"},
-                {"inner-tabs_pane_base",
-                    "rgb( 24, 48, 0 )"},
-                {"inner-tabs_border",
-                    "rgb( 220, 211, 187 )"},
-                {"inner-tabs_lines",
-                    "rgb( 124, 148, 100 )"},
-                {"sub-tabs_tab_base",
-                    "rgb( 34, 58, 10 )"},
-                {"sub-tabs_tab_base_unselected",
-                    "rgb( 24, 48, 0 )"},
-                {"sub-tabs_pane_base",
-                    "rgb( 34, 58, 10 )"},
-                {"sub-tabs_border",
-                    "rgb( 220, 211, 187 )"},
-                {"sub-tabs_tab_border_unselected",
-                    "rgb( 163, 145, 99 )"}
-            };
-            break;
-        case 4:
-            style_map = {
-                {"text_primary",
-                    "rgb( 30, 21, 0 )"},
-                {"text_secondary",
-                    "rgb( 40, 31, 7 )"},
-                {"text_disabled",
-                    "rgb( 60, 51, 27 )"},
-                {"tooltips_base",
-                    "rgb( 40, 31, 7 )"},
-                {"tooltips_text",
-                    "rgb( 170, 161, 137 )"},
-                {"tooltips_border",
-                    "rgb( 210, 201, 177 )"},
-                {"menu_text",
-                    "rgb( 40, 31, 7 )"},
-                {"menu_base",
-                    "rgb( 210, 201, 177 )"},
-                {"menu_base_hover",
-                    "rgb( 170, 161, 137 )"},
-                {"menu_base_dropdown_selection",
-                    "rgb( 70, 61, 37 )"},
-                {"window_base_primary",
-                    "rgb( 230, 221, 197 )"},
-                {"window_base_secondary",
-                    "rgb( 170, 161, 137 )"},
-                {"window_base_tertiary",
-                    "rgb( 210, 201, 177 )"},
-                {"border_primary",
-                    "rgb( 80, 71, 47 )"},
-                {"border_secondary",
-                    "rgb( 100, 91, 67 )"},
-                {"border_tertiary",
-                    "rgb( 100, 91, 67 )"},
-                {"buttons_base",
-                    "rgb( 130, 121, 97 )"},
-                {"buttons_base_hover",
-                    "rgb( 140, 131, 107 )"},
-                {"buttons_base_disabled",
-                    "rgb( 160, 151, 127 )"},
-                {"logs_switch_buttons_base_hover",
-                    "rgb( 160, 151, 127 )"},
-                {"stats_switch_buttons_frame_base",
-                    "rgb( 170, 161, 137 )"},
-                {"stats_switch_buttons_frame_border",
-                    "rgb( 230, 221, 197 )"},
-                {"stats_switch_buttons_base",
-                    "rgb( 200, 191, 167 )"},
-                {"stats_switch_buttons_base_hover",
-                    "rgb( 180, 171, 147 )"},
-                {"stats_switch_buttons_base_border_hover",
-                    "rgb( 220, 211, 187 )"},
-                {"globals_frames_base",
-                    "rgb( 210, 201, 177 )"},
-                {"globals_frames_border",
-                    "rgb( 80, 71, 47 )"},
-                {"globals_frames_lines",
-                    "rgb( 60, 51, 27 )"},
-                {"boxes_base_primary",
-                    "rgb( 130, 121, 97 )"},
-                {"boxes_base_secondary",
-                    "rgb( 140, 131, 107 )"},
-                {"boxes_base_tertiary",
-                    "rgb( 130, 121, 97 )"},
-                {"boxes_border_focus",
-                    "rgb( 80, 71, 47 )"},
-                {"boxes_base_disabled",
-                    "rgb( 160, 151, 127 )"},
-                {"boxes_base_off",
-                    "rgb( 150, 141, 117 )"},
-                {"linedit_text",
-                    "rgb( 30, 21, 0 )"},
-                {"linedit_base",
-                    "rgb( 210, 201, 177 )"},
-                {"linedit_base_focus",
-                    "rgb( 230, 221, 197 )"},
-                {"linedit_base_selection",
-                    "rgb( 170, 161, 137 )"},
-                {"linedit_base_disabled",
-                    "rgb( 160, 151, 127 )"},
-                {"tables_header",
-                    "rgb( 130, 121, 97 )"},
-                {"tables_base",
-                    "rgb( 210, 201, 177 )"},
-                {"tables_text_selection",
-                    "rgb( 230, 221, 197 )"},
-                {"tables_base_selection",
-                    "rgb( 60, 51, 27 )"},
-                {"tables_border",
-                    "rgb( 80, 71, 47 )"},
-                {"tables_base_disabled",
-                    "rgb( 160, 151, 127 )"},
-                {"tables_text_disabled",
-                    "rgb( 130, 121, 97 )"},
-                {"tables_border_disabled",
-                    "rgb( 130, 121, 97 )"},
-                {"charts_contour",
-                    "rgb( 40, 31, 7 )"},
-                {"textbrowser_text",
-                    "rgb( 30, 21, 0 )"},
-                {"textbrowser_base",
-                    "rgb( 210, 201, 177 )"},
-                {"textbrowser_text_selection",
-                    "rgb( 230, 221, 197 )"},
-                {"textbrowser_base_selection",
-                    "rgb( 80, 71, 47 )"},
-                {"scrollbar_base",
-                    "rgb( 100, 91, 67 )"},
-                {"scrollbar_handler",
-                    "rgb( 210, 201, 177 )"},
-                {"slider_handler",
-                    "rgb( 100, 91, 67 )"},
-                {"slider_bar_active",
-                    "rgb( 120, 111, 87 )"},
-                {"slider_bar_inactive",
-                    "rgb( 40, 31, 7 )"},
-                {"slider_bar_active_border",
-                    "rgb( 150, 141, 117 )"},
-                {"slider_handler_border",
-                    "rgb( 220, 211, 187 )"},
-                {"slider_handler_border_hover",
-                    "rgb( 250, 241, 217 )"},
-                {"outer-tabs_base",
-                    "rgb( 170, 161, 137 )"},
-                {"inner-tabs_base",
-                    "rgb( 180, 171, 147 )"},
-                {"sub-tabs_base",
-                    "rgb( 190, 181, 157 )"},
-                {"outer-tabs_tab_text_selected",
-                    "rgb( 30, 21, 0 )"},
-                {"outer-tabs_tab_text_unselected",
-                    "rgb( 90, 81, 57 )"},
-                {"outer-tabs_tab_text_hover",
-                    "rgb( 50, 41, 17 )"},
-                {"outer-tabs_tab_border",
-                    "rgb( 80, 71, 47 )"},
-                {"outer-tabs_tab_border_unselected",
-                    "rgb( 100, 91, 67 )"},
-                {"inner-tabs_tab_base",
-                    "rgb( 180, 171, 147 )"},
-                {"inner-tabs_tab_base_unselected",
-                    "rgb( 170, 161, 137 )"},
-                {"inner-tabs_pane_base",
-                    "rgb( 180, 171, 147 )"},
-                {"inner-tabs_border",
-                    "rgb( 80, 71, 47 )"},
-                {"inner-tabs_lines",
-                    "rgb( 60, 51, 27 )"},
-                {"sub-tabs_tab_base",
-                    "rgb( 190, 181, 157 )"},
-                {"sub-tabs_tab_base_unselected",
-                    "rgb( 180, 171, 147 )"},
-                {"sub-tabs_pane_base",
-                    "rgb( 190, 181, 157 )"},
-                {"sub-tabs_border",
-                    "rgb( 80, 71, 47 )"},
-                {"sub-tabs_tab_border_unselected",
-                    "rgb( 100, 91, 67 )"}
-            };
-            break;
-        default:
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(theme_id), true );
-            break;
-    }
-    makeStyleSheet( stylesheet, style_map, icons_theme );
 }
 
 } // namespace StyleSec

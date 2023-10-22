@@ -1,5 +1,6 @@
-#ifndef CRAPUP_H
-#define CRAPUP_H
+#ifndef LOGDOCTOR__CRAPUP_H
+#define LOGDOCTOR__CRAPUP_H
+
 
 #include <QWidget>
 
@@ -25,11 +26,9 @@ public:
 
     //! Class constructor
     /*!
-        \param window_theme_id The ID of the window theme
-        \param icons theme The theme of the icons
         \param parent The parent Widget
     */
-    explicit Crapup( const int& window_theme_id, const QString& icons_theme, QWidget* parent=nullptr );
+    explicit Crapup( QWidget* parent=nullptr );
     ~Crapup();
 
 
@@ -63,15 +62,13 @@ private slots:
 
 
 private:
-    Ui::Crapup *ui;
+    QSharedPointer<Ui::Crapup> ui;
 
     QPixmap img_checking;
 
     float img_orientation{ 0.0 };
 
     QScopedPointer<QTimer> img_timer;
-
-    void getStyleSheet( QString& stylesheet, const int& theme_id ) const;
 
     bool request_aborted;
 
@@ -87,4 +84,5 @@ private:
     bool quitting{ false };
 };
 
-#endif // CRAPUP_H
+
+#endif // LOGDOCTOR__CRAPUP_H

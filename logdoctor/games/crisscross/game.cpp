@@ -2,20 +2,23 @@
 #include "game.h"
 #include "ui_crisscross.h"
 
-#include "games/games.h"
+#include "globals/global_configs.h"
+
+#include "games/game_dialog.h"
+
+#include "modules/stylesheets.h"
 
 #include <QPushButton>
-#include <QMessageBox>
 
 
-CrissCross::CrissCross( const int& theme_id, QWidget* parent )
+CrissCross::CrissCross( QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::CrissCross }
 {
     this->ui->setupUi(this);
 
-    QString stylesheet{ "" };
-    GameSec::crisscrossStyleSheet( stylesheet, theme_id );
+    QString stylesheet;
+    StyleSec::Games::CrissCross::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
     // verify that one player is human and the other is not
@@ -40,11 +43,6 @@ CrissCross::CrissCross( const int& theme_id, QWidget* parent )
         this->AI_playTurn();
     }
 
-}
-
-CrissCross::~CrissCross()
-{
-    delete ui;
 }
 
 
@@ -183,7 +181,7 @@ void CrissCross::nextTurn()
 }
 
 
-const bool CrissCross::checkVictory()
+bool CrissCross::checkVictory()
 {
     bool result{ false };
     unsigned streak;
@@ -229,23 +227,26 @@ void CrissCross::victory()
     }
 
     // display a dialog
-    QString message;
+    QString title, message;
     if ( (this->p_turn == 1 && this->p1_human)
       || (this->p_turn == 2 && this->p2_human) ) {
         // user won
+        title = CrissCross::tr("Victory");
         message = CrissCross::tr("You beated me!");
     } else {
         // AI won
         message = CrissCross::tr("This time you lost!");
     }
-    QMessageBox::about(
-        this,
-        CrissCross::tr("Victory"),
-        message );
+    GameDialog dialog(
+        title,
+        message,
+        this
+    );
+    std::ignore = dialog.exec();
 }
 
 
-const bool CrissCross::gameDraw() const
+bool CrissCross::gameDraw() const
 {
     bool result{ false };
     unsigned empty_tiles{ 9 };
@@ -269,10 +270,12 @@ void CrissCross::draw()
     }
 
     // display a dialog
-    QMessageBox::about(
-        this,
+    GameDialog dialog(
         CrissCross::tr("Draw"),
-        CrissCross::tr("Nice match") );
+        CrissCross::tr("Nice match"),
+        this
+    );
+    std::ignore = dialog.exec();
 }
 
 
@@ -287,24 +290,24 @@ void CrissCross::AI_playTurn()
 void CrissCross::AI_updateWeights()
 {
     // reset the weights
-    for ( int i=0; i<9; i++ ) {
+    for ( size_t i{0ul}; i<9ul; i++ ) {
         this->board_weights[ i ] = 0;
     }
     // calculate the new weights
     unsigned win_streak, lose_streak;
-    std::vector<unsigned> empty_tiles;
+    std::vector<size_t> empty_tiles (3);
     for ( const auto& sequence : this->sequences ) {
         // reset data
         win_streak = lose_streak = 0;
         empty_tiles.clear();
         // check the tiles in the sequence
-        for ( const auto& index : sequence ) {
+        for ( const auto index : sequence ) {
             if ( this->board[ index ] == this->p_turn ) {
                 win_streak ++;
             } else if ( this->board[ index ] > 0 ) {
                 lose_streak ++;
             } else {
-                empty_tiles.push_back( index );
+                empty_tiles.emplace_back( std::move(index) );
             }
         }
         // set the new weight for the empty tiles
@@ -317,10 +320,9 @@ void CrissCross::AI_updateWeights()
             }
         }
     }
-
 }
 
-const unsigned CrissCross::AI_makeChoice() const
+unsigned CrissCross::AI_makeChoice() const
 {
     // get a list of the heaviest tiles
     std::vector<unsigned> moves;

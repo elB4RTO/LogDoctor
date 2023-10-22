@@ -13,7 +13,7 @@
 namespace IOutils
 {
 
-const bool exists( std::string_view path )
+bool exists( std::string_view path )
 {
     if ( path.empty() ) {
         return false;
@@ -22,7 +22,7 @@ const bool exists( std::string_view path )
 }
 
 
-const bool isFile( std::string_view path )
+bool isFile( std::string_view path )
 {
     if ( exists( path ) ) {
         return std::filesystem::is_regular_file( path );
@@ -30,7 +30,7 @@ const bool isFile( std::string_view path )
     return false;
 }
 
-const bool checkFile( std::string_view path, const bool readable, const bool writable )
+bool checkFile( std::string_view path, const bool readable, const bool writable )
 {
     if ( isFile( path ) ) {
         // check the needed permissions
@@ -51,7 +51,7 @@ const bool checkFile( std::string_view path, const bool readable, const bool wri
 }
 
 
-const bool isDir( std::string_view path )
+bool isDir( std::string_view path )
 {
     if ( exists( path )) {
         return std::filesystem::is_directory( path );
@@ -59,7 +59,7 @@ const bool isDir( std::string_view path )
     return false;
 }
 
-const bool checkDir( std::string_view path, const bool readable, const bool writable )
+bool checkDir( std::string_view path, const bool readable, const bool writable )
 {
     if ( isDir( path ) ) {
         // check the needed permissions
@@ -80,7 +80,7 @@ const bool checkDir( std::string_view path, const bool readable, const bool writ
 }
 
 
-const bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
+bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
 {
     try {
         const bool failed{ !std::filesystem::create_directories( path, err ) };
@@ -95,7 +95,7 @@ const bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
 
 
 // rename an entry with a trailing '.copy'
-const bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true)
+bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true)
 {
     try {
         std::string new_path{ path };

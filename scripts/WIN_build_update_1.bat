@@ -24,7 +24,7 @@ IF NOT EXIST "C:\Program Files\LogDoctor" (
 
 
 :: Call the builder
-IF NOT EXIST "builder.bat" (
+IF NOT EXIST "scripts/builder.bat" (
 	ECHO:
 	ECHO Error: builder not found
 	cd "%actual_path%"
@@ -32,7 +32,7 @@ IF NOT EXIST "builder.bat" (
 	EXIT /B 1
 )
 
-CALL builder.bat "%actual_path%"
+CALL scripts/builder.bat "%actual_path%"
 IF ERRORLEVEL 1 (
 	ECHO:
 	ECHO Compilation failed

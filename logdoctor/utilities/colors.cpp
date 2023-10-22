@@ -1,16 +1,20 @@
 
 #include "colors.h"
+
+#include "globals/global_configs.h"
+
 #include "modules/exceptions.h"
 
+#include <QtCharts>
 #include <QPalette>
-#include <QColor>
 #include <QString>
+#include <QColor>
 
 
 namespace ColorSec
 {
 
-const std::unordered_map<std::string, QColor> getColors()
+std::unordered_map<std::string, QColor> getColors()
 {
     return {
         // greyscale
@@ -27,7 +31,7 @@ const std::unordered_map<std::string, QColor> getColors()
 }
 
 
-const std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes()
+std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes()
 {
     return {
         // none
@@ -74,7 +78,7 @@ const std::unordered_map<int, std::unordered_map<std::string, QString>> getColor
 }
 
 
-void applyChartTheme( const int theme_id, const std::unordered_map<std::string, QFont>& fonts, QtCharts::QChartView* chart_view )
+void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QChartView* chart_view )
 {
     QPen axis_pen;
     QPen grid_pen;
@@ -83,34 +87,22 @@ void applyChartTheme( const int theme_id, const std::unordered_map<std::string, 
     QBrush background_brush{ chart_view->backgroundBrush() };
     const QFont& small_font{ fonts.at("main_small") };
     const QFont& font{ fonts.at("main") };
-    switch ( theme_id ) {
-        case 0:
+    switch ( GlobalConfigs::charts_theme ) {
+        case ChartsTheme::Light:
             label_color.setRgb( 16, 16, 16 );
-            axis_pen.setColor( QColor( 32, 32, 32 ) );
-            grid_pen.setColor( QColor( 128, 128, 128 ) );
+            axis_pen.setColor( QColor( 56, 56, 56 ) );
+            grid_pen.setColor( QColor( 160, 160, 160 ) );
             background_brush.setColor( QColor( 248, 248, 248 ) );
             break;
-        case 1:
+        case ChartsTheme::Dark:
             label_color.setRgb( 248, 248, 248 );
-            axis_pen.setColor( QColor( 216, 216, 216 ) );
-            grid_pen.setColor( QColor( 128, 128, 128 ) );
-            background_brush.setColor( QColor( 40, 40, 40 ) );
-            break;
-        case 2:
-            label_color.setRgb( 40, 31, 7 );
-            axis_pen.setColor( QColor( 70, 61, 37 ) );
-            grid_pen.setColor( QColor( 100, 91, 67 ) );
-            background_brush.setColor( QColor( 230, 221, 197 ) );
-            break;
-        case 3:
-            label_color.setRgb( 220, 250, 124 );
-            axis_pen.setColor( QColor( 188, 224, 232 ) );
-            grid_pen.setColor( QColor( 134, 199, 214 ) );
-            background_brush.setColor( QColor( 0, 77, 94 ) );
+            axis_pen.setColor( QColor( 200, 200, 200 ) );
+            grid_pen.setColor( QColor( 96, 96, 96 ) );
+            background_brush.setColor( QColor( 24, 24, 24 ) );
             break;
         default:
             // shouldn't be here
-            throw GenericException( "Unexpeced ChartsTheme ID: "+std::to_string(theme_id), true );
+            throw GenericException( "Unexpeced ChartsTheme ID: "+std::to_string(static_cast<themes_t>(GlobalConfigs::charts_theme)), true );
             break;
     }
     axis_pen.setWidthF( 1.1 );

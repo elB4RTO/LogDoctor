@@ -1,5 +1,6 @@
-#ifndef CRISSCROSS_H
-#define CRISSCROSS_H
+#ifndef LOGDOCTOR__GAMES__CRISSCROSS__GAME_H
+#define LOGDOCTOR__GAMES__CRISSCROSS__GAME_H
+
 
 #include <QIcon>
 #include <QWidget>
@@ -11,6 +12,7 @@ namespace Ui {
     class CrissCross;
 }
 
+
 //! CrissCross
 /*!
     Player vs AI criss-cross game
@@ -20,8 +22,7 @@ class CrissCross : public QWidget
     Q_OBJECT
 
 public:
-    explicit CrissCross( const int& theme_id, QWidget* parent=nullptr );
-    ~CrissCross();
+    explicit CrissCross( QWidget* parent=nullptr );
 
 
 private slots:
@@ -45,7 +46,7 @@ private slots:
 
 
 private:
-    Ui::CrissCross* ui;
+    QSharedPointer<Ui::CrissCross> ui;
 
     // player turn
     unsigned p_turn{ 1 };
@@ -71,7 +72,7 @@ private:
         QIcon(":/games/games/crisscross/x.png")
     };
 
-    const unsigned sequences[8][3]{
+    const size_t sequences[8][3]{
         {0,1,2},{3,4,5},{6,7,8}, // horizontal
         {0,3,6},{1,4,7},{2,5,8}, // vertical
         {0,4,8},{2,4,6}          // diagonal
@@ -94,15 +95,12 @@ private:
     //! Switches to the next turn
     void nextTurn();
 
-    //! Checks whether it's the human player turn or not
-    const bool isPlayerTurn();
-
 
     //! Checks whether somebody won or not
-    const bool checkVictory();
+    bool checkVictory();
 
     //! Checks whether the game is draw or not
-    const bool gameDraw() const;
+    bool gameDraw() const;
 
     //! Someone won, process the victory
     void victory();
@@ -128,8 +126,9 @@ private:
         \return The tile to select
         \see AI_playTurn();
     */
-    const unsigned AI_makeChoice() const;
+    unsigned AI_makeChoice() const;
 
 };
 
-#endif // CRISSCROSS_H
+
+#endif // LOGDOCTOR__GAMES__CRISSCROSS__GAME_H

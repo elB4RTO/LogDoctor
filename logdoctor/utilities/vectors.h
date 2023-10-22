@@ -1,5 +1,6 @@
-#ifndef VECOPS_H
-#define VECOPS_H
+#ifndef LOGDOCTOR__VECOPS_H
+#define LOGDOCTOR__VECOPS_H
+
 
 #include <vector>
 #include <algorithm>
@@ -19,13 +20,14 @@ namespace VecOps
     \return Whether the list does contain the flag or not
 */
 template <typename T>
-inline const bool contains( const std::vector<T>& list, const T& flag )
+inline bool contains( const std::vector<T>& list, const T& flag )
 {
     return std::any_of( list.cbegin(), list.cend(),
                         [&flag]( const T& item )
                                { return item == flag; } );
 }
 
-}
+} // namespace VecOps
 
-#endif // VECOPS_H
+
+#endif // LOGDOCTOR__UTILITIES__VECOPS_H

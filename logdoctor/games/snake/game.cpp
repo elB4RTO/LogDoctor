@@ -2,23 +2,24 @@
 #include "game.h"
 #include "ui_snake.h"
 
-#include "games/games.h"
+#include "modules/stylesheets.h"
+
+#include "games/game_dialog.h"
 
 #include <QTimer>
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
-#include <QMessageBox>
 
 
-SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* parent )
+SnakeGame::SnakeGame( const QFont& term_font, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::SnakeGame }
 {
     this->ui->setupUi(this);
 
-    QString stylesheet{ "" };
-    GameSec::snakeStyleSheet( stylesheet, theme_id );
+    QString stylesheet;
+    StyleSec::Games::Snake::getStyleSheet( stylesheet );
     this->setStyleSheet( stylesheet );
 
     QFont font{ term_font };
@@ -37,14 +38,12 @@ SnakeGame::SnakeGame( const int& theme_id, const QFont& term_font, QWidget* pare
     this->ui->view_Field->setScene( this->field_scene.get() );
 }
 
-SnakeGame::~SnakeGame()
-{
-    delete this->ui;
-}
-
 void SnakeGame::closeEvent( QCloseEvent* event )
 {
-    this->game_loop->stop();
+    Q_UNUSED(event)
+    if (this->game_loop) {
+        this->game_loop->stop();
+    }
     this->playing &= false;
 }
 
@@ -236,10 +235,12 @@ void SnakeGame::processGameLogic()
     if ( game_over ) {
         this->game_loop->stop();
         this->playing &= false;
-        QMessageBox::about(
-            this,
+        GameDialog dialog(
             SnakeGame::tr("Game Over"),
-            this->game_over_msg );
+            this->game_over_msg,
+            this
+        );
+        std::ignore = dialog.exec();
     } else {
 
 
@@ -314,7 +315,7 @@ void SnakeGame::processNextKeyEvent()
 void SnakeGame::updateGameScore()
 {
     this->game_score += this->score_step;
-    this->ui->lcd_Score->setDigitCount( std::to_string(this->game_score).size() );
+    this->ui->lcd_Score->setDigitCount( static_cast<int>(std::to_string(this->game_score).size()) );
     this->ui->lcd_Score->display( this->game_score );
 }
 

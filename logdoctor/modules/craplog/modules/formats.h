@@ -1,5 +1,6 @@
-#ifndef FORMATS_H
-#define FORMATS_H
+#ifndef LOGDOCTOR__CRAPLOG__FORMATS_H
+#define LOGDOCTOR__CRAPLOG__FORMATS_H
+
 
 #include <QString>
 
@@ -23,7 +24,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processApacheFormatString( const std::string& format_string ) const;
+    LogsFormat processApacheFormatString( const std::string& format_string ) const;
 
     //! Processes the given string to extrapolate the format for Nginx
     /*!
@@ -32,7 +33,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processNginxFormatString( const std::string& format_string ) const;
+    LogsFormat processNginxFormatString( const std::string& format_string ) const;
 
     //! Processes the given string to extrapolate the format for the IIS
     /*!
@@ -42,7 +43,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    const LogsFormat processIisFormatString( const std::string& format_string, const int& log_module ) const;
+    LogsFormat processIisFormatString( const std::string& format_string, const int& log_module ) const;
 
 
     /////////////////
@@ -54,7 +55,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getApacheLogSample( const LogsFormat& log_format ) const;
+    QString getApacheLogSample( const LogsFormat& log_format ) const;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -62,7 +63,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getNginxLogSample( const LogsFormat& log_format ) const;
+    QString getNginxLogSample( const LogsFormat& log_format ) const;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -70,7 +71,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    const QString getIisLogSample( const LogsFormat& log_format ) const;
+    QString getIisLogSample( const LogsFormat& log_format ) const;
 
 
 private:
@@ -80,90 +81,100 @@ private:
 
     //!< Access logs fields formats
     const std::unordered_map<std::string, std::string> APACHE_ALF{
-        {"h",  "client"},
-        {"t",  "date_time_ncsa"},
-        {"r",  "request_full"},
-        {"H",  "request_protocol"},
-        {"m",  "request_method"},
-        {"U",  "request_uri"},
-        {"q",  "request_query"},
-        {"s",  "response_code"},
-        {"<s", "response_code"},
-        {">s", "response_code"},
-        {"O",  "bytes_sent"},
-        {"I",  "bytes_received"},
-        {"T",  "time_taken_s"},
-        {"D",  "time_taken_ms"},
-        // not in use, will be discarded
         {"a",  "NONE"},
         {"A",  "NONE"},
         {"b",  "NONE"},
         {"B",  "NONE"},
+        {"C",  "NONE"},
+        {"D",  "time_taken_ms"},
         {"e",  "NONE"},
         {"f",  "NONE"},
+        {"h",  "client"},
+        {"H",  "request_protocol"},
+        {"i",  "NONE"},
+        {"I",  "bytes_received"},
         {"k",  "NONE"},
         {"l",  "NONE"},
         {"L",  "NONE"},
+        {"m",  "request_method"},
+        {"n",  "NONE"},
+        {"o",  "NONE"},
+        {"O",  "bytes_sent"},
         {"p",  "NONE"},
         {"P",  "NONE"},
+        {"q",  "request_query"},
+        {"r",  "request_full"},
         {"R",  "NONE"},
+        {"s",  "response_code"},
+        {"<s", "response_code"},
+        {">s", "response_code"},
         {"S",  "NONE"},
+        {"t",  "date_time_ncsa"},
+        {"T",  "time_taken_s"},
         {"u",  "NONE"},
+        {"U",  "request_uri"},
         {"v",  "NONE"},
         {"V",  "NONE"},
         {"X",  "NONE"} };
 
     //!< Composed access logs fields formats
     const std::unordered_map<std::string, std::unordered_map<std::string, std::string>> APACHE_ALF_V{
-        {"a", { {"c",          "client"}}},
-        {"h", { {"c",          "client"}}},
-        {"i", { {"Cookie",     "cookie"},
-                {"User-agent", "user_agent"},
-                {"Referer",    "referer"}}},
-        {"t", { /* not actually date-time fields but text, used as separators
-                {"\%n",        "NONE"}, // NEW LINE
-                {"\%t",        "NONE"}, // HORIZONTAL TAB
-                {"\%%",        "NONE"},*/
+        {"a", { {"",           "client"}, // as %h (from single fields)
+                {"c",          "client"}}},
+        {"h", { {"",           "client"}, // as %h (from single fields)
+                {"c",          "client"}}},
+        {"i", { {"",           "NONE"},
+                {"Cookie",     "cookie"},
+                {"Referer",    "referer"},
+                {"User-agent", "user_agent"}}},
+        {"t", { {"",           "date_time_ncsa"}, // as %t (from single fields)
+              //{"%%",         "NONE"}, // the percent sign
+              //{"%n",         "NONE"}, // line feed
+              //{"%t",         "NONE"}, // horizontal tab
                 {"sec",        "date_time_epoch_s"},
                 {"msec",       "date_time_epoch_ms"},
                 {"usec",       "date_time_epoch_us"},
-                {"msec_frac",  "NONE"},
-                {"usec_frac",  "NONE"},
-                {"\%a",        "NONE"},
-                {"\%A",        "NONE"},
-                {"\%b",        "date_time_month_str"},
-                {"\%B",        "date_time_month_str"},
-                {"\%c",        "date_time_mcs"},
-                {"\%C",        "NONE"},
-                {"\%d",        "date_time_day"},
-                {"\%D",        "date_time_MMDDYY"},
-                {"\%e",        "date_time_day"},
-                {"\%F",        "date_time_YYYYMMDD"},
-                {"\%g",        "NONE"},
-                {"\%G",        "NONE"},
-                {"\%h",        "date_time_month_str"},
-                {"\%H",        "date_time_hour"},
-                {"\%I",        "NONE"},
-                {"\%j",        "NONE"},
-                {"\%m",        "date_time_month"},
-                {"\%M",        "date_time_minute"},
-                {"\%p",        "NONE"},
-                {"\%r",        "date_time_clock_12"},
-                {"\%R",        "date_time_clock_short"},
-                {"\%S",        "date_time_second"},
-                {"\%T",        "date_time_clock_24"},
-                {"\%u",        "NONE"},
-                {"\%U",        "NONE"},
-                {"\%V",        "NONE"},
-                {"\%w",        "NONE"},
-                {"\%W",        "NONE"},
-                {"\%x",        "date_time_MMDDYY"},
-                {"\%X",        "date_time_clock_24"},
-                {"\%y",        "date_time_year_short"},
-                {"\%Y",        "date_time_year"},
-                {"\%z",        "NONE"},
-                {"\%Z",        "NONE"}}},
-        {"T", { {"s",          "time_taken_s"},
+                {"msec_frac",  "NONE"}, // milliseconds fraction
+                {"usec_frac",  "NONE"}, // microseconds fraction
+                {"%a",         "NONE"}, // abbreviated weekday name
+                {"%A",         "NONE"}, // weekday name
+                {"%b",         "date_time_month_str"},
+                {"%B",         "date_time_month_str"},
+                {"%c",         "date_time_mcs"},
+                {"%C",         "NONE"}, // year (first 2 digits, aka centuries)
+                {"%d",         "date_time_day"},
+                {"%D",         "date_time_MMDDYY"},
+                {"%e",         "date_time_day"},
+                {"%F",         "date_time_YYYYMMDD"},
+                {"%g",         "NONE"}, // weel-based year (last 2 digits)
+                {"%G",         "NONE"}, // week-based year, namely the year which contains the current week
+                {"%h",         "date_time_month_str"},
+                {"%H",         "date_time_hour"},
+                {"%I",         "NONE"}, // hour (12h format)
+                {"%j",         "NONE"}, // day of the year number
+                {"%k",         "date_time_hour"}, // ?!? hour (24h format) !?! no documentation ?!?
+                {"%l",         "NONE"}, // hour (12h format)
+                {"%m",         "date_time_month"},
+                {"%M",         "date_time_minute"},
+                {"%p",         "NONE"}, // AM or PM
+                {"%r",         "date_time_clock_12"},
+                {"%R",         "date_time_clock_short"},
+                {"%s",         "date_time_epoch_s"},
+                {"%S",         "date_time_second"},
+                {"%T",         "date_time_clock_24"},
+                {"%u",         "NONE"}, // weekday number (1-7, Monday is 1)
+                {"%U",         "NONE"}, // week of the year number, with the first Sunday as the first day of week one
+                {"%V",         "NONE"}, // week of the year number
+                {"%w",         "NONE"}, // weekday number (0-6, Sunday is 0)
+                {"%W",         "NONE"}, // week of the year number, with the first Monday as the first day of week one
+                {"%x",         "date_time_MMDDYY"},
+                {"%X",         "date_time_clock_24"},
+                {"%y",         "date_time_year_short"},
+                {"%Y",         "date_time_year"},
+                {"%z",         "NONE"}, // timezone offset from UTC (1 minute=1, 1 hour=100)
+                {"%Z",         "NONE"}}}, // timezone name abbreviation
+        {"T", { {"",           "time_taken_s"}, // as s
+                {"s",          "time_taken_s"},
                 {"ms",         "time_taken_ms"},
                 {"us",         "time_taken_us"}}},
         // composed not in use
@@ -172,10 +183,12 @@ private:
         {"L",   {}},
         {"n",   {}},
         {"o",   {}},
-        {"p",   {{"canonical", "NONE"},
+        {"p",   {{"",          "NONE"}, // as canonical
+                 {"canonical", "NONE"},
                  {"local",     "NONE"},
                  {"remote",    "NONE"}}},
-        {"P",   {{"pid",       "NONE"},
+        {"P",   {{"",          "NONE"}, // as pid
+                 {"pid",       "NONE"},
                  {"tid",       "NONE"},
                  {"hextid",    "NONE"}}},
         {"^ti", {}},
@@ -426,4 +439,4 @@ private:
 };
 
 
-#endif // FORMATS_H
+#endif // LOGDOCTOR__CRAPLOG__FORMATS_H

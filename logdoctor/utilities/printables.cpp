@@ -9,7 +9,7 @@
 namespace PrintSec
 {
 
-const QString printableSize( const size_t bytes )
+QString printableSize( const size_t bytes )
 {
     std::string size_sfx{" B"};
     double size{ static_cast<double>(bytes) };
@@ -48,7 +48,7 @@ const QString printableSize( const size_t bytes )
 }
 
 
-const QString printableSpeed( const double bytes, const double secs_ )
+QString printableSpeed( const double bytes, const double secs_ )
 {
     std::string speed_sfx{" B/s"};
     const double secs{ ( secs_ > 0.0 ) ? secs_ : ( secs_ < 0.0 ) ? -secs_ : 0.1 };
@@ -88,7 +88,7 @@ const QString printableSpeed( const double bytes, const double secs_ )
 }
 
 
-const QString printableTime( const unsigned seconds )
+QString printableTime( const unsigned seconds )
 {
     const unsigned mins{ seconds / 60u };
     const unsigned secs{ seconds - (mins*60u) };
@@ -103,7 +103,7 @@ const QString printableTime( const unsigned seconds )
 }
 
 
-const QString printableTime( const int hour, const int minute, const int second )
+QString printableTime( const int hour, const int minute, const int second )
 {
     return QString("%1:%2:%3").arg(
         (hour<10)
@@ -119,21 +119,21 @@ const QString printableTime( const int hour, const int minute, const int second 
 }
 
 
-const QString printableDate( const QString& year, const int month, const QString& day )
+QString printableDate( const QString& year, const int month, const QString& day )
 {
     return QString("%1-%2-%3").arg(
         year,
         (month<10)
             ? QString("0%1").arg( month )
             : QString::number( month ),
-        (day.size()<2ul)
+        (day.size()<2)
             ? QString("0%1").arg( day )
             : day
     );
 }
 
 
-const QString printableDate( const int year, const int month, const int day )
+QString printableDate( const int year, const int month, const int day )
 {
     return QString("%1-%2-%3").arg(
         QString::number( year ),
@@ -147,7 +147,7 @@ const QString printableDate( const int year, const int month, const int day )
 }
 
 
-const QString printableBool( const int value )
+QString printableBool( const int value )
 {
     if ( value == 0 ) {
         return TR::tr( BOOLS__FALSE.c_str() );

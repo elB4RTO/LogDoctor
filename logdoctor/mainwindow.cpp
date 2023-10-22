@@ -2,6 +2,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "globals/global_configs.h"
+
 #include "defines/web_servers.h"
 
 #include "customs/treewidgetitems.h"
@@ -136,8 +138,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     /////////////////
     //// CRAPLOG ////
-    qRegisterMetaType<LogFile>();
-    qRegisterMetaType<WorkerDialog>();
     connect( this, &MainWindow::refreshLogs, &this->craplog, &Craplog::scanLogsDir);
     connect( &this->craplog, &Craplog::pushLogFile, this, &MainWindow::appendToLogsList);
     connect( &this->craplog, &Craplog::finishedRefreshing, this, &MainWindow::refreshFinished);
@@ -188,11 +188,14 @@ MainWindow::MainWindow(QWidget *parent)
     this->craplog.setCurrentWSID( this->default_ws );
 
 
-    // make the Configs initialize
+    // initialize the Configs
+    this->ui->splitter_Conf->setSizes( {128,1} );
+    this->ui->tree_ConfSections->expandAll();
+    this->ui->tree_ConfSections->itemAt(0,0)->child(0)->setSelected( true );
     // window
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
-    this->ui->box_ConfWindow_Theme->setCurrentIndex( this->window_theme_id );
-    this->ui->box_ConfWindow_Icons->setCurrentIndex( this->icons_theme_id );
+    this->ui->box_ConfWindow_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::window_theme) );
+    this->ui->box_ConfWindow_Icons->setCurrentIndex( static_cast<int>(GlobalConfigs::icons_theme) );
     // dialogs
     this->ui->slider_ConfDialogs_General->setValue( this->dialogs_level );
     this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
@@ -203,7 +206,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( this->TB.getColorSchemeID() );
     this->refreshTextBrowserPreview();
     // charts
-    this->ui->box_ConfCharts_Theme->setCurrentIndex( this->charts_theme_id );
+    this->ui->box_ConfCharts_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::charts_theme) );
     this->refreshChartsPreview();
     // databases
     this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
@@ -214,7 +217,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_ConfDatabases_DoBackup->setChecked( this->db_do_backup );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
-    this->ui->spinBox_ConfControl_Size->setValue( this->craplog.getWarningSize() / 1'048'576 );
+    this->ui->spinBox_ConfControl_Size->setValue( static_cast<int>(this->craplog.getWarningSize() / 1'048'576ul) );
     if ( this->craplog.getWarningSize() > 0 ) {
         this->ui->checkBox_ConfControl_Size->setChecked( true );
     } else {
@@ -265,9 +268,9 @@ MainWindow::MainWindow(QWidget *parent)
         this->ui->chart_StatsDay,
         this->ui->chart_StatsRelat
     };
-    for ( auto* chart : charts ) {
+    for ( auto chart : charts ) {
         ColorSec::applyChartTheme(
-            this->charts_theme_id, this->FONTS, chart );
+            this->FONTS, chart );
     }
     this->ui->listLogFiles->sortByColumn( 0, Qt::SortOrder::AscendingOrder );
 
@@ -281,13 +284,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->waiter_timer->start(250);
 }
 
-MainWindow::~MainWindow()
-{
-    delete this->ui;
-}
-
 void MainWindow::closeEvent( QCloseEvent *event )
 {
+    Q_UNUSED(event)
     // save actual configurations
     this->writeConfigs();
     // backup the database
@@ -434,15 +433,15 @@ void MainWindow::readConfigs()
                     this->setGeometryFromString( val );
 
                 } else if ( var == "WindowTheme" ) {
-                    this->window_theme_id = std::stoi( val );
-
-                } else if ( var == "ChartsTheme" ) {
-                    this->charts_theme_id = std::stoi( val );
+                    GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
 
                 } else if ( var == "IconsTheme" ) {
-                    this->icons_theme_id = std::stoi( val );
+                    GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
 
-                } else if ( var == "MainDialogLevel" ) {
+                } else if ( var == "ChartsTheme" ) {
+                    GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
+
+                } else if ( var == "MainDialogsLevel" ) {
                     this->dialogs_level = std::stoi( val );
 
                 } else if ( var == "DefaultWebServer" ) {
@@ -469,7 +468,7 @@ void MainWindow::readConfigs()
                 } else if ( var == "ColorScheme" ) {
                     this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
 
-                } else if ( var == "CraplogDialogLevel" ) {
+                } else if ( var == "CraplogDialogsLevel" ) {
                     this->craplog.setDialogsLevel( std::stoi( val ) );
 
                 } else if ( var == "HideUsedFiles" ) {
@@ -635,7 +634,7 @@ void MainWindow::readConfigs()
                 } else if ( var == "IisBlacklistClientUsed" ) {
                     this->craplog.setBlacklistUsed( IIS_ID, 20, this->s2b.at( val ) );
 
-                } else if ( var == "CrapviewDialogLevel" ) {
+                } else if ( var == "CrapviewDialogsLevel" ) {
                     this->crapview.setDialogsLevel( std::stoi( val ) );
 
                 }/* else {
@@ -780,10 +779,10 @@ void MainWindow::writeConfigs()
         configs += "\nLanguage=" + this->language;
         configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
         configs += "\nGeometry=" + this->geometryToString();
-        configs += "\nWindowTheme=" + std::to_string( this->window_theme_id );
-        configs += "\nChartsTheme=" + std::to_string( this->charts_theme_id );
-        configs += "\nIconsTheme=" + std::to_string( this->icons_theme_id );
-        configs += "\nMainDialogLevel=" + std::to_string( this->dialogs_level );
+        configs += "\nWindowTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::window_theme) );
+        configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
+        configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
+        configs += "\nMainDialogsLevel=" + std::to_string( this->dialogs_level );
         configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
         configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
@@ -796,7 +795,7 @@ void MainWindow::writeConfigs()
         configs += "\nColorScheme=" + std::to_string( this->TB.getColorSchemeID() );
         //// CRAPLOG ////
         configs += "\n\n[Craplog]";
-        configs += "\nCraplogDialogLevel=" + std::to_string( this->craplog.getDialogsLevel() );
+        configs += "\nCraplogDialogsLevel=" + std::to_string( this->craplog.getDialogsLevel() );
         configs += "\nHideUsedFiles=" + this->b2s.at( this->hide_used_files );
         configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
         //// APACHE2 ////
@@ -850,7 +849,7 @@ void MainWindow::writeConfigs()
         configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( IIS_ID, 20 ) );
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
-        configs += "\nCrapviewDialogLevel=" + std::to_string( this->crapview.getDialogsLevel() );
+        configs += "\nCrapviewDialogsLevel=" + std::to_string( this->crapview.getDialogsLevel() );
 
         // write on file
         try {
@@ -980,7 +979,7 @@ void MainWindow::backupDatabase() const
 }
 
 
-const std::string MainWindow::geometryToString() const
+std::string MainWindow::geometryToString() const
 {
     QRect geometry{ this->geometry() };
     std::string string;
@@ -1008,22 +1007,22 @@ void MainWindow::setGeometryFromString( const std::string& geometry )
 }
 
 
-const std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
+std::string MainWindow::list2string( const std::vector<std::string>& list, const bool user_agent ) const
 {
     if ( user_agent ) {
         return std::accumulate(
             list.begin(), list.end(), std::string{},
-            []( auto& s, auto str ) -> std::string&
-              { return s += StringOps::replace( str, " ", "%@#" ) + " "; } );
+            [&]( auto s, auto str ) -> std::string
+               { return std::move(s) + StringOps::replace( str, " ", "%@#" ) + " "; } );
 
     } else {
         return std::accumulate(
             list.begin(), list.end(), std::string{},
-            []( auto& s, auto str ) -> std::string&
-              { return s += str + " "; } );
+            []( auto s, auto str ) -> std::string
+              { return std::move(s) + std::move(str) + " "; } );
     }
 }
-const std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
+std::vector<std::string> MainWindow::string2list( const std::string& string, const bool user_agent ) const
 {
     std::vector<std::string> list, aux;
     StringOps::splitrip( aux, string, ' ' );
@@ -1031,7 +1030,8 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
         list.reserve( aux.size() );
         std::transform( aux.cbegin(), aux.cend(),
                         std::back_inserter( list ),
-                        [](auto str){ return StringOps::replace( str, "%@#", " " ); } );
+                        [&]( auto str )
+                           { return StringOps::replace( str, "%@#", " " ); } );
         return list;
     } else {
         return aux;
@@ -1044,27 +1044,23 @@ const std::vector<std::string> MainWindow::string2list( const std::string& strin
 //////////////////
 void MainWindow::detectIconsTheme()
 {
-    switch ( this->window_theme_id ) {
-        case 0:
-            // system default, use window color to determine the theme
+    switch ( GlobalConfigs::window_theme ) {
+        case WindowTheme::Native:
+            // use window color to determine the theme
             if ( this->palette().window().color().black() > 127 ) {
-                this->icons_theme = "light";
+                GlobalConfigs::icons_set = "light_native";
             } else {
-                this->icons_theme = "dark";
+                GlobalConfigs::icons_set = "dark_native";
             }
             break;
-        case 1:
-        case 3:
-            // ash / herb
-            this->icons_theme = "light";
+        case WindowTheme::Light:
+            GlobalConfigs::icons_set = "dark";
             break;
-        case 2:
-        case 4:
-            // candy / powder
-            this->icons_theme = "dark";
+        case WindowTheme::Dark:
+            GlobalConfigs::icons_set = "light";
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
             break;
     }
 }
@@ -1073,26 +1069,27 @@ void MainWindow::detectIconsTheme()
 void MainWindow::updateUiTheme()
 {
     // window and fonts
-    switch ( this->window_theme_id ) {
-        case 0:
+    switch ( GlobalConfigs::window_theme ) {
+        case WindowTheme::Native:
             // window first
             this->setStyleSheet("");
             // icons last
             this->updateUiIcons();
             break;
-        case 1: case 2: case 3: case 4:
+        case WindowTheme::Light:
+        case WindowTheme::Dark:
             {
             // icons first
             this->updateUiIcons();
             // window last
             QString ss;
-            StyleSec::getStyleSheet( ss, this->icons_theme, this->window_theme_id );
+            StyleSec::getStyleSheet( ss );
             this->setStyleSheet( ss );
             break;
             }
         default:
             // wrong
-            throw GenericException( "Unexpected WindowTheme ID: "+std::to_string(this->window_theme_id), true );
+            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
             break;
     }
     // fallback stylesheets
@@ -1103,116 +1100,214 @@ void MainWindow::updateUiTheme()
 
 void MainWindow::updateUiIcons()
 {
-    const QString old_icons_theme{ this->icons_theme };
-    switch ( this->icons_theme_id ) {
-        case 0:
+    const QString old_icons_set{ GlobalConfigs::icons_set };
+    switch ( GlobalConfigs::icons_theme ) {
+        case IconsTheme::Auto:
             this->detectIconsTheme();
             break;
-        case 1:
-            this->icons_theme = "light";
+        case IconsTheme::Light:
+            GlobalConfigs::icons_set = ( GlobalConfigs::window_theme == WindowTheme::Native )
+                                       ? "light_native"
+                                       : "light";
             break;
-        case 2:
-            this->icons_theme = "dark";
+        case IconsTheme::Dark:
+            GlobalConfigs::icons_set = ( GlobalConfigs::window_theme == WindowTheme::Native )
+                                       ? "dark_native"
+                                       : "dark";
             break;
         default:
-            throw GenericException( "Unexpected IconSet index: "+std::to_string(this->icons_theme_id), true );
+            throw GenericException( "Unexpected IconsTheme index: "+std::to_string(static_cast<themes_t>(GlobalConfigs::icons_theme)), true );
             break;
     }
 
-    if ( this->icons_theme != old_icons_theme ) {
+    if ( GlobalConfigs::icons_set != old_icons_set ) {
         // main tabs
-        const int m_index{ this->ui->stacked_Tabs_Pages->currentIndex() };
+        const int m_index{ this->ui->stackedPages_Sections->currentIndex() };
         this->ui->button_Tab_Log->setIcon(
             QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (m_index==0) ? "on" : "off" )) );
         this->ui->button_Tab_View->setIcon(
             QIcon(QString(":/icons/icons/%1/view_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (m_index==1) ? "on" : "off" )) );
         this->ui->button_Tab_Conf->setIcon(
             QIcon(QString(":/icons/icons/%1/conf_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (m_index==2) ? "on" : "off" )) );
         // view logs
         this->ui->button_LogFiles_ViewFile->setIcon(
-            QIcon(QString(":/icons/icons/%1/show_file.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/show_file.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_LogFiles_RefreshList->setIcon(
-            QIcon(QString(":/icons/icons/%1/refresh.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/refresh.png").arg(GlobalConfigs::icons_set)) );
         // parse logs
         this->ui->icon_MakeStats_Size->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Lines->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Time->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Speed->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(this->icons_theme)) );
+            QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(GlobalConfigs::icons_set)) );
         // stats
-        const int s_index{ this->ui->stacked_Stats_Pages->currentIndex() };
+        const int s_index{ this->ui->stackedPages_Stats->currentIndex() };
         // stats warn
         this->ui->button_Tab_StatsWarn->setIcon(
             QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==0) ? "on" : "off" )) );
         this->ui->button_StatsWarn_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_StatsWarn_Update->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         // stats speed
         this->ui->button_Tab_StatsSpeed->setIcon(
             QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==1) ? "on" : "off" )) );
         this->ui->button_StatsSpeed_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats count
         this->ui->button_Tab_StatsCount->setIcon(
             QIcon(QString(":/icons/icons/%1/count_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==2) ? "on" : "off" )) );
         // stats daytime
         this->ui->button_Tab_StatsDay->setIcon(
             QIcon(QString(":/icons/icons/%1/daytime_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==3) ? "on" : "off" )) );
         this->ui->button_StatsDay_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats relational
         this->ui->button_Tab_StatsRelat->setIcon(
             QIcon(QString(":/icons/icons/%1/relational_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==4) ? "on" : "off" )) );
         this->ui->button_StatsRelat_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats globals
         this->ui->button_Tab_StatsGlob->setIcon(
             QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
-                this->icons_theme,
+                GlobalConfigs::icons_set,
                 (s_index==5) ? "on" : "off" )) );
-        // configs
+        // configs tree
+        QTreeWidgetItemIterator it{ this->ui->tree_ConfSections };
+        while (*it) {
+            QString icon_name;
+            const QString text{ (*it)->text(0) };
+            if ( text == tr("General") ) {
+                icon_name = "conf_general";
+            } else if ( text == tr("Window") ) {
+                icon_name = "conf_window";
+            } else if ( text == tr("Dialogs") ) {
+                icon_name = "conf_dialogs";
+            } else if ( text == tr("Charts") ) {
+                icon_name = "conf_charts";
+            } else if ( text == tr("TextBrowser") ) {
+                icon_name = "conf_textbrowser";
+            } else if ( text == tr("Databases") ) {
+                icon_name = "conf_databases";
+            } else if ( text == tr("Logs") ) {
+                icon_name = "conf_logs";
+            } else if ( text == tr("Defaults") ) {
+                icon_name = "conf_defaults";
+            } else if ( text == tr("Control") ) {
+                icon_name = "conf_control";
+            } else if ( text == tr("Path") ) {
+                icon_name = "conf_path";
+            } else if ( text == tr("Format") ) {
+                icon_name = "conf_format";
+            } else if ( text == tr("Warnlists") ) {
+                icon_name = "conf_warnlists";
+            } else if ( text == tr("Blacklists") ) {
+                icon_name = "conf_blacklists";
+            } else if ( text == tr("Apache2")
+                     || text == tr("Nginx")
+                     || text == tr("IIS") ) {
+                icon_name = "conf_webservers";
+            } else {
+                throw GenericException( "Unexpected Configs section: "+text.toStdString(), true );
+            }
+            (*it)->setIcon(0,
+                QIcon(QString(":/icons/icons/%1/%2.png").arg(GlobalConfigs::icons_set, icon_name)) );
+            ++it;
+        }
+        // conf databases
         this->ui->button_ConfDatabases_Data_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfDatabases_Hashes_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
+        // conf apache
         this->ui->button_ConfApache_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfApache_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Warnlist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Warnlist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Warnlist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Warnlist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Blacklist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Blacklist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Blacklist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfApache_Blacklist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+        // conf nginx
         this->ui->button_ConfNginx_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfNginx_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Warnlist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Warnlist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Warnlist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Warnlist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Blacklist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Blacklist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Blacklist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfNginx_Blacklist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+        // conf iis
         this->ui->button_ConfIis_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_ConfIis_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(this->icons_theme)) );
+            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Warnlist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Warnlist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Warnlist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Warnlist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Blacklist_Add->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Blacklist_Remove->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Blacklist_Up->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
+        this->ui->button_ConfIis_Blacklist_Down->setIcon(
+            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+
     }
 }
 
@@ -1388,13 +1483,6 @@ void MainWindow::updateUiFonts()
     this->ui->label_StatsGlob_Work_Time_Count->setFont( font );
     this->ui->label_StatsGlob_Work_Sent->setFont( font );
     this->ui->label_StatsGlob_Work_Sent_Count->setFont( font );
-    // configs tab
-    this->ui->ConfTabs->tabBar()->setFont( big_font );
-    this->ui->tabs_ConfGeneral->tabBar()->setFont( font );
-    this->ui->tabs_ConfLogs->tabBar()->setFont( font );
-    this->ui->tabs_ConfApache->tabBar()->setFont( font );
-    this->ui->tabs_ConfNginx->tabBar()->setFont( font );
-    this->ui->tabs_ConfIis->tabBar()->setFont( font );
     // conf window
     this->ui->label_ConfWindow_Geometry->setFont( big_font );
     this->ui->checkBox_ConfWindow_Geometry->setFont( font );
@@ -1549,6 +1637,15 @@ void MainWindow::updateUiLanguage()
         this->ui->button_StatsCount_Cookie->setText(    this->crapview.getLogFieldString( 22 ) );
         this->ui->button_StatsCount_UserAgent->setText( this->crapview.getLogFieldString( 21 ) );
         this->ui->button_StatsCount_Client->setText(    this->crapview.getLogFieldString( 20 ) );
+        // configs
+        {
+            QTreeWidgetItemIterator it( this->ui->tree_ConfSections );
+            while (*it) {
+                (*it)->setText( 0, tr((*it)->text(0).toStdString().c_str()) );
+                ++it;
+            }
+
+        }
         // configs warn/black-lists
         {
             const QStringList wl{
@@ -1755,7 +1852,7 @@ void MainWindow::makeInitialChecks()
 }
 
 
-const bool MainWindow::checkDataDB()
+bool MainWindow::checkDataDB()
 {
     bool ok{ false };
     if ( ! this->initiating ) { // avoid recursions
@@ -1796,7 +1893,7 @@ const bool MainWindow::checkDataDB()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
-const QString MainWindow::wsFromIndex(const int index ) const
+QString MainWindow::wsFromIndex(const int index ) const
 {
     switch (index) {
     case 0:
@@ -1810,7 +1907,7 @@ const QString MainWindow::wsFromIndex(const int index ) const
     }
 }
 
-const std::string MainWindow::resolvePath( const std::string& path ) const
+std::string MainWindow::resolvePath( const std::string& path ) const
 {
     std::string p;
     try {
@@ -1820,7 +1917,7 @@ const std::string MainWindow::resolvePath( const std::string& path ) const
     }
     return p;
 }
-const std::string MainWindow::parentPath( const std::string& path ) const
+std::string MainWindow::parentPath( const std::string& path ) const
 {
     return path.substr( 0, path.rfind( '/' ) );
 }
@@ -1973,7 +2070,6 @@ void MainWindow::menu_actionBlockNote_triggered()
 void MainWindow::menu_actionInfos_triggered()
 {
     this->crapinfo.reset( new Crapinfo(
-        this->window_theme_id,
         QString::number( this->version ),
         QString::fromStdString( this->resolvePath( "./" ) ),
         QString::fromStdString( this->configs_path ),
@@ -1987,9 +2083,7 @@ void MainWindow::menu_actionCheckUpdates_triggered()
         this->crapup->activateWindow();
 
     } else {
-        this->crapup.reset( new Crapup(
-            this->window_theme_id,
-            this->icons_theme ) );
+        this->crapup.reset( new Crapup() );
         this->crapup->show();
         this->crapup->versionCheck( this->version );
     }
@@ -2002,8 +2096,7 @@ void MainWindow::menu_actionCrissCross_triggered()
         this->crisscross->activateWindow();
 
     } else {
-        this->crisscross.reset( new CrissCross(
-            this->window_theme_id ) );
+        this->crisscross.reset( new CrissCross() );
         this->crisscross->show();
     }
 }
@@ -2015,7 +2108,6 @@ void MainWindow::menu_actionSnake_triggered()
 
     } else {
         this->snake.reset( new SnakeGame(
-            this->window_theme_id,
             this->FONTS.at("script") ) );
         this->snake->show();
     }
@@ -2028,26 +2120,26 @@ void MainWindow::menu_actionSnake_triggered()
 //////////////
 void MainWindow::switchMainTab( const int new_index )
 {
-    const int old_index{ this->ui->stacked_Tabs_Pages->currentIndex() };
+    const int old_index{ this->ui->stackedPages_Sections->currentIndex() };
     // turn off the old icon
     switch ( old_index ) {
         case 0:
             // make
             this->ui->button_Tab_Log->setFlat( true );
             this->ui->button_Tab_Log->setIcon(
-                QIcon(QString(":/icons/icons/%1/log_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/log_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // view
             this->ui->button_Tab_View->setFlat( true );
             this->ui->button_Tab_View->setIcon(
-                QIcon(QString(":/icons/icons/%1/view_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/view_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // config
             this->ui->button_Tab_Conf->setFlat( true );
             this->ui->button_Tab_Conf->setIcon(
-                QIcon(QString(":/icons/icons/%1/conf_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/conf_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected Tabs index: "+std::to_string(old_index));
@@ -2059,25 +2151,25 @@ void MainWindow::switchMainTab( const int new_index )
             // make
             this->ui->button_Tab_Log->setFlat( false );
             this->ui->button_Tab_Log->setIcon(
-                QIcon(QString(":/icons/icons/%1/log_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/log_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // view
             this->ui->button_Tab_View->setFlat( false );
             this->ui->button_Tab_View->setIcon(
-                QIcon(QString(":/icons/icons/%1/view_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/view_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // config
             this->ui->button_Tab_Conf->setFlat( false );
             this->ui->button_Tab_Conf->setIcon(
-                QIcon(QString(":/icons/icons/%1/conf_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/conf_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected MainTabs index: "+std::to_string(new_index));
             break;
     }
-    this->ui->stacked_Tabs_Pages->setCurrentIndex( new_index );
+    this->ui->stackedPages_Sections->setCurrentIndex( new_index );
 }
 
 
@@ -2100,44 +2192,44 @@ void MainWindow::on_button_Tab_Conf_clicked()
 //// STATS ////
 void MainWindow::switchStatsTab( const int new_index )
 {
-    const int old_index{ this->ui->stacked_Stats_Pages->currentIndex() };
+    const int old_index{ this->ui->stackedPages_Stats->currentIndex() };
     // turn off the old icon
     switch ( old_index ) {
         case 0:
             // warning
             this->ui->button_Tab_StatsWarn->setFlat( true );
             this->ui->button_Tab_StatsWarn->setIcon(
-                QIcon(QString(":/icons/icons/%1/warn_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/warn_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // speed
             this->ui->button_Tab_StatsSpeed->setFlat( true );
             this->ui->button_Tab_StatsSpeed->setIcon(
-                QIcon(QString(":/icons/icons/%1/speed_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/speed_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // counts
             this->ui->button_Tab_StatsCount->setFlat( true );
             this->ui->button_Tab_StatsCount->setIcon(
-                QIcon(QString(":/icons/icons/%1/count_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/count_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 3:
             // daytime
             this->ui->button_Tab_StatsDay->setFlat( true );
             this->ui->button_Tab_StatsDay->setIcon(
-                QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 4:
             // relational
             this->ui->button_Tab_StatsRelat->setFlat( true );
             this->ui->button_Tab_StatsRelat->setIcon(
-                QIcon(QString(":/icons/icons/%1/relational_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/relational_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 5:
             // globals
             this->ui->button_Tab_StatsGlob->setFlat( true );
             this->ui->button_Tab_StatsGlob->setIcon(
-                QIcon(QString(":/icons/icons/%1/global_off.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/global_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected StatsTabs index: "+std::to_string(old_index));
@@ -2149,43 +2241,43 @@ void MainWindow::switchStatsTab( const int new_index )
             // warning
             this->ui->button_Tab_StatsWarn->setFlat( false );
             this->ui->button_Tab_StatsWarn->setIcon(
-                QIcon(QString(":/icons/icons/%1/warn_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/warn_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // speed
             this->ui->button_Tab_StatsSpeed->setFlat( false );
             this->ui->button_Tab_StatsSpeed->setIcon(
-                QIcon(QString(":/icons/icons/%1/speed_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/speed_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // counts
             this->ui->button_Tab_StatsCount->setFlat( false );
             this->ui->button_Tab_StatsCount->setIcon(
-                QIcon(QString(":/icons/icons/%1/count_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/count_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 3:
             // daytime
             this->ui->button_Tab_StatsDay->setFlat( false );
             this->ui->button_Tab_StatsDay->setIcon(
-                QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 4:
             // relational
             this->ui->button_Tab_StatsRelat->setFlat( false );
             this->ui->button_Tab_StatsRelat->setIcon(
-                QIcon(QString(":/icons/icons/%1/relational_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/relational_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 5:
             // globals
             this->ui->button_Tab_StatsGlob->setFlat( false );
             this->ui->button_Tab_StatsGlob->setIcon(
-                QIcon(QString(":/icons/icons/%1/global_on.png").arg(this->icons_theme)) );
+                QIcon(QString(":/icons/icons/%1/global_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected StatsTabs index: "+std::to_string(new_index));
             break;
     }
-    this->ui->stacked_Stats_Pages->setCurrentIndex( new_index );
+    this->ui->stackedPages_Stats->setCurrentIndex( new_index );
 }
 
 
@@ -2240,7 +2332,7 @@ void MainWindow::setDbWorkingState( const bool working )
         this->ui->button_StatsGlob_Apache->setEnabled( true );
         this->ui->button_StatsGlob_Nginx->setEnabled(  true );
         this->ui->button_StatsGlob_Iis->setEnabled(    true );
-        this->ui->page_Tab_Conf->setEnabled( true );
+        this->ui->page_Section_Conf->setEnabled( true );
     } else {
         this->ui->button_MakeStats_Start->setEnabled(  false );
         this->ui->button_StatsWarn_Update->setEnabled( false );
@@ -2252,11 +2344,11 @@ void MainWindow::setDbWorkingState( const bool working )
         this->ui->button_StatsGlob_Apache->setEnabled( false );
         this->ui->button_StatsGlob_Nginx->setEnabled(  false );
         this->ui->button_StatsGlob_Iis->setEnabled(    false );
-        this->ui->page_Tab_Conf->setEnabled( false );
+        this->ui->page_Section_Conf->setEnabled( false );
     }
 }
 
-const bool MainWindow::dbUsable()
+bool MainWindow::dbUsable()
 {
     if ( !this->db_working ) {
         return this->checkDataDB();
@@ -2271,13 +2363,13 @@ const bool MainWindow::dbUsable()
 // switch pages
 void MainWindow::on_button_Logs_Down_clicked()
 {
-    this->ui->stacked_Logs_Pages->setCurrentIndex( 1 );
+    this->ui->stackedPages_Logs->setCurrentIndex( 1 );
 }
 
 
 void MainWindow::on_button_Logs_Up_clicked()
 {
-    this->ui->stacked_Logs_Pages->setCurrentIndex( 0 );
+    this->ui->stackedPages_Logs->setCurrentIndex( 0 );
 }
 
 
@@ -2415,6 +2507,7 @@ void MainWindow::appendToLogsList( const LogFile& log_file )
 
     // set the name
     item->setText( 0, log_file.name() );
+    item->setFont( 0, this->FONTS.at("main") );
     // set the size
     item->setText( 1, PrintSec::printableSize( log_file.size() ) );
     item->setFont( 1, this->FONTS.at("main_italic") );
@@ -2568,12 +2661,16 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
 void MainWindow::on_listLogFiles_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
+    Q_UNUSED(item)
+    Q_UNUSED(column)
     this->on_button_LogFiles_ViewFile_clicked();
 }
 
 
 void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 {
+    Q_UNUSED(item)
+    Q_UNUSED(column)
     // control checked
     size_t n_checked{ 0ul };
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
@@ -2698,7 +2795,7 @@ void MainWindow::craplogStarted()
     // reset perfs
     this->resetPerfsLabels();
     // disable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled( false );
+    this->ui->stackedPages_Logs->setEnabled( false );
     // disable things which needs database access
     this->setDbWorkingState( true );
 }
@@ -2712,10 +2809,11 @@ void MainWindow::craplogFinished()
         this->force_updating_labels &= false;
         // draw the chart
         this->craplog.makeChart(
-            this->CHARTS_THEMES.at( this->charts_theme_id ), this->FONTS,
+            this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+            this->FONTS,
             this->ui->chart_MakeStats_Size );
         ColorSec::applyChartTheme(
-            this->charts_theme_id, this->FONTS,
+            this->FONTS,
             this->ui->chart_MakeStats_Size );
         this->db_edited = this->craplog.editedDatabase();
         // refresh the logs section
@@ -2733,7 +2831,7 @@ void MainWindow::craplogFinished()
 void MainWindow::afterCraplogFinished()
 {
     // enable the LogFiles section
-    this->ui->stacked_Logs_Pages->setEnabled( true );
+    this->ui->stackedPages_Logs->setEnabled( true );
     // enable back
     this->setDbWorkingState( false );
     if ( this->craplog.editedDatabase() ) {
@@ -2784,10 +2882,18 @@ void MainWindow::checkStatsWarnDrawable()
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsWarn_Year->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsWarn_Year->addItems(
             this->crapview.getYears( this->wsFromIndex( index ) ));
         this->ui->box_StatsWarn_Year->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsWarn_Year->count() > 0 ) {
+        this->ui->box_StatsWarn_Year->setEnabled( true );
+        this->on_box_StatsWarn_Year_currentIndexChanged(
+            this->ui->box_StatsWarn_Year->currentIndex() );
+    } else {
+        this->ui->box_StatsWarn_Year->setEnabled( false );
+        this->on_box_StatsWarn_Year_currentIndexChanged( -1 );
     }
     this->checkStatsWarnDrawable();
 }
@@ -2795,12 +2901,21 @@ void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
 void MainWindow::on_box_StatsWarn_Year_currentIndexChanged(int index)
 {
     this->ui->box_StatsWarn_Month->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsWarn_Month->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
                 this->ui->box_StatsWarn_Year->currentText() ) );
         this->ui->box_StatsWarn_Month->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsWarn_Month->count() > 0
+      && this->ui->box_StatsWarn_Year->isEnabled() ) {
+        this->ui->box_StatsWarn_Month->setEnabled( true );
+        this->on_box_StatsWarn_Month_currentIndexChanged(
+            this->ui->box_StatsWarn_Month->currentIndex() );
+    } else {
+        this->ui->box_StatsWarn_Month->setEnabled( false );
+        this->on_box_StatsWarn_Month_currentIndexChanged( -1 );
     }
     this->checkStatsWarnDrawable();
 }
@@ -2808,7 +2923,7 @@ void MainWindow::on_box_StatsWarn_Year_currentIndexChanged(int index)
 void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
 {
     this->ui->box_StatsWarn_Day->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsWarn_Day->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
@@ -2816,24 +2931,38 @@ void MainWindow::on_box_StatsWarn_Month_currentIndexChanged(int index)
                 this->ui->box_StatsWarn_Month->currentText() ) );
         this->ui->box_StatsWarn_Day->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsWarn_Day->count() > 0
+      && this->ui->box_StatsWarn_Month->isEnabled() ) {
+        this->ui->box_StatsWarn_Day->setEnabled( true );
+        this->on_box_StatsWarn_Day_currentIndexChanged(
+            this->ui->box_StatsWarn_Day->currentIndex() );
+    } else {
+        this->ui->box_StatsWarn_Day->setEnabled( false );
+        this->on_box_StatsWarn_Day_currentIndexChanged( -1 );
+    }
     this->checkStatsWarnDrawable();
 }
 
 void MainWindow::on_box_StatsWarn_Day_currentIndexChanged(int index)
 {
-    if ( this->ui->checkBox_StatsWarn_Hour->isChecked() ) {
-        this->ui->box_StatsWarn_Hour->clear();
-        if ( index != -1 ) {
+    this->ui->box_StatsWarn_Hour->clear();
+    if ( this->ui->checkBox_StatsWarn_Hour->isChecked()
+      && this->ui->box_StatsWarn_Day->isEnabled() ) {
+        if ( index >= 0 ) {
             this->ui->box_StatsWarn_Hour->addItems( this->crapview.getHours() );
             this->ui->box_StatsWarn_Hour->setCurrentIndex( 0 );
+            this->ui->box_StatsWarn_Hour->setEnabled( true );
         }
+    } else {
+        this->ui->box_StatsWarn_Hour->setEnabled( false );
     }
     this->checkStatsWarnDrawable();
 }
 
 void MainWindow::on_checkBox_StatsWarn_Hour_stateChanged(int state)
 {
-    if ( state == Qt::CheckState::Checked ) {
+    if ( state == Qt::CheckState::Checked
+      && this->ui->box_StatsWarn_Day->isEnabled() ) {
         this->ui->box_StatsWarn_Hour->setEnabled( true );
         // add available dates
         this->on_box_StatsWarn_Day_currentIndexChanged( 0 );
@@ -2845,6 +2974,7 @@ void MainWindow::on_checkBox_StatsWarn_Hour_stateChanged(int state)
 
 void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsWarnDrawable();
 }
 
@@ -2865,14 +2995,14 @@ void MainWindow::drawStatsWarn()
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
         this->ui->box_StatsWarn_Day->currentText(),
         (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsWarn );
     this->setDbWorkingState( false );
 }
@@ -2915,10 +3045,18 @@ void MainWindow::checkStatsSpeedDrawable()
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Year->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsSpeed_Year->addItems(
             this->crapview.getYears( this->wsFromIndex( index ) ) );
         this->ui->box_StatsSpeed_Year->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsSpeed_Year->count() > 0 ) {
+        this->ui->box_StatsSpeed_Year->setEnabled( true );
+        this->on_box_StatsSpeed_Year_currentIndexChanged(
+            this->ui->box_StatsSpeed_Year->currentIndex() );
+    } else {
+        this->ui->box_StatsSpeed_Year->setEnabled( false );
+        this->on_box_StatsSpeed_Year_currentIndexChanged( -1 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -2926,12 +3064,20 @@ void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
 void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Month->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsSpeed_Month->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
                 this->ui->box_StatsSpeed_Year->currentText() ) );
         this->ui->box_StatsSpeed_Month->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsSpeed_Month->count() > 0 ) {
+        this->ui->box_StatsSpeed_Month->setEnabled( true );
+        this->on_box_StatsSpeed_Month_currentIndexChanged(
+            this->ui->box_StatsSpeed_Month->currentIndex() );
+    } else {
+        this->ui->box_StatsSpeed_Month->setEnabled( false );
+        this->on_box_StatsSpeed_Month_currentIndexChanged( -1 );
     }
     this->checkStatsSpeedDrawable();
 }
@@ -2939,7 +3085,7 @@ void MainWindow::on_box_StatsSpeed_Year_currentIndexChanged(int index)
 void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
 {
     this->ui->box_StatsSpeed_Day->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsSpeed_Day->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
@@ -2947,11 +3093,20 @@ void MainWindow::on_box_StatsSpeed_Month_currentIndexChanged(int index)
                 this->ui->box_StatsSpeed_Month->currentText() ) );
         this->ui->box_StatsSpeed_Day->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsSpeed_Day->count() > 0 ) {
+        this->ui->box_StatsSpeed_Day->setEnabled( true );
+        this->on_box_StatsSpeed_Day_currentIndexChanged(
+            this->ui->box_StatsSpeed_Day->currentIndex() );
+    } else {
+        this->ui->box_StatsSpeed_Day->setEnabled( false );
+        this->on_box_StatsSpeed_Day_currentIndexChanged( -1 );
+    }
     this->checkStatsSpeedDrawable();
 }
 
 void MainWindow::on_box_StatsSpeed_Day_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsSpeedDrawable();
 }
 
@@ -3033,7 +3188,7 @@ void MainWindow::drawStatsSpeed()
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_StatsSpeed,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
@@ -3044,7 +3199,7 @@ void MainWindow::drawStatsSpeed()
         FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).value(),
         FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).value() );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsSpeed );
     this->setDbWorkingState( false );
 }
@@ -3073,11 +3228,19 @@ void MainWindow::checkStatsCountDrawable()
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Year->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsCount_Year->addItems(
             this->crapview.getYears( this->wsFromIndex( index ) ));
         this->ui->box_StatsCount_Year->setCurrentIndex( 0 );
         this->resetStatsCountButtons();
+    }
+    if ( this->ui->box_StatsCount_Year->count() > 0 ) {
+        this->ui->box_StatsCount_Year->setEnabled( true );
+        this->on_box_StatsCount_Year_currentIndexChanged(
+            this->ui->box_StatsCount_Year->currentIndex() );
+    } else {
+        this->ui->box_StatsCount_Year->setEnabled( false );
+        this->on_box_StatsCount_Year_currentIndexChanged( -1 );
     }
     this->checkStatsCountDrawable();
 }
@@ -3085,12 +3248,20 @@ void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
 void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Month->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsCount_Month->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
                 this->ui->box_StatsCount_Year->currentText() ) );
         this->ui->box_StatsCount_Month->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsCount_Month->count() > 0 ) {
+        this->ui->box_StatsCount_Month->setEnabled( true );
+        this->on_box_StatsCount_Month_currentIndexChanged(
+            this->ui->box_StatsCount_Month->currentIndex() );
+    } else {
+        this->ui->box_StatsCount_Month->setEnabled( false );
+        this->on_box_StatsCount_Month_currentIndexChanged( -1 );
     }
     this->checkStatsCountDrawable();
 }
@@ -3098,7 +3269,7 @@ void MainWindow::on_box_StatsCount_Year_currentIndexChanged(int index)
 void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
 {
     this->ui->box_StatsCount_Day->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsCount_Day->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
@@ -3106,11 +3277,20 @@ void MainWindow::on_box_StatsCount_Month_currentIndexChanged(int index)
                 this->ui->box_StatsCount_Month->currentText() ) );
         this->ui->box_StatsCount_Day->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsCount_Day->count() > 0 ) {
+        this->ui->box_StatsCount_Day->setEnabled( true );
+        this->on_box_StatsCount_Day_currentIndexChanged(
+            this->ui->box_StatsCount_Day->currentIndex() );
+    } else {
+        this->ui->box_StatsCount_Day->setEnabled( false );
+        this->on_box_StatsCount_Day_currentIndexChanged( -1 );
+    }
     this->checkStatsCountDrawable();
 }
 
 void MainWindow::on_box_StatsCount_Day_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsCountDrawable();
 }
 
@@ -3251,14 +3431,14 @@ void MainWindow::drawStatsCount()
     this->ui->table_StatsCount->setRowCount(0);
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(),
         this->ui->box_StatsCount_Month->currentText(),
         this->ui->box_StatsCount_Day->currentText(),
         this->count_fld );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsCount );
     this->ui->chart_StatsCount->chart()->setTitleFont(
         this->FONTS.at( "main_big" ) );
@@ -3277,7 +3457,7 @@ void MainWindow::checkStatsDayDrawable()
             if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
               && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
               && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
-               aux &= false;
+                aux &= false;
             } else {
                 int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
                 int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
@@ -3323,7 +3503,7 @@ void MainWindow::checkStatsDayDrawable()
     }
 }
 
-const std::optional<QString> MainWindow::getStatsDayParsedFilter() const
+std::optional<QString> MainWindow::getStatsDayParsedFilter() const
 {
     const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
     if ( fld_i == 0 ) {
@@ -3340,7 +3520,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
     this->ui->box_StatsDay_LogsField->clear();
     this->ui->box_StatsDay_FromYear->clear();
     this->ui->box_StatsDay_ToYear->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         // refresh fields
         this->ui->box_StatsDay_LogsField->addItems(
             this->crapview.getFields( "Daytime" ));
@@ -3354,12 +3534,30 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
             this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
         }
     }
+    if ( this->ui->box_StatsDay_FromYear->count() > 0 ) {
+        this->ui->box_StatsDay_FromYear->setEnabled( true );
+        this->on_box_StatsDay_FromYear_currentIndexChanged(
+            this->ui->box_StatsDay_FromYear->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_FromYear->setEnabled( false );
+        this->on_box_StatsDay_FromYear_currentIndexChanged( -1 );
+    }
+    if ( this->ui->checkBox_StatsDay_Period->isChecked()
+      && this->ui->box_StatsDay_ToYear->count() > 0 ) {
+        this->ui->box_StatsDay_ToYear->setEnabled( true );
+        this->on_box_StatsDay_ToYear_currentIndexChanged(
+            this->ui->box_StatsDay_ToYear->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_ToYear->setEnabled( false );
+        this->on_box_StatsDay_ToYear_currentIndexChanged( -1 );
+    }
     this->checkStatsDayDrawable();
 }
 
 
 void MainWindow::on_box_StatsDay_LogsField_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->ui->inLine_StatsDay_Filter->clear();
     this->checkStatsDayDrawable();
 }
@@ -3367,12 +3565,20 @@ void MainWindow::on_box_StatsDay_LogsField_currentIndexChanged(int index)
 void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_FromMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_FromMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_FromYear->currentText() ) );
         this->ui->box_StatsDay_FromMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsDay_FromMonth->count() > 0 ) {
+        this->ui->box_StatsDay_FromMonth->setEnabled( true );
+        this->on_box_StatsDay_FromMonth_currentIndexChanged(
+            this->ui->box_StatsDay_FromMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_FromMonth->setEnabled( false );
+        this->on_box_StatsDay_FromMonth_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3380,7 +3586,7 @@ void MainWindow::on_box_StatsDay_FromYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_FromDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_FromDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
@@ -3388,11 +3594,20 @@ void MainWindow::on_box_StatsDay_FromMonth_currentIndexChanged(int index)
                 this->ui->box_StatsDay_FromMonth->currentText() ) );
         this->ui->box_StatsDay_FromDay->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsDay_FromDay->count() > 0 ) {
+        this->ui->box_StatsDay_FromDay->setEnabled( true );
+        this->on_box_StatsDay_FromDay_currentIndexChanged(
+            this->ui->box_StatsDay_FromDay->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_FromDay->setEnabled( false );
+        this->on_box_StatsDay_FromDay_currentIndexChanged( -1 );
+    }
     this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_box_StatsDay_FromDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsDayDrawable();
 }
 
@@ -3403,9 +3618,18 @@ void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
         this->ui->box_StatsDay_ToMonth->setEnabled( true );
         this->ui->box_StatsDay_ToDay->setEnabled( true );
         // add available dates
+        this->ui->box_StatsDay_ToYear->clear();
         this->ui->box_StatsDay_ToYear->addItems( this->crapview.getYears(
             this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ) ) );
         this->ui->box_StatsDay_ToYear->setCurrentIndex( 0 );
+        if ( this->ui->box_StatsDay_ToYear->count() > 0 ) {
+            this->ui->box_StatsDay_ToYear->setEnabled( true );
+            this->on_box_StatsDay_ToYear_currentIndexChanged(
+                this->ui->box_StatsDay_ToYear->currentIndex() );
+        } else {
+            this->ui->box_StatsDay_ToYear->setEnabled( false );
+            this->on_box_StatsDay_ToYear_currentIndexChanged( -1 );
+        }
     } else {
         this->ui->box_StatsDay_ToYear->clear();
         this->ui->box_StatsDay_ToYear->setEnabled( false );
@@ -3419,12 +3643,20 @@ void MainWindow::on_checkBox_StatsDay_Period_stateChanged(int state)
 void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_ToMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_ToMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
                 this->ui->box_StatsDay_ToYear->currentText() ) );
         this->ui->box_StatsDay_ToMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsDay_ToMonth->count() > 0 ) {
+        this->ui->box_StatsDay_ToMonth->setEnabled( true );
+        this->on_box_StatsDay_ToMonth_currentIndexChanged(
+            this->ui->box_StatsDay_ToMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_ToMonth->setEnabled( false );
+        this->on_box_StatsDay_ToMonth_currentIndexChanged( -1 );
     }
     this->checkStatsDayDrawable();
 }
@@ -3432,7 +3664,7 @@ void MainWindow::on_box_StatsDay_ToYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsDay_ToDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsDay_ToDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
@@ -3440,16 +3672,26 @@ void MainWindow::on_box_StatsDay_ToMonth_currentIndexChanged(int index)
                 this->ui->box_StatsDay_ToMonth->currentText() ) );
         this->ui->box_StatsDay_ToDay->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsDay_ToDay->count() > 0 ) {
+        this->ui->box_StatsDay_ToDay->setEnabled( true );
+        this->on_box_StatsDay_ToDay_currentIndexChanged(
+            this->ui->box_StatsDay_ToDay->currentIndex() );
+    } else {
+        this->ui->box_StatsDay_ToDay->setEnabled( false );
+        this->on_box_StatsDay_ToDay_currentIndexChanged( -1 );
+    }
     this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_box_StatsDay_ToDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsDayDrawable();
 }
 
 void MainWindow::on_inLine_StatsDay_Filter_textChanged(const QString& arg1)
 {
+    Q_UNUSED(arg1)
     if ( this->getStatsDayParsedFilter().has_value() ) {
         this->ui->inLine_StatsDay_Filter->setStyleSheet(
             this->stylesheet_lineedit );
@@ -3476,7 +3718,7 @@ void MainWindow::drawStatsDay()
     const bool period{ this->ui->checkBox_StatsDay_Period->isChecked() };
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
@@ -3487,7 +3729,7 @@ void MainWindow::drawStatsDay()
         this->ui->box_StatsDay_LogsField->currentText(),
         this->getStatsDayParsedFilter().value() );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsDay );
     this->setDbWorkingState( false );
 }
@@ -3549,7 +3791,7 @@ void MainWindow::checkStatsRelatDrawable()
     }
 }
 
-const std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_num ) const
+std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_num ) const
 {
     const int fld_i{ ( filter_num == 1 )
                      ? this->ui->box_StatsRelat_LogsField_1->currentIndex()
@@ -3572,7 +3814,7 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
     this->ui->box_StatsRelat_LogsField_2->clear();
     this->ui->box_StatsRelat_FromYear->clear();
     this->ui->box_StatsRelat_ToYear->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         // refresh fields
         QStringList fields{ this->crapview.getFields( "Relational" ) };
         this->ui->box_StatsRelat_LogsField_1->addItems( fields );
@@ -3590,17 +3832,35 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
         this->ui->box_StatsRelat_ToYear->addItems( years );
         this->ui->box_StatsRelat_ToYear->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsRelat_FromYear->count() > 0 ) {
+        this->ui->box_StatsRelat_FromYear->setEnabled( true );
+        this->on_box_StatsRelat_FromYear_currentIndexChanged(
+            this->ui->box_StatsRelat_FromYear->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_FromYear->setEnabled( false );
+        this->on_box_StatsRelat_FromYear_currentIndexChanged( -1 );
+    }
+    if ( this->ui->box_StatsRelat_ToYear->count() > 0 ) {
+        this->ui->box_StatsRelat_ToYear->setEnabled( true );
+        this->on_box_StatsRelat_ToYear_currentIndexChanged(
+            this->ui->box_StatsRelat_ToYear->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_ToYear->setEnabled( false );
+        this->on_box_StatsRelat_ToYear_currentIndexChanged( -1 );
+    }
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_LogsField_1_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->ui->inLine_StatsRelat_Filter_1->clear();
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_LogsField_2_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->ui->inLine_StatsRelat_Filter_2->clear();
     this->checkStatsRelatDrawable();
 }
@@ -3608,12 +3868,20 @@ void MainWindow::on_box_StatsRelat_LogsField_2_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_FromMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_FromMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_FromYear->currentText() ) );
         this->ui->box_StatsRelat_FromMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_FromMonth->count() > 0 ) {
+        this->ui->box_StatsRelat_FromMonth->setEnabled( true );
+        this->on_box_StatsRelat_FromMonth_currentIndexChanged(
+            this->ui->box_StatsRelat_FromMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_FromMonth->setEnabled( false );
+        this->on_box_StatsRelat_FromMonth_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3621,7 +3889,7 @@ void MainWindow::on_box_StatsRelat_FromYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_FromDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_FromDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
@@ -3629,23 +3897,40 @@ void MainWindow::on_box_StatsRelat_FromMonth_currentIndexChanged(int index)
                 this->ui->box_StatsRelat_FromMonth->currentText() ) );
         this->ui->box_StatsRelat_FromDay->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsRelat_FromDay->count() > 0 ) {
+        this->ui->box_StatsRelat_FromDay->setEnabled( true );
+        this->on_box_StatsRelat_FromDay_currentIndexChanged(
+            this->ui->box_StatsRelat_FromDay->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_FromDay->setEnabled( false );
+        this->on_box_StatsRelat_FromDay_currentIndexChanged( -1 );
+    }
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_FromDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_ToMonth->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_ToMonth->addItems(
             this->crapview.getMonths(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
                 this->ui->box_StatsRelat_ToYear->currentText() ) );
         this->ui->box_StatsRelat_ToMonth->setCurrentIndex( 0 );
+    }
+    if ( this->ui->box_StatsRelat_ToMonth->count() > 0 ) {
+        this->ui->box_StatsRelat_ToMonth->setEnabled( true );
+        this->on_box_StatsRelat_ToMonth_currentIndexChanged(
+            this->ui->box_StatsRelat_ToMonth->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_ToMonth->setEnabled( false );
+        this->on_box_StatsRelat_ToMonth_currentIndexChanged( -1 );
     }
     this->checkStatsRelatDrawable();
 }
@@ -3653,7 +3938,7 @@ void MainWindow::on_box_StatsRelat_ToYear_currentIndexChanged(int index)
 void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
 {
     this->ui->box_StatsRelat_ToDay->clear();
-    if ( index != -1 ) {
+    if ( index >= 0 ) {
         this->ui->box_StatsRelat_ToDay->addItems(
             this->crapview.getDays(
                 this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
@@ -3661,16 +3946,26 @@ void MainWindow::on_box_StatsRelat_ToMonth_currentIndexChanged(int index)
                 this->ui->box_StatsRelat_ToMonth->currentText() ) );
         this->ui->box_StatsRelat_ToDay->setCurrentIndex( 0 );
     }
+    if ( this->ui->box_StatsRelat_ToDay->count() > 0 ) {
+        this->ui->box_StatsRelat_ToDay->setEnabled( true );
+        this->on_box_StatsRelat_ToDay_currentIndexChanged(
+            this->ui->box_StatsRelat_ToDay->currentIndex() );
+    } else {
+        this->ui->box_StatsRelat_ToDay->setEnabled( false );
+        this->on_box_StatsRelat_ToDay_currentIndexChanged( -1 );
+    }
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_box_StatsRelat_ToDay_currentIndexChanged(int index)
 {
+    Q_UNUSED(index)
     this->checkStatsRelatDrawable();
 }
 
 void MainWindow::on_inLine_StatsRelat_Filter_1_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
     if ( this->getStatsRelatParsedFilter( 1 ).has_value() ) {
         this->ui->inLine_StatsRelat_Filter_1->setStyleSheet(
             this->stylesheet_lineedit );
@@ -3683,6 +3978,7 @@ void MainWindow::on_inLine_StatsRelat_Filter_1_textChanged(const QString &arg1)
 
 void MainWindow::on_inLine_StatsRelat_Filter_2_textChanged(const QString &arg1)
 {
+    Q_UNUSED(arg1)
     if ( this->getStatsRelatParsedFilter( 2 ).has_value() ) {
         this->ui->inLine_StatsRelat_Filter_2->setStyleSheet(
             this->stylesheet_lineedit );
@@ -3709,7 +4005,7 @@ void MainWindow::drawStatsRelat()
 {
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
-        this->CHARTS_THEMES.at( this->charts_theme_id ),
+        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
         this->ui->box_StatsRelat_FromYear->currentText(),
         this->ui->box_StatsRelat_FromMonth->currentText(),
@@ -3722,7 +4018,7 @@ void MainWindow::drawStatsRelat()
         this->ui->box_StatsRelat_LogsField_2->currentText(),
         this->getStatsRelatParsedFilter( 2 ).value() );
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_StatsRelat );
     this->setDbWorkingState( false );
 }
@@ -3879,6 +4175,76 @@ void MainWindow::on_button_StatsGlob_Iis_clicked()
 //////// CONFIGS ////////
 /////////////////////////
 
+void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(column)
+    const QString section{ item->text(0) };
+    if ( section == tr("General") ) {
+        return;
+    } else if ( section == tr("Window") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(0);
+    } else if ( section == tr("Dialogs") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(1);
+    } else if ( section == tr("Charts") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(2);
+    } else if ( section == tr("TextBrowser") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(3);
+    } else if ( section == tr("Databases") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(4);
+    } else if ( section == tr("Logs") ) {
+        return;
+    } else if ( section == tr("Defaults") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(5);
+    } else if ( section == tr("Control") ) {
+        this->ui->stackedPages_Conf->setCurrentIndex(6);
+    } else if ( section == tr("Apache2") || section == tr("Nginx") || section == tr("IIS") ) {
+        return;
+    } else if ( section == tr("Path") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(7);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(11);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(15);
+        }
+    } else if ( section == tr("Format") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(8);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(12);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(16);
+        }
+    } else if ( section == tr("Warnlists") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(9);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(13);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(17);
+        }
+    } else if ( section == tr("Blacklists") ) {
+        const QString parent{ item->parent()->text(0) };
+        if ( parent == tr("Apache2") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(10);
+        } else if ( parent == tr("Nginx") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(14);
+        } else if ( parent == tr("IIS") ) {
+            this->ui->stackedPages_Conf->setCurrentIndex(18);
+        }
+    } else {
+        throw("Unexpected Conf section: "+section.toStdString());
+    }
+}
+
+void MainWindow::on_tree_ConfSections_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    this->on_tree_ConfSections_itemClicked( item, column );
+}
+
 /////////////////
 //// GENERAL ////
 /////////////////
@@ -3892,13 +4258,13 @@ void MainWindow::on_checkBox_ConfWindow_Geometry_clicked(bool checked)
 
 void MainWindow::on_box_ConfWindow_Theme_currentIndexChanged(int index)
 {
-    this->window_theme_id = index;
+    GlobalConfigs::window_theme = static_cast<WindowTheme>(index);
     this->updateUiTheme();
 }
 
 void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
 {
-    this->icons_theme_id = index;
+    GlobalConfigs::icons_theme = static_cast<IconsTheme>(index);
     this->updateUiIcons();
 }
 
@@ -3970,8 +4336,27 @@ void MainWindow::refreshTextBrowserPreview()
 //// CHARTS ////
 void MainWindow::on_box_ConfCharts_Theme_currentIndexChanged(int index)
 {
-    this->charts_theme_id = index;
+    GlobalConfigs::charts_theme = static_cast<ChartsTheme>(index);
     this->refreshChartsPreview();
+
+    ColorSec::applyChartTheme(
+        this->FONTS,
+        this->ui->chart_MakeStats_Size );
+    ColorSec::applyChartTheme(
+        this->FONTS,
+        this->ui->chart_StatsWarn );
+    ColorSec::applyChartTheme(
+        this->FONTS,
+        this->ui->chart_StatsSpeed );
+    ColorSec::applyChartTheme(
+        this->FONTS,
+        this->ui->chart_StatsCount );
+    ColorSec::applyChartTheme(
+        this->FONTS,
+        this->ui->chart_StatsDay );
+    ColorSec::applyChartTheme(
+        this->FONTS,
+        this->ui->chart_StatsRelat );
 }
 void MainWindow::refreshChartsPreview()
 {
@@ -3989,20 +4374,41 @@ void MainWindow::refreshChartsPreview()
     QBarSet* bars_6{ new QBarSet( "" ) };
     bars_6->setColor( col );
 
+    const auto random_value = [] () -> int {
+        return (rand()%10 > 8) ? rand()%100 : (rand()%10 > 6) ? rand()%50 : rand()%30;
+    };
     int aux, max{0};
     for ( int i{0}; i<24; i++ ) {
-        aux = rand() %100; *bars_1 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_2 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_3 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_4 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_5 << aux;
-        if ( aux > max ) { max = aux; }
-        aux = rand() %100; *bars_6 << aux;
-        if ( aux > max ) { max = aux; }
+        aux = random_value();
+        *bars_1 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_2 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_3 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_4 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_5 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
+        aux = random_value();
+        *bars_6 << aux;
+        if ( aux > max ) {
+            max = aux;
+        }
     }
 
     QBarSeries* bars{ new QBarSeries() };
@@ -4012,7 +4418,7 @@ void MainWindow::refreshChartsPreview()
 
     QChart* t_chart{ new QChart() };
     // apply the theme
-    t_chart->setTheme( this->CHARTS_THEMES.at( this->charts_theme_id ) );
+    t_chart->setTheme( this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ) );
     // add the bars
     t_chart->addSeries( bars );
     t_chart->setTitle( "Sample preview" );
@@ -4046,7 +4452,7 @@ void MainWindow::refreshChartsPreview()
     this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
 
     ColorSec::applyChartTheme(
-        this->charts_theme_id, this->FONTS,
+        this->FONTS,
         this->ui->chart_ConfCharts_Preview );
 }
 
@@ -4172,14 +4578,17 @@ void MainWindow::on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1)
 //// DEFAULTS ////
 void MainWindow::on_radio_ConfDefaults_Apache_toggled(bool checked)
 {
+    Q_UNUSED(checked)
     this->default_ws = APACHE_ID;
 }
 void MainWindow::on_radio_ConfDefaults_Nginx_toggled(bool checked)
 {
+    Q_UNUSED(checked)
     this->default_ws = NGINX_ID;
 }
 void MainWindow::on_radio_ConfDefaults_Iis_toggled(bool checked)
 {
+    Q_UNUSED(checked)
     this->default_ws = IIS_ID;
 }
 
@@ -4214,7 +4623,7 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 // paths
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString& arg1)
 {
-    if ( arg1.size() > 0ul ) {
+    if ( arg1.size() > 0 ) {
         std::string path{ this->resolvePath( arg1.toStdString() ) };
         if ( IOutils::checkDir( path ) ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
@@ -4252,6 +4661,7 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
 // formats
 void MainWindow::on_inLine_ConfApache_Format_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( true );
     } else {
@@ -4314,16 +4724,25 @@ void MainWindow::on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfApache_Warnlist_String->setEnabled( true );
         this->ui->list_ConfApache_Warnlist_List->setEnabled( true );
+        this->ui->button_ConfApache_Warnlist_Add->setFlat( false );
+        this->ui->button_ConfApache_Warnlist_Remove->setFlat( false );
+        this->ui->button_ConfApache_Warnlist_Up->setFlat( false );
+        this->ui->button_ConfApache_Warnlist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfApache_Warnlist_String->clear();
         this->ui->inLine_ConfApache_Warnlist_String->setEnabled( false );
         this->ui->list_ConfApache_Warnlist_List->clearSelection();
         this->ui->list_ConfApache_Warnlist_List->setEnabled( false );
+        this->ui->button_ConfApache_Warnlist_Add->setFlat( true );
+        this->ui->button_ConfApache_Warnlist_Remove->setFlat( true );
+        this->ui->button_ConfApache_Warnlist_Up->setFlat( true );
+        this->ui->button_ConfApache_Warnlist_Down->setFlat( true );
     }
 }
 
 void MainWindow::on_inLine_ConfApache_Warnlist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfApache_Warnlist_Add->setEnabled( true );
     } else {
@@ -4363,7 +4782,7 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfApache_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfApache_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfApache_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfApache_Warnlist_Up->setEnabled( false );
@@ -4387,7 +4806,7 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4397,7 +4816,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4410,7 +4829,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
@@ -4452,16 +4871,25 @@ void MainWindow::on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfApache_Blacklist_String->setEnabled( true );
         this->ui->list_ConfApache_Blacklist_List->setEnabled( true );
+        this->ui->button_ConfApache_Blacklist_Add->setFlat( false );
+        this->ui->button_ConfApache_Blacklist_Remove->setFlat( false );
+        this->ui->button_ConfApache_Blacklist_Up->setFlat( false );
+        this->ui->button_ConfApache_Blacklist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfApache_Blacklist_String->clear();
         this->ui->inLine_ConfApache_Blacklist_String->setEnabled( false );
         this->ui->list_ConfApache_Blacklist_List->clearSelection();
         this->ui->list_ConfApache_Blacklist_List->setEnabled( false );
+        this->ui->button_ConfApache_Blacklist_Add->setFlat( true );
+        this->ui->button_ConfApache_Blacklist_Remove->setFlat( true );
+        this->ui->button_ConfApache_Blacklist_Up->setFlat( true );
+        this->ui->button_ConfApache_Blacklist_Down->setFlat( true );
     }
 }
 
 void MainWindow::on_inLine_ConfApache_Blacklist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfApache_Blacklist_Add->setEnabled( true );
     } else {
@@ -4501,7 +4929,7 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfApache_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfApache_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfApache_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfApache_Blacklist_Up->setEnabled( false );
@@ -4525,7 +4953,7 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -4535,7 +4963,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -4548,7 +4976,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
         APACHE_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
@@ -4604,6 +5032,7 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
 // formats
 void MainWindow::on_inLine_ConfNginx_Format_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( true );
     } else {
@@ -4666,16 +5095,25 @@ void MainWindow::on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfNginx_Warnlist_String->setEnabled( true );
         this->ui->list_ConfNginx_Warnlist_List->setEnabled( true );
+        this->ui->button_ConfNginx_Warnlist_Add->setFlat( false );
+        this->ui->button_ConfNginx_Warnlist_Remove->setFlat( false );
+        this->ui->button_ConfNginx_Warnlist_Up->setFlat( false );
+        this->ui->button_ConfNginx_Warnlist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfNginx_Warnlist_String->clear();
         this->ui->inLine_ConfNginx_Warnlist_String->setEnabled( false );
         this->ui->list_ConfNginx_Warnlist_List->clearSelection();
         this->ui->list_ConfNginx_Warnlist_List->setEnabled( false );
+        this->ui->button_ConfNginx_Warnlist_Add->setFlat( true );
+        this->ui->button_ConfNginx_Warnlist_Remove->setFlat( true );
+        this->ui->button_ConfNginx_Warnlist_Up->setFlat( true );
+        this->ui->button_ConfNginx_Warnlist_Down->setFlat( true );
     }
 }
 
 void MainWindow::on_inLine_ConfNginx_Warnlist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfNginx_Warnlist_Add->setEnabled( true );
     } else {
@@ -4715,7 +5153,7 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfNginx_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfNginx_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfNginx_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfNginx_Warnlist_Up->setEnabled( false );
@@ -4739,7 +5177,7 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -4749,7 +5187,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -4762,7 +5200,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
@@ -4804,16 +5242,25 @@ void MainWindow::on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfNginx_Blacklist_String->setEnabled( true );
         this->ui->list_ConfNginx_Blacklist_List->setEnabled( true );
+        this->ui->button_ConfNginx_Blacklist_Add->setFlat( false );
+        this->ui->button_ConfNginx_Blacklist_Remove->setFlat( false );
+        this->ui->button_ConfNginx_Blacklist_Up->setFlat( false );
+        this->ui->button_ConfNginx_Blacklist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfNginx_Blacklist_String->clear();
         this->ui->inLine_ConfNginx_Blacklist_String->setEnabled( false );
         this->ui->list_ConfNginx_Blacklist_List->clearSelection();
         this->ui->list_ConfNginx_Blacklist_List->setEnabled( false );
+        this->ui->button_ConfNginx_Blacklist_Add->setFlat( true );
+        this->ui->button_ConfNginx_Blacklist_Remove->setFlat( true );
+        this->ui->button_ConfNginx_Blacklist_Up->setFlat( true );
+        this->ui->button_ConfNginx_Blacklist_Down->setFlat( true );
     }
 }
 
 void MainWindow::on_inLine_ConfNginx_Blacklist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfNginx_Blacklist_Add->setEnabled( true );
     } else {
@@ -4853,7 +5300,7 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfNginx_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfNginx_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfNginx_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfNginx_Blacklist_Up->setEnabled( false );
@@ -4877,7 +5324,7 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -4887,7 +5334,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -4900,7 +5347,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
         NGINX_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
@@ -4954,15 +5401,14 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
 }
 
 // formats
-const int MainWindow::getIisLogsModule() const
+int MainWindow::getIisLogsModule() const
 {
-    int module{ 0 };
     if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
-        module += 1;
+        return 1;
     } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
-        module += 2;
+        return 2;
     }
-    return module;
+    return 0;
 }
 
 void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
@@ -5019,6 +5465,7 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
 
 void MainWindow::on_inLine_ConfIis_Format_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( true );
     } else {
@@ -5082,16 +5529,25 @@ void MainWindow::on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfIis_Warnlist_String->setEnabled( true );
         this->ui->list_ConfIis_Warnlist_List->setEnabled( true );
+        this->ui->button_ConfIis_Warnlist_Add->setFlat( false );
+        this->ui->button_ConfIis_Warnlist_Remove->setFlat( false );
+        this->ui->button_ConfIis_Warnlist_Up->setFlat( false );
+        this->ui->button_ConfIis_Warnlist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfIis_Warnlist_String->clear();
         this->ui->inLine_ConfIis_Warnlist_String->setEnabled( false );
         this->ui->list_ConfIis_Warnlist_List->clearSelection();
         this->ui->list_ConfIis_Warnlist_List->setEnabled( false );
+        this->ui->button_ConfIis_Warnlist_Add->setFlat( true );
+        this->ui->button_ConfIis_Warnlist_Remove->setFlat( true );
+        this->ui->button_ConfIis_Warnlist_Up->setFlat( true );
+        this->ui->button_ConfIis_Warnlist_Down->setFlat( true );
     }
 }
 
 void MainWindow::on_inLine_ConfIis_Warnlist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfIis_Warnlist_Add->setEnabled( true );
     } else {
@@ -5131,7 +5587,7 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
         this->ui->button_ConfIis_Warnlist_Up->setEnabled( true );
         this->ui->button_ConfIis_Warnlist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfIis_Warnlist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfIis_Warnlist_Up->setEnabled( false );
@@ -5155,7 +5611,7 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5165,7 +5621,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5178,7 +5634,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 }
 void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
@@ -5220,16 +5676,25 @@ void MainWindow::on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked)
     if ( checked ) {
         this->ui->inLine_ConfIis_Blacklist_String->setEnabled( true );
         this->ui->list_ConfIis_Blacklist_List->setEnabled( true );
+        this->ui->button_ConfIis_Blacklist_Add->setFlat( false );
+        this->ui->button_ConfIis_Blacklist_Remove->setFlat( false );
+        this->ui->button_ConfIis_Blacklist_Up->setFlat( false );
+        this->ui->button_ConfIis_Blacklist_Down->setFlat( false );
     } else {
         this->ui->inLine_ConfIis_Blacklist_String->clear();
         this->ui->inLine_ConfIis_Blacklist_String->setEnabled( false );
         this->ui->list_ConfIis_Blacklist_List->clearSelection();
         this->ui->list_ConfIis_Blacklist_List->setEnabled( false );
+        this->ui->button_ConfIis_Blacklist_Add->setFlat( true );
+        this->ui->button_ConfIis_Blacklist_Remove->setFlat( true );
+        this->ui->button_ConfIis_Blacklist_Up->setFlat( true );
+        this->ui->button_ConfIis_Blacklist_Down->setFlat( true );
     }
 }
 
 void MainWindow::on_inLine_ConfIis_Blacklist_String_cursorPositionChanged(int arg1, int arg2)
 {
+    Q_UNUSED(arg1)
     if ( arg2 > 0 ) {
         this->ui->button_ConfIis_Blacklist_Add->setEnabled( true );
     } else {
@@ -5269,7 +5734,7 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
         this->ui->button_ConfIis_Blacklist_Up->setEnabled( true );
         this->ui->button_ConfIis_Blacklist_Down->setEnabled( true );
         // polishing
-        const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+        const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
         const int max{ this->ui->list_ConfIis_Blacklist_List->count() -1 };
         if ( max == 0 ) {
             this->ui->button_ConfIis_Blacklist_Up->setEnabled( false );
@@ -5293,7 +5758,7 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
@@ -5303,7 +5768,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
@@ -5316,7 +5781,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 }
 void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
 {
-    const auto& item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
+    const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
         IIS_ID,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),

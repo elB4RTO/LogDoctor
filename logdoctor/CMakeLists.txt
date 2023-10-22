@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 2.05 LANGUAGES CXX)
+project(LogDoctor VERSION 3.00 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -8,11 +8,26 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts LinguistTools Sql Network)
+if(MSVC)
+    add_compile_options(/W2)
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "/Os")
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+endif()
+
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Widgets Charts LinguistTools Sql Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Charts LinguistTools Sql Network)
+
+if(${QT_VERSION_MAJOR} LESS 6)
+    message("Error: Qt6 or greater required")
+    return()
+endif()
 
 
 set(TS_FILES
@@ -30,6 +45,9 @@ set(PROJECT_SOURCES
     mainwindow.ui
     mainwindow.h
     mainwindow.cpp
+
+    globals/global_configs.h
+    globals/global_configs.cpp
 
     defines/web_servers.h
 
@@ -65,15 +83,15 @@ set(PROJECT_SOURCES
 
     modules/dialogs.h
     modules/dialogs.cpp
-    modules/dialogs/dialogmsg.ui
-    modules/dialogs/dialogmsg.h
-    modules/dialogs/dialogmsg.cpp
-    modules/dialogs/dialogbool.ui
-    modules/dialogs/dialogbool.h
-    modules/dialogs/dialogbool.cpp
-    modules/dialogs/dialogdia.ui
-    modules/dialogs/dialogdia.h
-    modules/dialogs/dialogdia.cpp
+    modules/dialogs/message_dialog.ui
+    modules/dialogs/message_dialog.h
+    modules/dialogs/message_dialog.cpp
+    modules/dialogs/boolean_dialog.ui
+    modules/dialogs/boolean_dialog.h
+    modules/dialogs/boolean_dialog.cpp
+    modules/dialogs/ida_dialog.ui
+    modules/dialogs/ida_dialog.h
+    modules/dialogs/ida_dialog.cpp
 
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
@@ -93,6 +111,8 @@ set(PROJECT_SOURCES
     modules/craplog/modules/workers/lib.h
     modules/craplog/modules/workers/lister.h
     modules/craplog/modules/workers/lister.cpp
+    modules/craplog/modules/workers/parser_interface.h
+    modules/craplog/modules/workers/parser_interface.cpp
     modules/craplog/modules/workers/parser.h
     modules/craplog/modules/workers/parser.cpp
     modules/craplog/modules/workers/parser_async.h
@@ -112,21 +132,27 @@ set(PROJECT_SOURCES
     modules/crapup/crapup.ui
     modules/crapup/crapup.h
     modules/crapup/crapup.cpp
+    modules/crapup/modules/stylesheets.h
+    modules/crapup/modules/stylesheets.cpp
 
     modules/crapinfo/crapinfo.ui
     modules/crapinfo/crapinfo.h
     modules/crapinfo/crapinfo.cpp
+    modules/crapinfo/modules/stylesheets.h
+    modules/crapinfo/modules/stylesheets.cpp
 
     tools/crapnote/crapnote.ui
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
 
-    games/games.h
-    games/games.cpp
-
+    games/game_dialog.ui
+    games/game_dialog.h
+    games/game_dialog.cpp
     games/crisscross/crisscross.ui
     games/crisscross/game.h
     games/crisscross/game.cpp
+    games/crisscross/modules/stylesheets.h
+    games/crisscross/modules/stylesheets.cpp
 
     games/snake/snake.ui
     games/snake/game.h
@@ -135,63 +161,49 @@ set(PROJECT_SOURCES
     games/snake/snake.cpp
     games/snake/food.h
     games/snake/food.cpp
+    games/snake/modules/stylesheets.h
+    games/snake/modules/stylesheets.cpp
 
     resources/resources.qrc
     ${TS_FILES}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(LogDoctor
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET LogDoctor APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-else()
-    if(ANDROID)
-        add_library(LogDoctor SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(LogDoctor
-            ${PROJECT_SOURCES}
-        )
-    endif()
-
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-endif()
+qt_add_executable(LogDoctor
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
+qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 if(WIN32)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lgcc -lstdc++ -lwinpthread")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lstdc++ -lwinpthread")
     target_link_libraries(LogDoctor PRIVATE
+        -static Qt${QT_VERSION_MAJOR}::Core
         -static Qt${QT_VERSION_MAJOR}::Widgets
         -static Qt${QT_VERSION_MAJOR}::Charts
         -static Qt${QT_VERSION_MAJOR}::Sql
-        -static Qt${QT_VERSION_MAJOR}::Network)
+        -static Qt${QT_VERSION_MAJOR}::Network
+    )
 else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
     target_link_libraries(LogDoctor PRIVATE
+        Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Charts
         Qt${QT_VERSION_MAJOR}::Sql
-        Qt${QT_VERSION_MAJOR}::Network)
+        Qt${QT_VERSION_MAJOR}::Network
+    )
     # Include zlib
     find_package(ZLIB REQUIRED)
     include_directories(${ZLIB_INCLUDE_DIRS})
     target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 endif()
 
-set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
-
-if(APPLE)
+if(WIN32)
+    set_target_properties(LogDoctor PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+elseif(APPLE)
     set_target_properties(LogDoctor PROPERTIES
         MACOSX_BUNDLE TRUE
         #MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -200,16 +212,10 @@ if(APPLE)
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     )
-elseif(WIN32)
-    set_target_properties(LogDoctor PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
 endif()
 
+qt_finalize_executable(LogDoctor)
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(LogDoctor)
-endif()
 
 
 # CTest

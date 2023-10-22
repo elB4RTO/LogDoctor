@@ -3,7 +3,7 @@ var searchData=
   ['mainslice_0',['MainSlice',['../classMainSlice.html',1,'']]],
   ['mainwindow_1',['MainWindow',['../classMainWindow.html',1,'']]],
   ['makechart_2',['makeChart',['../classCraplog.html#ae25af3f4bd279585cd28cd0c2b0785fc',1,'Craplog']]],
-  ['makedir_3',['makeDir',['../namespaceIOutils.html#a07b21afffc37bea1f5e2a912b614622a',1,'IOutils']]],
+  ['makedir_3',['makeDir',['../namespaceIOutils.html#a9f8aee8de3eeaca32a1b198c8befdd09',1,'IOutils']]],
   ['makeinitialchecks_4',['makeInitialChecks',['../classMainWindow.html#ae459fb4a3966975abe641c11c76e2c03',1,'MainWindow']]],
   ['makepreview_5',['makePreview',['../classTextBrowser.html#a9678c99090d67310690f6a1146d70c06',1,'TextBrowser']]],
   ['max_5fsnake_5flength_6',['MAX_SNAKE_LENGTH',['../classSnakeGame.html#ab359f92ba6a02621b131f3cdacd1260b',1,'SnakeGame']]],

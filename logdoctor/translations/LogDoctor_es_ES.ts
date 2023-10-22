@@ -115,18 +115,6 @@ Visita el repositorio de LogDoctor y descargalo una otra vez</translation>
     </message>
     <message>
         <source>An error occured while parsing:
-initial version mark not found</source>
-        <translation type="unfinished">Ocurrió un error al analizar:
-marcador inicial no encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
-final version mark not found</source>
-        <translation type="unfinished">Ocurrió un error al analizar:
-marcador final no encontrado</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing:
 malformed version</source>
         <translation type="unfinished">Ocurrió un error al analizar:
 versión mal formada</translation>
@@ -136,6 +124,12 @@ versión mal formada</translation>
 malformed upstream version</source>
         <translation type="unfinished">Ocurrió un error al comparar:
 versión online mal formada</translation>
+    </message>
+    <message>
+        <source>An error occured while parsing:
+version mark not found</source>
+        <translation type="unfinished">Ocurrió un error al analizar:
+marcador no encontrado</translation>
     </message>
 </context>
 <context>
@@ -173,7 +167,7 @@ versión online mal formada</translation>
     </message>
 </context>
 <context>
-    <name>DialogDia</name>
+    <name>DialogIda</name>
     <message>
         <source>Ignore</source>
         <translation type="unfinished">Ignorar</translation>
@@ -712,6 +706,13 @@ Anulado</translation>
     </message>
 </context>
 <context>
+    <name>GameDialog</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Parse logs from the Apache2 web server</source>
@@ -986,10 +987,6 @@ Anulado</translation>
         <translation type="unfinished">General</translation>
     </message>
     <message>
-        <source>General settings</source>
-        <translation type="unfinished">Configuración general</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation type="unfinished">Ventana</translation>
     </message>
@@ -1010,32 +1007,12 @@ Anulado</translation>
         <translation type="unfinished">Tema</translation>
     </message>
     <message>
-        <source>None (System)</source>
-        <translation type="unfinished">Ninguno (Sistema)</translation>
-    </message>
-    <message>
         <source>Dark</source>
         <translation type="unfinished">Oscuro</translation>
     </message>
     <message>
         <source>Dialogs</source>
         <translation type="unfinished">Diálogos</translation>
-    </message>
-    <message>
-        <source>Candy</source>
-        <translation type="unfinished">Dulce</translation>
-    </message>
-    <message>
-        <source>Herb</source>
-        <translation type="unfinished">Hierba</translation>
-    </message>
-    <message>
-        <source>Powder</source>
-        <translation type="unfinished">Polvo</translation>
-    </message>
-    <message>
-        <source>Auto (Default)</source>
-        <translation type="unfinished">Auto (Predeterminado)</translation>
     </message>
     <message>
         <source>Light</source>
@@ -1126,18 +1103,6 @@ Anulado</translation>
         <translation type="unfinished">Gráficos</translation>
     </message>
     <message>
-        <source>Default (Light)</source>
-        <translation type="unfinished">Predeterminado (Claro)</translation>
-    </message>
-    <message>
-        <source>Sand</source>
-        <translation type="unfinished">Arena</translation>
-    </message>
-    <message>
-        <source>Cerulean</source>
-        <translation type="unfinished">Azul claro</translation>
-    </message>
-    <message>
         <source>Theme to use for the Charts</source>
         <translation type="unfinished">Tema a usar para los Gráficos</translation>
     </message>
@@ -1202,10 +1167,6 @@ Anulado</translation>
         <translation type="unfinished">Registros</translation>
     </message>
     <message>
-        <source>Logs related settings</source>
-        <translation type="unfinished">Configuración relacionada con los registros</translation>
-    </message>
-    <message>
         <source>Defaults</source>
         <translation type="unfinished">Predeterminados</translation>
     </message>
@@ -1216,10 +1177,6 @@ Anulado</translation>
     <message>
         <source>Control</source>
         <translation type="unfinished">Controlar</translation>
-    </message>
-    <message>
-        <source>Options about the log files usage control</source>
-        <translation type="unfinished">Opciones sobre el control de uso de archivos de registro</translation>
     </message>
     <message>
         <source>Usage control</source>
@@ -1292,10 +1249,6 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
         <translation type="unfinished">Recuerda posición y tamaño</translation>
     </message>
     <message>
-        <source>Ash</source>
-        <translation type="unfinished">Ceniza</translation>
-    </message>
-    <message>
         <source>Icons</source>
         <translation type="unfinished">Iconos</translation>
     </message>
@@ -1318,10 +1271,6 @@ Con números, use &apos;!&apos;, &apos;=&apos;, &apos;&lt;&apos; o &apos;&gt;&ap
     <message>
         <source>Dialogs emitted when viewing statistics</source>
         <translation type="unfinished">Diálogos emitidos al visualizar estadísticas</translation>
-    </message>
-    <message>
-        <source>Configure Apache2 specific options</source>
-        <translation type="unfinished">Configurar opciones específicas de Apache2</translation>
     </message>
     <message>
         <source>Logs folder</source>
@@ -1406,20 +1355,12 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
         <translation type="unfinished">Nginx</translation>
     </message>
     <message>
-        <source>Configure Nginx specific options</source>
-        <translation type="unfinished">Configurar opciones específicas de Nginx</translation>
-    </message>
-    <message>
         <source>IIS</source>
         <translation type="unfinished">IIS</translation>
     </message>
     <message>
         <source>Format</source>
         <translation type="unfinished">Formato</translation>
-    </message>
-    <message>
-        <source>Configure IIS specific options</source>
-        <translation type="unfinished">Configurar opciones específicas de IIS</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1472,6 +1413,18 @@ Los campos marcados como &apos;DISCARDED&apos; se analizaron correctamente, pero
     <message>
         <source>copies</source>
         <translation type="unfinished">copias</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation type="unfinished">Ruta</translation>
+    </message>
+    <message>
+        <source>Native</source>
+        <translation type="unfinished">Nativo</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation type="unfinished">Auto</translation>
     </message>
 </context>
 <context>
