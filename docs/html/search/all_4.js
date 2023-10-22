@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['editeddatabase_0',['editedDatabase',['../classCraplog.html#a6cabb746e255f911ec2adcad74d5f332',1,'Craplog']]],
+  ['editeddatabase_0',['editedDatabase',['../classCraplog.html#a68dd849eb25f6d0143c30676251dfc5f',1,'Craplog']]],
   ['ends_1',['ends',['../structCraplog_1_1LogName.html#a84d26cb4dc6f8efd87b26ad77d048e15',1,'Craplog::LogName']]],
-  ['endswith_2',['endsWith',['../namespaceStringOps.html#a5843b851d3731a93f5f18fbf89ff51bc',1,'StringOps::endsWith(std::string_view str, const char flag)'],['../namespaceStringOps.html#a8cadbdaa44cb42d709f29e2ea46851e5',1,'StringOps::endsWith(std::string_view str, std::string_view flag)']]],
+  ['endswith_2',['endswith',['../namespaceStringOps.html#aa31fa90911d193832aab0bd2c337641c',1,'StringOps::endsWith(std::string_view str, const char flag)'],['../namespaceStringOps.html#a03327aaf5b652d05bdb4406611d6d00d',1,'StringOps::endsWith(std::string_view str, std::string_view flag)']]],
   ['endturn_3',['endTurn',['../classCrissCross.html#a3d3d3eeb2b7666c4411c89cf153048e0',1,'CrissCross']]],
   ['enrichlogs_4',['enrichLogs',['../classRichText.html#a2afa546c743511aba5eb62f4bdc1da09',1,'RichText']]],
   ['errconfdirnotwritable_5',['errConfDirNotWritable',['../classDialogSec.html#a2cfc4ee49a455ec10253c133308e5235',1,'DialogSec']]],
@@ -38,5 +38,5 @@ var searchData=
   ['errlogformatnotset_35',['errLogFormatNotSet',['../classDialogSec.html#af9f19176ce2981bd3397b9d033490cb8',1,'DialogSec']]],
   ['errrenaming_36',['errRenaming',['../classDialogSec.html#a93804c66ed89197dceb292926fceb690',1,'DialogSec']]],
   ['errsqldrivernotfound_37',['errSqlDriverNotFound',['../classDialogSec.html#a41c7f8f921aff3ecfb876be3d89276b6',1,'DialogSec']]],
-  ['exists_38',['exists',['../namespaceIOutils.html#ab5d50d893f9555e52cd035b3afdce5f7',1,'IOutils']]]
+  ['exists_38',['exists',['../namespaceIOutils.html#aca83a80f57ec7447988db335cea3f180',1,'IOutils']]]
 ];

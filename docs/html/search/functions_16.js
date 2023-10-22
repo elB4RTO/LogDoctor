@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_0',['Y',['../classFood.html#a519bdb6ef4a9648bb868e0f9d31e2708',1,'Food']]]
+  ['y_0',['Y',['../classFood.html#aa48eeda2151769eb75a41c6aa3f216be',1,'Food']]]
 ];
