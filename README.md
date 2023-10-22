@@ -87,8 +87,10 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
   - Qt6 *(Framework 6.2+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From source**:
   - *all the above*
-  - Cmake
-  - gcc / clang / msvc<br/><br/>
+  - CMake
+  - gcc / clang / msvc<br/><br/><br/>
+- **As Docker**:
+  - Docker<br/><br/>
 
 <br/>
 
@@ -96,7 +98,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 - Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
   <br/>*or*<br/>
-  Follow the step-by-step "[How to compile](#how-to-compile)" guide
+  Follow the step-by-step guide in [HOW_TO_COMPILE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_COMPILE.md)
 
 - Run the executable
 
@@ -104,112 +106,13 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 ### Usage with installation
 
-#### From source
-
-- Download and unzip this repo
-  <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
-- Step inside inside "*LogDoctor-main*"
-  <br/>*or*<br/>
-  `cd LogDoctor`<br/><br/>
-- Run the installation script
-  - Linux:
-    - `bash scripts/LINUX_build_install.sh`
-  - BSD:
-    - `bash scripts/BSD_build_install.sh`
-  - Windows:
-    - run `WIN_build_install_1.bat` as normal user
-    - right-click on `WIN_build_install_2.bat` and select **Run as Administrator**
-  - Mac OS:
-    - `bash scripts/MAC_build_install.sh`
-
-<br/>
-
-#### From package
-
-##### Arch-based distributions
-
-- Pre-made package:
-  - `wget https://github.com/elB4RTO/LogDoctor/archive/refs/tags/logdoctor-<VERSION>-x86_64.pkg.tar.zst`
-  - `sudo pacman -U logdoctor-<VERSION>-x86_64.pkg.tar.zst`<br/><br/>
-- From the AUR:
-  - Using **yay**:
-    - `yay -S logdoctor`<br/>
-  - Manually:
-    - `git clone https://aur.archlinux.org/logdoctor.git -b master --depth 1`
-    - `cd logdoctor`
-    - `makepkg -sci`<br/><br/>
-
-##### Debian-based distributions
-
-- Pre-made package:
-  - `wget https://github.com/elB4RTO/LogDoctor/archive/refs/tags/logdoctor_<VERSION>_amd64.deb`
-  - `sudo apt install ./logdoctor_<VERSION>_amd64.deb`
-
-<br/>
-
-#### From binary
-
-- Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)
-- Run the installation executable, or the installation script if you prefer it
-
-<br/>
-
-#### As Docker image
-
-- Download and unzip this repo
-  <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
-- Step inside inside "*LogDoctor-main*"
-  <br/>*or*<br/>
-  `cd LogDoctor`<br/><br/>
-- Run the installation script
-  - Linux:
-    - `bash scripts/DOCKER_build_install.sh`
+See [HOW_TO_INSTALL.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_INSTALL.md)
 
 <br/><br/>
 
 ### How to compile
 
-- Install the *dependencies* you're missing.<br/><br/>
-- Download and unzip this repo
-  <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
-- Open a terminal inside "*LogDoctor-main/*"
-  <br/>*or*<br/>
-  `cd LogDoctor/`<br/><br/>
-- Prepare a build folder:
-  <br/>`mkdir build && cd build`<br/><br/>
-- Prepare **Cmake**'s build files:
-  <br/>`cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel`<br/><br/>
-- Use **Cmake** to compile the entire project:
-  <br/>`cmake --build ./ --target all`<br/><br/>
-  If compilation fails, use the following command before to rebuild:
-  <br/>`cmake --build ./ --target clean`
-  <br/><br/>
-
-#### Additional steps
-
-- **Linux** / **BSD**:
-  - No additional steps. Once compiling is done, you can move the executable file wherever you want and execute it from there.<br/><br/>
-
-- **Windows**:
-  - Create a new folder and move the executable in it:
-    <br/>`mkdir LogDoctor && move LogDoctor.exe .\LogDoctor`<br/><br/>
-  - Add the needed libraries to the executable's folder:<br/>
-    - You need to know the path of your Qt installation, default is *C:\Qt*<br/>
-    - You need to know which compiler you used, usually *MinGW*
-      <br/>`cd C:\<path>\<to>\Qt\<version>\<compiler>\bin`<br/><br/>
-    - Deploy Qt's libraries using Qt's additional tool:
-      <br/>`windeployqt.exe C:\<path>\<to>\<LogDoctor>`<br/><br/>
-    - Deploy C++ libraries by copying them:
-      <br/>`copy "libstdc++-6.dll" C:\<path>\<to>\<LogDoctor>`
-      <br/>`copy "libwinpthread-1.dll" C:\<path>\<to>\<LogDoctor>`
-      <br/>`copy "libgcc_s_seh-1.dll" C:\<path>\<to>\<LogDoctor>`<br/><br/>
-  - You can now move the executable's folder wherever you want and execute LogDoctor from there.<br/><br/>
-
-- **Mac OS**:
-  - No additional steps. Once compiling is done, you can use the app bundle to execute LogDoctor.
+See [HOW_TO_COMPILE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_COMPILE.md)
 
 <br/><br/>
 
@@ -218,59 +121,11 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 ### Version check
 
 A version check utility is available while running LogDoctor to check the availability of a new version.<br/>
-To check for updates, open the menu `Utilities`→`Version check`.
-
-<br/>
+To check for updates, open the menu `Utilities`→`Version check`.<br/><br/>
 
 ### How to update
 
-At the moment of writing, the only supported method is the manual update.<br/><br/>
-
-#### From source
-
-- Download and unzip this repo
-  <br/>*or*<br/>
-  `git clone https://bitbucket.org/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
-- Step inside inside "*LogDoctor-main*"
-  <br/>*or*<br/>
-  `cd LogDoctor`<br/><br/>
-- Run the update script
-  - Linux:
-    - `bash LINUX_build_update.sh`
-  - BSD:
-    - `bash BSD_build_update.sh`
-  - Windows:
-    - run `WIN_build_update_1.bat` as normal user
-    - right-click on `WIN_build_update_2.bat` and select **Run as Administrator**
-  - Mac OS:
-    - `bash MAC_build_update.sh`
-
-<br/>
-
-#### From package
-
-Follow the same process as for installing
-
-<br/>
-
-#### From binary
-
-- Download a pre-compiled [Release](https://github.com/elB4RTO/LogDoctor/releases)<br/>
-- Run the update script
-
-<br/>
-
-#### As Docker image
-
-- Download and unzip this repo
-  <br/>*or*<br/>
-  `git clone https://github.com/elB4RTO/LogDoctor -b main --depth 1`<br/><br/>
-- Step inside inside "*LogDoctor-main*"
-  <br/>*or*<br/>
-  `cd LogDoctor`<br/><br/>
-- Run the update script
-  - Linux:
-    - `bash scripts/DOCKER_build_update.sh`
+See [HOW_TO_UPDATE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_UPDATE.md)
 
 <br/><br/><br/>
 
@@ -502,7 +357,7 @@ A block-note utility is available at `Tools`→`BlockNote` which can be used to 
 
 ### Games
 
-Simple mini-games to pass the time.<br/><br/>
+Simple mini-games to kill the time.<br/><br/>
 
 #### CrissCross
 
@@ -548,13 +403,13 @@ LogDoctor is available in:
 
 - 🇮🇹 **Italian** (100%)
 
-- 🇪🇸 **Spanish** (90%, *wanna [contribute](#translations)?*)
+- 🇪🇸 **Spanish** (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
 
-- 🇫🇷 **French** (90%, *wanna [contribute](#translations)?*)
+- 🇫🇷 **French** (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
 
-- 🇧🇷 **Portuguese** [**Brazil**] (90%, *wanna [contribute](#translations)?*)
+- 🇧🇷 **Portuguese** [**Brazil**] (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
 
-- 🇯🇵 **Japanese** (90%, *wanna [contribute](#translations)?*)
+- 🇯🇵 **Japanese** (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
 
 <br/><br/>
 
@@ -566,75 +421,6 @@ If you have suggestions about how to improve it, please open an [issue](https://
 
 If you want to contribute to the code, please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
 
-If you want to contribute to the translation, please read the [Translation Guidelines](#how-to-contribute-to-translations).
-
-<br/>
-
-### Translations
-
-Current translations under developement:
-
-- `es_ES` : **90%** *(auditor needed)*
-
-- `fr_FR` : **90%** *(auditor needed)*
-
-- `pt_BR` : **90%** *(auditor needed)*
-
-- `ja_JP` : **90%** *(auditor needed)*
-
-If you have a request for a missing language or you're willing to contribute, please refer to [this issue](https://github.com/elB4RTO/LogDoctor/issues/10).
-
-<br/>
-
-#### How to contribute to translations
-
-Since the whole application is build upon Qt, translations are made throught `.ts` [translation files](https://github.com/elB4RTO/LogDoctor/tree/main/logdoctor/translations).
-
-<br/>
-
-The easiest way to go is to use **Qt Linguist**:
-- Download or clone this repo<br/>
-- Open the `.ts` translation file of your language using QtLinguist<br/>
-- Translate (*don't know how? Follow [this video](https://www.youtube.com/watch?v=GNyfkuDchNQ)*)<br/>
-- **Push only the `.ts` files, you don't have to release them**: pull request containing `.qm` binaries won't be accepted.<br/>
-
-<br/><br/>
-
-If you don't want to install QtLinguist, you can do it the hard way, by opening the files with a text editor and do it manually:
-- Here is a sample of some text waiting for translation<br/>
-  You can see the original text enclosed in the `<source>` tags. Don't edit it.<br/>
-  ```
-      <message>
-          <location filename="..." line="n"/>
-          <source>This is the original text</source>
-      </message>
-  ```
-- Everything you need to do is to add the missing line containing the translated text, without editing the other lines.<br/>
-  Here is a sample after having translated it<br/>
-  ```
-      <message>
-          <location filename="..." line="n"/>
-          <source>Original text</source>
-          <translation type="unfinished">Translated text goes here</translation>
-      </message>
-  ```
-
-<br/>
-
-If you don't feel comfortable with any of the above solutions, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues) and write your translations/corrections there, in a clear way.
-
-<br/>
-
-#### Translation guidelines
-
-*[hints from Qt](https://doc.qt.io/qt-6/linguist-overview.html)*
-
-Just follow some simple guidelines to ensure a correct and clear contribution:
-
-- Respect the structure of the phrase: if *(for example)* it starts or ends with a whitespace or something, please do the same.
-
-- Please leave your translations marked as *unfinished*, they will be checked and un-marked after having been verified.
-
-- If you see a translation marked as *finished*, please edit it only if you're sure that your definition suits better.
+If you want to contribute to the translation, please read the [Translation Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md).
 
 <br/>
