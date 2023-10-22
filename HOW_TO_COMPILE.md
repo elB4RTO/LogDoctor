@@ -32,12 +32,8 @@
     - You need to know the path of your Qt installation, default is *C:\Qt*<br/>
     - You need to know which compiler you used
       <br/>`cd C:\<path>\<to>\Qt\<version>\<compiler>\bin`<br/><br/>
-    - Deploy Qt's libraries using Qt's additional tool:
+    - Deploy libraries using Qt's additional tool:
       <br/>`windeployqt.exe C:\<path>\<to>\<LogDoctor>`<br/><br/>
-    - Deploy C++ libraries by copying them:
-      <br/>`copy "libstdc++-6.dll" C:\<path>\<to>\<LogDoctor>`
-      <br/>`copy "libwinpthread-1.dll" C:\<path>\<to>\<LogDoctor>`
-      <br/>`copy "libgcc_s_seh-1.dll" C:\<path>\<to>\<LogDoctor>`<br/><br/>
   - You can now move the executable's folder wherever you want and execute LogDoctor from there.<br/><br/>
 
 - **Mac OS**:
