@@ -44,7 +44,7 @@ if [[ "$?" == "0" ]]
 then
 	while :
 	do
-		echo "A $(tput bold)debian:latest$(tput sgr0) image is already installed\nIt is recomended to build LogDoctor on top of an updated image\nPull the latest updates? [y/n] : "
+		echo -e "A $(tput bold)debian:latest$(tput sgr0) image is already installed\nIt is recomended to build LogDoctor on top of an updated image\nPull the latest updates? [y/n] : "
 		read agree
 		case "$agree"
 		in
