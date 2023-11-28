@@ -214,6 +214,9 @@ public:
     */
     QString getLogsFormatSample( const unsigned& web_server_id ) const;
 
+    //! Checks whether the current Logs Format is valid or not
+    bool checkCurrentLogsFormat() const;
+
 
 
     //////////////////////

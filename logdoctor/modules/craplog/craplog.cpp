@@ -35,23 +35,23 @@ Craplog::Craplog()
     ////////////////////////
     // blacklists / whitelists
     for ( unsigned i{APACHE_ID}; i<=IIS_ID; i++ ) {
-        this->warnlists.emplace(  i, std::unordered_map<int, BWlist>{} );
-        this->blacklists.emplace( i, std::unordered_map<int, BWlist>{} );
+        this->warnlists.emplace(  i, std::unordered_map<int, BWlist>(4) );
+        this->blacklists.emplace( i, std::unordered_map<int, BWlist>(1) );
         // default data
-        this->warnlists.at( i ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists.at( i ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/setup.cgi","/cgi-bin"} } );
+        this->warnlists.at( i ).emplace( 11, BWlist{ .used=false, .list={} } );
+        this->warnlists.at( i ).emplace( 12, BWlist{ .used=false, .list={} } );
         this->warnlists.at( i ).emplace( 20, BWlist{ .used=false, .list={} } );
         this->warnlists.at( i ).emplace( 21, BWlist{ .used=false, .list={} } );
-        this->blacklists.at( i ).emplace( 20, BWlist{ .used=true,  .list={} } );
+        this->blacklists.at( i ).emplace( 20, BWlist{ .used=false, .list={} } );
     }
 
     // default format strings
     this->logs_format_strings.emplace(
-        APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
+        APACHE_ID, "" );
     this->logs_format_strings.emplace(
-        NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
+        NGINX_ID,  "" );
     this->logs_format_strings.emplace(
-        IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
+        IIS_ID,    "" );
 
     // initialize formats
     this->logs_formats.emplace(
@@ -391,6 +391,24 @@ QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
             // unexpected WebServer
             throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
     }
+}
+
+bool Craplog::checkCurrentLogsFormat() const
+{
+    if ( this->current_LF.string.empty() ) {
+            // format string not set
+            DialogSec::errLogFormatNotSet( nullptr );
+            return false;
+    } else if ( this->current_LF.fields.empty() ) {
+            // no field, useless to parse
+            DialogSec::errLogFormatNoFields( nullptr );
+            return false;
+    } else if ( this->current_LF.separators.size() < this->current_LF.fields.size()-1 ) {
+            // at least one separator is missing between two (or more) fields
+            DialogSec::errLogFormatNoSeparators( nullptr );
+            return false;
+    }
+    return true;
 }
 
 

@@ -251,6 +251,10 @@ void checkIisString( std::string_view string )
 
 LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) const
 {
+    if ( f_str.empty() ) {
+        return LogsFormat();
+    }
+
     const auto& f_map   { this->APACHE_ALF   };
     const auto& f_map_v { this->APACHE_ALF_V };
 
@@ -582,6 +586,10 @@ QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
 
 LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
 {
+    if ( f_str.empty() ) {
+        return LogsFormat();
+    }
+
     const auto& f_map{ this->NGINX_ALF };
 
     std::string initial, final;
@@ -678,6 +686,10 @@ QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 
 LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
 {
+    if ( f_str.empty() ) {
+        return LogsFormat();
+    }
+
     checkIisString( f_str );
     std::string initial, final;
     std::vector<std::string> separators, fields;

@@ -2694,21 +2694,8 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 {
     if ( this->dbUsable() ) {
         bool proceed{ true };
-        // check that the format has been set
-        const LogsFormat& lf{ this->craplog.getLogsFormat( this->craplog.getCurrentWSID() ) };
-        if ( lf.string.empty() ) {
-            // format string not set
-            proceed &= false;
-            DialogSec::errLogFormatNotSet( nullptr );
-        } else if ( lf.fields.empty() ) {
-            // no field, useless to parse
-            proceed &= false;
-            DialogSec::errLogFormatNoFields( nullptr );
-        } else if ( lf.separators.size() < lf.fields.size()-1 ) {
-            // missing at least a separator between two (or more) fields
-            proceed &= false;
-            DialogSec::errLogFormatNoSeparators( nullptr );
-        }
+        // check that the format has been set and is consistent
+        proceed = craplog.checkCurrentLogsFormat();
 
         if ( proceed ) {
             // take actions on Craplog's start
@@ -4677,7 +4664,7 @@ void MainWindow::on_inLine_ConfApache_Format_String_returnPressed()
 void MainWindow::on_button_ConfApache_Format_Save_clicked()
 {
     const bool success{ this->craplog.setApacheLogFormat(
-        this->ui->inLine_ConfApache_Format_String->text().toStdString() ) };
+        this->ui->inLine_ConfApache_Format_String->text().trimmed().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( false );
         if ( this->craplog.getCurrentWSID() == APACHE_ID ) {
@@ -5048,7 +5035,7 @@ void MainWindow::on_inLine_ConfNginx_Format_String_returnPressed()
 void MainWindow::on_button_ConfNginx_Format_Save_clicked()
 {
     const bool success{ this->craplog.setNginxLogFormat(
-        this->ui->inLine_ConfNginx_Format_String->text().toStdString() ) };
+        this->ui->inLine_ConfNginx_Format_String->text().trimmed().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( false );
         if ( this->craplog.getCurrentWSID() == NGINX_ID ) {
@@ -5481,7 +5468,7 @@ void MainWindow::on_inLine_ConfIis_Format_String_returnPressed()
 void MainWindow::on_button_ConfIis_Format_Save_clicked()
 {
     const bool success{ this->craplog.setIisLogFormat(
-        StringOps::strip( this->ui->inLine_ConfIis_Format_String->text().toStdString() ),
+        this->ui->inLine_ConfIis_Format_String->text().trimmed().toStdString(),
         this->getIisLogsModule() ) };
     if ( success ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( false );
