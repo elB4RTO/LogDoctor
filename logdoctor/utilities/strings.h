@@ -1,9 +1,11 @@
 #ifndef LOGDOCTOR__UTILITIES__STRINGS_H
 #define LOGDOCTOR__UTILITIES__STRINGS_H
 
+#include "chars.h"
 
 #include <string>
 #include <vector>
+#include <bits/stl_algo.h>
 
 
 //! StringOps
@@ -19,7 +21,10 @@ namespace StringOps
     \param flag The character to find
     \return The number of occurrences
 */
-size_t count( std::string_view str, const char flag );
+inline size_t count( std::string_view str, const char flag )
+{
+    return static_cast<size_t>( std::count( str.cbegin(), str.cend(), flag ) );
+}
 
 //! Count the occurrences of the given sequence in the given string
 /*!
@@ -29,57 +34,41 @@ size_t count( std::string_view str, const char flag );
 */
 size_t count( std::string_view str, std::string_view flag );
 
-//! Checks whether character is numeric
-/*!
-    \param str The target character
-    \return The result of the check
-    \see isNumeric()
-*/
-bool isNumeric( const char& chr );
-
 //! Checks whether a string only contains numeric characters
 /*!
     \param str The target string
     \return The result of the check
 */
-bool isNumeric( std::string_view str );
-
-//! Checks whether a character is alphabetic
-/*!
-    \param str The target character
-    \return The result of the check
-    \see isAlphabetic()
-*/
-bool isAlphabetic( const char& chr );
+inline bool isNumeric( std::string_view str )
+{
+    return str.empty()
+        ? false
+        : std::all_of( str.cbegin(), str.cend(), CharOps::isNumeric );
+}
 
 //! Checks whether a string only contains alphabetic characters
 /*!
     \param str The target string
     \return The result of the check
 */
-bool isAlphabetic( std::string_view str );
-
-//! Checks whether a character is alpha-numeric
-/*!
-    \param str The target character
-    \return The result of the check
-    \see isAlnum
-*/
-bool isAlnum( const char& chr );
+inline bool isAlphabetic( std::string_view str )
+{
+    return str.empty()
+        ? false
+        : std::all_of( str.cbegin(), str.cend(), CharOps::isAlphabetic );
+}
 
 //! Checks whether a string only contains alpha-numeric characters
 /*!
     \param str The target string
     \return The result of the check
 */
-bool isAlnum( std::string_view str );
-
-//! Checks whether a string only contains hexadecimal characters
-/*!
-    \param str The target character
-    \return The result of the check
-*/
-bool isHex( const char& chr );
+inline bool isAlnum( std::string_view str )
+{
+    return str.empty()
+        ? false
+        : std::all_of( str.cbegin(), str.cend(), CharOps::isAlnum );
+}
 
 //! Checks whether a string contains only IPv4/IPv6 chars
 /*!
@@ -88,7 +77,12 @@ bool isHex( const char& chr );
     \param str The target string
     \return The result of the check
 */
-bool isIP( std::string_view str );
+inline bool isIP( std::string_view str )
+{
+    return str.empty()
+        ? false
+        : std::all_of( str.cbegin(), str.cend(), CharOps::isIP );
+}
 
 //! Checks if a string starts with the given sequence
 /*!
@@ -96,7 +90,10 @@ bool isIP( std::string_view str );
     \param flag The character to search for
     \return The result of the check
 */
-bool startsWith( std::string_view str, const char flag );
+inline bool startsWith( std::string_view str, const char flag )
+{
+    return str.front() == flag;
+}
 
 //! Checks if a string starts with the given sequence
 /*!
@@ -105,7 +102,10 @@ bool startsWith( std::string_view str, const char flag );
     \param flag The sequence to search for
     \return The result of the check
 */
-bool startsWith( std::string_view str, std::string_view flag );
+inline bool startsWith( std::string_view str, std::string_view flag )
+{
+    return str.rfind( flag, 0ul ) == 0ul;
+}
 
 //! Checks if a string ends with the given sequence
 /*!
@@ -113,7 +113,10 @@ bool startsWith( std::string_view str, std::string_view flag );
     \param flag The character to search for
     \return The result of the check
 */
-bool endsWith( std::string_view str, const char flag );
+inline bool endsWith( std::string_view str, const char flag )
+{
+    return str.back() == flag;
+}
 
 //! Checks if a string ends with the given sequence
 /*!
@@ -122,7 +125,10 @@ bool endsWith( std::string_view str, const char flag );
     \param flag The sequence to search for
     \return The result of the check
 */
-bool endsWith( std::string_view str, std::string_view flag );
+inline bool endsWith( std::string_view str, std::string_view flag )
+{
+    return str.rfind( flag ) == str.size()-flag.size();
+}
 
 //! Checks if a string contains the given sequence
 /*!
@@ -130,7 +136,10 @@ bool endsWith( std::string_view str, std::string_view flag );
     \param flag The sequence to search for
     \return The result of the check
 */
-bool contains( std::string_view str, std::string_view flag );
+inline bool contains( std::string_view str, std::string_view flag )
+{
+    return str.find( flag ) != std::string::npos;
+}
 
 //!  Strips the given character from both the left and the right side of a string
 /*!

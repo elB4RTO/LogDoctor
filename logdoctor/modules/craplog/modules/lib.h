@@ -26,9 +26,8 @@ enum class LogType
 
 
 //! Holds informations about a log file
-class LogFile {
-public:
-    explicit LogFile(){}
+struct LogFile {
+    explicit LogFile() = default;
     explicit LogFile
         (const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt)
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
@@ -60,9 +59,8 @@ Q_DECLARE_METATYPE( LogFile )
 
 
 //! Holds informations about a log format
-class LogsFormat {
-public:
-    explicit LogsFormat(){}
+struct LogsFormat {
+    explicit LogsFormat() = default;
     explicit LogsFormat
         (const std::string& str,const std::string& itl,const std::string& fnl,const std::vector<std::string>& seps,const std::vector<std::string>& flds,const unsigned nl)
         :string{str},initial{itl},final{fnl},separators{seps},fields{flds},new_lines{nl}{}
