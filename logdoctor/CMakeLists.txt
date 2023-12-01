@@ -53,6 +53,7 @@ set(PROJECT_SOURCES
 
     customs/treewidgetitems.h
 
+    utilities/chars.h
     utilities/checks.h
     utilities/checks.cpp
     utilities/colors.h
