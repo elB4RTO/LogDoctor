@@ -13,23 +13,6 @@
 namespace IOutils
 {
 
-bool exists( std::string_view path )
-{
-    if ( path.empty() ) {
-        return false;
-    }
-    return std::filesystem::exists( path );
-}
-
-
-bool isFile( std::string_view path )
-{
-    if ( exists( path ) ) {
-        return std::filesystem::is_regular_file( path );
-    }
-    return false;
-}
-
 bool checkFile( std::string_view path, const bool readable, const bool writable )
 {
     if ( isFile( path ) ) {
@@ -50,14 +33,6 @@ bool checkFile( std::string_view path, const bool readable, const bool writable 
     return false;
 }
 
-
-bool isDir( std::string_view path )
-{
-    if ( exists( path )) {
-        return std::filesystem::is_directory( path );
-    }
-    return false;
-}
 
 bool checkDir( std::string_view path, const bool readable, const bool writable )
 {

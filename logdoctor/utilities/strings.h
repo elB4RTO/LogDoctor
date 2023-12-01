@@ -42,8 +42,8 @@ size_t count( std::string_view str, std::string_view flag );
 inline bool isNumeric( std::string_view str )
 {
     return str.empty()
-        ? false
-        : std::all_of( str.cbegin(), str.cend(), CharOps::isNumeric );
+         ? false
+         : std::all_of( str.cbegin(), str.cend(), CharOps::isNumeric );
 }
 
 //! Checks whether a string only contains alphabetic characters
@@ -54,8 +54,8 @@ inline bool isNumeric( std::string_view str )
 inline bool isAlphabetic( std::string_view str )
 {
     return str.empty()
-        ? false
-        : std::all_of( str.cbegin(), str.cend(), CharOps::isAlphabetic );
+         ? false
+         : std::all_of( str.cbegin(), str.cend(), CharOps::isAlphabetic );
 }
 
 //! Checks whether a string only contains alpha-numeric characters
@@ -66,8 +66,8 @@ inline bool isAlphabetic( std::string_view str )
 inline bool isAlnum( std::string_view str )
 {
     return str.empty()
-        ? false
-        : std::all_of( str.cbegin(), str.cend(), CharOps::isAlnum );
+         ? false
+         : std::all_of( str.cbegin(), str.cend(), CharOps::isAlnum );
 }
 
 //! Checks whether a string contains only IPv4/IPv6 chars
@@ -80,8 +80,8 @@ inline bool isAlnum( std::string_view str )
 inline bool isIP( std::string_view str )
 {
     return str.empty()
-        ? false
-        : std::all_of( str.cbegin(), str.cend(), CharOps::isIP );
+         ? false
+         : std::all_of( str.cbegin(), str.cend(), CharOps::isIP );
 }
 
 //! Checks if a string starts with the given sequence

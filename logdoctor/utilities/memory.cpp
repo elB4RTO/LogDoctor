@@ -33,8 +33,8 @@ size_t availableMemory() {
     if ( host_statistics( mach_host_self(), HOST_VM_INFO, (host_info_t)&vmstat, &count ) != KERN_SUCCESS ) {
         throw GenericException("Failed to get host infos", true);
     }
-    natural_t n_pages{ vmstat.free_count };
-    long page_size{ sysconf( _SC_PAGE_SIZE ) };
+    const natural_t n_pages{ vmstat.free_count };
+    const long page_size{ sysconf( _SC_PAGE_SIZE ) };
     if ( n_pages < 0u || page_size < 0l ) {
         return 0ul;
     }
@@ -52,8 +52,8 @@ size_t availableMemory() {
     }
     return vmt.t_free * static_cast<size_t>( page_size );
 #elif defined( Q_OS_UNIX )
-    long n_pages{ sysconf( _SC_AVPHYS_PAGES ) };
-    long page_size{ sysconf( _SC_PAGE_SIZE ) };
+    const long n_pages{ sysconf( _SC_AVPHYS_PAGES ) };
+    const long page_size{ sysconf( _SC_PAGE_SIZE ) };
     if ( n_pages < 0l || page_size < 0l ) {
         return 0ul;
     }

@@ -75,7 +75,6 @@ set(PROJECT_SOURCES
     utilities/vectors.h
 
     modules/shared.h
-    modules/shared.cpp
 
     modules/exceptions.h
     modules/exceptions.cpp

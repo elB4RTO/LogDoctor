@@ -664,13 +664,13 @@ private:
     };
 
     // color schemes
-    std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
+    const std::unordered_map<int, std::unordered_map<std::string, QString>> tb_color_schemes;
 
     // colors
-    std::unordered_map<std::string, QColor> COLORS;
+    const std::unordered_map<std::string, QColor> colors;
 
     // fonts
-    std::unordered_map<std::string, QFont>  FONTS;
+    std::unordered_map<std::string, QFont>  fonts;
 
     int font_size       { 13 };
     int font_size_big   { 16 };

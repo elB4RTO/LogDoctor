@@ -19,21 +19,36 @@ namespace IOutils
     \param path The path of the entry
     \return The result of the check
 */
-bool exists( std::string_view path );
+inline bool exists( std::string_view path )
+{
+    return path.empty()
+         ? false
+         : std::filesystem::exists( path );
+}
 
 //! Checks if a path exists and points to a file
 /*!
     \param path The path of the entry
     \return The result of the check
 */
-bool isFile( std::string_view path );
+inline bool isFile( std::string_view path )
+{
+    return exists( path )
+         ? std::filesystem::is_regular_file( path )
+         : false;
+}
 
 //! Checks if a path exists and points to a directory
 /*!
     \param path The path of the entry
     \return The result of the checks
 */
-bool isDir( std::string_view path );
+inline bool isDir( std::string_view path )
+{
+    return exists( path )
+         ? std::filesystem::is_directory( path )
+         : false;
+}
 
 //! Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it
 /*!

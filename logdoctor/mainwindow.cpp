@@ -46,15 +46,12 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow{ parent }
     , ui{ new Ui::MainWindow }
+    , tb_color_schemes{ ColorSec::getColorSchemes() }
+    , colors{ ColorSec::getColors() }
 {
     //////////////////
     //// GRAPHICS ////
     this->ui->setupUi(this);
-
-    // initialize the color-schemes map
-    this->TB_COLOR_SCHEMES = ColorSec::getColorSchemes();
-    // initialize the colors map
-    this->COLORS = ColorSec::getColors();
 
     // load the main font
     this->main_font_family = QFontDatabase::applicationFontFamilies(
@@ -66,36 +63,36 @@ MainWindow::MainWindow(QWidget *parent)
     this->script_font_family = QFontDatabase::applicationFontFamilies(
         QFontDatabase::addApplicationFont(":/fonts/3270")).at(0);
     // initialize the fonts map
-    this->FONTS.emplace( "main", QFont(
+    this->fonts.emplace( "main", QFont(
         this->main_font_family,
         this->font_size ) );
-    this->FONTS.emplace( "main_italic", QFont(
+    this->fonts.emplace( "main_italic", QFont(
         this->main_font_family,
         this->font_size,
         -1, true ) );
-    this->FONTS.emplace( "main_bold", QFont(
+    this->fonts.emplace( "main_bold", QFont(
         this->main_font_family,
         this->font_size,
         1 ) );
-    this->FONTS.emplace( "main_big", QFont(
+    this->fonts.emplace( "main_big", QFont(
         this->main_font_family,
         this->font_size_big ) );
-    this->FONTS.emplace( "main_small", QFont(
+    this->fonts.emplace( "main_small", QFont(
         this->main_font_family,
         this->font_size_small ) );
-    this->FONTS.emplace( "alternative", QFont(
+    this->fonts.emplace( "alternative", QFont(
         this->alternative_font_family,
         this->font_size ) );
-    this->FONTS.emplace( "script", QFont(
+    this->fonts.emplace( "script", QFont(
         this->script_font_family,
         this->font_size ) );
 
     // parent fonts
-    this->ui->mainwidget->setFont( this->FONTS.at( "main_big" ) );
+    this->ui->mainwidget->setFont( this->fonts.at( "main_big" ) );
 
     // TextBrowser for the LogFiles
-    this->TB.setColorScheme( 1, this->TB_COLOR_SCHEMES.at( 1 ) );
-    this->TB.setFont( this->FONTS.at( "main" ) );
+    this->TB.setColorScheme( 1, this->tb_color_schemes.at( 1 ) );
+    this->TB.setFont( this->fonts.at( "main" ) );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
 
     // adjust LogsList headers width
@@ -270,7 +267,7 @@ MainWindow::MainWindow(QWidget *parent)
     };
     for ( auto chart : charts ) {
         ColorSec::applyChartTheme(
-            this->FONTS, chart );
+            this->fonts, chart );
     }
     this->ui->listLogFiles->sortByColumn( 0, Qt::SortOrder::AscendingOrder );
 
@@ -1313,12 +1310,12 @@ void MainWindow::updateUiIcons()
 
 void MainWindow::updateUiFonts()
 {
-    const QFont& small_font{ this->FONTS.at( "main_small" ) };
-    const QFont& font{ this->FONTS.at( "main" ) };
-    const QFont& big_font{ this->FONTS.at( "main_big" ) };
-    QFont menu_font{ this->FONTS.at( "main_small" ) };
+    const QFont& small_font{ this->fonts.at( "main_small" ) };
+    const QFont& font{ this->fonts.at( "main" ) };
+    const QFont& big_font{ this->fonts.at( "main_big" ) };
+    QFont menu_font{ this->fonts.at( "main_small" ) };
     menu_font.setPointSizeF( this->font_size_small+1.5 );
-    QFont header_font{ this->FONTS.at( "main_small" ) };
+    QFont header_font{ this->fonts.at( "main_small" ) };
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
     this->ui->menuLanguage->setFont( menu_font );
@@ -2108,7 +2105,7 @@ void MainWindow::menu_actionSnake_triggered()
 
     } else {
         this->snake.reset( new SnakeGame(
-            this->FONTS.at("script") ) );
+            this->fonts.at("script") ) );
         this->snake->show();
     }
 }
@@ -2497,20 +2494,20 @@ void MainWindow::appendToLogsList( const LogFile& log_file )
             return;
         }
         // display with red foreground
-        item->setForeground( 0, this->COLORS.at( "red" ) );
+        item->setForeground( 0, this->colors.at( "red" ) );
     }
 
     // preliminary check on file size
-    item->setForeground( 1, this->COLORS.at( (log_file.size() > this->craplog.getWarningSize())
+    item->setForeground( 1, this->colors.at( (log_file.size() > this->craplog.getWarningSize())
                                              ? "orange"
                                              : "grey" ) );
 
     // set the name
     item->setText( 0, log_file.name() );
-    item->setFont( 0, this->FONTS.at("main") );
+    item->setFont( 0, this->fonts.at("main") );
     // set the size
     item->setText( 1, PrintSec::printableSize( log_file.size() ) );
-    item->setFont( 1, this->FONTS.at("main_italic") );
+    item->setFont( 1, this->fonts.at("main_italic") );
     // append the item (on top, forced)
     item->setCheckState(0, Qt::CheckState::Unchecked );
     this->ui->listLogFiles->addTopLevelItem( item );
@@ -2797,10 +2794,10 @@ void MainWindow::craplogFinished()
         // draw the chart
         this->craplog.makeChart(
             this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
-            this->FONTS,
+            this->fonts,
             this->ui->chart_MakeStats_Size );
         ColorSec::applyChartTheme(
-            this->FONTS,
+            this->fonts,
             this->ui->chart_MakeStats_Size );
         this->db_edited = this->craplog.editedDatabase();
         // refresh the logs section
@@ -2989,7 +2986,7 @@ void MainWindow::drawStatsWarn()
         this->ui->box_StatsWarn_Day->currentText(),
         (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsWarn );
     this->setDbWorkingState( false );
 }
@@ -3186,7 +3183,7 @@ void MainWindow::drawStatsSpeed()
         FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).value(),
         FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).value() );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsSpeed );
     this->setDbWorkingState( false );
 }
@@ -3425,10 +3422,10 @@ void MainWindow::drawStatsCount()
         this->ui->box_StatsCount_Day->currentText(),
         this->count_fld );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsCount );
     this->ui->chart_StatsCount->chart()->setTitleFont(
-        this->FONTS.at( "main_big" ) );
+        this->fonts.at( "main_big" ) );
     this->setDbWorkingState( false );
 }
 
@@ -3716,7 +3713,7 @@ void MainWindow::drawStatsDay()
         this->ui->box_StatsDay_LogsField->currentText(),
         this->getStatsDayParsedFilter().value() );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsDay );
     this->setDbWorkingState( false );
 }
@@ -4005,7 +4002,7 @@ void MainWindow::drawStatsRelat()
         this->ui->box_StatsRelat_LogsField_2->currentText(),
         this->getStatsRelatParsedFilter( 2 ).value() );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsRelat );
     this->setDbWorkingState( false );
 }
@@ -4287,7 +4284,7 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
         default:
             throw GenericException( "Unexpected Font index: "+std::to_string(index), true );
     }
-    const QFont& font{ this->FONTS.at( f ) };
+    const QFont& font{ this->fonts.at( f ) };
     this->TB.setFont( font );
     this->ui->textBrowser_ConfTextBrowser_Preview->setFont( font );
     this->ui->preview_ConfApache_Format_Sample->setFont( font );
@@ -4304,7 +4301,7 @@ void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 }
 void MainWindow::on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int index)
 {
-    this->TB.setColorScheme( index, this->TB_COLOR_SCHEMES.at( index ) );
+    this->TB.setColorScheme( index, this->tb_color_schemes.at( index ) );
     if ( !this->crapnote.isNull() ) {
         this->crapnote->setColorScheme( index );
     }
@@ -4327,22 +4324,22 @@ void MainWindow::on_box_ConfCharts_Theme_currentIndexChanged(int index)
     this->refreshChartsPreview();
 
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_MakeStats_Size );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsWarn );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsSpeed );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsCount );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsDay );
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_StatsRelat );
 }
 void MainWindow::refreshChartsPreview()
@@ -4409,7 +4406,7 @@ void MainWindow::refreshChartsPreview()
     // add the bars
     t_chart->addSeries( bars );
     t_chart->setTitle( "Sample preview" );
-    t_chart->setTitleFont( this->FONTS.at("main") );
+    t_chart->setTitleFont( this->fonts.at("main") );
     t_chart->setAnimationOptions( QChart::SeriesAnimations );
 
     QStringList categories;
@@ -4418,16 +4415,16 @@ void MainWindow::refreshChartsPreview()
 
     QBarCategoryAxis* axisX{ new QBarCategoryAxis() };
     axisX->append( categories );
-    axisX->setLabelsFont( this->FONTS.at( "main_small" ) );
+    axisX->setLabelsFont( this->fonts.at( "main_small" ) );
     axisX->setTitleText( "Infoes" );
-    axisX->setTitleFont( this->FONTS.at("main_small") );
+    axisX->setTitleFont( this->fonts.at("main_small") );
     t_chart->addAxis( axisX, Qt::AlignBottom );
     bars->attachAxis( axisX );
 
     QValueAxis* axisY{ new QValueAxis() };
     axisY->setLabelFormat( "%d" );
     axisY->setRange( 0, max );
-    axisY->setLabelsFont( this->FONTS.at( "main_small" ) );
+    axisY->setLabelsFont( this->fonts.at( "main_small" ) );
     t_chart->addAxis( axisY, Qt::AlignLeft );
     bars->attachAxis( axisY) ;
 
@@ -4439,7 +4436,7 @@ void MainWindow::refreshChartsPreview()
     this->ui->chart_ConfCharts_Preview->setRenderHint( QPainter::Antialiasing );
 
     ColorSec::applyChartTheme(
-        this->FONTS,
+        this->fonts,
         this->ui->chart_ConfCharts_Preview );
 }
 
