@@ -65,36 +65,83 @@ void testUtilities()
     T_PRINT("IOutils::checkDir");
 
 
+    //// CHARS ////
+
+    {
+    const auto every_other_char_but = [](const std::vector<char>& in)->std::vector<char>{
+        std::vector<char> out( 128-in.size() );
+        for (char c{0}; c<127; c++) {
+            if (const auto it = std::find(in.cbegin(),in.cend(),c); it == in.cend()) {
+                out.push_back( c );
+            }
+        }
+        out.push_back(127);
+        out.shrink_to_fit();
+        return out;
+    };
+    const std::vector<char> numerical_chars
+        {'0','1','2','3','4','5','6','7','8','9'};
+    const std::vector<char> alphabetical_chars
+        {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+         'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    const std::vector<char> alphanumerical_chars
+        {'0','1','2','3','4','5','6','7','8','9',
+         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+         'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    const std::vector<char> hexadecimal_chars
+        {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f'};
+    const std::vector<char> ip_chars
+        {'.',':','0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f'};
+
+    for (const char& c : numerical_chars)
+        assert( CharOps::isNumeric(c) == true );
+    for (const char& c : every_other_char_but(numerical_chars))
+        assert( CharOps::isNumeric(c) == false );
+    T_PRINT("CharOps::isNumeric");
+
+    for (const char& c : alphabetical_chars)
+        assert( CharOps::isAlphabetic(c) == true );
+    for (const char& c : every_other_char_but(alphabetical_chars))
+        assert( CharOps::isAlphabetic(c) == false );
+    T_PRINT("CharOps::isAlphabetic");
+
+    for (const char& c : alphanumerical_chars)
+        assert( CharOps::isAlnum(c) == true );
+    for (const char& c : every_other_char_but(alphanumerical_chars))
+        assert( CharOps::isAlnum(c) == false );
+    T_PRINT("CharOps::isAlnum");
+
+    for (const char& c : hexadecimal_chars)
+        assert( CharOps::isHex(c) == true );
+    for (const char& c : every_other_char_but(hexadecimal_chars))
+        assert( CharOps::isHex(c) == false );
+    T_PRINT("CharOps::isHex");
+
+    for (const char& c : ip_chars)
+        assert( CharOps::isIP(c) == true );
+    for (const char& c : every_other_char_but(ip_chars))
+        assert( CharOps::isIP(c) == false );
+    T_PRINT("CharOps::isIP");
+    }
+
+
     //// STRINGS ////
 
     assert( StringOps::count("test test  test   test ", ' ') == 7ul );
     assert( StringOps::count("flagABCflagXYZflag", "flag") == 3ul );
     T_PRINT("StringOps::count");
 
-    assert( StringOps::isNumeric('0') == true );
-    assert( StringOps::isNumeric(' ') == false );
     assert( StringOps::isNumeric("0123456789") == true );
     assert( StringOps::isNumeric("0123456789 ") == false );
     T_PRINT("StringOps::isNumeric");
 
-    assert( StringOps::isAlphabetic('a') == true );
-    assert( StringOps::isAlphabetic('.') == false );
     assert( StringOps::isAlphabetic("abcXYZ") == true );
     assert( StringOps::isAlphabetic("abc_XYZ") == false );
     T_PRINT("StringOps::isAlphabetic");
 
-    assert( StringOps::isAlnum('X') == true );
-    assert( StringOps::isAlnum('7') == true );
-    assert( StringOps::isAlnum('-') == false );
     assert( StringOps::isAlnum("testME123") == true );
     assert( StringOps::isAlnum("Fail!") == false );
     T_PRINT("StringOps::isAlnum");
-
-    assert( StringOps::isHex('6') == true );
-    assert( StringOps::isHex('a') == true );
-    assert( StringOps::isHex('F') == true );
-    assert( StringOps::isHex('g') == false );
-    T_PRINT("StringOps::isHex");
 
     assert( StringOps::isIP("192.168.1.1") == true );
     assert( StringOps::isIP("::1") == true );
@@ -119,25 +166,47 @@ void testUtilities()
     assert( StringOps::contains("this_should_fail", "SHOULD") == false );
     T_PRINT("StringOps::contains");
 
-    assert( StringOps::strip("   ok ", ' ') == "ok" );
+    assert( StringOps::strip("___test___", '_') == "test" );
+    assert( StringOps::strip("test", ' ') == "test" );
+    assert( StringOps::strip("    ", ' ') == "" );
+    assert( StringOps::strip("", ' ') == "" );
     assert( StringOps::strip("a b ctestc", " abc") == "test" );
     assert( StringOps::strip("\n\t \ntest\r ") == "test" );
+    assert( StringOps::strip("test") == "test" );
+    assert( StringOps::strip(" \t\n\r") == "" );
+    assert( StringOps::strip("") == "" );
     T_PRINT("StringOps::strip");
 
-    assert( StringOps::lstrip("___ok_", '_') == "ok_" );
+    assert( StringOps::lstrip("___test_", '_') == "test_" );
+    assert( StringOps::lstrip("test", ' ') == "test" );
+    assert( StringOps::lstrip("    ", ' ') == "" );
+    assert( StringOps::lstrip("", ' ') == "" );
     assert( StringOps::lstrip("the three trees", " ethr") == "s" );
     assert( StringOps::lstrip(" \n\t\rtest ") == "test " );
+    assert( StringOps::lstrip("test") == "test" );
+    assert( StringOps::lstrip(" \t\n\r") == "" );
+    assert( StringOps::lstrip("") == "" );
     T_PRINT("StringOps::lstrip");
 
-    assert( StringOps::rstrip("_ok___", '_') == "_ok" );
+    assert( StringOps::rstrip("_test___", '_') == "_test" );
+    assert( StringOps::rstrip("test", ' ') == "test" );
+    assert( StringOps::rstrip("    ", ' ') == "" );
+    assert( StringOps::rstrip("", ' ') == "" );
     assert( StringOps::rstrip("testTEST", "TEST") == "test" );
     assert( StringOps::rstrip(" test\r\t\n ") == " test" );
+    assert( StringOps::rstrip("test") == "test" );
+    assert( StringOps::rstrip(" \t\n\r") == "" );
+    assert( StringOps::rstrip("") == "" );
     T_PRINT("StringOps::rstrip");
 
     assert( StringOps::lstripUntil("is ok?", ' ') == "ok?" );
     assert( StringOps::lstripUntil("yes, it is", ' ', false) == " it is" );
-    assert( StringOps::lstripUntil("__fine", '_', true, false) == "_fine" );
-    assert( StringOps::lstripUntil("\t\t\t\t\t\t\t\t\tx", '\t') == "x" );
+    assert( StringOps::lstripUntil("__test", '_', false, false) == "__test" );
+    assert( StringOps::lstripUntil("__test", '_', true, false) == "_test" );
+    assert( StringOps::lstripUntil("__test", '_', true, true) == "test" );
+    assert( StringOps::lstripUntil("   ", '_') == "   " );
+    assert( StringOps::lstripUntil("   ", ' ') == "" );
+    assert( StringOps::lstripUntil("", ' ') == "" );
     T_PRINT("StringOps::lstripUntil");
 
     {
@@ -249,10 +318,15 @@ void testCraplogModules()
 
     {
     FormatOps fo;
-    std::string format_string{"%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\""};
-    std::vector<std::string> fields{"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
-    std::vector<std::string> separators{" "," "," [","] \"","\" "," "," \"","\" \""};
-    LogsFormat lf{ fo.processApacheFormatString(format_string) };
+    LogsFormat lf;
+    std::string format_string;
+    std::vector<std::string> fields;
+    std::vector<std::string> separators;
+    // test the default string
+    format_string = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
+    fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
+    separators = {" "," "," [","] \"","\" "," "," \"","\" \""};
+    lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
@@ -387,32 +461,131 @@ void testCraplogModules()
     assert( lf.fields == fields );
     assert( lf.separators == separators );
     assert( lf.final.empty() );
+    // test an empty string
+    format_string.erase();
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields.empty() );
+    assert( lf.separators.empty() );
+    assert( lf.final.empty() );
     }
     T_PRINT("FormatOps::processApacheFormatString");
 
     {
     FormatOps fo;
-    std::string format_string{"$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\""};
-    std::vector<std::string> fields{"client","NONE","date_time_ncsa","request_full","response_code","bytes_sent","referer","user_agent"};
-    assert( fo.processNginxFormatString(format_string).fields == fields );
+    LogsFormat lf;
+    std::string format_string;
+    std::vector<std::string> fields;
+    std::vector<std::string> separators;
+    // test the default string
+    format_string = "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"";
+    fields = {"client","NONE","date_time_ncsa","request_full","response_code","bytes_sent","referer","user_agent"};
+    separators = {" - "," [","] \"","\" "," "," \"","\" \""};
+    lf = fo.processNginxFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "\"" );
+    // test all the considered fields
+    format_string = "$remote_addr $realip_remote_addr $time_local $time_iso8601 $date_gmt $msec $request $server_protocol $request_method $request_uri $uri $query_string $status $bytes_sent $request_length $request_time $http_referer $cookie_ $http_user_agent";
+    fields = {"client","client","date_time_ncsa","date_time_iso","date_time_gmt","date_time_epoch_s.ms","request_full","request_protocol","request_method","request_uri_query","request_uri","request_query","response_code","bytes_sent","bytes_received","time_taken_s.ms","referer","cookie","user_agent"};
+    separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processNginxFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test all the non-considered fields
+    format_string = "$ancient_browser $arg_ $args $binary_remote_addr $body_bytes_sent $connection $connection_requests $connections_active $connections_reading $connections_waiting $connections_writing $content_length $content_type $date_local $document_root $document_uri $fastcgi_path_info $fastcgi_script_name $geoip_area_code $geoip_city $geoip_city_continent_code $geoip_city_country_code $geoip_city_country_code3 $geoip_city_country_name $geoip_country_code $geoip_country_code3 $geoip_country_name $geoip_dma_code $geoip_latitude $geoip_longitude $geoip_org $geoip_postal_code $geoip_region $geoip_region_name $gzip_ratio $host $hostname $http2 $http_ $https $invalid_referer $is_args $limit_rate $memcached_key $modern_browser $msie $nginx_version $pid $pipe $proxy_add_x_forwarded_for $proxy_host $proxy_port $proxy_protocol_addr $proxy_protocol_port $realip_remote_port $realpath_root $remote_port $remote_user $request_body $request_body_file $request_completion $request_filename $request_id $scheme $secure_link $secure_link_expires $sent_http_ $server_addr $server_name $server_port $session_log_binary_id $session_log_id $slice_range $spdy $spdy_request_priority $ssl_cipher $ssl_client_cert $ssl_client_fingerprint $ssl_client_i_dn $ssl_client_raw_cert $ssl_client_s_dn $ssl_client_serial $ssl_client_verify $ssl_protocol $ssl_server_name $ssl_session_id $ssl_session_reused $tcpinfo_rtt $tcpinfo_rttvar $tcpinfo_snd_cwnd $tcpinfo_rcv_space $uid_got $uid_reset $uid_set $upstream_addr $upstream_cache_status $upstream_connect_time $upstream_cookie_ $upstream_header_time $upstream_http_ $upstream_response_length $upstream_response_time $upstream_status";
+    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processNginxFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test an empty string
+    format_string.erase();
+    lf = fo.processNginxFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields.empty() );
+    assert( lf.separators.empty() );
+    assert( lf.final.empty() );
     }
     T_PRINT("FormatOps::processNginxFormatString");
 
     {
     FormatOps fo;
-    std::string format_string{"date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken"};
-    std::vector<std::string> fields{"date_time_utc_d","date_time_utc_t","NONE","request_method","request_uri","request_query","NONE","NONE","client","user_agent","referer","response_code","NONE","NONE","time_taken_ms"};
-    assert( fo.processIisFormatString(format_string, 0).fields == fields );
+    LogsFormat lf;
+    std::string format_string;
+    std::vector<std::string> fields;
+    std::vector<std::string> separators;
+    // test the default string for the W3C module
+    format_string = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken";
+    fields = {"date_time_utc_d","date_time_utc_t","NONE","request_method","request_uri","request_query","NONE","NONE","client","user_agent","referer","response_code","NONE","NONE","time_taken_ms"};
+    separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processIisFormatString(format_string, 0);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test all the considered fields for the W3C module
+    format_string = "date time cs-version cs-method cs-uri-stem cs-uri-query sc-status sc-bytes cs-bytes time-taken cs(Referer) cs(Cookie) cs(User-Agent) c-ip";
+    fields = {"date_time_utc_d","date_time_utc_t","request_protocol","request_method","request_uri","request_query","response_code","bytes_sent","bytes_received","time_taken_ms","referer","cookie","user_agent","client"};
+    separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "};
+    lf = fo.processIisFormatString(format_string, 0);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test all the non-considered fields for the W3C module
+    format_string = "s-sitename s-computername s-ip s-port cs-username cs-host sc-substatus sc-win32-status streamid";
+    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    separators = {" "," "," "," "," "," "," "," "};
+    lf = fo.processIisFormatString(format_string, 0);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test an empty string for the W3C module
+    format_string.erase();
+    lf = fo.processIisFormatString(format_string, 0);
+    assert( lf.initial.empty() );
+    assert( lf.fields.empty() );
+    assert( lf.separators.empty() );
+    assert( lf.final.empty() );
+    // test the the NCSA module
     format_string = "some random useless text";
     fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","bytes_sent"};
-    assert( fo.processIisFormatString(format_string, 1).fields == fields );
+    separators = {" "," "," [","] \"","\" "," "};
+    lf = fo.processIisFormatString(format_string, 1);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test an empty string for the NCSA module
     format_string.erase();
-    assert( fo.processIisFormatString(format_string, 1).fields == fields );
+    lf = fo.processIisFormatString(format_string, 1);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final.empty() );
+    // test the the IIS module
     format_string = "some random useless text";
     fields = {"client","NONE","date_time_MDYYYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
-    assert( fo.processIisFormatString(format_string, 2).fields == fields );
+    separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
+    lf = fo.processIisFormatString(format_string, 2);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "," );
+    // test an empty string for the IIS module
     format_string.erase();
-    assert( fo.processIisFormatString(format_string, 2).fields == fields );
+    lf = fo.processIisFormatString(format_string, 2);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "," );
     }
     T_PRINT("FormatOps::processIisFormatString");
 
