@@ -100,9 +100,7 @@ public:
         \param web_server The ID of the Web Server
         \param new_path The new path
     */
-    void setLogsPath( const unsigned& web_server,
-        const std::string& new_path
-    );
+    void setLogsPath( const unsigned& web_server, const std::string& new_path );
 
 
     ///////////////////

@@ -55,11 +55,11 @@ Craplog::Craplog()
 
     // initialize formats
     this->logs_formats.emplace(
-        APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(APACHE_ID) ) );
+        APACHE_ID, LogsFormat() );
     this->logs_formats.emplace(
-        NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(NGINX_ID) ) );
+        NGINX_ID,  LogsFormat() );
     this->logs_formats.emplace(
-        IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(IIS_ID), 0 ) );
+        IIS_ID,    LogsFormat() );
 
     this->current_LF = this->logs_formats.at( APACHE_ID );
 
@@ -457,7 +457,7 @@ size_t Craplog::getLogsListSize() const
     return this->logs_list.size();
 }
 
-// return the list. rescan if fresh is true
+// return the current list
 const std::vector<LogFile>& Craplog::getLogsList() const
 {
     return this->logs_list;
@@ -604,7 +604,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             }
             // serach for incremental numbers
             for ( size_t i{start}; i<=stop; i++ ) {
-                if ( ! StringOps::isNumeric( name.at( i ) ) ) {
+                if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     valid &= false;
                     break;
                 }
@@ -625,7 +625,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             // search for date
             std::string date;
             for ( size_t i{start}; i<=stop; i++ ) {
-                if ( ! StringOps::isNumeric( name.at( i ) ) ) {
+                if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     valid &= false;
                     break;
                 }

@@ -204,6 +204,17 @@ std::string parseNginxEscapes( std::string_view string )
 }
 
 
+//! Checks whether the given character is valid or not
+/*!
+    \param chr The target character
+    \return The result of the check
+    \see findNginxFieldEnd
+*/
+bool checkNginxFieldChar( const char& chr )
+{
+    return CharOps::isAlnum( chr ) || chr == '_';
+}
+
 //! Finds the end of a Nginx log field
 /*!
     \param string The format string
@@ -211,23 +222,27 @@ std::string parseNginxEscapes( std::string_view string )
     \return The ending poin of the field in the string
     \see processNginxFormatString()
 */
-size_t findNginxFieldEnd( std::string_view string, const size_t start )
+size_t findNginxFieldEnd( const std::string& string, const size_t start )
 {
-    size_t stop{ start };
-    const size_t max{ string.size()-1ul };
-    if ( start < max ) { // if start equals max there's no need to loop
-        for ( size_t i{start}; i<=max; i++ ) {
-            const char& c{ string.at( i ) };
-            if ( StringOps::isAlnum( c ) || c == '_' ) {
-                stop = i;
-            } else {
-                break;
-            }
-        }
+    if ( string.empty() || start >= string.size()-1ul ) {
+        return start;
     }
-    return stop;
+    return std::distance( std::cbegin(string), std::find_if_not( string.cbegin()+start, string.cend(), checkNginxFieldChar ) ) - 1ul;
 }
 
+
+//! Checks whether the given character is valid or not
+/*!
+    \param chr The target character
+    \return The result of the check
+    \see checkIisString
+*/
+bool checkIisChar( const char& chr )
+{
+    return CharOps::isAlnum( chr )
+        || chr == ' ' || chr == '-' || chr == ',' || chr == ':'
+        || chr == '(' || chr == ')' || chr == '[' || chr == ']';
+}
 
 //! Checks whether the format string contains invalid characters or not
 /*!
@@ -237,11 +252,10 @@ size_t findNginxFieldEnd( std::string_view string, const size_t start )
 */
 void checkIisString( std::string_view string )
 {
-    for ( const char chr : string ) {
-        if ( !(StringOps::isAlnum( chr ) || chr == ' ' || chr == '-' || chr == ',' || chr == ':' || chr == '(' || chr == ')' || chr == '[' || chr == ']') ) {
-            // unwanted character
-            throw LogFormatException( "Unexpected character found: '"+std::string{chr}+"'" );
-        }
+    if ( const auto it{ std::find_if_not( string.cbegin(), string.cend(), checkIisChar ) };
+         it != string.cend() ) {
+        // unwanted character
+        throw LogFormatException( "Unexpected character found in string: '"+std::string{*it}+"'" );
     }
 }
 
@@ -299,7 +313,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                         // the percent sign character, will be used as separator, skip
                         stop = aux + 2ul;
                         continue;
-                    } else if ( ! StringOps::isAlnum( c ) ) {
+                    } else if ( ! CharOps::isAlnum( c ) ) {
                         // invalid, there must be a field code, a status code or a percent sign after a '%'
                         throw LogFormatException( "Invalid format: there must be a valid format code, a status code or a percent sign character after a '%', found: '%"+std::string{c}+"'" );
                     }
@@ -320,7 +334,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
             char c = f_str.at( aux );
             // remove the per-status directives (if any)
-            if ( StringOps::isNumeric( c ) || c == '!' || c == ',' ) {
+            if ( CharOps::isNumeric( c ) || c == '!' || c == ',' ) {
                 // per-status, not important for LogDoctor
                 size_t aux_aux{ aux+1ul };
                 while (true) {
@@ -328,7 +342,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                         break;
                     }
                     c = f_str.at( aux_aux );
-                    if ( StringOps::isNumeric( c ) || c == '!' || c == ',' ) {
+                    if ( CharOps::isNumeric( c ) || c == '!' || c == ',' ) {
                         // skip these chars
                         aux_aux ++;
                         continue;
@@ -612,11 +626,12 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
         }
         aux ++;
         // find the end of the current field
-        stop = findNginxFieldEnd( f_str, aux ) + 1ul;
+        stop = findNginxFieldEnd( f_str, aux );
         if ( stop == max ) {
             // this is the last field, and ther's no final separator
             finished |= true;
         }
+        stop ++;
 
         cur_sep = f_str.substr( start, aux-start-1ul );
         cur_fld = f_str.substr( aux, stop-aux );
@@ -686,10 +701,6 @@ QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 
 LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
 {
-    if ( f_str.empty() ) {
-        return LogsFormat();
-    }
-
     checkIisString( f_str );
     std::string initial, final;
     std::vector<std::string> separators, fields;
