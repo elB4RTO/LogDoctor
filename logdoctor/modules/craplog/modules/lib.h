@@ -31,21 +31,29 @@ struct LogFile {
     explicit LogFile
         (const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt)
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
-    bool isSelected() const   //!< Wheter the file has been selected to be use or not
+    //! Wheter the file has been selected to be used or not
+    inline bool isSelected() const noexcept
         { return this->selected; }
-    void setSelected()              //!< Sets the file as selected
+    //! Sets the file as selected
+    inline void setSelected() noexcept
         { this->selected |= true; }
-    void setUnselected()            //!< Sets the file as unselected
+    //! Sets the file as unselected
+    inline void setUnselected() noexcept
         { this->selected &= false; }
-    bool hasBeenUsed() const  //!< Wheter the file has been used already or not
+    //! Wheter the file has been used already or not
+    inline bool hasBeenUsed() const noexcept
         { return this->used_already; }
-    size_t size() const     //!< The size of the file
+    //! The size of the file
+    inline size_t size() const noexcept
         { return this->size_; }
-    const QString& name() const     //!< The name of the file, to be displayed in the list
+    //! The name of the file, to be displayed in the list
+    inline const QString& name() const noexcept
         { return this->name_; }
-    const std::string& hash() const //!< The sha256 hash of the content
+    //! The sha256 hash of the content
+    inline const std::string& hash() const noexcept
         { return this->hash_; }
-    const std::string& path() const //!< The path of the file, including the file name
+    //! The path of the file, including the file name
+    inline const std::string& path() const noexcept
         { return this->path_; }
 private:
     bool selected;
