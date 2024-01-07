@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-#include <bits/stl_algo.h>
+#include <algorithm>
 
 
 //! StringOps
