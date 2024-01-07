@@ -6,7 +6,7 @@
 
 #include <unordered_map>
 
-class LogsFormat;
+struct LogsFormat;
 
 
 //! FormatOps

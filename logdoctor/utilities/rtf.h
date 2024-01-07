@@ -6,8 +6,8 @@
 
 #include <string>
 
+struct LogsFormat;
 class TextBrowser;
-class LogsFormat;
 class QString;
 
 

@@ -4,8 +4,8 @@
 
 #include <QObject>
 
-class LogsFormat;
-class LogFile;
+struct LogsFormat;
+struct LogFile;
 class HashOps;
 
 enum class WorkerDialog;
