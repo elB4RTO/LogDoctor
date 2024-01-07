@@ -10,6 +10,49 @@
 #include <fstream>
 
 
+//! RAII class to handle a file stream resource
+template<typename Stream>
+class FileHandler
+{
+    Stream file;
+
+public:
+    explicit FileHandler( const std::string& path )
+    : file{ path }
+    {
+        if ( ! this->file.is_open() ) {
+            throw std::ios_base::failure( "file is not open" );
+        }
+        if ( ! this->file.good() ) {
+            throw std::ios_base::failure( "file is not good" );
+        }
+    }
+
+    ~FileHandler()
+    {
+        if ( this->file.is_open() ) {
+            this->file.close();
+        }
+    }
+
+    FileHandler(const FileHandler&) = delete;
+    FileHandler(FileHandler&&) = delete;
+    FileHandler& operator=(const FileHandler&) = delete;
+    FileHandler& operator=(FileHandler&&) = delete;
+
+    inline Stream& operator*()
+    {
+        return this->file;
+    }
+
+    inline void setException( const std::ios_base::iostate e )
+    {
+        this->file.exceptions( e );
+    }
+};
+
+
+
 namespace IOutils
 {
 
@@ -96,38 +139,21 @@ bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true)
 void readFile( const std::string& path, std::string& content )
 {
     // read the whole file
-    std::ifstream file;
     try {
-        /*constexpr std::size_t read_size = std::size_t(4096);*/
-        file = std::ifstream(path);
-        if ( ! file.is_open() ) {
-            throw std::ios_base::failure( "file is not open" );
-        }
-        if ( ! file.good() ) {
-            throw std::ios_base::failure( "file is not good" );
-        }
+        FileHandler<std::ifstream> file{ path }; // throws std::ios_base::failure on failure
         // add bit exceptions
-        file.exceptions( std::ifstream::failbit );
-        file.exceptions( std::ios_base::badbit );
+        file.setException( std::ifstream::failbit );
+        file.setException( std::ios_base::badbit );
         // read the whole file
         content = std::string(
-            std::istreambuf_iterator<char>( file ),
+            std::istreambuf_iterator<char>( *file ),
             std::istreambuf_iterator<char>() );
 
     } catch ( const std::ios_base::failure& ) {
         // failed reading
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw;
     } catch (...) {
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw std::exception(); // already catched
-    }
-    if ( file.is_open() ) {
-        file.close();
     }
 }
 
@@ -218,36 +244,19 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
 
 void writeOnFile( const std::string& path, std::string_view content )
 {
-    std::ofstream file;
     try {
-        file.open( path );
-        if ( ! file.is_open() ) {
-            throw std::ios_base::failure( "file is not open" );
-        }
-        if ( ! file.good() ) {
-            throw std::ios_base::failure( "file is not good" );
-        }
+        FileHandler<std::ofstream> file{ path }; // throws std::ios_base::failure on failure
         // add bit exceptions
-        file.exceptions( std::ifstream::failbit );
-        file.exceptions( std::ios_base::badbit );
+        file.setException( std::ios_base::failbit );
+        file.setException( std::ios_base::badbit );
         // write the content
-        file << content << std::endl;
+        *file << content << std::endl;
 
     } catch ( const std::ios_base::failure& ) {
         // failed writing
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw;
     } catch (...) {
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw std::exception(); // already catched
-    }
-
-    if ( file.is_open() ) {
-        file.close();
     }
 }
 

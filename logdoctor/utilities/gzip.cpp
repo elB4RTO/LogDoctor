@@ -24,6 +24,60 @@
 #define CHUNK 16384
 
 
+//! RAII class to handle s file resource
+class FileHandler
+{
+    FILE* file;
+
+public:
+    explicit FileHandler( const char* path, const char* mode )
+    : file{ nullptr }
+    {
+    #ifdef _MSC_VER
+        fopen_s( &this->file, path, mode );
+    #else
+        this->file = fopen( path, mode );
+    #endif
+    }
+
+    ~FileHandler()
+    {
+        if ( this->valid() ) {
+            fclose( this->file );
+        }
+    }
+
+    FileHandler(const FileHandler&) = delete;
+    FileHandler(FileHandler&&) = delete;
+    FileHandler& operator=(const FileHandler&) = delete;
+    FileHandler& operator=(FileHandler&&) = delete;
+
+    inline operator FILE*()
+    {
+        return this->file;
+    }
+
+    inline bool valid() const noexcept
+    {
+        return this->file != NULL;
+    }
+
+    inline bool error() const noexcept
+    {
+        return ferror( this->file );
+    }
+
+    inline void close()
+    {
+        if ( fclose( this->file ) ) {
+            throw GenericException( "Failed to close file pointer" );
+        }
+        this->file = nullptr;
+    }
+};
+
+
+
 namespace GZutils
 {
 
@@ -49,24 +103,16 @@ void readFile( const std::string& path, std::string& content )
     }
 
     if ( successful ) {
-#ifdef _MSC_VER
-        FILE* file;
-        const int err{ fopen_s( &file, path.c_str(), "rb" ) };
-        /*FILE *dest = fopen ( out_path.c_str(), "wb" );*/
-        if ( file == NULL || err != 0 ) {
-#else
-        FILE* file = fopen( path.c_str(), "rb" );
-        /*FILE *dest = fopen( out_path.c_str(), "wb" );*/
-        if ( file == NULL ) {
-#endif
+        FileHandler file{ path.c_str(), "rb" };
+        if ( ! file.valid() ) {
             // unable to open the file
-            //throw("cannot read");
             return;
         }
+        /*FILE *dest = fopen( out_path.c_str(), "wb" );*/
         // decompress until deflate stream ends or end of file is reached
         do {
             strm.avail_in = static_cast<unsigned>(fread( in, 1, CHUNK, file ));
-            if ( ferror( file ) ) {
+            if ( file.error() ) {
                 // error reading
                 (void)inflateEnd( &strm );
                 /*successful = false;*/
@@ -111,11 +157,7 @@ void readFile( const std::string& path, std::string& content )
         // clean up and return
         (void)inflateEnd( &strm );
         successful = (ret == Z_STREAM_END) ? true : false;
-        if ( fclose( file ) ) {
-            // error while trying to close file pointer
-            throw GenericException( "Failed to close file pointer" );
-        }
-        //delete file;
+        file.close(); // throws GenericException on failure
     }
     if ( content.empty() ) {
         // probably not a gzip compressed file
