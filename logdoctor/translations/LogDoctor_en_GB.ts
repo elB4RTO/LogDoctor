@@ -235,18 +235,6 @@ version mark not found</translation>
         <translation>Create a new database?</translation>
     </message>
     <message>
-        <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</translation>
-    </message>
-    <message>
-        <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</translation>
-    </message>
-    <message>
         <source>An error occured</source>
         <translation>An error occured</translation>
     </message>
@@ -427,10 +415,6 @@ Continue?</translation>
         <translation>The file is blank</translation>
     </message>
     <message>
-        <source>An error accured while reading the file</source>
-        <translation>An error accured while reading the file</translation>
-    </message>
-    <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation>The path was supposed to point to a folder, but it doesn&apos;t</translation>
     </message>
@@ -591,10 +575,6 @@ please report this issue</translation>
         <translation>Warning size parameter</translation>
     </message>
     <message>
-        <source>An error accured while reading the gzipped file</source>
-        <translation>An error accured while reading the gzipped file</translation>
-    </message>
-    <message>
         <source>Something failed while handling the file</source>
         <translation>Something failed while handling the file</translation>
     </message>
@@ -703,6 +683,24 @@ please follow the instruction on the repository page</translation>
     <message>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation>Please free some resources, parse the files in different steps or split them into smaller units</translation>
+    </message>
+    <message>
+        <source>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created. Continue?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the file</source>
+        <translation>An error occured while reading the file</translation>
+    </message>
+    <message>
+        <source>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created. Continue?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the gzipped file</source>
+        <translation>An error occured while reading the gzipped file</translation>
     </message>
 </context>
 <context>

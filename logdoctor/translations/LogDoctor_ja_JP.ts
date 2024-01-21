@@ -235,18 +235,6 @@ version mark not found</source>
         <translation type="unfinished">新しいデータベースを作成しますか?</translation>
     </message>
     <message>
-        <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">このデータベースは末尾に「.copy」を付けて名前が変更され、新しいデータベースが作成されます。
-継続する？</translation>
-    </message>
-    <message>
-        <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">エントリは末尾に「.copy」を付けて名前が変更され、新しいエントリが作成されます。
-継続する？</translation>
-    </message>
-    <message>
         <source>An error occured</source>
         <translation type="unfinished">エラーが発生した</translation>
     </message>
@@ -427,10 +415,6 @@ Continue?</source>
         <translation type="unfinished">ファイルが空です</translation>
     </message>
     <message>
-        <source>An error accured while reading the file</source>
-        <translation type="unfinished">ファイルの読み取り中にエラーが発生しました</translation>
-    </message>
-    <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished">パスはフォルダーを指すはずでしたが、そうではありません</translation>
     </message>
@@ -591,10 +575,6 @@ please report this issue</source>
         <translation type="unfinished">警告サイズ パラメータ</translation>
     </message>
     <message>
-        <source>An error accured while reading the gzipped file</source>
-        <translation type="unfinished">Gzip ファイルの読み取り中にエラーが発生しました</translation>
-    </message>
-    <message>
         <source>Something failed while handling the file</source>
         <translation type="unfinished">ファイルの処理中に何かが失敗しました</translation>
     </message>
@@ -703,6 +683,26 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation type="unfinished">いくつかのリソースを解放し、ファイルを別の手順で解析するか、ファイルを小さな単位に分割してください</translation>
+    </message>
+    <message>
+        <source>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">このデータベースは末尾に「.copy」を付けて名前が変更され、新しいデータベースが作成されます。
+継続する？</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the file</source>
+        <translation type="unfinished">ファイルの読み取り中にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">エントリは末尾に「.copy」を付けて名前が変更され、新しいエントリが作成されます。
+継続する？</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the gzipped file</source>
+        <translation type="unfinished">Gzip ファイルの読み取り中にエラーが発生しました</translation>
     </message>
 </context>
 <context>

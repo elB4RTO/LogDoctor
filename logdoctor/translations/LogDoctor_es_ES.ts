@@ -247,24 +247,12 @@ marcador no encontrado</translation>
         <translation type="unfinished">Crear un nuevo database?</translation>
     </message>
     <message>
-        <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">Este database se renombrará con el final &apos;.copia&apos; y se creará uno nuevo.
-¿Continuar?</translation>
-    </message>
-    <message>
         <source>Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?</source>
         <translation type="unfinished">¿Ignorar la advertencia y usarlo igualmente, Descartarlo y continuar o Anular todo el proceso?</translation>
     </message>
     <message>
         <source>Proceed anyway?</source>
         <translation type="unfinished">¿Procede de todas maneras?</translation>
-    </message>
-    <message>
-        <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">La entrada se renombrará con el final &apos;.copia&apos; y se creará una nueva.
-¿Continuar?</translation>
     </message>
     <message>
         <source>An error occured</source>
@@ -485,10 +473,6 @@ Corrígela y vuelve a intentarlo</translation>
         <translation type="unfinished">El archivo está vacío</translation>
     </message>
     <message>
-        <source>An error accured while reading the file</source>
-        <translation type="unfinished">Error en la lectura del archivo</translation>
-    </message>
-    <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished">La ruta debería apuntar a una carpeta, pero no lo hace</translation>
     </message>
@@ -649,10 +633,6 @@ por favor notifica este problema</translation>
         <translation type="unfinished">Parámetro de advertencia del tamaño</translation>
     </message>
     <message>
-        <source>An error accured while reading the gzipped file</source>
-        <translation type="unfinished">Error en la lectura del archivo gzip</translation>
-    </message>
-    <message>
         <source>Something failed while handling the file</source>
         <translation type="unfinished">Algo falló al manejar el archivo</translation>
     </message>
@@ -703,6 +683,26 @@ Anulado</translation>
     <message>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation type="unfinished">Por favor libere algunos recursos, analice los archivos en diferentes pasos o divídalos en unidades más pequeñas</translation>
+    </message>
+    <message>
+        <source>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">Este database se renombrará con el final &apos;.copia&apos; y se creará uno nuevo.
+¿Continuar?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the file</source>
+        <translation type="unfinished">Error en la lectura del archivo</translation>
+    </message>
+    <message>
+        <source>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">La entrada se renombrará con el final &apos;.copia&apos; y se creará una nueva.
+¿Continuar?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the gzipped file</source>
+        <translation type="unfinished">Error en la lectura del archivo gzip</translation>
     </message>
 </context>
 <context>

@@ -235,18 +235,6 @@ marcatore non trovato</translation>
         <translation>Creare un nuovo database?</translation>
     </message>
     <message>
-        <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation>L&apos;attuale database verrà rinominato con estensione &apos;.copy&apos; e ne verrà creato uno nuovo.
-Continuare?</translation>
-    </message>
-    <message>
-        <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation>La risorsa attuale verrà rinominata con estensione &apos;.copy&apos; e ne verrà creata una nuova.
-Continuare?</translation>
-    </message>
-    <message>
         <source>An error occured</source>
         <translation>È avvenuto un errore</translation>
     </message>
@@ -427,10 +415,6 @@ Continuare?</translation>
         <translation>Il file è vuoto</translation>
     </message>
     <message>
-        <source>An error accured while reading the file</source>
-        <translation>Errore nella lettura del file</translation>
-    </message>
-    <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation>Il percorso dovrebbe puntare ad una cartella, ma non è così</translation>
     </message>
@@ -591,10 +575,6 @@ per favore segnala questo problema</translation>
         <translation>Dimensione di sicurezza</translation>
     </message>
     <message>
-        <source>An error accured while reading the gzipped file</source>
-        <translation>Errore durante la lettura del file gzip</translation>
-    </message>
-    <message>
         <source>Something failed while handling the file</source>
         <translation>Qualcosa è andato storto nel maneggiare il file</translation>
     </message>
@@ -703,6 +683,26 @@ per favore segui le istruzioni nella pagina del repository</translation>
     <message>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation>Per favore rilascia qualche risorsa, analizza i file in diversi passaggi o dividili in unità più piccole</translation>
+    </message>
+    <message>
+        <source>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation>L&apos;attuale database verrà rinominato con estensione &apos;.copy&apos; e ne verrà creato uno nuovo.
+Continuare?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the file</source>
+        <translation>Errore nella lettura del file</translation>
+    </message>
+    <message>
+        <source>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation>La risorsa attuale verrà rinominata con estensione &apos;.copy&apos; e ne verrà creata una nuova.
+Continuare?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the gzipped file</source>
+        <translation>Errore durante la lettura del file gzip</translation>
     </message>
 </context>
 <context>
