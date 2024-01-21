@@ -111,12 +111,9 @@ set(PROJECT_SOURCES
     modules/craplog/modules/workers/lib.h
     modules/craplog/modules/workers/lister.h
     modules/craplog/modules/workers/lister.cpp
-    modules/craplog/modules/workers/parser_interface.h
-    modules/craplog/modules/workers/parser_interface.cpp
     modules/craplog/modules/workers/parser.h
     modules/craplog/modules/workers/parser.cpp
-    modules/craplog/modules/workers/parser_async.h
-    modules/craplog/modules/workers/parser_async.cpp
+    modules/craplog/modules/workers/impl/loglinedata.cpp
 
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
@@ -229,6 +226,8 @@ add_executable(LogDocTester
     modules/exceptions.h
     modules/exceptions.cpp
     modules/craplog/modules/lib.h
+    modules/craplog/modules/workers/lib.h
+    modules/craplog/modules/workers/impl/loglinedata.cpp
     utilities/gzip.h
     utilities/gzip.cpp
     utilities/io.h
