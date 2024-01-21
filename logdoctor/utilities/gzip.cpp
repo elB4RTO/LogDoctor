@@ -47,10 +47,7 @@ public:
         }
     }
 
-    FileHandler(const FileHandler&) = delete;
-    FileHandler(FileHandler&&) = delete;
-    FileHandler& operator=(const FileHandler&) = delete;
-    FileHandler& operator=(FileHandler&&) = delete;
+    Q_DISABLE_COPY_MOVE(FileHandler)
 
     inline operator FILE*()
     {
@@ -144,7 +141,7 @@ void readFile( const std::string& path, std::string& content )
                     successful = false;
                     break;
                 }*/
-                for ( unsigned i{0u}; i<have; i++ ) {
+                for ( unsigned i{0u}; i<have; ++i ) {
                     content.push_back( out[i] );
                 }
 

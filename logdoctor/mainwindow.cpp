@@ -382,7 +382,7 @@ void MainWindow::readConfigs()
         std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
-            for ( unsigned w=APACHE_ID; w<=IIS_ID; w++ ) {
+            for ( unsigned w=APACHE_ID; w<=IIS_ID; ++w ) {
                 for ( const int& f : {11,12,20,21} ) {
                     this->craplog.setWarnlist( w, f, {} );
                 }
@@ -952,7 +952,7 @@ void MainWindow::backupDatabase() const
             }
             if ( proceed ) {
                 // cascade rename
-                for ( int n=this->db_backups_number-1; n>=0; n-- ) {
+                for ( int n=this->db_backups_number-1; n>=0; --n ) {
                     path = this->db_data_path+"/backups/collection.db."+std::to_string( n );
                     if ( std::filesystem::exists( path ) ) {
                         new_path = this->db_data_path+"/backups/collection.db."+std::to_string( n+1 );
@@ -2673,9 +2673,9 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
     while ( *i ) {
         if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
-            n_checked++;
+            ++ n_checked;
         }
-        ++i;
+        ++ i;
     }
     if ( n_checked == 0ul ) {
         this->ui->checkBox_LogFiles_CheckAll->setCheckState(Qt::CheckState::Unchecked);
@@ -4362,7 +4362,7 @@ void MainWindow::refreshChartsPreview()
         return (rand()%10 > 8) ? rand()%100 : (rand()%10 > 6) ? rand()%50 : rand()%30;
     };
     int aux, max{0};
-    for ( int i{0}; i<24; i++ ) {
+    for ( int i{0}; i<24; ++i ) {
         aux = random_value();
         *bars_1 << aux;
         if ( aux > max ) {
@@ -4772,7 +4772,7 @@ void MainWindow::on_list_ConfApache_Warnlist_List_itemSelectionChanged()
             this->ui->button_ConfApache_Warnlist_Up->setEnabled( false );
             this->ui->button_ConfApache_Warnlist_Down->setEnabled( false );
         } else {
-            for ( int i{0}; i<=max; i++ ) {
+            for ( int i{0}; i<=max; ++i ) {
                 if ( this->ui->list_ConfApache_Warnlist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfApache_Warnlist_Up->setEnabled( false );
@@ -4919,7 +4919,7 @@ void MainWindow::on_list_ConfApache_Blacklist_List_itemSelectionChanged()
             this->ui->button_ConfApache_Blacklist_Up->setEnabled( false );
             this->ui->button_ConfApache_Blacklist_Down->setEnabled( false );
         } else {
-            for ( int i{0}; i<=max; i++ ) {
+            for ( int i{0}; i<=max; ++i ) {
                 if ( this->ui->list_ConfApache_Blacklist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfApache_Blacklist_Up->setEnabled( false );
@@ -5143,7 +5143,7 @@ void MainWindow::on_list_ConfNginx_Warnlist_List_itemSelectionChanged()
             this->ui->button_ConfNginx_Warnlist_Up->setEnabled( false );
             this->ui->button_ConfNginx_Warnlist_Down->setEnabled( false );
         } else {
-            for ( int i{0}; i<=max; i++ ) {
+            for ( int i{0}; i<=max; ++i ) {
                 if ( this->ui->list_ConfNginx_Warnlist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfNginx_Warnlist_Up->setEnabled( false );
@@ -5290,7 +5290,7 @@ void MainWindow::on_list_ConfNginx_Blacklist_List_itemSelectionChanged()
             this->ui->button_ConfNginx_Blacklist_Up->setEnabled( false );
             this->ui->button_ConfNginx_Blacklist_Down->setEnabled( false );
         } else {
-            for ( int i{0}; i<=max; i++ ) {
+            for ( int i{0}; i<=max; ++i ) {
                 if ( this->ui->list_ConfNginx_Blacklist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfNginx_Blacklist_Up->setEnabled( false );
@@ -5577,7 +5577,7 @@ void MainWindow::on_list_ConfIis_Warnlist_List_itemSelectionChanged()
             this->ui->button_ConfIis_Warnlist_Up->setEnabled( false );
             this->ui->button_ConfIis_Warnlist_Down->setEnabled( false );
         } else {
-            for ( int i{0}; i<=max; i++ ) {
+            for ( int i{0}; i<=max; ++i ) {
                 if ( this->ui->list_ConfIis_Warnlist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfIis_Warnlist_Up->setEnabled( false );
@@ -5724,7 +5724,7 @@ void MainWindow::on_list_ConfIis_Blacklist_List_itemSelectionChanged()
             this->ui->button_ConfIis_Blacklist_Up->setEnabled( false );
             this->ui->button_ConfIis_Blacklist_Down->setEnabled( false );
         } else {
-            for ( int i{0}; i<=max; i++ ) {
+            for ( int i{0}; i<=max; ++i ) {
                 if ( this->ui->list_ConfIis_Blacklist_List->item(i) == item ) {
                     if ( i == 0 ) {
                         this->ui->button_ConfIis_Blacklist_Up->setEnabled( false );

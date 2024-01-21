@@ -71,7 +71,7 @@ void testUtilities()
     {
     const auto every_other_char_but = [](const std::vector<char>& in)->std::vector<char>{
         std::vector<char> out( 128-in.size() );
-        for (char c{0}; c<127; c++) {
+        for (char c{0}; c<127; ++c) {
             if (const auto it = std::find(in.cbegin(),in.cend(),c); it == in.cend()) {
                 out.push_back( c );
             }

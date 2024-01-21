@@ -10,7 +10,7 @@ size_t count( std::string_view str, std::string_view flag )
 {
     const size_t flg_size{ flag.size() };
     size_t count{ 0ul };
-    for ( size_t start{0ul}; (start=str.find(flag, start)) != std::string::npos; count++ ) {
+    for ( size_t start{0ul}; (start=str.find(flag, start)) != std::string::npos; ++count ) {
         start += flg_size;
     }
     return count;
@@ -74,7 +74,7 @@ std::string lstripUntil( const std::string& str, const char delim, const bool in
 {
     if (size_t start{ str.find( delim ) }; start != std::string::npos ) {
         if ( inclusive ) {
-            start ++;
+            ++ start;
             if ( consecutives ) {
                 if (str[start] == delim) {
                     start = str.find_first_not_of( delim, start );

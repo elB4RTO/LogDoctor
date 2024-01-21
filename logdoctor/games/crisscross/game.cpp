@@ -189,7 +189,7 @@ bool CrissCross::checkVictory()
         streak = 0;
         for ( const auto& index : sequence ) {
             if ( this->board[ index ] == this->p_turn ) {
-                streak ++;
+                ++streak;
                 this->victory_sequence.push_back( index );
             } else {
                 break;
@@ -210,7 +210,7 @@ void CrissCross::victory()
 {
     // disable all buttons except the victory sequence ones
     bool disable{ true };
-    for ( unsigned i=0; i<9; i++ ) {
+    for ( unsigned i=0; i<9; ++i ) {
         disable |= true;
         for ( const auto& j : this->victory_sequence ) {
             if ( i == j ) {
@@ -252,7 +252,7 @@ bool CrissCross::gameDraw() const
     unsigned empty_tiles{ 9 };
     for ( const auto& tile : this->board ) {
         if ( tile > 0 ) {
-            empty_tiles --;
+            -- empty_tiles;
         }
     }
     if ( empty_tiles == 0 ) {
@@ -290,7 +290,7 @@ void CrissCross::AI_playTurn()
 void CrissCross::AI_updateWeights()
 {
     // reset the weights
-    for ( size_t i{0ul}; i<9ul; i++ ) {
+    for ( size_t i{0ul}; i<9ul; ++i ) {
         this->board_weights[ i ] = 0;
     }
     // calculate the new weights
@@ -303,9 +303,9 @@ void CrissCross::AI_updateWeights()
         // check the tiles in the sequence
         for ( const auto index : sequence ) {
             if ( this->board[ index ] == this->p_turn ) {
-                win_streak ++;
+                ++ win_streak;
             } else if ( this->board[ index ] > 0 ) {
-                lose_streak ++;
+                ++ lose_streak;
             } else {
                 empty_tiles.emplace_back( std::move(index) );
             }
@@ -341,7 +341,7 @@ unsigned CrissCross::AI_makeChoice() const
             // lighter weight
             ;
         }*/
-        index ++;
+        ++ index;
     }
     // decide the movement (or better, randomly pick one)
     unsigned next_move;

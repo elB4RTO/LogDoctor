@@ -29,18 +29,18 @@ bool deepTypeCheck( const std::string& line, const LogsFormat& format )
     // check the initial part
     if ( ! format.initial.empty() ) {
         if ( StringOps::startsWith( line, format.initial ) ) {
-            n_sep_found ++;
+            ++ n_sep_found;
         }
     } else {
-        n_sep_found ++;
-        n_blank_sep ++;
+        ++ n_sep_found;
+        ++ n_blank_sep;
     }
     // check the middle part
-    for ( size_t i{0}; i<n_sep; i++ ) {
+    for ( size_t i{0}; i<n_sep; ++i ) {
         sep = format.separators.at( i );
         if ( sep.empty() ) {
-            n_sep_found ++;
-            n_blank_sep ++;
+            ++ n_sep_found;
+            ++ n_blank_sep;
             continue;
         }
         aux_found_at2 = aux_found_at1;
@@ -58,7 +58,7 @@ bool deepTypeCheck( const std::string& line, const LogsFormat& format )
                 aux_sep1 = StringOps::lstripUntil( aux_sep1, ' ' );
             }
             // iterate over following separators
-            for ( size_t j{i+1ul}; j<n_sep; j++ ) {
+            for ( size_t j{i+1ul}; j<n_sep; ++j ) {
                 aux_sep2 = format.separators.at( j );
                 aux_found_at2 = aux_sep2.find(' ');
                 if ( aux_found_at2 == std::string::npos ) {
@@ -81,18 +81,18 @@ bool deepTypeCheck( const std::string& line, const LogsFormat& format )
             }
         }
         aux_found_at1 = found_at + sep.size();
-        n_sep_found ++;
+        ++ n_sep_found;
 
     }
 
     // check the final part
     if ( ! format.final.empty() ) {
         if ( StringOps::endsWith( line, format.final ) ) {
-            n_sep_found ++;
+            ++ n_sep_found;
         }
     } else {
-        n_sep_found ++;
-        n_blank_sep ++;
+        ++ n_sep_found;
+        ++ n_blank_sep;
     }
 
     // add the initial and final seps now
@@ -124,9 +124,9 @@ LogType defineFileType( const std::vector<std::string>& lines, const LogsFormat&
     for ( const std::string& line : lines ) {
         // scan the given lines
         if ( deepTypeCheck( line, format ) ) {
-            n_access++;
+            ++ n_access;
         } else {
-            n_other++;
+            ++ n_other;
         }
     }
 

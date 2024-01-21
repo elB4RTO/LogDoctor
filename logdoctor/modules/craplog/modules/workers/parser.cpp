@@ -193,7 +193,7 @@ void CraplogParser::parseLogLines()
     const auto parseLine = [this]( const std::string& line, const LogsFormat& logs_format ) {
         this->data_collection.emplace_back( LogLineData(line, logs_format) );
         this->parsed_size += line.size();
-        this->parsed_lines ++;
+        ++ this->parsed_lines;
     };
 
 
@@ -219,10 +219,10 @@ void CraplogParser::parseLogLines()
             const size_t send_gap{ real_lines>1000ul ? real_lines/100 : real_lines>100ul ? real_lines/10 : 10 };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( real_lines );
-            for ( size_t i{0ul}; i<n_lines; i++ ) {
+            for ( size_t i{0ul}; i<n_lines; ++i ) {
                 std::string line = this->logs_lines.at( i );
-                for ( size_t n{0ul}; n<nl; n++ ) {
-                    i++;
+                for ( size_t n{0ul}; n<nl; ++n ) {
+                    ++i;
                     line += "\n" + this->logs_lines.at( i );
                 }
                 parseLine( line, lf );

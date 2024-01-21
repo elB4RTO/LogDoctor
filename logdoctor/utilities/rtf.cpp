@@ -35,7 +35,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
     StringOps::splitrip( lines, content );
     size_t lines_left{ lines.size() };
     for ( const std::string& line : lines ) {
-        lines_left --;
+        -- lines_left;
         // check if the line is commented, usually from IIS logs
         if ( StringOps::startsWith( line, '#' ) && !StringOps::startsWith( logs_format.initial, '#' ) ) {
             rich_line = QString("<p>%1</p>").arg( QString::fromStdString( line ) );
@@ -74,7 +74,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
             }
             if ( stop == std::string::npos ) {
                 // separator not found, skip to the next one
-                i++;
+                ++i;
                 stop = start;
                 continue;
             }
@@ -112,7 +112,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
                                 break;
                             }
                             aux_start = aux_stop + 1;
-                            c++;
+                            ++c;
                         }
                     }
 
@@ -186,7 +186,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
                 stop = aux_stop;
             } else {
                 stop += sep_size;
-                i++;
+                ++i;
             }
             if ( stop > line_size ) {
                 // this was the final separator

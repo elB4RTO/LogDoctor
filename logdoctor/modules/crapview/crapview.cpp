@@ -153,7 +153,7 @@ void Crapview::sliceClicked( QPieSlice* slice )
 void Crapview::updateWarn( QTableWidget* table , const QString& web_server ) const
 {
     std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
-    for ( int i{0}; i<table->rowCount(); i++ ) {
+    for ( int i{0}; i<table->rowCount(); ++i ) {
         QTableWidgetItem* item = table->item( i, 0 );
         if ( item->checkState() == Qt::CheckState::Checked && item->text() == TR::tr( BOOLS__FALSE.c_str() ) ) {
             // remove warning
@@ -188,13 +188,13 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
         int norm_count, warn_count, sum_count, max_count=0, n_rows=0;
         if ( hour.isEmpty() ) {
             // entire day
-            for ( int i{0}; i<6; i++ ) {
+            for ( int i{0}; i<6; ++i ) {
                 sets.push_back( std::vector<QBarSet*>() );
                 sets.back().push_back( new QBarSet("") );
                 sets.back().push_back( new QBarSet("") );
             }
-            for ( size_t h{0}; h<24ul; h++ ) {
-                for ( size_t m{0}; m<6ul; m++ ) {
+            for ( size_t h{0}; h<24ul; ++h ) {
+                for ( size_t m{0}; m<6ul; ++m ) {
                     const auto& data{ items.at( h ).at( m ) };
                     norm_count = warn_count = 0;
                     for ( const std::vector<QString>& line : data ) {
@@ -210,7 +210,7 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
                         table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
                         int col{ 3 };
                         const size_t max{ line.size() };
-                        for ( size_t i{7ul}; i<max; i++ ) {
+                        for ( size_t i{7ul}; i<max; ++i ) {
                             QTableWidgetItem* itm;
                             if ( (col == 7 || col >= 12) && !line.at(i).isEmpty() ) {
                                 itm = new QTableWidgetItem();
@@ -219,14 +219,14 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
                                 itm = new QTableWidgetItem( line.at( i ) );
                             }
                             table->setItem( n_rows, col, itm );
-                            col ++;
+                            ++ col;
                         }
                         if ( line.at( 0ul ) == "0" ) {
-                            norm_count ++;
+                            ++ norm_count;
                         } else {
-                            warn_count ++;
+                            ++ warn_count;
                         }
-                        n_rows ++;
+                        ++ n_rows;
                     }
                     sets.at( m ).at( 0ul )->append( norm_count );
                     sets.at( m ).at( 1ul )->append( warn_count );
@@ -239,13 +239,13 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
             date = PrintSec::printableDate( year, this->getMonthNumber( month ), day );
         } else {
             // 1 hour
-            for ( int i{0}; i<10; i++ ) {
+            for ( int i{0}; i<10; ++i ) {
                 sets.push_back( std::vector<QBarSet*>() );
                 sets.back().push_back( new QBarSet("") );
                 sets.back().push_back( new QBarSet("") );
             }
-            for ( size_t g{0ul}; g<6ul; g++ ) {
-                for ( size_t m{0ul}; m<10ul; m++ ) {
+            for ( size_t g{0ul}; g<6ul; ++g ) {
+                for ( size_t m{0ul}; m<10ul; ++m ) {
                     const auto& data{ items.at( g ).at( m ) };
                     norm_count = warn_count = 0;
                     for ( const std::vector<QString>& line : data ) {
@@ -260,13 +260,13 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
                         }
                         table->setItem( n_rows, 1, new QTableWidgetItem( PrintSec::printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
                         table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
-                        for ( size_t i{7ul}; i<line.size(); i++ ) {
+                        for ( size_t i{7ul}; i<line.size(); ++i ) {
                             table->setItem( n_rows, i-4, new QTableWidgetItem( line.at( i ) ));
                         }
                         if ( line.at( 0ul ) == "0" ) {
-                            norm_count ++;
+                            ++ norm_count;
                         } else {
-                            warn_count ++;
+                            ++ warn_count;
                         }
                     }
                     sets.at( m ).at( 0ul )->append( norm_count );
@@ -286,10 +286,10 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
         //QColor cols[] = {QColor(18,175,194), QColor(237,80,61)};
         std::vector<QStackedBarSeries*> b_series;
         const size_t max{ sets.size() };
-        for ( size_t i{0}; i<max; i++ ) {
+        for ( size_t i{0}; i<max; ++i ) {
             const auto& set{ sets.at( i ) };
             b_series.push_back( new QStackedBarSeries() );
-            for ( size_t w{0}; w<2ul; w++ ) {
+            for ( size_t w{0}; w<2ul; ++w ) {
                 QBarSet* b = set.at( w );
                 b->setColor( cols[ w ] );
                 b_series.at( i )->append( b );
@@ -374,7 +374,7 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
         QDateTime dt;
         std::vector<QString> data;
         for ( const auto& item : items ) {
-            i++;
+            ++i;
             // append a value to the chart
             aux_time = std::get<0>(item);
             data = std::get<1>(item);
@@ -401,7 +401,7 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
                 if ( first_count ) {
                     first_count &= false;
                 } else {
-                    count ++;
+                    ++ count;
                 }
                 value += aux_value;
                 if ( i == max_i ) {
@@ -426,7 +426,7 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
                 table->setItem( n_rows, 5, new QTableWidgetItem( data.at(5ul) ));
                 dt = QDateTime::fromMSecsSinceEpoch( aux_time );
                 table->setItem( n_rows, 6, new QTableWidgetItem( dt.time().toString("hh:mm:ss") ));
-                n_rows ++;
+                ++ n_rows;
             }
         }
         table->verticalHeader()->setVisible( false );
@@ -527,7 +527,7 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
             ic->setData( Qt::DisplayRole, count );
             table->setItem( n_rows, 0, ic );
             table->setItem( n_rows, 1, new QTableWidgetItem( item ));
-            n_rows ++;
+            ++ n_rows;
         }
         table->verticalHeader()->setVisible( false );
 
@@ -594,7 +594,7 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
 
         // build the bars upon data
         int count, max_count{0};
-        for ( size_t h{0ul}; h<24ul; h++ ) {
+        for ( size_t h{0ul}; h<24ul; ++h ) {
             auto& data = items.at( h );
             count = data.at( 0ul );
             *b_10 << count;
@@ -823,7 +823,7 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
             // compose the results
 
             // max request elements
-            for ( size_t i{0}; i<4ul; i++ ) {
+            for ( size_t i{0}; i<4ul; ++i ) {
                 unsigned max{ 0 };
                 QString max_str{ "-" };
                 const auto& aux{ recurs.at( i ) };

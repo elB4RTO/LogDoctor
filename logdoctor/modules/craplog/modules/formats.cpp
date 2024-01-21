@@ -66,14 +66,14 @@ std::string parseApacheEscapes( std::string_view string , const bool strftime=fa
         cc = string.at( i+1ul );
         if ( c == '\\' && (cc == '\\' || cc == '"') ) {
             str1.push_back( cc );
-            i++;
+            ++i;
         } else if ( c == '%' && cc == '%' ) {
             str1.push_back( c );
-            i++;
+            ++i;
         } else {
             str1.push_back( c );
         }
-        i++;
+        ++i;
     }
     i = 0ul;
     max = str1.size()-1ul;
@@ -92,29 +92,29 @@ std::string parseApacheEscapes( std::string_view string , const bool strftime=fa
             // just the ones supported
             if ( cc == '\\' || cc == '"' ) {
                 str2.push_back( cc );
-                i++;
+                ++i;
             } else {
                 if ( strftime ) {
                     // when parsing for strftime, any other backslashed characters result in a backslash+character
                     str2.push_back( c );
                     str2.push_back( cc );
-                    i++;
+                    ++i;
 
                 } else {
                     if ( cc == 'n' ) {
                         str2.push_back( '\n' );
-                        i++;
+                        ++i;
                     } else if ( cc == 'r' ) {
                         // not supported
                         throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'" );
                     } else if ( cc == 't' ) {
                         str2.push_back( '\t' );
-                        i++;
+                        ++i;
                     } else {
                         // any other backslashed characters result in a backslash+character
                         str2.push_back( c );
                         str2.push_back( cc );
-                        i++;
+                        ++i;
                     }
                 }
             }
@@ -122,21 +122,21 @@ std::string parseApacheEscapes( std::string_view string , const bool strftime=fa
             // strftime control-characters
             if ( cc == 'n' ) {
                 str2.push_back( '\n' );
-                i++;
+                ++i;
             } else if ( cc == 't' ) {
                 str2.push_back( '\t' );
-                i++;
+                ++i;
             } else {
                 // any other characters result in a percent+character
                 str2.push_back( c );
                 str2.push_back( cc );
-                i++;
+                ++i;
             }
 
         } else {
             str2.push_back( c );
         }
-        i++;
+        ++i;
     }
 
     str2.shrink_to_fit();
@@ -177,26 +177,26 @@ std::string parseNginxEscapes( std::string_view string )
             // just the ones supported by nginx
             if ( cc == '\\' || cc == '\'' || cc == '"' ) {
                 str.push_back( cc );
-                i++;
+                ++i;
             } else if ( cc == 'n' ) {
                 str.push_back( '\n' );
-                i++;
+                ++i;
             } else if ( cc == 'r' ) {
                 // not supported
                 throw LogFormatException( "LogDoctor doesn't support the usage of the Carriage Return: '\\r'" );
             } else if ( cc == 't' ) {
                 str.push_back( '\t' );
-                i++;
+                ++i;
             } else {
                 // not a control-character, resulting in a backslash+character
                 str.push_back( c );
                 str.push_back( cc );
-                i++;
+                ++i;
             }
         } else {
             str.push_back( c );
         }
-        i++;
+        ++i;
     }
 
     str.shrink_to_fit();
@@ -330,7 +330,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
             // append the current separator
             cur_sep += f_str.substr( start, aux-start );
-            aux ++;
+            ++ aux;
 
             char c = f_str.at( aux );
             // remove the per-status directives (if any)
@@ -344,7 +344,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     c = f_str.at( aux_aux );
                     if ( CharOps::isNumeric( c ) || c == '!' || c == ',' ) {
                         // skip these chars
-                        aux_aux ++;
+                        ++ aux_aux;
                         continue;
                     } else {
                         // stop
@@ -493,7 +493,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                                     cur_sep.clear();
                                     // append the field
                                     fields.push_back( cur_fld );
-                                    n_fld ++;
+                                    ++ n_fld;
 
                                 } else {
                                     // invalid, append as separator and keep hunting
@@ -514,7 +514,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                 aux_stop = aux+1ul;
                 if ( aux_fld == ">" || aux_fld == "<" ) {
                     aux_fld += f_str.at( aux+1 );
-                    aux_stop ++;
+                    ++ aux_stop;
                 }
                 // check if the module is valid
                 if ( f_map.find( aux_fld ) != f_map.end() ) {
@@ -566,7 +566,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
         // append the field
         fields.push_back( cur_fld );
-        n_fld++;
+        ++ n_fld;
     }
 
     return LogsFormat(
@@ -582,7 +582,7 @@ QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
-    for ( size_t i{0ul}; i<log_format.separators.size(); i++ ) {
+    for ( size_t i{0ul}; i<log_format.separators.size(); ++i ) {
         // append fields and separators
         sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
@@ -624,14 +624,14 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
             final = parseNginxEscapes( f_str.substr( start ) );
             break;
         }
-        aux ++;
+        ++ aux;
         // find the end of the current field
         stop = findNginxFieldEnd( f_str, aux );
         if ( stop == max ) {
             // this is the last field, and ther's no final separator
             finished |= true;
         }
-        stop ++;
+        ++ stop;
 
         cur_sep = f_str.substr( start, aux-start-1ul );
         cur_fld = f_str.substr( aux, stop-aux );
@@ -683,7 +683,7 @@ QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
-    for ( size_t i{0}; i<log_format.separators.size(); i++ ) {
+    for ( size_t i{0}; i<log_format.separators.size(); ++i ) {
         // append fields and separators
         sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );
@@ -740,7 +740,7 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
                     // set the current field
                     cur_fld = f_str.substr( start, stop-start );
                     // step over the separator
-                    stop++;
+                    ++ stop;
 
                     // check if the module is valid
                     if ( f_map.find( cur_fld ) != f_map.end() ) {
@@ -777,7 +777,7 @@ QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
 
     // append the initial characters
     sample += QString::fromStdString( log_format.initial );
-    for ( size_t i{0}; i<log_format.separators.size(); i++ ) {
+    for ( size_t i{0}; i<log_format.separators.size(); ++i ) {
         // append fields and separators
         sample += map.at( log_format.fields.at( i ) );
         sample += QString::fromStdString( log_format.separators.at( i ) );

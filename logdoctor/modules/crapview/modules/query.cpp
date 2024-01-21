@@ -43,7 +43,7 @@ int DbQuery::getMinuteGap( const int minute, const int gap )
             m = gap * n;
             break;
         }
-        n++;
+        ++n;
     }
     return m;
 }
@@ -95,7 +95,7 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
             n_days += to_day - from_day + 1;
         } else {
             n_days += getMonthDays( from_year, from_month ) - from_day; // first month's days
-            for ( int month=from_month+1; month<to_month; month++ ) {
+            for ( int month=from_month+1; month<to_month; ++month ) {
                 n_days += getMonthDays( from_year, month );
             }
             n_days += to_day; // last month's days
@@ -103,17 +103,17 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
     } else {
         n_days += getMonthDays( from_year, from_month ) - from_day;
         if ( from_month < 12 ) {
-            for ( int month{from_month+1}; month<=12; month++ ) {
+            for ( int month{from_month+1}; month<=12; ++month ) {
                 n_days += getMonthDays( from_year, month );
             }
         }
-        for ( int year{from_year+1}; year<=to_year; year++ ) {
+        for ( int year{from_year+1}; year<=to_year; ++year ) {
             int last_month{ 12 };
             if ( year == to_year ) {
                 last_month = to_month-1;
                 n_days += to_day; // last month's days, added in advance
             }
-            for ( int month{1}; month<=last_month; month++ ) {
+            for ( int month{1}; month<=last_month; ++month ) {
                 n_days += getMonthDays( year, month );
             }
         }
@@ -451,7 +451,7 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
             if ( hour_.isEmpty() ) {
                 // entire day
                 items.reserve( 24 );
-                for ( size_t h{0}; h<24ul; h++ ) {
+                for ( size_t h{0}; h<24ul; ++h ) {
                     items.push_back( std::vector<std::vector<std::vector<QString>>>() );
                     auto& aux{ items.at( h ) };
                     aux.reserve( 6 );
@@ -472,10 +472,10 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
                         while ( query.next() ) {
                             std::vector<QString> aux;
                             aux.reserve( 20 );
-                            for ( int i{1}; i<13; i++ ) {
+                            for ( int i{1}; i<13; ++i ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
-                            for ( int i{19}; i>12; i-- ) {
+                            for ( int i{19}; i>12; --i ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
                             aux.push_back( query.value( 0 ).toString() );
@@ -494,11 +494,11 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
             } else {
                 // 1 hour
                 items.reserve( 6 );
-                for ( size_t g{0}; g<6ul; g++ ) {
+                for ( size_t g{0}; g<6ul; ++g ) {
                     items.push_back( std::vector<std::vector<std::vector<QString>>>() );
                     auto& aux{ items.at( g ) };
                     aux.reserve( 10ul );
-                    for ( int m{0}; m<10; m++ ) {
+                    for ( int m{0}; m<10; ++m ) {
                         aux.push_back( std::vector<std::vector<QString>>() );
                     }
                 }
@@ -515,10 +515,10 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
                         while ( query.next() ) {
                             std::vector<QString> aux;
                             aux.reserve( 20 );
-                            for ( int i{1}; i<13; i++ ) {
+                            for ( int i{1}; i<13; ++i ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
-                            for ( int i{19}; i>12; i-- ) {
+                            for ( int i{19}; i>12; --i ) {
                                 aux.push_back( query.value( i ).toString() );
                             }
                             aux.push_back( query.value( 0 ).toString() );
@@ -714,9 +714,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                 if ( aux_hour == hour ) {
                                     h=hour; m=minute; s=second-1;
                                     if ( s < 0 ) {
-                                        s=59; m--;
+                                        s=59; --m;
                                         if ( m < 0 ) {
-                                            m=59; h--;
+                                            m=59; --h;
                                             if ( h < 0 ) {
                                                 h=m=s=0;
                                             }
@@ -737,9 +737,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                     // append the second after the last one found, if it is not equal to the next
                                     h=hour; m=minute; s=second+1;
                                     if ( s > 59 ) {
-                                        s=0; m++;
+                                        s=0; ++m;
                                         if ( m > 59 ) {
-                                            m=0; h++;
+                                            m=0; ++h;
                                             if ( h > 23 ) {
                                                 h=23;m=59;s=59;
                                             }
@@ -759,9 +759,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                         // append the prev as zero
                                         h=hour; m=minute; s=second-1;
                                         if ( s < 0 ) {
-                                            s=59; m--;
+                                            s=59; --m;
                                             if ( m < 0 ) {
-                                                m=59; h--;
+                                                m=59; --h;
                                                 if ( h < 0 ) {
                                                     h=m=s=0;
                                                 }
@@ -781,9 +781,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                         // append the next as zero
                                         h=hour; m=minute; s=second+1;
                                         if ( s > 59 ) {
-                                            s=0; m++;
+                                            s=0; ++m;
                                             if ( m > 59 ) {
-                                                m=0; h++;
+                                                m=0; ++h;
                                                 if ( h > 23 ) {
                                                     h=23;m=59;s=59;
                                                 }
@@ -805,9 +805,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                             // append the second before the first found
                                             h=aux_hour; m=aux_minute; s=aux_second-1;
                                             if ( s < 0 ) {
-                                                s=59; m--;
+                                                s=59; --m;
                                                 if ( m < 0 ) {
-                                                    m=59; h--;
+                                                    m=59; --h;
                                                     if ( h < 0 ) {
                                                         // abort
                                                         h=m=s=0;
@@ -840,9 +840,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                         // last one, append the prev
                         h=hour; m=minute; s=second-1;
                         if ( s < 0 ) {
-                            s=59; m--;
+                            s=59; --m;
                             if ( m < 0 ) {
-                                m=59; h--;
+                                m=59; --h;
                                 if ( h < 0 ) {
                                     h=m=s=0;
                                 }
@@ -862,9 +862,9 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                         // append 1 second after the last
                         h=hour; m=minute; s=second+1;
                         if ( s > 59 ) {
-                            s=0; m++;
+                            s=0; ++m;
                             if ( m > 59 ) {
-                                m=0; h++;
+                                m=0; ++h;
                                 if ( h > 23 ) {
                                     h=23;m=59;s=59;
                                 }
@@ -878,13 +878,13 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                         }
                     }
                     // append the last fictitious count
-                    day ++;
+                    ++ day;
                     if ( day > getMonthDays( year, month ) ) {
                         day = 1;
-                        month ++;
+                        ++ month;
                         if ( month > 12 ) {
                             month = 1;
-                            year ++;
+                            ++ year;
                         }
                     }
                     time.setDate( QDate( year, month , day ) );
@@ -974,7 +974,7 @@ void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, const Q
                     while ( query.next() ) {
                         item = query.value(0).toString();
                         if ( ! item.isEmpty() ) {
-                            aux_items[ item ] ++;
+                            ++ aux_items[ item ];
                         }
                     }
                 } catch (...) {
@@ -1138,9 +1138,9 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                             hour   = query.value(1).toInt();
                             minute = query.value(2).toInt();
                             // increase the count
-                            data.at( hour ).at( getMinuteGap( minute ) ) ++;
+                            ++ data.at( hour ).at( getMinuteGap( minute ) );
                             // append the day as newly found if not found yet
-                            days_l[ day ] ++;
+                            ++ days_l[ day ];
                         }
                         n_days += static_cast<int>(days_l.size());
                     } catch (...) {
@@ -1152,7 +1152,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
 
 
             } else {
-                for ( int m=1; m<=n_months; m++ ) {
+                for ( int m=1; m<=n_months; ++m ) {
                     stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
                         .arg( web_server )
                         .arg( year ).arg( month );
@@ -1217,15 +1217,15 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                                 hour   = query.value(1).toInt();
                                 minute = query.value(2).toInt();
                                 // increase the count
-                                data.at( hour ).at( getMinuteGap( minute ) ) ++;
+                                ++ data.at( hour ).at( getMinuteGap( minute ) );
                                 // append the day as newly found if not found yet
-                                days_l[ day ] ++;
+                                ++ days_l[ day ];
                             }
                             n_days += static_cast<int>(days_l.size());
-                            month ++;
+                            ++ month;
                             if ( month > 12 ) {
                                 month = 1;
-                                year ++;
+                                ++ year;
                             }
                         } catch (...) {
                             // something failed
@@ -1245,7 +1245,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                         if ( count > 0 ) {
                             count /= n_days;
                             if ( count == 0 ) {
-                                count++;
+                                ++ count;
                             }
                         }
                     }
@@ -1404,7 +1404,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
             } else if ( ! query.last() ) {
                 // no result found, fill with 0 values
-                for ( int h{0}; h<24; h++ ) {
+                for ( int h{0}; h<24; ++h ) {
                     for ( int m{0}; m<60; m+=gap ) {
                         time.setTime( QTime( h, m ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -1425,7 +1425,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
                         aux_hour   = query.value(0).toInt();
                         aux_minute = getMinuteGap( query.value(1).toInt(), gap );
                         if ( aux_hour == hour && aux_minute == minute ) {
-                            count ++;
+                            ++ count;
                         } else {
                             if ( aux_hour == hour ) {
                                 // same hour new minute gap, append the last count
@@ -1447,13 +1447,13 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
                                         time.setTime( QTime( hour, m ) );
                                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                     }
-                                    hour ++;
+                                    ++ hour;
                                 } else {
                                     // prepare to add missing gaps from 00:00 (+gap will be added to the minute)
                                     hour = 0;
                                 }
                                 // append any missing gap in every hour between the current and the next found (aux)
-                                for ( int h{hour}; h<aux_hour; h++ ) {
+                                for ( int h{hour}; h<aux_hour; ++h ) {
                                     for ( int m{0}; m<60; m+=gap ) {
                                         time.setTime( QTime( h, m ) );
                                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -1478,20 +1478,20 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
                         time.setTime( QTime( hour, m ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                     }
-                    for ( int h{hour+1}; h<24; h++ ) {
+                    for ( int h{hour+1}; h<24; ++h ) {
                         for ( int m{0}; m<60; m+=gap ) {
                             time.setTime( QTime( h, m ) );
                             data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                         }
                     }
                     // append the real last fictitious count
-                    day ++;
+                    ++ day;
                     if ( day > getMonthDays( year, month ) ) {
                         day = 1;
-                        month ++;
+                        ++ month;
                         if ( month > 12 ) {
                             month = 1;
-                            year ++;
+                            ++ year;
                         }
                     }
                     time.setDate( QDate( year, month , day ) );
@@ -1647,7 +1647,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
                 } else if ( ! query.last() ) {
                     // no days found, append missing days with 0 value
-                    for ( int d{from_day}; d<=to_day; d++ ) {
+                    for ( int d{from_day}; d<=to_day; ++d ) {
                         time.setDate( QDate( year, month , d ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                     }
@@ -1663,13 +1663,13 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                         while ( query.next() ) {
                             aux_day = query.value(0).toInt();
                             if ( aux_day == day ) {
-                                count ++;
+                                ++ count;
                             } else {
                                 if ( day > 0 ) {
                                     // any loop-round except the first
                                     time.setDate( QDate( year, month , day ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                    for ( int d{day+1}; d<aux_day; d++ ) {
+                                    for ( int d{day+1}; d<aux_day; ++d ) {
                                         // append any missing day with a zero value
                                         time.setDate( QDate( year, month , d ) );
                                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -1680,20 +1680,20 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                         m = month,
                                         y = year;
                                     if ( d < 1 ) {
-                                        m --;
+                                        -- m;
                                         if ( m < 1 ) {
                                             m = 12;
-                                            y --;
+                                            -- y;
                                         }
                                         d = getMonthDays( y, m );
                                     }
-                                    for ( ; d!=aux_day; d++ ) {
+                                    for ( ; d!=aux_day; ++d ) {
                                         if ( d > getMonthDays( y, m ) ) {
                                             d = 1;
-                                            m ++;
+                                            ++ m;
                                             if ( m > 12 ) {
                                                 m = 1;
-                                                y ++;
+                                                ++ y;
                                             }
                                         }
                                         time.setDate( QDate( y, m , d ) );
@@ -1708,12 +1708,12 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                         time.setDate( QDate( year, month , day ) );
                         data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                         // append any missing day from the last found until 1 day before the last one
-                        day++;
+                        ++ day;
                         if ( day > getMonthDays( year, month ) ) {
-                            month ++;
+                            ++ month;
                             if ( month > 12 ) {
                                 month = 1;
-                                year ++;
+                                ++ year;
                             }
                             day = getMonthDays( year, month );
                         }
@@ -1723,17 +1723,17 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                 y{ year };
                             if ( m > 12 ) {
                                 m = 1;
-                                y ++;
+                                ++ y;
                             }
                             to_day = getMonthDays( y, m );
                         }
-                        for ( ; day!=to_day; day++ ) {
+                        for ( ; day!=to_day; ++day ) {
                             if ( day > getMonthDays( year, month ) ) {
                                 day = 1;
-                                month ++;
+                                ++ month;
                                 if ( month > 12 ) {
                                     month = 1;
-                                    year ++;
+                                    ++ year;
                                 }
                             }
                             time.setDate( QDate( year, month , day ) );
@@ -1749,7 +1749,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
             } else {
                 data.reserve( countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
-                for ( int m{1}; m<=n_months; m++ ) {
+                for ( int m{1}; m<=n_months; ++m ) {
                     stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
                         .arg( web_server )
                         .arg( year ).arg( month );
@@ -1835,7 +1835,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                     // last month, only get the days until the ending day
                                     t_d = to_day;
                                 }
-                                for ( ; f_d<=t_d; f_d++ ) {
+                                for ( ; f_d<=t_d; ++f_d ) {
                                     time.setDate( QDate( year, month , f_d ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }
@@ -1848,13 +1848,13 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                 while ( query.next() ) {
                                     aux_day = query.value(0).toInt();
                                     if ( aux_day == day ) {
-                                        count ++;
+                                        ++ count;
                                     } else {
                                         if ( day > 0 ) {
                                             // any loop-round except the first
                                             time.setDate( QDate( year, month , day ) );
                                             data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                            for ( int d{day+1}; d<aux_day; d++ ) {
+                                            for ( int d{day+1}; d<aux_day; ++d ) {
                                                 // append any missing day with a zero value
                                                 time.setDate( QDate( year, month , d ) );
                                                 data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -1862,7 +1862,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                         } else {
                                             // append any missing day until the next found day
                                             day = 1;
-                                            for ( int d{day}; d<aux_day; d++ ) {
+                                            for ( int d{day}; d<aux_day; ++d ) {
                                                 time.setDate( QDate( year, month , d ) );
                                                 data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                             }
@@ -1877,16 +1877,16 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
                                 }
                                 // append any missing day to the end of the month with a zero value
-                                for ( int d{day+1}; d<=getMonthDays(year,month); d++ ) {
+                                for ( int d{day+1}; d<=getMonthDays(year,month); ++d ) {
                                     time.setDate( QDate( year, month , d ) );
                                     data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
                                 }
                             }
                             // increase the month
-                            month ++;
+                            ++ month;
                             if ( month > 12 ) {
                                 month = 1;
-                                year ++;
+                                ++ year;
                             }
                         } catch (...) {
                             // something failed
@@ -1902,7 +1902,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                 month = to_month +1;
                 if ( month > 12 ) {
                     month = 1;
-                    year ++;
+                    ++ year;
                 }
                 time.setDate( QDate( year, month , day ) );
                 data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
@@ -2060,15 +2060,15 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
                                     day = d;
                                 }
                                 if ( d == day ) {
-                                    day_count ++;
+                                    ++ day_count;
                                 } else {
-                                    n_days ++;
+                                    ++ n_days;
                                     // sum the day count to the total count
                                     req_count += day_count;
                                     // sum the day count to the relative day of the week count
                                     week_day = QDate(year,month,day).dayOfWeek();
                                     traf_day.at( week_day ) += day_count;
-                                    num_day_count.at( week_day ) ++;
+                                    ++ num_day_count.at( week_day );
                                     // check the max date count
                                     const QString m_str{ (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) };
                                     const QString d_str{ (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) };
@@ -2087,7 +2087,7 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
                                     hour = h;
                                 }
                                 if ( h == hour ) {
-                                    hour_count ++;
+                                    ++ hour_count;
                                 } else {
                                     traf_hour.at( hour ) += hour_count;
                                     hour_count = 1;
@@ -2101,7 +2101,7 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
                                     max_tt = tt;
                                 }
                                 tot_tt += tt;
-                                num_tt ++;
+                                ++ num_tt;
                             }
 
                             // sum the bytes sent
@@ -2110,7 +2110,7 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
                                     max_bs = bs;
                                 }
                                 tot_bs += bs;
-                                num_bs ++;
+                                ++ num_bs;
                             }
 
                             // sum the bytes received
@@ -2119,27 +2119,27 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
                                     max_br = br;
                                 }
                                 tot_br += br;
-                                num_br ++;
+                                ++ num_br;
                             }
 
                             // process the protocol
                             if ( ! protocol.isEmpty() ) {
-                                recurs.at( 0 )[ protocol ] ++;
+                                ++ recurs.at( 0 )[ protocol ];
                             }
 
                             // process the method
                             if ( ! method.isEmpty() ) {
-                                recurs.at( 1 )[ method ] ++;
+                                ++ recurs.at( 1 )[ method ];
                             }
 
                             // process the uri
                             if ( ! uri.isEmpty() ) {
-                                recurs.at( 2 )[ uri ] ++;
+                                ++ recurs.at( 2 )[ uri ];
                             }
 
                             // process the user-agent
                             if ( ! user_agent.isEmpty() ) {
-                                recurs.at( 3 )[ user_agent ] ++;
+                                ++ recurs.at( 3 )[ user_agent ];
                             }
                         }
                     }
@@ -2156,7 +2156,7 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
                         // sum the day count to the relative day of the week count
                         week_day = QDate(year,month,day).dayOfWeek();
                         traf_day.at( week_day ) += day_count;
-                        num_day_count.at( week_day ) ++;
+                        ++ num_day_count.at( week_day );
 
                         // check the max date count
                         const QString m_str{ (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) };
@@ -2177,14 +2177,14 @@ bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, st
         if ( successful ) {
 
             // process the hours of the day
-            for ( int i{0}; i<24; i++ ) {
+            for ( int i{0}; i<24; ++i ) {
                 if ( n_days > 0 ) {
                     traf_hour.at( i ) /= n_days;
                 }
             }
 
             // process the day of the week
-            for ( int i{1}; i<8; i++ ) {
+            for ( int i{1}; i<8; ++i ) {
                 const int& x{ num_day_count.at( i ) };
                 if ( x > 0 ) {
                     traf_day.at( i ) /= x;

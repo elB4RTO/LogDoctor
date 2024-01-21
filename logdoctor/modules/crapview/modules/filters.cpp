@@ -115,18 +115,18 @@ std::optional<QString> parseNumericFilter( const QString& filter_str )
     size_t i{ 0ul };
     const size_t max{ str.size() };
     if ( char c=str.at(i); c == '=' || c == '!' || c == '<' || c == '>' ) {
-        i ++;
+        ++i;
         if ( i >= max ) {
             return result;
         }
         if ( str.at(i) == '=' ) {
-            i ++;
+            ++i;
             if ( i >= max ) {
                 return result;
             }
         }
         if ( str.at(i) == ' ' ) {
-            i ++;
+            ++i;
             if ( i >= max ) {
                 return result;
             }

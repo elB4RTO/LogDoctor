@@ -33,7 +33,7 @@ Craplog::Craplog()
     //// INITIALIZATION ////
     ////////////////////////
     // blacklists / whitelists
-    for ( unsigned i{APACHE_ID}; i<=IIS_ID; i++ ) {
+    for ( unsigned i{APACHE_ID}; i<=IIS_ID; ++i ) {
         this->warnlists.emplace(  i, std::unordered_map<int, BWlist>(4) );
         this->blacklists.emplace( i, std::unordered_map<int, BWlist>(1) );
         // default data
@@ -185,7 +185,7 @@ void Craplog::blacklistRemove( const unsigned& web_server_id, const int& log_fie
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     // move the item to the end, then pop it
     const size_t max{ list.size()-1ul };
-    for ( size_t i{0}; i<max; i++ ) {
+    for ( size_t i{0}; i<max; ++i ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i+1ul );
             list.at( i+1ul ) = item;
@@ -198,7 +198,7 @@ void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_fiel
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     // move the item to the end, then pop it
     const size_t max{ list.size()-1ul };
-    for ( size_t i{0}; i<max; i++ ) {
+    for ( size_t i{0}; i<max; ++i ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i+1ul );
             list.at( i+1ul ) = item;
@@ -212,11 +212,11 @@ int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_fiel
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 1 };
     const size_t max{ list.size() };
-    for ( ; i<max; i++ ) {
+    for ( ; i<max; ++i ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i-1ul );
             list.at( i-1ul ) = item;
-            i--;
+            --i;
             break;
         }
     }
@@ -227,11 +227,11 @@ int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 1 };
     const size_t max{ list.size() };
-    for ( ; i<max; i++ ) {
+    for ( ; i<max; ++i ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i-1ul );
             list.at( i-1ul ) = item;
-            i--;
+            --i;
             break;
         }
     }
@@ -243,11 +243,11 @@ int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_fi
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 0 };
     const size_t max{ list.size()-1ul };
-    for ( ; i<max; i++ ) {
+    for ( ; i<max; ++i ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i+1ul );
             list.at( i+1ul ) = item;
-            i++;
+            ++i;
             break;
         }
     }
@@ -258,11 +258,11 @@ int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_fie
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 0 };
     const size_t max{ list.size()-1ul };
-    for ( ; i<max; i++ ) {
+    for ( ; i<max; ++i ) {
         if ( list.at( i ) == item ) {
             list.at( i ) = list.at( i+1ul );
             list.at( i+1ul ) = item;
-            i++;
+            ++i;
             break;
         }
     }
@@ -602,7 +602,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
                 stop -= 3ul;
             }
             // serach for incremental numbers
-            for ( size_t i{start}; i<=stop; i++ ) {
+            for ( size_t i{start}; i<=stop; ++i ) {
                 if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     valid &= false;
                     break;
@@ -623,7 +623,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             }
             // search for date
             std::string date;
-            for ( size_t i{start}; i<=stop; i++ ) {
+            for ( size_t i{start}; i<=stop; ++i ) {
                 if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     valid &= false;
                     break;
@@ -639,7 +639,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
                 // using strftime to display time
                 strftime( aux_date, 7, "%y%m%d", tmp );
                 valid &= false;
-                for ( size_t i{0}; i<6ul; i++ ) {
+                for ( size_t i{0}; i<6ul; ++i ) {
                     if ( date.at(i) != aux_date[i] ) {
                         // different date, valid
                         valid |= true;

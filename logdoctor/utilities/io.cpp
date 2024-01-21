@@ -35,10 +35,7 @@ public:
         }
     }
 
-    FileHandler(const FileHandler&) = delete;
-    FileHandler(FileHandler&&) = delete;
-    FileHandler& operator=(const FileHandler&) = delete;
-    FileHandler& operator=(FileHandler&&) = delete;
+    Q_DISABLE_COPY_MOVE(FileHandler)
 
     inline Stream& operator*()
     {
@@ -196,7 +193,7 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
                 srand( (unsigned)time(&nTime) );
                 size_t index;
                 std::vector<size_t> picked_indexes;
-                for( size_t i=0ul; i<n_lines ; i++ ) {
+                for( size_t i=0ul; i<n_lines ; ++i ) {
                     while (true) {
                         index = static_cast<size_t>(rand()) % max;
                         if ( VecOps::contains<size_t>( picked_indexes, index ) ) {
@@ -206,7 +203,7 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
                     }
                     const std::string& line{ aux_lines.at( index ) };
                     if ( StringOps::startsWith( line, '#' ) ) { // leave the "#" check for IIS logs
-                        i--;
+                        -- i;
                         continue;
                     }
                     lines.push_back( line );

@@ -256,7 +256,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 
         // update the stop for the next start
         stop += sep_size;
-        sep_i++;
+        ++sep_i;
         if ( stop > line_size ) {
             // this was the final separator
             break;

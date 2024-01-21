@@ -29,12 +29,12 @@ QString printableSize( const size_t bytes )
     }
     size_t n_decimals{ 3ul };
     if ( size >= 100.0 ) {
-        n_decimals --;
+        -- n_decimals;
         if ( size >= 1000.0 ) {
-            n_decimals --;
+            -- n_decimals;
             if ( size >= 10000.0 ) {
-                n_decimals --;
-                cut_index --; // no decimals, no "dot"
+                -- n_decimals;
+                -- cut_index; // no decimals, no "dot"
             }
         }
     }
@@ -69,12 +69,12 @@ QString printableSpeed( const double bytes, const double secs_ )
     }
     size_t n_decimals{ 3ul };
     if ( speed >= 100.0 ) {
-        n_decimals --;
+        -- n_decimals;
         if ( speed >= 1000.0 ) {
-            n_decimals --;
+            -- n_decimals;
             if ( speed >= 10000.0 ) {
-                n_decimals --;
-                cut_index --; // no decimals, no "dot"
+                -- n_decimals;
+                -- cut_index; // no decimals, no "dot"
             }
         }
     }

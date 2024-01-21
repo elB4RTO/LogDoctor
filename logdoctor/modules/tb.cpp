@@ -76,7 +76,7 @@ void TextBrowser::makePreview( QString& content ) const
     /*if ( this->wide_lines ) {
         content += "<br/>";
     }*/
-    for ( int i{0}; i<32; i++ ) {
+    for ( int i{0}; i<32; ++i ) {
         content += "<p>";
 
         content += "<b>";

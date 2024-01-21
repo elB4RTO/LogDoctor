@@ -185,17 +185,17 @@ void SnakeGame::newSnake_()
         case Direction::UP:
         case Direction::DOWN:
             if ( rnd ) {
-                head_x ++;
+                ++ head_x;
             } else {
-                head_x --;
+                -- head_x;
             }
             break;
         case Direction::LEFT:
         case Direction::RIGHT:
             if ( rnd ) {
-                head_y ++;
+                ++ head_y;
             } else {
-                head_y --;
+                -- head_y;
             }
             break;
         default:
@@ -272,7 +272,7 @@ void SnakeGame::processGameLogic()
                     this->moving_countdown = this->moving_rate;
                 }
             } else if ( this->game_mode == GameMode::Hunt ) {
-                this->moving_countdown --;
+                -- this->moving_countdown;
                 if ( this->moving_countdown == 0u ) {
                     this->moving_countdown = this->moving_rate;
                     this->food.move( this->snake );
@@ -327,16 +327,16 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
     unsigned x_, y_;
     switch ( snake.direction() ) {
         case Direction::UP:
-            y--;
+            --y;
             break;
         case Direction::DOWN:
-            y++;
+            ++y;
             break;
         case Direction::LEFT:
-            x--;
+            --x;
             break;
         case Direction::RIGHT:
-            x++;
+            ++x;
             break;
         default:
             // should be unreachable
@@ -348,16 +348,16 @@ void SnakeGame::checkCollision( Snake& snake, Snake& adv_snake, const bool is_ad
         y_ = adv_snake.front().y;
         switch ( adv_snake.direction() ) {
             case Direction::UP:
-                y_--;
+                --y_;
                 break;
             case Direction::DOWN:
-                y_++;
+                ++y_;
                 break;
             case Direction::LEFT:
-                x_--;
+                --x_;
                 break;
             case Direction::RIGHT:
-                x_++;
+                ++x_;
                 break;
             default:
                 // should be unreachable
