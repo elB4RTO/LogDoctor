@@ -12,6 +12,7 @@
 #include "modules/craplog/modules/datetime.h"
 #include "modules/craplog/modules/formats.h"
 #include "modules/craplog/modules/logs.h"
+#include "modules/craplog/modules/workers/lib.h"
 
 #include "modules/crapview/modules/filters.h"
 
@@ -461,6 +462,15 @@ void testCraplogModules()
     assert( lf.fields == fields );
     assert( lf.separators == separators );
     assert( lf.final.empty() );
+    // test the default string with dumb logging: no characters to enclose the full request
+    format_string = "%h %l %u %t %r %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
+    fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
+    separators = {" "," "," [","] "," "," "," \"","\" \""};
+    lf = fo.processApacheFormatString(format_string);
+    assert( lf.initial.empty() );
+    assert( lf.fields == fields );
+    assert( lf.separators == separators );
+    assert( lf.final == "\"" );
     // test an empty string
     format_string.erase();
     lf = fo.processApacheFormatString(format_string);
@@ -590,7 +600,7 @@ void testCraplogModules()
     T_PRINT("FormatOps::processIisFormatString");
 
 
-    //// LOGS ////
+    //// LOGS TYPE ////
 
     {
     LogsFormat lf{ "","","]",{" ","_"},{"","",""},0 };
@@ -599,6 +609,264 @@ void testCraplogModules()
     assert( LogOps::defineFileType({}, lf) == LogType::Failed );
     }
     T_PRINT("LogOps::defineFileType");
+
+
+    //// LOGS PARSING ////
+
+    {
+    FormatOps fo;
+    LogsFormat lf;
+    std::string log_line;
+    {
+    lf = fo.processApacheFormatString(R"(%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-agent}i")");
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET /index.php?query=x HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.year == true && *line_data.year == "2000" );
+    assert( line_data.month == true && *line_data.month == "01" );
+    assert( line_data.day == true && *line_data.day == "01" );
+    assert( line_data.hour == true && *line_data.hour == "23" );
+    assert( line_data.minute == true && *line_data.minute == "59" );
+    assert( line_data.second == true && *line_data.second == "59" );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    assert( line_data.response_code == true && *line_data.response_code == "200" );
+    assert( line_data.time_taken == false && *line_data.time_taken == "" );
+    assert( line_data.bytes_sent == true && *line_data.bytes_sent == "1024" );
+    assert( line_data.bytes_received == false && *line_data.bytes_received == "" );
+    assert( line_data.client == true && *line_data.client == "192.168.1.123" );
+    assert( line_data.cookie == false && *line_data.cookie == "" );
+    assert( line_data.user_agent == true && *line_data.user_agent == "UserAgent/3.0 (Details stuff) Info/123" );
+    assert( line_data.referrer == true && *line_data.referrer == "http://www.referrer.site" );
+    }{
+    // same as above but without the query
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET /index.php HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // dumb logging, without any surrounding character to enclose the request
+    lf = fo.processApacheFormatString(R"(%h %l %u %t %r %>s %O "%{Referer}i" "%{User-agent}i")");
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] GET /index.php?query=x HTTP/1.1 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.year == true && *line_data.year == "2000" );
+    assert( line_data.month == true && *line_data.month == "01" );
+    assert( line_data.day == true && *line_data.day == "01" );
+    assert( line_data.hour == true && *line_data.hour == "23" );
+    assert( line_data.minute == true && *line_data.minute == "59" );
+    assert( line_data.second == true && *line_data.second == "59" );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    assert( line_data.response_code == true && *line_data.response_code == "200" );
+    assert( line_data.time_taken == false && *line_data.time_taken == "" );
+    assert( line_data.bytes_sent == true && *line_data.bytes_sent == "1024" );
+    assert( line_data.bytes_received == false && *line_data.bytes_received == "" );
+    assert( line_data.client == true && *line_data.client == "192.168.1.123" );
+    assert( line_data.cookie == false && *line_data.cookie == "" );
+    assert( line_data.user_agent == true && *line_data.user_agent == "UserAgent/3.0 (Details stuff) Info/123" );
+    assert( line_data.referrer == true && *line_data.referrer == "http://www.referrer.site" );
+    }{
+    // dumb logging, without any surrounding character to enclose the request and the user-agent
+    lf = fo.processApacheFormatString(R"(%h %l %u %t %r %>s %O "%{Referer}i" %{User-agent}i)");
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] GET /index.php?query=x HTTP/1.1 200 1024 "http://www.referrer.site" UserAgent/3.0 (Details stuff) Info/123)";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    assert( line_data.response_code == true && *line_data.response_code == "200" );
+    assert( line_data.time_taken == false && *line_data.time_taken == "" );
+    assert( line_data.bytes_sent == true && *line_data.bytes_sent == "1024" );
+    assert( line_data.bytes_received == false && *line_data.bytes_received == "" );
+    assert( line_data.client == true && *line_data.client == "192.168.1.123" );
+    assert( line_data.cookie == false && *line_data.cookie == "" );
+    assert( line_data.user_agent == true && *line_data.user_agent == "UserAgent/3.0 (Details stuff) Info/123" );
+    assert( line_data.referrer == true && *line_data.referrer == "http://www.referrer.site" );
+    }{
+    // malformed request with empty method
+    lf = fo.processApacheFormatString(R"(%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-agent}i")");
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] " /index.php?query=x HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with empty protocol
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET /index.php?query=x " 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with empty uri
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET  HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with empty method and protocol
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] " /index.php?query=x " 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with empty method and uri
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "  HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with empty uri and protocol
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET  " 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with all fields empty
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "  " 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with missing method
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "/index.php?query=x HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with missing protocol
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET /index.php?query=x" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with missing uri
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with missing the uri but with the query
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET ?query=x HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with only the method
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with only the protocol
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with only the uri and the query
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "/index.php?query=x" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with only the uri
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "/index.php" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with only the query
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "?query=x" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with every field missing
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == false && *line_data.uri == "" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with only random data
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "M4l1C10US" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == false && *line_data.protocol == "" );
+    assert( line_data.method == false && *line_data.method == "" );
+    assert( line_data.uri == true && *line_data.uri == "M4l1C10US" );
+    assert( line_data.query == false && *line_data.query == "" );
+    }{
+    // malformed request with method and protocol positions swapped
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "HTTP/1.1 /index.php?query=x GET" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with method and uri positions swapped
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "/index.php?query=x GET HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with uri and protocol positions swapped
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET HTTP/1.1 /index.php?query=x" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }{
+    // malformed request with all fields positions swapped
+    log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "HTTP/1.1 GET /index.php?query=x" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
+    LogLineData line_data( log_line, lf );
+    assert( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
+    assert( line_data.method == true && *line_data.method == "GET" );
+    assert( line_data.uri == true && *line_data.uri == "/index.php" );
+    assert( line_data.query == true && *line_data.query == "query=x" );
+    }
+    T_PRINT("LogLineData::LogLineData");
+    }
 }
 
 
