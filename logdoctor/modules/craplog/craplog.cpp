@@ -1025,7 +1025,9 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
         sizeBreakdown->legend()->setVisible( false );
         sizeBreakdown->setTitle("");
     }
-    sizeBreakdown->legend()->markers( ignoredSize_donut ).first()->setVisible( false );
+    if ( auto markers{ sizeBreakdown->legend()->markers( ignoredSize_donut ) }; !markers.isEmpty() ) {
+        markers.first()->setVisible( false );
+    }
 
     size_chart->setChart( sizeBreakdown );
     size_chart->setRenderHint( QPainter::Antialiasing );
