@@ -12,6 +12,7 @@
 struct BWlist;
 struct LogLineData;
 
+enum class WebServer;
 enum class WorkerDialog;
 
 class QSqlDatabase;
@@ -28,7 +29,7 @@ class CraplogParser final : public QObject
 public:
 
     explicit CraplogParser(
-        const unsigned web_server_id,
+        const WebServer web_server,
         const unsigned dialogs_level,
         const std::string& db_data_path,
         const std::string& db_hashes_path,
@@ -73,7 +74,7 @@ public slots:
 
 private:
 
-    const unsigned wsID;
+    const WebServer web_server;
 
     const unsigned dialogs_level;
 

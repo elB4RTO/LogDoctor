@@ -165,24 +165,24 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // set the default WS as the current one
-    switch ( this->default_ws ) {
-        case APACHE_ID:
+    switch ( this->default_web_server ) {
+        case WS_APACHE:
             this->ui->button_LogFiles_Apache->setFlat( false );
             this->ui->radio_ConfDefaults_Apache->setChecked( true );
             break;
-        case NGINX_ID:
+        case WS_NGINX:
             this->ui->button_LogFiles_Nginx->setFlat( false );
             this->ui->radio_ConfDefaults_Nginx->setChecked( true );
             break;
-        case IIS_ID:
+        case WS_IIS:
             this->ui->button_LogFiles_Iis->setFlat( false );
             this->ui->radio_ConfDefaults_Iis->setChecked( true );
             break;
         default:
             // shouldn't be here
-            throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
+            throw WebServerException( "Unexpected WebServer: " + toString(this->default_web_server) );
     }
-    this->craplog.setCurrentWSID( this->default_ws );
+    this->craplog.setCurrentWebServer( this->default_web_server );
 
 
     // initialize the Configs
@@ -221,30 +221,30 @@ MainWindow::MainWindow(QWidget *parent)
         this->ui->checkBox_ConfControl_Size->setChecked( false );
     }
     // apache paths
-    this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( APACHE_ID )) );
+    this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_APACHE )) );
     this->ui->button_ConfApache_Path_Save->setEnabled( false );
     // apache formats
-    this->ui->inLine_ConfApache_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( APACHE_ID ) ) );
+    this->ui->inLine_ConfApache_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_APACHE ) ) );
     this->ui->button_ConfApache_Format_Save->setEnabled( false );
     // apache warnlists
     this->on_box_ConfApache_Warnlist_Field_currentTextChanged( this->ui->box_ConfApache_Warnlist_Field->currentText() );
     // apache blacklists
     this->on_box_ConfApache_Blacklist_Field_currentTextChanged( this->ui->box_ConfApache_Blacklist_Field->currentText() );
     // nginx paths
-    this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( NGINX_ID )) );
+    this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_NGINX )) );
     this->ui->button_ConfNginx_Path_Save->setEnabled( false );
     // nginx formats
-    this->ui->inLine_ConfNginx_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( NGINX_ID ) ) );
+    this->ui->inLine_ConfNginx_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_NGINX ) ) );
     this->ui->button_ConfNginx_Format_Save->setEnabled( false );
     // nginx warnlists
     this->on_box_ConfNginx_Warnlist_Field_currentTextChanged( this->ui->box_ConfNginx_Warnlist_Field->currentText() );
     // nginx blacklists
     this->on_box_ConfNginx_Blacklist_Field_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Field->currentText() );
     // iis paths
-    this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( IIS_ID )) );
+    this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_IIS )) );
     this->ui->button_ConfIis_Path_Save->setEnabled( false );
     // iis formats
-    this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( IIS_ID ) ) );
+    this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_IIS ) ) );
     this->ui->button_ConfIis_Format_Save->setEnabled( false );
     // iis warnlists
     this->on_box_ConfIis_Warnlist_Field_currentTextChanged( this->ui->box_ConfIis_Warnlist_Field->currentText() );
@@ -382,7 +382,7 @@ void MainWindow::readConfigs()
         std::vector<std::string> aux, configs;
         try {
             // reset the lists when a config file is found
-            for ( unsigned w=APACHE_ID; w<=IIS_ID; ++w ) {
+            for ( const WebServer& w : {WS_APACHE,WS_NGINX,WS_IIS} ) {
                 for ( const int& f : {11,12,20,21} ) {
                     this->craplog.setWarnlist( w, f, {} );
                 }
@@ -442,7 +442,7 @@ void MainWindow::readConfigs()
                     this->dialogs_level = std::stoi( val );
 
                 } else if ( var == "DefaultWebServer" ) {
-                    this->default_ws = std::stoi( val );
+                    this->default_web_server = fromString( val );
 
                 } else if ( var == "DatabaseDataPath" ) {
                     this->db_data_path = this->resolvePath( val );
@@ -475,7 +475,7 @@ void MainWindow::readConfigs()
                     this->craplog.setWarningSize( std::stoul( val ) );
 
                 } else if ( var == "ApacheLogsPath" ) {
-                    this->craplog.setLogsPath( APACHE_ID, this->resolvePath( val ) );
+                    this->craplog.setLogsPath( WS_APACHE, this->resolvePath( val ) );
 
                 } else if ( var == "ApacheLogsFormat" ) {
                     if ( ! this->craplog.setApacheLogFormat( val ) ) {
@@ -485,45 +485,45 @@ void MainWindow::readConfigs()
                 } else if ( var == "ApacheWarnlistMethod" ) {
                     aux_err_msg = QString("Apache -> %1 (%2)")
                         .arg( TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( APACHE_ID, 11, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_APACHE, 11, this->string2list( val ) );
 
                 } else if ( var == "ApacheWarnlistMethodUsed" ) {
-                    this->craplog.setWarnlistUsed( APACHE_ID, 11, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_APACHE, 11, this->s2b.at( val ) );
 
                 } else if ( var == "ApacheWarnlistURI" ) {
                     aux_err_msg = QString("Apache -> %1 (%2)")
                         .arg( TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( APACHE_ID, 12, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_APACHE, 12, this->string2list( val ) );
 
                 } else if ( var == "ApacheWarnlistURIUsed" ) {
-                    this->craplog.setWarnlistUsed( APACHE_ID, 12, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_APACHE, 12, this->s2b.at( val ) );
 
                 } else if ( var == "ApacheWarnlistClient" ) {
                     aux_err_msg = QString("Apache -> %1 (%2)")
                         .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( APACHE_ID, 20, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_APACHE, 20, this->string2list( val ) );
 
                 } else if ( var == "ApacheWarnlistClientUsed" ) {
-                    this->craplog.setWarnlistUsed( APACHE_ID, 20, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_APACHE, 20, this->s2b.at( val ) );
 
                 } else if ( var == "ApacheWarnlistUserAgent" ) {
                     aux_err_msg = QString("Apache -> %1 (%2)")
                         .arg( TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( APACHE_ID, 21, this->string2list( val, true ) );
+                    this->craplog.setWarnlist( WS_APACHE, 21, this->string2list( val, true ) );
 
                 } else if ( var == "ApacheWarnlistUserAgentUsed" ) {
-                    this->craplog.setWarnlistUsed( APACHE_ID, 21, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_APACHE, 21, this->s2b.at( val ) );
 
                 } else if ( var == "ApacheBlacklistClient" ) {
                     aux_err_msg = QString("Apache -> %1 (%2)")
                         .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") );
-                    this->craplog.setBlacklist( APACHE_ID, 20, this->string2list( val ) );
+                    this->craplog.setBlacklist( WS_APACHE, 20, this->string2list( val ) );
 
                 } else if ( var == "ApacheBlacklistClientUsed" ) {
-                    this->craplog.setBlacklistUsed( APACHE_ID, 20, this->s2b.at( val ) );
+                    this->craplog.setBlacklistUsed( WS_APACHE, 20, this->s2b.at( val ) );
 
                 } else if ( var == "NginxLogsPath" ) {
-                    this->craplog.setLogsPath( NGINX_ID, this->resolvePath( val ) );
+                    this->craplog.setLogsPath( WS_NGINX, this->resolvePath( val ) );
 
                 } else if ( var == "NginxLogsFormat" ) {
                     if ( ! this->craplog.setNginxLogFormat( val ) ) {
@@ -533,45 +533,45 @@ void MainWindow::readConfigs()
                 } else if ( var == "NginxWarnlistMethod" ) {
                     aux_err_msg = QString("Nginx -> %1 (%2)")
                         .arg( TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( NGINX_ID, 11, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_NGINX, 11, this->string2list( val ) );
 
                 } else if ( var == "NginxWarnlistMethodUsed" ) {
-                    this->craplog.setWarnlistUsed( NGINX_ID, 11, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_NGINX, 11, this->s2b.at( val ) );
 
                 } else if ( var == "NginxWarnlistURI" ) {
                     aux_err_msg = QString("Nginx -> %1 (%2)")
                         .arg( TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( NGINX_ID, 12, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_NGINX, 12, this->string2list( val ) );
 
                 } else if ( var == "NginxWarnlistURIUsed" ) {
-                    this->craplog.setWarnlistUsed( NGINX_ID, 12, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_NGINX, 12, this->s2b.at( val ) );
 
                 } else if ( var == "NginxWarnlistClient" ) {
                     aux_err_msg = QString("Nginx -> %1 (%2)")
                         .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( NGINX_ID, 20, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_NGINX, 20, this->string2list( val ) );
 
                 } else if ( var == "NginxWarnlistClientUsed" ) {
-                    this->craplog.setWarnlistUsed( NGINX_ID, 20, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_NGINX, 20, this->s2b.at( val ) );
 
                 } else if ( var == "NginxWarnlistUserAgent" ) {
                     aux_err_msg = QString("Nginx -> %1 (%2)")
                         .arg( TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( NGINX_ID, 21, this->string2list( val, true ) );
+                    this->craplog.setWarnlist( WS_NGINX, 21, this->string2list( val, true ) );
 
                 } else if ( var == "NginxWarnlistUserAgentUsed" ) {
-                    this->craplog.setWarnlistUsed( NGINX_ID, 21, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_NGINX, 21, this->s2b.at( val ) );
 
                 } else if ( var == "NginxBlacklistClient" ) {
                     aux_err_msg = QString("Nginx -> %1 (%2)")
                         .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") );
-                    this->craplog.setBlacklist( NGINX_ID, 20, this->string2list( val ) );
+                    this->craplog.setBlacklist( WS_NGINX, 20, this->string2list( val ) );
 
                 } else if ( var == "NginxBlacklistClientUsed" ) {
-                    this->craplog.setBlacklistUsed( NGINX_ID, 20, this->s2b.at( val ) );
+                    this->craplog.setBlacklistUsed( WS_NGINX, 20, this->s2b.at( val ) );
 
                 } else if ( var == "IisLogsPath" ) {
-                    this->craplog.setLogsPath( IIS_ID, this->resolvePath( val ) );
+                    this->craplog.setLogsPath( WS_IIS, this->resolvePath( val ) );
 
                 } else if ( var == "IisLogsModule" ) {
                     if ( val == "1" ) {
@@ -594,42 +594,42 @@ void MainWindow::readConfigs()
                 } else if ( var == "IisWarnlistMethod" ) {
                     aux_err_msg = QString("IIS -> %1 (%2)")
                         .arg( TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( IIS_ID, 11, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_IIS, 11, this->string2list( val ) );
 
                 } else if ( var == "IisWarnlistMethodUsed" ) {
-                    this->craplog.setWarnlistUsed( IIS_ID, 11, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_IIS, 11, this->s2b.at( val ) );
 
                 } else if ( var == "IisWarnlistURI" ) {
                     aux_err_msg = QString("IIS -> %1 (%2)")
                         .arg( TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( IIS_ID, 12, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_IIS, 12, this->string2list( val ) );
 
                 } else if ( var == "IisWarnlistURIUsed" ) {
-                    this->craplog.setWarnlistUsed( IIS_ID, 12, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_IIS, 12, this->s2b.at( val ) );
 
                 } else if ( var == "IisWarnlistClient" ) {
                     aux_err_msg = QString("IIS -> %1 (%2)")
                         .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( IIS_ID, 20, this->string2list( val ) );
+                    this->craplog.setWarnlist( WS_IIS, 20, this->string2list( val ) );
 
                 } else if ( var == "IisWarnlistClientUsed" ) {
-                    this->craplog.setWarnlistUsed( IIS_ID, 20, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_IIS, 20, this->s2b.at( val ) );
 
                 } else if ( var == "IisWarnlistUserAgent" ) {
                     aux_err_msg = QString("IIS -> %1 (%2)")
                         .arg( TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( IIS_ID, 21, this->string2list( val, true ) );
+                    this->craplog.setWarnlist( WS_IIS, 21, this->string2list( val, true ) );
 
                 } else if ( var == "IisWarnlistUserAgentUsed" ) {
-                    this->craplog.setWarnlistUsed( IIS_ID, 21, this->s2b.at( val ) );
+                    this->craplog.setWarnlistUsed( WS_IIS, 21, this->s2b.at( val ) );
 
                 } else if ( var == "IisBlacklistClient" ) {
                     aux_err_msg = QString("IIS -> %1 (%2)")
                         .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") );
-                    this->craplog.setBlacklist( IIS_ID, 20, this->string2list( val ) );
+                    this->craplog.setBlacklist( WS_IIS, 20, this->string2list( val ) );
 
                 } else if ( var == "IisBlacklistClientUsed" ) {
-                    this->craplog.setBlacklistUsed( IIS_ID, 20, this->s2b.at( val ) );
+                    this->craplog.setBlacklistUsed( WS_IIS, 20, this->s2b.at( val ) );
 
                 } else if ( var == "CrapviewDialogsLevel" ) {
                     this->crapview.setDialogsLevel( std::stoi( val ) );
@@ -780,7 +780,7 @@ void MainWindow::writeConfigs()
         configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
         configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
         configs += "\nMainDialogsLevel=" + std::to_string( this->dialogs_level );
-        configs += "\nDefaultWebServer=" + std::to_string( this->default_ws );
+        configs += "\nDefaultWebServer=" + toString( this->default_web_server );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
         configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
         configs += "\nDatabaseDoBackup=" + this->b2s.at( this->db_do_backup );
@@ -797,35 +797,35 @@ void MainWindow::writeConfigs()
         configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
         //// APACHE2 ////
         configs += "\n\n[Apache2]";
-        configs += "\nApacheLogsPath=" + this->craplog.getLogsPath( APACHE_ID );
-        configs += "\nApacheLogsFormat=" + this->craplog.getLogsFormatString( APACHE_ID );
-        configs += "\nApacheWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( APACHE_ID, 11 ) );
-        configs += "\nApacheWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( APACHE_ID, 11 ) );
-        configs += "\nApacheWarnlistURI=" + this->list2string( this->craplog.getWarnlist( APACHE_ID, 12 ) );
-        configs += "\nApacheWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( APACHE_ID, 12 ) );
-        configs += "\nApacheWarnlistClient=" + this->list2string( this->craplog.getWarnlist( APACHE_ID, 20 ) );
-        configs += "\nApacheWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( APACHE_ID, 20 ) );
-        configs += "\nApacheWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( APACHE_ID, 21 ), true );
-        configs += "\nApacheWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( APACHE_ID, 21 ) );
-        configs += "\nApacheBlacklistClient=" + this->list2string( this->craplog.getBlacklist( APACHE_ID, 20 ) );
-        configs += "\nApacheBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( APACHE_ID, 20 ) );
+        configs += "\nApacheLogsPath=" + this->craplog.getLogsPath( WS_APACHE );
+        configs += "\nApacheLogsFormat=" + this->craplog.getLogsFormatString( WS_APACHE );
+        configs += "\nApacheWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( WS_APACHE, 11 ) );
+        configs += "\nApacheWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_APACHE, 11 ) );
+        configs += "\nApacheWarnlistURI=" + this->list2string( this->craplog.getWarnlist( WS_APACHE, 12 ) );
+        configs += "\nApacheWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_APACHE, 12 ) );
+        configs += "\nApacheWarnlistClient=" + this->list2string( this->craplog.getWarnlist( WS_APACHE, 20 ) );
+        configs += "\nApacheWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_APACHE, 20 ) );
+        configs += "\nApacheWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( WS_APACHE, 21 ), true );
+        configs += "\nApacheWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_APACHE, 21 ) );
+        configs += "\nApacheBlacklistClient=" + this->list2string( this->craplog.getBlacklist( WS_APACHE, 20 ) );
+        configs += "\nApacheBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( WS_APACHE, 20 ) );
         //// NGINX ////
         configs += "\n\n[Nginx]";
-        configs += "\nNginxLogsPath=" + this->craplog.getLogsPath( NGINX_ID );
-        configs += "\nNginxLogsFormat=" + this->craplog.getLogsFormatString( NGINX_ID );
-        configs += "\nNginxWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( NGINX_ID, 11 ) );
-        configs += "\nNginxWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( NGINX_ID, 11 ) );
-        configs += "\nNginxWarnlistURI=" + this->list2string( this->craplog.getWarnlist( NGINX_ID, 12 ) );
-        configs += "\nNginxWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( NGINX_ID, 12 ) );
-        configs += "\nNginxWarnlistClient=" + this->list2string( this->craplog.getWarnlist( NGINX_ID, 20 ) );
-        configs += "\nNginxWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( NGINX_ID, 20 ) );
-        configs += "\nNginxWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( NGINX_ID, 21 ), true );
-        configs += "\nNginxWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( NGINX_ID, 21 ) );
-        configs += "\nNginxBlacklistClient=" + this->list2string( this->craplog.getBlacklist( NGINX_ID, 20 ) );
-        configs += "\nNginxBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( NGINX_ID, 20 ) );
+        configs += "\nNginxLogsPath=" + this->craplog.getLogsPath( WS_NGINX );
+        configs += "\nNginxLogsFormat=" + this->craplog.getLogsFormatString( WS_NGINX );
+        configs += "\nNginxWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( WS_NGINX, 11 ) );
+        configs += "\nNginxWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_NGINX, 11 ) );
+        configs += "\nNginxWarnlistURI=" + this->list2string( this->craplog.getWarnlist( WS_NGINX, 12 ) );
+        configs += "\nNginxWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_NGINX, 12 ) );
+        configs += "\nNginxWarnlistClient=" + this->list2string( this->craplog.getWarnlist( WS_NGINX, 20 ) );
+        configs += "\nNginxWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_NGINX, 20 ) );
+        configs += "\nNginxWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( WS_NGINX, 21 ), true );
+        configs += "\nNginxWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_NGINX, 21 ) );
+        configs += "\nNginxBlacklistClient=" + this->list2string( this->craplog.getBlacklist( WS_NGINX, 20 ) );
+        configs += "\nNginxBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( WS_NGINX, 20 ) );
         //// IIS ////
         configs += "\n\n[IIS]";
-        configs += "\nIisLogsPath=" + this->craplog.getLogsPath( IIS_ID );
+        configs += "\nIisLogsPath=" + this->craplog.getLogsPath( WS_IIS );
         std::string module{ "0" };
         if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
             module = "1";
@@ -833,17 +833,17 @@ void MainWindow::writeConfigs()
             module = "2";
         }
         configs += "\nIisLogsModule=" + module;
-        configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( IIS_ID );
-        configs += "\nIisWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( IIS_ID, 11 ) );
-        configs += "\nIisWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( IIS_ID, 11 ) );
-        configs += "\nIisWarnlistURI=" + this->list2string( this->craplog.getWarnlist( IIS_ID, 12 ) );
-        configs += "\nIisWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( IIS_ID, 12 ) );
-        configs += "\nIisWarnlistClient=" + this->list2string( this->craplog.getWarnlist( IIS_ID, 20 ) );
-        configs += "\nIisWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( IIS_ID, 20 ) );
-        configs += "\nIisWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( IIS_ID, 21 ), true );
-        configs += "\nIisWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( IIS_ID, 21 ) );
-        configs += "\nIisBlacklistClient=" + this->list2string( this->craplog.getBlacklist( IIS_ID, 20 ) );
-        configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( IIS_ID, 20 ) );
+        configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( WS_IIS );
+        configs += "\nIisWarnlistMethod=" + this->list2string( this->craplog.getWarnlist( WS_IIS, 11 ) );
+        configs += "\nIisWarnlistMethodUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_IIS, 11 ) );
+        configs += "\nIisWarnlistURI=" + this->list2string( this->craplog.getWarnlist( WS_IIS, 12 ) );
+        configs += "\nIisWarnlistURIUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_IIS, 12 ) );
+        configs += "\nIisWarnlistClient=" + this->list2string( this->craplog.getWarnlist( WS_IIS, 20 ) );
+        configs += "\nIisWarnlistClientUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_IIS, 20 ) );
+        configs += "\nIisWarnlistUserAgent=" + this->list2string( this->craplog.getWarnlist( WS_IIS, 21 ), true );
+        configs += "\nIisWarnlistUserAgentUsed=" + this->b2s.at( this->craplog.isWarnlistUsed( WS_IIS, 21 ) );
+        configs += "\nIisBlacklistClient=" + this->list2string( this->craplog.getBlacklist( WS_IIS, 20 ) );
+        configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( WS_IIS, 20 ) );
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
         configs += "\nCrapviewDialogsLevel=" + std::to_string( this->crapview.getDialogsLevel() );
@@ -1813,21 +1813,21 @@ void MainWindow::makeInitialChecks()
         this->on_button_LogFiles_RefreshList_clicked();
         // set the default WS as the current one
         switch ( this->craplog.getCurrentWSID() ) {
-            case APACHE_ID:
+            case WS_APACHE:
                 this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
                 this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
                 this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
                 this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
                 this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
                 break;
-            case NGINX_ID:
+            case WS_NGINX:
                 this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
                 this->ui->box_StatsCount_WebServer->setCurrentIndex( 1 );
                 this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 1 );
                 this->ui->box_StatsDay_WebServer->setCurrentIndex(   1 );
                 this->ui->box_StatsRelat_WebServer->setCurrentIndex( 1 );
                 break;
-            case IIS_ID:
+            case WS_IIS:
                 this->ui->box_StatsWarn_WebServer->setCurrentIndex(  2 );
                 this->ui->box_StatsCount_WebServer->setCurrentIndex( 2 );
                 this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 2 );
@@ -1836,7 +1836,7 @@ void MainWindow::makeInitialChecks()
                 break;
             default:
                 // shouldn't be here
-                throw WebServerException( "Unexpected WebServer ID: "+std::to_string( this->default_ws ) );
+                throw WebServerException( "Unexpected WebServer: " + toString(this->default_web_server) );
         }
         this->initiating &= false;
         // effectively check if draw buttons can be enabled
@@ -2399,13 +2399,13 @@ void MainWindow::checkMakeStats_Makable()
 // switch to apache web server
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != APACHE_ID ) {
+    if ( this->craplog.getCurrentWSID() != WS_APACHE ) {
         // flat/unflat
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( APACHE_ID );
+        this->craplog.setCurrentWebServer( WS_APACHE );
         // reset the log files viewer
         {
             QString rich_text;
@@ -2420,13 +2420,13 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
 // switch to nginx web server
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != NGINX_ID ) {
+    if ( this->craplog.getCurrentWSID() != WS_NGINX ) {
         // flat/unflat
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Iis->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( NGINX_ID );
+        this->craplog.setCurrentWebServer( WS_NGINX );
         // reset the log files viewer
         {
             QString rich_text;
@@ -2441,13 +2441,13 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
 // switch to iis web server
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != IIS_ID ) {
+    if ( this->craplog.getCurrentWSID() != WS_IIS ) {
         // flat/unflat
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
         this->ui->button_LogFiles_Nginx->setFlat( true );
         // set the WebServer
-        this->craplog.setCurrentWSID( IIS_ID );
+        this->craplog.setCurrentWebServer( WS_IIS );
         // reset the log files viewer
         {
             QString rich_text;
@@ -4563,17 +4563,17 @@ void MainWindow::on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1)
 void MainWindow::on_radio_ConfDefaults_Apache_toggled(bool checked)
 {
     Q_UNUSED(checked)
-    this->default_ws = APACHE_ID;
+    this->default_web_server = WS_APACHE;
 }
 void MainWindow::on_radio_ConfDefaults_Nginx_toggled(bool checked)
 {
     Q_UNUSED(checked)
-    this->default_ws = NGINX_ID;
+    this->default_web_server = WS_NGINX;
 }
 void MainWindow::on_radio_ConfDefaults_Iis_toggled(bool checked)
 {
     Q_UNUSED(checked)
-    this->default_ws = IIS_ID;
+    this->default_web_server = WS_IIS;
 }
 
 /////////////////
@@ -4636,7 +4636,7 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        this->craplog.setLogsPath( APACHE_ID, path );
+        this->craplog.setLogsPath( WS_APACHE, path );
         this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfApache_Path_Save->setEnabled( false );
@@ -4664,7 +4664,7 @@ void MainWindow::on_button_ConfApache_Format_Save_clicked()
         this->ui->inLine_ConfApache_Format_String->text().trimmed().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( false );
-        if ( this->craplog.getCurrentWSID() == APACHE_ID ) {
+        if ( this->craplog.getCurrentWSID() == WS_APACHE ) {
             this->craplog.setCurrentLogFormat();
         }
     }
@@ -4672,7 +4672,7 @@ void MainWindow::on_button_ConfApache_Format_Save_clicked()
 void MainWindow::on_button_ConfApache_Format_Sample_clicked()
 {
     this->ui->preview_ConfApache_Format_Sample->setText(
-        this->craplog.getLogsFormatSample( APACHE_ID ) );
+        this->craplog.getLogsFormatSample( WS_APACHE ) );
 }
 void MainWindow::on_button_ConfApache_Format_Help_clicked()
 {
@@ -4687,13 +4687,13 @@ void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QStri
         this->ui->list_ConfApache_Warnlist_List->clear();
         // update the list
         const std::vector<std::string>& list{ this->craplog.getWarnlist(
-            APACHE_ID, this->crapview.getLogFieldID( arg1 ) ) };
+            WS_APACHE, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfApache_Warnlist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
         const bool used{ this->craplog.isWarnlistUsed(
-            APACHE_ID,
+            WS_APACHE,
             this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ) ) };
         this->ui->checkBox_ConfApache_Warnlist_Used->setChecked( used );
         this->on_checkBox_ConfApache_Warnlist_Used_clicked( used );
@@ -4702,7 +4702,7 @@ void MainWindow::on_box_ConfApache_Warnlist_Field_currentTextChanged(const QStri
 void MainWindow::on_checkBox_ConfApache_Warnlist_Used_clicked(bool checked)
 {
     this->craplog.setWarnlistUsed(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
         checked );
     if ( checked ) {
@@ -4744,7 +4744,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Add_clicked()
         // not in the list yet, append
         try {
             this->craplog.warnlistAdd(
-                APACHE_ID,
+                WS_APACHE,
                 this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfApache_Warnlist_List->addItem( item );
@@ -4792,7 +4792,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Remove_clicked()
 {
     const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
         item->text().toStdString() );
     // refresh the list
@@ -4802,7 +4802,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Up_clicked()
 {
     const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -4815,7 +4815,7 @@ void MainWindow::on_button_ConfApache_Warnlist_Down_clicked()
 {
     const auto item{ this->ui->list_ConfApache_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Warnlist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -4834,13 +4834,13 @@ void MainWindow::on_box_ConfApache_Blacklist_Field_currentTextChanged(const QStr
         this->ui->list_ConfApache_Blacklist_List->clear();
         // update the list
         const std::vector<std::string>& list{ this->craplog.getBlacklist(
-            APACHE_ID, this->crapview.getLogFieldID( arg1 ) ) };
+            WS_APACHE, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfApache_Blacklist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
         const bool used{ this->craplog.isBlacklistUsed(
-            APACHE_ID,
+            WS_APACHE,
             this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ) ) };
         this->ui->checkBox_ConfApache_Blacklist_Used->setChecked( used );
         this->on_checkBox_ConfApache_Blacklist_Used_clicked( used );
@@ -4849,7 +4849,7 @@ void MainWindow::on_box_ConfApache_Blacklist_Field_currentTextChanged(const QStr
 void MainWindow::on_checkBox_ConfApache_Blacklist_Used_clicked(bool checked)
 {
     this->craplog.setBlacklistUsed(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
         checked );
     if ( checked ) {
@@ -4891,7 +4891,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Add_clicked()
         // not in the list yet, append
         try {
             this->craplog.blacklistAdd(
-                APACHE_ID,
+                WS_APACHE,
                 this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfApache_Blacklist_List->addItem( item );
@@ -4939,7 +4939,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Remove_clicked()
 {
     const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
         item->text().toStdString() );
     // refresh the list
@@ -4949,7 +4949,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Up_clicked()
 {
     const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -4962,7 +4962,7 @@ void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 {
     const auto item{ this->ui->list_ConfApache_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
-        APACHE_ID,
+        WS_APACHE,
         this->crapview.getLogFieldID( this->ui->box_ConfApache_Blacklist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5007,7 +5007,7 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        this->craplog.setLogsPath( NGINX_ID, path );
+        this->craplog.setLogsPath( WS_NGINX, path );
         this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfNginx_Path_Save->setEnabled( false );
@@ -5035,7 +5035,7 @@ void MainWindow::on_button_ConfNginx_Format_Save_clicked()
         this->ui->inLine_ConfNginx_Format_String->text().trimmed().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( false );
-        if ( this->craplog.getCurrentWSID() == NGINX_ID ) {
+        if ( this->craplog.getCurrentWSID() == WS_NGINX ) {
             this->craplog.setCurrentLogFormat();
         }
     }
@@ -5043,7 +5043,7 @@ void MainWindow::on_button_ConfNginx_Format_Save_clicked()
 void MainWindow::on_button_ConfNginx_Format_Sample_clicked()
 {
     this->ui->preview_ConfNginx_Format_Sample->setText(
-        this->craplog.getLogsFormatSample( NGINX_ID ) );
+        this->craplog.getLogsFormatSample( WS_NGINX ) );
 }
 void MainWindow::on_button_ConfNginx_Format_Help_clicked()
 {
@@ -5058,13 +5058,13 @@ void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QStrin
         this->ui->list_ConfNginx_Warnlist_List->clear();
         // update the list
         const std::vector<std::string>& list{ this->craplog.getWarnlist(
-            NGINX_ID, this->crapview.getLogFieldID( arg1 ) ) };
+            WS_NGINX, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfNginx_Warnlist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
         const bool used{ this->craplog.isWarnlistUsed(
-            NGINX_ID,
+            WS_NGINX,
             this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ) ) };
         this->ui->checkBox_ConfNginx_Warnlist_Used->setChecked( used );
         this->on_checkBox_ConfNginx_Warnlist_Used_clicked( used );
@@ -5073,7 +5073,7 @@ void MainWindow::on_box_ConfNginx_Warnlist_Field_currentTextChanged(const QStrin
 void MainWindow::on_checkBox_ConfNginx_Warnlist_Used_clicked(bool checked)
 {
     this->craplog.setWarnlistUsed(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
         checked );
     if ( checked ) {
@@ -5115,7 +5115,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Add_clicked()
         // not in the list yet, append
         try {
             this->craplog.warnlistAdd(
-                NGINX_ID,
+                WS_NGINX,
                 this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfNginx_Warnlist_List->addItem( item );
@@ -5163,7 +5163,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Remove_clicked()
 {
     const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
         item->text().toStdString() );
     // refresh the list
@@ -5173,7 +5173,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Up_clicked()
 {
     const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5186,7 +5186,7 @@ void MainWindow::on_button_ConfNginx_Warnlist_Down_clicked()
 {
     const auto item{ this->ui->list_ConfNginx_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Warnlist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5205,13 +5205,13 @@ void MainWindow::on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QStri
         this->ui->list_ConfNginx_Blacklist_List->clear();
         // update the list
         const std::vector<std::string>& list{ this->craplog.getBlacklist(
-            NGINX_ID, this->crapview.getLogFieldID( arg1 ) ) };
+            WS_NGINX, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfNginx_Blacklist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
         const bool used{ this->craplog.isBlacklistUsed(
-            NGINX_ID,
+            WS_NGINX,
             this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ) ) };
         this->ui->checkBox_ConfNginx_Blacklist_Used->setChecked( used );
         this->on_checkBox_ConfNginx_Blacklist_Used_clicked( used );
@@ -5220,7 +5220,7 @@ void MainWindow::on_box_ConfNginx_Blacklist_Field_currentTextChanged(const QStri
 void MainWindow::on_checkBox_ConfNginx_Blacklist_Used_clicked(bool checked)
 {
     this->craplog.setBlacklistUsed(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
         checked );
     if ( checked ) {
@@ -5262,7 +5262,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Add_clicked()
         // not in the list yet, append
         try {
             this->craplog.blacklistAdd(
-                NGINX_ID,
+                WS_NGINX,
                 this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfNginx_Blacklist_List->addItem( item );
@@ -5310,7 +5310,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Remove_clicked()
 {
     const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
         item->text().toStdString() );
     // refresh the list
@@ -5320,7 +5320,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Up_clicked()
 {
     const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5333,7 +5333,7 @@ void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 {
     const auto item{ this->ui->list_ConfNginx_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
-        NGINX_ID,
+        WS_NGINX,
         this->crapview.getLogFieldID( this->ui->box_ConfNginx_Blacklist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5378,7 +5378,7 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        this->craplog.setLogsPath( IIS_ID, path );
+        this->craplog.setLogsPath( WS_IIS, path );
         this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString( path ) );
     }
     this->ui->button_ConfIis_Path_Save->setEnabled( false );
@@ -5403,7 +5403,7 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setEnabled( true );
             this->ui->inLine_ConfIis_Format_String->setFocus();
-            if ( this->craplog.getCurrentWSID() == IIS_ID ) {
+            if ( this->craplog.getCurrentWSID() == WS_IIS ) {
                 this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
@@ -5418,10 +5418,10 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
             1 ) };
         if ( success ) {
             this->ui->inLine_ConfIis_Format_String->clear();
-            this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( IIS_ID ) ) );
+            this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_IIS ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
-            if ( this->craplog.getCurrentWSID() == IIS_ID ) {
+            if ( this->craplog.getCurrentWSID() == WS_IIS ) {
                 this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
@@ -5436,10 +5436,10 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
             2 ) };
         if ( success ) {
             this->ui->inLine_ConfIis_Format_String->clear();
-            this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( IIS_ID ) ) );
+            this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_IIS ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
-            if ( this->craplog.getCurrentWSID() == IIS_ID ) {
+            if ( this->craplog.getCurrentWSID() == WS_IIS ) {
                 this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
@@ -5469,7 +5469,7 @@ void MainWindow::on_button_ConfIis_Format_Save_clicked()
         this->getIisLogsModule() ) };
     if ( success ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( false );
-        if ( this->craplog.getCurrentWSID() == IIS_ID ) {
+        if ( this->craplog.getCurrentWSID() == WS_IIS ) {
             this->craplog.setCurrentLogFormat();
         }
     }
@@ -5477,7 +5477,7 @@ void MainWindow::on_button_ConfIis_Format_Save_clicked()
 void MainWindow::on_button_ConfIis_Format_Sample_clicked()
 {
     this->ui->preview_ConfIis_Format_Sample->setText(
-        this->craplog.getLogsFormatSample( IIS_ID ) );
+        this->craplog.getLogsFormatSample( WS_IIS ) );
 }
 void MainWindow::on_button_ConfIis_Format_Help_clicked()
 {
@@ -5492,13 +5492,13 @@ void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString&
         this->ui->list_ConfIis_Warnlist_List->clear();
         // update the list
         const std::vector<std::string>& list{ this->craplog.getWarnlist(
-            IIS_ID, this->crapview.getLogFieldID( arg1 ) ) };
+            WS_IIS, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfIis_Warnlist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
         const bool used{ this->craplog.isWarnlistUsed(
-            IIS_ID,
+            WS_IIS,
             this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ) ) };
         this->ui->checkBox_ConfIis_Warnlist_Used->setChecked( used );
         this->on_checkBox_ConfIis_Warnlist_Used_clicked( used );
@@ -5507,7 +5507,7 @@ void MainWindow::on_box_ConfIis_Warnlist_Field_currentTextChanged(const QString&
 void MainWindow::on_checkBox_ConfIis_Warnlist_Used_clicked(bool checked)
 {
     this->craplog.setWarnlistUsed(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
         checked );
     if ( checked ) {
@@ -5549,7 +5549,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Add_clicked()
         // not in the list yet, append
         try {
             this->craplog.warnlistAdd(
-                IIS_ID,
+                WS_IIS,
                 this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfIis_Warnlist_List->addItem( item );
@@ -5597,7 +5597,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Remove_clicked()
 {
     const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     this->craplog.warnlistRemove(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
         item->text().toStdString() );
     // refresh the list
@@ -5607,7 +5607,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Up_clicked()
 {
     const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveUp(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5620,7 +5620,7 @@ void MainWindow::on_button_ConfIis_Warnlist_Down_clicked()
 {
     const auto item{ this->ui->list_ConfIis_Warnlist_List->selectedItems().at(0) };
     const int i{ this->craplog.warnlistMoveDown(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Warnlist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5639,13 +5639,13 @@ void MainWindow::on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString
         this->ui->list_ConfIis_Blacklist_List->clear();
         // update the list
         const std::vector<std::string>& list{ this->craplog.getBlacklist(
-            IIS_ID, this->crapview.getLogFieldID( arg1 ) ) };
+            WS_IIS, this->crapview.getLogFieldID( arg1 ) ) };
         for ( const std::string& item : list ) {
             this->ui->list_ConfIis_Blacklist_List->addItem( QString::fromStdString( item ) );
         }
         // check/uncheck the usage option
         const bool used{ this->craplog.isBlacklistUsed(
-            IIS_ID,
+            WS_IIS,
             this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ) ) };
         this->ui->checkBox_ConfIis_Blacklist_Used->setChecked( used );
         this->on_checkBox_ConfIis_Blacklist_Used_clicked( used );
@@ -5654,7 +5654,7 @@ void MainWindow::on_box_ConfIis_Blacklist_Field_currentTextChanged(const QString
 void MainWindow::on_checkBox_ConfIis_Blacklist_Used_clicked(bool checked)
 {
     this->craplog.setBlacklistUsed(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
         checked );
     if ( checked ) {
@@ -5696,7 +5696,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Add_clicked()
         // not in the list yet, append
         try {
             this->craplog.blacklistAdd(
-                IIS_ID,
+                WS_IIS,
                 this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
                 item.toStdString() );
             this->ui->list_ConfIis_Blacklist_List->addItem( item );
@@ -5744,7 +5744,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Remove_clicked()
 {
     const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     this->craplog.blacklistRemove(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
         item->text().toStdString() );
     // refresh the list
@@ -5754,7 +5754,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Up_clicked()
 {
     const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveUp(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list
@@ -5767,7 +5767,7 @@ void MainWindow::on_button_ConfIis_Blacklist_Down_clicked()
 {
     const auto item{ this->ui->list_ConfIis_Blacklist_List->selectedItems().at(0) };
     const int i{ this->craplog.blacklistMoveDown(
-        IIS_ID,
+        WS_IIS,
         this->crapview.getLogFieldID( this->ui->box_ConfIis_Blacklist_Field->currentText() ),
         item->text().toStdString() ) };
     // refresh the list

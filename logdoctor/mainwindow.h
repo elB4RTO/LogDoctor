@@ -636,7 +636,7 @@ private:
     int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
 
     // default web server
-    unsigned default_ws{ 11 };
+    WebServer default_web_server{ WS_APACHE };
 
 
     //////////////////

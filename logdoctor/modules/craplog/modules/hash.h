@@ -9,6 +9,9 @@
 
 #include <QString>
 
+
+enum class WebServer;
+
 class QSqlQuery;
 
 
@@ -45,7 +48,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the hash is already in the list or not
     */
-    bool hasBeenUsed( const std::string& file_hash, const unsigned& web_server_id ) const noexcept;
+    bool hasBeenUsed( const std::string& file_hash, const WebServer& web_server ) const noexcept;
 
     //! Inserts multiple hashes in the corresponding database table
     /*!
@@ -54,7 +57,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \return Whether the operation has been successful or not
     */
-    bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id );
+    bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server );
 
 private:
 
@@ -62,24 +65,24 @@ private:
     int dialog_level{ 2 };
 
     // List of Web Servers names for database tables
-    const std::unordered_map<unsigned, QString> ws_names{
-        {APACHE_ID, "apache"},
-        {NGINX_ID,  "nginx"},
-        {IIS_ID,    "iis"}
+    const std::unordered_map<WebServer, QString> ws_names{
+        {WS_APACHE, "apache"},
+        {WS_NGINX,  "nginx"},
+        {WS_IIS,    "iis"}
     };
 
     // Lists of used files' hashes
     // { web_server_id : { hashes } }
-    std::unordered_map<unsigned, std::vector<std::string>> hashes{
-        {APACHE_ID, {}},
-        {NGINX_ID,  {}},
-        {IIS_ID,    {}}
+    std::unordered_map<WebServer, std::vector<std::string>> hashes{
+        {WS_APACHE, {}},
+        {WS_NGINX,  {}},
+        {WS_IIS,    {}}
     };
 
 
     // Called by insertUsedHashes()
     // Inserts a hash in the corresponding database table
-    bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id ) noexcept;
+    bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const WebServer& web_server ) noexcept;
 
 };
 

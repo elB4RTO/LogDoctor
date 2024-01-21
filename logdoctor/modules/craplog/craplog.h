@@ -61,15 +61,15 @@ public:
 
     //! Sets the currently used Web Server ID
     /*!
-        \param web_server_id The new currently used Web Server
+        \param web_server The new currently used Web Server
     */
-    void setCurrentWSID( const unsigned web_server_id ) noexcept;
+    void setCurrentWebServer( const WebServer web_server ) noexcept;
 
     //! Returns the currently used Web Server ID
     /*!
         \return The Web Server ID
     */
-    unsigned getCurrentWSID() const noexcept;
+    WebServer getCurrentWSID() const noexcept;
 
     //! Uses the current Web Server to set the relative logs format
     /*!
@@ -90,17 +90,17 @@ public:
 
     //! Returns the logs' path for the given web Server
     /*!
-        \param web_server The ID of the Web Server
+        \param web_server The Web Server
         \return The path of the logs' folder
     */
-    const std::string& getLogsPath( const unsigned& web_server ) const noexcept;
+    const std::string& getLogsPath( const WebServer& web_server ) const noexcept;
 
     //! Sets a new path for the given Web Server to search the logs in
     /*!
-        \param web_server The ID of the Web Server
+        \param web_server The Web Server
         \param new_path The new path
     */
-    void setLogsPath( const unsigned& web_server, const std::string& new_path ) noexcept;
+    void setLogsPath( const WebServer& web_server, const std::string& new_path ) noexcept;
 
 
     ///////////////////
@@ -189,28 +189,28 @@ public:
 
     //! Returns the logs format string for the given Web Server
     /*!
-        \param web_server_id ID of the Web Server
+        \param web_server ID of the Web Server
         \return The format string
         \see FormatOps::LogsFormat
     */
-    const std::string& getLogsFormatString( const unsigned& web_server_id ) const noexcept;
+    const std::string& getLogsFormatString( const WebServer& web_server ) const noexcept;
 
     //! Returns the LogsFormat currently set for the given Web Server
     /*!
-        \param web_server_id ID of the Web Server
+        \param web_server ID of the Web Server
         \return The LogsFormat instance
         \see LogsFormat
     */
-    const LogsFormat& getLogsFormat( const unsigned& web_server_id ) const noexcept;
+    const LogsFormat& getLogsFormat( const WebServer& web_server ) const noexcept;
 
     //! Returns a sample log line for the given Web Server using the relative LogsFormat
     /*!
-        \param web_server_id ID of the Web Server
+        \param web_server ID of the Web Server
         \return The sample of a log line
         \throw WebServerException
         \see FormatOps::getApacheLogSample(), FormatOps::getNginxLogSample(), FormatOps::getIisLogSample()
     */
-    QString getLogsFormatSample( const unsigned& web_server_id ) const;
+    QString getLogsFormatSample( const WebServer& web_server ) const;
 
     //! Checks whether the current Logs Format is valid or not
     bool checkCurrentLogsFormat() const noexcept;
@@ -238,147 +238,147 @@ public:
 
     //! Returns whether the relative blacklist is set to be used or not
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \return Whether the list is used or not
         \see BWlist
     */
-    bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
+    bool isBlacklistUsed( const WebServer& web_server, const int& log_field_id ) const noexcept;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \return Whether the list is used or not
         \see BWlist
     */
-    bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
+    bool isWarnlistUsed( const WebServer& web_server, const int& log_field_id ) const noexcept;
 
     //! Sets the relative blacklist to be used or not
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used ) noexcept;
+    void setBlacklistUsed( const WebServer& web_server, const int& log_field_id, const bool used ) noexcept;
 
     //! Sets the relative warnlist to be used or not
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used ) noexcept;
+    void setWarnlistUsed( const WebServer& web_server, const int& log_field_id, const bool used ) noexcept;
 
     //! Returns the relative items list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \return The list of items in the given blacklist
         \see BWlist
     */
-    const std::vector<std::string>& getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
+    const std::vector<std::string>& getBlacklist( const WebServer& web_server, const int& log_field_id ) const noexcept;
 
     //! Returns the relative items list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \return The list of items in the givenwarnlist
         \see BWlist
     */
-    const std::vector<std::string>& getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
+    const std::vector<std::string>& getWarnlist( const WebServer& web_server, const int& log_field_id ) const noexcept;
 
     //! Sets the relative items list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param new_list The new items list
         \see BWlist
     */
-    void setBlacklist( const unsigned& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
+    void setBlacklist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list );
 
     //! Sets the relative items list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param new_list The new items list
         \see BWlist
     */
-    void setWarnlist( const unsigned& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list );
+    void setWarnlist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list );
 
     //! Adds an item to the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param new_list The new items list
         \see BWlist
     */
-    void blacklistAdd( const unsigned& web_server_id, const int& log_field_id, const std::string& new_item );
+    void blacklistAdd( const WebServer& web_server, const int& log_field_id, const std::string& new_item );
 
     //! Adds an item to the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param new_item The new item to add to the list
         \see BWlist
     */
-    void warnlistAdd( const unsigned& web_server_id, const int& log_field_id, const std::string& new_item );
+    void warnlistAdd( const WebServer& web_server, const int& log_field_id, const std::string& new_item );
 
     //! Removes an item from the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param item The item to remove from the list
         \see BWlist
     */
-    void blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
+    void blacklistRemove( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Removes an item from the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param item The item to remove from the list
         \see BWlist
     */
-    void warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
+    void warnlistRemove( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position up in the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param item The item to move
         \see BWlist
     */
-    int blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
+    int blacklistMoveUp( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position up in the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param item The item to move
         \see BWlist
     */
-    int warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
+    int warnlistMoveUp( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position down in the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param item The item to move
         \see BWlist
     */
-    int blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
+    int blacklistMoveDown( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position down in the relative list
     /*!
-        \param web_server_id The ID of the Web Server
+        \param web_server The Web Server
         \param log_field_id The ID of the log field
         \param item The item to move
         \see BWlist
     */
-    int warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
+    int warnlistMoveDown( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
 
 
     //////////////
@@ -520,9 +520,9 @@ private:
     //////////////////////////////
     //// BLACKLIST / WARNLIST ////
 
-    // { web_server_id : { log_field_id : BWlist } }
-    std::unordered_map<unsigned, std::unordered_map<int, BWlist>> blacklists;
-    std::unordered_map<unsigned, std::unordered_map<int, BWlist>> warnlists;
+    // { web_server : { log_field_id : BWlist } }
+    std::unordered_map<WebServer, std::unordered_map<int, BWlist>> blacklists;
+    std::unordered_map<WebServer, std::unordered_map<int, BWlist>> warnlists;
 
     //! Sanitizes an item removing the unwanted elements
     /*!
@@ -540,9 +540,9 @@ private:
     //// WEB SERVER ////
 
     // currently used web server
-    unsigned current_WS{ APACHE_ID };
+    WebServer current_web_server{ WS_APACHE };
 
-    std::unordered_map<int, std::string> logs_paths;
+    std::unordered_map<WebServer, std::string> logs_paths;
 
     //! Web Server specific file names criterions
     /*!
@@ -555,7 +555,7 @@ private:
         std::string ends;     //!< What should be the final part of the name
     };
 
-    std::unordered_map<unsigned, LogName> logs_base_names;
+    std::unordered_map<WebServer, LogName> logs_base_names;
 
     //! Changes the name criterions for IIS logs files names depending on the given module
     /*!
@@ -578,12 +578,12 @@ private:
 
     FormatOps formatOps;
 
-    std::unordered_map<unsigned, std::string> logs_format_strings;
+    std::unordered_map<WebServer, std::string> logs_format_strings;
 
-    std::unordered_map<unsigned, LogsFormat> logs_formats;
+    std::unordered_map<WebServer, LogsFormat> logs_formats;
 
     // currently used logs format
-    LogsFormat current_LF;
+    LogsFormat current_log_format;
 
 };
 

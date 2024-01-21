@@ -136,9 +136,9 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( const std::string &file_hash, const unsigned& web_server_id) const noexcept
+bool HashOps::hasBeenUsed( const std::string &file_hash, const WebServer& web_server) const noexcept
 {
-    const auto& ws_hashes{ this->hashes.at( web_server_id ) };
+    const auto& ws_hashes{ this->hashes.at( web_server ) };
     return std::any_of(
         ws_hashes.cbegin(), ws_hashes.cend(),
         [&file_hash]( const std::string& hash )
@@ -147,15 +147,15 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const unsigned& web_ser
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id ) noexcept
+bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const WebServer& web_server ) noexcept
 {
     bool successful{ true };
     try {
-        if( ! VecOps::contains<std::string>( this->hashes.at( web_server_id ), hash ) ) {
-            this->hashes.at( web_server_id ).push_back( hash );
+        if( ! VecOps::contains<std::string>( this->hashes.at( web_server ), hash ) ) {
+            this->hashes.at( web_server ).push_back( hash );
             // insert tnto the database
             QString stmt = QString("INSERT INTO %1 ( hash ) VALUES ( '%2' );")
-                .arg( this->ws_names.at(web_server_id), QString::fromStdString(hash).replace("'","''") );
+                .arg( this->ws_names.at(web_server), QString::fromStdString(hash).replace("'","''") );
             if ( ! query.exec( stmt ) ) {
                 // error opening database
                 successful &= false;
@@ -180,7 +180,7 @@ bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const st
 }
 
 
-bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const unsigned& web_server_id )
+bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
 {
     bool successful{ true };
 
@@ -218,7 +218,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
 
             try {
                 for ( const std::string& hash : hashes ) {
-                    successful = this->insertUsedHash( query, db_name, hash, web_server_id );
+                    successful = this->insertUsedHash( query, db_name, hash, web_server );
                     if ( ! successful ) {
                         break;
                     }

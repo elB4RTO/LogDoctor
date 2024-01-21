@@ -19,9 +19,9 @@
 #include <QSqlError>
 
 
-CraplogParser::CraplogParser( const unsigned web_server_id, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
+CraplogParser::CraplogParser( const WebServer web_server, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
     : QObject        { parent         }
-    , wsID           { web_server_id  }
+    , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
     , db_data_path   { db_data_path   }
     , db_hashes_path { db_hashes_path }
@@ -152,7 +152,7 @@ void CraplogParser::joinLogLines()
             this->total_lines += content.size();
             this->total_size  += aux.size();
 
-            if ( this->wsID == IIS_ID ) {
+            if ( this->web_server == WS_IIS ) {
                 cleanLines( content );
             }
 
@@ -357,7 +357,7 @@ void CraplogParser::storeLogLines()
 #define APPEND_TO_QUERY_USER_AGENT(LOG_FIELD)\
     query_stmt += QStringLiteral(", ");\
     if ( LOG_FIELD ) {\
-        if ( this->wsID == IIS_ID ) {\
+        if ( this->web_server == WS_IIS ) {\
             query_stmt += QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace("+"," ").replace("'","''") );\
         } else {\
             query_stmt += QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace("'","''") );\
@@ -402,19 +402,19 @@ bool CraplogParser::storeData( QSqlDatabase& db )
 
     // prepare the database related studd
     QString table;
-    switch ( this->wsID ) {
-        case APACHE_ID:
+    switch ( this->web_server ) {
+        case WS_APACHE:
             table += "apache";
             break;
-        case NGINX_ID:
+        case WS_NGINX:
             table += "nginx";
             break;
-        case IIS_ID:
+        case WS_IIS:
             table += "iis";
             break;
         default:
             // wrong WebServerID, but should be unreachable because of the previous operations
-            throw WebServerException( "Unexpected WebServerID: " + std::to_string(this->wsID) );
+            throw WebServerException( "Unexpected WebServer: " + toString(this->web_server) );
     }
 
 

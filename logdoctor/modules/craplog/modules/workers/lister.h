@@ -8,6 +8,7 @@ struct LogsFormat;
 struct LogFile;
 class HashOps;
 
+enum class WebServer;
 enum class WorkerDialog;
 
 
@@ -18,7 +19,7 @@ class CraplogLister final : public QObject
 public:
 
     explicit CraplogLister(
-        const unsigned web_server_id,
+        const WebServer web_server,
         const unsigned dialogs_level,
         const std::string& logs_path,
         const LogsFormat& logs_format,
@@ -45,7 +46,7 @@ public slots:
 
 private:
 
-    const unsigned wsID;
+    const WebServer web_server;
 
     const unsigned dialogs_level;
 
