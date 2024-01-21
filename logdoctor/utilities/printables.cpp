@@ -149,11 +149,9 @@ QString printableDate( const int year, const int month, const int day ) noexcept
 
 QString printableBool( const int value ) noexcept
 {
-    if ( value == 0 ) {
-        return TR::tr( BOOLS__FALSE.c_str() );
-    } else {
-        return TR::tr( BOOLS__TRUE.c_str() );
-    }
+    return value == 0
+         ? TR::tr( BOOLS__FALSE.c_str() )
+         : TR::tr( BOOLS__TRUE.c_str()  );
 }
 
 } // namespace PrintSec

@@ -23,9 +23,9 @@ void DbQuery::setDialogLevel(const int new_level ) noexcept
     this->dialog_level = new_level;
 }
 
-void DbQuery::setDbPath( const std::string& path ) noexcept
+void DbQuery::setDbPath( std::string&& path ) noexcept
 {
-    this->db_path = path;
+    this->db_path = std::move(path);
     this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1ul ) );
 }
 

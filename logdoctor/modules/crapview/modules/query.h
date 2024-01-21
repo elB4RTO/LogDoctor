@@ -24,25 +24,25 @@ public:
 
     // convert log fields IDs to log fields
     const std::unordered_map<int, std::string> FIELDS{
-            {0, FIELDS__WARNING},
-            {10,FIELDS__PROTOCOL},   {11,FIELDS__METHOD},
-            {12,FIELDS__URI},        {13,FIELDS__QUERY},      {14,FIELDS__RESPONSE_CODE},
-            {15,FIELDS__TIME_TAKEN}, {16,FIELDS__BYTES_SENT}, {17,FIELDS__BYTES_RECEIVED},
-            {18,FIELDS__REFERRER},   {22,FIELDS__COOKIE},
-            {20,FIELDS__CLIENT},     {21,FIELDS__USER_AGENT} };
+        {0, FIELDS__WARNING},
+        {10,FIELDS__PROTOCOL},   {11,FIELDS__METHOD},
+        {12,FIELDS__URI},        {13,FIELDS__QUERY},      {14,FIELDS__RESPONSE_CODE},
+        {15,FIELDS__TIME_TAKEN}, {16,FIELDS__BYTES_SENT}, {17,FIELDS__BYTES_RECEIVED},
+        {18,FIELDS__REFERRER},   {22,FIELDS__COOKIE},
+        {20,FIELDS__CLIENT},     {21,FIELDS__USER_AGENT} };
 
     // convert month numbers to month names
     const std::unordered_map<int, std::string> MONTHS{
-            {1, MONTHS__JANUARY},  {2, MONTHS__FEBRUARY},  {3, MONTHS__MARCH},
-            {4, MONTHS__APRIL},    {5, MONTHS__MAY},       {6, MONTHS__JUNE},
-            {7, MONTHS__JULY},     {8, MONTHS__AUGUST},    {9, MONTHS__SEPTEMBER},
-            {10,MONTHS__OCTOBER},  {11,MONTHS__NOVEMBER},  {12,MONTHS__DECEMBER} };
+        {1, MONTHS__JANUARY},  {2, MONTHS__FEBRUARY},  {3, MONTHS__MARCH},
+        {4, MONTHS__APRIL},    {5, MONTHS__MAY},       {6, MONTHS__JUNE},
+        {7, MONTHS__JULY},     {8, MONTHS__AUGUST},    {9, MONTHS__SEPTEMBER},
+        {10,MONTHS__OCTOBER},  {11,MONTHS__NOVEMBER},  {12,MONTHS__DECEMBER} };
 
     // convert week-day numbers to day names
     const std::unordered_map<int, std::string> DAYS{
-            {1, DAYS__SUNDAY},    {2, DAYS__MONDAY},   {3, DAYS__TUESDAY},
-            {4, DAYS__WEDNESDAY}, {5, DAYS__THURSDAY}, {6, DAYS__FRIDAY},
-            {7, DAYS__SATURDAY} };
+        {1, DAYS__SUNDAY},    {2, DAYS__MONDAY},   {3, DAYS__TUESDAY},
+        {4, DAYS__WEDNESDAY}, {5, DAYS__THURSDAY}, {6, DAYS__FRIDAY},
+        {7, DAYS__SATURDAY} };
 
 
     //! Returns the Dialogs level
@@ -53,7 +53,7 @@ public:
     /*!
         \see Crapview::setDbPath()
     */
-    void setDbPath( const std::string& path ) noexcept;
+    void setDbPath( std::string&& path ) noexcept;
 
     /*const std::string getDbPath( const int web_server );*/
 
