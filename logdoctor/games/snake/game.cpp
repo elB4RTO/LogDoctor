@@ -51,41 +51,36 @@ void SnakeGame::closeEvent( QCloseEvent* event )
 void SnakeGame::keyPressEvent( QKeyEvent* event ) noexcept
 {
     // store the key pressed if needed
-    if ( this->playing ) {
-        switch ( event->key() ) {
-            case Qt::Key_Up:
-            case Qt::Key_W:
-                if ( this->key_events.empty() ) {
-                    this->key_events.push( 0 );
-                } else if ( this->key_events.back() != 0 ) {
-                    this->key_events.push( 0 );
-                }
-                break;
-            case Qt::Key_Down:
-            case Qt::Key_S:
-                if ( this->key_events.empty() ) {
-                    this->key_events.push( 1 );
-                } else if ( this->key_events.back() != 1 ) {
-                    this->key_events.push( 1 );
-                }
-                break;
-            case Qt::Key_Left:
-            case Qt::Key_A:
-                if ( this->key_events.empty() ) {
-                    this->key_events.push( 2 );
-                } else if ( this->key_events.back() != 2 ) {
-                    this->key_events.push( 2 );
-                }
-                break;
-            case Qt::Key_Right:
-            case Qt::Key_D:
-                if ( this->key_events.empty() ) {
-                    this->key_events.push( 3 );
-                } else if ( this->key_events.back() != 3 ) {
-                    this->key_events.push( 3 );
-                }
-                break;
-        }
+    if ( ! this->playing ) {
+        return;
+    }
+    switch ( event->key() ) {
+        case Qt::Key_Up:
+        case Qt::Key_W:
+            if ( this->key_events.empty() || this->key_events.back() != Direction::UP ) {
+                this->key_events.push( Direction::UP );
+            }
+            break;
+        case Qt::Key_Down:
+        case Qt::Key_S:
+            if ( this->key_events.empty() || this->key_events.back() != Direction::DOWN ) {
+                this->key_events.push( Direction::DOWN );
+            }
+            break;
+        case Qt::Key_Left:
+        case Qt::Key_A:
+            if ( this->key_events.empty() || this->key_events.back() != Direction::LEFT ) {
+                this->key_events.push( Direction::LEFT );
+            }
+            break;
+        case Qt::Key_Right:
+        case Qt::Key_D:
+            if ( this->key_events.empty() || this->key_events.back() != Direction::RIGHT ) {
+                this->key_events.push( Direction::RIGHT );
+            }
+            break;
+        default:
+            return;
     }
 }
 
@@ -136,19 +131,16 @@ void SnakeGame::newSnake()
     }
 
     // snake initial direction
-    const unsigned short rand_d{ static_cast<unsigned short>( rand()%4 ) };
+    const Direction rand_d{ static_cast<Direction>( rand()%4 ) };
     switch ( rand_d ) {
-        case 0:
-            this->snake.setDirection( Direction::UP );
-            break;
-        case 1:
-            this->snake.setDirection( Direction::DOWN );
-            break;
-        case 2:
-            this->snake.setDirection( Direction::LEFT );
-            break;
-        case 3:
-            this->snake.setDirection( Direction::RIGHT );
+        case Direction::UP:
+            [[fallthrough]];
+        case Direction::DOWN:
+            [[fallthrough]];
+        case Direction::LEFT:
+            [[fallthrough]];
+        case Direction::RIGHT:
+            this->snake.setDirection( rand_d );
             break;
         default:
             // should be unreachable
@@ -157,10 +149,10 @@ void SnakeGame::newSnake()
     this->key_events.push( rand_d );
 
     // build the body with a head
-    this->snake.push_back(
-        { head_x, head_y,
-          this->snake.direction(), this->snake.direction(),
-          new QGraphicsPixmapItem( this->snake.getHeadImage() ) }
+    this->snake.emplace_back(
+        head_x, head_y,
+        this->snake.direction(), this->snake.direction(),
+        new QGraphicsPixmapItem( this->snake.getHeadImage() )
     );
     this->field_scene->addItem( this->snake.front().image );
     this->snake.front().update( head_x, head_y, this->snake.direction() );
@@ -204,10 +196,10 @@ void SnakeGame::newSnake_()
     }
 
     // build the body with a head
-    this->snake_.push_back(
-        { head_x, head_y,
-          this->snake_.direction(), this->snake_.direction(),
-          new QGraphicsPixmapItem( this->snake_.getHeadImage() ) }
+    this->snake_.emplace_back(
+        head_x, head_y,
+        this->snake_.direction(), this->snake_.direction(),
+        new QGraphicsPixmapItem( this->snake_.getHeadImage() )
     );
     this->field_scene->addItem( this->snake_.front().image );
     this->snake_.front().update( head_x, head_y, this->snake_.direction() );
@@ -219,7 +211,7 @@ void SnakeGame::newSnake_()
     this->snake_.update( this->field_scene.get(), true, true );
 }
 
-void SnakeGame::newFood( const bool& movable ) noexcept
+void SnakeGame::newFood( const bool movable ) noexcept
 {
     // put some food on the field for it to eat
     this->food = Food( movable );
@@ -287,22 +279,22 @@ void SnakeGame::processNextKeyEvent() noexcept
 {
     // update direction if needed
     switch ( this->key_events.front() ) {
-        case 0: // up
+        case Direction::UP:
             if ( this->snake.direction() != Direction::DOWN ) {
                 this->snake.setDirection( Direction::UP );
             }
             break;
-        case 1: // down
+        case Direction::DOWN:
             if ( this->snake.direction() != Direction::UP ) {
                 this->snake.setDirection( Direction::DOWN );
             }
             break;
-        case 2: // left
+        case Direction::LEFT:
             if ( this->snake.direction() != Direction::RIGHT ) {
                 this->snake.setDirection( Direction::LEFT );
             }
             break;
-        case 3: // right
+        case Direction::RIGHT:
             if ( this->snake.direction() != Direction::LEFT ) {
                 this->snake.setDirection( Direction::RIGHT );
             }

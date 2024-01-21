@@ -58,7 +58,7 @@ private:
     void keyPressEvent( QKeyEvent* event ) noexcept override;
 
     //! Stores the key events
-    std::queue<unsigned short> key_events;
+    std::queue<Direction> key_events;
 
     //! Processes the key events in the queue
     /*!
@@ -119,7 +119,7 @@ private:
 
     //! Instance of the egg/rat which will be eat by the snake
     Food food;
-    void newFood( const bool& movable ) noexcept;
+    void newFood( const bool movable ) noexcept;
 
     bool spawn_food{ false };
 

@@ -12,8 +12,9 @@ class Food final
 {
 public:
     explicit Food( const bool can_move=false );
-    explicit Food( const Food& other );
-    const Food& operator=( const Food& other );
+    explicit Food( Food&& other ) noexcept;
+    Food& operator=( Food&& other ) noexcept;
+    Q_DISABLE_COPY(Food)
 
     //! Returns the position on the X-axis
     unsigned X() const noexcept;
@@ -43,7 +44,7 @@ private:
     const QPixmap img_rat{ ":/games/games/snake/rat.png" };
 
     //!< The image which graphically represents the food
-    QGraphicsPixmapItem* image = nullptr;
+    QGraphicsPixmapItem* image = nullptr; // QGraphicsScene takes ownerhips of it
 
     //!< Whether the food is a rat or an egg
     bool movable;

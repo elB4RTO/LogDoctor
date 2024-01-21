@@ -4,7 +4,35 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 
+BodyPart::BodyPart( const unsigned x, const unsigned y, const Direction d, const Direction pd, QGraphicsPixmapItem*const img ) noexcept
+    : x{ x }
+    , y{ y }
+    , direction{ d }
+    , prev_direction{ pd }
+    , image{ img }
+{
 
+}
+BodyPart::BodyPart( BodyPart&& other ) noexcept
+    : x{ other.x }
+    , y{ other.y }
+    , direction{ other.direction }
+    , prev_direction{ other.prev_direction }
+    , image{ other.image }
+{
+    other.image = nullptr;
+}
+BodyPart& BodyPart::operator=( BodyPart&& other ) noexcept
+{
+    if ( this == &other ) return *this;
+    this->x = other.x;
+    this->y = other.y;
+    this->direction = other.direction;
+    this->prev_direction = other.prev_direction;
+    this->image = other.image;
+    other.image = nullptr;
+    return *this;
+}
 void BodyPart::update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) noexcept {
     this->x = new_x;
     this->y = new_y;
@@ -97,10 +125,10 @@ void Snake::grow( const bool is_borning )
                 throw("Unexpected direction: "+std::to_string(d));
         }
     }
-    this->push_back(
-        { x, y,
-          d, ld,
-          new QGraphicsPixmapItem( (this->adversary) ? this->img_snakeTail_ : this->img_snakeTail ) }
+    this->emplace_back(
+        x, y,
+        d, ld,
+        new QGraphicsPixmapItem( (this->adversary) ? this->img_snakeTail_ : this->img_snakeTail )
     );
     this->update( nullptr, true );
     this->back().update( x, y, d );

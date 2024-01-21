@@ -13,20 +13,22 @@ Food::Food( const bool can_move )
     , y{ 0 }
 {
 }
-Food::Food( const Food& other )
-    : image{ new QGraphicsPixmapItem( (other.movable) ? this->img_rat : this->img_egg ) }
+Food::Food( Food&& other ) noexcept
+    : image{ other.image }
     , movable{ other.movable }
     , x{ other.x }
     , y{ other.y }
 {
+    other.image = nullptr;
 }
-const Food& Food::operator=( const Food& other )
+Food& Food::operator=( Food&& other ) noexcept
 {
-    if ( this == &other ) return other;
+    if ( this == &other ) return *this;
     this->x = other.x;
     this->y = other.y;
     this->movable = other.movable;
-    this->image = new QGraphicsPixmapItem( (this->movable) ? this->img_rat : this->img_egg );
+    this->image = other.image;
+    other.image = nullptr;
     return *this;
 }
 
@@ -47,13 +49,9 @@ QGraphicsPixmapItem* Food::getImageItem() const noexcept
 }
 
 
-bool Food::inTile(  const unsigned x, const unsigned y  ) const noexcept
+bool Food::inTile( const unsigned x, const unsigned y  ) const noexcept
 {
-    if ( this->x == x && this->y == y ) {
-        return true;
-    } else {
-        return false;
-    }
+    return this->x == x && this->y == y;
 }
 
 

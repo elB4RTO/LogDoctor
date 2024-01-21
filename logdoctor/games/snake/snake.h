@@ -12,7 +12,7 @@ class QGraphicsScene;
 
 
 //! Enumerates the possible directions
-enum Direction {
+enum Direction : uint8_t {
     UP,   //!< Up
     DOWN, //!< Down
     LEFT, //!< Left
@@ -22,6 +22,11 @@ enum Direction {
 
 //! Instance of a part of the body of the snake
 struct BodyPart final {
+    explicit BodyPart( const unsigned x, const unsigned y, const Direction d, const Direction pd, QGraphicsPixmapItem*const img ) noexcept;
+    explicit BodyPart( BodyPart&& other ) noexcept;
+    BodyPart& operator=( BodyPart&& other ) noexcept;
+    Q_DISABLE_COPY(BodyPart)
+    // QGraphicsScene takes ownerhips of the image
     unsigned x;                 //!< The position on the X-axis
     unsigned y;                 //!< The position on the Y-axis
     Direction direction;        //!< The current direction of the part
