@@ -485,11 +485,6 @@ private:
 
     //! Hires a worker to parse the selected logs
     void hireWorker() const;
-    //! Hires a worker to parse the selected logs, asynchronously
-    void hireAsyncWorker() const;
-
-    //! Defines whether it's worth it working async or not
-    bool shouldWorkAsync() const;
 
 
     //////////////////////
