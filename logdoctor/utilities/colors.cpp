@@ -14,7 +14,7 @@
 namespace ColorSec
 {
 
-std::unordered_map<std::string, QColor> getColors()
+std::unordered_map<std::string, QColor> getColors() noexcept
 {
     return {
         // greyscale
@@ -31,7 +31,7 @@ std::unordered_map<std::string, QColor> getColors()
 }
 
 
-std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes()
+std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes() noexcept
 {
     return {
         // none

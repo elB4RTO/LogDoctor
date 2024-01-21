@@ -48,14 +48,14 @@ void SnakeGame::closeEvent( QCloseEvent* event )
 }
 
 
-void SnakeGame::keyPressEvent( QKeyEvent* event )
+void SnakeGame::keyPressEvent( QKeyEvent* event ) noexcept
 {
     // store the key pressed if needed
     if ( this->playing ) {
         switch ( event->key() ) {
             case Qt::Key_Up:
             case Qt::Key_W:
-                if ( this->key_events.empty() ) { // leave me here
+                if ( this->key_events.empty() ) {
                     this->key_events.push( 0 );
                 } else if ( this->key_events.back() != 0 ) {
                     this->key_events.push( 0 );
@@ -219,7 +219,7 @@ void SnakeGame::newSnake_()
     this->snake_.update( this->field_scene.get(), true, true );
 }
 
-void SnakeGame::newFood( const bool& movable )
+void SnakeGame::newFood( const bool& movable ) noexcept
 {
     // put some food on the field for it to eat
     this->food = Food( movable );
@@ -283,7 +283,7 @@ void SnakeGame::processGameLogic()
 }
 
 
-void SnakeGame::processNextKeyEvent()
+void SnakeGame::processNextKeyEvent() noexcept
 {
     // update direction if needed
     switch ( this->key_events.front() ) {

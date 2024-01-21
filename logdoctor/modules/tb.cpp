@@ -3,60 +3,60 @@
 
 
 // getters
-bool TextBrowser::getWideLinesUsage() const
+bool TextBrowser::getWideLinesUsage() const noexcept
 {
     return this->wide_lines;
 }
 
-int TextBrowser::getColorSchemeID() const
+int TextBrowser::getColorSchemeID() const noexcept
 {
     return this->color_scheme_id;
 }
 
-const std::unordered_map<std::string, QString>& TextBrowser::getColorScheme() const
+const std::unordered_map<std::string, QString>& TextBrowser::getColorScheme() const noexcept
 {
     return this->color_scheme;
 }
 
-/*const int& TextBrowser::getFontSize()
+/*const int& TextBrowser::getFontSize() noexcept
 {
     return this->font_size;
 }*/
 
-const QString& TextBrowser::getFontFamily() const
+const QString& TextBrowser::getFontFamily() const noexcept
 {
     return this->font_family;
 }
 
-const QFont& TextBrowser::getFont() const
+const QFont& TextBrowser::getFont() const noexcept
 {
     return this->font;
 }
 
 
 // setters
-void TextBrowser::setWideLinesUsage( const bool& use_wide_lines )
+void TextBrowser::setWideLinesUsage( const bool& use_wide_lines ) noexcept
 {
     this->wide_lines = use_wide_lines;
 }
 
-void TextBrowser::setColorScheme( const int& color_scheme_id, const std::unordered_map<std::string, QString>& color_scheme )
+void TextBrowser::setColorScheme( const int& color_scheme_id, const std::unordered_map<std::string, QString>& color_scheme ) noexcept
 {
     this->color_scheme_id = color_scheme_id;
     this->color_scheme = color_scheme;
 }
 
-/*void TextBrowser::setFontSize( const int& font_size )
+/*void TextBrowser::setFontSize( const int& font_size ) noexcept
 {
     this->font_size = font_size;
 }
 
-void TextBrowser::setFontFamily( const QString& font_family )
+void TextBrowser::setFontFamily( const QString& font_family ) noexcept
 {
     this->font_family = font_family;
 }*/
 
-void TextBrowser::setFont( const QFont& font )
+void TextBrowser::setFont( const QFont& font ) noexcept
 {
     this->font = font;
     this->font_family = font.family();
@@ -64,7 +64,7 @@ void TextBrowser::setFont( const QFont& font )
 
 
 // preview
-void TextBrowser::makePreview( QString& content ) const
+void TextBrowser::makePreview( QString& content ) const noexcept
 {
     content += QString("<!DOCTYPE html><html><head></head><body");
     if ( this->color_scheme_id > 0 ) {

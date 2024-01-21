@@ -14,7 +14,7 @@ namespace CharOps
     \param chr The target character
     \return The result of the check
 */
-inline bool isNumeric( const char& chr )
+inline bool isNumeric( const char& chr ) noexcept
 {
     return chr > 47 && chr < 58; // 0-9
 }
@@ -24,7 +24,7 @@ inline bool isNumeric( const char& chr )
     \param chr The target character
     \return The result of the check
 */
-inline bool isAlphabetic( const char& chr )
+inline bool isAlphabetic( const char& chr ) noexcept
 {
     return (chr > 96 && chr < 123)  // a-z
         || (chr > 64 && chr <  91); // A-Z
@@ -35,7 +35,7 @@ inline bool isAlphabetic( const char& chr )
     \param chr The target character
     \return The result of the check
 */
-inline bool isAlnum( const char& chr )
+inline bool isAlnum( const char& chr ) noexcept
 {
     return isAlphabetic( chr )
         || isNumeric( chr );
@@ -46,7 +46,7 @@ inline bool isAlnum( const char& chr )
     \param chr The target character
     \return The result of the check
 */
-inline bool isHex( const char& chr )
+inline bool isHex( const char& chr ) noexcept
 {
     return (chr > 47 && chr < 58)   // 0-9
         || (chr > 64 && chr < 71)   // A-F
@@ -58,7 +58,7 @@ inline bool isHex( const char& chr )
     \param chr The target character
     \return The result of the check
 */
-inline bool isIP( const char& chr )
+inline bool isIP( const char& chr ) noexcept
 {
     return chr == 46 // .
         || chr == 58 // :

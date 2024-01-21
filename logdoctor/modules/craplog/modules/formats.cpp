@@ -575,7 +575,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
 
 }
 // sample
-QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const
+QString FormatOps::getApacheLogSample( const LogsFormat& log_format ) const noexcept
 {
     QString sample;
     const auto& map{ this->APACHE_ALF_SAMPLES };
@@ -676,7 +676,7 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
         countNewLines( initial, final, separators ) );
 }
 // sample
-QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const
+QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const noexcept
 {
     QString sample;
     const auto& map{ this->NGINX_ALF_SAMPLES };
@@ -770,7 +770,7 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
         f_str, initial, final, separators, fields, 0 );
 }
 // sample
-QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const
+QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const noexcept
 {
     QString sample;
     const auto& map{ this->IIS_ALF_SAMPLES };

@@ -8,29 +8,29 @@
 #include <QTableWidget>
 
 
-int Crapview::getDialogsLevel() const
+int Crapview::getDialogsLevel() const noexcept
 {
     return this->dialogs_level;
 }
-void Crapview::setDialogsLevel( const int new_level )
+void Crapview::setDialogsLevel( const int new_level ) noexcept
 {
     this->dialogs_level = new_level;
 }
 
 
-void Crapview::setDbPath( const std::string& path )
+void Crapview::setDbPath( const std::string& path ) noexcept
 {
     this->dbQuery.setDbPath( path + "/collection.db" );
 }
 
 
 
-QString Crapview::getLogFieldString ( const size_t field_id ) const
+QString Crapview::getLogFieldString ( const size_t field_id ) const noexcept
 {
     return TR::tr( this->dbQuery.FIELDS.at( field_id ).c_str() );
 }
 
-int Crapview::getLogFieldID ( const QString& field_str ) const
+int Crapview::getLogFieldID ( const QString& field_str ) const noexcept
 {
     int f{ 0 };
     for ( const auto& [id,str] : this->dbQuery.FIELDS ) {
@@ -43,7 +43,7 @@ int Crapview::getLogFieldID ( const QString& field_str ) const
 }
 
 
-int Crapview::getMonthNumber( const QString& month_str ) const
+int Crapview::getMonthNumber( const QString& month_str ) const noexcept
 {
     int m{ 0 };
     for ( const auto& [num,str] : this->dbQuery.MONTHS ) {
@@ -67,12 +67,12 @@ void Crapview::refreshDates()
         this->dates = std::move( result.value() );
     }
 }
-void Crapview::clearDates()
+void Crapview::clearDates() noexcept
 {
     this->dates.clear();
 }
 
-QStringList Crapview::getYears( const QString& web_server ) const
+QStringList Crapview::getYears( const QString& web_server ) const noexcept
 {
     QStringList years;
     if ( ! this->dates.empty() ) {
@@ -86,7 +86,7 @@ QStringList Crapview::getYears( const QString& web_server ) const
     }
     return years;
 }
-QStringList Crapview::getMonths( const QString& web_server, const QString& year ) const
+QStringList Crapview::getMonths( const QString& web_server, const QString& year ) const noexcept
 {
     QStringList months;
     if ( ! this->dates.empty() ) {
@@ -104,7 +104,7 @@ QStringList Crapview::getMonths( const QString& web_server, const QString& year 
     }
     return months;
 }
-QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month ) const
+QStringList Crapview::getDays( const QString& web_server, const QString& year, const QString& month ) const noexcept
 {
     QStringList days;
     if ( ! this->dates.empty() ) {
@@ -124,12 +124,12 @@ QStringList Crapview::getDays( const QString& web_server, const QString& year, c
     }
     return days;
 }
-QStringList Crapview::getHours() const
+QStringList Crapview::getHours() const noexcept
 {
     return QStringList{"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};
 }
 
-QStringList Crapview::getFields( const std::string& tab ) const
+QStringList Crapview::getFields( const std::string& tab ) const noexcept
 {
     QStringList list;
     const auto& f{ this->fields.at( tab ) };

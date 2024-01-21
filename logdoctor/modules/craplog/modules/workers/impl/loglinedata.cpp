@@ -274,7 +274,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
     }
 }
 
-void LogLineData::storeUriQuery(std::string&& str)
+void LogLineData::storeUriQuery(std::string&& str) noexcept
 {
     if ( ! str.empty() ) {
         if ( const auto pos{ str.find( '?' ) }; pos != std::string::npos ) {
@@ -286,7 +286,7 @@ void LogLineData::storeUriQuery(std::string&& str)
     }
 }
 
-void LogLineData::storeMalformedRequestOneSpace(std::string&& str)
+void LogLineData::storeMalformedRequestOneSpace(std::string&& str) noexcept
 {
     const size_t pos{ str.find( ' ' ) };
     std::string field1{ str.substr( 0ul, pos ) },
@@ -351,7 +351,7 @@ void LogLineData::storeMalformedRequestOneSpace(std::string&& str)
     }
 }
 
-void LogLineData::storeMalformedRequestMultiSpace(std::string&& str)
+void LogLineData::storeMalformedRequestMultiSpace(std::string&& str) noexcept
 {
     const size_t pos1{ str.find( ' ' ) },
                  pos2{ str.rfind( ' ' ) };
@@ -510,7 +510,7 @@ void LogLineData::storeMalformedRequestMultiSpace(std::string&& str)
     }
 }
 
-size_t LogLineData::size() const
+size_t LogLineData::size() const noexcept
 {
     return this->year
          + this->month

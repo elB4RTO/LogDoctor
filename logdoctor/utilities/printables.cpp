@@ -9,7 +9,7 @@
 namespace PrintSec
 {
 
-QString printableSize( const size_t bytes )
+QString printableSize( const size_t bytes ) noexcept
 {
     std::string size_sfx{" B"};
     double size{ static_cast<double>(bytes) };
@@ -48,7 +48,7 @@ QString printableSize( const size_t bytes )
 }
 
 
-QString printableSpeed( const double bytes, const double secs_ )
+QString printableSpeed( const double bytes, const double secs_ ) noexcept
 {
     std::string speed_sfx{" B/s"};
     const double secs{ ( secs_ > 0.0 ) ? secs_ : ( secs_ < 0.0 ) ? -secs_ : 0.1 };
@@ -88,7 +88,7 @@ QString printableSpeed( const double bytes, const double secs_ )
 }
 
 
-QString printableTime( const unsigned seconds )
+QString printableTime( const unsigned seconds ) noexcept
 {
     const unsigned mins{ seconds / 60u };
     const unsigned secs{ seconds - (mins*60u) };
@@ -103,7 +103,7 @@ QString printableTime( const unsigned seconds )
 }
 
 
-QString printableTime( const int hour, const int minute, const int second )
+QString printableTime( const int hour, const int minute, const int second ) noexcept
 {
     return QString("%1:%2:%3").arg(
         (hour<10)
@@ -119,7 +119,7 @@ QString printableTime( const int hour, const int minute, const int second )
 }
 
 
-QString printableDate( const QString& year, const int month, const QString& day )
+QString printableDate( const QString& year, const int month, const QString& day ) noexcept
 {
     return QString("%1-%2-%3").arg(
         year,
@@ -133,7 +133,7 @@ QString printableDate( const QString& year, const int month, const QString& day 
 }
 
 
-QString printableDate( const int year, const int month, const int day )
+QString printableDate( const int year, const int month, const int day ) noexcept
 {
     return QString("%1-%2-%3").arg(
         QString::number( year ),
@@ -147,7 +147,7 @@ QString printableDate( const int year, const int month, const int day )
 }
 
 
-QString printableBool( const int value )
+QString printableBool( const int value ) noexcept
 {
     if ( value == 0 ) {
         return TR::tr( BOOLS__FALSE.c_str() );

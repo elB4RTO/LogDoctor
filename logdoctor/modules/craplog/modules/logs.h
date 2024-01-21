@@ -22,7 +22,7 @@ namespace LogOps
 LogType defineFileType(
     const std::vector<std::string>& lines,
     const LogsFormat& format
-);
+) noexcept;
 
 } // namespace LogOps
 

@@ -181,7 +181,7 @@ void CrissCross::nextTurn()
 }
 
 
-bool CrissCross::checkVictory()
+bool CrissCross::checkVictory() noexcept
 {
     bool result{ false };
     unsigned streak;
@@ -206,7 +206,7 @@ bool CrissCross::checkVictory()
     return result;
 }
 
-void CrissCross::victory()
+void CrissCross::victory() noexcept
 {
     // disable all buttons except the victory sequence ones
     bool disable{ true };
@@ -246,7 +246,7 @@ void CrissCross::victory()
 }
 
 
-bool CrissCross::gameDraw() const
+bool CrissCross::gameDraw() const noexcept
 {
     bool result{ false };
     unsigned empty_tiles{ 9 };
@@ -262,7 +262,7 @@ bool CrissCross::gameDraw() const
     return result;
 }
 
-void CrissCross::draw()
+void CrissCross::draw() noexcept
 {
     // disable all buttons
     for ( const auto& button : this->board_buttons ) {
@@ -281,13 +281,13 @@ void CrissCross::draw()
 
 ////////////
 //// AI ////
-void CrissCross::AI_playTurn()
+void CrissCross::AI_playTurn() noexcept
 {
     this->AI_updateWeights();
     emit this->board_buttons[ this->AI_makeChoice() ]->clicked();
 }
 
-void CrissCross::AI_updateWeights()
+void CrissCross::AI_updateWeights() noexcept
 {
     // reset the weights
     for ( size_t i{0ul}; i<9ul; ++i ) {
@@ -322,7 +322,7 @@ void CrissCross::AI_updateWeights()
     }
 }
 
-unsigned CrissCross::AI_makeChoice() const
+unsigned CrissCross::AI_makeChoice() const noexcept
 {
     // get a list of the heaviest tiles
     std::vector<unsigned> moves;

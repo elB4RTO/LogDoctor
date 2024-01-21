@@ -31,23 +31,23 @@ const Food& Food::operator=( const Food& other )
 }
 
 
-unsigned Food::X() const
+unsigned Food::X() const noexcept
 {
     return this->x;
 }
-unsigned Food::Y() const
+unsigned Food::Y() const noexcept
 {
     return this->y;
 }
 
 
-QGraphicsPixmapItem* Food::getImageItem() const
+QGraphicsPixmapItem* Food::getImageItem() const noexcept
 {
     return this->image;
 }
 
 
-bool Food::inTile(  const unsigned x, const unsigned y  ) const
+bool Food::inTile(  const unsigned x, const unsigned y  ) const noexcept
 {
     if ( this->x == x && this->y == y ) {
         return true;
@@ -57,7 +57,7 @@ bool Food::inTile(  const unsigned x, const unsigned y  ) const
 }
 
 
-void Food::update( const unsigned new_x, const unsigned new_y )
+void Food::update( const unsigned new_x, const unsigned new_y ) noexcept
 {
     this->x = new_x;
     this->y = new_y;
@@ -65,7 +65,7 @@ void Food::update( const unsigned new_x, const unsigned new_y )
 }
 
 
-void Food::spawn( const Snake& snake, const Snake& snake_ )
+void Food::spawn( const Snake& snake, const Snake& snake_ ) noexcept
 {
     // pick a new random position
     unsigned new_x, new_y;

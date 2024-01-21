@@ -18,12 +18,12 @@
 #include <vector>
 
 
-void DbQuery::setDialogLevel(const int new_level )
+void DbQuery::setDialogLevel(const int new_level ) noexcept
 {
     this->dialog_level = new_level;
 }
 
-void DbQuery::setDbPath( const std::string& path )
+void DbQuery::setDbPath( const std::string& path ) noexcept
 {
     this->db_path = path;
     this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1ul ) );
@@ -72,7 +72,7 @@ int DbQuery::getMonthDays( const int year, const int month )
 }
 
 
-int DbQuery::getMonthNumber( const QString& month_str ) const
+int DbQuery::getMonthNumber( const QString& month_str ) const noexcept
 {
     int m{ 0 };
     for ( const auto& [num,str] : this->MONTHS ) {
@@ -121,7 +121,7 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
     return n_days;
 }
 
-int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month )
+int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month ) noexcept
 {
     int n_months{ 0 };
     if ( from_year == to_year ) {
@@ -170,7 +170,7 @@ int DbQuery::countMonths( const QString& from_year, const QString& from_month, c
     return f;
 }*/
 
-QString DbQuery::getDbField( const QString& tr_fld ) const
+QString DbQuery::getDbField( const QString& tr_fld ) const noexcept
 {
     QString f;
     for ( const auto& [id,str] : this->FIELDS ) {
@@ -185,7 +185,7 @@ QString DbQuery::getDbField( const QString& tr_fld ) const
 
 
 // get a fresh map of available dates
-void DbQuery::refreshDates( std::optional<stats_dates_t>& result )
+void DbQuery::refreshDates( std::optional<stats_dates_t>& result ) noexcept
 {
     bool successful{ true };
     stats_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>

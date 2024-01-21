@@ -22,7 +22,7 @@ public:
     explicit Crapnote( QWidget* parent=nullptr );
 
     //! Sets the given font
-    void setTextFont( const QFont& font );
+    void setTextFont( const QFont& font ) noexcept;
 
     //! Sets the given color-scheme
     void setColorScheme( const int& color_scheme_id );

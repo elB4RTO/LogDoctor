@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 
 
-void BodyPart::update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) {
+void BodyPart::update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) noexcept {
     this->x = new_x;
     this->y = new_y;
     this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
@@ -14,7 +14,7 @@ void BodyPart::update( const unsigned new_x, const unsigned new_y, const Directi
 }
 
 
-Snake::Snake( const bool is_adversary )
+Snake::Snake( const bool is_adversary ) noexcept
     : adversary( is_adversary )
 {
     if ( is_adversary ) {
@@ -24,7 +24,7 @@ Snake::Snake( const bool is_adversary )
 }
 
 
-const QPixmap& Snake::getHeadImage() const
+const QPixmap& Snake::getHeadImage() const noexcept
 {
     if ( this->adversary ) {
         return this->img_snakeHead_;
@@ -34,7 +34,7 @@ const QPixmap& Snake::getHeadImage() const
 }
 
 
-bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const
+bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const noexcept
 {
     if ( this->size() > 0 ) {
         size_t i{ 0 };
@@ -56,16 +56,16 @@ bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) 
 }
 
 
-void Snake::setDirection( const Direction new_direction )
+void Snake::setDirection( const Direction new_direction ) noexcept
 {
     this->head_direction = new_direction;
 }
-const Direction& Snake::direction() const
+const Direction& Snake::direction() const noexcept
 {
     return this->head_direction;
 }
 
-void Snake::willGrow()
+void Snake::willGrow() noexcept
 {
     this->will_grow |= true;
 }
@@ -408,7 +408,7 @@ void Snake::move( const Snake& adv_snake, const unsigned food_x, const unsigned 
 }
 
 
-Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const
+Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const noexcept
 {
     float results[]{ 1.f, 1.f, 1.f, 1.f };
     bool keep_current{ false };
@@ -728,7 +728,7 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
 }
 
 
-void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y )
+void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y ) noexcept
 {
     // reset to default state
     for ( size_t x{0}; x<16ul; ++x ) {
@@ -759,7 +759,7 @@ void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, cons
 }
 
 
-bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
+bool Snake::inTileAdv(const unsigned x, const unsigned y ) const noexcept
 {
     if ( x < 16 && y < 16 ) {
         switch ( this->field_map.at(x).at(y).entity ) {
@@ -772,7 +772,7 @@ bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
     return false;
 }
 
-bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned steps ) const
+bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned steps ) const noexcept
 {
     switch ( this->field_map.at(x).at(y).entity ) {
         case Entity::S:

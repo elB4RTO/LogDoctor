@@ -40,12 +40,12 @@ struct FieldData final
     FieldData& operator=(FieldData&& rhs) noexcept = default;
     Q_DISABLE_COPY(FieldData)
 
-    inline operator bool() const
+    inline operator bool() const noexcept
         { return this->is_set; }
-    inline const std::string& operator *() const
+    inline const std::string& operator *() const noexcept
         { return this->data; }
 
-    inline size_t operator +(const FieldData& rhs) const
+    inline size_t operator +(const FieldData& rhs) const noexcept
         { return this->data.size() + rhs.data.size(); }
 
 private:
@@ -54,7 +54,7 @@ private:
 };
 
 
-inline size_t operator +(const size_t lhs, const FieldData& rhs)
+inline size_t operator +(const size_t lhs, const FieldData& rhs) noexcept
 {
     return lhs + (*rhs).size();
 }
@@ -73,7 +73,7 @@ struct LogLineData final
     LogLineData& operator=(LogLineData&& rhs) noexcept = delete;
     Q_DISABLE_COPY(LogLineData)
 
-    size_t size() const;
+    size_t size() const noexcept;
 
     // date and time
     FieldData year;             // 1
@@ -101,10 +101,10 @@ struct LogLineData final
 private:
     FieldData& data(const int& id);
 
-    void storeUriQuery(std::string&& str);
+    void storeUriQuery(std::string&& str) noexcept;
 
-    void storeMalformedRequestOneSpace(std::string&& str);
-    void storeMalformedRequestMultiSpace(std::string&& str);
+    void storeMalformedRequestOneSpace(std::string&& str) noexcept;
+    void storeMalformedRequestMultiSpace(std::string&& str) noexcept;
 
     inline static const std::unordered_map<std::string, int> field2id{
         // date-time

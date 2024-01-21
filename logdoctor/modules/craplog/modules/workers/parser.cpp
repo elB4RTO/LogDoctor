@@ -34,7 +34,7 @@ CraplogParser::CraplogParser( const unsigned web_server_id, const unsigned dialo
 }
 
 
-void CraplogParser::sendPerfData()
+void CraplogParser::sendPerfData() noexcept
 {
     emit this->perfData(
         this->parsed_size,
@@ -42,7 +42,7 @@ void CraplogParser::sendPerfData()
     );
 }
 
-void CraplogParser::sendChartData()
+void CraplogParser::sendChartData() noexcept
 {
     emit this->chartData(
         this->total_size,

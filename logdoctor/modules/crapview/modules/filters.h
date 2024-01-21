@@ -23,7 +23,7 @@ namespace FilterOps
     \param to_clean Whether the filter_str should be cleaned before parsing (trimmed and uppercased)
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true );
+std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true ) noexcept;
 
 //! Parses a filter for a database field with boolean type
 /*!
@@ -33,7 +33,7 @@ std::optional<QString> parseNull( const QString& filter_str, const bool to_clean
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseBooleanFilter( const QString& filter_str );
+std::optional<QString> parseBooleanFilter( const QString& filter_str ) noexcept;
 
 //! Parses a filter for a log field with integer type
 /*!
@@ -44,7 +44,7 @@ std::optional<QString> parseBooleanFilter( const QString& filter_str );
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseNumericFilter( const QString& filter_str );
+std::optional<QString> parseNumericFilter( const QString& filter_str ) noexcept;
 
 //! Parses a filter for a log field with text type
 /*!
@@ -53,7 +53,7 @@ std::optional<QString> parseNumericFilter( const QString& filter_str );
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseTextualFilter( const QString& filter_str );
+std::optional<QString> parseTextualFilter( const QString& filter_str ) noexcept;
 
 }
 

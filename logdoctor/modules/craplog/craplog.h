@@ -29,31 +29,31 @@ public:
     //// DIALOGS ////
 
     //! Returns the Dialogs level
-    int getDialogsLevel() const;
+    int getDialogsLevel() const noexcept;
 
     //! Sets the new Dialogs level
-    void setDialogsLevel( const int new_level );
+    void setDialogsLevel( const int new_level ) noexcept;
 
     ///////////////////
     //// DATABASES ////
 
     //! Returns the path of the logs Collection database
-    const std::string& getStatsDatabasePath() const;
+    const std::string& getStatsDatabasePath() const noexcept;
 
     //! Returns the path of the log files' Hashes database
-    const std::string& getHashesDatabasePath() const;
+    const std::string& getHashesDatabasePath() const noexcept;
 
     //! Sets the new path for the logs Collection database
     /*!
         \param The new path of the database file
     */
-    void setStatsDatabasePath( const std::string& path );
+    void setStatsDatabasePath( const std::string& path ) noexcept;
 
     //! Sets the new path for the log files' Hashes database
     /*!
         \param The new path of the database file
     */
-    void setHashesDatabasePath( const std::string& path );
+    void setHashesDatabasePath( const std::string& path ) noexcept;
 
 
     ////////////////////////
@@ -63,26 +63,26 @@ public:
     /*!
         \param web_server_id The new currently used Web Server
     */
-    void setCurrentWSID( const unsigned web_server_id );
+    void setCurrentWSID( const unsigned web_server_id ) noexcept;
 
     //! Returns the currently used Web Server ID
     /*!
         \return The Web Server ID
     */
-    unsigned getCurrentWSID() const;
+    unsigned getCurrentWSID() const noexcept;
 
     //! Uses the current Web Server to set the relative logs format
     /*!
         \see LogsFormat
     */
-    void setCurrentLogFormat();
+    void setCurrentLogFormat() noexcept;
 
     //! Returns the currently used LogsFormat
     /*!
         \return The LogsFormat
         \see LogsFormat
     */
-    const LogsFormat& getCurrentLogFormat() const;
+    const LogsFormat& getCurrentLogFormat() const noexcept;
 
 
     ////////////////////
@@ -93,14 +93,14 @@ public:
         \param web_server The ID of the Web Server
         \return The path of the logs' folder
     */
-    const std::string& getLogsPath( const unsigned& web_server ) const;
+    const std::string& getLogsPath( const unsigned& web_server ) const noexcept;
 
     //! Sets a new path for the given Web Server to search the logs in
     /*!
         \param web_server The ID of the Web Server
         \param new_path The new path
     */
-    void setLogsPath( const unsigned& web_server, const std::string& new_path );
+    void setLogsPath( const unsigned& web_server, const std::string& new_path ) noexcept;
 
 
     ///////////////////
@@ -123,14 +123,14 @@ public:
         \return The list of log files
         \see LogFile, logs_list
     */
-    const std::vector<LogFile>& getLogsList() const;
+    const std::vector<LogFile>& getLogsList() const noexcept;
 
     //! Returns the amount of log files in the list
     /*!
         \return The number of files actually in the list
         \see logs_list
     */
-    size_t getLogsListSize() const;
+    size_t getLogsListSize() const noexcept;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -149,14 +149,14 @@ public:
         \return Wheter the given file name has been found in the list
         \see LogFile, logs_list
     */
-    bool setLogFileSelected( const QString& file_name );
+    bool setLogFileSelected( const QString& file_name ) noexcept;
 
     //! Sets all files in the list as unselected
     /*!
         \return Wheter the given file name has been found in the list
         \see LogFile, logs_list
     */
-    void clearLogFilesSelection();
+    void clearLogFilesSelection() noexcept;
 
 
     //////////////////////
@@ -168,7 +168,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processApacheFormatString()
     */
-    bool setApacheLogFormat( const std::string& format_string );
+    bool setApacheLogFormat( const std::string& format_string ) noexcept;
 
     //! Sets the Nginx LogsFormat from the given format string
     /*!
@@ -176,7 +176,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processNginxFormatString()
     */
-    bool setNginxLogFormat( const std::string& format_string );
+    bool setNginxLogFormat( const std::string& format_string ) noexcept;
 
     //! Sets the IIS LogsFormat from the given format string
     /*!
@@ -185,7 +185,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processIisFormatString()
     */
-    bool setIisLogFormat( const std::string& format_string, const int log_module );
+    bool setIisLogFormat( const std::string& format_string, const int log_module ) noexcept;
 
     //! Returns the logs format string for the given Web Server
     /*!
@@ -193,7 +193,7 @@ public:
         \return The format string
         \see FormatOps::LogsFormat
     */
-    const std::string& getLogsFormatString( const unsigned& web_server_id ) const;
+    const std::string& getLogsFormatString( const unsigned& web_server_id ) const noexcept;
 
     //! Returns the LogsFormat currently set for the given Web Server
     /*!
@@ -201,7 +201,7 @@ public:
         \return The LogsFormat instance
         \see LogsFormat
     */
-    const LogsFormat& getLogsFormat( const unsigned& web_server_id ) const;
+    const LogsFormat& getLogsFormat( const unsigned& web_server_id ) const noexcept;
 
     //! Returns a sample log line for the given Web Server using the relative LogsFormat
     /*!
@@ -213,7 +213,7 @@ public:
     QString getLogsFormatSample( const unsigned& web_server_id ) const;
 
     //! Checks whether the current Logs Format is valid or not
-    bool checkCurrentLogsFormat() const;
+    bool checkCurrentLogsFormat() const noexcept;
 
 
 
@@ -221,10 +221,10 @@ public:
     //// WARNING SIZE ////
 
     //! Returns the currently set warning size for the log files
-    size_t getWarningSize() const;
+    size_t getWarningSize() const noexcept;
 
     //! Sets the new warning size for the log files
-    void setWarningSize( const size_t new_size );
+    void setWarningSize( const size_t new_size ) noexcept;
 
 
     ////////////////////
@@ -243,7 +243,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    bool isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
 
     //! Returns whether the relative warnlist is set to be used or not
     /*!
@@ -252,7 +252,7 @@ public:
         \return Whether the list is used or not
         \see BWlist
     */
-    bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const;
+    bool isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
 
     //! Sets the relative blacklist to be used or not
     /*!
@@ -261,7 +261,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used );
+    void setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used ) noexcept;
 
     //! Sets the relative warnlist to be used or not
     /*!
@@ -270,7 +270,7 @@ public:
         \param used Whether the list is to be used or not
         \see BWlist
     */
-    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used );
+    void setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used ) noexcept;
 
     //! Returns the relative items list
     /*!
@@ -279,7 +279,7 @@ public:
         \return The list of items in the given blacklist
         \see BWlist
     */
-    const std::vector<std::string>& getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const;
+    const std::vector<std::string>& getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
 
     //! Returns the relative items list
     /*!
@@ -288,7 +288,7 @@ public:
         \return The list of items in the givenwarnlist
         \see BWlist
     */
-    const std::vector<std::string>& getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const;
+    const std::vector<std::string>& getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const noexcept;
 
     //! Sets the relative items list
     /*!
@@ -333,7 +333,7 @@ public:
         \param item The item to remove from the list
         \see BWlist
     */
-    void blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    void blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Removes an item from the relative list
     /*!
@@ -342,7 +342,7 @@ public:
         \param item The item to remove from the list
         \see BWlist
     */
-    void warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    void warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position up in the relative list
     /*!
@@ -351,7 +351,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    int blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position up in the relative list
     /*!
@@ -360,7 +360,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    int warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position down in the relative list
     /*!
@@ -369,7 +369,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    int blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
 
     //! Moves an item one position down in the relative list
     /*!
@@ -378,7 +378,7 @@ public:
         \param item The item to move
         \see BWlist
     */
-    int warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item );
+    int warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept;
 
 
     //////////////
@@ -393,23 +393,23 @@ public:
     bool checkStuff();
 
     //! Returns whether the database has been edited or not during the process
-    bool isParsing() const;
+    bool isParsing() const noexcept;
 
     //! Returns whether the database has been edited or not during the process
-    bool editedDatabase() const;
+    bool editedDatabase() const noexcept;
 
 
     //////////////////////
     //// PERFORMANCES ////
 
     //! Returns the total logs size
-    size_t getParsedSize();
+    size_t getParsedSize() noexcept;
 
     //! Returns the parsed logs lines
-    size_t getParsedLines();
+    size_t getParsedLines() noexcept;
 
     //! Returns the speed on parsing logs
-    QString getParsingSpeed();
+    QString getParsingSpeed() noexcept;
 
     //! Builds and draws the chart to be displayed in the main window
     /*!
@@ -434,28 +434,28 @@ public slots:
 
     void scanLogsDir();
 
-    void appendLogFile( const LogFile log_file );
+    void appendLogFile( const LogFile log_file ) noexcept;
 
-    void logsDirScanned();
+    void logsDirScanned() noexcept;
 
     void startWorking();
 
-    void workerStartedParsing();
+    void workerStartedParsing() noexcept;
 
-    void workerFinishedParsing();
+    void workerFinishedParsing() noexcept;
 
     void stopWorking( const bool successful );
 
     void updatePerfData( const size_t parsed_size,
-                         const size_t parsed_lines );
+                         const size_t parsed_lines ) noexcept;
 
     void updateChartData( const size_t total_size,
                           const size_t total_lines,
                           const size_t warnlisted_size,
-                          const size_t blacklisted_size );
+                          const size_t blacklisted_size ) noexcept;
 
     void showWorkerDialog( const WorkerDialog dialog_type,
-                           const QStringList args ) const;
+                           const QStringList args ) const noexcept;
 
 
 private:

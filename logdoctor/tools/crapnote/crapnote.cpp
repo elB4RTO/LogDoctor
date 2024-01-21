@@ -13,7 +13,7 @@ Crapnote::Crapnote(QWidget *parent)
 }
 
 
-void Crapnote::setTextFont( const QFont& font )
+void Crapnote::setTextFont( const QFont& font ) noexcept
 {
     QFont f{ font };
     f.setPointSize( this->font_size );

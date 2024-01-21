@@ -21,7 +21,7 @@ namespace PrintSec
 */
 QString printableSize(
     const size_t bytes
-);
+) noexcept;
 
 
 //! Formats the speed including the suffix, for display purposes
@@ -32,7 +32,7 @@ QString printableSize(
 */
 QString printableSpeed(
     const double bytes, const double seconds
-);
+) noexcept;
 
 
 //! Formats the time, for display purposes
@@ -42,7 +42,7 @@ QString printableSpeed(
 */
 QString printableTime(
     const unsigned seconds
-);
+) noexcept;
 
 
 //! Returns a string of the given time in the format HH:MM:SS
@@ -54,7 +54,7 @@ QString printableTime(
 */
 QString printableTime(
     const int hour, const int minute, const int second
-);
+) noexcept;
 
 
 //! Returns a string of the given date in the format YYYY-MM-DD
@@ -67,7 +67,7 @@ QString printableTime(
 */
 QString printableDate(
     const QString& year, const int month, const QString& day
-);
+) noexcept;
 
 
 //! Returns a string of the given date in the format YYYY-MM-DD
@@ -79,7 +79,7 @@ QString printableDate(
 */
 QString printableDate(
     const int year, const int month, const int day
-);
+) noexcept;
 
 
 //! Returns a string corresponding to the given value
@@ -90,7 +90,7 @@ QString printableDate(
 */
 QString printableBool(
     const int value
-);
+) noexcept;
 
 } // namespace PrintSec
 

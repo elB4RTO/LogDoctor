@@ -27,7 +27,7 @@ namespace /*private*/
   \return The result of the check: 0 if failed with an error, 1 if all the integrity checks passed, 2 if a rebuild is needed
   \see checkCollectionDatabase(), checkHashesDatabase(), newCollectionDatabase(), newHashesDatabase()
 */
-int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
+int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name ) noexcept
 {
     bool make_new{false}, ok{true};
     QSqlQuery query{ QSqlQuery( db ) };
@@ -94,7 +94,7 @@ int checkDatabaseTablesNames( QSqlDatabase& db, const QString& db_name )
   \return The result of the operation
   \see checkCollectionDatabase(), checkHashesDatabase()
 */
-bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
+bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names ) noexcept
 {
     bool successful{ true };
     // create the database
@@ -161,7 +161,7 @@ bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std:
   \return The result of the operation
   \see checkCollectionDatabase(), checkHashesDatabase()
 */
-bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names )
+bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vector<QString>& ws_names ) noexcept
 {
     bool successful{ true };
     // create the database
@@ -205,7 +205,7 @@ bool newHashesDatabase( QSqlDatabase& db, const QString& db_name, const std::vec
 } // namespace (private)
 
 
-bool checkCollectionDatabase( const std::string& db_path )
+bool checkCollectionDatabase( const std::string& db_path ) noexcept
 {
     bool make_new{false}, ok{true};
     std::error_code err;
@@ -375,7 +375,7 @@ bool checkCollectionDatabase( const std::string& db_path )
 }
 
 
-bool checkHashesDatabase( const std::string& db_path )
+bool checkHashesDatabase( const std::string& db_path ) noexcept
 {
     bool make_new{false}, ok{true};
     std::error_code err;
@@ -513,7 +513,7 @@ bool checkHashesDatabase( const std::string& db_path )
 }
 
 
-bool checkDatabaseFile( const std::string& db_path, const QString& db_name )
+bool checkDatabaseFile( const std::string& db_path, const QString& db_name ) noexcept
 {
     if ( ! IOutils::exists( db_path ) ) {
         // path doesn't exists

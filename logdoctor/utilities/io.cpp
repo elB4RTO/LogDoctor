@@ -53,7 +53,7 @@ public:
 namespace IOutils
 {
 
-bool checkFile( std::string_view path, const bool readable, const bool writable )
+bool checkFile( std::string_view path, const bool readable, const bool writable ) noexcept
 {
     if ( isFile( path ) ) {
         // check the needed permissions
@@ -74,7 +74,7 @@ bool checkFile( std::string_view path, const bool readable, const bool writable 
 }
 
 
-bool checkDir( std::string_view path, const bool readable, const bool writable )
+bool checkDir( std::string_view path, const bool readable, const bool writable ) noexcept
 {
     if ( isDir( path ) ) {
         // check the needed permissions
@@ -95,7 +95,7 @@ bool checkDir( std::string_view path, const bool readable, const bool writable )
 }
 
 
-bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
+bool makeDir( std::string_view path, std::error_code& err ) noexcept
 {
     try {
         const bool failed{ !std::filesystem::create_directories( path, err ) };
@@ -110,7 +110,7 @@ bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
 
 
 // rename an entry with a trailing '.copy'
-bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true)
+bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept
 {
     try {
         std::string new_path{ path };

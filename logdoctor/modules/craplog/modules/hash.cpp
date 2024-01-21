@@ -19,14 +19,14 @@
 #include <QSqlError>
 
 
-void HashOps::setDialogLevel( const int new_level )
+void HashOps::setDialogLevel( const int new_level ) noexcept
 {
     this->dialog_level = new_level;
 }
 
 
 // reads the database holding the already used hashes
-bool HashOps::loadUsedHashesLists( const std::string& db_path )
+bool HashOps::loadUsedHashesLists( const std::string& db_path ) noexcept
 {
     bool successful{ true };
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
@@ -136,7 +136,7 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( const std::string &file_hash, const unsigned& web_server_id) const
+bool HashOps::hasBeenUsed( const std::string &file_hash, const unsigned& web_server_id) const noexcept
 {
     const auto& ws_hashes{ this->hashes.at( web_server_id ) };
     return std::any_of(
@@ -147,7 +147,7 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const unsigned& web_ser
 
 
 // insert the given hash/es in the relative list
-bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id )
+bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const unsigned& web_server_id ) noexcept
 {
     bool successful{ true };
     try {

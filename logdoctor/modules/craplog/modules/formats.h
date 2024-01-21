@@ -55,7 +55,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    QString getApacheLogSample( const LogsFormat& log_format ) const;
+    QString getApacheLogSample( const LogsFormat& log_format ) const noexcept;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -63,7 +63,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    QString getNginxLogSample( const LogsFormat& log_format ) const;
+    QString getNginxLogSample( const LogsFormat& log_format ) const noexcept;
 
     //! Returns a log line sample based on the given format
     /*!
@@ -71,7 +71,7 @@ public:
         \return The sample line
         \see LogsFormat, Craplog::getLogsFormatSample()
     */
-    QString getIisLogSample( const LogsFormat& log_format ) const;
+    QString getIisLogSample( const LogsFormat& log_format ) const noexcept;
 
 
 private:

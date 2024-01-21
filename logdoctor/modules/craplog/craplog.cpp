@@ -86,40 +86,40 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-int Craplog::getDialogsLevel() const
+int Craplog::getDialogsLevel() const noexcept
 {
     return this->dialogs_level;
 }
-void Craplog::setDialogsLevel( const int new_level )
+void Craplog::setDialogsLevel( const int new_level ) noexcept
 {
     this->dialogs_level = new_level;
     this->hashOps.setDialogLevel( new_level );
 }
 
-const std::string& Craplog::getStatsDatabasePath() const
+const std::string& Craplog::getStatsDatabasePath() const noexcept
 {
     return this->db_stats_path;
 }
-const std::string& Craplog::getHashesDatabasePath() const
+const std::string& Craplog::getHashesDatabasePath() const noexcept
 {
     return this->db_hashes_path;
 }
 
-void Craplog::setStatsDatabasePath( const std::string& path )
+void Craplog::setStatsDatabasePath( const std::string& path ) noexcept
 {
     this->db_stats_path = path + "/collection.db";
 }
-void Craplog::setHashesDatabasePath( const std::string& path )
+void Craplog::setHashesDatabasePath( const std::string& path ) noexcept
 {
     this->db_hashes_path = path + "/hashes.db";
 }
 
-size_t Craplog::getWarningSize() const
+size_t Craplog::getWarningSize() const noexcept
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const size_t new_size )
+void Craplog::setWarningSize(const size_t new_size ) noexcept
 {
     this->warning_size = new_size;
 }
@@ -127,29 +127,29 @@ void Craplog::setWarningSize(const size_t new_size )
 
 ////////////////////
 //// WARN/BLACK ////
-bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const noexcept
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).used;
 }
-bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
+bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const noexcept
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).used;
 }
 
-void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
+void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used ) noexcept
 {
     this->blacklists.at( web_server_id ).at( log_field_id ).used = used;
 }
-void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
+void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used ) noexcept
 {
     this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
 }
 
-const std::vector<std::string>& Craplog::getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const
+const std::vector<std::string>& Craplog::getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const noexcept
 {
     return this->blacklists.at( web_server_id ).at( log_field_id ).list;
 }
-const std::vector<std::string>& Craplog::getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const
+const std::vector<std::string>& Craplog::getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const noexcept
 {
     return this->warnlists.at( web_server_id ).at( log_field_id ).list;
 }
@@ -180,7 +180,7 @@ void Craplog::warnlistAdd( const unsigned& web_server_id, const int& log_field_i
         this->sanitizeBWitem( log_field_id, new_item ) );
 }
 
-void Craplog::blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+void Craplog::blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     // move the item to the end, then pop it
@@ -193,7 +193,7 @@ void Craplog::blacklistRemove( const unsigned& web_server_id, const int& log_fie
     }
     list.pop_back();
 }
-void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     // move the item to the end, then pop it
@@ -207,7 +207,7 @@ void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_fiel
     list.pop_back();
 }
 
-int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 1 };
@@ -222,7 +222,7 @@ int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_fiel
     }
     return static_cast<int>( i );
 }
-int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 1 };
@@ -238,7 +238,7 @@ int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field
     return static_cast<int>( i );
 }
 
-int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 0 };
@@ -253,7 +253,7 @@ int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_fi
     }
     return static_cast<int>( i );
 }
-int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
+int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
     size_t i{ 0 };
@@ -312,19 +312,19 @@ std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string&
 /////////////////
 //// FORMATS ////
 // get the logs format string
-const std::string& Craplog::getLogsFormatString( const unsigned& web_server_id ) const
+const std::string& Craplog::getLogsFormatString( const unsigned& web_server_id ) const noexcept
 {
     return this->logs_format_strings.at( web_server_id );
 }
 
 // get the logs format
-const LogsFormat& Craplog::getLogsFormat(const unsigned& web_server_id ) const
+const LogsFormat& Craplog::getLogsFormat(const unsigned& web_server_id ) const noexcept
 {
     return this->logs_formats.at( web_server_id );
 }
 
 // set the logs format
-bool Craplog::setApacheLogFormat( const std::string& format_string )
+bool Craplog::setApacheLogFormat( const std::string& format_string ) noexcept
 {
     // apache
     bool success{ true };
@@ -341,7 +341,7 @@ bool Craplog::setApacheLogFormat( const std::string& format_string )
     }
     return success;
 }
-bool Craplog::setNginxLogFormat( const std::string& format_string )
+bool Craplog::setNginxLogFormat( const std::string& format_string ) noexcept
 {
     // nginx
     bool success{ true };
@@ -358,7 +358,7 @@ bool Craplog::setNginxLogFormat( const std::string& format_string )
     }
     return success;
 }
-bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module )
+bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module ) noexcept
 {
     // iis
     bool success{ true };
@@ -392,7 +392,7 @@ QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
     }
 }
 
-bool Craplog::checkCurrentLogsFormat() const
+bool Craplog::checkCurrentLogsFormat() const noexcept
 {
     if ( this->current_LF.string.empty() ) {
             // format string not set
@@ -412,25 +412,25 @@ bool Craplog::checkCurrentLogsFormat() const
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( const unsigned web_server_id )
+void Craplog::setCurrentWSID( const unsigned web_server_id ) noexcept
 {
     this->current_WS = web_server_id;
     this->setCurrentLogFormat();
 }
 
-unsigned Craplog::getCurrentWSID() const
+unsigned Craplog::getCurrentWSID() const noexcept
 {
     return this->current_WS;
 }
 
 // set the current access logs format
-void Craplog::setCurrentLogFormat()
+void Craplog::setCurrentLogFormat() noexcept
 {
     this->current_LF = this->logs_formats.at( this->current_WS );
 }
 
 // get the current access logs format
-const LogsFormat& Craplog::getCurrentLogFormat() const
+const LogsFormat& Craplog::getCurrentLogFormat() const noexcept
 {
     return this->current_LF;
 }
@@ -438,11 +438,11 @@ const LogsFormat& Craplog::getCurrentLogFormat() const
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const unsigned& web_server ) const
+const std::string& Craplog::getLogsPath( const unsigned& web_server ) const noexcept
 {
     return this->logs_paths.at( web_server );
 }
-void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_path )
+void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_path ) noexcept
 {
     this->logs_paths.at( web_server ) = new_path;
 }
@@ -451,13 +451,13 @@ void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_pa
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-size_t Craplog::getLogsListSize() const
+size_t Craplog::getLogsListSize() const noexcept
 {
     return this->logs_list.size();
 }
 
 // return the current list
-const std::vector<LogFile>& Craplog::getLogsList() const
+const std::vector<LogFile>& Craplog::getLogsList() const noexcept
 {
     return this->logs_list;
 }
@@ -476,7 +476,7 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 
 
 // set a file as selected
-bool Craplog::setLogFileSelected( const QString& file_name )
+bool Craplog::setLogFileSelected( const QString& file_name ) noexcept
 {
     const auto item{ std::find_if
         ( this->logs_list.begin(), this->logs_list.end(),
@@ -489,7 +489,7 @@ bool Craplog::setLogFileSelected( const QString& file_name )
     return false;
 }
 
-void Craplog::clearLogFilesSelection()
+void Craplog::clearLogFilesSelection() noexcept
 {
     std::ignore = std::for_each(
         this->logs_list.begin(), this->logs_list.end(),
@@ -539,13 +539,13 @@ void Craplog::scanLogsDir()
     worker_thread->start();
 }
 
-void Craplog::appendLogFile( const LogFile log_file )
+void Craplog::appendLogFile( const LogFile log_file ) noexcept
 {
     this->logs_list.push_back( std::move( log_file ) );
     emit this->pushLogFile( this->logs_list.back() );
 }
 
-void Craplog::logsDirScanned()
+void Craplog::logsDirScanned() noexcept
 {
     emit this->finishedRefreshing();
 }
@@ -808,7 +808,7 @@ bool Craplog::checkStuff()
     return this->proceed;
 }
 
-void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringList args ) const
+void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringList args ) const noexcept
 {
     switch ( dialog_type ) {
         case WorkerDialog::errGeneric:
@@ -825,12 +825,14 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
             break;
         case WorkerDialog::errDatabaseFailedOpening:
             if ( args.size() < 2 ) {
+                // do not throw, just print to stderr
                 GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
             }
             DialogSec::errDatabaseFailedOpening( args.at(0), args.at(1) );
             break;
         case WorkerDialog::errDatabaseFailedExecuting:
             if ( args.size() < 3 ) {
+                // do not throw, just print to stderr
                 GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
             }
             DialogSec::errDatabaseFailedExecuting( args.at(0), args.at(1), args.at(2) );
@@ -914,23 +916,23 @@ void Craplog::stopWorking( const bool successful )
     emit this->finishedWorking();
 }
 
-bool Craplog::editedDatabase() const
+bool Craplog::editedDatabase() const noexcept
 {
     return this->db_edited;
 }
 
 
-size_t Craplog::getParsedSize()
+size_t Craplog::getParsedSize() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-size_t Craplog::getParsedLines()
+size_t Craplog::getParsedLines() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
 }
-QString Craplog::getParsingSpeed()
+QString Craplog::getParsingSpeed() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     auto stop{ ( is_parsing )
@@ -947,30 +949,30 @@ QString Craplog::getParsingSpeed()
         );
 }
 
-void Craplog::workerStartedParsing()
+void Craplog::workerStartedParsing() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->is_parsing |= true;
     this->parsing_time_start = std::chrono::system_clock::now();
 }
-void Craplog::workerFinishedParsing()
+void Craplog::workerFinishedParsing() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsing_time_stop = std::chrono::system_clock::now();
     this->is_parsing &= false;
 }
-bool Craplog::isParsing() const
+bool Craplog::isParsing() const noexcept
 {
     return this->is_parsing;
 }
 
-void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines )
+void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t warnlisted_size, const size_t blacklisted_size )
+void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t warnlisted_size, const size_t blacklisted_size ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;

@@ -29,7 +29,7 @@ public:
         \param font The font to be used
         \param color_scheme_id The ID of the color-scheme to be used
     */
-    void helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const;
+    void helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const noexcept;
 
     //! Provides help about log formats
     /*!
@@ -39,16 +39,16 @@ public:
         \param font The font to be used
         \param color_scheme_id The ID of the color-scheme to be used
     */
-    void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const;
+    void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const noexcept;
 
 private:
     QSharedPointer<Ui::Craphelp> ui;
 
     std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
 
-    void defaultApacheFormat( std::string& str ) const;
-    void defaultNginxFormat( std::string& str ) const;
-    void defaultIisFormat( std::string& str ) const;
+    void defaultApacheFormat( std::string& str ) const noexcept;
+    void defaultNginxFormat( std::string& str ) const noexcept;
+    void defaultIisFormat( std::string& str ) const noexcept;
 };
 
 

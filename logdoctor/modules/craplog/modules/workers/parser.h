@@ -67,9 +67,9 @@ public slots:
 
     void work();
 
-    virtual void sendPerfData();
+    void sendPerfData() noexcept;
 
-    virtual void sendChartData();
+    void sendChartData() noexcept;
 
 private:
 

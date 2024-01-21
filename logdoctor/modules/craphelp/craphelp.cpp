@@ -67,7 +67,7 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int sch
 }
 
 
-void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const
+void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const noexcept
 {
     std::unordered_map<std::string, QString> color_scheme{ this->getColorScheme( color_scheme_id ) };
     std::string aux;
@@ -111,7 +111,7 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
 }
 
 
-void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const
+void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const noexcept
 {
     std::unordered_map<std::string, QString> color_scheme = this->getColorScheme( color_scheme_id );
     std::string aux;
@@ -162,7 +162,7 @@ void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& f
 
 
 
-void Craphelp::defaultApacheFormat( std::string& str ) const
+void Craphelp::defaultApacheFormat( std::string& str ) const noexcept
 {
     str.append(
         "<!DOCTYPE html>"
@@ -420,7 +420,7 @@ void Craphelp::defaultApacheFormat( std::string& str ) const
     );
 }
 
-void Craphelp::defaultNginxFormat( std::string& str ) const
+void Craphelp::defaultNginxFormat( std::string& str ) const noexcept
 {
     str.append(
         "<!DOCTYPE html>"
@@ -618,7 +618,7 @@ void Craphelp::defaultNginxFormat( std::string& str ) const
     );
 }
 
-void Craphelp::defaultIisFormat( std::string& str ) const
+void Craphelp::defaultIisFormat( std::string& str ) const noexcept
 {
     str.append(
         "<!DOCTYPE html>"

@@ -20,7 +20,7 @@ namespace VecOps
     \return Whether the list does contain the flag or not
 */
 template <typename T>
-inline bool contains( const std::vector<T>& list, const T& flag )
+inline bool contains( const std::vector<T>& list, const T& flag ) noexcept
 {
     return std::any_of( list.cbegin(), list.cend(),
                         [&flag]( const T& item )

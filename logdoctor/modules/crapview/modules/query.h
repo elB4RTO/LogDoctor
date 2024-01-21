@@ -46,14 +46,14 @@ public:
 
 
     //! Returns the Dialogs level
-    void setDialogLevel( const int new_level );
+    void setDialogLevel( const int new_level ) noexcept;
 
 
     //! Sets the path for the logs Collection database
     /*!
         \see Crapview::setDbPath()
     */
-    void setDbPath( const std::string& path );
+    void setDbPath( const std::string& path ) noexcept;
 
     /*const std::string getDbPath( const int web_server );*/
 
@@ -79,7 +79,7 @@ public:
     /*!
         \param result Holds the data only if the operation completed succssfully
     */
-    void refreshDates( std::optional<stats_dates_t>& result );
+    void refreshDates( std::optional<stats_dates_t>& result ) noexcept;
 
 
     //! Updates the database applying the changes made in the Warnings statistics table
@@ -297,7 +297,7 @@ private:
         \param tr_fld The log field, hendles translated text
         \return The database field
     */
-    QString getDbField( const QString& tr_fld ) const;
+    QString getDbField( const QString& tr_fld ) const noexcept;
 
     /*const int getLogFieldID ( const QString& field_str );*/
 
@@ -326,7 +326,7 @@ private:
         \param month_str The month
         \return The month number
     */
-    int getMonthNumber( const QString& month_str ) const;
+    int getMonthNumber( const QString& month_str ) const noexcept;
 
 
     //! Returns the number of days in a given period
@@ -342,7 +342,8 @@ private:
     */
     static int countDays(
         const int from_year, const int from_month, const int from_day,
-        const int to_year, const int to_month, const int to_day );
+        const int to_year, const int to_month, const int to_day
+    );
 
 
     //! Returns the number of months in a given period
@@ -355,7 +356,8 @@ private:
     */
     static int countMonths(
         const int from_year, const int from_month,
-        const int to_year,   const int to_month );
+        const int to_year,   const int to_month
+    ) noexcept;
 };
 
 
