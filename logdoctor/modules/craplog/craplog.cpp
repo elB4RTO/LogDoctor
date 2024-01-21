@@ -183,90 +183,58 @@ void Craplog::warnlistAdd( const unsigned& web_server_id, const int& log_field_i
 void Craplog::blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
-    // move the item to the end, then pop it
-    const size_t max{ list.size()-1ul };
-    for ( size_t i{0}; i<max; ++i ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-        }
+    if ( const auto it{ std::find( list.cbegin(), list.cend(), item ) }; it != list.cend() ) {
+        list.erase( it );
     }
-    list.pop_back();
 }
 void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
-    // move the item to the end, then pop it
-    const size_t max{ list.size()-1ul };
-    for ( size_t i{0}; i<max; ++i ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-        }
+    if ( const auto it{ std::find( list.cbegin(), list.cend(), item ) }; it != list.cend() ) {
+        list.erase( it );
     }
-    list.pop_back();
 }
 
 int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 1 };
-    const size_t max{ list.size() };
-    for ( ; i<max; ++i ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i-1ul );
-            list.at( i-1ul ) = item;
-            --i;
-            break;
-        }
+    if ( auto it{ std::find( std::next(list.begin()), list.end(), item ) }; it != list.cend() ) {
+        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) - 1 };
+        std::swap( *it, *std::prev(it) );
+        return pos;
     }
-    return static_cast<int>( i );
+    return -1;
 }
 int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 1 };
-    const size_t max{ list.size() };
-    for ( ; i<max; ++i ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i-1ul );
-            list.at( i-1ul ) = item;
-            --i;
-            break;
-        }
+    if ( auto it{ std::find( std::next(list.begin()), list.end(), item ) }; it != list.cend() ) {
+        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) - 1 };
+        std::swap( *it, *std::prev(it) );
+        return pos;
     }
-    return static_cast<int>( i );
+    return -1;
 }
 
 int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 0 };
-    const size_t max{ list.size()-1ul };
-    for ( ; i<max; ++i ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-            ++i;
-            break;
-        }
+    if ( auto it{ std::find( list.begin(), std::prev(list.end()), item ) }; it != list.cend() ) {
+        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) + 1 };
+        std::swap( *it, *std::next(it) );
+        return pos;
     }
-    return static_cast<int>( i );
+    return -1;
 }
 int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item ) noexcept
 {
     auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 0 };
-    const size_t max{ list.size()-1ul };
-    for ( ; i<max; ++i ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-            ++i;
-            break;
-        }
+    if ( auto it{ std::find( list.begin(), std::prev(list.end()), item ) }; it != list.cend() ) {
+        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) + 1 };
+        std::swap( *it, *std::next(it) );
+        return pos;
     }
-    return static_cast<int>( i );
+    return -1;
 }
 
 std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
