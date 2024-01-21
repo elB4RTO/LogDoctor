@@ -570,7 +570,8 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
     }
 
     return LogsFormat(
-        f_str, initial, final, separators, fields,
+        f_str, std::move(initial), std::move(final),
+        std::move(separators), std::move(fields),
         countNewLines( initial, final, separators ) );
 
 }
@@ -672,7 +673,8 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
     }
 
     return LogsFormat(
-        f_str, initial, final, separators, fields,
+        f_str, std::move(initial), std::move(final),
+        std::move(separators), std::move(fields),
         countNewLines( initial, final, separators ) );
 }
 // sample
@@ -767,7 +769,8 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
     }
 
     return LogsFormat(
-        f_str, initial, final, separators, fields, 0 );
+        f_str, std::move(initial), std::move(final),
+        std::move(separators), std::move(fields), 0 );
 }
 // sample
 QString FormatOps::getIisLogSample( const LogsFormat& log_format ) const noexcept
