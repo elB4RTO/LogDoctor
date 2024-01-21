@@ -160,14 +160,14 @@ void CraplogParser::joinLogLines()
         } catch ( const GenericException& ) {
             // failed closing gzip file pointer
             throw GenericException( QString("%1:\n%2").arg(
-                    DialogSec::tr("An error accured while reading the gzipped file"),
+                    DialogSec::tr("An error occured while reading the gzipped file"),
                     QString::fromStdString( file_path )
                 ).toStdString() );
 
         } catch ( const std::ios_base::failure& ) {
             // failed reading as text
             throw GenericException( QString("%1:\n%2").arg(
-                    DialogSec::tr("An error accured while reading the file"),
+                    DialogSec::tr("An error occured while reading the file"),
                     QString::fromStdString( file_path )
                 ).toStdString() );
 

@@ -242,7 +242,7 @@ bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& msg, Q
         title,
         QString("%1\n\n%2").arg(
             msg,
-            DialogSec::tr("This database will renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
+            DialogSec::tr("This database will be renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
         parent };
     return dialog.exec();
 }
@@ -492,7 +492,7 @@ void DialogSec::errFailedReadFile( const QString& file , const bool skipping, QW
     DialogMsg dialog{
         DialogSec::tr("Failed reading"),
         QString("%1:\n%2").arg(
-            DialogSec::tr("An error accured while reading the file"),
+            DialogSec::tr("An error occured while reading the file"),
             file + ((skipping) ? DialogSec::tr("Skipping") : "") ),
         "", MsgType::Error, parent };
     std::ignore = dialog.exec();
@@ -503,7 +503,7 @@ void DialogSec::errFailedReadFile( const QString& file , const bool skipping, QW
     DialogMsg dialog{
         DialogSec::tr("Failed writing"),
         QString("%1:\n%2%3").arg(
-            DialogSec::tr("An error accured while writing the file"),
+            DialogSec::tr("An error occured while writing the file"),
             file,
             (skipping) ? QString("\n\n%1").arg(DialogSec::tr("Skipping")) : "" ),
         "", MsgType::Error, parent };
@@ -667,7 +667,7 @@ bool DialogSec::choiceDirNotDir( const QString& path, QWidget* parent )
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The path was supposed to point to a folder, but it doesn't"),
             path,
-            DialogSec::tr("The entry will renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
+            DialogSec::tr("The entry will be renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
         parent };
     return dialog.exec();
 }
@@ -678,7 +678,7 @@ bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
         QString("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The path was supposed to point to a file, but it doesn't"),
             path,
-            DialogSec::tr("The entry will renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
+            DialogSec::tr("The entry will be renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
         parent };
     return dialog.exec();
 }

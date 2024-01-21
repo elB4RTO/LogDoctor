@@ -228,12 +228,12 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
     } catch ( const GenericException& ) {
         // failed closing gzip file pointer
         lines.clear();
-        throw GenericException( "An error accured while reading the gzipped file" );
+        throw GenericException( "An error occured while reading the gzipped file" );
 
     } catch ( const std::ios_base::failure& ) {
         // failed reading
         lines.clear();
-        throw GenericException( "An error accured while reading the file" );
+        throw GenericException( "An error occured while reading the file" );
 
     } catch (...) {
         lines.clear();
