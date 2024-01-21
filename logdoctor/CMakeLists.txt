@@ -46,7 +46,7 @@ set(PROJECT_SOURCES
     mainwindow.h
     mainwindow.cpp
 
-    lib.h
+    main_lib.h
 
     globals/global_configs.h
     globals/global_configs.cpp
