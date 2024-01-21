@@ -21,7 +21,7 @@ enum Direction {
 
 
 //! Instance of a part of the body of the snake
-struct BodyPart {
+struct BodyPart final {
     unsigned x;                 //!< The position on the X-axis
     unsigned y;                 //!< The position on the Y-axis
     Direction direction;        //!< The current direction of the part
@@ -32,7 +32,7 @@ struct BodyPart {
 };
 
 
-class Snake : public std::vector<BodyPart>
+class Snake final : public std::vector<BodyPart>
 {
 public:
     explicit Snake( const bool is_adversary=false );
@@ -90,7 +90,7 @@ private:
         F, // food
     };
 
-    struct Tile {
+    struct Tile final {
         Entity entity;
         unsigned s_index;
     };

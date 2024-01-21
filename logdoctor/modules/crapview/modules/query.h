@@ -16,7 +16,7 @@
     using stats_count_items_t = std::multimap<unsigned, QString>;
 
 
-class DbQuery
+class DbQuery final
 {
     DATA_TYPEDEFS
 

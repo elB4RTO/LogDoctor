@@ -25,7 +25,7 @@
 
 
 //! RAII class to handle s file resource
-class FileHandler
+class FileHandler final
 {
     FILE* file;
 

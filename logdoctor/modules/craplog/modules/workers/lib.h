@@ -29,7 +29,7 @@ Q_DECLARE_METATYPE(WorkerDialog)
     Holds the data of a single field from a log line
     \see LogLineData
 */
-struct FieldData
+struct FieldData final
 {
     FieldData() noexcept
         : is_set{false} {}
@@ -65,7 +65,7 @@ inline size_t operator +(const size_t lhs, const FieldData& rhs)
 /*!
     Holds the data of a single log line
 */
-struct LogLineData
+struct LogLineData final
 {
     LogLineData(const std::string& line, const LogsFormat& logs_format);
     ~LogLineData() noexcept = default;

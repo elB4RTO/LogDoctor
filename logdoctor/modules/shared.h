@@ -9,7 +9,7 @@
 /*!
     Fictitious class for the translations
 */
-class TR : public QObject
+class TR final : public QObject
 {
     Q_OBJECT
 public:

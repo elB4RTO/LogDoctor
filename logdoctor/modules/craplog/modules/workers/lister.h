@@ -11,7 +11,7 @@ class HashOps;
 enum class WorkerDialog;
 
 
-class CraplogLister : public QObject
+class CraplogLister final : public QObject
 {
     Q_OBJECT
 

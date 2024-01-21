@@ -12,7 +12,7 @@
 /*!
     Perform operations for files visualization
 */
-class TextBrowser
+class TextBrowser final
 {
 public:
 

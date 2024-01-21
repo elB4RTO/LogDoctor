@@ -14,7 +14,7 @@ namespace Ui {
 /*!
     IGNORE/DISCARD/ABORT choice dialog
 */
-class DialogIda : public QDialog
+class DialogIda final : public QDialog
 {
     Q_OBJECT
 

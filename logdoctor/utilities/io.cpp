@@ -12,7 +12,7 @@
 
 //! RAII class to handle a file stream resource
 template<typename Stream>
-class FileHandler
+class FileHandler final
 {
     Stream file;
 

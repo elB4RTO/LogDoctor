@@ -15,7 +15,7 @@ class QString;
 /*!
     Utilities for the TextBrowser
 */
-class RichText : public QObject
+class RichText final : public QObject
 {
     Q_OBJECT
 

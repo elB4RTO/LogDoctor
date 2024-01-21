@@ -13,7 +13,7 @@
 /*!
     Builds the donut chart to be displayed
 */
-class DonutBreakdown : public QChart
+class DonutBreakdown final : public QChart
 {
 public:
 
@@ -47,7 +47,7 @@ private:
 /*!
     A slice to be added at the donut
 */
-class MainSlice : public QPieSlice
+class MainSlice final : public QPieSlice
 {
     Q_OBJECT
 

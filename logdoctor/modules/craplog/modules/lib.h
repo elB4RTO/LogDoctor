@@ -26,7 +26,7 @@ enum class LogType
 
 
 //! Holds informations about a log file
-struct LogFile {
+struct LogFile final {
     explicit LogFile() = default;
     explicit LogFile
         (const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt)
@@ -67,7 +67,7 @@ Q_DECLARE_METATYPE( LogFile )
 
 
 //! Holds informations about a log format
-struct LogsFormat {
+struct LogsFormat final {
     explicit LogsFormat() = default;
     explicit LogsFormat
         (const std::string& str,const std::string& itl,const std::string& fnl,const std::vector<std::string>& seps,const std::vector<std::string>& flds,const unsigned nl)
@@ -82,7 +82,7 @@ struct LogsFormat {
 
 
 //! Hold the items of a blacklist/warnlist
-struct BWlist {
+struct BWlist final {
     bool used;                     //!< Whether the list is set to be used or not
     std::vector<std::string> list; //!< The list of items
 };

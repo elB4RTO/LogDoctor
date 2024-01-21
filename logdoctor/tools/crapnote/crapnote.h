@@ -14,7 +14,7 @@ namespace Ui {
 /*!
     A simple block-note like widget
 */
-class Crapnote : public QWidget
+class Crapnote final : public QWidget
 {
     Q_OBJECT
 

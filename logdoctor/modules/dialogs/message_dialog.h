@@ -21,7 +21,7 @@ namespace Ui {
 /*!
     A dialog message to provide informations to the user
 */
-class DialogMsg : public QDialog
+class DialogMsg final : public QDialog
 {
     Q_OBJECT
 

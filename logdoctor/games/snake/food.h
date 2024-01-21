@@ -8,7 +8,7 @@ class Snake;
 class QGraphicsPixmapItem;
 
 
-class Food
+class Food final
 {
 public:
     explicit Food( const bool can_move=false );

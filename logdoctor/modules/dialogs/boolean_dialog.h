@@ -13,7 +13,7 @@ namespace Ui {
 /*!
     YES/NO choice dialog
 */
-class DialogBool : public QDialog
+class DialogBool final : public QDialog
 {
     Q_OBJECT
 

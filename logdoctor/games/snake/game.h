@@ -23,7 +23,7 @@ namespace Ui {
 /*!
     A reproduction of the timeless classic game
 */
-class SnakeGame : public QWidget
+class SnakeGame final : public QWidget
 {
     Q_OBJECT
 

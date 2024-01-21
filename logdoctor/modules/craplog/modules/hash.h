@@ -16,7 +16,7 @@ class QSqlQuery;
 /*!
     Operations for the hashes
 */
-class HashOps
+class HashOps final
 {
 public:
 

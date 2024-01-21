@@ -13,7 +13,7 @@ struct LogsFormat;
 /*!
     Operations for the logs formats
 */
-class FormatOps
+class FormatOps final
 {
 public:
 

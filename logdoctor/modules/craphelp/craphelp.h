@@ -16,7 +16,7 @@ namespace Ui {
 /*!
     Displays an help window
 */
-class Craphelp : public QWidget
+class Craphelp final : public QWidget
 {
     Q_OBJECT
 

@@ -5,7 +5,7 @@
 #include <QTreeWidgetItem>
 
 
-class LogFileTreeWidgetItem : public QTreeWidgetItem {
+class LogFileTreeWidgetItem final : public QTreeWidgetItem {
 public:
     LogFileTreeWidgetItem(QTreeWidget*parent=nullptr):QTreeWidgetItem(parent){}
     bool operator < (const QTreeWidgetItem& other) const {

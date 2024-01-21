@@ -16,7 +16,7 @@ class QTableWidget;
 /*!
     Performs operations related to the visualization of the statistics
 */
-class Crapview : public QObject
+class Crapview final : public QObject
 {
     Q_OBJECT
     DATA_TYPEDEFS

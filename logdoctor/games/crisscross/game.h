@@ -17,7 +17,7 @@ namespace Ui {
 /*!
     Player vs AI criss-cross game
 */
-class CrissCross : public QWidget
+class CrissCross final : public QWidget
 {
     Q_OBJECT
 

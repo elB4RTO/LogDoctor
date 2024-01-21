@@ -17,7 +17,7 @@ enum class WorkerDialog;
 class QSqlDatabase;
 
 
-class CraplogParser : public QObject
+class CraplogParser final : public QObject
 {
     Q_OBJECT
 

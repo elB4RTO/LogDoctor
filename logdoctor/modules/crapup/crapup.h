@@ -18,7 +18,7 @@ namespace Ui {
 /*!
 
 */
-class Crapup : public QWidget
+class Crapup final : public QWidget
 {
     Q_OBJECT
 

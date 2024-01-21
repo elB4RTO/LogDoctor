@@ -17,7 +17,7 @@
 /*!
     Performs operations related to the logs
 */
-class Craplog : public QObject
+class Craplog final : public QObject
 {
     Q_OBJECT
 
@@ -549,7 +549,7 @@ private:
         The rules to be used to decide whether a file name is valid or not
         \see isFileNameValid()
     */
-    struct LogName {
+    struct LogName final {
         std::string starts;   //!< What should be the initial part of the name
         std::string contains; //!< What should be contained in the middle of the name
         std::string ends;     //!< What should be the final part of the name

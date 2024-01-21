@@ -10,7 +10,7 @@
     Implements various dialog models
     \see DialogMsg, DialogBool, DialogDia
 */
-class DialogSec : public QObject
+class DialogSec final : public QObject
 {
     Q_OBJECT
 

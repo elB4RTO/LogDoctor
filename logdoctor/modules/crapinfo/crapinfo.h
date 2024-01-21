@@ -14,7 +14,7 @@ namespace Ui {
 /*!
     Displays informations
 */
-class Crapinfo : public QWidget
+class Crapinfo final : public QWidget
 {
     Q_OBJECT
 
