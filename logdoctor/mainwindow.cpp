@@ -2,9 +2,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "globals/global_configs.h"
+#include "main_lib.h"
 
-#include "defines/web_servers.h"
+#include "globals/global_configs.h"
 
 #include "customs/treewidgetitems.h"
 
@@ -194,9 +194,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_ConfWindow_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::window_theme) );
     this->ui->box_ConfWindow_Icons->setCurrentIndex( static_cast<int>(GlobalConfigs::icons_theme) );
     // dialogs
-    this->ui->slider_ConfDialogs_General->setValue( this->dialogs_level );
-    this->ui->slider_ConfDialogs_Logs->setValue( this->craplog.getDialogsLevel() );
-    this->ui->slider_ConfDialogs_Stats->setValue( this->crapview.getDialogsLevel() );
+    this->ui->slider_ConfDialogs_General->setValue( static_cast<int>(this->dialogs_level) );
+    this->ui->slider_ConfDialogs_Logs->setValue( static_cast<int>(this->craplog.getDialogsLevel()) );
+    this->ui->slider_ConfDialogs_Stats->setValue( static_cast<int>(this->crapview.getDialogsLevel()) );
     // text browser
     this->ui->box_ConfTextBrowser_Font->setCurrentText( this->TB.getFontFamily() );
     this->ui->checkBox_ConfTextBrowser_WideLines->setChecked( this->TB.getWideLinesUsage() );
@@ -342,7 +342,7 @@ void MainWindow::readConfigs()
                 if ( err.value() ) {
                     proceed &= false;
                     QString file;
-                    if ( this->dialogs_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         file = QString::fromStdString( this->configs_path );
                         err_msg = QString::fromStdString( err.message() );
                     }
@@ -356,7 +356,7 @@ void MainWindow::readConfigs()
                 proceed = IOutils::renameAsCopy( this->configs_path, err );
                 if ( ! proceed ) {
                     QString path;
-                    if ( this->dialogs_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         path = QString::fromStdString( this->configs_path );
                         if ( err.value() ) {
                             err_msg = QString::fromStdString( err.message() );
@@ -370,7 +370,7 @@ void MainWindow::readConfigs()
         // configuration file not found
         proceed &= false;
         QString file;
-        if ( this->dialogs_level == 2 ) {
+        if ( this->dialogs_level == DL_EXPLANATORY ) {
             file = QString::fromStdString( this->configs_path );
         }
         DialogSec::warnConfFileNotFound( file );
@@ -439,7 +439,7 @@ void MainWindow::readConfigs()
                     GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
 
                 } else if ( var == "MainDialogsLevel" ) {
-                    this->dialogs_level = std::stoi( val );
+                    this->dialogs_level = fromInt( std::stoi( val ) );
 
                 } else if ( var == "DefaultWebServer" ) {
                     this->default_web_server = fromString( val );
@@ -466,7 +466,7 @@ void MainWindow::readConfigs()
                     this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
 
                 } else if ( var == "CraplogDialogsLevel" ) {
-                    this->craplog.setDialogsLevel( std::stoi( val ) );
+                    this->craplog.setDialogsLevel( fromInt( std::stoi( val ) ) );
 
                 } else if ( var == "HideUsedFiles" ) {
                     hide_used_files = this->s2b.at( val );
@@ -632,7 +632,7 @@ void MainWindow::readConfigs()
                     this->craplog.setBlacklistUsed( WS_IIS, 20, this->s2b.at( val ) );
 
                 } else if ( var == "CrapviewDialogsLevel" ) {
-                    this->crapview.setDialogsLevel( std::stoi( val ) );
+                    this->crapview.setDialogsLevel( fromInt( std::stoi( val ) ) );
 
                 }/* else {
                     // not valid
@@ -679,7 +679,7 @@ void MainWindow::writeConfigs()
                 if ( err.value() ) {
                     proceed &= false;
                     QString file;
-                    if ( this->dialogs_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         file = QString::fromStdString( this->configs_path );
                         err_msg = QString::fromStdString( err.message() );
                     }
@@ -694,7 +694,7 @@ void MainWindow::writeConfigs()
                 proceed = IOutils::renameAsCopy( this->configs_path, err );
                 if ( ! proceed ) {
                     QString path;
-                    if ( this->dialogs_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         path = QString::fromStdString( this->configs_path );
                         if ( err.value() ) {
                             err_msg = QString::fromStdString( err.message() );
@@ -719,7 +719,7 @@ void MainWindow::writeConfigs()
                     if ( err.value() ) {
                         proceed &= false;
                         QString file;
-                        if ( this->dialogs_level > 0 ) {
+                        if ( this->dialogs_level > DL_ESSENTIAL ) {
                             file = QString::fromStdString( base_path );
                             err_msg = QString::fromStdString( err.message() );
                         }
@@ -734,7 +734,7 @@ void MainWindow::writeConfigs()
                     proceed = IOutils::renameAsCopy( base_path, err );
                     if ( ! proceed ) {
                         QString path;
-                        if ( this->dialogs_level > 0 ) {
+                        if ( this->dialogs_level > DL_ESSENTIAL ) {
                             path = QString::fromStdString( base_path );
                             err_msg = QString::fromStdString( err.message() );
                         }
@@ -745,7 +745,7 @@ void MainWindow::writeConfigs()
                         proceed = IOutils::makeDir( base_path, err );
                         if ( ! proceed ) {
                             msg = DialogSec::tr("Failed to create the configuration file's directory");
-                            if ( this->dialogs_level > 0 ) {
+                            if ( this->dialogs_level > DL_ESSENTIAL ) {
                                 msg += ":\n"+QString::fromStdString( base_path );
                                 err_msg = QString::fromStdString( err.message() );
                             }
@@ -758,7 +758,7 @@ void MainWindow::writeConfigs()
             proceed = IOutils::makeDir( base_path, err );
             if ( ! proceed ) {
                 msg = DialogSec::tr("Failed to create the configuration file's directory");
-                if ( this->dialogs_level > 0 ) {
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
                     msg += ":\n"+QString::fromStdString( base_path );
                     err_msg = QString::fromStdString( err.message() );
                 }
@@ -779,7 +779,7 @@ void MainWindow::writeConfigs()
         configs += "\nWindowTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::window_theme) );
         configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
         configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
-        configs += "\nMainDialogsLevel=" + std::to_string( this->dialogs_level );
+        configs += "\nMainDialogsLevel=" + toString( this->dialogs_level );
         configs += "\nDefaultWebServer=" + toString( this->default_web_server );
         configs += "\nDatabaseDataPath=" + this->db_data_path;
         configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
@@ -792,7 +792,7 @@ void MainWindow::writeConfigs()
         configs += "\nColorScheme=" + std::to_string( this->TB.getColorSchemeID() );
         //// CRAPLOG ////
         configs += "\n\n[Craplog]";
-        configs += "\nCraplogDialogsLevel=" + std::to_string( this->craplog.getDialogsLevel() );
+        configs += "\nCraplogDialogsLevel=" + toString( this->craplog.getDialogsLevel() );
         configs += "\nHideUsedFiles=" + this->b2s.at( this->hide_used_files );
         configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
         //// APACHE2 ////
@@ -846,7 +846,7 @@ void MainWindow::writeConfigs()
         configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->craplog.isBlacklistUsed( WS_IIS, 20 ) );
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
-        configs += "\nCrapviewDialogsLevel=" + std::to_string( this->crapview.getDialogsLevel() );
+        configs += "\nCrapviewDialogsLevel=" + toString( this->crapview.getDialogsLevel() );
 
         // write on file
         try {
@@ -879,7 +879,7 @@ void MainWindow::backupDatabase() const
                     proceed = IOutils::renameAsCopy( path, err );
                     if ( ! proceed ) {
                         QString p;
-                        if ( this->dialogs_level > 0 ) {
+                        if ( this->dialogs_level > DL_ESSENTIAL ) {
                             p = QString::fromStdString( path );
                             if ( err.value() ) {
                                 err_msg = QString::fromStdString( err.message() );
@@ -891,7 +891,7 @@ void MainWindow::backupDatabase() const
                         proceed = IOutils::makeDir( path, err );
                         if ( ! proceed ) {
                             QString msg = DialogSec::tr("Failed to create the database backups' directory");
-                            if ( this->dialogs_level > 0 ) {
+                            if ( this->dialogs_level > DL_ESSENTIAL ) {
                                 msg += ":\n"+QString::fromStdString( path );
                                 if ( err.value() ) {
                                     err_msg = QString::fromStdString( err.message() );
@@ -907,7 +907,7 @@ void MainWindow::backupDatabase() const
             proceed = IOutils::makeDir( path, err );
             if ( ! proceed ) {
                 QString msg = DialogSec::tr("Failed to create the database backups' directory");
-                if ( this->dialogs_level > 0 ) {
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
                     msg += ":\n"+QString::fromStdString( path );
                     if ( err.value() ) {
                         err_msg = QString::fromStdString( err.message() );
@@ -1739,7 +1739,7 @@ void MainWindow::makeInitialChecks()
                         ok = IOutils::renameAsCopy( path, err );
                         if ( ! ok ) {
                             QString p;
-                            if ( this->dialogs_level > 0 ) {
+                            if ( this->dialogs_level > DL_ESSENTIAL ) {
                                 p = QString::fromStdString( path );
                                 if ( err.value() ) {
                                     err_msg = QString::fromStdString( err.message() );
@@ -1750,7 +1750,7 @@ void MainWindow::makeInitialChecks()
                             ok = IOutils::makeDir( path, err );
                             if ( ! ok ) {
                                 QString msg = DialogSec::tr("Failed to create the directory");
-                                if ( this->dialogs_level > 0 ) {
+                                if ( this->dialogs_level > DL_ESSENTIAL ) {
                                     msg += ":\n"+QString::fromStdString( path );
                                     if ( err.value() ) {
                                         err_msg = QString::fromStdString( err.message() );
@@ -1766,7 +1766,7 @@ void MainWindow::makeInitialChecks()
                 ok = IOutils::makeDir( path, err );
                 if ( ! ok ) {
                     QString msg = DialogSec::tr("Failed to create the directory");
-                    if ( this->dialogs_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         msg += ":\n"+QString::fromStdString( path );
                         if ( err.value() ) {
                             err_msg = QString::fromStdString( err.message() );
@@ -2575,11 +2575,11 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 if ( item.size() > warn_size ) {
                     // exceeds the warning size
                     QString msg{ item.name() };
-                    if ( this->dialogs_level >= 1 ) {
+                    if ( this->dialogs_level >= DL_NORMAL ) {
                         msg += QString("\n\n%1:\n%2").arg(
                             DialogSec::tr("Size of the file"),
                             PrintSec::printableSize( item.size() ) );
-                        if ( this->dialogs_level == 2 ) {
+                        if ( this->dialogs_level == DL_EXPLANATORY ) {
                             msg += QString("\n\n%1:\n%2").arg(
                                 DialogSec::tr("Warning size parameter"),
                                 PrintSec::printableSize( warn_size ) );
@@ -4257,15 +4257,15 @@ void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
 //// DIALOGS ////
 void MainWindow::on_slider_ConfDialogs_General_sliderReleased()
 {
-    this->dialogs_level = this->ui->slider_ConfDialogs_General->value();
+    this->dialogs_level = fromInt( this->ui->slider_ConfDialogs_General->value() );
 }
 void MainWindow::on_slider_ConfDialogs_Logs_sliderReleased()
 {
-    this->craplog.setDialogsLevel( this->ui->slider_ConfDialogs_Logs->value() );
+    this->craplog.setDialogsLevel( fromInt( this->ui->slider_ConfDialogs_Logs->value() ) );
 }
 void MainWindow::on_slider_ConfDialogs_Stats_sliderReleased()
 {
-    this->crapview.setDialogsLevel( this->ui->slider_ConfDialogs_Stats->value() );
+    this->crapview.setDialogsLevel( fromInt( this->ui->slider_ConfDialogs_Stats->value() ) );
 }
 
 

@@ -19,9 +19,9 @@
 #include <QSqlError>
 
 
-void HashOps::setDialogLevel( const int new_level ) noexcept
+void HashOps::setDialogLevel( const DialogsLevel new_level ) noexcept
 {
-    this->dialog_level = new_level;
+    this->dialogs_level = new_level;
 }
 
 
@@ -46,7 +46,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path ) noexcept
         // error opening database
         successful &= false;
         QString err_msg;
-        if ( this->dialog_level == 2 ) {
+        if ( this->dialogs_level == DL_EXPLANATORY ) {
             err_msg = db.lastError().text();
         }
         DialogSec::errDatabaseFailedOpening( db_name, err_msg );
@@ -160,9 +160,9 @@ bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const st
                 // error opening database
                 successful &= false;
                 QString query_msg, err_msg;
-                if ( this->dialog_level > 0 ) {
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
                     query_msg = "query.exec()";
-                    if ( this->dialog_level == 2 ) {
+                    if ( this->dialogs_level == DL_EXPLANATORY ) {
                         err_msg = query.lastError().text();
                     }
                 }
@@ -195,7 +195,7 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
         // error opening database
         successful &= false;
         QString err_msg;
-        if ( this->dialog_level == 2 ) {
+        if ( this->dialogs_level == DL_EXPLANATORY ) {
             err_msg = db.lastError().text();
         }
         DialogSec::errDatabaseFailedOpening( db_name, err_msg );
@@ -206,9 +206,9 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
             // error opening database
             successful &= false;
             QString stmt_msg, err_msg;
-            if ( this->dialog_level > 0 ) {
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
                 stmt_msg = "db.transaction()";
-                if ( this->dialog_level == 2 ) {
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
                     err_msg = db.lastError().text();
                 }
             }
@@ -231,9 +231,9 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                         // error opening database
                         successful &= false;
                         QString stmt_msg, err_msg;
-                        if ( this->dialog_level > 0 ) {
+                        if ( this->dialogs_level > DL_ESSENTIAL ) {
                             stmt_msg = "db.commit()";
-                            if ( this->dialog_level == 2 ) {
+                            if ( this->dialogs_level == DL_EXPLANATORY ) {
                                 err_msg= db.lastError().text();
                             }
                         }
@@ -253,9 +253,9 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
                 if ( ! db.rollback() ) {
                     // error rolling back commits
                     QString stmt_msg, err_msg;
-                    if ( this->dialog_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         stmt_msg = "db.rollback()";
-                        if ( this->dialog_level == 2 ) {
+                        if ( this->dialogs_level == DL_EXPLANATORY ) {
                             err_msg = db.lastError().text();
                         }
                     }

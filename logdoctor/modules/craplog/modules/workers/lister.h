@@ -2,13 +2,14 @@
 #define LOGDOCTOR__CRAPLOG__WORKERS__LISTER_H
 
 
+#include "main_lib.h"
+
 #include <QObject>
 
 struct LogsFormat;
 struct LogFile;
 class HashOps;
 
-enum class WebServer;
 enum class WorkerDialog;
 
 
@@ -20,7 +21,7 @@ public:
 
     explicit CraplogLister(
         const WebServer web_server,
-        const unsigned dialogs_level,
+        const DialogsLevel dialogs_level,
         const std::string& logs_path,
         const LogsFormat& logs_format,
         const HashOps& hashOps,
@@ -48,7 +49,7 @@ private:
 
     const WebServer web_server;
 
-    const unsigned dialogs_level;
+    const DialogsLevel dialogs_level;
 
     const std::string& logs_path;
 

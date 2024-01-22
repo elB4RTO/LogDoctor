@@ -4,7 +4,7 @@
 
 #include <QtCharts>
 
-#include "defines/web_servers.h"
+#include "main_lib.h"
 
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
@@ -29,10 +29,10 @@ public:
     //// DIALOGS ////
 
     //! Returns the Dialogs level
-    int getDialogsLevel() const noexcept;
+    DialogsLevel getDialogsLevel() const noexcept;
 
     //! Sets the new Dialogs level
-    void setDialogsLevel( const int new_level ) noexcept;
+    void setDialogsLevel( const DialogsLevel new_level ) noexcept;
 
     ///////////////////
     //// DATABASES ////
@@ -464,7 +464,7 @@ private:
     //// DIALOGS ////
 
     // quantity of information to display throught dialogs
-    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
+    DialogsLevel dialogs_level{ DL_NORMAL };
 
 
     ///////////////////

@@ -2,6 +2,8 @@
 #define LOGDOCTOR__CRAPLOG__WORKERS__PARSER_H
 
 
+#include "main_lib.h"
+
 #include "modules/craplog/modules/lib.h"
 
 #include <QObject>
@@ -12,7 +14,6 @@
 struct BWlist;
 struct LogLineData;
 
-enum class WebServer;
 enum class WorkerDialog;
 
 class QSqlDatabase;
@@ -30,7 +31,7 @@ public:
 
     explicit CraplogParser(
         const WebServer web_server,
-        const unsigned dialogs_level,
+        const DialogsLevel dialogs_level,
         const std::string& db_data_path,
         const std::string& db_hashes_path,
         const LogsFormat& logs_format,
@@ -76,7 +77,7 @@ private:
 
     const WebServer web_server;
 
-    const unsigned dialogs_level;
+    const DialogsLevel dialogs_level;
 
     bool proceed{ true };
 

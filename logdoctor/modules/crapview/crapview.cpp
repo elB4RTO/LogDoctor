@@ -8,11 +8,11 @@
 #include <QTableWidget>
 
 
-int Crapview::getDialogsLevel() const noexcept
+DialogsLevel Crapview::getDialogsLevel() const noexcept
 {
     return this->dialogs_level;
 }
-void Crapview::setDialogsLevel( const int new_level ) noexcept
+void Crapview::setDialogsLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialogs_level = new_level;
 }

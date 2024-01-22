@@ -86,11 +86,11 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-int Craplog::getDialogsLevel() const noexcept
+DialogsLevel Craplog::getDialogsLevel() const noexcept
 {
     return this->dialogs_level;
 }
-void Craplog::setDialogsLevel( const int new_level ) noexcept
+void Craplog::setDialogsLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialogs_level = new_level;
     this->hashOps.setDialogLevel( new_level );
@@ -657,7 +657,7 @@ bool Craplog::checkStuff()
         if ( file.hasBeenUsed() ) {
             // already used
             QString msg{ file.name() };
-            if ( this->dialogs_level == 2 ) {
+            if ( this->dialogs_level == DL_EXPLANATORY ) {
                 msg += "\n" + QString::fromStdString( file.hash() );
             }
             const int choice = DialogSec::choiceFileAlreadyUsed( msg );
@@ -680,7 +680,7 @@ bool Craplog::checkStuff()
             if ( VecOps::contains( this->used_files_hashes, file.hash() ) ) {
                 // appears twice in the list
                 QString msg{ file.name() };
-                if ( this->dialogs_level == 2 ) {
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
                         msg += "\n" + QString::fromStdString( file.hash() );
                 }
                 const int choice = DialogSec::choiceDuplicateFile( msg );
@@ -706,11 +706,11 @@ bool Craplog::checkStuff()
             if ( file.size() > this->warning_size ) {
                 // exceeds the warning size
                 QString msg{ file.name() };
-                if ( this->dialogs_level >= 1 ) {
+                if ( this->dialogs_level >= DL_NORMAL ) {
                     msg += QString("\n\n%1:\n%2").arg(
                         DialogSec::tr("Size of the file"),
                         PrintSec::printableSize( file.size() ) );
-                    if ( this->dialogs_level == 2 ) {
+                    if ( this->dialogs_level == DL_EXPLANATORY ) {
                         msg += QString("\n\n%1:\n%2").arg(
                             DialogSec::tr("Warning size parameter"),
                             PrintSec::printableSize( this->warning_size ) );
@@ -764,11 +764,11 @@ bool Craplog::checkStuff()
     if ( this->proceed && logs_size >= MemOps::availableMemory() ) {
         // no files left, abort
         QString msg;
-        if ( this->dialogs_level >= 1 ) {
+        if ( this->dialogs_level >= DL_NORMAL ) {
             msg += QString("\n\n%1: %2").arg(
                 DialogSec::tr("Available memory"),
                 PrintSec::printableSize( MemOps::availableMemory() ) );
-            if ( this->dialogs_level == 2 ) {
+            if ( this->dialogs_level == DL_EXPLANATORY ) {
                 msg += QString("\n%1: %2").arg(
                     DialogSec::tr("Size of the logs"),
                     PrintSec::printableSize( logs_size ) );

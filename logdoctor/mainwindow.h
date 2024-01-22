@@ -633,7 +633,7 @@ private:
     //// GENERAL ////
 
     // quantoty of informational dialogs to display
-    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
+    DialogsLevel dialogs_level{ DL_NORMAL };
 
     // default web server
     WebServer default_web_server{ WS_APACHE };

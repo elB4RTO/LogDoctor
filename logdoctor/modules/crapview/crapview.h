@@ -2,12 +2,15 @@
 #define LOGDOCTOR__CRAPVIEW_H
 
 
-#include <QHash>
-#include <QtCharts>
+#include "main_lib.h"
 
 #include "modules/crapview/modules/query.h"
 
+#include <QHash>
+#include <QtCharts>
+
 #include <string>
+
 
 class QTableWidget;
 
@@ -24,10 +27,10 @@ class Crapview final : public QObject
 public:
 
     //! Returns the Dialogs level
-    int getDialogsLevel() const noexcept;
+    DialogsLevel getDialogsLevel() const noexcept;
 
     //! Sets the new Dialogs level
-    void setDialogsLevel( const int new_level ) noexcept;
+    void setDialogsLevel( const DialogsLevel new_level ) noexcept;
 
 
     /*//! Sets the new charts theme to use
@@ -262,7 +265,7 @@ private slots:
 private:
 
     // quantity of information to display throught dialogs
-    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
+    DialogsLevel dialogs_level{ DL_NORMAL };
 
     // charts theme ID
     int charts_theme{ 0 };

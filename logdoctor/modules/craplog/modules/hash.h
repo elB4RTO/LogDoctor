@@ -2,7 +2,7 @@
 #define LOGDOCTOR__CRAPLOG__HASH_H
 
 
-#include "defines/web_servers.h"
+#include "main_lib.h"
 
 #include <vector>
 #include <unordered_map>
@@ -24,7 +24,7 @@ class HashOps final
 public:
 
     //! Sets the new Dialogs level
-    void setDialogLevel( const int new_level ) noexcept;
+    void setDialogLevel( const DialogsLevel new_level ) noexcept;
 
     //! Retrieves the lists of hashes from the database file
     /*!
@@ -62,7 +62,7 @@ public:
 private:
 
     // Quantity of information to display throught dialogs
-    int dialog_level{ 2 };
+    DialogsLevel dialogs_level{ DL_NORMAL };
 
     // List of Web Servers names for database tables
     const std::unordered_map<WebServer, QString> ws_names{

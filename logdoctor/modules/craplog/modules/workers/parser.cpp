@@ -1,8 +1,6 @@
 
 #include "parser.h"
 
-#include "defines/web_servers.h"
-
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -19,7 +17,7 @@
 #include <QSqlError>
 
 
-CraplogParser::CraplogParser( const WebServer web_server, const unsigned dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
+CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
     : QObject        { parent         }
     , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
@@ -254,7 +252,7 @@ void CraplogParser::storeLogLines()
         // error opening database
         this->proceed &= false;
         QString err_msg;
-        if ( this->dialogs_level == 2 ) {
+        if ( this->dialogs_level == DL_EXPLANATORY ) {
             err_msg = db.lastError().text();
         }
         emit this->showDialog( WorkerDialog::errDatabaseFailedOpening,
@@ -268,9 +266,9 @@ void CraplogParser::storeLogLines()
                 // error opening database
                 this->proceed &= false;
                 QString stmt_msg, err_msg;
-                if ( this->dialogs_level > 0 ) {
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
                     stmt_msg = "db.transaction()";
-                    if ( this->dialogs_level == 2 ) {
+                    if ( this->dialogs_level == DL_EXPLANATORY ) {
                         err_msg = db.lastError().text();
                     }
                 }
@@ -288,9 +286,9 @@ void CraplogParser::storeLogLines()
                     // error opening database
                     this->proceed &= false;
                     QString stmt_msg, err_msg;
-                    if ( this->dialogs_level > 0 ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
                         stmt_msg = "db.commit()";
-                        if ( this->dialogs_level == 2 ) {
+                        if ( this->dialogs_level == DL_EXPLANATORY ) {
                             err_msg= db.lastError().text();
                         }
                     }
@@ -311,9 +309,9 @@ void CraplogParser::storeLogLines()
             if ( ! db.rollback() ) {
                 // error rolling back commits
                 QString stmt_msg, err_msg;
-                if ( this->dialogs_level > 0 ) {
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
                     stmt_msg = "db.rollback()";
-                    if ( this->dialogs_level == 2 ) {
+                    if ( this->dialogs_level == DL_EXPLANATORY ) {
                         err_msg = db.lastError().text();
                     }
                 }
@@ -511,9 +509,9 @@ bool CraplogParser::storeData( QSqlDatabase& db )
         if ( ! query.prepare( query_stmt ) ) {
             // error opening database
             QString query_msg, err_msg;
-            if ( this->dialogs_level > 0 ) {
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
                 query_msg = "query.prepare()";
-                if ( this->dialogs_level == 2 ) {
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
                     err_msg = query.lastError().text();
                 }
             }
@@ -526,9 +524,9 @@ bool CraplogParser::storeData( QSqlDatabase& db )
         if ( ! query.exec() ) {
             // error finalizing step
             QString query_msg, err_msg;
-            if ( this->dialogs_level > 0 ) {
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
                 query_msg = "query.exec()";
-                if ( this->dialogs_level == 2 ) {
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
                     err_msg = query.lastError().text();
                 }
             }
