@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <sstream>
 
+#include "main_lib.h"
+
 #include "utilities/io.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
@@ -40,6 +42,118 @@
 
 namespace Testing
 {
+
+void testOperators()
+{
+    //// DIALOGS LEVEL ////
+
+    assert( DialogsLevel::Essential < DialogsLevel::Normal );
+    assert( DialogsLevel::Essential < DialogsLevel::Explanatory );
+    assert( DialogsLevel::Normal < DialogsLevel::Explanatory );
+    assert( ! (DialogsLevel::Essential < DialogsLevel::Essential) );
+    assert( ! (DialogsLevel::Normal < DialogsLevel::Normal) );
+    assert( ! (DialogsLevel::Explanatory < DialogsLevel::Explanatory) );
+    T_PRINT("DialogsLevel::operator <");
+
+    assert( DialogsLevel::Essential >= DialogsLevel::Essential );
+    assert( DialogsLevel::Normal >= DialogsLevel::Essential );
+    assert( DialogsLevel::Normal >= DialogsLevel::Normal );
+    assert( DialogsLevel::Explanatory >= DialogsLevel::Essential );
+    assert( DialogsLevel::Explanatory >= DialogsLevel::Normal );
+    assert( DialogsLevel::Explanatory >= DialogsLevel::Explanatory );
+    assert( ! (DialogsLevel::Essential >= DialogsLevel::Normal) );
+    assert( ! (DialogsLevel::Essential >= DialogsLevel::Explanatory) );
+    assert( ! (DialogsLevel::Normal >= DialogsLevel::Explanatory) );
+    T_PRINT("DialogsLevel::operator >=");
+
+    //// FIELD DATA ////
+
+    {
+    const FieldData fd;
+    assert( fd == false );
+    }{
+    const FieldData fd("");
+    assert( fd == false );
+    }{
+    const FieldData fd("*");
+    assert( fd == true );
+    }
+    T_PRINT("FieldData::operator bool");
+
+    {
+    const FieldData fd;
+    assert( 0ul + fd == 0ul );
+    }{
+    const FieldData fd("");
+    assert( 0ul + fd == 0ul );
+    }{
+    const FieldData fd("1");
+    assert( 0ul + fd == 1ul );
+    }{
+    const FieldData fd("0123456789");
+    assert( 10ul + fd == 20ul );
+    assert( fd + 10ul != 20ul ); // fd evaluates to bool (aka 1)
+    }{
+    const FieldData fd1;
+    const FieldData fd2;
+    assert( fd1 + fd2 == 0ul );
+    }{
+    const FieldData fd1("");
+    const FieldData fd2("");
+    assert( fd1 + fd2 == 0ul );
+    }{
+    const FieldData fd1("");
+    const FieldData fd2("123");
+    assert( fd1 + fd2 == 3ul );
+    }{
+    const FieldData fd1("123");
+    const FieldData fd2("456");
+    assert( fd1 + fd2 == 6ul );
+    }{
+    const FieldData fd1("123");
+    const FieldData fd2("456");
+    assert( 4ul + fd1 + fd2 == 10ul );
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    assert( fd1 + fd2 + fd3 == 30ul );
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    assert( 70ul + fd1 + fd2 + fd3 == 100ul );
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    assert( fd1 + fd2 + fd3 + 70ul == 100ul );
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    assert( 10ul + fd1 + fd2 + fd3 + 10ul == 50ul );
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    assert( 10ul + (fd1 + fd2) + fd3 + 10ul == 50ul );
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    assert( 10ul + (fd1 + fd2) + (fd3 + 10ul) != 50ul ); // fd3 evaluates to bool (== 1)
+    }{
+    const FieldData fd1("0123456789");
+    const FieldData fd2("0123456789");
+    const FieldData fd3("0123456789");
+    const FieldData fd4("0123456789");
+    const FieldData fd5("0123456789");
+    assert( 10ul + fd1 + 20ul + fd2 + fd3 + 10ul + fd4 + 10ul + fd5 == 100ul );
+    }
+    T_PRINT("FieldData::operator +");
+}
+
 
 void testUtilities()
 {
