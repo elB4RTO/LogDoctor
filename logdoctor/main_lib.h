@@ -55,19 +55,6 @@ inline std::string toString(const WebServer ws) noexcept
     }
 }
 
-inline WebServer fromString(const std::string& ws)
-{
-    if ( ws == "Apache" ) {
-        return WebServer::Apache;
-    } else if ( ws == "Nginx" ) {
-        return WebServer::Nginx;
-    } else if ( ws == "IIS" ) {
-        return WebServer::IIS;
-    } else {
-        throw( "Unexpected WebServer: " + ws );
-    }
-}
-
 
 inline std::string toString(const DialogsLevel lvl)
 {
@@ -80,15 +67,6 @@ inline std::string toString(const DialogsLevel lvl)
             return "2";
         default:
             throw( "Unexpected DialogsLevel: " + std::to_string(static_cast<int>(lvl)) );
-    }
-}
-
-inline DialogsLevel fromInt(const int lvl)
-{
-    if ( lvl >= 0 && lvl <= 2) {
-        return static_cast<DialogsLevel>( lvl );
-    } else {
-        throw( "Unexpected DialogsLevel: " + std::to_string(lvl) );
     }
 }
 

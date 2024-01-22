@@ -630,13 +630,32 @@ private:
 
 
     /////////////////
-    //// GENERAL ////
+    //// DIALOGS ////
 
     // quantoty of informational dialogs to display
     DialogsLevel dialogs_level{ DL_NORMAL };
 
+    //! Retrieves the dialogs level from the given string
+    /*!
+        \see readConfigs()
+    */
+    void setDialogsLevelFromString( const std::string& dialogs_level );
+
+    //! Returns the dialogs level corresponding to the given number
+    DialogsLevel dialogsLevelFromInt( const int dialogs_level );
+
+
+    ////////////////////
+    //// WEB SERVER ////
+
     // default web server
     WebServer default_web_server{ WS_APACHE };
+
+    //! Retrieves the Web Server from the given string
+    /*!
+        \see readConfigs()
+    */
+    void setWebServerFromString( const std::string& web_server );
 
 
     //////////////////

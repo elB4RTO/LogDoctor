@@ -439,10 +439,10 @@ void MainWindow::readConfigs()
                     GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
 
                 } else if ( var == "MainDialogsLevel" ) {
-                    this->dialogs_level = fromInt( std::stoi( val ) );
+                    this->setDialogsLevelFromString( val );
 
                 } else if ( var == "DefaultWebServer" ) {
-                    this->default_web_server = fromString( val );
+                    this->setWebServerFromString( val );
 
                 } else if ( var == "DatabaseDataPath" ) {
                     this->db_data_path = this->resolvePath( val );
@@ -466,7 +466,7 @@ void MainWindow::readConfigs()
                     this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
 
                 } else if ( var == "CraplogDialogsLevel" ) {
-                    this->craplog.setDialogsLevel( fromInt( std::stoi( val ) ) );
+                    this->craplog.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
 
                 } else if ( var == "HideUsedFiles" ) {
                     hide_used_files = this->s2b.at( val );
@@ -632,7 +632,7 @@ void MainWindow::readConfigs()
                     this->craplog.setBlacklistUsed( WS_IIS, 20, this->s2b.at( val ) );
 
                 } else if ( var == "CrapviewDialogsLevel" ) {
-                    this->crapview.setDialogsLevel( fromInt( std::stoi( val ) ) );
+                    this->crapview.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
 
                 }/* else {
                     // not valid
@@ -1000,6 +1000,33 @@ void MainWindow::setGeometryFromString( const std::string& geometry )
     this->setGeometry( new_geometry );
     if ( aux.at(4) == "true" ) {
         this->showMaximized();
+    }
+}
+
+void MainWindow::setDialogsLevelFromString( const std::string& dialogs_level )
+{
+    this->dialogs_level = this->dialogsLevelFromInt( std::stoi( dialogs_level ) );
+}
+DialogsLevel MainWindow::dialogsLevelFromInt( const int dialogs_level )
+{
+    if ( dialogs_level >= 0 && dialogs_level <= 2) {
+        return static_cast<DialogsLevel>( dialogs_level );
+    } else {
+        throw( "Unexpected DialogsLevel: " + std::to_string(dialogs_level) );
+    }
+}
+
+void MainWindow::setWebServerFromString(const std::string& web_server )
+{
+    // 11,12,13 are kept for retro-compatibility, to be removed in a later stage
+    if ( web_server == "Apache" || web_server == "11" ) {
+        this->default_web_server = WebServer::Apache;
+    } else if ( web_server == "Nginx" || web_server == "12" ) {
+        this->default_web_server = WebServer::Nginx;
+    } else if ( web_server == "IIS" || web_server == "13" ) {
+        this->default_web_server = WebServer::IIS;
+    } else {
+        throw( "Unexpected WebServer: " + web_server );
     }
 }
 
@@ -4257,15 +4284,18 @@ void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
 //// DIALOGS ////
 void MainWindow::on_slider_ConfDialogs_General_sliderReleased()
 {
-    this->dialogs_level = fromInt( this->ui->slider_ConfDialogs_General->value() );
+    this->dialogs_level = this->dialogsLevelFromInt(
+        this->ui->slider_ConfDialogs_General->value() );
 }
 void MainWindow::on_slider_ConfDialogs_Logs_sliderReleased()
 {
-    this->craplog.setDialogsLevel( fromInt( this->ui->slider_ConfDialogs_Logs->value() ) );
+    this->craplog.setDialogsLevel( this->dialogsLevelFromInt(
+        this->ui->slider_ConfDialogs_Logs->value() ) );
 }
 void MainWindow::on_slider_ConfDialogs_Stats_sliderReleased()
 {
-    this->crapview.setDialogsLevel( fromInt( this->ui->slider_ConfDialogs_Stats->value() ) );
+    this->crapview.setDialogsLevel( this->dialogsLevelFromInt(
+        this->ui->slider_ConfDialogs_Stats->value() ) );
 }
 
 
