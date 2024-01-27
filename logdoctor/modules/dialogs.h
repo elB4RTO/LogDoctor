@@ -57,8 +57,14 @@ public:
     //! Missing read permission for the configuration file's directory
     static void errConfDirNotWritable( const QString& dir, const QString& err, QWidget* parent=nullptr );
 
-    //! Missing write permission for the configuration file's directory
-    static void errFailedApplyingConfigs( const QString& msg, QWidget* parent=nullptr );
+    //! An error occured while applying the value retrieved from the conf file
+    static void errFailedApplyingConfigsItem( const QString& msg, QWidget* parent=nullptr );
+
+    //! The lines in the list caused an error and cannot be applied
+    static void warnInvalidConfigsList( const QStringList& list, QWidget* parent=nullptr );
+
+    //! Failed to apply user provided configurations
+    static bool choiceFailedApplyingConfigs( const QString& msg, QWidget* parent=nullptr );
 
 
     //////////////

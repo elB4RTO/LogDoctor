@@ -98,15 +98,40 @@ void DialogSec::errConfDirNotWritable( const QString& dir, const QString& err, Q
 }
 
 
-void DialogSec::errFailedApplyingConfigs( const QString& msg, QWidget* parent )
+void DialogSec::errFailedApplyingConfigsItem( const QString& msg, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Failed applying configuration"),
         QString("%1\n%2").arg(
             (msg.isEmpty()) ? msg : QString("%1\n").arg(msg),
-            DialogSec::tr("Aborting") ),
+            DialogSec::tr("Skipping") ),
         "", MsgType::Error, parent };
     std::ignore = dialog.exec();
+}
+
+
+void DialogSec::warnInvalidConfigsList( const QStringList& list, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("Invalid configuration lines"),
+        QString("%1\n%2").arg(
+            DialogSec::tr("Has not been possible to apply some of the configurations"),
+            DialogSec::tr("If you haven't manually edited the configuration file,\nplease report this issue") ),
+        list.join('\n'),
+        MsgType::Warning, parent };
+    std::ignore = dialog.exec();
+}
+
+
+bool DialogSec::choiceFailedApplyingConfigs( const QString& msg, QWidget* parent )
+{
+    DialogBool dialog{
+        DialogSec::tr("Failed applying configuration"),
+        QString("%1\n\n%2").arg(
+            msg,
+            DialogSec::tr("If you choose to proceed, all of the unapplied configurations will be lost\nContinue?") ),
+        parent };
+    return dialog.exec();
 }
 
 
