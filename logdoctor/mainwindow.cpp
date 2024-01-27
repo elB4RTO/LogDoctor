@@ -378,16 +378,9 @@ void MainWindow::readConfigs()
 
     if ( proceed ) {
         err_msg.clear();
-        QString aux_err_msg;
+        QStringList invalid_lines;
         std::vector<std::string> aux, configs;
         try {
-            // reset the lists when a config file is found
-            for ( const WebServer& w : {WS_APACHE,WS_NGINX,WS_IIS} ) {
-                for ( const int& f : {11,12,20,21} ) {
-                    this->craplog.setWarnlist( w, f, {} );
-                }
-                this->craplog.setBlacklist( w, 20, {} );
-            }
             std::string content;
             IOutils::readFile( this->configs_path, content );
             StringOps::splitrip( configs, content );
@@ -414,164 +407,340 @@ void MainWindow::readConfigs()
                 if ( var == "Language" ) {
                     if ( val.size() != 5 ) {
                         // not a valid locale, keep the default
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
                         DialogSec::errLangLocaleInvalid( QString::fromStdString( val ) );
                     } else {
                         if ( val == "en_GB" || val == "es_ES" || val == "fr_FR" || val == "it_IT" || val == "ja_JP" || val == "pt_BR" ) {
                             this->language = val;
                         } else {
+                            invalid_lines.emplaceBack( QString::fromStdString( line ) );
                             DialogSec::errLangNotAccepted( QString::fromStdString( val ) );
                         }
                     }
 
                 } else if ( var == "RememberGeometry" ) {
-                    this->remember_window = this->s2b.at( val );
+                    try {
+                        this->remember_window = this->s2b.at( val );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "Geometry" ) {
                     this->setGeometryFromString( val );
 
                 } else if ( var == "WindowTheme" ) {
-                    GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
+                    try {
+                        GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IconsTheme" ) {
-                    GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
+                    try {
+                        GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ChartsTheme" ) {
-                    GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
+                    try {
+                        GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "MainDialogsLevel" ) {
-                    this->setDialogsLevelFromString( val );
+                    try {
+                        this->setDialogsLevelFromString( val );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "DefaultWebServer" ) {
-                    this->setWebServerFromString( val );
+                    try {
+                        this->setWebServerFromString( val );
+                    } catch ( const GenericException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            TR::tr("Unexpected WebServer"),
+                            QString::fromStdString( val ) ) );
+                    }
 
                 } else if ( var == "DatabaseDataPath" ) {
                     this->db_data_path = this->resolvePath( val );
+                    if ( this->db_data_path.empty() ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "DatabaseHashesPath" ) {
                     this->db_hashes_path = this->resolvePath( val );
+                    if ( this->db_hashes_path.empty() ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "DatabaseDoBackup" ) {
-                    this->db_do_backup = this->s2b.at( val );
+                    try {
+                        this->db_do_backup = this->s2b.at( val );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "DatabaseBackupsNumber" ) {
-                    this->db_backups_number = std::stoi( val );
+                    try {
+                        this->db_backups_number = std::stoi( val );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "Font" ) {
-                    this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
+                    try {
+                        this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "WideLines" ) {
-                    this->TB.setWideLinesUsage( this->s2b.at( val ) );
+                    try {
+                        this->TB.setWideLinesUsage( this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ColorScheme" ) {
-                    this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
+                    try {
+                        this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "CraplogDialogsLevel" ) {
-                    this->craplog.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
+                    try {
+                        this->craplog.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
+                    } catch ( ... ) { // std::exception / GenericException
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "HideUsedFiles" ) {
-                    hide_used_files = this->s2b.at( val );
+                    try {
+                        hide_used_files = this->s2b.at( val );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "WarningSize" ) {
-                    this->craplog.setWarningSize( std::stoul( val ) );
+                    try {
+                        this->craplog.setWarningSize( std::stoul( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ApacheLogsPath" ) {
                     this->craplog.setLogsPath( WS_APACHE, this->resolvePath( val ) );
+                    if ( this->craplog.getLogsPath( WS_APACHE ).empty() ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ApacheLogsFormat" ) {
                     if ( ! this->craplog.setApacheLogFormat( val ) ) {
-                        throw("");
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
                     }
 
                 } else if ( var == "ApacheWarnlistMethod" ) {
-                    aux_err_msg = QString("Apache -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_APACHE, 11, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_APACHE, 11, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Apache -> %1 (%2)").arg(
+                                TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistMethodUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_APACHE, 11, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_APACHE, 11, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistURI" ) {
-                    aux_err_msg = QString("Apache -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_APACHE, 12, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_APACHE, 12, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Apache -> %1 (%2)").arg(
+                                TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistURIUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_APACHE, 12, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_APACHE, 12, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistClient" ) {
-                    aux_err_msg = QString("Apache -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_APACHE, 20, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_APACHE, 20, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Apache -> %1 (%2)").arg(
+                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistClientUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_APACHE, 20, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_APACHE, 20, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistUserAgent" ) {
-                    aux_err_msg = QString("Apache -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_APACHE, 21, this->string2list( val, true ) );
+                    try {
+                        this->craplog.setWarnlist( WS_APACHE, 21, this->string2list( val, true ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Apache -> %1 (%2)").arg(
+                                TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "ApacheWarnlistUserAgentUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_APACHE, 21, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_APACHE, 21, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "ApacheBlacklistClient" ) {
-                    aux_err_msg = QString("Apache -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") );
-                    this->craplog.setBlacklist( WS_APACHE, 20, this->string2list( val ) );
+                    try {
+                        this->craplog.setBlacklist( WS_APACHE, 20, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Apache -> %1 (%2)").arg(
+                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
+                    }
 
                 } else if ( var == "ApacheBlacklistClientUsed" ) {
-                    this->craplog.setBlacklistUsed( WS_APACHE, 20, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setBlacklistUsed( WS_APACHE, 20, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "NginxLogsPath" ) {
                     this->craplog.setLogsPath( WS_NGINX, this->resolvePath( val ) );
+                    if ( this->craplog.getLogsPath( WS_NGINX ).empty() ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "NginxLogsFormat" ) {
                     if ( ! this->craplog.setNginxLogFormat( val ) ) {
-                        throw("");
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
                     }
 
                 } else if ( var == "NginxWarnlistMethod" ) {
-                    aux_err_msg = QString("Nginx -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_NGINX, 11, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_NGINX, 11, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Nginx -> %1 (%2)").arg(
+                                TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "NginxWarnlistMethodUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_NGINX, 11, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_NGINX, 11, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "NginxWarnlistURI" ) {
-                    aux_err_msg = QString("Nginx -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_NGINX, 12, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_NGINX, 12, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Nginx -> %1 (%2)").arg(
+                                TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "NginxWarnlistURIUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_NGINX, 12, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_NGINX, 12, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "NginxWarnlistClient" ) {
-                    aux_err_msg = QString("Nginx -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_NGINX, 20, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_NGINX, 20, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Nginx -> %1 (%2)").arg(
+                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "NginxWarnlistClientUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_NGINX, 20, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_NGINX, 20, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "NginxWarnlistUserAgent" ) {
-                    aux_err_msg = QString("Nginx -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_NGINX, 21, this->string2list( val, true ) );
+                    try {
+                        this->craplog.setWarnlist( WS_NGINX, 21, this->string2list( val, true ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Nginx -> %1 (%2)").arg(
+                                TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "NginxWarnlistUserAgentUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_NGINX, 21, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_NGINX, 21, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "NginxBlacklistClient" ) {
-                    aux_err_msg = QString("Nginx -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") );
-                    this->craplog.setBlacklist( WS_NGINX, 20, this->string2list( val ) );
+                    try {
+                        this->craplog.setBlacklist( WS_NGINX, 20, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("Nginx -> %1 (%2)").arg(
+                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
+                    }
 
                 } else if ( var == "NginxBlacklistClientUsed" ) {
-                    this->craplog.setBlacklistUsed( WS_NGINX, 20, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setBlacklistUsed( WS_NGINX, 20, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IisLogsPath" ) {
                     this->craplog.setLogsPath( WS_IIS, this->resolvePath( val ) );
+                    if ( this->craplog.getLogsPath( WS_IIS ).empty() ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IisLogsModule" ) {
                     if ( val == "1" ) {
@@ -588,51 +757,105 @@ void MainWindow::readConfigs()
                         module = 2;
                     }
                     if ( ! this->craplog.setIisLogFormat( val, module ) ) {
-                        throw("");
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
                     }
 
                 } else if ( var == "IisWarnlistMethod" ) {
-                    aux_err_msg = QString("IIS -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_IIS, 11, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_IIS, 11, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("IIS -> %1 (%2)").arg(
+                                TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "IisWarnlistMethodUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_IIS, 11, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_IIS, 11, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IisWarnlistURI" ) {
-                    aux_err_msg = QString("IIS -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_IIS, 12, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_IIS, 12, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("IIS -> %1 (%2)").arg(
+                                TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "IisWarnlistURIUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_IIS, 12, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_IIS, 12, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IisWarnlistClient" ) {
-                    aux_err_msg = QString("IIS -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_IIS, 20, this->string2list( val ) );
+                    try {
+                        this->craplog.setWarnlist( WS_IIS, 20, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("IIS -> %1 (%2)").arg(
+                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "IisWarnlistClientUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_IIS, 20, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_IIS, 20, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IisWarnlistUserAgent" ) {
-                    aux_err_msg = QString("IIS -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") );
-                    this->craplog.setWarnlist( WS_IIS, 21, this->string2list( val, true ) );
+                    try {
+                        this->craplog.setWarnlist( WS_IIS, 21, this->string2list( val, true ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("IIS -> %1 (%2)").arg(
+                                TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                    }
 
                 } else if ( var == "IisWarnlistUserAgentUsed" ) {
-                    this->craplog.setWarnlistUsed( WS_IIS, 21, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setWarnlistUsed( WS_IIS, 21, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "IisBlacklistClient" ) {
-                    aux_err_msg = QString("IIS -> %1 (%2)")
-                        .arg( TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") );
-                    this->craplog.setBlacklist( WS_IIS, 20, this->string2list( val ) );
+                    try {
+                        this->craplog.setBlacklist( WS_IIS, 20, this->string2list( val ) );
+                    } catch ( const BWlistException& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                            DialogSec::tr("One of the lists has an invalid item"),
+                            QString("IIS -> %1 (%2)").arg(
+                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
+                    }
 
                 } else if ( var == "IisBlacklistClientUsed" ) {
-                    this->craplog.setBlacklistUsed( WS_IIS, 20, this->s2b.at( val ) );
+                    try {
+                        this->craplog.setBlacklistUsed( WS_IIS, 20, this->s2b.at( val ) );
+                    } catch ( const std::exception& ) {
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 } else if ( var == "CrapviewDialogsLevel" ) {
-                    this->crapview.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
+                    try {
+                        this->crapview.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
+                    } catch ( ... ) { // std::exception / GenericException
+                        invalid_lines.emplaceBack( QString::fromStdString( line ) );
+                    }
 
                 }/* else {
                     // not valid
@@ -642,22 +865,25 @@ void MainWindow::readConfigs()
         } catch ( const std::ios_base::failure& ) {
             // failed reading
             proceed &= false;
+            invalid_lines.clear();
             err_msg = DialogSec::tr("An error occured while reading the configuration file");
-        } catch ( const LogFormatException& ) {
-            proceed &= false; // message already shown
-        } catch ( const BWlistException& ) {
-            proceed &= false;
-            err_msg = QString("%1:\n%2").arg(
-                DialogSec::tr("One of the lists has an invalid item"),
-                aux_err_msg );
         } catch (...) {
             // something failed
             proceed &= false;
+            invalid_lines.clear();
+            err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
+        }
+
+        if ( ! invalid_lines.isEmpty() ) {
+            proceed &= false;
+            DialogSec::warnInvalidConfigsList( invalid_lines );
             err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
         }
         if ( ! proceed ) {
-            DialogSec::errFailedApplyingConfigs( err_msg );
-            this->closeEvent( new QCloseEvent() );
+            if ( ! DialogSec::choiceFailedApplyingConfigs( err_msg ) ) {
+                // choosed to abort
+                std::exit( 1 );
+            }
         }
     }
 }
@@ -1012,7 +1238,7 @@ DialogsLevel MainWindow::dialogsLevelFromInt( const int dialogs_level )
     if ( dialogs_level >= 0 && dialogs_level <= 2) {
         return static_cast<DialogsLevel>( dialogs_level );
     } else {
-        throw( "Unexpected DialogsLevel: " + std::to_string(dialogs_level) );
+        throw GenericException( "Unexpected DialogsLevel: " + std::to_string(dialogs_level), true );
     }
 }
 
@@ -1026,7 +1252,7 @@ void MainWindow::setWebServerFromString(const std::string& web_server )
     } else if ( web_server == "IIS" || web_server == "13" ) {
         this->default_web_server = WebServer::IIS;
     } else {
-        throw( "Unexpected WebServer: " + web_server );
+        throw GenericException( "Unexpected WebServer: " + web_server, true );
     }
 }
 
@@ -1931,15 +2157,13 @@ QString MainWindow::wsFromIndex(const int index ) const
     }
 }
 
-std::string MainWindow::resolvePath( const std::string& path ) const
+std::string MainWindow::resolvePath( const std::string& path ) const noexcept
 {
-    std::string p;
     try {
-        p = std::filesystem::canonical( StringOps::strip( path ) ).string();
+        return std::filesystem::canonical( StringOps::strip( path ) ).string();
     } catch (...) {
-        ;
+        return std::string();
     }
-    return p;
 }
 std::string MainWindow::parentPath( const std::string& path ) const
 {

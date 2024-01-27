@@ -717,7 +717,7 @@ private:
 
 
     //! Resolves the given path and returns the canonical path
-    std::string resolvePath( const std::string& path ) const;
+    std::string resolvePath( const std::string& path ) const noexcept;
 
     //! Returns the parent folder of the given path
     std::string parentPath( const std::string& path ) const;
