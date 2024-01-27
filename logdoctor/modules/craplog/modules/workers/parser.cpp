@@ -17,14 +17,13 @@
 #include <QSqlError>
 
 
-CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const bw_lists_t& warnlists, const worker_files_t& log_files, QObject* parent )
+CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const worker_files_t& log_files, QObject* parent )
     : QObject        { parent         }
     , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
     , db_data_path   { db_data_path   }
     , db_hashes_path { db_hashes_path }
     , blacklists     { blacklists     }
-    , warnlists      { warnlists      }
     , logs_format    { logs_format    }
     , files_to_use   { log_files      }
 {
@@ -45,7 +44,6 @@ void CraplogParser::sendChartData() noexcept
     emit this->chartData(
         this->total_size,
         this->total_lines,
-        this->warnlisted_size,
         this->blacklisted_size
     );
 }
@@ -91,7 +89,6 @@ void CraplogParser::work()
         this->parsed_lines = 0ul;
         this->total_size   = 0ul;
         this->parsed_size  = 0ul;
-        this->warnlisted_size  = 0ul;
         this->blacklisted_size = 0ul;
     }
     this->sendPerfData();
@@ -336,14 +333,16 @@ void CraplogParser::storeLogLines()
 }
 
 #define APPEND_TO_QUERY_AS_NUMBER(LOG_FIELD)\
-    query_stmt += QStringLiteral(", ");\
     if ( LOG_FIELD ) {\
         query_stmt += QString::fromStdString( *LOG_FIELD ).replace("'","''");\
     } else {\
         query_stmt += QStringLiteral("NULL");\
     }
+#define CONCAT_TO_QUERY_AS_NUMBER(LOG_FIELD)\
+    query_stmt += QStringLiteral(", ");\
+    APPEND_TO_QUERY_AS_NUMBER(LOG_FIELD)
 
-#define APPEND_TO_QUERY_AS_STRING(LOG_FIELD)\
+#define CONCAT_TO_QUERY_AS_STRING(LOG_FIELD)\
     query_stmt += QStringLiteral(", ");\
     if ( LOG_FIELD ) {\
         query_stmt += QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace("'","''") );\
@@ -352,7 +351,7 @@ void CraplogParser::storeLogLines()
     }
 
 // in IIS logs the user-agent is logged with '+' instead of ' ' (whitespace)
-#define APPEND_TO_QUERY_USER_AGENT(LOG_FIELD)\
+#define CONCAT_TO_QUERY_USERAGENT(LOG_FIELD)\
     query_stmt += QStringLiteral(", ");\
     if ( LOG_FIELD ) {\
         if ( this->web_server == WS_IIS ) {\
@@ -370,32 +369,12 @@ bool CraplogParser::storeData( QSqlDatabase& db )
         this->db_data_path.substr(
             this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
 
-    // get blacklist/warnlist items
+    // get blacklist items
     const bool check_bl_cli { this->blacklists.at( 20 ).used };
-    const bool check_wl_met { this->warnlists.at( 11 ).used  };
-    const bool check_wl_uri { this->warnlists.at( 12 ).used  };
-    const bool check_wl_cli { this->warnlists.at( 20 ).used  };
-    const bool check_wl_ua  { this->warnlists.at( 21 ).used  };
 
     const std::vector<std::string> empty;
     const std::vector<std::string>& bl_cli_list{ (check_bl_cli)
         ? this->blacklists.at( 20 ).list
-        : empty };
-
-    const std::vector<std::string>& wl_met_list{ (check_wl_met)
-        ? this->warnlists.at( 11 ).list
-        : empty };
-
-    const std::vector<std::string>& wl_req_list{ (check_wl_uri)
-        ? this->warnlists.at( 12 ).list
-        : empty };
-
-    const std::vector<std::string>& wl_cli_list{ (check_wl_cli)
-        ? this->warnlists.at( 20 ).list
-        : empty };
-
-    const std::vector<std::string>& wl_ua_list{ (check_wl_ua)
-        ? this->warnlists.at( 21 ).list
         : empty };
 
     // prepare the database related studd
@@ -417,7 +396,6 @@ bool CraplogParser::storeData( QSqlDatabase& db )
 
 
     /*int perf_size;*/
-    bool warning{ false };
     QSqlQuery query{ db };
     // parse every row of data
     for ( const LogLineData& line_data : this->data_collection ) {
@@ -430,78 +408,36 @@ bool CraplogParser::storeData( QSqlDatabase& db )
             }
         }
 
-        // check warnlisted clients
-        if ( check_wl_cli && line_data.client ) {
-            if ( VecOps::contains( wl_cli_list, *line_data.client ) ) {
-                warning |= true;
-                goto end_of_warnings_check;
-            }
-        }
-        // check warnlisted user-agents
-        if ( check_wl_ua && line_data.user_agent ) {
-            if ( VecOps::contains( wl_ua_list, *line_data.user_agent ) ) {
-                // match found! skip this line
-                warning |= true;
-                goto end_of_warnings_check;
-            }
-        }
-        // check warnlisted methods
-        if ( check_wl_met && line_data.method ) {
-            if ( VecOps::contains( wl_met_list, *line_data.method ) ) {
-                // match found! skip this line
-                warning |= true;
-                goto end_of_warnings_check;
-            }
-        }
-        // check warnlisted requests URIs
-        if ( check_wl_uri && line_data.uri ) {
-            if ( VecOps::contains( wl_req_list, *line_data.uri ) ) {
-                // match found! skip this line
-                warning |= true;
-            }
-        }
-        end_of_warnings_check:
-
-
         // initialize the SQL statement
-        QString query_stmt{ "INSERT INTO \""+table+"\" (\"warning\", \"year\", \"month\", \"day\", \"hour\", \"minute\", \"second\", \"protocol\", \"method\", \"uri\", \"query\", \"response\", \"time_taken\", \"bytes_sent\", \"bytes_received\", \"referrer\", \"client\", \"user_agent\", \"cookie\") "
+        QString query_stmt{ "INSERT INTO \""+table+"\" (\"year\", \"month\", \"day\", \"hour\", \"minute\", \"second\", \"protocol\", \"method\", \"uri\", \"query\", \"response\", \"time_taken\", \"bytes_sent\", \"bytes_received\", \"referrer\", \"client\", \"user_agent\", \"cookie\") "
                             "VALUES (" };
 
         // complete and execute the statement, binding NULL if not found
 
-        // warning
-        if ( warning ) {
-            warning &= false;
-            this->warnlisted_size += line_data.size();
-            query_stmt += "1";
-        } else {
-            query_stmt += "0";
-        }
-
         // date and time
         APPEND_TO_QUERY_AS_NUMBER(line_data.year) // 1
-        APPEND_TO_QUERY_AS_NUMBER(line_data.month) // 2
-        APPEND_TO_QUERY_AS_NUMBER(line_data.day) // 3
-        APPEND_TO_QUERY_AS_NUMBER(line_data.hour) // 4
-        APPEND_TO_QUERY_AS_NUMBER(line_data.minute) // 5
-        APPEND_TO_QUERY_AS_NUMBER(line_data.second) // 6
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.month) // 2
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.day) // 3
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.hour) // 4
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.minute) // 5
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.second) // 6
 
         // request
-        APPEND_TO_QUERY_AS_STRING(line_data.protocol) // 10
-        APPEND_TO_QUERY_AS_STRING(line_data.method) // 11
-        APPEND_TO_QUERY_AS_STRING(line_data.uri) // 12
-        APPEND_TO_QUERY_AS_STRING(line_data.query) // 13
+        CONCAT_TO_QUERY_AS_STRING(line_data.protocol) // 10
+        CONCAT_TO_QUERY_AS_STRING(line_data.method) // 11
+        CONCAT_TO_QUERY_AS_STRING(line_data.uri) // 12
+        CONCAT_TO_QUERY_AS_STRING(line_data.query) // 13
 
-        APPEND_TO_QUERY_AS_NUMBER(line_data.response_code) // 14
-        APPEND_TO_QUERY_AS_NUMBER(line_data.time_taken) // 15
-        APPEND_TO_QUERY_AS_NUMBER(line_data.bytes_sent) // 16
-        APPEND_TO_QUERY_AS_NUMBER(line_data.bytes_received) // 17
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.response_code) // 14
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.time_taken) // 15
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.bytes_sent) // 16
+        CONCAT_TO_QUERY_AS_NUMBER(line_data.bytes_received) // 17
 
         // client data and referrer
-        APPEND_TO_QUERY_AS_STRING(line_data.referrer) // 18
-        APPEND_TO_QUERY_AS_STRING(line_data.client) // 20
-        APPEND_TO_QUERY_USER_AGENT(line_data.user_agent) // 21
-        APPEND_TO_QUERY_AS_STRING(line_data.cookie) // 22
+        CONCAT_TO_QUERY_AS_STRING(line_data.referrer) // 18
+        CONCAT_TO_QUERY_AS_STRING(line_data.client) // 20
+        CONCAT_TO_QUERY_USERAGENT(line_data.user_agent) // 21
+        CONCAT_TO_QUERY_AS_STRING(line_data.cookie) // 22
 
         query_stmt += ");";
 

@@ -9,8 +9,8 @@
 
 #define DATA_TYPEDEFS\
     using stats_dates_t       = std::map<int, std::map<int, std::map<int, std::vector<int>>>>;\
-    using stats_warn_items_t  = std::vector<std::vector<std::vector<std::vector<QString>>>>;\
-    using stats_speed_items_t = std::vector<std::tuple<long long, std::vector<QString>>>;\
+    using stats_warn_items_t  = std::vector<std::vector<std::vector<std::array<QString,18>>>>;\
+    using stats_speed_items_t = std::vector<std::tuple<long long, std::array<QString,6>>>;\
     using stats_day_items_t   = std::unordered_map<int, std::unordered_map<int, int>>;\
     using stats_relat_items_t = std::vector<std::tuple<long long, int>>;\
     using stats_count_items_t = std::multimap<unsigned, QString>;
@@ -82,16 +82,6 @@ public:
     void refreshDates( std::optional<stats_dates_t>& result ) noexcept;
 
 
-    //! Updates the database applying the changes made in the Warnings statistics table
-    /*!
-        \param web_server The ID of the Web Server to use
-        \param updates The list of rowids to update and the corresponding warning values
-    */
-    void updateWarnings(
-        const QString& web_server,
-        const std::vector<std::tuple<int, int>>& updates
-    ) const;
-
     //! Retrieves the data needed for the Warnings statistics
     /*!
         \param result Holds the data only if the operation completed succssfully
@@ -101,7 +91,7 @@ public:
         \param day_ The day
         \param hour_ The hour
     */
-    void getWarnCounts(
+    void getWarningsData(
         std::optional<stats_warn_items_t>& result,
         const QString& web_server,
         const QString& year_,

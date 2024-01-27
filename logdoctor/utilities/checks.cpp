@@ -111,7 +111,6 @@ bool newCollectionDatabase( QSqlDatabase& db, const QString& db_name, const std:
             // compose the statement with the table name for the access logs
             query.prepare( "\
                 CREATE TABLE \""+ws_name+"\" (\
-                    \"warning\" BOOLEAN,\
                     \"year\" SMALLINT,\
                     \"month\" TINYINT,\
                     \"day\" TINYINT,\
@@ -249,10 +248,11 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
                     for ( const QString& table : ws_names ) {
 
                         if ( !ok || make_new ) { break; }
+
+                        bool has_warning_column{ false };
                         // column's name:type associations
                         std::unordered_map<QString, std::tuple<QString, bool>>
                             data_types {
-                                       {"warning", { "BOOLEAN",  false} },
                                           {"year", { "SMALLINT", false} },
                                          {"month", { "TINYINT",  false} },
                                            {"day", { "TINYINT",  false} },
@@ -283,7 +283,11 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
                         while ( query.next() ) {
                             const QString col_name{ query.value(0).toString() };
                             const QString col_type{ query.value(1).toString() };
-                            if ( data_types.find( col_name ) == data_types.end() ) {
+                            if ( col_name == "warning" ) {
+                                // provide backward compatibility, this column will be removed from the table
+                                has_warning_column |= true;
+
+                            } else if ( data_types.find( col_name ) == data_types.end() ) {
                                 // unexpected column
                                 if ( DialogSec::choiceDatabaseWrongColumn( db_name, table, col_name ) ) {
                                     // agreed to renew
@@ -314,9 +318,19 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
                             }
                         }
                         if ( ok && !make_new ) {
+                            if ( has_warning_column ) {
+                                // provide backward compatibility
+                                query.finish();
+                                if ( ! query.exec( "ALTER TABLE \""+table+"\" DROP COLUMN \"warning\";" ) ) {
+                                    // failed to remove the column
+                                    ok &= false;
+                                    DialogSec::errDatabaseFailedExecuting( db_name, query.lastQuery(), query.lastError().text() );
+                                    break;
+                                }
+                            }
                             for ( const auto& [ col, tup ] : data_types ) {
                                 if ( ! std::get<1>( tup ) ) {
-                                    // a table has not been found
+                                    // a column has not been found
                                     if ( DialogSec::choiceDatabaseMissingColumn( db_name, table, col ) ) {
                                         // agreed to renew
                                         make_new |= true;

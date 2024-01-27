@@ -341,63 +341,11 @@ void DbQuery::refreshDates( std::optional<stats_dates_t>& result ) noexcept
 }
 
 
-// update the values for the warnings
-void DbQuery::updateWarnings( const QString& web_server, const std::vector<std::tuple<int, int>>& updates ) const
-{
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
-
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        return;
-
-    } else if ( ! db.open() ) {
-        // error opening database
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
-
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-
-        } else {
-            // update the database
-            QSqlQuery query{ db };
-
-            for ( const auto& data : updates ) {
-                // build the query statement
-                QString stmt = QString("UPDATE \"%1\" SET warning=%2 WHERE rowid=%3;")
-                        .arg( web_server )
-                        .arg( std::get<1>(data) )
-                        .arg( std::get<0>(data) );
-
-                if ( ! query.exec( stmt.replace("'","''") ) ) {
-                    // error querying database
-                    DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-                    break;
-                }
-            }
-        }
-    }
-    if ( db.isOpen() ) {
-        db.close();
-    }
-}
-
-
 // get daytime values for the warnings
-void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
+void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
 {
     bool successful{ true };
-    stats_warn_items_t items; // std::vector<std::vector<std::vector<std::vector<QString>>>>
+    stats_warn_items_t items; // std::vector<std::vector<std::vector<std::array<QString,18>>>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -442,9 +390,29 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
             }
         }
         if ( successful ) {
+            const auto from_query_data{
+                [](const QSqlQuery& query)->std::array<QString,18>
+                {
+                    return {
+                        query.value(0).toString(), query.value(1).toString(), query.value(2).toString(), // year, month, day
+                        query.value(3).toString(), query.value(4).toString(), query.value(5).toString(), // hour, minute, second
+                        query.value(6).toString(), query.value(7).toString(), // protocol, method
+                        query.value(8).toString(), query.value(9).toString(), // uri, query
+                        query.value(10).toString(), // response
+                        query.value(15).toString(), // user agent
+                        query.value(14).toString(), // client
+                        query.value(16).toString(), // cookie
+                        query.value(17).toString(), // referer
+                        query.value(13).toString(), // bytes received
+                        query.value(12).toString(), // bytes sent
+                        query.value(11).toString()  // time taken
+                    };
+                }
+            };
+
             // build the query statement
             QSqlQuery query{ db };
-            QString stmt{ QString("SELECT rowid, * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
+            QString stmt{ QString("SELECT * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
                     .arg( web_server )
                     .arg( year ).arg( month ).arg( day ) };
 
@@ -452,11 +420,11 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
                 // entire day
                 items.reserve( 24 );
                 for ( size_t h{0}; h<24ul; ++h ) {
-                    items.push_back( std::vector<std::vector<std::vector<QString>>>() );
+                    items.push_back( std::vector<std::vector<std::array<QString,18>>>() );
                     auto& aux{ items.at( h ) };
                     aux.reserve( 6 );
                     for ( int m{0}; m<60; m+=10 ) {
-                        aux.push_back( std::vector<std::vector<QString>>() );
+                        aux.push_back( std::vector<std::array<QString,18>>() );
                     }
                 }
 
@@ -470,19 +438,10 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
                     try {
                         // get query data
                         while ( query.next() ) {
-                            std::vector<QString> aux;
-                            aux.reserve( 20 );
-                            for ( int i{1}; i<13; ++i ) {
-                                aux.push_back( query.value( i ).toString() );
-                            }
-                            for ( int i{19}; i>12; --i ) {
-                                aux.push_back( query.value( i ).toString() );
-                            }
-                            aux.push_back( query.value( 0 ).toString() );
                             // append the line
-                            items.at( query.value(5).toInt() )
-                                 .at( getMinuteGap( query.value(6).toInt() )/10 )
-                                 .push_back( aux );
+                            items.at( query.value(3).toInt() )
+                                 .at( getMinuteGap( query.value(4).toInt() )/10 )
+                                 .push_back( from_query_data( query ) );
                         }
                     } catch (...) {
                         // something failed
@@ -495,11 +454,11 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
                 // 1 hour
                 items.reserve( 6 );
                 for ( size_t g{0}; g<6ul; ++g ) {
-                    items.push_back( std::vector<std::vector<std::vector<QString>>>() );
+                    items.push_back( std::vector<std::vector<std::array<QString,18>>>() );
                     auto& aux{ items.at( g ) };
                     aux.reserve( 10ul );
                     for ( int m{0}; m<10; ++m ) {
-                        aux.push_back( std::vector<std::vector<QString>>() );
+                        aux.push_back( std::vector<std::array<QString,18>>() );
                     }
                 }
 
@@ -513,19 +472,11 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
                     try {
                         // get query data
                         while ( query.next() ) {
-                            std::vector<QString> aux;
-                            aux.reserve( 20 );
-                            for ( int i{1}; i<13; ++i ) {
-                                aux.push_back( query.value( i ).toString() );
-                            }
-                            for ( int i{19}; i>12; --i ) {
-                                aux.push_back( query.value( i ).toString() );
-                            }
-                            aux.push_back( query.value( 0 ).toString() );
                             // append the line
-                            items.at( static_cast<size_t>( getMinuteGap( query.value(6).toInt() )/10 ) )
-                                 .at( static_cast<size_t>( query.value(6).toInt()%10 ) )
-                                 .push_back( aux );
+                            const int min{ query.value(4).toInt() };
+                            items.at( static_cast<size_t>( getMinuteGap( min )/10 ) )
+                                 .at( static_cast<size_t>( min % 10 ) )
+                                 .push_back( from_query_data( query ) );
                         }
                     } catch (...) {
                         // something failed
@@ -550,7 +501,7 @@ void DbQuery::getWarnCounts( std::optional<stats_warn_items_t>& result, const QS
 void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f ) const
 {
     bool successful{ true };
-    stats_speed_items_t data; // std::vector<std::tuple<long long, std::vector<QString>>>
+    stats_speed_items_t data; // std::vector<std::tuple<long long, std::array<QString,6>>>
 
     QSqlDatabase db;
     if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
@@ -685,9 +636,6 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     // append the first fictitious count
                     time.setDate( QDate( year, month, day ) );
                     time.setTime( QTime( 0, 0, 0 ));
-                    data.push_back( std::make_tuple(
-                        time.toMSecsSinceEpoch(),
-                        std::vector<QString>{"","","","","",""} ));
 
                     if ( query.last() ) {
                         data.clear();
@@ -709,7 +657,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                 time.setTime( QTime( hour, minute, second ));
                                 data.push_back( std::make_tuple(
                                     time.toMSecsSinceEpoch(),
-                                    std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                                    std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
                             } else {
                                 if ( aux_hour == hour ) {
                                     h=hour; m=minute; s=second-1;
@@ -727,13 +675,13 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                         time.setTime( QTime( h, m, s ));
                                         data.push_back( std::make_tuple(
                                             time.toMSecsSinceEpoch(),
-                                            std::vector<QString>{"","","","","",""} ));
+                                            std::array<QString,6>{"","","","","",""} ));
                                     }
                                     // same hour new minute/second, append the last count
                                     time.setTime( QTime( hour, minute, second ));
                                     data.push_back( std::make_tuple(
                                         time.toMSecsSinceEpoch(),
-                                        std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                                        std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
                                     // append the second after the last one found, if it is not equal to the next
                                     h=hour; m=minute; s=second+1;
                                     if ( s > 59 ) {
@@ -749,13 +697,12 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                         time.setTime( QTime( h, m, s ));
                                         data.push_back( std::make_tuple(
                                             time.toMSecsSinceEpoch(),
-                                            std::vector<QString>{"","","","","",""} ));
+                                            std::array<QString,6>{"","","","","",""} ));
                                     }
                                     prev_hour = hour; // update now to avoid getting aux_hour's value
                                 } else {
                                     // minute & second are always different when the hour is different
                                     if ( hour >= 0 ) {
-                                        // here only in the first round of the loop
                                         // append the prev as zero
                                         h=hour; m=minute; s=second-1;
                                         if ( s < 0 ) {
@@ -771,13 +718,13 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                             time.setTime( QTime( h, m, s ));
                                             data.push_back( std::make_tuple(
                                                 time.toMSecsSinceEpoch(),
-                                                std::vector<QString>{"","","","","",""} ));
+                                                std::array<QString,6>{"","","","","",""} ));
                                         }
                                         // apend the last p count if not in the first round of the loop
                                         time.setTime( QTime( hour, minute, second ));
                                         data.push_back( std::make_tuple(
                                             time.toMSecsSinceEpoch(),
-                                            std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                                            std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
                                         // append the next as zero
                                         h=hour; m=minute; s=second+1;
                                         if ( s > 59 ) {
@@ -793,15 +740,16 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                             time.setTime( QTime( h, m, s ));
                                             data.push_back( std::make_tuple(
                                                 time.toMSecsSinceEpoch(),
-                                                std::vector<QString>{"","","","","",""} ));
+                                                std::array<QString,6>{"","","","","",""} ));
                                         }
                                     } else {
+                                        // hout < 0, here only in the first round of the loop
                                         // append the second 0 of the day, if it is not the one found
                                         if ( aux_hour > 0 || aux_minute > 0 || aux_second > 0 ) {
                                             time.setTime( QTime( 0, 0, 0 ));
                                             data.push_back( std::make_tuple(
                                                 time.toMSecsSinceEpoch(),
-                                                std::vector<QString>{"","","","","",""} ));
+                                                std::array<QString,6>{"","","","","",""} ));
                                             // append the second before the first found
                                             h=aux_hour; m=aux_minute; s=aux_second-1;
                                             if ( s < 0 ) {
@@ -818,7 +766,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                                                 time.setTime( QTime( h, m, s ));
                                                 data.push_back( std::make_tuple(
                                                     time.toMSecsSinceEpoch(),
-                                                    std::vector<QString>{"","","","","",""} ));
+                                                    std::array<QString,6>{"","","","","",""} ));
                                             }
                                         }
                                     }
@@ -852,13 +800,13 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                             time.setTime( QTime( h, m, s ));
                             data.push_back( std::make_tuple(
                                 time.toMSecsSinceEpoch(),
-                                std::vector<QString>{"","","","","",""} ));
+                                std::array<QString,6>{"","","","","",""} ));
                         }
                         // append the last count
                         time.setTime( QTime( hour, minute, second ));
                         data.push_back( std::make_tuple(
                             time.toMSecsSinceEpoch(),
-                            std::vector<QString>{tt,ur,qr,mt,pt,rs} ));
+                            std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
                         // append 1 second after the last
                         h=hour; m=minute; s=second+1;
                         if ( s > 59 ) {
@@ -874,7 +822,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                             time.setTime( QTime( h, m, s ));
                             data.push_back( std::make_tuple(
                                 time.toMSecsSinceEpoch(),
-                                std::vector<QString>{"","","","","",""} ));
+                                std::array<QString,6>{"","","","","",""} ));
                         }
                     }
                     // append the last fictitious count
@@ -891,7 +839,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QS
                     time.setTime( QTime( 0, 0, 0 ));
                     data.push_back( std::make_tuple(
                         time.toMSecsSinceEpoch(),
-                        std::vector<QString>{"","","","","",""} ));
+                        std::array<QString,6>{"","","","","",""} ));
                 } catch (...) {
                     // something failed
                     successful = false;
@@ -1102,8 +1050,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                             .arg( log_field.replace("'","''") );
                     } else {
                         // filter
-                        if ( log_field == "warning"
-                          || log_field == "response"
+                        if ( log_field == "response"
                           || log_field == "time_taken"
                           || log_field == "bytes_sent"
                           || log_field == "bytes_received" ) {
@@ -1177,8 +1124,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
                                 .arg( log_field.replace("'","''") );
                         } else {
                             // filter
-                            if ( log_field == "warning"
-                              || log_field == "response"
+                            if ( log_field == "response"
                               || log_field == "time_taken"
                               || log_field == "bytes_sent"
                               || log_field == "bytes_received" ) {
@@ -1338,8 +1284,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
                         .arg( log_field_1.replace("'","''") );
                 } else {
                     // filter
-                    if ( log_field_1 == "warning"
-                      || log_field_1 == "response"
+                    if ( log_field_1 == "response"
                       || log_field_1 == "time_taken"
                       || log_field_1 == "bytes_sent"
                       || log_field_1 == "bytes_received" ) {
@@ -1373,8 +1318,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
                         .arg( log_field_2.replace("'","''") );
                 } else {
                     // filter
-                    if ( log_field_2 == "warning"
-                      || log_field_2 == "response"
+                    if ( log_field_2 == "response"
                       || log_field_2 == "time_taken"
                       || log_field_2 == "bytes_sent"
                       || log_field_2 == "bytes_received" ) {
@@ -1592,8 +1536,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                 // apply a filter if present
                 if ( ! field_filter_1.isEmpty() ) {
                     QString filter{ field_filter_1 };
-                    if ( log_field_1 == "warning"
-                      || log_field_1 == "response"
+                    if ( log_field_1 == "response"
                       || log_field_1 == "time_taken"
                       || log_field_1 == "bytes_sent"
                       || log_field_1 == "bytes_received" ) {
@@ -1618,8 +1561,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                 // apply a filter if present
                 if ( ! field_filter_2.isEmpty() ) {
                     QString filter{ field_filter_2 };
-                    if ( log_field_2 == "warning"
-                      || log_field_2 == "response"
+                    if ( log_field_2 == "response"
                       || log_field_2 == "time_taken"
                       || log_field_2 == "bytes_sent"
                       || log_field_2 == "bytes_received" ) {
@@ -1768,8 +1710,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                     // apply a filter if present
                     if ( ! field_filter_1.isEmpty() ) {
                         QString filter = field_filter_1;
-                        if ( log_field_1 == "warning"
-                          || log_field_1 == "response"
+                        if ( log_field_1 == "response"
                           || log_field_1 == "time_taken"
                           || log_field_1 == "bytes_sent"
                           || log_field_1 == "bytes_received" ) {
@@ -1794,8 +1735,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
                     // apply a filter if present
                     if ( ! field_filter_2.isEmpty() ) {
                         QString filter = field_filter_2;
-                        if ( log_field_2 == "warning"
-                          || log_field_2 == "response"
+                        if ( log_field_2 == "response"
                           || log_field_2 == "time_taken"
                           || log_field_2 == "bytes_sent"
                           || log_field_2 == "bytes_received" ) {

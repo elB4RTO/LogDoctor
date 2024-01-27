@@ -153,8 +153,6 @@ private slots:
 
     void on_button_StatsWarn_Draw_clicked();
 
-    void on_button_StatsWarn_Update_clicked();
-
     //// SPEED ////
 
     void on_box_StatsSpeed_WebServer_currentIndexChanged(int index);
@@ -543,6 +541,7 @@ private:
     const float version{ 3.00f };
 
     QString wsFromIndex( const int index ) const;
+    WebServer wsEnumFromIndex( const int index ) const;
 
 
     //////////////////////////

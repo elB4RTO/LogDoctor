@@ -961,10 +961,6 @@ void getStyleSheet( QString& stylesheet )
         "   border-top: 2px solid "+style.at(STATS_SWITCH_BUTTONS)+";"
         "   border-radius: 12px;"
         "}"
-        // draw buttons
-        "QPushButton#button_StatsWarn_Update::disabled {"
-        "   icon: url(:/icons/icons/midtone/save.png);"
-        "}"
         // stats warn
         "QTableWidget#table_StatsWarn::indicator {"
         "   width: 13px;"

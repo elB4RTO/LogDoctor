@@ -290,6 +290,14 @@ public:
     */
     const std::vector<std::string>& getWarnlist( const WebServer& web_server, const int& log_field_id ) const noexcept;
 
+    //! Returns the relative list
+    /*!
+        \param web_server The Web Server
+        \return The list of items in the givenwarnlist
+        \see BWlist
+    */
+    const std::unordered_map<int, BWlist>& getWarnlists( const WebServer& web_server ) const noexcept;
+
     //! Sets the relative items list
     /*!
         \param web_server The Web Server
@@ -451,7 +459,6 @@ public slots:
 
     void updateChartData( const size_t total_size,
                           const size_t total_lines,
-                          const size_t warnlisted_size,
                           const size_t blacklisted_size ) noexcept;
 
     void showWorkerDialog( const WorkerDialog dialog_type,
@@ -494,7 +501,6 @@ private:
     size_t parsed_lines     { 0ul }; // number of parsed logs lines
     size_t total_size       { 0ul }; // total size of the logs
     size_t parsed_size      { 0ul }; // size of the logs which have been used
-    size_t warnlisted_size  { 0ul }; // size of the logs which caused a warning
     size_t blacklisted_size { 0ul }; // size of the logs which has been blacklisted
 
     std::chrono::system_clock::time_point parsing_time_start,

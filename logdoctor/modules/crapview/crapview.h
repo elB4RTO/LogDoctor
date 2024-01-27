@@ -12,6 +12,8 @@
 #include <string>
 
 
+struct BWlist;
+
 class QTableWidget;
 
 
@@ -114,17 +116,6 @@ public:
     QStringList getFields( const std::string& tab ) const noexcept;
 
 
-    //! Updates the database applying the changes which have been made to the table
-    /*!
-        \param table The Warnings stats table
-        \param web_server The printable Web Server name
-    */
-    void updateWarn(
-        QTableWidget* table,
-        const QString& web_server
-    ) const;
-
-
     //! Draws the chart and fills the table for the Warnings stats
     /*!
         \param table The table widget
@@ -135,12 +126,14 @@ public:
         \param month The printable month name
         \param day The day
         \param hout The hour
+        \param warnlists The warnlists to check against
     */
     void drawWarn(
         QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString& web_server,
-        const QString& year, const QString& month, const QString& day, const QString& hour
+        const QString& year, const QString& month, const QString& day, const QString& hour,
+        const std::unordered_map<int, BWlist>& warnlists
     ) const;
 
 
@@ -281,9 +274,9 @@ private:
     // { tab : [ fields ] }
     const std::unordered_map<std::string, std::vector<std::string>> fields{
         {"Daytime", {
-            this->dbQuery.FIELDS.at(0),this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} },
+            this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} },
         {"Relational", {
-            this->dbQuery.FIELDS.at(0),this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(15),this->dbQuery.FIELDS.at(16),this->dbQuery.FIELDS.at(17),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} }
+            this->dbQuery.FIELDS.at(10),this->dbQuery.FIELDS.at(11),this->dbQuery.FIELDS.at(12),this->dbQuery.FIELDS.at(13),this->dbQuery.FIELDS.at(14),this->dbQuery.FIELDS.at(15),this->dbQuery.FIELDS.at(16),this->dbQuery.FIELDS.at(17),this->dbQuery.FIELDS.at(18),this->dbQuery.FIELDS.at(22),this->dbQuery.FIELDS.at(21),this->dbQuery.FIELDS.at(20)} }
     };
 
 

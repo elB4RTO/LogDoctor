@@ -63,11 +63,11 @@ Craplog::Craplog()
     this->current_log_format = this->logs_formats.at( WS_APACHE );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( WS_APACHE, "/var/log/apache2" );
+    this->logs_paths.emplace( WS_APACHE, std::string{} );
     // nginx access/error logs location
-    this->logs_paths.emplace( WS_NGINX, "/var/log/nginx" );
+    this->logs_paths.emplace( WS_NGINX, std::string{} );
     // iis access/error logs location
-    this->logs_paths.emplace( WS_IIS, "C:/inetpub/logs/LogFiles" );
+    this->logs_paths.emplace( WS_IIS, std::string{} );
 
     // apache2 access/error log files' names
     this->logs_base_names.emplace( WS_APACHE, LogName{ .starts   = "access.log.",
@@ -152,6 +152,10 @@ const std::vector<std::string>& Craplog::getBlacklist( const WebServer& web_serv
 const std::vector<std::string>& Craplog::getWarnlist( const WebServer& web_server, const int& log_field_id ) const noexcept
 {
     return this->warnlists.at( web_server ).at( log_field_id ).list;
+}
+const std::unordered_map<int, BWlist>& Craplog::getWarnlists( const WebServer& web_server ) const noexcept
+{
+    return this->warnlists.at( web_server );
 }
 
 void Craplog::setBlacklist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list )
@@ -827,7 +831,6 @@ void Craplog::startWorking()
     this->parsed_lines = 0ul;
     this->total_size   = 0ul;
     this->parsed_size  = 0ul;
-    this->warnlisted_size  = 0ul;
     this->blacklisted_size = 0ul;
     // hire a worker
     this->hireWorker();
@@ -841,7 +844,6 @@ void Craplog::hireWorker() const
         this->db_hashes_path,
         this->logs_formats.at( this->current_web_server ),
         this->blacklists.at( this->current_web_server ),
-        this->warnlists.at( this->current_web_server ),
         this->log_files_to_use
     ) };
     QThread* worker_thread{ new QThread() };
@@ -945,12 +947,11 @@ void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_line
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t warnlisted_size, const size_t blacklisted_size ) noexcept
+void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t blacklisted_size ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;
     this->total_lines = total_lines;
-    this->warnlisted_size  = warnlisted_size;
     this->blacklisted_size = blacklisted_size;
 }
 
@@ -961,19 +962,15 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
         size_chart_name        { TR::tr("Logs Size Breakdown") },
         ignored_slice_name     { TR::tr("Ignored")             },
         parsed_slice_name      { TR::tr("Parsed")              },
-        warning_slice_name     { TR::tr("Warnings")            },
         blacklisted_slice_name { TR::tr("Blacklisted")         };
 
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
     parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size ) );
-    const size_t parsed_size{ this->parsed_size - this->warnlisted_size - this->blacklisted_size };
+    const size_t parsed_size{ this->parsed_size - this->blacklisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         static_cast<qreal>( parsed_size ) );
-    parsedSize_donut->append(
-        "W@" + warning_slice_name + "@" + PrintSec::printableSize( this->warnlisted_size ),
-        static_cast<qreal>( this->warnlisted_size ) );
     parsedSize_donut->append(
         "B@" + blacklisted_slice_name + "@" + PrintSec::printableSize( this->blacklisted_size ),
         static_cast<qreal>( this->blacklisted_size ) );

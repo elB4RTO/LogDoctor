@@ -3,6 +3,9 @@
 
 #include "utilities/printables.h"
 #include "utilities/strings.h"
+#include "utilities/vectors.h"
+
+#include "modules/craplog/modules/lib.h"
 
 #include <QGraphicsItem>
 #include <QTableWidget>
@@ -150,42 +153,99 @@ void Crapview::sliceClicked( QPieSlice* slice )
 }
 
 
-void Crapview::updateWarn( QTableWidget* table , const QString& web_server ) const
-{
-    std::vector<std::tuple<int, int>> updates; // { (rowid, warn) }
-    for ( int i{0}; i<table->rowCount(); ++i ) {
-        QTableWidgetItem* item = table->item( i, 0 );
-        if ( item->checkState() == Qt::CheckState::Checked && item->text() == TR::tr( BOOLS__FALSE.c_str() ) ) {
-            // remove warning
-            updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 1 ) );
-        } else if (item->checkState() == Qt::CheckState::Unchecked && item->text() == TR::tr( BOOLS__TRUE.c_str() ) ) {
-            // add warning
-            updates.push_back( std::make_tuple( table->item( i, table->columnCount()-1 )->text().toInt(), 0 ) );
-        }
-    }
-    this->dbQuery.updateWarnings( web_server, updates );
-}
-
-void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour ) const
+void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& hour, const std::unordered_map<int, BWlist>& warnlists ) const
 {
     std::optional<stats_warn_items_t> result;
-    this->dbQuery.getWarnCounts(
+    this->dbQuery.getWarningsData(
         result,
         web_server,
         year, month, day, hour );
     if ( result ) {
-        // std::vector<std::vector<std::vector<std::vector<QString>>>>
+        // std::vector<std::vector<std::vector<std::array<QString,18>>>>
         // day  -> [ hours[ 10th_minutes[ lines[ log_data ] ] ] ]
         // hour -> [ 10th_minutes[ minute[ lines[ log_data ] ] ] ]
         auto& items{ result.value() };
+
+        QColor warn_color{ 255, 140, 0, 255 };
+
+        const auto check_warnings{
+            [&warnlists](const std::array<QString,18>& line)->std::tuple<bool,std::vector<int>>
+            {
+                bool is_warning{ false };
+                std::vector<int> warning_cols;
+                warning_cols.reserve(4ul);
+                if ( warnlists.at( 11ul ).used ) { // method
+                    if ( VecOps::contains( warnlists.at( 11ul ).list, line.at( 7ul ).toStdString() ) ) {
+                        is_warning |= true;
+                        warning_cols.emplace_back( 4 );
+                    }
+                }
+                if ( warnlists.at( 12ul ).used ) { // uri
+                    const auto target{ line.at( 8ul ).toStdString() };
+                    const auto& list{ warnlists.at( 12ul ).list };
+                    if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
+                        // match found! skip this line
+                        is_warning |= true;
+                        warning_cols.emplace_back( 5 );
+                    }
+                }
+                if ( warnlists.at( 20ul ).used ) { // client
+                    const auto target{ line.at( 12ul ).toStdString() };
+                    const auto& list{ warnlists.at( 20ul ).list };
+                    if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
+                        // match found! skip this line
+                        is_warning |= true;
+                        warning_cols.emplace_back( 9 );
+                    }
+                }
+                if ( warnlists.at( 21ul ).used ) { // user-agent
+                    const auto target{ line.at( 11ul ).toStdString() };
+                    const auto& list{ warnlists.at( 21ul ).list };
+                    if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
+                        // match found! skip this line
+                        is_warning |= true;
+                        warning_cols.emplace_back( 8 );
+                    }
+                }
+                return std::make_tuple( is_warning, warning_cols );
+            }
+        };
+
+        const auto append_to_table{
+            [&table,&warn_color](const std::array<QString,18>& line, const bool is_warning, const std::vector<int>& warning_cols )
+            {
+                const int n_rows{ table->rowCount() };
+                table->insertRow( n_rows );
+                table->setItem( n_rows, 0, new QTableWidgetItem( PrintSec::printableBool( is_warning )));
+                table->setItem( n_rows, 1, new QTableWidgetItem( PrintSec::printableDate( line.at( 0 ).toInt(), line.at( 1 ).toInt(), line.at( 2 ).toInt() )));
+                table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 3 ).toInt(), line.at( 4 ).toInt(), line.at( 5 ).toInt() )));
+                int col{ 3 };
+                for ( size_t i{6ul}; i<18ul; ++i ) {
+                    QTableWidgetItem* itm;
+                    if ( (col == 7 || col >= 12) && !line.at(i).isEmpty() ) {
+                        itm = new QTableWidgetItem();
+                        itm->setData( Qt::DisplayRole, line.at( i ).toInt() );
+                    } else {
+                        itm = new QTableWidgetItem( line.at( i ) );
+                    }
+                    table->setItem( n_rows, col, itm );
+                    ++ col;
+                }
+                if ( is_warning ) {
+                    table->item( n_rows, 0 )->setForeground( warn_color );
+                    for ( const int col : warning_cols ) {
+                        table->item( n_rows, col )->setForeground( warn_color );
+                    }
+                }
+            }
+        };
 
         // bars
         std::vector<std::vector<QBarSet*>> sets;
 
         // build the bars and the table upon data
         QString date;
-        QColor warn_col{ 255, 140, 0, 255 };
-        int norm_count, warn_count, sum_count, max_count=0, n_rows=0;
+        int norm_count, warn_count, sum_count, max_count=0;
         if ( hour.isEmpty() ) {
             // entire day
             for ( int i{0}; i<6; ++i ) {
@@ -197,36 +257,10 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
                 for ( size_t m{0}; m<6ul; ++m ) {
                     const auto& data{ items.at( h ).at( m ) };
                     norm_count = warn_count = 0;
-                    for ( const std::vector<QString>& line : data ) {
-                        table->insertRow( n_rows );
-                        table->setItem( n_rows, 0, new QTableWidgetItem( PrintSec::printableBool( line.at( 0 ).toInt() )));
-                        if ( line.at( 0ul ).toInt() != 0 ) {
-                            table->item( n_rows, 0 )->setForeground( warn_col );
-                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Checked );
-                        } else {
-                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Unchecked );
-                        }
-                        table->setItem( n_rows, 1, new QTableWidgetItem( PrintSec::printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
-                        table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
-                        int col{ 3 };
-                        const size_t max{ line.size() };
-                        for ( size_t i{7ul}; i<max; ++i ) {
-                            QTableWidgetItem* itm;
-                            if ( (col == 7 || col >= 12) && !line.at(i).isEmpty() ) {
-                                itm = new QTableWidgetItem();
-                                itm->setData( Qt::DisplayRole, line.at( i ).toInt() );
-                            } else {
-                                itm = new QTableWidgetItem( line.at( i ) );
-                            }
-                            table->setItem( n_rows, col, itm );
-                            ++ col;
-                        }
-                        if ( line.at( 0ul ) == "0" ) {
-                            ++ norm_count;
-                        } else {
-                            ++ warn_count;
-                        }
-                        ++ n_rows;
+                    for ( const std::array<QString,18>& line : data ) {
+                        const auto [is_warning, warning_cols]{ check_warnings( line ) };
+                        append_to_table( line, is_warning, warning_cols );
+                        is_warning ? ++warn_count : ++norm_count;
                     }
                     sets.at( m ).at( 0ul )->append( norm_count );
                     sets.at( m ).at( 1ul )->append( warn_count );
@@ -248,26 +282,10 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
                 for ( size_t m{0ul}; m<10ul; ++m ) {
                     const auto& data{ items.at( g ).at( m ) };
                     norm_count = warn_count = 0;
-                    for ( const std::vector<QString>& line : data ) {
-                        n_rows = table->rowCount();
-                        table->insertRow( n_rows );
-                        table->setItem( n_rows, 0, new QTableWidgetItem( PrintSec::printableBool( line.at( 0 ).toInt() )));
-                        if ( line.at( 0ul ).toInt() != 0 ) {
-                            table->item( n_rows, 0 )->setForeground( warn_col );
-                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Checked );
-                        } else {
-                            table->item( n_rows, 0 )->setCheckState( Qt::CheckState::Unchecked );
-                        }
-                        table->setItem( n_rows, 1, new QTableWidgetItem( PrintSec::printableDate( line.at( 1 ).toInt(), line.at( 2 ).toInt(), line.at( 3 ).toInt() )));
-                        table->setItem( n_rows, 2, new QTableWidgetItem( PrintSec::printableTime( line.at( 4 ).toInt(), line.at( 5 ).toInt(), line.at( 6 ).toInt() )));
-                        for ( size_t i{7ul}; i<line.size(); ++i ) {
-                            table->setItem( n_rows, i-4, new QTableWidgetItem( line.at( i ) ));
-                        }
-                        if ( line.at( 0ul ) == "0" ) {
-                            ++ norm_count;
-                        } else {
-                            ++ warn_count;
-                        }
+                    for ( const std::array<QString,18>& line : data ) {
+                        const auto [is_warning, warning_cols]{ check_warnings( line ) };
+                        append_to_table( line, is_warning, warning_cols );
+                        is_warning ? ++warn_count : ++norm_count;
                     }
                     sets.at( m ).at( 0ul )->append( norm_count );
                     sets.at( m ).at( 1ul )->append( warn_count );
@@ -283,7 +301,6 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
 
         // apply the colors and append to the series
         QColor cols[]{ QColor(127,127,127), QColor(237,80,61) };
-        //QColor cols[] = {QColor(18,175,194), QColor(237,80,61)};
         std::vector<QStackedBarSeries*> b_series;
         const size_t max{ sets.size() };
         for ( size_t i{0}; i<max; ++i ) {
@@ -368,16 +385,15 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
         size_t i{ 0 };
         const size_t max_i{ items.size() };
         int value{0}, aux_value, max_value{0}, n_rows{0};
-        long long time /* xD */, aux_time, count{1};
+        long long time /* xD */, count{1};
         bool first_count{ true };
         time = std::get<0>(items.at(0ul));
         QDateTime dt;
-        std::vector<QString> data;
         for ( const auto& item : items ) {
             ++i;
             // append a value to the chart
-            aux_time = std::get<0>(item);
-            data = std::get<1>(item);
+            const long long aux_time{ std::get<0>(item) };
+            const std::array<QString,6>& data{ std::get<1>(item) };
             aux_value = data.at( 0ul ).toInt();
             // append only if the second is different, else sum
             if ( aux_time > time ) {

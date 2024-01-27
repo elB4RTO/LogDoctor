@@ -36,7 +36,6 @@ public:
         const std::string& db_hashes_path,
         const LogsFormat& logs_format,
         const bw_lists_t& blacklists,
-        const bw_lists_t& warnlists,
         const worker_files_t& log_files,
         QObject* parent=nullptr
     );
@@ -50,7 +49,6 @@ signals:
     void chartData(
         const size_t total_size,
         const size_t total_lines,
-        const size_t warnlisted_size,
         const size_t blacklisted_size );
 
     void showDialog(
@@ -95,15 +93,13 @@ private:
     size_t parsed_lines     { 0ul };
     size_t total_size       { 0ul };
     size_t parsed_size      { 0ul };
-    size_t warnlisted_size  { 0ul };
     size_t blacklisted_size { 0ul };
 
-    //////////////////////////////
-    //// BLACKLIST / WARNLIST ////
+    ///////////////////
+    //// BLACKLIST ////
 
     // { log_field_id : BWlist }
     const bw_lists_t blacklists;
-    const bw_lists_t warnlists;
 
     //////////////
     //// LOGS ////

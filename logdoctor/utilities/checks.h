@@ -14,7 +14,7 @@ class QString;
 namespace CheckSec
 {
 
-//! Checks the database file
+//! Basic checks on a database file
 /*!
   \param db_path Path of the database file
   \param db_name Database's name, used by the dialogs if necessary

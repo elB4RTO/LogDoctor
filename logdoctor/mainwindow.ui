@@ -1391,12 +1391,84 @@ li.checked::marker { content: &quot;\2612&quot;; }
                </sizepolicy>
               </property>
               <layout class="QGridLayout" name="gridLayout_23">
-               <item row="0" column="3">
-                <widget class="Line" name="gline_StatsWarn_2">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
+               <item row="0" column="2">
+                <widget class="QFrame" name="frame_StatsWarn_Logs">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
                  </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_7">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_StatsWarn_WebServer">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Web Server</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QComboBox" name="box_StatsWarn_WebServer">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>Select a Web Server</string>
+                    </property>
+                    <property name="sizeAdjustPolicy">
+                     <enum>QComboBox::AdjustToContents</enum>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Apache2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Nginx</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>IIS</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
+               </item>
+               <item row="0" column="5">
+                <spacer name="spacer_StatsWarn_1">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>82</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item row="0" column="4">
                 <widget class="QFrame" name="frame_StatsWarn_Date">
@@ -1588,55 +1660,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  </layout>
                 </widget>
                </item>
-               <item row="0" column="5">
-                <spacer name="spacer_StatsWarn_1">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>82</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="6">
-                <widget class="QPushButton" name="button_StatsWarn_Update">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>64</width>
-                   <height>88</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>64</width>
-                   <height>88</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>23</pointsize>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Update the database with current Warning States</string>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>44</width>
-                   <height>44</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="0">
                 <widget class="QPushButton" name="button_StatsWarn_Draw">
                  <property name="minimumSize">
@@ -1670,77 +1693,18 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="Line" name="gline_StatsWarn_1">
+               <item row="0" column="3">
+                <widget class="Line" name="gline_StatsWarn_2">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <widget class="QFrame" name="frame_StatsWarn_Logs">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
+               <item row="0" column="1">
+                <widget class="Line" name="gline_StatsWarn_1">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
                  </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Sunken</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_7">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_StatsWarn_WebServer">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Web Server</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QComboBox" name="box_StatsWarn_WebServer">
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="toolTip">
-                     <string>Select a Web Server</string>
-                    </property>
-                    <property name="sizeAdjustPolicy">
-                     <enum>QComboBox::AdjustToContents</enum>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>Apache2</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Nginx</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>IIS</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                 </layout>
                 </widget>
                </item>
               </layout>
@@ -1874,10 +1838,21 @@ li.checked::marker { content: &quot;\2612&quot;; }
                </column>
                <column>
                 <property name="text">
-                 <string notr="true">Referrer</string>
+                 <string notr="true">User-agent</string>
                 </property>
                 <property name="toolTip">
-                 <string>The URL which redirected the Client to the requested page</string>
+                 <string>User-agent of the client which made the request</string>
+                </property>
+                <property name="textAlignment">
+                 <set>AlignLeading|AlignVCenter</set>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string notr="true">Client</string>
+                </property>
+                <property name="toolTip">
+                 <string>IP address of the Client which made the request</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1896,21 +1871,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
                </column>
                <column>
                 <property name="text">
-                 <string notr="true">User-agent</string>
+                 <string notr="true">Referrer</string>
                 </property>
                 <property name="toolTip">
-                 <string>User-agent of the client which made the request</string>
-                </property>
-                <property name="textAlignment">
-                 <set>AlignLeading|AlignVCenter</set>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string notr="true">Client</string>
-                </property>
-                <property name="toolTip">
-                 <string>IP address of the Client which made the request</string>
+                 <string>The URL which redirected the Client to the requested page</string>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -1944,17 +1908,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </property>
                 <property name="toolTip">
                  <string>Time taken by the server to serve the content, in milliseconds</string>
-                </property>
-                <property name="textAlignment">
-                 <set>AlignLeading|AlignVCenter</set>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string notr="true">rowid</string>
-                </property>
-                <property name="toolTip">
-                 <string notr="true"/>
                 </property>
                 <property name="textAlignment">
                  <set>AlignLeading|AlignVCenter</set>
@@ -8511,7 +8464,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -9360,7 +9313,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -10533,7 +10486,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -11477,7 +11430,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
   <tabstop>button_StatsWarn_Draw</tabstop>
   <tabstop>table_StatsWarn</tabstop>
   <tabstop>chart_StatsWarn</tabstop>
-  <tabstop>button_StatsWarn_Update</tabstop>
   <tabstop>box_StatsSpeed_WebServer</tabstop>
   <tabstop>box_StatsSpeed_Year</tabstop>
   <tabstop>box_StatsSpeed_Month</tabstop>

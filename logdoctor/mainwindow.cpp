@@ -1408,8 +1408,6 @@ void MainWindow::updateUiIcons()
                 (s_index==0) ? "on" : "off" )) );
         this->ui->button_StatsWarn_Draw->setIcon(
             QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_StatsWarn_Update->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
         // stats speed
         this->ui->button_Tab_StatsSpeed->setIcon(
             QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
@@ -1853,14 +1851,13 @@ void MainWindow::updateUiLanguage()
                 this->crapview.getLogFieldString(12),
                 this->crapview.getLogFieldString(13),
                 this->crapview.getLogFieldString(14),
-                this->crapview.getLogFieldString(18),
-                this->crapview.getLogFieldString(22),
                 this->crapview.getLogFieldString(21),
                 this->crapview.getLogFieldString(20),
+                this->crapview.getLogFieldString(22),
+                this->crapview.getLogFieldString(18),
                 this->crapview.getLogFieldString(17),
                 this->crapview.getLogFieldString(16),
-                this->crapview.getLogFieldString(15),
-                "rowid" };
+                this->crapview.getLogFieldString(15)  };
             this->ui->table_StatsWarn->setColumnCount( h.size() );
             this->ui->table_StatsWarn->setHorizontalHeaderLabels( h );
         }
@@ -2143,17 +2140,30 @@ bool MainWindow::checkDataDB()
 /////////////////////
 //// GENERAL USE ////
 /////////////////////
-QString MainWindow::wsFromIndex(const int index ) const
+QString MainWindow::wsFromIndex( const int index ) const
 {
     switch (index) {
-    case 0:
-        return QString("apache");
-    case 1:
-        return QString("nginx");
-    case 2:
-        return QString("iis");
-    default:
-        throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
+        case 0:
+            return QString("apache");
+        case 1:
+            return QString("nginx");
+        case 2:
+            return QString("iis");
+        default:
+            throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
+    }
+}
+WebServer MainWindow::wsEnumFromIndex( const int index ) const
+{
+    switch (index) {
+        case 0:
+            return WS_APACHE;
+        case 1:
+            return WS_NGINX;
+        case 2:
+            return WS_IIS;
+        default:
+            throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
     }
 }
 
@@ -2569,9 +2579,6 @@ void MainWindow::setDbWorkingState( const bool working )
     this->db_working = working;
     if ( ! working ) {
         this->checkMakeStats_Makable();
-        if ( this->ui->table_StatsWarn->rowCount() > 0 ) {
-            this->ui->button_StatsWarn_Update->setEnabled( true );
-        }
         this->checkStatsWarnDrawable();
         this->checkStatsCountDrawable();
         this->checkStatsSpeedDrawable();
@@ -2583,7 +2590,6 @@ void MainWindow::setDbWorkingState( const bool working )
         this->ui->page_Section_Conf->setEnabled( true );
     } else {
         this->ui->button_MakeStats_Start->setEnabled(  false );
-        this->ui->button_StatsWarn_Update->setEnabled( false );
         this->ui->button_StatsWarn_Draw->setEnabled(   false );
         this->ui->scrollArea_StatsCount->setEnabled(   false );
         this->ui->button_StatsSpeed_Draw->setEnabled(  false );
@@ -3226,29 +3232,22 @@ void MainWindow::on_button_StatsWarn_Draw_clicked()
 }
 void MainWindow::drawStatsWarn()
 {
+    const int wsIndex{ this->ui->box_StatsWarn_WebServer->currentIndex() };
     this->ui->table_StatsWarn->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
     this->ui->table_StatsWarn->setRowCount(0);
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
-        this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ),
+        this->wsFromIndex( wsIndex ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
         this->ui->box_StatsWarn_Day->currentText(),
-        (this->ui->checkBox_StatsWarn_Hour->isChecked()) ? this->ui->box_StatsWarn_Hour->currentText() : "" );
+        this->ui->checkBox_StatsWarn_Hour->isChecked() ? this->ui->box_StatsWarn_Hour->currentText() : "",
+        this->craplog.getWarnlists( this->wsEnumFromIndex( wsIndex ) ) );
     ColorSec::applyChartTheme(
         this->fonts,
         this->ui->chart_StatsWarn );
     this->setDbWorkingState( false );
-}
-
-
-void MainWindow::on_button_StatsWarn_Update_clicked()
-{
-    this->crapview.updateWarn(
-        this->ui->table_StatsWarn,
-        this->wsFromIndex( this->ui->box_StatsWarn_WebServer->currentIndex() ) );
-    this->db_edited |= true;
 }
 
 
@@ -3741,9 +3740,7 @@ void MainWindow::checkStatsDayDrawable()
 std::optional<QString> MainWindow::getStatsDayParsedFilter() const
 {
     const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
-    if ( fld_i == 0 ) {
-        return FilterOps::parseBooleanFilter( this->ui->inLine_StatsDay_Filter->text() );
-    } else if ( fld_i == 5 ) {
+    if ( fld_i == 4 ) {
         return FilterOps::parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
     } else {
         return FilterOps::parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
@@ -3761,7 +3758,7 @@ void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
             this->crapview.getFields( "Daytime" ));
         this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
         // refresh dates
-        QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
+        const QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
         this->ui->box_StatsDay_FromYear->addItems( years );
         this->ui->box_StatsDay_FromYear->setCurrentIndex( 0 );
         if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
@@ -4034,9 +4031,7 @@ std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_n
     const QString fld_t{ ( filter_num == 1 )
                          ? this->ui->inLine_StatsRelat_Filter_1->text()
                          : this->ui->inLine_StatsRelat_Filter_2->text() };
-    if ( fld_i == 0 ) {
-        return FilterOps::parseBooleanFilter( fld_t );
-    } else if ( fld_i >= 5 && fld_i <= 8 ) {
+    if ( fld_i >= 4 && fld_i <= 7 ) {
         return FilterOps::parseNumericFilter( fld_t );
     } else {
         return FilterOps::parseTextualFilter( fld_t );
@@ -4051,13 +4046,13 @@ void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
     this->ui->box_StatsRelat_ToYear->clear();
     if ( index >= 0 ) {
         // refresh fields
-        QStringList fields{ this->crapview.getFields( "Relational" ) };
+        const QStringList fields{ this->crapview.getFields( "Relational" ) };
         this->ui->box_StatsRelat_LogsField_1->addItems( fields );
         this->ui->box_StatsRelat_LogsField_2->addItems( fields );
         this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
         this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
         // refresh dates
-        QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
+        const QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
         // from
         this->ui->box_StatsRelat_FromYear->clear();
         this->ui->box_StatsRelat_FromYear->addItems( years );

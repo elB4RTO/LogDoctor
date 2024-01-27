@@ -71,11 +71,9 @@ void DonutBreakdown::addBreakdownSeries( QPieSeries* series, const QColor& color
     series->setLabelsVisible();
     const auto slices = series->slices();
     for (QPieSlice *slice : slices) {
-        if ( StringOps::startsWith( slice->label().toStdString(), 'B' ) ) {
+        if ( slice->label().startsWith( 'B' ) ) {
             slice->setBrush( Qt::GlobalColor::black );
-        } else if ( StringOps::startsWith( slice->label().toStdString(), 'W' ) ) {
-            slice->setBrush( QColor( 255, 140, 0, 255 ) );
-        } else if ( StringOps::startsWith( slice->label().toStdString(), 'I' ) ) {
+        } else if ( slice->label().startsWith( 'I' ) ) {
             slice->setBrush( Qt::GlobalColor::transparent );
             series->setPieSize( 0.0 );
         } else {
@@ -125,13 +123,13 @@ void DonutBreakdown::updateLegendMarkers()
                 pieMarker->setVisible(false);
             } else {
                 // modify markers from breakdown series
-                std::string aux = pieMarker->slice()->label().toStdString();
-                if ( aux.at( aux.find('@')+1 ) != '#' ) {
+                const QString& aux = pieMarker->slice()->label();
+                if ( aux.at( aux.indexOf('@')+1 ) != '#' ) {
                     pieMarker->setLabel( QString("%1 %2%")
-                                            .arg( QString::fromStdString( aux.substr( 0, aux.find('@') ) ) )
+                                            .arg( aux.mid( 0, aux.indexOf('@') ) )
                                             .arg( pieMarker->slice()->percentage() * 100, 0, 'f', 2) );
                     pieMarker->setFont( QFont("Arial", 8) );
-                    pieMarker->slice()->setLabel( QString::fromStdString( aux.substr( aux.find('@')+1 ) ) );
+                    pieMarker->slice()->setLabel( aux.mid( aux.indexOf('@')+1 ) );
                 } else {
                     pieMarker->setLabel( "" );
                     pieMarker->slice()->setLabel( "" );
