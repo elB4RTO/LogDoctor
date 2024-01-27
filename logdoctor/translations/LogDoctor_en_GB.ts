@@ -702,6 +702,19 @@ Continue?</source>
         <source>An error occured while reading the gzipped file</source>
         <translation>An error occured while reading the gzipped file</translation>
     </message>
+    <message>
+        <source>Invalid configuration lines</source>
+        <translation>Invalid configuration lines</translation>
+    </message>
+    <message>
+        <source>Has not been possible to apply some of the configurations</source>
+        <translation>Has not been possible to apply some of the configurations</translation>
+    </message>
+    <message>
+        <source>If you choose to proceed, all of the unapplied configurations will be lost
+Continue?</source>
+        <translation>If you choose to proceed, all of the unapplied configurations will be lost Continue?</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>

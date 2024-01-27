@@ -704,6 +704,20 @@ Continue?</source>
         <source>An error occured while reading the gzipped file</source>
         <translation type="unfinished">Error en la lectura del archivo gzip</translation>
     </message>
+    <message>
+        <source>Invalid configuration lines</source>
+        <translation type="unfinished">Líneas de configuración no válidas</translation>
+    </message>
+    <message>
+        <source>Has not been possible to apply some of the configurations</source>
+        <translation type="unfinished">No ha sido posible aplicar algunas de las configuraciones</translation>
+    </message>
+    <message>
+        <source>If you choose to proceed, all of the unapplied configurations will be lost
+Continue?</source>
+        <translation type="unfinished">Si decide continuar, se perderán todas las configuraciones no aplicadas
+¿Continuar?</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
