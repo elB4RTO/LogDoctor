@@ -8,6 +8,9 @@
 #include <algorithm>
 
 
+class QStringView;
+
+
 //! StringOps
 /*!
     Utilities for the strings
@@ -15,7 +18,7 @@
 namespace StringOps
 {
 
-//! Count the occurrences of the given sequence in the given string
+//! Counts the occurrences of the given sequence in the given string
 /*!
     \param str The target string
     \param flag The character to find
@@ -26,7 +29,7 @@ inline size_t count( std::string_view str, const char flag ) noexcept
     return static_cast<size_t>( std::count( str.cbegin(), str.cend(), flag ) );
 }
 
-//! Count the occurrences of the given sequence in the given string
+//! Counts the occurrences of the given sequence in the given string
 /*!
     \param str The target string
     \param flag The string to find
@@ -45,6 +48,13 @@ inline bool isNumeric( std::string_view str ) noexcept
          ? false
          : std::all_of( str.cbegin(), str.cend(), CharOps::isNumeric );
 }
+
+//! Checks whether a string only contains numeric characters
+/*!
+    \param str The target string
+    \return The result of the check
+*/
+bool isNumeric( QStringView str ) noexcept;
 
 //! Checks whether a string only contains alphabetic characters
 /*!

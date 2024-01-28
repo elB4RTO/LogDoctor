@@ -2,6 +2,8 @@
 
 #include "chars.h"
 
+#include <QStringView>
+
 
 namespace StringOps
 {
@@ -14,6 +16,14 @@ size_t count( std::string_view str, std::string_view flag ) noexcept
         start += flg_size;
     }
     return count;
+}
+
+
+bool isNumeric( QStringView str ) noexcept
+{
+    return str.empty()
+         ? false
+         : std::all_of( str.cbegin(), str.cend(), [](const QChar c){ return c.isDigit(); } );
 }
 
 
