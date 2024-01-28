@@ -25,16 +25,6 @@ namespace FilterOps
 */
 std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true ) noexcept;
 
-//! Parses a filter for a database field with boolean type
-/*!
-    Boolean filters are not locale-dependant,
-    meaning that English syntax must be used: 'TRUE', 'FALSE'.
-    This filter is case-insensitive.
-    \param field_str The given filter
-    \return The resulting filter to apply to the query, if valid
-*/
-std::optional<QString> parseBooleanFilter( const QString& filter_str ) noexcept;
-
 //! Parses a filter for a log field with integer type
 /*!
     The filter can be composed by anumber or by a comparison operator followed by a number.
