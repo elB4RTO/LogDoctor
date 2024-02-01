@@ -4,6 +4,7 @@
 
 #include "main_lib.h"
 
+#include "globals/db_names.h"
 #include "globals/global_configs.h"
 
 #include "customs/treewidgetitems.h"
@@ -290,6 +291,8 @@ void MainWindow::closeEvent( QCloseEvent *event )
     if ( this->db_do_backup && this->db_edited ) {
         this->backupDatabase();
     }
+    QSqlDatabase::removeDatabase( DatabasesNames::data );
+    QSqlDatabase::removeDatabase( DatabasesNames::hashes );
     // save splitters sizes => this->ui->splitter_StatsCount->sizes();
 }
 
@@ -2032,6 +2035,8 @@ void MainWindow::makeInitialChecks()
     }
 
     if ( ok ) {
+        QSqlDatabase::addDatabase( "QSQLITE", DatabasesNames::data );
+        QSqlDatabase::addDatabase( "QSQLITE", DatabasesNames::hashes );
         // statistics' database
         if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/collection.db" ) ) {
             // checks failed, abort

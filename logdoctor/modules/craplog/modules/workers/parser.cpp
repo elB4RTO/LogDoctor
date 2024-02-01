@@ -1,6 +1,8 @@
 
 #include "parser.h"
 
+#include "globals/db_names.h"
+
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -239,7 +241,7 @@ void CraplogParser::storeLogLines()
     QString db_path{ QString::fromStdString( this->db_data_path ) };
     QString db_name{ QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
 
-    QSqlDatabase db{ QSqlDatabase::addDatabase("QSQLITE") };
+    QSqlDatabase db{ QSqlDatabase::database(DatabasesNames::data) };
     db.setDatabaseName( db_path );
 
     if ( ! CheckSec::checkDatabaseFile( this->db_data_path, db_name ) ) {

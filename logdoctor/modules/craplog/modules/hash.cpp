@@ -1,6 +1,8 @@
 
 #include "hash.h"
 
+#include "globals/db_names.h"
+
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -31,12 +33,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path ) noexcept
     bool successful{ true };
     const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
+    QSqlDatabase db{ QSqlDatabase::database(DatabasesNames::hashes) };
     db.setDatabaseName( QString::fromStdString( db_path ) );
 
     if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
@@ -184,9 +181,10 @@ bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
 {
     bool successful{ true };
 
-    const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
-    QSqlDatabase db{ QSqlDatabase::addDatabase("QSQLITE") };
+    QSqlDatabase db{ QSqlDatabase::database(DatabasesNames::hashes) };
     db.setDatabaseName( QString::fromStdString( db_path ) );
+
+    const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
 
     if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
         successful &= false;
