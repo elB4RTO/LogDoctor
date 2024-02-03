@@ -4,7 +4,6 @@
 #include "utilities/strings.h"
 
 #include <QRegularExpression>
-#include <QStringList>
 
 
 namespace FilterOps
@@ -57,28 +56,28 @@ std::optional<QString> parseNumericFilter( const QString& filter_str ) noexcept
         return {aux};
 
     } else if ( StringOps::isNumeric( aux ) ) {
-        aux.prepend( QChar('=') );
+        aux.prepend( QLatin1Char('=') );
 
-    } else if ( aux.at(0) == QChar('!') && aux.at(1) != QChar('=') ) {
-        aux.insert(1, QChar('='));
+    } else if ( aux.at(0) == QLatin1Char('!') && aux.at(1) != QLatin1Char('=') ) {
+        aux.insert(1, QLatin1Char('='));
 
     } else if ( aux.startsWith(QLatin1String("EQ")) ) {
-        aux.replace(0, 2, QChar('='));
+        aux.replace(0, 2, QLatin1Char('='));
 
     } else if ( aux.startsWith(QLatin1String("NE")) ) {
-        aux.replace(0, 2, QChar('=')).prepend(QChar('!'));
+        aux.replace(0, 2, QLatin1Char('=')).prepend(QLatin1Char('!'));
 
     } else if ( aux.startsWith(QLatin1String("LT")) ) {
-        aux.replace(0, 2, QChar('<'));
+        aux.replace(0, 2, QLatin1Char('<'));
 
     } else if ( aux.startsWith(QLatin1String("LE")) ) {
-        aux.replace(0, 2, QChar('=')).prepend(QChar('<'));
+        aux.replace(0, 2, QLatin1Char('=')).prepend(QLatin1Char('<'));
 
     } else if ( aux.startsWith(QLatin1String("GT")) ) {
-        aux.replace(0, 2, QChar('>'));
+        aux.replace(0, 2, QLatin1Char('>'));
 
     } else if ( aux.startsWith(QLatin1String("GE")) ) {
-        aux.replace(0, 2, QChar('=')).prepend(QChar('>'));
+        aux.replace(0, 2, QLatin1Char('=')).prepend(QLatin1Char('>'));
     }
 
     // final check
@@ -112,13 +111,13 @@ std::optional<QString> parseTextualFilter( const QString& filter_str ) noexcept
         result.emplace(QStringLiteral(" IS NOT NULL"));
 
     } else {
-        if ( aux.startsWith(QChar('!')) ) {
-            result.emplace( QStringLiteral(" NOT LIKE '%1'").arg( aux.removeFirst().trimmed().replace(QChar('\''),QLatin1String("''")) ) );
+        if ( aux.startsWith(QLatin1Char('!')) ) {
+            result.emplace( QStringLiteral(" NOT LIKE '%1'").arg( aux.removeFirst().trimmed().replace(QLatin1Char('\''),QLatin1String("''")) ) );
         } else {
-            if ( aux.startsWith(QChar('\\')) ) {
+            if ( aux.startsWith(QLatin1Char('\\')) ) {
                 aux.removeFirst();
             }
-            result.emplace( QStringLiteral(" LIKE '%1'").arg( aux.replace(QChar('\''),QLatin1String("''")) ) );
+            result.emplace( QStringLiteral(" LIKE '%1'").arg( aux.replace(QLatin1Char('\''),QLatin1String("''")) ) );
         }
     }
     return result;

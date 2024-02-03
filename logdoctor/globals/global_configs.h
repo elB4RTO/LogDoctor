@@ -32,15 +32,16 @@ enum class ChartsTheme : themes_t {
 /*!
     Globally shared configurations
 */
-namespace GlobalConfigs {
+namespace GlobalConfigs
+{
 
-    extern WindowTheme window_theme;
+extern WindowTheme window_theme;
 
-    extern IconsTheme icons_theme;
+extern IconsTheme icons_theme;
 
-    extern ChartsTheme charts_theme;
+extern ChartsTheme charts_theme;
 
-    extern QString icons_set;
+extern QString icons_set;
 
 } // namespace GlobalConfigs
 
