@@ -20,7 +20,7 @@ namespace /*private*/
     \return The number of new lines in a single log line
     \see LogsFormat, processApacheFormatString(), processNginxFormatString()
 */
-unsigned countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators )
+size_t countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators )
 {
     size_t nl{ 0ul };
     nl += StringOps::count( initial, '\n' );
@@ -28,7 +28,7 @@ unsigned countNewLines( std::string_view initial, std::string_view final, const 
     for ( const std::string& sep : separators ) {
         nl += StringOps::count( sep, '\n' );
     }
-    return static_cast<unsigned>(nl);
+    return nl;
 }
 
 

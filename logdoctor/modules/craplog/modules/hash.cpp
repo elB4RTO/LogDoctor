@@ -11,14 +11,13 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
+#include "modules/database/database.h"
+
 #include "sha256.h"
 
 #include <ios>
 
 #include <QVariant>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 
 
 void HashOps::setDialogLevel( const DialogsLevel new_level ) noexcept
@@ -30,51 +29,29 @@ void HashOps::setDialogLevel( const DialogsLevel new_level ) noexcept
 // reads the database holding the already used hashes
 bool HashOps::loadUsedHashesLists( const std::string& db_path ) noexcept
 {
-    bool successful{ true };
-    const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
 
-    QSqlDatabase db{ QSqlDatabase::database(DatabasesNames::hashes) };
-    db.setDatabaseName( QString::fromStdString( db_path ) );
+    db.open( db_path, this->dialogs_level==DL_EXPLANATORY );
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    const QString stmt{ QStringLiteral(R"(SELECT "hash" FROM "%1";)") };
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialogs_level == DL_EXPLANATORY ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
+    for ( const auto& [wid,name] : this->ws_names ) {
 
-    } else {
-        QSqlQuery query{ db };
-        for ( const auto& [wid,name] : this->ws_names ) {
-            if ( ! query.exec("SELECT hash FROM "+name+";") ) {
-                // error querying database
-                successful &= false;
-                DialogSec::errDatabaseFailedExecuting( db_name, query.lastQuery(), query.lastError().text() );
-                break;
-            } else {
-                // iterate over results
-                while ( query.next() ) {
-                    std::string hash{ query.value(0).toString().toStdString() };
-                    if ( hash.size() != 64ul ) {
-                        // not a valid sha256 hash
-                        continue;
-                    }
-                    this->hashes.at( wid ).push_back( hash );
-                }
+        QueryWrapper query{ db.getQuery() };
+
+        query( stmt.arg( name ) );
+
+        while ( query->next() ) {
+            const QString hash{ query[0].toString() };
+            if ( hash.size() != 64ul ) {
+                // not a valid sha256 hash
+                continue;
             }
-            if ( ! successful ) { break; }
+            this->hashes.at( wid ).push_back( hash.toStdString() );
         }
     }
 
-    if ( db.isOpen() ) {
-        db.close();
-    }
-    return successful;
+    return true;
 }
 
 
@@ -93,7 +70,7 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash )
 
         } catch (...) {
             // failed as gzip, try as text file
-            if ( content.size() > 0ul ) {
+            if ( ! content.empty() ) {
                 content.clear();
             }
             IOutils::readFile( file_path, content );
@@ -124,7 +101,6 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash )
 
     SHA256 sha;
     sha.update( content );
-    content.clear();
     uint8_t* digest{ sha.digest() };
     // return the hex digest
     hash.append( SHA256::toString(digest) );
@@ -143,133 +119,35 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const WebServer& web_se
 }
 
 
-// insert the given hash/es in the relative list
-bool HashOps::insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const WebServer& web_server ) noexcept
+void HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
 {
-    bool successful{ true };
+    const bool explain_msg{ this->dialogs_level >  DL_ESSENTIAL   };
+    const bool explain_err{ this->dialogs_level == DL_EXPLANATORY };
+
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
+
+    db.open( db_path, explain_err );
+
+    db.startTransaction( explain_msg, explain_err );
+
     try {
-        if( ! VecOps::contains<std::string>( this->hashes.at( web_server ), hash ) ) {
-            this->hashes.at( web_server ).push_back( hash );
-            // insert tnto the database
-            QString stmt = QString("INSERT INTO %1 ( hash ) VALUES ( '%2' );")
-                .arg( this->ws_names.at(web_server), QString::fromStdString(hash).replace("'","''") );
-            if ( ! query.exec( stmt ) ) {
-                // error opening database
-                successful &= false;
-                QString query_msg, err_msg;
-                if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    query_msg = "query.exec()";
-                    if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        err_msg = query.lastError().text();
-                    }
-                }
-                DialogSec::errDatabaseFailedExecuting( db_name, query_msg, err_msg );
+
+        for ( const std::string& hash : hashes ) {
+
+            if ( VecOps::contains( this->hashes.at( web_server ), hash ) ) {
+
+                db.getQuery()( QStringLiteral(R"(INSERT INTO "%1" ( hash ) VALUES ( '%2' );)")
+                                .arg( this->ws_names.at(web_server), QString::fromStdString(hash).replace(QLatin1Char('\''),QLatin1String("''")) ) );
             }
-        }/* else {
-            // hash already stored
-        }*/
+        }
+
+        db.commitTransaction( explain_msg, explain_err );
+
+        auto& used_hashes{ this->hashes.at( web_server ) };
+        used_hashes.insert( used_hashes.end(), hashes.begin(), hashes.end() );
+
     } catch (...) {
-        // failed to insert the hash
-        successful &= false;
+        // rollback the transaction
+        db.rollbackTransaction( explain_msg, explain_err );
     }
-    query.finish();
-    return successful;
-}
-
-
-bool HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
-{
-    bool successful{ true };
-
-    QSqlDatabase db{ QSqlDatabase::database(DatabasesNames::hashes) };
-    db.setDatabaseName( QString::fromStdString( db_path ) );
-
-    const QString db_name{ QString::fromStdString( db_path.substr( db_path.find_last_of( '/' ) + 1ul ) ) };
-
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
-
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialogs_level == DL_EXPLANATORY ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( db_name, err_msg );
-
-    } else {
-        QSqlQuery query{ db };
-        if ( ! db.transaction() ) {
-            // error opening database
-            successful &= false;
-            QString stmt_msg, err_msg;
-            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                stmt_msg = "db.transaction()";
-                if ( this->dialogs_level == DL_EXPLANATORY ) {
-                    err_msg = db.lastError().text();
-                }
-            }
-            DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
-
-        } else {
-
-            try {
-                for ( const std::string& hash : hashes ) {
-                    successful = this->insertUsedHash( query, db_name, hash, web_server );
-                    if ( ! successful ) {
-                        break;
-                    }
-                }
-                query.finish();
-
-                if ( successful ) {
-                    // commit the transaction
-                    if ( ! db.commit() ) {
-                        // error opening database
-                        successful &= false;
-                        QString stmt_msg, err_msg;
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            stmt_msg = "db.commit()";
-                            if ( this->dialogs_level == DL_EXPLANATORY ) {
-                                err_msg= db.lastError().text();
-                            }
-                        }
-                        DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
-                    }
-                }
-                if ( ! successful ) {
-                    // rollback
-                    throw (std::exception());
-                }
-
-            } catch (...) {
-                // wrongthing w3nt some.,.
-                successful &= false;
-                bool err_shown{ false };
-                // rollback the transaction
-                if ( ! db.rollback() ) {
-                    // error rolling back commits
-                    QString stmt_msg, err_msg;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        stmt_msg = "db.rollback()";
-                        if ( this->dialogs_level == DL_EXPLANATORY ) {
-                            err_msg = db.lastError().text();
-                        }
-                    }
-                    DialogSec::errDatabaseFailedExecuting( db_name, stmt_msg, err_msg );
-                    err_shown |= true;
-                }
-                if ( ! err_shown ) {
-                    // show a message
-                    QString msg{ DialogSec::tr("An error occured while working on the database\n\nAborting") };
-                    DialogSec::errGeneric( msg );
-                }
-            }
-        }
-    }
-    if ( db.isOpen() ) {
-        db.close();
-    }
-    return successful;
 }

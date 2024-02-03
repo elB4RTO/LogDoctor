@@ -30,6 +30,7 @@ public:
     /*!
         \param db_path The path of the log files' Hashes database
         \return Whether the operation has been successful or not
+        \throw LogDoctorException
     */
     bool loadUsedHashesLists( const std::string& db_path ) noexcept;
 
@@ -55,9 +56,9 @@ public:
         \param db_path The path of the Hashes database
         \param hashes The list of hashes to insert
         \param web_server_id The ID of the Web Server which generated the file
-        \return Whether the operation has been successful or not
+        \throw LogDoctorException
     */
-    bool insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server );
+    void insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server );
 
 private:
 
@@ -78,11 +79,6 @@ private:
         {WS_NGINX,  {}},
         {WS_IIS,    {}}
     };
-
-
-    // Called by insertUsedHashes()
-    // Inserts a hash in the corresponding database table
-    bool insertUsedHash( QSqlQuery& query, const QString& db_name, const std::string& hash, const WebServer& web_server ) noexcept;
 
 };
 

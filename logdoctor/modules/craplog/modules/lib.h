@@ -28,9 +28,12 @@ enum class LogType
 //! Holds informations about a log file
 struct LogFile final {
     explicit LogFile() noexcept = default;
-    explicit LogFile
-        (const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt) noexcept
+    explicit LogFile(const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt) noexcept
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
+    LogFile(LogFile&& other) noexcept = default;
+    LogFile& operator=(LogFile&& other) noexcept = default;
+    LogFile(const LogFile& other) noexcept = default;
+    LogFile& operator=(const LogFile& other) noexcept = default;
     //! Wheter the file has been selected to be used or not
     inline bool isSelected() const noexcept
         { return this->selected; }

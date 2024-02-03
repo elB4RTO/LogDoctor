@@ -98,15 +98,10 @@ bool deepTypeCheck( const std::string& line, const LogsFormat& format ) noexcept
     // add the initial and final seps now
     n_sep += 2;
 
-    // the result is considered ture if more then a half of the seps was found
-    // and more than a half of the found separators was not blank
-    bool result{ false };
-    if ( n_sep_found >= n_sep-1
-      && n_blank_sep <= n_sep_found/2  ) {
-        result |= true;
-    }
-
-    return result;
+    // the line is considered valid if all the seps have been found
+    // and more than a half of them were not blank
+    return n_sep_found >= n_sep-1
+        && n_blank_sep <= n_sep_found/2;
 }
 
 } // namespace (private)

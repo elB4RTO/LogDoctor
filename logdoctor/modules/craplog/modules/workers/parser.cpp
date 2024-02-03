@@ -12,10 +12,10 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
+#include "modules/database/database.h"
+
 #include "modules/craplog/modules/workers/lib.h"
 
-#include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QSqlError>
 
 
@@ -84,6 +84,7 @@ void CraplogParser::work()
         emit this->showDialog( WorkerDialog::errFailedParsingLogs,
                                {e.what()} );
         this->proceed &= false;
+
     }
     // send the final data
     if ( ! this->proceed ) {
@@ -187,11 +188,18 @@ void CraplogParser::joinLogLines()
 
 void CraplogParser::parseLogLines()
 {
-    const auto parseLine = [this]( const std::string& line, const LogsFormat& logs_format ) {
+    const auto parseLine{ [this]( const std::string& line, const LogsFormat& logs_format ) {
         this->data_collection.emplace_back( LogLineData(line, logs_format) );
         this->parsed_size += line.size();
         ++ this->parsed_lines;
-    };
+    }};
+
+    const auto signal_emission_gap{ [](const size_t n_lines)->size_t{
+        return n_lines>10000ul ? n_lines/1000ul
+                               : n_lines>1000ul ? n_lines/100ul
+                                                : n_lines>100ul ? n_lines/10ul
+                                                                : 10ul;
+    }};
 
 
     // parse all the lines
@@ -200,20 +208,19 @@ void CraplogParser::parseLogLines()
         const size_t nl{ this->logs_format.new_lines };
         size_t send{ 0ul };
         if ( nl == 0ul ) {
-            const size_t send_gap{ n_lines>1000ul ? n_lines/100 : n_lines>100ul ? n_lines/10 : 10 };
+            const size_t send_gap{ signal_emission_gap(n_lines) };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( n_lines );
             for ( const std::string& line : this->logs_lines ) {
                 parseLine( line, lf );
-                if (send == send_gap) {
+                if (++send == send_gap) {
                     this->sendPerfData();
                     send = 0ul;
                 }
-                ++send;
             }
         } else {
             const size_t real_lines{ n_lines / (nl+1ul) };
-            const size_t send_gap{ real_lines>1000ul ? real_lines/100 : real_lines>100ul ? real_lines/10 : 10 };
+            const size_t send_gap{ signal_emission_gap(real_lines) };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( real_lines );
             for ( size_t i{0ul}; i<n_lines; ++i ) {
@@ -223,11 +230,10 @@ void CraplogParser::parseLogLines()
                     line += "\n" + this->logs_lines.at( i );
                 }
                 parseLine( line, lf );
-                if (send == send_gap) {
+                if (++send == send_gap) {
                     this->sendPerfData();
                     send = 0ul;
                 }
-                ++send;
             }
         }
         this->sendPerfData();
@@ -241,136 +247,116 @@ void CraplogParser::storeLogLines()
     QString db_path{ QString::fromStdString( this->db_data_path ) };
     QString db_name{ QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
 
-    QSqlDatabase db{ QSqlDatabase::database(DatabasesNames::data) };
-    db.setDatabaseName( db_path );
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
 
-    if ( ! CheckSec::checkDatabaseFile( this->db_data_path, db_name ) ) {
+    db->setDatabaseName( db_path );
+
+    if ( ! this->checkDatabaseFile( db_name ) ) [[unlikely]] {
         this->proceed &= false;
+        return;
+    }
 
-    } else if ( ! db.open() ) {
-        // error opening database
+    if ( ! db->open() ) [[unlikely]] {
         this->proceed &= false;
         QString err_msg;
         if ( this->dialogs_level == DL_EXPLANATORY ) {
-            err_msg = db.lastError().text();
+            err_msg = db->lastError().text();
         }
         emit this->showDialog( WorkerDialog::errDatabaseFailedOpening,
-                               {db_name, err_msg} );
+                              {db_name, err_msg} );
+        return;
+    }
 
-    } else {
+    try {
 
-        try {
-            // ACID transaction
-            if ( ! db.transaction() ) {
-                // error opening database
+        if ( ! db->transaction() ) [[unlikely]] {
+            this->proceed &= false;
+            QString stmt_msg, err_msg;
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                stmt_msg.append( "db.transaction()" );
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
+                    err_msg = db->lastError().text();
+                }
+            }
+            emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
+                                   {db_name, stmt_msg, err_msg} );
+            return;
+
+        } else if ( this->storeData( db, db_name ) ) [[likely]] {
+
+            if ( ! db->commit() ) [[unlikely]] {
                 this->proceed &= false;
                 QString stmt_msg, err_msg;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    stmt_msg = "db.transaction()";
+                    stmt_msg.append( "db.commit()" );
                     if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        err_msg = db.lastError().text();
+                        err_msg.append( db->lastError().text() );
                     }
                 }
                 emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
                                        {db_name, stmt_msg, err_msg} );
             }
+        }
 
-            if ( this->proceed ) {
-                this->proceed &= this->storeData( db );
-            }
-
-            if ( this->proceed ) {
-                // commit the transaction
-                if ( ! db.commit() ) {
-                    // error opening database
-                    this->proceed &= false;
-                    QString stmt_msg, err_msg;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        stmt_msg = "db.commit()";
-                        if ( this->dialogs_level == DL_EXPLANATORY ) {
-                            err_msg= db.lastError().text();
-                        }
-                    }
-                    emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
-                                           {db_name, stmt_msg, err_msg} );
-                }
-            }
-            if ( ! this->proceed ) {
-                // rollback
-                throw (std::exception());
-            }
-
-        } catch (...) {
-            // wrongthing w3nt some.,.
-            this->proceed &= false;
-            bool err_shown = false;
+        if ( ! this->proceed ) [[unlikely]] {
             // rollback the transaction
-            if ( ! db.rollback() ) {
-                // error rolling back commits
+            if ( ! db->rollback() ) {
                 QString stmt_msg, err_msg;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
                     stmt_msg = "db.rollback()";
                     if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        err_msg = db.lastError().text();
+                        err_msg = db->lastError().text();
                     }
                 }
                 emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
                                        {db_name, stmt_msg, err_msg} );
-                err_shown = true;
-            }
-            if ( ! err_shown ) {
-                // show a message
-                emit this->showDialog(
-                    WorkerDialog::errGeneric,
-                    {QString("%1\n\n%2").arg(
-                        DialogSec::tr("An error occured while working on the database"),
-                        DialogSec::tr("Aborting") )} );
+                return;
             }
         }
 
-        if ( db.isOpen() ) {
-            db.close();
-        }
+    } catch (...) {
+        // wrongthing w3nt some.,.
+        emit this->showDialog(
+            WorkerDialog::errGeneric,
+            {QStringLiteral("%1\n\n%2").arg(
+                DialogSec::tr("An error occured while working on the database"),
+                DialogSec::tr("Aborting") )} );
     }
 }
 
 #define APPEND_TO_QUERY_AS_NUMBER(LOG_FIELD)\
     if ( LOG_FIELD ) {\
-        query_stmt += QString::fromStdString( *LOG_FIELD ).replace("'","''");\
+        stmt.append( QString::fromStdString( *LOG_FIELD ).replace(QLatin1Char('\''),QLatin1String("''")) );\
     } else {\
-        query_stmt += QStringLiteral("NULL");\
+        stmt.append( QStringLiteral("NULL") );\
     }
 #define CONCAT_TO_QUERY_AS_NUMBER(LOG_FIELD)\
-    query_stmt += QStringLiteral(", ");\
+    stmt.append( QStringLiteral(", ") );\
     APPEND_TO_QUERY_AS_NUMBER(LOG_FIELD)
 
 #define CONCAT_TO_QUERY_AS_STRING(LOG_FIELD)\
-    query_stmt += QStringLiteral(", ");\
+    stmt.append( QStringLiteral(", ") );\
     if ( LOG_FIELD ) {\
-        query_stmt += QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace("'","''") );\
+        stmt.append( QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace(QLatin1Char('\''),QLatin1String("''")) ) );\
     } else {\
-            query_stmt += QStringLiteral("NULL");\
+        stmt.append( QStringLiteral("NULL") );\
     }
 
 // in IIS logs the user-agent is logged with '+' instead of ' ' (whitespace)
 #define CONCAT_TO_QUERY_USERAGENT(LOG_FIELD)\
-    query_stmt += QStringLiteral(", ");\
+    stmt.append( QStringLiteral(", ") );\
     if ( LOG_FIELD ) {\
         if ( this->web_server == WS_IIS ) {\
-            query_stmt += QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace("+"," ").replace("'","''") );\
+            stmt.append( QStringLiteral("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace(QLatin1Char('+'),QLatin1Char(' ')).replace(QLatin1Char('\''),QLatin1String("''")) ) );\
         } else {\
-            query_stmt += QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace("'","''") );\
+            stmt.append( QStringLiteral("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace(QLatin1Char('\''),QLatin1String("''")) ) );\
         }\
     } else {\
-            query_stmt += QStringLiteral("NULL");\
+        stmt.append( QStringLiteral("NULL") );\
     }
 
-bool CraplogParser::storeData( QSqlDatabase& db )
+bool CraplogParser::storeData( DatabaseWrapper& db, const QString& db_name )
 {
-    const QString db_name{ QString::fromStdString(
-        this->db_data_path.substr(
-            this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
-
     // get blacklist items
     const bool check_bl_cli { this->blacklists.at( 20 ).used };
 
@@ -383,22 +369,25 @@ bool CraplogParser::storeData( QSqlDatabase& db )
     QString table;
     switch ( this->web_server ) {
         case WS_APACHE:
-            table += "apache";
+            table.append( "apache" );
             break;
         case WS_NGINX:
-            table += "nginx";
+            table.append( "nginx" );
             break;
         case WS_IIS:
-            table += "iis";
+            table.append( "iis" );
             break;
         default:
             // wrong WebServerID, but should be unreachable because of the previous operations
             throw WebServerException( "Unexpected WebServer: " + toString(this->web_server) );
     }
 
+    const QString stmt_template{
+        QStringLiteral(R"(INSERT INTO "%1" ("year", "month", "day", "hour", "minute", "second", "protocol", "method", "uri", "query", "response", "time_taken", "bytes_sent", "bytes_received", "referrer", "client", "user_agent", "cookie") )"
+                         "VALUES (")
+    };
 
     /*int perf_size;*/
-    QSqlQuery query{ db };
     // parse every row of data
     for ( const LogLineData& line_data : this->data_collection ) {
 
@@ -410,9 +399,7 @@ bool CraplogParser::storeData( QSqlDatabase& db )
             }
         }
 
-        // initialize the SQL statement
-        QString query_stmt{ "INSERT INTO \""+table+"\" (\"year\", \"month\", \"day\", \"hour\", \"minute\", \"second\", \"protocol\", \"method\", \"uri\", \"query\", \"response\", \"time_taken\", \"bytes_sent\", \"bytes_received\", \"referrer\", \"client\", \"user_agent\", \"cookie\") "
-                            "VALUES (" };
+        QString stmt{ stmt_template.arg( table ) };
 
         // complete and execute the statement, binding NULL if not found
 
@@ -441,29 +428,13 @@ bool CraplogParser::storeData( QSqlDatabase& db )
         CONCAT_TO_QUERY_USERAGENT(line_data.user_agent) // 21
         CONCAT_TO_QUERY_AS_STRING(line_data.cookie) // 22
 
-        query_stmt += ");";
+        stmt.append( ");" );
 
-        // encode the statement
-        if ( ! query.prepare( query_stmt ) ) {
-            // error opening database
-            QString query_msg, err_msg;
-            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                query_msg = "query.prepare()";
-                if ( this->dialogs_level == DL_EXPLANATORY ) {
-                    err_msg = query.lastError().text();
-                }
-            }
-            emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
-                                   {db_name, query_msg, err_msg} );
-            return false;
-        }
-
-        // finalize this statement
-        if ( ! query.exec() ) {
+        if ( QSqlQuery query(*db); !query.exec( stmt ) ) [[unlikely]] {
             // error finalizing step
             QString query_msg, err_msg;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
-                query_msg = "query.exec()";
+                query_msg.append( "query.exec()" );
                 if ( this->dialogs_level == DL_EXPLANATORY ) {
                     err_msg = query.lastError().text();
                 }
@@ -472,10 +443,26 @@ bool CraplogParser::storeData( QSqlDatabase& db )
                                    {db_name, query_msg, err_msg} );
             return false;
         }
-
-        // reset the statement to prepare for the next one
-        query.finish();
     }
 
+    return true;
+}
+
+
+bool CraplogParser::checkDatabaseFile( const QString& db_name ) noexcept
+{
+    if ( ! IOutils::exists( this->db_data_path ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotFound, {db_name} );
+        return false;
+    } else if ( ! IOutils::isFile( this->db_data_path ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotFile, {db_name} );
+        return false;
+    } else if ( ! IOutils::checkFile( this->db_data_path, true ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotReadable, {db_name} );
+        return false;
+    } else if ( ! IOutils::checkFile( this->db_data_path, false, true ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotWritable, {db_name} );
+        return false;
+    }
     return true;
 }

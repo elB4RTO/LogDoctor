@@ -14,9 +14,9 @@
 struct BWlist;
 struct LogLineData;
 
-enum class WorkerDialog;
+class DatabaseWrapper;
 
-class QSqlDatabase;
+enum class WorkerDialog;
 
 
 class CraplogParser final : public QObject
@@ -86,6 +86,8 @@ private:
     std::string db_data_path;
     std::string db_hashes_path;
 
+    bool checkDatabaseFile( const QString& db_name ) noexcept;
+
     //////////////////////
     //// PERFORMANCES ////
 
@@ -136,10 +138,11 @@ private:
     //! Stores the data collection in the logs Collection database
     /*!
         \param db A database instance, already initizlized
+        \param db_name The database in use, to be shown in the dialogs
         \return Whether the operation has been successful or not
         \throw WebServerException
     */
-    bool storeData( QSqlDatabase& db );
+    bool storeData( DatabaseWrapper& db , const QString& db_name );
 
 };
 
