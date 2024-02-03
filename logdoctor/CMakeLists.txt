@@ -83,6 +83,9 @@ set(PROJECT_SOURCES
     modules/tb.h
     modules/tb.cpp
 
+    modules/database/database.h
+    modules/database/database.cpp
+
     modules/dialogs.h
     modules/dialogs.cpp
     modules/dialogs/message_dialog.ui
