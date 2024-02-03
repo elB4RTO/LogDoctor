@@ -8,8 +8,11 @@
 
 #include "modules/tb.h"
 
+#include "modules/database/database.h"
+
 #include "modules/craplog/craplog.h"
 #include "modules/crapview/crapview.h"
+
 
 class Craphelp;
 class Crapup;
@@ -728,23 +731,23 @@ private:
 
     bool initiating{ true };
 
-    bool db_ok{ true };
-
     //! Makes the initial integrity checks
     void makeInitialChecks();
-
-    //! Checks the integrity of the logs data collection database
-    bool checkDataDB();
 
 
     ///////////////////
     //// DATABASES ////
     ///////////////////
 
+    DatabaseHandler dbHandler;
+
+    // true if a process edited the database and so a backup is required
     bool db_edited{ false };
 
+    // user-defined configuration: whether to make backups or not
     bool db_do_backup{ true };
 
+    // user-defined configuration: maximum number of backups to keep
     unsigned db_backups_number{ 3 };
 
     //! Backs-up the logs data collection database
@@ -753,13 +756,25 @@ private:
     std::string db_data_path;
     std::string db_hashes_path;
 
-    // actions when working on a db
+    // true when a process is working on a db
     bool db_working{ false };
 
     //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool working );
 
+    //! Weak check on the logs data collection database
+    /*!
+        Returns true if the database is free (no other process is running
+        that may access it for read/write operations) and it exists
+        \see checkDataDB
+    */
     bool dbUsable();
+
+    // false if the logs data collection database is invalid
+    bool db_ok{ true };
+
+    //! Checks the integrity of the logs data collection database
+    bool checkDataDB();
 
 
     //////////////////

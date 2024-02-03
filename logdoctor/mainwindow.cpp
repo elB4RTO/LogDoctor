@@ -36,7 +36,6 @@
 #include <QThread>
 #include <QTimer>
 #include <QTreeWidget>
-#include <QSqlDatabase>
 #include <QFontDatabase>
 #include <QChartView>
 
@@ -291,8 +290,6 @@ void MainWindow::closeEvent( QCloseEvent *event )
     if ( this->db_do_backup && this->db_edited ) {
         this->backupDatabase();
     }
-    QSqlDatabase::removeDatabase( DatabasesNames::data );
-    QSqlDatabase::removeDatabase( DatabasesNames::hashes );
     // save splitters sizes => this->ui->splitter_StatsCount->sizes();
 }
 
@@ -1947,7 +1944,7 @@ void MainWindow::makeInitialChecks()
     std::error_code err;
     QString err_msg;
     // check that the sqlite plugin is available
-    if ( ! QSqlDatabase::drivers().contains("QSQLITE") ) {
+    if ( ! this->dbHandler.checkDriver() ) {
         // checks failed, abort
         DialogSec::errSqlDriverNotFound( "QSQLITE" );
         ok &= false;
@@ -2035,8 +2032,6 @@ void MainWindow::makeInitialChecks()
     }
 
     if ( ok ) {
-        QSqlDatabase::addDatabase( "QSQLITE", DatabasesNames::data );
-        QSqlDatabase::addDatabase( "QSQLITE", DatabasesNames::hashes );
         // statistics' database
         if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/collection.db" ) ) {
             // checks failed, abort
@@ -2050,10 +2045,7 @@ void MainWindow::makeInitialChecks()
                 ok &= false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                if ( ! this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" ) ) {
-                    // failed to load the list, abort
-                    ok &= false;
-                }
+                this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" );
             }
         }
     }
@@ -2106,39 +2098,31 @@ void MainWindow::makeInitialChecks()
 
 bool MainWindow::checkDataDB()
 {
-    bool ok{ false };
     if ( ! this->initiating ) { // avoid recursions
-        // check the db
-        const std::string path{ this->db_data_path + "/collection.db" };
-        ok = IOutils::checkFile( path, true );
-        if ( ! ok ) {
-            // database file not found, make a new one
-            ok = CheckSec::checkCollectionDatabase( path );
-            // update ui stuff
-            if ( ! ok ) {
-                // checks failed
-                this->crapview.clearDates();
-                this->ui->box_StatsWarn_Year->clear();
-                this->ui->box_StatsSpeed_Year->clear();
-                this->ui->box_StatsCount_Year->clear();
-                this->ui->box_StatsDay_FromYear->clear();
-                if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
-                    this->ui->box_StatsDay_ToYear->clear();
-                }
-                this->ui->box_StatsRelat_FromYear->clear();
-                this->ui->box_StatsRelat_ToYear->clear();
-            }
-        }
-        if ( ok && !this->db_ok ) {
-            this->db_ok = ok;
-            this->initiating |= true;
-            this->refreshStatsDates();
-            this->initiating &= false;
-        } else {
-            this->db_ok = ok;
-        }
+        return false;
     }
-    return ok;
+
+    const std::string path{ this->db_data_path + "/collection.db" };
+    if ( ! CheckSec::checkCollectionDatabase( path ) ) {
+        // db invalid and failed to create a new one or user refused to do so
+        this->crapview.clearDates();
+        this->ui->box_StatsWarn_Year->clear();
+        this->ui->box_StatsSpeed_Year->clear();
+        this->ui->box_StatsCount_Year->clear();
+        this->ui->box_StatsDay_FromYear->clear();
+        if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
+            this->ui->box_StatsDay_ToYear->clear();
+        }
+        this->ui->box_StatsRelat_FromYear->clear();
+        this->ui->box_StatsRelat_ToYear->clear();
+        this->db_ok &= false;
+
+    } else if ( ! this->db_ok ) {
+        // db was invalid but is now fine and ready to use
+        this->db_ok |= true;
+    }
+
+    return this->db_ok;
 }
 
 
@@ -2609,8 +2593,13 @@ void MainWindow::setDbWorkingState( const bool working )
 
 bool MainWindow::dbUsable()
 {
-    if ( !this->db_working ) {
-        return this->checkDataDB();
+    if ( ! this->db_working ) {
+        if ( this->db_ok ) {
+            const std::string path{ this->db_data_path + "/collection.db" };
+            return IOutils::checkFile( path, true );
+        } else {
+            this->checkDataDB(); // db is invalid, attempt to renew
+        }
     }
     return false;
 }
@@ -2651,6 +2640,9 @@ void MainWindow::checkMakeStats_Makable()
                     break;
                 }
                 ++i;
+            }
+            if ( ! state ) {
+                this->ui->checkBox_LogFiles_CheckAll->setTristate( false );
             }
         }
     }
@@ -2951,61 +2943,55 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
 
 void MainWindow::on_button_MakeStats_Start_clicked()
 {
-    if ( this->dbUsable() ) {
-        bool proceed{ true };
-        // check that the format has been set and is consistent
-        proceed = craplog.checkCurrentLogsFormat();
+    if ( !( this->dbUsable() && this->checkDataDB() ) ) {
+        return;
+    }
 
-        if ( proceed ) {
-            // take actions on Craplog's start
-            this->craplogStarted();
+    // check that the format has been set and is consistent
+    if ( ! craplog.checkCurrentLogsFormat() ) {
+        return;
+    }
 
-            // feed craplog with the checked files
-            QTreeWidgetItemIterator i{ this->ui->listLogFiles };
-            while ( *i ) {
-                if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
-                    // tell Craplog to set this file as selected
-                    if ( ! this->craplog.setLogFileSelected( (*i)->text(0) ) ) {
-                        // failed to retrieve the file. this shouldn't be, but...
-                        const int choice{ DialogSec::choiceSelectedFileNotFound( (*i)->text(0) ) };
-                        if ( choice == 0 ) {
-                            // choosed to abort all
-                            proceed &= false;
-                            break;
-                        } else if ( choice == 1 ) {
-                            // choosed to discard the file and continue
-                            ;
-                        } else {
-                            // shouldn't be here
-                            throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
-                        }
-                    }
+    // take actions on Craplog's start
+    this->craplogStarted();
+
+    // feed craplog with the checked files
+    QTreeWidgetItemIterator i{ this->ui->listLogFiles };
+    while ( *i ) {
+        if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
+            // tell Craplog to set this file as selected
+            if ( ! this->craplog.setLogFileSelected( (*i)->text(0) ) ) {
+                // failed to retrieve the file. this shouldn't be, but...
+                const int choice{ DialogSec::choiceSelectedFileNotFound( (*i)->text(0) ) };
+                if ( choice == 0 ) {
+                    // choosed to abort all
+                    this->craplogFinished();
+                    return;
+                } else if ( choice == 1 ) {
+                    // choosed to discard the file and continue
+                    ;
+                } else {
+                    // shouldn't be here
+                    throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
                 }
-                ++i;
-            }
-
-            if ( proceed ) {
-                // check files to be used before to start
-                proceed = this->craplog.checkStuff();
-            } else {
-                this->craplogFinished();
-            }
-
-            if ( proceed ) {
-                // periodically update perfs
-                this->waiter_timer.reset( new QTimer(this) );
-                this->waiter_timer->setInterval(250);
-                this->waiter_timer->setTimerType( Qt::PreciseTimer );
-                connect( this->waiter_timer.get(), &QTimer::timeout,
-                         this, &MainWindow::updatePerfsLabels );
-                // start processing
-                this->waiter_timer_start = std::chrono::system_clock::now();
-                this->waiter_timer->start();
-                emit runCraplog();
-            } else {
-                this->craplogFinished();
             }
         }
+        ++i;
+    }
+
+    if ( this->craplog.checkStuff() ) {
+        // periodically update perfs
+        this->waiter_timer.reset( new QTimer(this) );
+        this->waiter_timer->setInterval(250);
+        this->waiter_timer->setTimerType( Qt::PreciseTimer );
+        connect( this->waiter_timer.get(), &QTimer::timeout,
+                 this, &MainWindow::updatePerfsLabels );
+        // start processing
+        this->waiter_timer_start = std::chrono::system_clock::now();
+        this->waiter_timer->start();
+        emit runCraplog();
+    } else {
+        this->craplogFinished();
     }
 }
 
@@ -3226,7 +3212,7 @@ void MainWindow::on_box_StatsWarn_Hour_currentIndexChanged(int index)
 
 void MainWindow::on_button_StatsWarn_Draw_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->setDbWorkingState( true );
         this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
@@ -3411,7 +3397,7 @@ void MainWindow::on_inLine_StatsSpeed_Response_textChanged(const QString& arg1)
 
 void MainWindow::on_button_StatsSpeed_Draw_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->setDbWorkingState( true );
         this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
@@ -3576,7 +3562,7 @@ void MainWindow::makeStatsCount()
 
 void MainWindow::on_button_StatsCount_Protocol_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->ui->button_StatsCount_Protocol->setFlat( false );
         this->count_fld = this->ui->button_StatsCount_Protocol->text();
@@ -3586,7 +3572,7 @@ void MainWindow::on_button_StatsCount_Protocol_clicked()
 
 void MainWindow::on_button_StatsCount_Method_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Method->text();
         this->ui->button_StatsCount_Method->setFlat( false );
@@ -3596,7 +3582,7 @@ void MainWindow::on_button_StatsCount_Method_clicked()
 
 void MainWindow::on_button_StatsCount_Uri_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Uri->text();
         this->ui->button_StatsCount_Uri->setFlat( false );
@@ -3606,7 +3592,7 @@ void MainWindow::on_button_StatsCount_Uri_clicked()
 
 void MainWindow::on_button_StatsCount_Query_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Query->text();
         this->ui->button_StatsCount_Query->setFlat( false );
@@ -3616,7 +3602,7 @@ void MainWindow::on_button_StatsCount_Query_clicked()
 
 void MainWindow::on_button_StatsCount_Response_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Response->text();
         this->ui->button_StatsCount_Response->setFlat( false );
@@ -3626,7 +3612,7 @@ void MainWindow::on_button_StatsCount_Response_clicked()
 
 void MainWindow::on_button_StatsCount_Referrer_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Referrer->text();
         this->ui->button_StatsCount_Referrer->setFlat( false );
@@ -3636,7 +3622,7 @@ void MainWindow::on_button_StatsCount_Referrer_clicked()
 
 void MainWindow::on_button_StatsCount_Cookie_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Cookie->text();
         this->ui->button_StatsCount_Cookie->setFlat( false );
@@ -3646,7 +3632,7 @@ void MainWindow::on_button_StatsCount_Cookie_clicked()
 
 void MainWindow::on_button_StatsCount_UserAgent_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_UserAgent->text();
         this->ui->button_StatsCount_UserAgent->setFlat( false );
@@ -3656,7 +3642,7 @@ void MainWindow::on_button_StatsCount_UserAgent_clicked()
 
 void MainWindow::on_button_StatsCount_Client_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->resetStatsCountButtons();
         this->count_fld = this->ui->button_StatsCount_Client->text();
         this->ui->button_StatsCount_Client->setFlat( false );
@@ -3941,7 +3927,7 @@ void MainWindow::on_inLine_StatsDay_Filter_textChanged(const QString& arg1)
 
 void MainWindow::on_button_StatsDay_Draw_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->setDbWorkingState( true );
         this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
@@ -4227,7 +4213,7 @@ void MainWindow::on_inLine_StatsRelat_Filter_2_textChanged(const QString &arg1)
 
 void MainWindow::on_button_StatsRelat_Draw_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->setDbWorkingState( true );
         this->crapview_timer.reset( new QTimer(this) );
         this->crapview_timer->setSingleShot( true );
@@ -4380,7 +4366,7 @@ void MainWindow::makeStatsGlob()
 
 void MainWindow::on_button_StatsGlob_Apache_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->glob_ws = "apache";
         this->makeStatsGlob();
     }
@@ -4389,7 +4375,7 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
 
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->glob_ws = "nginx";
         this->makeStatsGlob();
     }
@@ -4398,7 +4384,7 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
-    if ( this->dbUsable() ) {
+    if ( this->dbUsable() && this->checkDataDB() ) {
         this->glob_ws = "iis";
         this->makeStatsGlob();
     }
