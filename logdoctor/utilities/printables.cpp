@@ -92,58 +92,36 @@ QString printableTime( const unsigned seconds ) noexcept
 {
     const unsigned mins{ seconds / 60u };
     const unsigned secs{ seconds - (mins*60u) };
-    return QString("%1:%2").arg(
-        (mins<10u)
-            ? QString("0%1").arg( mins )
-            : QString::number( mins ),
-        (secs<10u)
-            ? QString("0%1").arg( secs )
-            : QString::number( secs )
-    );
+    return QStringLiteral("%1:%2")
+        .arg( mins, 2, 10, QChar('0') )
+        .arg( secs, 2, 10, QChar('0') );
 }
 
 
 QString printableTime( const int hour, const int minute, const int second ) noexcept
 {
-    return QString("%1:%2:%3").arg(
-        (hour<10)
-            ? QString("0%1").arg( hour )
-            : QString::number( hour ),
-        (minute<10)
-            ? QString("0%1").arg( minute )
-            : QString::number( minute ),
-        (second<10)
-            ? QString("0%1").arg( second )
-            : QString::number( second )
-    );
+    return QStringLiteral("%1:%2:%3")
+        .arg( hour,   2, 10, QChar('0') )
+        .arg( minute, 2, 10, QChar('0') )
+        .arg( second, 2, 10, QChar('0') );
 }
 
 
 QString printableDate( const QString& year, const int month, const QString& day ) noexcept
 {
-    return QString("%1-%2-%3").arg(
-        year,
-        (month<10)
-            ? QString("0%1").arg( month )
-            : QString::number( month ),
-        (day.size()<2)
-            ? QString("0%1").arg( day )
-            : day
-    );
+    return QStringLiteral("%1-%2-%3")
+        .arg( year                     )
+        .arg( month, 2, 10, QChar('0') )
+        .arg( day,   2,     QChar('0') );
 }
 
 
 QString printableDate( const int year, const int month, const int day ) noexcept
 {
-    return QString("%1-%2-%3").arg(
-        QString::number( year ),
-        (month<10)
-            ? QString("0%1").arg( month )
-            : QString::number( month ),
-        (day<10)
-            ? QString("0%1").arg( day )
-            : QString::number( day )
-    );
+    return QStringLiteral("%1-%2-%3")
+        .arg( year                     )
+        .arg( month, 2, 10, QChar('0') )
+        .arg( day,   2, 10, QChar('0') );
 }
 
 
