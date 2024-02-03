@@ -122,6 +122,7 @@ set(PROJECT_SOURCES
 
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
+    modules/crapview/modules/lib.h
     modules/crapview/modules/filters.h
     modules/crapview/modules/filters.cpp
     modules/crapview/modules/query.h
