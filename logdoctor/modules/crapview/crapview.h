@@ -2,11 +2,8 @@
 #define LOGDOCTOR__CRAPVIEW_H
 
 
-#include "main_lib.h"
-
 #include "modules/crapview/modules/query.h"
 
-#include <QHash>
 #include <QtCharts>
 
 #include <string>
@@ -24,7 +21,7 @@ class QTableWidget;
 class Crapview final : public QObject
 {
     Q_OBJECT
-    DATA_TYPEDEFS
+    CRAPVIEW_DATA_TYPEDEFS
 
 public:
 
@@ -131,8 +128,8 @@ public:
     void drawWarn(
         QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
-        const QString& web_server,
-        const QString& year, const QString& month, const QString& day, const QString& hour,
+        const QString web_server,
+        const QString year, const QString month, const QString day, const QString hour,
         const std::unordered_map<int, BWlist>& warnlists
     ) const;
 
@@ -155,9 +152,9 @@ public:
     void drawSpeed(
         QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
-        const QString& web_server,
-        const QString& year, const QString& month, const QString& day,
-        const QString& protocol, const QString& method, const QString& uri, const QString& query, const QString& response
+        const QString web_server,
+        const QString year, const QString month, const QString day,
+        const QString protocol, const QString method, const QString uri, const QString query, const QString response
     ) const;
 
 
@@ -175,9 +172,9 @@ public:
     void drawCount(
         QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
-        const QString& web_server,
-        const QString& year, const QString& month, const QString& day,
-        const QString& field
+        const QString web_server,
+        const QString year, const QString month, const QString day,
+        const QString field
     ) const;
 
 
@@ -198,10 +195,10 @@ public:
     void drawDay(
         QChartView* chart,
         const QChart::ChartTheme& theme,
-        const QString& web_server,
-        const QString& from_year, const QString& from_month, const QString& from_day,
-        const QString& to_year, const QString& to_month, const QString& to_day,
-        const QString& field, const QString& filter
+        const QString web_server,
+        const QString from_year, const QString from_month, const QString from_day,
+        const QString to_year, const QString to_month, const QString to_day,
+        const QString field, const QString filter
     ) const;
 
 
@@ -224,11 +221,11 @@ public:
     void drawRelat(
         QChartView* chart,
         const QChart::ChartTheme& theme,
-        const QString& web_server,
-        const QString& from_year, const QString& from_month, const QString& from_day,
-        const QString& to_year,   const QString& to_month,   const QString& to_day,
-        const QString& field_1, const QString& filter_1,
-        const QString& field_2, const QString& filter_2
+        const QString web_server,
+        const QString from_year, const QString from_month, const QString from_day,
+        const QString to_year,   const QString to_month,   const QString to_day,
+        const QString field_1, const QString filter_1,
+        const QString field_2, const QString filter_2
     ) const;
 
 
@@ -246,7 +243,7 @@ public:
         std::vector<std::tuple<QString,QString>>& traffic_list,
         std::vector<std::tuple<QString,QString>>& perf_list,
         std::vector<QString>& work_list,
-        const QString& web_server
+        const QString web_server
     ) const;
 
 
@@ -263,12 +260,14 @@ private:
     // charts theme ID
     int charts_theme{ 0 };
 
+    const QColor warning_color{ 255, 140, 0, 255 };
+
     DbQuery dbQuery;
 
     // collection of available dates
     // db_dates_t = std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
     // { web_server_id : { year : { month : [ days ] } } }
-    stats_dates_t dates;
+    database_dates_t dates;
 
     // collection of available fields, for tabs which needs them
     // { tab : [ fields ] }

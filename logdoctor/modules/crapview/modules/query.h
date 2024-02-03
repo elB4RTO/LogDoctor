@@ -1,24 +1,19 @@
 #ifndef LOGDOCTOR__CRAPVIEW__QUERY_H
 #define LOGDOCTOR__CRAPVIEW__QUERY_H
 
+#include "lib.h"
+
+#include "main_lib.h"
 
 #include "modules/shared.h"
 
 #include <unordered_map>
 #include <optional>
 
-#define DATA_TYPEDEFS\
-    using stats_dates_t       = std::map<int, std::map<int, std::map<int, std::vector<int>>>>;\
-    using stats_warn_items_t  = std::vector<std::vector<std::vector<std::array<QString,18>>>>;\
-    using stats_speed_items_t = std::vector<std::tuple<long long, std::array<QString,6>>>;\
-    using stats_day_items_t   = std::unordered_map<int, std::unordered_map<int, int>>;\
-    using stats_relat_items_t = std::vector<std::tuple<long long, int>>;\
-    using stats_count_items_t = std::multimap<unsigned, QString>;
-
 
 class DbQuery final
 {
-    DATA_TYPEDEFS
+    CRAPVIEW_DATA_TYPEDEFS
 
 public:
 
@@ -40,13 +35,13 @@ public:
 
     // convert week-day numbers to day names
     const std::unordered_map<int, std::string> DAYS{
-        {1, DAYS__SUNDAY},    {2, DAYS__MONDAY},   {3, DAYS__TUESDAY},
-        {4, DAYS__WEDNESDAY}, {5, DAYS__THURSDAY}, {6, DAYS__FRIDAY},
-        {7, DAYS__SATURDAY} };
+        {1, DAYS__MONDAY},   {2, DAYS__TUESDAY}, {3, DAYS__WEDNESDAY},
+        {4, DAYS__THURSDAY}, {5, DAYS__FRIDAY},  {6, DAYS__SATURDAY},
+        {7, DAYS__SUNDAY} };
 
 
     //! Returns the Dialogs level
-    void setDialogLevel( const int new_level ) noexcept;
+    void setDialogLevel( const DialogsLevel new_level ) noexcept;
 
 
     //! Sets the path for the logs Collection database
@@ -65,21 +60,24 @@ public:
         \param to_year The final Year
         \param to_month The final month
         \return The number of months in the period
+        \throw ConversionException
         \throw DateTimeException
     */
     int countMonths(
-        const QString& from_year,
-        const QString& from_month,
-        const QString& to_year,
-        const QString& to_month
+        QStringView from_year,
+        QStringView from_month,
+        QStringView to_year,
+        QStringView to_month
     ) const;
 
 
     //! Refreshes the dates which are available in the database
     /*!
         \param result Holds the data only if the operation completed succssfully
+        \throw LogDoctorException
+        \throw ConversionException
     */
-    void refreshDates( std::optional<stats_dates_t>& result ) noexcept;
+    void refreshDates( std::optional<database_dates_t>& result ) noexcept;
 
 
     //! Retrieves the data needed for the Warnings statistics
@@ -90,14 +88,17 @@ public:
         \param month_ The month
         \param day_ The day
         \param hour_ The hour
+        \throw LogDoctorException
+        \throw ConversionException
+        \throw DateTimeException
     */
     void getWarningsData(
         std::optional<stats_warn_items_t>& result,
-        const QString& web_server,
-        const QString& year_,
-        const QString& month_,
-        const QString& day_,
-        const QString& hour_
+        QStringView web_server,
+        QStringView year_,
+        QStringView month_,
+        QStringView day_,
+        QStringView hour_
     ) const;
 
 
@@ -113,18 +114,22 @@ public:
         \param uri_f The filter for the URI field
         \param query_f The filter for the Query field
         \param response_f The filter for the Response field
+        \throw LogDoctorException
+        \throw CrapviewException
+        \throw ConversionException
+        \throw DateTimeException
     */
     void getSpeedData(
         std::optional<stats_speed_items_t>& result,
-        const QString& web_server,
-        const QString& year_,
-        const QString& month_,
-        const QString& day_,
-        const QString& protocol_f,
-        const QString& method_f,
-        const QString& uri_f,
-        const QString& query_f,
-        const QString& response_f
+        QStringView web_server,
+        QStringView year_,
+        QStringView month_,
+        QStringView day_,
+        QStringView protocol_f,
+        QStringView method_f,
+        QStringView uri_f,
+        QStringView query_f,
+        QStringView response_f
     ) const;
 
 
@@ -136,14 +141,17 @@ public:
         \param month The month
         \param day The day
         \param log_field The log field
+        \throw LogDoctorException
+        \throw CrapviewException
+        \throw DateTimeException
     */
     void getItemsCount(
         std::optional<stats_count_items_t>& result,
-        const QString& web_server,
-        const QString& year,
-        const QString& month,
-        const QString& day,
-        const QString& log_field
+        QStringView web_server,
+        QStringView year,
+        QStringView month,
+        QStringView day,
+        QStringView log_field
     ) const;
 
 
@@ -159,13 +167,17 @@ public:
         \param to_day_ The final day
         \param log_field_ The log field to filter
         \param field_filter The filter to apply
+        \throw LogDoctorException
+        \throw CrapviewException
+        \throw ConversionException
+        \throw DateTimeException
     */
     void getDaytimeCounts(
         std::optional<stats_day_items_t>& result,
-        const QString& web_server,
-        const QString& from_year_, const QString& from_month_, const QString& from_day_,
-        const QString& to_year_,   const QString& to_month_,   const QString& to_day_,
-        const QString& log_field_, const QString& field_filter
+        QStringView web_server,
+        QStringView from_year_, QStringView from_month_, QStringView from_day_,
+        QStringView to_year_,   QStringView to_month_,   QStringView to_day_,
+        QStringView log_field_, QStringView field_filter
     ) const;
 
 
@@ -181,14 +193,18 @@ public:
         \param field_filter_1 The filter to apply to the first field
         \param log_field_2_ The second log field to filter
         \param field_filter_2 The filter to apply to the second fiend
+        \throw LogDoctorException
+        \throw CrapviewException
+        \throw ConversionException
+        \throw DateTimeException
         \see getRelationalCountsPeriod()
     */
     void getRelationalCountsDay(
         std::optional<stats_relat_items_t>& result,
-        const QString& web_server,
-        const QString& year_,        const QString& month_,         const QString& day_,
-        const QString& log_field_1_, const QString& field_filter_1,
-        const QString& log_field_2_, const QString& field_filter_2
+        QStringView web_server,
+        QStringView year_,        QStringView month_,         QStringView day_,
+        QStringView log_field_1_, QStringView field_filter_1,
+        QStringView log_field_2_, QStringView field_filter_2
     ) const;
 
     //! Retrieves the data needed for the Relational statistics
@@ -206,43 +222,35 @@ public:
         \param field_filter_1 The filter to apply to the first field
         \param log_field_2_ The second log field to filter
         \param field_filter_2 The filter to apply to the second fiend
+        \throw LogDoctorException
+        \throw CrapviewException
+        \throw ConversionException
+        \throw DateTimeException
         \see getRelationalCountsDay()
     */
     void getRelationalCountsPeriod(
         std::optional<stats_relat_items_t>& result,
-        const QString& web_server,
-        const QString& from_year_,   const QString& from_month_,    const QString& from_day_,
-        const QString& to_year_,     const QString& to_month_,      const QString& to_day_,
-        const QString& log_field_1_, const QString& field_filter_1,
-        const QString& log_field_2_, const QString& field_filter_2
+        QStringView web_server,
+        QStringView from_year_,   QStringView from_month_,    QStringView from_day_,
+        QStringView to_year_,     QStringView to_month_,      QStringView to_day_,
+        QStringView log_field_1_, QStringView field_filter_1,
+        QStringView log_field_2_, QStringView field_filter_2
     ) const;
 
 
     //! Retrieves the data needed for the Global statistics
     /*!
+        \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param dates The dates to query
-        \param recurs Will hold the recurrencies of the items
-        \param traf_date Will hold the most trafficked date and the count
-        \param traf_day Will hold the most trafficked day of the week and the count
-        \param traf_hour Will hold the most trafficked hour of the day and the count
-        \param perf_time Will hold the overallo time taken
-        \param perf_sent Will hold the overall Bytes sent
-        \param perf_receiv Will hold the overall Bytes received
-        \param req_count Will hold the number of requests examined by the query
-        \return Whether the operation has been successful or not
+        \throw LogDoctorException
+        \throw CrapviewException
+        \throw ConversionException
     */
-    bool getGlobalCounts(
-        const QString& web_server,
-        const std::map<int, std::map<int, std::vector<int>>>& dates,
-        std::vector<std::unordered_map<QString, unsigned>>& recurs,
-        std::tuple<QString, int>& traf_date,
-        std::unordered_map<int, double>& traf_day,
-        std::unordered_map<int, double>& traf_hour,
-        std::vector<long long>& perf_time,
-        std::vector<long long>& perf_sent,
-        std::vector<long long>& perf_receiv,
-        long& req_count
+    void getGlobalCounts(
+        std::optional<GlobalsData>& result,
+        QStringView web_server,
+        const stats_dates_t& dates
     ) const;
 
 
@@ -260,7 +268,7 @@ private:
     const std::string MSG_TABLE_NAME{ TR::tr("Database table name").toStdString() };
 
     // quantity of information to display throught dialogs
-    int dialog_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
+    DialogsLevel dialog_level{ DL_NORMAL };
 
     std::string db_path;
     QString db_name;
@@ -286,10 +294,9 @@ private:
     /*!
         \param tr_fld The log field, hendles translated text
         \return The database field
+        \throw CrapviewException
     */
-    QString getDbField( const QString& tr_fld ) const noexcept;
-
-    /*const int getLogFieldID ( const QString& field_str );*/
+    const QString& getDbField( QStringView tr_fld ) const;
 
 
     //! Returns the minute gap for the given minute with the given gap
@@ -315,8 +322,9 @@ private:
     /*!
         \param month_str The month
         \return The month number
+        \throw DateTimeException
     */
-    int getMonthNumber( const QString& month_str ) const noexcept;
+    int getMonthNumber( QStringView month_str ) const;
 
 
     //! Returns the number of days in a given period

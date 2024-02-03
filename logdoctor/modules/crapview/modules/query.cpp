@@ -1,24 +1,73 @@
 
 #include "query.h"
 
+#include "modules/database/database.h"
+
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
-#include "utilities/checks.h"
+#include "utilities/printables.h"
 #include "utilities/strings.h"
 
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QVariant>
 #include <QDateTime>
-#include <QDate>
 
 #include <map>
 #include <vector>
+#include <ranges>
 
 
-void DbQuery::setDialogLevel(const int new_level ) noexcept
+int toInt( const QString& str )
+{
+    bool ok;
+    const int result{ str.toInt( &ok ) };
+    if ( ! ok ) {
+        DialogSec::errConvertingData(
+            QStringLiteral("QString"),
+            QStringLiteral("int"),
+            str );
+        throw LogDoctorException{};
+    }
+    return result;
+}
+int toInt( QStringView str )
+{
+    bool ok;
+    const int result{ str.toInt( &ok ) };
+    if ( ! ok ) {
+        DialogSec::errConvertingData(
+            QStringLiteral("QStringView"),
+            QStringLiteral("int"),
+            str.toString() );
+        throw LogDoctorException{};
+    }
+    return result;
+}
+int toInt( const QVariant& v )
+{
+    if ( ! v.canConvert( QMetaType(QMetaType::Int) ) ) {
+        DialogSec::errConvertingData(
+            QStringLiteral("QVariant"),
+            QStringLiteral("int"),
+            v.toString() );
+        throw LogDoctorException{};
+    }
+    return v.toInt();
+}
+
+QString toString( const QVariant& v )
+{
+    if ( ! v.canConvert( QMetaType(QMetaType::QString) ) ) {
+        DialogSec::errConvertingData(
+            QStringLiteral("QVariant"),
+            QStringLiteral("QString"),
+            v.toString() );
+        throw LogDoctorException{};
+    }
+    return v.toString();
+}
+
+
+void DbQuery::setDialogLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialog_level = new_level;
 }
@@ -35,7 +84,7 @@ int DbQuery::getMinuteGap( const int minute, const int gap )
     int m{ -1 };
     if ( minute < 0 || minute >= 60 ) {
         // unexpected value
-        throw DateTimeException( "Unexpected Minute: "+std::to_string( minute ) );
+        throw DateTimeException( "Unexpected Minute: " + std::to_string( minute ) );
     }
     int n{ 0 };
     for ( int g{0}; g<60; g+=gap ) {
@@ -66,22 +115,20 @@ int DbQuery::getMonthDays( const int year, const int month )
         case 12: n_days = 31; break;
         default:
             // unexpected month
-            throw DateTimeException( "Unexpected Month: "+std::to_string( month ) );
+            throw DateTimeException( "Unexpected Month number: " + std::to_string( month ) );
     }
     return n_days;
 }
 
 
-int DbQuery::getMonthNumber( const QString& month_str ) const noexcept
+int DbQuery::getMonthNumber( QStringView month_str ) const
 {
-    int m{ 0 };
     for ( const auto& [num,str] : this->MONTHS ) {
         if ( TR::tr(str.c_str()) == month_str ) {
-            m = num;
-            break;
+            return num;
         }
     }
-    return m;
+    throw DateTimeException( "Unexpected Month name: " + month_str.toString().toStdString() );
 }
 
 
@@ -142,821 +189,422 @@ int DbQuery::countMonths( const int from_year, const int from_month, const int t
     return n_months;
 }
 
-int DbQuery::countMonths( const QString& from_year, const QString& from_month, const QString& to_year, const QString& to_month ) const
+int DbQuery::countMonths( QStringView from_year, QStringView from_month, QStringView to_year, QStringView to_month ) const
 {
-    int from_year_, from_month_, to_year_, to_month_;
-    try {
-        from_year_  = from_year.toInt();
-        from_month_ = this->getMonthNumber( from_month );
-        to_year_  = ( to_year.isEmpty() )  ? from_year_  : to_year.toInt() ;
-        to_month_ = ( to_month.isEmpty() ) ? from_month_ : this->getMonthNumber( to_month ) ;
-    } catch (...) {
-        // failed to convert to integers
-        throw DateTimeException( "Failed to convert Month from string to int" ); // leave un-catched
-    }
-    return countMonths( from_year_, from_month_, to_year_, to_month_ );
+    const int from_year_{ toInt( from_year ) },
+              from_month_{ this->getMonthNumber( from_month ) };
+
+    return this->countMonths(
+        toInt( from_year ),
+        this->getMonthNumber( from_month ),
+        to_year.isEmpty() ? from_year_ : toInt( to_year ),
+        to_month.isEmpty() ? from_month_ : this->getMonthNumber( to_month )
+    );
 }
 
 
-/*const int DbQuery::getLogFieldID ( const QString& field_str )
+const QString& DbQuery::getDbField( QStringView tr_fld ) const
 {
-    int f=0;
-    for ( const auto& [id,str] : this->MONTHS ) {
-        if ( TR::tr(str.c_str()) == field_str ) {
-            f = id;
-            break;
-        }
-    }
-    return f;
-}*/
-
-QString DbQuery::getDbField( const QString& tr_fld ) const noexcept
-{
-    QString f;
     for ( const auto& [id,str] : this->FIELDS ) {
         if ( TR::tr(str.c_str()) == tr_fld ) {
-            f = this->LogFields_to_DbFields.at( str );
-            break;
+            return this->LogFields_to_DbFields.at( str );
         }
     }
-    return f;
+    throw DatabaseException( std::move(QStringLiteral("Unexpected DbField: ").append(tr_fld)) );
 }
 
 
 
 // get a fresh map of available dates
-void DbQuery::refreshDates( std::optional<stats_dates_t>& result ) noexcept
+void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
 {
-    bool successful{ true };
-    stats_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
+    database_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
         {11, {}}, {12, {}}, {13, {}}
     };
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    // recursively query years, months and days for every WebServer
+    static const std::vector<std::tuple<int, QString>> tables{
+        std::make_tuple(11,"apache"),
+        std::make_tuple(12,"nginx"),
+        std::make_tuple(13,"iis") };
 
-    } else {
-        // recursively query years, months and days for every WebServer
-        const std::vector<std::tuple<int, QString>> tables{
-            std::make_tuple(11,"apache"),
-            std::make_tuple(12,"nginx"),
-            std::make_tuple(13,"iis") };
+    for ( const auto& [ws,tbl] : tables ) {
 
-        QSqlQuery Y_query{ db },
-                  M_query{ db },
-                  D_query{ db };
+        QueryWrapper query{ db.getQuery() };
 
-        for ( const auto& table : tables ) {
-            if ( ! successful ) { break; }
+        query( QStringLiteral(R"(SELECT DISTINCT "year", "month", "day" FROM "%1" ORDER BY "year", "month", "day" ASC;)").arg(tbl) );
 
-            const int ws{ std::get<0>(table) };
-            const QString tbl{ std::get<1>(table) };
+        auto& years = dates.at( ws );
 
-            if ( ! Y_query.exec( QString("SELECT DISTINCT \"year\" FROM \"%1\" ORDER BY \"year\" ASC;").arg(tbl) ) ) {
-                // error querying database
-                successful &= false;
-                DialogSec::errDatabaseFailedExecuting( this->db_name, Y_query.lastQuery(), Y_query.lastError().text() );
-                break;
-
-            } else {
-                int year, month, day;
-                auto& years = dates.at( ws );
-                while ( Y_query.next() ) {
-                    try {
-                        year = Y_query.value(0).toInt();
-                    } catch (...) {
-                        // failed to convert to integer
-                        successful &= false;
-                        QString err_msg{ TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_YEARS.c_str()) ) };
-                        if ( this->dialog_level > 0 ) {
-                            err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), Y_query.value(0).toString() );
-                            if ( this->dialog_level == 2 ) {
-                                err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_TABLE_NAME.c_str()), tbl );
-                            }
-                        }
-                        DialogSec::errGeneric( err_msg );
-                        break;
-                    }
-                    // successfully get the year
-                    years.emplace( year, std::map<int, std::vector<int>>() );
-                    // query any available month
-                    if ( ! M_query.exec( QString("SELECT DISTINCT \"month\" FROM \"%1\" WHERE \"year\"=%2 ORDER BY \"month\" ASC;").arg(tbl).arg(year) ) ) {
-                        // error querying database
-                        successful &= false;
-                        DialogSec::errDatabaseFailedExecuting( this->db_name, M_query.lastQuery(), M_query.lastError().text() );
-                        break;
-
-                    } else {
-                        auto& months{ years.at( year ) };
-                        while ( M_query.next() ) {
-                            try {
-                                month = M_query.value(0).toInt();
-                            } catch (...) {
-                                // failed to convert to integer
-                                successful &= false;
-                                QString err_msg{ TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_MONTHS.c_str()) ) };
-                                if ( this->dialog_level > 0 ) {
-                                    err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), M_query.value(0).toString() );
-                                    if ( this->dialog_level == 2 ) {
-                                        err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_TABLE_NAME.c_str()), tbl );
-                                    }
-                                }
-                                DialogSec::errGeneric( err_msg );
-                                break;
-                            }
-                            // successfully get the month
-                            months[ month ] = std::vector<int>();
-                            // query any available day
-                            if ( ! D_query.exec( QString("SELECT DISTINCT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\" ASC;").arg(tbl).arg(year).arg(month) ) ) {
-                                // error querying database
-                                successful &= false;
-                                DialogSec::errDatabaseFailedExecuting( this->db_name, D_query.lastQuery(), D_query.lastError().text() );
-                                break;
-
-                            } else if ( D_query.last() ) {
-                                auto& days{ months.at( month ) };
-                                days.reserve( D_query.at() );
-                                D_query.first();
-                                D_query.previous();
-
-                                while ( D_query.next() ) {
-                                    try {
-                                        day = D_query.value(0).toInt();
-                                    } catch (...) {
-                                        // failed to convert to integer
-                                        successful &= false;
-                                        QString err_msg{ TR::tr(this->MSG_ERR_PARSING_YMD.c_str()).arg( TR::tr(this->WORD_DAYS.c_str()) ) };
-                                        if ( this->dialog_level > 0 ) {
-                                            err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_RESPONSIBLE_VALUE.c_str()), D_query.value(0).toString() );
-                                            if ( this->dialog_level == 2 ) {
-                                                err_msg += QString("\n\n%1:\n%2").arg( TR::tr(this->MSG_TABLE_NAME.c_str()), tbl );
-                                            }
-                                        }
-                                        DialogSec::errGeneric( err_msg );
-                                        break;
-                                    }
-                                    // successfully get the day
-                                    days.push_back( day );
-                                }
-                                D_query.finish();
-                                // break if something went wrong
-                                if ( ! successful ) { break; }
-                            }
-                        }
-                        M_query.finish();
-                        // break if something went wrong
-                        if ( ! successful ) { break; }
-                    }
-                }
-                Y_query.finish();
-                // break if something went wrong
-                if ( ! successful ) { break; }
-            }
+        while ( query->next() ) {
+            years.try_emplace( toInt( query[0] ), std::map<int, std::vector<int>>{} )
+                 .first->second
+                 .try_emplace( toInt( query[1] ), std::vector<int>{} )
+                 .first->second
+                 .emplace_back( toInt( query[2] ) );
         }
     }
-    if ( db.isOpen() ) {
-        db.close();
-    }
 
-    if ( successful ) {
-        result.emplace( dates );
-    }
+    result.emplace( std::move(dates) );
 }
 
 
 // get daytime values for the warnings
-void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& hour_ ) const
+void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
 {
-    bool successful{ true };
     stats_warn_items_t items; // std::vector<std::vector<std::vector<std::array<QString,18>>>>
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    // setup period limits
+    const int year{  toInt( year_ ) };
+    const int month{ this->getMonthNumber( month_ ) };
+    const int day{   toInt( day_ ) };
+    const int hour{  hour_.isEmpty() ? -1 : toInt( hour_ ) };
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful &= false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
-        int year, month, day, hour;
-        if ( successful ) {
-            // setup period limits
-            try {
-                year  = year_.toInt();
-                month = this->getMonthNumber( month_ );
-                day   = day_.toInt();
-                if ( ! hour_.isEmpty() ) {
-                    hour = hour_.toInt();
-                }
-            } catch (...) {
-                // failed to convert to integers
-                successful &= false;
-                DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
-            }
-        }
-        if ( successful ) {
-            const auto from_query_data{
-                [](const QSqlQuery& query)->std::array<QString,18>
-                {
-                    return {
-                        query.value(0).toString(), query.value(1).toString(), query.value(2).toString(), // year, month, day
-                        query.value(3).toString(), query.value(4).toString(), query.value(5).toString(), // hour, minute, second
-                        query.value(6).toString(), query.value(7).toString(), // protocol, method
-                        query.value(8).toString(), query.value(9).toString(), // uri, query
-                        query.value(10).toString(), // response
-                        query.value(15).toString(), // user agent
-                        query.value(14).toString(), // client
-                        query.value(16).toString(), // cookie
-                        query.value(17).toString(), // referer
-                        query.value(13).toString(), // bytes received
-                        query.value(12).toString(), // bytes sent
-                        query.value(11).toString()  // time taken
-                    };
-                }
+    const auto from_query_data{
+        [](const QueryWrapper& query)->std::array<QString,18>
+        {
+            return {
+                toString(query[0]), toString(query[1]), toString(query[2]), // year, month, day
+                toString(query[3]), toString(query[4]), toString(query[5]), // hour, minute, second
+                toString(query[6]), toString(query[7]), // protocol, method
+                toString(query[8]), toString(query[9]), // uri, query
+                toString(query[10]), // response
+                toString(query[15]), // user agent
+                toString(query[14]), // client
+                toString(query[16]), // cookie
+                toString(query[17]), // referer
+                toString(query[13]), // bytes received
+                toString(query[12]), // bytes sent
+                toString(query[11])  // time taken
             };
+        }
+    };
 
-            // build the query statement
-            QSqlQuery query{ db };
-            QString stmt{ QString("SELECT * FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
-                    .arg( web_server )
-                    .arg( year ).arg( month ).arg( day ) };
+    QueryWrapper query{ db.getQuery() };
 
-            if ( hour_.isEmpty() ) {
-                // entire day
-                items.reserve( 24 );
-                for ( size_t h{0}; h<24ul; ++h ) {
-                    items.push_back( std::vector<std::vector<std::array<QString,18>>>() );
-                    auto& aux{ items.at( h ) };
-                    aux.reserve( 6 );
-                    for ( int m{0}; m<60; m+=10 ) {
-                        aux.push_back( std::vector<std::array<QString,18>>() );
-                    }
-                }
+    query << QStringLiteral(R"(SELECT * FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
+                .arg( web_server )
+                .arg( year ).arg( month ).arg( day );
 
-                stmt += " ORDER BY \"hour\",\"minute\",\"second\" ASC;";
-                if ( ! query.exec( stmt.replace("'","''") ) ) {
-                    // error querying database
-                    successful &= false;
-                    DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-
-                } else {
-                    try {
-                        // get query data
-                        while ( query.next() ) {
-                            // append the line
-                            items.at( query.value(3).toInt() )
-                                 .at( getMinuteGap( query.value(4).toInt() )/10 )
-                                 .push_back( from_query_data( query ) );
-                        }
-                    } catch (...) {
-                        // something failed
-                        successful &= false;
-                        DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                    }
-                }
-
-            } else {
-                // 1 hour
-                items.reserve( 6 );
-                for ( size_t g{0}; g<6ul; ++g ) {
-                    items.push_back( std::vector<std::vector<std::array<QString,18>>>() );
-                    auto& aux{ items.at( g ) };
-                    aux.reserve( 10ul );
-                    for ( int m{0}; m<10; ++m ) {
-                        aux.push_back( std::vector<std::array<QString,18>>() );
-                    }
-                }
-
-                stmt += QString(" AND \"hour\"=%5 ORDER BY \"minute\",\"second\" ASC;").arg( hour );
-                if ( ! query.exec( stmt.replace("'","''") ) ) {
-                    // error querying database
-                    successful &= false;
-                    DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-
-                } else {
-                    try {
-                        // get query data
-                        while ( query.next() ) {
-                            // append the line
-                            const int min{ query.value(4).toInt() };
-                            items.at( static_cast<size_t>( getMinuteGap( min )/10 ) )
-                                 .at( static_cast<size_t>( min % 10 ) )
-                                 .push_back( from_query_data( query ) );
-                        }
-                    } catch (...) {
-                        // something failed
-                        successful &= false;
-                        DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                    }
-                }
+    if ( hour == -1 ) {
+        // entire day
+        items.reserve( 24ul );
+        for ( size_t h{0ul}; h<24ul; ++h ) {
+            items.emplace_back( std::vector<std::vector<std::array<QString,18>>>{} );
+            auto& aux{ items.at( h ) };
+            aux.reserve( 6ul );
+            for ( int m{0}; m<60; m+=10 ) {
+                aux.emplace_back( std::vector<std::array<QString,18>>{} );
             }
         }
-    }
-    if ( db.isOpen() ) {
-        db.close();
+
+        query << R"( ORDER BY "hour","minute","second" ASC;)";
+
+        query();
+
+        while ( query->next() ) {
+            // append the line
+            items.at( static_cast<size_t>( toInt( query[3] ) ) )
+                 .at( static_cast<size_t>( this->getMinuteGap( toInt( query[4] ) )/10 ) )
+                 .push_back( from_query_data( query ) );
+        }
+
+    } else {
+        // 1 hour
+        items.reserve( 6ul );
+        for ( size_t g{0ul}; g<6ul; ++g ) {
+            items.emplace_back( std::vector<std::vector<std::array<QString,18>>>{} );
+            auto& aux{ items.at( g ) };
+            aux.reserve( 10ul );
+            for ( int m{0}; m<10; ++m ) {
+                aux.emplace_back( std::vector<std::array<QString,18>>{} );
+            }
+        }
+
+        query << QStringLiteral(R"( AND "hour"=%5 ORDER BY "minute","second" ASC;)")
+                    .arg( hour );
+
+        query();
+
+        while ( query->next() ) {
+            // append the line
+            const int min{ toInt( query[4] ) };
+            items.at( static_cast<size_t>( this->getMinuteGap( min )/10 ) )
+                 .at( static_cast<size_t>( min % 10 ) )
+                 .push_back( from_query_data( query ) );
+        }
     }
 
-    if ( successful ) {
-        result.emplace( items );
-    }
+    result.emplace( std::move(items) );
 }
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& protocol_f, const QString& method_f, const QString& uri_f, const QString& query_f, const QString& response_f ) const
+void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f ) const
 {
-    bool successful{ true };
     stats_speed_items_t data; // std::vector<std::tuple<long long, std::array<QString,6>>>
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    const int year{  toInt( year_ ) };
+    const int month{ this->getMonthNumber( month_ ) };
+    const int day{   toInt( day_ ) };
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful &= false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
-        int year, month, day;
-        if ( successful ) {
-            // setup period limits
-            try {
-                year  = year_.toInt();
-                month = this->getMonthNumber( month_ );
-                day   = day_.toInt();
-            } catch (...) {
-                // failed to convert to integers
-                successful &= false;
-                DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
-            }
-        }
-        if ( successful ) {
-            QDateTime time;
-            time.setDate( QDate( year, month , day ) );
-            // build the query statement
-            QSqlQuery query{ db };
-            QString stmt;
+    QueryWrapper query{ db.getQuery() };
 
-            // prepare the statement
-            stmt = QString("SELECT \"hour\",\"minute\",\"second\",\"time_taken\",\"uri\",\"query\",\"method\",\"protocol\",\"response\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4 AND \"time_taken\" IS NOT NULL")
+    query << QStringLiteral(R"(SELECT "hour","minute","second","time_taken","uri","query","method","protocol","response" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4 AND "time_taken" IS NOT NULL)")
                 .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
 
-            // apply a filter if present
-            if ( ! protocol_f.isEmpty() ) {
-                if ( protocol_f == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"protocol\" IS NULL");
-                } else if ( protocol_f == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"protocol\" IS NOT NULL");
-                } else {
-                    stmt += QString(" AND \"protocol\" LIKE '%1'")
-                        .arg( QString(protocol_f).replace("'","''") );
-                }
-            }
-            if ( ! method_f.isEmpty() ) {
-                if ( method_f == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"method\" IS NULL");
-                } else if ( method_f == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"method\" IS NOT NULL");
-                } else {
-                    stmt += QString(" AND \"method\" LIKE '%1'")
-                        .arg( QString(method_f).replace("'","''") );
-                }
-            }
-            if ( ! uri_f.isEmpty() ) {
-                if ( uri_f == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"uri\" IS NULL");
-                } else if ( uri_f == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"uri\" IS NOT NULL");
-                } else {
-                    stmt += QString(" AND \"uri\" LIKE '%1'")
-                        .arg( QString(uri_f).replace("'","''") );
-                }
-            }
-            if ( ! query_f.isEmpty() ) {
-                if ( query_f == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"query\" IS NULL");
-                } else if ( query_f == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"query\" IS NOT NULL");
-                } else {
-                    stmt += QString(" AND \"query\" LIKE '%1'")
-                        .arg( QString(query_f).replace("'","''") );
-                }
-            }
-            if ( ! response_f.isEmpty() ) {
-                // numbers
-                if ( response_f == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"response\" IS NULL");
-                } else if ( response_f == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"response\" IS NOT NULL");
-                } else {
-                    QString filter;
-                    if ( StringOps::isNumeric( response_f.toStdString() ) ) {
-                        // no operator found, set defult to '='
-                        filter = QString("=%1").arg( response_f );
-                    } else {
-                        filter = response_f;
-                    }
-                    stmt += QString(" AND \"response\"%1")
-                        .arg( filter.replace("'","''") );
-                }
-            }
+    if ( ! protocol_f.isEmpty() ) {
+        query << QStringLiteral(R"( AND "protocol")").append( protocol_f );
+    }
 
-            stmt += QString(" ORDER BY \"hour\",\"minute\",\"second\" ASC;");
-            if ( ! query.exec( stmt ) ) {
-                // error querying database
-                successful &= false;
-                DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
+    if ( ! method_f.isEmpty() ) {
+        query << QStringLiteral(R"( AND "method")").append( method_f );
+    }
 
+    if ( ! uri_f.isEmpty() ) {
+        query << QStringLiteral(R"( AND "uri")").append( uri_f );
+    }
+
+    if ( ! query_f.isEmpty() ) {
+        query << QStringLiteral(R"( AND "query")").append( query_f );
+    }
+
+    if ( ! response_f.isEmpty() ) {
+        query << QStringLiteral(R"( AND "response")").append( response_f );
+    }
+
+    query << R"( ORDER BY "hour","minute","second" ASC;)";
+
+    query();
+
+    if ( const size_t size{ query.size() }; size > 0ul ) {
+        data.reserve( size * 3 );
+    } else {
+        return;
+    }
+
+    int h, m, s;
+    const auto prev_instant{
+        [&h,&m,&s](const int hour, const int minute, const int second)
+        {
+            h=hour; m=minute; s=second;
+            if ( --s < 0 ) { s=59;
+            if ( --m < 0 ) { m=59;
+            if ( --h < 0 ) { h=m=s=0; }}}
+        }
+    };
+    const auto next_instant{
+        [&h,&m,&s](const int hour, const int minute, const int second)
+        {
+            h=hour; m=minute; s=second;
+            if ( ++s > 59 ) { s=0;
+            if ( ++m > 59 ) { m=0;
+            if ( ++h > 23 ) { h=23;m=59;s=59; }}}
+        }
+    };
+
+    using data_t = std::array<QString,6>;
+
+    QDateTime time{
+        QDate( year, month, day ),
+        QTime( 0, 0, 0 )
+    };
+
+    const auto push_empty{
+        [&data,&time]()
+        {
+            data.emplace_back( time.toMSecsSinceEpoch(), data_t{} );
+        }
+    };
+    const auto push_data{
+        [&data,&time](const auto ...args)
+        {
+            data.emplace_back( time.toMSecsSinceEpoch(), data_t{args...} );
+        }
+    };
+
+    const auto set_time{
+        [&time](const auto ...args)
+        {
+            time.setTime( QTime(args...) );
+        }
+    };
+
+    int hour{-1},  next_hour,   prev_hour{0},
+        minute{0}, next_minute, prev_minute{0},
+        second{0}, next_second, prev_second{0};
+    QString tt, ur, qr, mt, pt, rs;
+
+    // append the first ficticious count
+    time.setMSecsSinceEpoch( time.toMSecsSinceEpoch() - 1000 ); // -1s
+    push_empty();
+    time.setMSecsSinceEpoch( time.toMSecsSinceEpoch() + 1000 ); // +1s
+
+    while ( query->next() ) {
+        next_hour   = toInt( query[0] );
+        next_minute = toInt( query[1] );
+        next_second = toInt( query[2] );
+
+        if ( next_hour == hour && next_minute == minute && next_second == second ) {
+            set_time( hour, minute, second );
+            push_data( tt,ur,qr,mt,pt,rs );
+        } else {
+            if ( next_hour == hour ) {
+                prev_instant( hour, minute, second );
+                // append the second before the last one found, if it is not equal to the prev
+                if ( prev_hour < h || prev_minute < m || prev_second < s ) {
+                    set_time( h, m, s );
+                    push_empty();
+                }
+                // same hour new minute/second, append the last count
+                set_time( hour, minute, second );
+                push_data( tt,ur,qr,mt,pt,rs );
+                // append the second after the last one found, if it is not equal to the next
+                next_instant( hour, minute, second );
+                if ( next_hour > h || next_minute > m || next_second > s ) {
+                    set_time( h, m, s );
+                    push_empty();
+                }
+                prev_hour = hour; // update now to avoid getting next_hour's value
             } else {
-
-                try {
-                    // append the first fictitious count
-                    time.setDate( QDate( year, month, day ) );
-                    time.setTime( QTime( 0, 0, 0 ));
-
-                    if ( query.last() ) {
-                        data.clear();
-                        data.reserve( static_cast<size_t>( query.at()*2 ) );
-                        query.first();
-                        query.previous();
-
-                        // get query data
-                        int hour{-1},  aux_hour,   prev_hour{0},   h,
-                            minute{0}, aux_minute, prev_minute{0}, m,
-                            second{0}, aux_second, prev_second{0}, s;
-                        QString tt, ur, qr, mt, pt, rs;
-                        while ( query.next() ) {
-                            aux_hour   = query.value(0).toInt();
-                            aux_minute = query.value(1).toInt();
-                            aux_second = query.value(2).toInt();
-
-                            if ( aux_hour == hour && aux_minute == minute && aux_second == second ) {
-                                time.setTime( QTime( hour, minute, second ));
-                                data.push_back( std::make_tuple(
-                                    time.toMSecsSinceEpoch(),
-                                    std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
-                            } else {
-                                if ( aux_hour == hour ) {
-                                    h=hour; m=minute; s=second-1;
-                                    if ( s < 0 ) {
-                                        s=59; --m;
-                                        if ( m < 0 ) {
-                                            m=59; --h;
-                                            if ( h < 0 ) {
-                                                h=m=s=0;
-                                            }
-                                        }
-                                    }
-                                    // append the second before the last one found, if it is not equal to the prev
-                                    if ( prev_hour < h || prev_minute < m || prev_second < s ) {
-                                        time.setTime( QTime( h, m, s ));
-                                        data.push_back( std::make_tuple(
-                                            time.toMSecsSinceEpoch(),
-                                            std::array<QString,6>{"","","","","",""} ));
-                                    }
-                                    // same hour new minute/second, append the last count
-                                    time.setTime( QTime( hour, minute, second ));
-                                    data.push_back( std::make_tuple(
-                                        time.toMSecsSinceEpoch(),
-                                        std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
-                                    // append the second after the last one found, if it is not equal to the next
-                                    h=hour; m=minute; s=second+1;
-                                    if ( s > 59 ) {
-                                        s=0; ++m;
-                                        if ( m > 59 ) {
-                                            m=0; ++h;
-                                            if ( h > 23 ) {
-                                                h=23;m=59;s=59;
-                                            }
-                                        }
-                                    }
-                                    if ( aux_hour > h || aux_minute > m || aux_second > s ) {
-                                        time.setTime( QTime( h, m, s ));
-                                        data.push_back( std::make_tuple(
-                                            time.toMSecsSinceEpoch(),
-                                            std::array<QString,6>{"","","","","",""} ));
-                                    }
-                                    prev_hour = hour; // update now to avoid getting aux_hour's value
-                                } else {
-                                    // minute & second are always different when the hour is different
-                                    if ( hour >= 0 ) {
-                                        // append the prev as zero
-                                        h=hour; m=minute; s=second-1;
-                                        if ( s < 0 ) {
-                                            s=59; --m;
-                                            if ( m < 0 ) {
-                                                m=59; --h;
-                                                if ( h < 0 ) {
-                                                    h=m=s=0;
-                                                }
-                                            }
-                                        }
-                                        if ( prev_hour < h || prev_minute < m || prev_second < s ) {
-                                            time.setTime( QTime( h, m, s ));
-                                            data.push_back( std::make_tuple(
-                                                time.toMSecsSinceEpoch(),
-                                                std::array<QString,6>{"","","","","",""} ));
-                                        }
-                                        // apend the last p count if not in the first round of the loop
-                                        time.setTime( QTime( hour, minute, second ));
-                                        data.push_back( std::make_tuple(
-                                            time.toMSecsSinceEpoch(),
-                                            std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
-                                        // append the next as zero
-                                        h=hour; m=minute; s=second+1;
-                                        if ( s > 59 ) {
-                                            s=0; ++m;
-                                            if ( m > 59 ) {
-                                                m=0; ++h;
-                                                if ( h > 23 ) {
-                                                    h=23;m=59;s=59;
-                                                }
-                                            }
-                                        }
-                                        if ( aux_hour > h || aux_minute > m || aux_second > s ) {
-                                            time.setTime( QTime( h, m, s ));
-                                            data.push_back( std::make_tuple(
-                                                time.toMSecsSinceEpoch(),
-                                                std::array<QString,6>{"","","","","",""} ));
-                                        }
-                                    } else {
-                                        // hout < 0, here only in the first round of the loop
-                                        // append the second 0 of the day, if it is not the one found
-                                        if ( aux_hour > 0 || aux_minute > 0 || aux_second > 0 ) {
-                                            time.setTime( QTime( 0, 0, 0 ));
-                                            data.push_back( std::make_tuple(
-                                                time.toMSecsSinceEpoch(),
-                                                std::array<QString,6>{"","","","","",""} ));
-                                            // append the second before the first found
-                                            h=aux_hour; m=aux_minute; s=aux_second-1;
-                                            if ( s < 0 ) {
-                                                s=59; --m;
-                                                if ( m < 0 ) {
-                                                    m=59; --h;
-                                                    if ( h < 0 ) {
-                                                        // abort
-                                                        h=m=s=0;
-                                                    }
-                                                }
-                                            }
-                                            if ( h > 0 || m > 0 || s > 0 ) {
-                                                time.setTime( QTime( h, m, s ));
-                                                data.push_back( std::make_tuple(
-                                                    time.toMSecsSinceEpoch(),
-                                                    std::array<QString,6>{"","","","","",""} ));
-                                            }
-                                        }
-                                    }
-                                    prev_hour = hour;
-                                    hour = aux_hour;
-                                }
-                                prev_minute = minute;
-                                minute = aux_minute;
-                                prev_second = second;
-                                second = aux_second;
-                            }
-                            tt = query.value(3).toString(); // time taken
-                            ur = query.value(4).toString(); // uri
-                            qr = query.value(5).toString(); // query
-                            mt = query.value(6).toString(); // method
-                            pt = query.value(7).toString(); // protocol
-                            rs = query.value(8).toString(); // response
-                        }
-                        // last one, append the prev
-                        h=hour; m=minute; s=second-1;
-                        if ( s < 0 ) {
-                            s=59; --m;
-                            if ( m < 0 ) {
-                                m=59; --h;
-                                if ( h < 0 ) {
-                                    h=m=s=0;
-                                }
-                            }
-                        }
-                        if ( prev_hour < h || prev_minute < m || prev_second < s ) {
-                            time.setTime( QTime( h, m, s ));
-                            data.push_back( std::make_tuple(
-                                time.toMSecsSinceEpoch(),
-                                std::array<QString,6>{"","","","","",""} ));
-                        }
-                        // append the last count
-                        time.setTime( QTime( hour, minute, second ));
-                        data.push_back( std::make_tuple(
-                            time.toMSecsSinceEpoch(),
-                            std::array<QString,6>{tt,ur,qr,mt,pt,rs} ));
-                        // append 1 second after the last
-                        h=hour; m=minute; s=second+1;
-                        if ( s > 59 ) {
-                            s=0; ++m;
-                            if ( m > 59 ) {
-                                m=0; ++h;
-                                if ( h > 23 ) {
-                                    h=23;m=59;s=59;
-                                }
-                            }
-                        }
-                        if ( h > hour || m > minute || s > second ) {
-                            time.setTime( QTime( h, m, s ));
-                            data.push_back( std::make_tuple(
-                                time.toMSecsSinceEpoch(),
-                                std::array<QString,6>{"","","","","",""} ));
+                // minute & second are always different when the hour is different
+                if ( hour >= 0 ) {
+                    // append the prev as zero
+                    prev_instant( hour, minute, second );
+                    if ( prev_hour < h || prev_minute < m || prev_second < s ) {
+                        set_time( h, m, s );
+                        push_empty();
+                    }
+                    // apend the last p count if not in the first round of the loop
+                    set_time( hour, minute, second );
+                    push_data( tt,ur,qr,mt,pt,rs );
+                    // append the next as zero
+                    next_instant( hour, minute, second );
+                    if ( next_hour > h || next_minute > m || next_second > s ) {
+                        set_time( h, m, s );
+                        push_empty();
+                    }
+                } else {
+                    // hout < 0 only in the first round of the loop
+                    // append the second 0 of the day, if it is not the one found
+                    if ( next_hour > 0 || next_minute > 0 || next_second > 0 ) {
+                        push_empty();
+                        // append the second before the first found
+                        prev_instant( next_hour, next_minute, next_second );
+                        if ( h > 0 || m > 0 || s > 0 ) {
+                            set_time( h, m, s );
+                            push_empty();
                         }
                     }
-                    // append the last fictitious count
-                    ++ day;
-                    if ( day > getMonthDays( year, month ) ) {
-                        day = 1;
-                        ++ month;
-                        if ( month > 12 ) {
-                            month = 1;
-                            ++ year;
-                        }
-                    }
-                    time.setDate( QDate( year, month , day ) );
-                    time.setTime( QTime( 0, 0, 0 ));
-                    data.push_back( std::make_tuple(
-                        time.toMSecsSinceEpoch(),
-                        std::array<QString,6>{"","","","","",""} ));
-                } catch (...) {
-                    // something failed
-                    successful = false;
-                    DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
                 }
+                prev_hour = hour;
+                hour = next_hour;
             }
+            prev_minute = minute;
+            minute = next_minute;
+            prev_second = second;
+            second = next_second;
         }
+        tt = toString( query[3] ); // time taken
+        ur = toString( query[4] ); // uri
+        qr = toString( query[5] ); // query
+        mt = toString( query[6] ); // method
+        pt = toString( query[7] ); // protocol
+        rs = toString( query[8] ); // response
     }
-    if ( db.isOpen() ) {
-        db.close();
+    // last one, append the prev count
+    prev_instant( hour, minute, second );
+    if ( prev_hour < h || prev_minute < m || prev_second < s ) {
+        set_time( h, m, s );
+        push_empty();
+    }
+    // append the last count
+    set_time( hour, minute, second );
+    push_data( tt,ur,qr,mt,pt,rs );
+    if ( hour < 23 && minute < 59 && second < 59 ) {
+        // append 1 second after the last
+        next_instant( hour, minute, second );
+        set_time( h, m, s );
+        push_empty();
+    }
+    // append the last fictitious count
+    time.setTime( QTime( 23, 59, 59 ) );
+    time.setMSecsSinceEpoch( time.toMSecsSinceEpoch() + 1000 ); // +1s
+    push_empty();
+
+    if ( data.capacity() > data.size() ) {
+        data.shrink_to_fit();
     }
 
-    if ( successful ) {
-        if ( data.capacity() > data.size() ) {
-            data.shrink_to_fit();
-        }
-        result.emplace( data );
-    }
+    result.emplace( std::move(data) );
 }
 
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, const QString& web_server, const QString& year, const QString& month, const QString& day, const QString& log_field ) const
+void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
 {
-    bool successful{ true };
     QHash<QString, unsigned> aux_items;
     stats_count_items_t items; // std::map<QString, unsigned int>>
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    QueryWrapper query{ db.getQuery() };
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful = false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
-        if ( successful ) {
-            // build the query statement
-            QSqlQuery query{ db };
-            QString stmt{ QString("SELECT \"%1\" FROM \"%2\" WHERE \"%3\" IS NOT NULL AND \"year\"=%4 AND \"month\"=%5 AND \"day\"=%6;")
+    query << QStringLiteral(R"(SELECT "%1" FROM "%2" WHERE "%3" IS NOT NULL AND "year"=%4 AND "month"=%5 AND "day"=%6;)")
                 .arg( this->getDbField( log_field ),
                       web_server,
                       this->getDbField( log_field ),
                       year,
-                      QString::fromStdString( std::to_string( this->getMonthNumber( month ) )),
-                      day ) };
-            // quary the database
-            if ( ! query.exec( stmt.replace("'","''") ) ) {
-                // error querying database
-                successful &= false;
-                DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
+                      QString::number( this->getMonthNumber( month ) ),
+                      day )
+                .replace(QChar('\''),QLatin1String("''"));
 
-            } else if ( query.last() ) {
-                aux_items.reserve( query.at() );
-                query.first();
-                query.previous();
+    query();
 
-                try {
-                    // get data
-                    QString item;
-                    while ( query.next() ) {
-                        item = query.value(0).toString();
-                        if ( ! item.isEmpty() ) {
-                            ++ aux_items[ item ];
-                        }
-                    }
-                } catch (...) {
-                    // something failed
-                    successful &= false;
-                    DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                }
-            }
+    if ( const size_t size{ query.size() }; size > 0ul ) {
+        aux_items.reserve( size * 3 );
+    } else {
+        return;
+    }
+
+    while ( query->next() ) {
+        const QString item{ toString( query[0] ) };
+        if ( ! item.isEmpty() ) {
+            ++ aux_items[ item ];
         }
-        if ( successful ) { // sort the list
-            // morph tha QHash into an ordered map
-            QHashIterator iter{ aux_items };
-            while ( iter.hasNext() ) {
-                iter.next();
-                items.emplace( iter.value(), iter.key() );
-            }
-        }
-        aux_items.clear();
-    }
-    if ( db.isOpen() ) {
-        db.close();
     }
 
-    if ( successful ) {
-        result.emplace( items );
+    // morph tha QHash into an ordered map
+    QHashIterator iter{ aux_items };
+    while ( iter.hasNext() ) {
+        iter.next();
+        items.emplace( iter.value(), iter.key() );
     }
+
+    result.emplace( std::move(items) );
 }
 
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_, const QString& field_filter ) const
+void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, QStringView log_field_, QStringView field_filter ) const
 {
-    bool successful{ true };
     stats_day_items_t data{ // std::unordered_map<int, std::unordered_map<int, int>>
         {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {2,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {3,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
@@ -972,1177 +620,730 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, const 
         {22, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {23, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
     };
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    const int from_year{  toInt( from_year_ ) };
+    const int from_month{ this->getMonthNumber( from_month_ ) };
+    const int from_day{   toInt( from_day_ ) };
+    const int to_year{    to_year_.isEmpty()  ? from_year  : toInt( to_year_ )  };
+    const int to_month{   to_month_.isEmpty() ? from_month : this->getMonthNumber( to_month_ )  };
+    const int to_day{     to_day_.isEmpty()   ? from_day   : toInt( to_day_ )  };
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful &= false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
-        int from_year, from_month, from_day,
-            to_year, to_month, to_day;
-        if ( successful ) {
-            // setup period limits
-            try {
-                from_year  = from_year_.toInt();
-                from_month = this->getMonthNumber( from_month_ );
-                from_day   = from_day_.toInt();
-                to_year    = ( to_year_.isEmpty() )  ? from_year  : to_year_.toInt() ;
-                to_month   = ( to_month_.isEmpty() ) ? from_month : this->getMonthNumber( to_month_ ) ;
-                to_day     = ( to_day_.isEmpty() )   ? from_day   : to_day_.toInt() ;
-            } catch (...) {
-                // failed to convert to integers
-                successful &= false;
-                DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
-            }
-        }
-        if ( successful ) {
-            // build the query statement
-            QSqlQuery query{ db };
-            QString stmt;
-            QString log_field{ this->getDbField( log_field_ ) };
+    const QString& log_field{ this->getDbField( log_field_ ) };
 
-            int n_days   { 0 },
-                n_months { countMonths( from_year, from_month, to_year, to_month ) };
+    int n_days   { 0 },
+        n_months { this->countMonths( from_year, from_month, to_year, to_month ) };
 
-            int year  { from_year },
-                month { from_month },
-                day, hour, minute;
-            std::unordered_map<int,int> days_l;
-            days_l.reserve( 31ul );
+    int year  { from_year },
+        month { from_month };
+    std::unordered_map<int,int> days_l;
+    days_l.reserve( 31ul );
 
-            if ( n_months == 1 ) {
-                // 1 month, no need to loop
-                stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\">=%4 AND \"day\"<=%5")
+    if ( n_months == 1 ) {
+        // 1 month, no need to loop
+        QueryWrapper query{ db.getQuery() };
+
+        query << QStringLiteral(R"(SELECT "day", "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
                     .arg( web_server )
                     .arg( year ).arg( month )
                     .arg( from_day ).arg( to_day );
 
-                // apply a filter if present
-                if ( ! field_filter.isEmpty() ) {
-                    QString filter{ field_filter };
-                    if ( filter == "NULL" ) {
-                        // only select NULL values
-                        stmt += QString(" AND \"%1\" IS NULL")
-                            .arg( log_field.replace("'","''") );
-                    } else if ( filter == "NOT NULL" ) {
-                        // only select non-NULL values
-                        stmt += QString(" AND \"%1\" IS NOT NULL")
-                            .arg( log_field.replace("'","''") );
-                    } else {
-                        // filter
-                        if ( log_field == "response"
-                          || log_field == "time_taken"
-                          || log_field == "bytes_sent"
-                          || log_field == "bytes_received" ) {
-                            // numbers
-                            if ( StringOps::isNumeric( field_filter.toStdString() ) ) {
-                                // no operator found, set defult to '='
-                                filter = QString("=%1").arg( field_filter );
-                            }
-                            stmt += QString(" AND \"%1\"%2")
-                                .arg( log_field.replace("'","''"),
-                                      filter.replace("'","''") );
+        if ( ! field_filter.isEmpty() ) {
+            query << QStringLiteral(R"( AND "%1"%2)").arg( log_field, field_filter );
+        }
 
-                        } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2'")
-                                .arg( log_field.replace("'","''"),
-                                      filter.replace("'","''") );
-                        }
-                    }
-                }
+        query << ";";
 
-                stmt += ";";
-                if ( ! query.exec( stmt ) ) {
-                    // error querying database
-                    successful &= false;
-                    DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
+        query();
 
-                } else {
-                    try {
-                        // get query data
-                        while ( query.next() ) {
-                            day    = query.value(0).toInt();
-                            hour   = query.value(1).toInt();
-                            minute = query.value(2).toInt();
-                            // increase the count
-                            ++ data.at( hour ).at( getMinuteGap( minute ) );
-                            // append the day as newly found if not found yet
-                            ++ days_l[ day ];
-                        }
-                        n_days += static_cast<int>(days_l.size());
-                    } catch (...) {
-                        // something failed
-                        successful &= false;
-                        DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                    }
-                }
+        while ( query->next() ) {
+            const int day{    toInt( query[0] ) };
+            const int hour{   toInt( query[1] ) };
+            const int minute{ toInt( query[2] ) };
+            // increase the count
+            ++ data.at( hour ).at( this->getMinuteGap( minute ) );
+            // append the day as newly found if not found yet
+            ++ days_l[ day ];
+        }
+        n_days += static_cast<int>(days_l.size());
 
 
-            } else {
-                for ( int m=1; m<=n_months; ++m ) {
-                    stmt = QString("SELECT \"day\", \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
+    } else {
+        for ( int m{1}; m<=n_months; ++m ) {
+
+            QueryWrapper query{ db.getQuery() };
+
+            query << QStringLiteral(R"(SELECT "day", "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3)")
                         .arg( web_server )
                         .arg( year ).arg( month );
-                    if ( m == 1 ) {
-                        // first month, only get the days starting from the beginning day
-                        stmt += QString(" AND \"day\">=%1").arg( from_day );
-                    } else if ( m == n_months ) {
-                        // last month, only get the days until the ending day
-                        stmt += QString(" AND \"day\"<=%1").arg( to_day );
-                    }
 
-                    // apply a filter if present
-                    if ( ! field_filter.isEmpty() ) {
-                        QString filter = field_filter;
-                        if ( filter == "NULL" ) {
-                            // only select NULL values
-                            stmt += QString(" AND \"%1\" IS NULL")
-                                .arg( log_field.replace("'","''") );
-                        } else if ( filter == "NOT NULL" ) {
-                            // only select non-NULL values
-                            stmt += QString(" AND \"%1\" IS NOT NULL")
-                                .arg( log_field.replace("'","''") );
-                        } else {
-                            // filter
-                            if ( log_field == "response"
-                              || log_field == "time_taken"
-                              || log_field == "bytes_sent"
-                              || log_field == "bytes_received" ) {
-                                // numbers
-                                if ( StringOps::isNumeric( field_filter.toStdString() ) ) {
-                                    // no operator found, set defult to '='
-                                    filter = QString("=%1").arg( field_filter );
-                                }
-                                stmt += QString(" AND \"%1\"%2")
-                                    .arg( log_field.replace("'","''"),
-                                          filter.replace("'","''") );
-
-                            } else {
-                                // only values starting-with
-                                stmt += QString(" AND \"%1\" LIKE '%2'")
-                                    .arg( log_field.replace("'","''"),
-                                          filter.replace("'","''") );
-                            }
-                        }
-                    }
-
-                    // quary the database
-                    stmt += ";";
-                    if ( ! query.exec( stmt ) ) {
-                        // error querying database
-                        successful &= false;
-                        DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-
-                    } else {
-                        try {
-                            // clear the list of found days
-                            days_l.clear();
-                            // get query data
-                            while ( query.next() ) {
-                                day    = query.value(0).toInt();
-                                hour   = query.value(1).toInt();
-                                minute = query.value(2).toInt();
-                                // increase the count
-                                ++ data.at( hour ).at( getMinuteGap( minute ) );
-                                // append the day as newly found if not found yet
-                                ++ days_l[ day ];
-                            }
-                            n_days += static_cast<int>(days_l.size());
-                            ++ month;
-                            if ( month > 12 ) {
-                                month = 1;
-                                ++ year;
-                            }
-                        } catch (...) {
-                            // something failed
-                            successful &= false;
-                            DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                            break;
-                        }
-                        query.finish();
-                    }
-                }
+            if ( m == 1 ) {
+                // first month, only get the days starting from the beginning day
+                query << QStringLiteral(R"( AND "day">=%1)").arg( from_day );
+            } else if ( m == n_months ) {
+                // last month, only get the days until the ending day
+                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_day );
             }
-            if ( successful && n_days > 0 ) {
-                // divide the count by the number of days to get the mean value
-                for ( const auto& [h,data_] : data ) {
-                    for ( const auto& [m,c] : data_ ) {
-                        int& count{ data.at( h ).at( m ) };
-                        if ( count > 0 ) {
-                            count /= n_days;
-                            if ( count == 0 ) {
-                                ++ count;
-                            }
-                        }
-                    }
+
+            if ( ! field_filter.isEmpty() ) {
+                query << QStringLiteral(R"( AND "%1"%2)").arg( log_field, field_filter );
+            }
+
+            query << ";";
+
+            query();
+
+            while ( query->next() ) {
+                const int day{    toInt( query[0] ) };
+                const int hour{   toInt( query[1] ) };
+                const int minute{ toInt( query[2] ) };
+                // increase the count
+                ++ data.at( hour ).at( this->getMinuteGap( minute ) );
+                // append the day as newly found if not found yet
+                ++ days_l[ day ];
+            }
+            n_days += static_cast<int>(days_l.size());
+            ++ month;
+            if ( month > 12 ) {
+                month = 1;
+                ++ year;
+            }
+        }
+    }
+    if ( n_days == 0 ) {
+        // no data
+        return;
+    }
+
+    // divide the count by the number of days to get the mean value
+    for ( const auto& [h,data_] : data ) {
+        for ( const auto& [m,c] : data_ ) {
+            int& count{ data.at( h ).at( m ) };
+            if ( count > 0 ) {
+                count /= n_days;
+                if ( count == 0 ) {
+                    ++ count;
                 }
             }
         }
     }
-    if ( db.isOpen() ) {
-        db.close();
-    }
 
-    if ( successful ) {
-        result.emplace( data );
-    }
+    result.emplace( std::move(data) );
 }
 
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, const QString& web_server, const QString& year_, const QString& month_, const QString& day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
+void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView log_field_1_, QStringView field_filter_1, QStringView log_field_2_, QStringView field_filter_2 ) const
 {
-    bool successful{ true };
-    stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
+    stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
     int gap = 20;
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    const int year{  toInt( year_ ) };
+    const int month{ this->getMonthNumber( month_ ) };
+    const int day{   toInt( day_ ) };
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful &= false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
+    const QString& log_field_1{ this->getDbField( log_field_1_ ) };
+    const QString& log_field_2{ this->getDbField( log_field_2_ ) };
 
-        int year, month, day;
-        if ( successful ) {
-            // setup period limits
-            try {
-                year  = year_.toInt();
-                month = this->getMonthNumber( month_ );
-                day   = day_.toInt();
-            } catch (...) {
-                // failed to convert to integers
-                successful &= false;
-                DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
-            }
-        }
-        if ( successful ) {
-            QDateTime time;
-            time.setDate( QDate( year, month , day ) );
-            // build the query statement
-            QSqlQuery query{ db };
-            QString stmt;
-            QString log_field_1{ this->getDbField( log_field_1_ ) },
-                    log_field_2{ this->getDbField( log_field_2_ ) };
+    QueryWrapper query{ db.getQuery() };
 
-            // 1 day, no need to loop
-            stmt = QString("SELECT \"hour\", \"minute\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\"=%4")
+    query << QStringLiteral(R"(SELECT "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
                 .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
 
-            // apply a filter if present
-            if ( ! field_filter_1.isEmpty() ) {
-                QString filter{ field_filter_1 };
-                if ( filter == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"%1\" IS NULL")
-                        .arg( log_field_1.replace("'","''") );
-                } else if ( filter == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"%1\" IS NOT NULL")
-                        .arg( log_field_1.replace("'","''") );
-                } else {
-                    // filter
-                    if ( log_field_1 == "response"
-                      || log_field_1 == "time_taken"
-                      || log_field_1 == "bytes_sent"
-                      || log_field_1 == "bytes_received" ) {
-                        // numbers
-                        if ( StringOps::isNumeric( field_filter_1.toStdString() ) ) {
-                            // no operator found, set defult to '='
-                            filter = QString("=%1").arg( field_filter_1 );
-                        }
-                        stmt += QString(" AND \"%1\"%2")
-                            .arg( log_field_1.replace("'","''"),
-                                  filter.replace("'","''") );
+    if ( ! field_filter_1.isEmpty() ) {
+        query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 );
+    }
 
-                    } else {
-                        // only values starting-with
-                        stmt += QString(" AND \"%1\" LIKE '%2'")
-                            .arg( log_field_1.replace("'","''"),
-                                  filter.replace("'","''") );
-                    }
+    if ( ! field_filter_2.isEmpty() ) {
+        query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_2, field_filter_2 );
+    }
+
+    query << QStringLiteral(R"( ORDER BY "hour","minute" ASC;)");
+
+    query();
+
+    if ( query.size() == 0ul ) {
+        return;
+    }
+
+    QDateTime time{
+        QDate( year, month, day ),
+        QTime( 0, 0, 0 )
+    };
+
+    data.reserve( static_cast<size_t>( 24*(60/gap) ) );
+
+    const auto push_data{
+        [&data,&time](const int count)
+        {
+            data.emplace_back( time.toMSecsSinceEpoch(), count );
+        }
+    };
+
+    const auto set_time{
+        [&time](const auto ...args)
+        {
+            time.setTime( QTime(args...) );
+        }
+    };
+
+    int hour{-1},  next_hour,
+        minute{0}, next_minute,
+        count{0};
+
+    while ( query->next() ) {
+        next_hour   = toInt( query[0] );
+        next_minute = this->getMinuteGap( toInt( query[1] ), gap );
+        if ( next_hour == hour && next_minute == minute ) {
+            ++ count;
+        } else {
+            if ( next_hour == hour ) {
+                // same hour new minute gap, append the last count
+                set_time( hour, minute );
+                push_data( count );
+                // and any missing gap
+                for ( int m{minute+gap}; m<next_minute; m+=gap ) {
+                    set_time( hour, m );
+                    push_data( 0 );
                 }
-            }
-            // apply a filter if present
-            if ( ! field_filter_2.isEmpty() ) {
-                QString filter{ field_filter_2 };
-                if ( filter == "NULL" ) {
-                    // only select NULL values
-                    stmt += QString(" AND \"%1\" IS NULL")
-                        .arg( log_field_2.replace("'","''") );
-                } else if ( filter == "NOT NULL" ) {
-                    // only select non-NULL values
-                    stmt += QString(" AND \"%1\" IS NOT NULL")
-                        .arg( log_field_2.replace("'","''") );
-                } else {
-                    // filter
-                    if ( log_field_2 == "response"
-                      || log_field_2 == "time_taken"
-                      || log_field_2 == "bytes_sent"
-                      || log_field_2 == "bytes_received" ) {
-                        // numbers
-                        if ( StringOps::isNumeric( field_filter_2.toStdString() ) ) {
-                            // no operator found, set defult to '='
-                            filter = QString("=%1").arg( field_filter_2 );
-                        }
-                        stmt += QString(" AND \"%1\"%2")
-                            .arg( log_field_2.replace("'","''"),
-                                  filter.replace("'","''") );
-
-                    } else {
-                        // only values starting-with
-                        stmt += QString(" AND \"%1\" LIKE '%2'")
-                            .arg( log_field_2.replace("'","''"),
-                                  QString(field_filter_2).replace("'","''") );
-                    }
-                }
-            }
-
-            stmt += QString(" ORDER BY \"hour\",\"minute\" ASC;");
-            if ( ! query.exec( stmt ) ) {
-                // error querying database
-                successful &= false;
-                DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-
-            } else if ( ! query.last() ) {
-                // no result found, fill with 0 values
-                for ( int h{0}; h<24; ++h ) {
-                    for ( int m{0}; m<60; m+=gap ) {
-                        time.setTime( QTime( h, m ) );
-                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                    }
-                }
-
             } else {
-                query.first();
-                query.previous();
-
-                try {
-                    data.reserve( static_cast<size_t>( 24*(60/gap) ) );
-                    // get query data
-                    int hour{-1}, aux_hour,
-                        minute{0}, aux_minute,
-                        count{0};
-                    while ( query.next() ) {
-                        aux_hour   = query.value(0).toInt();
-                        aux_minute = getMinuteGap( query.value(1).toInt(), gap );
-                        if ( aux_hour == hour && aux_minute == minute ) {
-                            ++ count;
-                        } else {
-                            if ( aux_hour == hour ) {
-                                // same hour new minute gap, append the last count
-                                time.setTime( QTime( hour, minute ) );
-                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                // and any missing gap
-                                for ( int m{minute+gap}; m<aux_minute; m+=gap ) {
-                                    time.setTime( QTime( hour, m ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                }
-                            } else {
-                                // minute is always different when the hour is different
-                                if ( hour >= 0 ) {
-                                    // apend the last minute-gap count if not in the first round of the loop
-                                    time.setTime( QTime( hour, minute ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                    // append any missing gap in the current hour
-                                    for ( int m{minute+gap}; m<60; m+=gap ) {
-                                        time.setTime( QTime( hour, m ) );
-                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                    }
-                                    ++ hour;
-                                } else {
-                                    // prepare to add missing gaps from 00:00 (+gap will be added to the minute)
-                                    hour = 0;
-                                }
-                                // append any missing gap in every hour between the current and the next found (aux)
-                                for ( int h{hour}; h<aux_hour; ++h ) {
-                                    for ( int m{0}; m<60; m+=gap ) {
-                                        time.setTime( QTime( h, m ) );
-                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                    }
-                                }
-                                // append any missing gap in the netx found hour
-                                for ( int m{0}; m<aux_minute; m+=gap ) {
-                                    time.setTime( QTime( aux_hour, m ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                }
-                                hour = aux_hour;
-                            }
-                            minute = aux_minute;
-                            count = 1;
-                        }
-                    }
-                    // append the last count
-                    time.setTime( QTime( hour, minute ) );
-                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                    // yet again, append any missing gap
+                // minute is always different when the hour is different
+                if ( hour >= 0 ) {
+                    // apend the last minute-gap count if not in the first round of the loop
+                    set_time( hour, minute );
+                    push_data( count );
+                    // append any missing gap in the current hour
                     for ( int m{minute+gap}; m<60; m+=gap ) {
-                        time.setTime( QTime( hour, m ) );
-                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                        set_time( hour, m );
+                        push_data( 0 );
                     }
-                    for ( int h{hour+1}; h<24; ++h ) {
-                        for ( int m{0}; m<60; m+=gap ) {
-                            time.setTime( QTime( h, m ) );
-                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                        }
-                    }
-                    // append the real last fictitious count
-                    ++ day;
-                    if ( day > getMonthDays( year, month ) ) {
-                        day = 1;
-                        ++ month;
-                        if ( month > 12 ) {
-                            month = 1;
-                            ++ year;
-                        }
-                    }
-                    time.setDate( QDate( year, month , day ) );
-                    time.setTime( QTime( 0, 0 ) );
-                    //time.setTime( QTime( 23, 59, 59, 999 ) );
-                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                } catch (...) {
-                    // something failed
-                    successful &= false;
-                    DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
+                    ++ hour;
+                } else {
+                    // prepare to add missing gaps from 00:00 (+gap will be added to the minute)
+                    hour = 0;
                 }
+                // append any missing gap in every hour between the current and the next found (aux)
+                for ( int h{hour}; h<next_hour; ++h ) {
+                    for ( int m{0}; m<60; m+=gap ) {
+                        set_time( h, m );
+                        push_data( 0 );
+                    }
+                }
+                // append any missing gap in the netx found hour
+                for ( int m{0}; m<next_minute; m+=gap ) {
+                    set_time( next_hour, m );
+                    push_data( 0 );
+                }
+                hour = next_hour;
             }
+            minute = next_minute;
+            count = 1;
         }
     }
-    if ( db.isOpen() ) {
-        db.close();
+    // append the last count
+    set_time( hour, minute );
+    push_data( count );
+    // append any missing gap in the last hour
+    for ( int m{minute+gap}; m<60; m+=gap ) {
+        set_time( hour, m );
+        push_data( 0 );
     }
+    // append any missing data up to the end of the day
+    for ( int h{hour+1}; h<24; ++h ) {
+        for ( int m{0}; m<60; m+=gap ) {
+            set_time( h, m );
+            push_data( 0 );
+        }
+    }
+    // append the real last fictitious count
+    int d{ day }, m{ month }, y{ year };
+    if ( ++d > this->getMonthDays( year, month ) ) {
+        if ( ++m > 12 ) {
+            m = 1;
+            ++y;
+        }
+        d = 1;
+    }
+    time.setDate( QDate( y, m , d ) );
+    time.setTime( QTime( 0, 0, 0 ) );
+    push_data( 0 );
 
-    if ( successful ) {
-        result.emplace( data );
-    }
+    result.emplace( std::move(data) );
 }
 
 
 
-void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, const QString& web_server, const QString& from_year_, const QString& from_month_, const QString& from_day_, const QString& to_year_, const QString& to_month_, const QString& to_day_, const QString& log_field_1_, const QString& field_filter_1, const QString& log_field_2_, const QString& field_filter_2 ) const
+void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, QStringView log_field_1_, QStringView field_filter_1, QStringView log_field_2_, QStringView field_filter_2 ) const
 {
-    bool successful{ true };
-    stats_relat_items_t data; // std::vector<std::tuple<long long, int>>
+    stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
+    const int from_year{  toInt( from_year_ ) };
+    const int from_month{ this->getMonthNumber( from_month_ ) };
+    const int from_day{   toInt( from_day_ ) };
+    const int to_year{    to_year_.isEmpty()  ? from_year  : toInt( to_year_ ) };
+    const int to_month{   to_month_.isEmpty() ? from_month : this->getMonthNumber( to_month_ ) };
+    const int to_day{     to_day_.isEmpty()   ? from_day   : toInt( to_day_ ) };
+
+    const QString& log_field_1{ this->getDbField( log_field_1_ ) };
+    const QString& log_field_2{ this->getDbField( log_field_2_ ) };
+
+    const int n_months{ this->countMonths( from_year, from_month, to_year, to_month ) };
+
+    QDateTime time;
+
+    const auto set_date{
+        [&time](const auto ...args)
+        {
+            time.setDate( QDate(args...) );
         }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    };
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful &= false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
+    const auto push_data{
+        [&data,&time](const int count)
+        {
+            data.emplace_back( time.toMSecsSinceEpoch(), count );
         }
-        int from_year, from_month, from_day,
-            to_year,   to_month,   to_day;
-        if ( successful ) {
-            // setup period limits
-            try {
-                from_year  = from_year_.toInt();
-                from_month = this->getMonthNumber( from_month_ );
-                from_day   = from_day_.toInt();
-                to_year  = ( to_year_.isEmpty() )  ? from_year  : to_year_.toInt() ;
-                to_month = ( to_month_.isEmpty() ) ? from_month : this->getMonthNumber( to_month_ ) ;
-                to_day   = ( to_day_.isEmpty() )   ? from_day   : to_day_.toInt() ;
-            } catch (...) {
-                // failed to convert to integers
-                successful &= false;
-                DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING_DATES.c_str()), true );
+    };
+
+    const auto prev_instant{
+        [this](int& y, int& m, int& d)
+        {
+            if ( --d < 1 ) {
+                if ( --m < 1 ) {
+                    m=12; --y;
+                }
+                d = this->getMonthDays( y, m );
             }
         }
-        if ( successful ) {
-            // build the query statement
-            QSqlQuery query{ db };
-            QString stmt;
-            QString log_field_1{ this->getDbField( log_field_1_ ) },
-                    log_field_2{ this->getDbField( log_field_2_ ) };
+    };
+    const auto next_instant{
+        [this](int& y, int& m, int& d)
+        {
+            if ( ++d > this->getMonthDays( y, m ) ) {
+                if ( ++m > 12 ) {
+                    m=1; ++y;
+                }
+                d = 1;
+            }
+        }
+    };
 
-            const int n_months{ countMonths( from_year, from_month, to_year, to_month ) };
+    int year  { from_year  },
+        month { from_month };
 
-            QDateTime time;
-            int year  { from_year  },
-                month { from_month },
-                day, aux_day, count;
+    if ( n_months == 1 ) {
+        // 1 month, no need to loop
+        QueryWrapper query{ db.getQuery() };
 
-            if ( n_months == 1 ) {
-                // 1 month, no need to loop
-                stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 AND \"day\">=%4 AND \"day\"<=%5")
+        query << QStringLiteral(R"(SELECT "day" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
                     .arg( web_server )
                     .arg( year ).arg( month )
                     .arg( from_day ).arg( to_day );
 
-                // only select non-NULL values
-                stmt += QString(" AND \"%1\" IS NOT NULL")
-                    .arg( log_field_1.replace("'","''") );
-                // apply a filter if present
-                if ( ! field_filter_1.isEmpty() ) {
-                    QString filter{ field_filter_1 };
-                    if ( log_field_1 == "response"
-                      || log_field_1 == "time_taken"
-                      || log_field_1 == "bytes_sent"
-                      || log_field_1 == "bytes_received" ) {
-                    // numbers
-                    if ( StringOps::isNumeric( field_filter_1.toStdString() ) ) {
-                        // no operator found, set defult to '='
-                        filter = QString("=%1").arg( field_filter_1 );
-                    }
-                    stmt += QString(" AND \"%1\"%2")
-                        .arg( log_field_1.replace("'","''"),
-                              filter.replace("'","''") );
+        if ( ! field_filter_1.isEmpty() ) {
+            query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 );
+        }
 
-                    } else {
-                        stmt += QString(" AND \"%1\" LIKE '%2'")
-                            .arg( log_field_1.replace("'","''"),
-                                  filter.replace("'","''") );
-                    }
+        if ( ! field_filter_2.isEmpty() ) {
+            query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_2, field_filter_2 );
+        }
+
+        query << R"( ORDER BY "day" ASC;)";
+
+        query();
+
+        if ( query.size() == 0ul ) {
+            return;
+        }
+
+        data.reserve( to_day - from_day );
+
+        int day{0}, count{0};
+
+        while ( query->next() ) {
+            const int next_day{ toInt( query[0] ) };
+            if ( next_day == day ) {
+                ++ count;
+                continue; // avoids resetting the count at the end
+
+            } else if ( day > 0 ) {
+                // any loop-round except the first
+                set_date( year, month , day );
+                push_data( count );
+                for ( int d{day+1}; d<next_day; ++d ) {
+                    // append any missing day with a zero value
+                    set_date( year, month , d );
+                    push_data( 0 );
                 }
-                // only select non-NULL values
-                stmt += QString(" AND \"%1\" IS NOT NULL")
-                    .arg( log_field_2.replace("'","''") );
-                // apply a filter if present
-                if ( ! field_filter_2.isEmpty() ) {
-                    QString filter{ field_filter_2 };
-                    if ( log_field_2 == "response"
-                      || log_field_2 == "time_taken"
-                      || log_field_2 == "bytes_sent"
-                      || log_field_2 == "bytes_received" ) {
-                    // numbers
-                    if ( StringOps::isNumeric( field_filter_2.toStdString() ) ) {
-                        // no operator found, set defult to '='
-                        filter = QString("=%1").arg( field_filter_2 );
-                    }
-                    stmt += QString(" AND \"%1\"%2")
-                        .arg( log_field_2.replace("'","''"),
-                              filter.replace("'","''") );
-
-                    } else {
-                        stmt += QString(" AND \"%1\" LIKE '%2'")
-                            .arg( log_field_2.replace("'","''"),
-                                  QString(field_filter_2).replace("'","''") );
-                    }
-                }
-
-                stmt += QString(" ORDER BY \"day\" ASC;");
-                if ( ! query.exec( stmt ) ) {
-                    // error querying database
-                    successful &= false;
-                    DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-
-                } else if ( ! query.last() ) {
-                    // no days found, append missing days with 0 value
-                    for ( int d{from_day}; d<=to_day; ++d ) {
-                        time.setDate( QDate( year, month , d ) );
-                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                    }
-
-                } else {
-                    query.first();
-                    query.previous();
-
-                    try {
-                        data.reserve( to_day - from_day );
-                        // get query data
-                        day = count = 0;
-                        while ( query.next() ) {
-                            aux_day = query.value(0).toInt();
-                            if ( aux_day == day ) {
-                                ++ count;
-                            } else {
-                                if ( day > 0 ) {
-                                    // any loop-round except the first
-                                    time.setDate( QDate( year, month , day ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                    for ( int d{day+1}; d<aux_day; ++d ) {
-                                        // append any missing day with a zero value
-                                        time.setDate( QDate( year, month , d ) );
-                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                    }
-                                } else {
-                                    // append any missing day from 1 day before the first until the next found
-                                    int d = from_day - 1,
-                                        m = month,
-                                        y = year;
-                                    if ( d < 1 ) {
-                                        -- m;
-                                        if ( m < 1 ) {
-                                            m = 12;
-                                            -- y;
-                                        }
-                                        d = getMonthDays( y, m );
-                                    }
-                                    for ( ; d!=aux_day; ++d ) {
-                                        if ( d > getMonthDays( y, m ) ) {
-                                            d = 1;
-                                            ++ m;
-                                            if ( m > 12 ) {
-                                                m = 1;
-                                                ++ y;
-                                            }
-                                        }
-                                        time.setDate( QDate( y, m , d ) );
-                                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                    }
-                                }
-                                day = aux_day;
-                                count = 1;
-                            }
-                        }
-                        // append the last count
-                        time.setDate( QDate( year, month , day ) );
-                        data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                        // append any missing day from the last found until 1 day before the last one
-                        ++ day;
-                        if ( day > getMonthDays( year, month ) ) {
-                            ++ month;
-                            if ( month > 12 ) {
-                                month = 1;
-                                ++ year;
-                            }
-                            day = getMonthDays( year, month );
-                        }
-                        to_day += 2;
-                        if ( to_day > getMonthDays( year, month ) ) {
-                            int m{ month + 1 },
-                                y{ year };
-                            if ( m > 12 ) {
-                                m = 1;
-                                ++ y;
-                            }
-                            to_day = getMonthDays( y, m );
-                        }
-                        for ( ; day!=to_day; ++day ) {
-                            if ( day > getMonthDays( year, month ) ) {
-                                day = 1;
-                                ++ month;
-                                if ( month > 12 ) {
-                                    month = 1;
-                                    ++ year;
-                                }
-                            }
-                            time.setDate( QDate( year, month , day ) );
-                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                        }
-                    } catch (...) {
-                        // something failed
-                        successful &= false;
-                        DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                    }
-                }
-
 
             } else {
-                data.reserve( countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
-                for ( int m{1}; m<=n_months; ++m ) {
-                    stmt = QString("SELECT \"day\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3")
+                // day == 0 only in the first round of the loop
+                // append any missing day from 1 day before the first until the next found
+                int d{ from_day }, m{ month }, y{ year };
+                prev_instant( y, m, d );
+                while ( d!=next_day ) {
+                    set_date( y, m , d );
+                    push_data( 0 );
+                    next_instant( y, m, d );
+                }
+            }
+            day = next_day;
+            count = 1;
+        }
+        // append the last count
+        set_date( year, month , day );
+        push_data( count );
+        // append any missing day from the last found until 1 day after the last one
+        next_instant( year, month, day );
+        int max_day{ to_day }, max_month{ to_month }, max_year{ to_year };
+        next_instant( max_year, max_month, max_day );
+        while ( year<=max_year && month<=max_month && day<=max_day ) {
+            set_date( year, month , day );
+            push_data( 0 );
+            next_instant( year, month, day );
+        }
+
+
+    } else {
+        data.reserve( this->countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
+        bool no_data{ true };
+
+        const QString query_filters{ QStringLiteral("%1%2").arg(
+            !field_filter_1.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 ) : QString(),
+            !field_filter_2.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field_2, field_filter_2 ) : QString())
+        };
+
+        for ( int m{1}; m<=n_months; ++m ) {
+
+            QueryWrapper query{ db.getQuery() };
+
+            query << QStringLiteral(R"(SELECT "day" FROM "%1" WHERE "year"=%2 AND "month"=%3)")
                         .arg( web_server )
                         .arg( year ).arg( month );
 
-                    if ( m == 1 ) {
-                        // first month, only get the day from the beginning day
-                        stmt += QString(" AND \"day\">=%1").arg( from_day );
-                    } else if ( m == n_months ) {
-                        // last month, only get the days until the ending day
-                        stmt += QString(" AND \"day\"<=%1").arg( to_day );
-                    }
+            if ( m == 1 ) {
+                // first month, only get the day from the beginning day
+                query << QStringLiteral(R"( AND "day">=%1)").arg( from_day );
+            } else if ( m == n_months ) {
+                // last month, only get the days until the ending day
+                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_day );
+            }
 
-                    // only select non-NULL values
-                    stmt += QString(" AND \"%1\" IS NOT NULL")
-                        .arg( log_field_1.replace("'","''") );
-                    // apply a filter if present
-                    if ( ! field_filter_1.isEmpty() ) {
-                        QString filter = field_filter_1;
-                        if ( log_field_1 == "response"
-                          || log_field_1 == "time_taken"
-                          || log_field_1 == "bytes_sent"
-                          || log_field_1 == "bytes_received" ) {
-                            // numbers
-                            if ( StringOps::isNumeric( field_filter_1.toStdString() ) ) {
-                                // no operator found, set defult to '='
-                                filter = QString("=%1").arg( field_filter_1 );
-                            }
-                            stmt += QString(" AND \"%1\"%2")
-                                .arg( log_field_1.replace("'","''"),
-                                      filter.replace("'","''") );
+            if ( ! query_filters.isEmpty() ) {
+                query << query_filters;
+            }
 
-                        } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2'")
-                                .arg( log_field_1.replace("'","''"),
-                                      filter.replace("'","''") );
+            query << R"( ORDER BY "day" ASC;)";
+
+            query();
+
+            if ( query.size() == 0ul ) {
+                // no data found for this month, append missing days with 0 value
+                const int max_d{ m==n_months ? to_day : this->getMonthDays( year, month ) };
+                int d{ m==1 ? from_day : 1 };
+                for ( ; d<=max_d; ++d ) {
+                    set_date( year, month , d );
+                    push_data( 0 );
+                }
+
+            } else {
+                no_data &= false;
+
+                int day{0}, count{0};
+                while ( query->next() ) {
+                    const int next_day{ toInt( query[0] ) };
+                    if ( next_day == day ) {
+                        ++ count;
+                        continue; // avoids resetting the count at the end
+
+                    } else  if ( day > 0 ) {
+                        // any loop-round except the first
+                        set_date( year, month, day++ );
+                        push_data( count );
+                        while ( day<next_day ) {
+                            // append any missing day with a zero value
+                            set_date( year, month, day++ );
+                            push_data( 0 );
                         }
-                    }
-                    // only select non-NULL values
-                    stmt += QString(" AND \"%1\" IS NOT NULL")
-                        .arg( log_field_2.replace("'","''") );
-                    // apply a filter if present
-                    if ( ! field_filter_2.isEmpty() ) {
-                        QString filter = field_filter_2;
-                        if ( log_field_2 == "response"
-                          || log_field_2 == "time_taken"
-                          || log_field_2 == "bytes_sent"
-                          || log_field_2 == "bytes_received" ) {
-                            // numbers
-                            if ( StringOps::isNumeric( field_filter_2.toStdString() ) ) {
-                                // no operator found, set defult to '='
-                                filter = QString("=%1").arg( field_filter_2 );
-                            }
-                            stmt += QString(" AND \"%1\"%2")
-                                .arg( log_field_2.replace("'","''"),
-                                      filter.replace("'","''") );
-
-                        } else {
-                            stmt += QString(" AND \"%1\" LIKE '%2'")
-                                .arg( log_field_2.replace("'","''"),
-                                      QString(field_filter_2).replace("'","''") );
-                        }
-                    }
-
-                    // quary the database
-                    stmt += " ORDER BY \"day\" ASC;";
-                    if ( ! query.exec( stmt ) ) {
-                        // error querying database
-                        successful = false;
-                        DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
 
                     } else {
-                        try {
-                            if ( ! query.last() ) {
-                                // no days found, append missing days with 0 value
-                                int f_d{ 1 },
-                                    t_d{ getMonthDays( year, month ) };
-                                if ( m == 1 ) {
-                                    // first month, only get the day from the beginning day
-                                    f_d = from_day;
-                                } else if ( m == n_months ) {
-                                    // last month, only get the days until the ending day
-                                    t_d = to_day;
-                                }
-                                for ( ; f_d<=t_d; ++f_d ) {
-                                    time.setDate( QDate( year, month , f_d ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                }
-
-                            } else {
-                                query.first();
-                                query.previous();
-                                // get query data
-                                day = count = 0;
-                                while ( query.next() ) {
-                                    aux_day = query.value(0).toInt();
-                                    if ( aux_day == day ) {
-                                        ++ count;
-                                    } else {
-                                        if ( day > 0 ) {
-                                            // any loop-round except the first
-                                            time.setDate( QDate( year, month , day ) );
-                                            data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                            for ( int d{day+1}; d<aux_day; ++d ) {
-                                                // append any missing day with a zero value
-                                                time.setDate( QDate( year, month , d ) );
-                                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                            }
-                                        } else {
-                                            // append any missing day until the next found day
-                                            day = 1;
-                                            for ( int d{day}; d<aux_day; ++d ) {
-                                                time.setDate( QDate( year, month , d ) );
-                                                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                            }
-                                        }
-                                        day = aux_day;
-                                        count = 1;
-                                    }
-                                }
-                                // append the last count
-                                if ( day > 0 ) {
-                                    time.setDate( QDate( year, month , day ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), count ) );
-                                }
-                                // append any missing day to the end of the month with a zero value
-                                for ( int d{day+1}; d<=getMonthDays(year,month); ++d ) {
-                                    time.setDate( QDate( year, month , d ) );
-                                    data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
-                                }
-                            }
-                            // increase the month
-                            ++ month;
-                            if ( month > 12 ) {
-                                month = 1;
-                                ++ year;
-                            }
-                        } catch (...) {
-                            // something failed
-                            successful &= false;
-                            DialogSec::errGeneric( TR::tr(this->MSG_ERR_PROCESSING.c_str()), true );
-                            break;
+                        // day == 0 only in the first round of the loop
+                        // append any missing day until one before the next day with a zero value
+                        int d{ m==1 ? from_day : 2 }, m{ month }, y{ year };
+                        prev_instant( y, m, d );
+                        while ( y<=year && m<=month && d<next_day ) {
+                            set_date( y, m, d );
+                            push_data( 0 );
+                            next_instant( y, m, d );
                         }
                     }
-                    query.finish();
+                    day = next_day;
+                    count = 1;
                 }
-                // append the first day of 1 month after the last one as the last one day
-                day = 1;
-                month = to_month +1;
-                if ( month > 12 ) {
-                    month = 1;
-                    ++ year;
+                // append the last count
+                if ( day > 0 ) {
+                    set_date( year, month , day );
+                    push_data( count );
                 }
-                time.setDate( QDate( year, month , day ) );
-                data.push_back( std::make_tuple( time.toMSecsSinceEpoch(), 0 ) );
+                // append any missing day up to the last one with a zero value
+                const int max_d{ m==n_months ? to_day : this->getMonthDays( year, month ) };
+                int d{ day>0 ? day : 1 }, m{ month }, y{ year };
+                while ( y<=year && m<=month && d<=max_d ) {
+                    set_date( y, m, d );
+                    push_data( 0 );
+                    next_instant( y, m, d );
+                }
+            }
+            // increase the month
+            if ( ++month > 12 ) {
+                month = 1;
+                ++year;
             }
         }
-    }
-    if ( db.isOpen() ) {
-        db.close();
+        if ( no_data ) {
+            return;
+        }
+        // append one day after the last one
+        int day{ to_day };
+        next_instant( year, month, day );
+        set_date( year, month , day );
+        push_data( 0 );
     }
 
-    if ( successful ) {
-        if ( data.capacity() > data.size() ) {
-            data.shrink_to_fit();
-        }
-        result.emplace( data );
+    if ( data.capacity() > data.size() ) {
+        data.shrink_to_fit();
     }
+
+    result.emplace( std::move(data) );
 }
 
 
 
-bool DbQuery::getGlobalCounts( const QString& web_server, const std::map<int, std::map<int, std::vector<int>>>& dates, std::vector<std::unordered_map<QString, unsigned>>& recurs, std::tuple<QString, int>& traf_date, std::unordered_map<int, double>& traf_day, std::unordered_map<int, double>& traf_hour, std::vector<long long>& perf_time, std::vector<long long>& perf_sent, std::vector<long long>& perf_receiv, long& req_count ) const
+void DbQuery::getGlobalCounts( std::optional<GlobalsData>& result, QStringView web_server, const stats_dates_t& dates ) const
 {
-    bool successful{ true };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
 
-    QSqlDatabase db;
-    if ( QSqlDatabase::contains("qt_sql_default_connection") ) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName( QString::fromStdString( this->db_path ));
+    db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    if ( ! CheckSec::checkDatabaseFile( db_path, db_name ) ) {
-        successful &= false;
+    bool no_data{ true };
+    int max_date_year, max_date_month, max_date_day;
+    double n_days{0.0};
+    size_t max_date_count{0};
+    std::array<double, 7> week_days_count{ 0, 0, 0, 0, 0, 0, 0 };
 
-    } else if ( ! db.open() ) {
-        // error opening database
-        successful &= false;
-        QString err_msg;
-        if ( this->dialog_level == 2 ) {
-            err_msg = db.lastError().text();
-        }
-        DialogSec::errDatabaseFailedOpening( this->db_name, err_msg );
+    GlobalsData data;
 
-    } else {
-        if ( web_server != "apache" && web_server != "nginx" && web_server != "iis" ) {
-            // unexpected WebServer
-            successful &= false;
-            DialogSec::errGeneric( QString("%1:\n%2").arg( TR::tr(this->MSG_ERR_UNX_WS.c_str()), web_server ), true );
-        }
-    }
+    const auto week_day_from{
+        [](const int y, const int m, const int d)->size_t
+        { return static_cast<size_t>( QDate(y,m,d).dayOfWeek()-1 ); }
+    };
 
-    if ( successful ) {
-        QSqlQuery query{ db };
-        int d, h, tt, bs, br,
-            day, hour, week_day,
-            max_tt{0}, tot_tt{0}, num_tt{0},
-            max_bs{0}, tot_bs{0}, num_bs{0},
-            max_br{0}, tot_br{0}, num_br{0},
-            n_days{0};
-        unsigned day_count, hour_count, max_date_count{0};
-        QString protocol, method, uri, user_agent, max_date_str;
-        std::unordered_map<int, int> num_day_count{
-            {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
-        // get years
-        for ( const auto& [year, dates_] : dates ) {
-            // get months of the year
-            for ( const auto& [month, dates__] : dates_ ) {
-
-                hour=-1; hour_count=0;
-                day=-1; day_count=0;
-
-                if ( ! query.exec( QString("SELECT \"day\",\"hour\",\"protocol\",\"method\",\"uri\",\"user_agent\",\"time_taken\",\"bytes_sent\",\"bytes_received\" FROM \"%1\" WHERE \"year\"=%2 AND \"month\"=%3 ORDER BY \"day\",\"hour\" ASC;")
-                                          .arg( web_server ).arg( year ).arg( month ).replace("'","''") ) ) {
-                    // error querying database
-                    successful &= false;
-                    DialogSec::errDatabaseFailedExecuting( this->db_name, query.lastQuery(), query.lastError().text() );
-                    break;
-
-                } else if ( query.last() ) {
-                    query.first();
-                    query.previous();
-
-                    while ( query.next() ) {
-                        try {
-                            // day
-                            if ( query.value(0).isNull() ) {
-                                d = -1;
-                            } else {
-                                d = query.value(0).toInt();
-                            }
-                            // hour
-                            if ( query.value(1).isNull() ) {
-                                h = -1;
-                            } else {
-                                h = query.value(1).toInt();
-                            }
-                            // protocol
-                            if ( query.value(2).isNull() ) {
-                                protocol.clear();
-                            } else {
-                                protocol = query.value(2).toString();
-                            }
-                            // method
-                            if ( query.value(3).isNull() ) {
-                                method.clear();
-                            } else {
-                                method = query.value(3).toString();
-                            }
-                            // uri
-                            if ( query.value(4).isNull() ) {
-                                uri.clear();
-                            } else {
-                                uri = query.value(4).toString();
-                            }
-                            // user agent
-                            if ( query.value(5).isNull() ) {
-                                user_agent.clear();
-                            } else {
-                                user_agent = query.value(5).toString();
-                            }
-                            // time taken
-                            if ( query.value(6).isNull() ) {
-                                tt = -1;
-                            } else {
-                                tt = query.value(6).toInt();
-                            }
-                            // bytes sent
-                            if ( query.value(7).isNull() ) {
-                                bs = -1;
-                            } else {
-                                bs = query.value(7).toInt();
-                            }
-                            // bytes received
-                            if ( query.value(8).isNull() ) {
-                                br = -1;
-                            } else {
-                                br = query.value(8).toInt();
-                            }
-                        } catch (...) {
-                            // failed to convert to integer
-                            successful &= false;
-                            QString err_msg;
-                            if ( this->dialog_level == 2 ) {
-                                err_msg = TR::tr(this->MSG_ERR_PROCESSING.c_str());
-                            }
-                            DialogSec::errGeneric( err_msg );
-                            break;
-                        }
-                        if ( successful ) {
-
-                            // process the day count
-                            if ( d > 0 ) {
-                                if ( day == -1 ) {
-                                    day = d;
-                                }
-                                if ( d == day ) {
-                                    ++ day_count;
-                                } else {
-                                    ++ n_days;
-                                    // sum the day count to the total count
-                                    req_count += day_count;
-                                    // sum the day count to the relative day of the week count
-                                    week_day = QDate(year,month,day).dayOfWeek();
-                                    traf_day.at( week_day ) += day_count;
-                                    ++ num_day_count.at( week_day );
-                                    // check the max date count
-                                    const QString m_str{ (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) };
-                                    const QString d_str{ (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) };
-                                    if ( day_count > max_date_count ) {
-                                        max_date_count = day_count;
-                                        max_date_str = QString("%1-%2-%3").arg( year ).arg( m_str, d_str );
-                                    }
-                                    day_count = 1;
-                                    day = d;
-                                }
-                            }
-
-                            // process the hour count
-                            if ( h >= 0 ) {
-                                if ( hour == -1 ) {
-                                    hour = h;
-                                }
-                                if ( h == hour ) {
-                                    ++ hour_count;
-                                } else {
-                                    traf_hour.at( hour ) += hour_count;
-                                    hour_count = 1;
-                                    hour = h;
-                                }
-                            }
-
-                            // sum the time taken
-                            if ( tt >= 0 ) {
-                                if ( tt > max_tt ) {
-                                    max_tt = tt;
-                                }
-                                tot_tt += tt;
-                                ++ num_tt;
-                            }
-
-                            // sum the bytes sent
-                            if ( bs >= 0 ) {
-                                if ( bs > max_bs ) {
-                                    max_bs = bs;
-                                }
-                                tot_bs += bs;
-                                ++ num_bs;
-                            }
-
-                            // sum the bytes received
-                            if ( br >= 0 ) {
-                                if ( br > max_br ) {
-                                    max_br = br;
-                                }
-                                tot_br += br;
-                                ++ num_br;
-                            }
-
-                            // process the protocol
-                            if ( ! protocol.isEmpty() ) {
-                                ++ recurs.at( 0 )[ protocol ];
-                            }
-
-                            // process the method
-                            if ( ! method.isEmpty() ) {
-                                ++ recurs.at( 1 )[ method ];
-                            }
-
-                            // process the uri
-                            if ( ! uri.isEmpty() ) {
-                                ++ recurs.at( 2 )[ uri ];
-                            }
-
-                            // process the user-agent
-                            if ( ! user_agent.isEmpty() ) {
-                                ++ recurs.at( 3 )[ user_agent ];
-                            }
-                        }
+    const auto update_perf{
+        [](Perfs& perf, const int val)
+        {
+            if ( val >= 0 ) {
+                if ( const size_t v{static_cast<size_t>(val)}; v > 0ul) [[likely]] {
+                    if ( v > perf.max ) {
+                        perf.max = v;
                     }
-                    // complete the remaining stats
-                    if ( successful ) {
-                        // append the last hour
-                        if ( hour >= 0 ) {
-                            traf_hour.at( hour ) += hour_count;
-                        }
+                    perf.total += v;
+                }
+                ++ perf.count;
+            }
+        }
+    };
 
+    for ( const auto& [year, dates_] : dates ) {
+        for ( const auto& [month, dates__] : dates_ ) {
+
+            int d{-1}, h{-1}, tt{-1}, bs{-1}, br{-1},
+                day{-1}, hour{-1};
+            double hour_count{0};
+            size_t day_count{0};
+            QString protocol, method, uri, user_agent;
+
+            QueryWrapper query{ db.getQuery() };
+
+            query( QStringLiteral(R"(SELECT "day","hour","protocol","method","uri","user_agent","time_taken","bytes_sent","bytes_received" FROM "%1" WHERE "year"=%2 AND "month"=%3 ORDER BY "day","hour" ASC;)")
+                        .arg( web_server )
+                        .arg( year ).arg( month ) );
+
+            if ( query.size() == 0ul ) {
+                // no data in this month
+                continue;
+            }
+            no_data &= false;
+
+            while ( query->next() ) {
+
+                // day
+                if ( ! query[0].isNull() ) {
+                    d = toInt( query[0] );
+                }
+                // hour
+                if ( ! query[1].isNull() ) {
+                    h = toInt( query[1] );
+                }
+                // protocol
+                if ( ! query[2].isNull() ) {
+                    protocol = toString( query[2] );
+                }
+                // method
+                if ( ! query[3].isNull() ) {
+                    method = toString( query[3] );
+                }
+                // uri
+                if ( ! query[4].isNull() ) {
+                    uri = toString( query[4] );
+                }
+                // user agent
+                if ( ! query[5].isNull() ) {
+                    user_agent = toString( query[5] );
+                }
+                // time taken
+                if ( ! query[6].isNull() ) {
+                    tt = toInt( query[6] );
+                }
+                // bytes sent
+                if ( ! query[7].isNull() ) {
+                    bs = toInt( query[7] );
+                }
+                // bytes received
+                if ( ! query[8].isNull() ) {
+                    br = toInt( query[8] );
+                }
+
+                // process the day count
+                if ( d > 0 ) {
+                    if ( day == -1 ) {
+                        day = d;
+                    }
+                    if ( d == day ) {
+                        ++ day_count;
+                    } else {
+                        ++ n_days;
                         // sum the day count to the total count
-                        req_count += day_count;
-
+                        data.req_count += day_count;
                         // sum the day count to the relative day of the week count
-                        week_day = QDate(year,month,day).dayOfWeek();
-                        traf_day.at( week_day ) += day_count;
-                        ++ num_day_count.at( week_day );
-
+                        const size_t week_day{ week_day_from(year,month,day) };
+                        data.traf.day[ week_day ] += static_cast<double>(day_count);
+                        ++ week_days_count[ week_day ];
                         // check the max date count
-                        const QString m_str{ (month<10) ? QString("0%1").arg(month) : QString("%1").arg(month) };
-                        const QString d_str{ (day<10) ? QString("0%1").arg(day) : QString("%1").arg(day) };
                         if ( day_count > max_date_count ) {
                             max_date_count = day_count;
-                            max_date_str = QString("%1-%2-%3").arg( year ).arg( m_str, d_str );
+                            max_date_year = year;
+                            max_date_month = month;
+                            max_date_day = day;
                         }
+                        day_count = 1;
+                        day = d;
                     }
                 }
-                query.finish();
-                if ( ! successful ) { break; }
+
+                // process the hour count
+                if ( h >= 0 ) {
+                    if ( hour == -1 ) {
+                        hour = h;
+                    }
+                    if ( h == hour ) {
+                        ++ hour_count;
+                    } else {
+                        data.traf.hour[ hour ] += hour_count;
+                        hour_count = 1;
+                        hour = h;
+                    }
+                }
+
+                // sum the time taken
+                update_perf( data.perf.time_taken, tt );
+
+                // sum the bytes sent
+                update_perf( data.perf.bytes_sent, bs );
+
+                // sum the bytes received
+                update_perf( data.perf.bytes_recv, br );
+
+                // process the protocol
+                if ( ! protocol.isEmpty() ) {
+                    ++ data.recurs.protocol[ protocol ];
+                }
+
+                // process the method
+                if ( ! method.isEmpty() ) {
+                    ++ data.recurs.method[ method ];
+                }
+
+                // process the uri
+                if ( ! uri.isEmpty() ) {
+                    ++ data.recurs.uri[ uri ];
+                }
+
+                // process the user-agent
+                if ( ! user_agent.isEmpty() ) {
+                    ++ data.recurs.user_agent[ user_agent ];
+                }
             }
-            if ( ! successful ) { break; }
+
+            // complete the remaining stats
+
+            // append the last hour
+            if ( hour >= 0 ) {
+                data.traf.hour[ hour ] += hour_count;
+            }
+
+            // sum the day count to the total count
+            data.req_count += day_count;
+
+            // sum the day count to the relative day of the week count
+            const size_t week_day{ week_day_from(year,month,day) };
+            data.traf.day[ week_day ] += static_cast<double>(day_count);
+            ++ week_days_count[ week_day ];
+
+            // check the max date count
+            if ( day_count > max_date_count ) {
+                max_date_count = day_count;
+                max_date_year = year;
+                max_date_month = month;
+                max_date_day = day;
+            }
         }
+    }
+    if ( no_data ) {
+        return;
+    }
 
-        // final process for some of the values
-        if ( successful ) {
+    // finally process some of the values
 
-            // process the hours of the day
-            for ( int i{0}; i<24; ++i ) {
-                if ( n_days > 0 ) {
-                    traf_hour.at( i ) /= n_days;
-                }
-            }
+    // process the hours of the day
+    if ( n_days > 0.0 ) {
+        std::transform( data.traf.hour.cbegin(), data.traf.hour.cend(), data.traf.hour.begin(),
+                        [n_days](const double count){ return count / n_days; } );
+    }
 
-            // process the day of the week
-            for ( int i{1}; i<8; ++i ) {
-                const int& x{ num_day_count.at( i ) };
-                if ( x > 0 ) {
-                    traf_day.at( i ) /= x;
-                }
-            }
-
-            // make the max-date tuple
-            traf_date = std::make_tuple( max_date_str, max_date_count );
-
-            // time-taken perfs
-            perf_time = { max_tt, tot_tt, num_tt };
-            // bytes-sent perfs
-            perf_sent = { max_bs, tot_bs, num_bs };
-            // bytes-received perfs
-            perf_receiv = { max_br, tot_br, num_br };
+    // process the day of the week
+    for ( auto [total,count] : std::views::zip( data.traf.day, week_days_count ) ) {
+        if ( count > 0.0 ) {
+            total /= count;
         }
     }
 
-    return successful;
+    // make the max-date tuple
+    data.traf.date = std::make_tuple(
+        PrintSec::printableDate( max_date_year, max_date_month, max_date_day ),
+        QString::number( max_date_count ) );
+
+    result.emplace( std::move(data) );
 }
 
