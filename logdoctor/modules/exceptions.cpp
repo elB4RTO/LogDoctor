@@ -3,14 +3,21 @@
 
 #include <iostream>
 
+#include <QString>
+
+
+DoNotCatchException::DoNotCatchException( const char* msg )
+{
+    std::cerr << "LogDoctor: Exception: " << msg << std::endl;
+}
+
 
 /////////////////
 //// GENERIC ////
 GenericException::GenericException( const std::string& msg, const bool to_sys )
 {
     if ( to_sys ) { // when sys, leave un-catched
-        std::cout << "LogDoctor: Exception: " << msg << std::endl;
-        std::cerr << "LogDoctor: Exception: " << msg << std::endl;
+        std::cerr << "LogDoctor: GenericException: " << msg << std::endl;
     } else {
         this->msg = QString::fromStdString( msg );
     }
@@ -25,7 +32,6 @@ const QString& GenericException::what()
 //// WEB SERVER ////
 WebServerException::WebServerException( const std::string& msg ) // leave un-catched
 {
-    std::cout << "LogDoctor: WebServerException: " << msg << std::endl;
     std::cerr << "LogDoctor: WebServerException: " << msg << std::endl;
     /*this->msg = QString::fromStdString( msg );*/
 }
@@ -39,7 +45,6 @@ WebServerException::WebServerException( const std::string& msg ) // leave un-cat
 //// LOG FORMAT ////
 LogFormatException::LogFormatException( const std::string& msg )
 {
-    std::cout << "LogDoctor: LogFormatException: " << msg << std::endl;
     std::cerr << "LogDoctor: LogFormatException: " << msg << std::endl;
     this->msg = QString::fromStdString( msg );
 }
@@ -53,7 +58,6 @@ const QString& LogFormatException::what()
 //// LOG PARSER ////
 LogParserException::LogParserException( const std::string& txt , const std::string& val )
 {
-    std::cout << "LogDoctor: LogParserException: " << txt << ": '" << val << "'" << std::endl;
     std::cerr << "LogDoctor: LogParserException: " << txt << ": '" << val << "'" << std::endl;
     this->msg = QString("%1:\n'%2'").arg(
         QString::fromStdString( txt ),
@@ -69,7 +73,6 @@ const QString& LogParserException::what()
 //// DATE-TIME ////
 DateTimeException::DateTimeException( const std::string& msg ) // leave un-catched
 {
-    std::cout << "LogDoctor: DateTimeException: " << msg << std::endl;
     std::cerr << "LogDoctor: DateTimeException: " << msg << std::endl;
     /*this->msg = QString::fromStdString( msg );*/
 }
@@ -79,11 +82,23 @@ DateTimeException::DateTimeException( const std::string& msg ) // leave un-catch
 }*/
 
 
+////////////////////
+//// CONVERSION ////
+ConversionException::ConversionException( const std::string& msg )
+{
+    //std::cerr << "LogDoctor: ConversionException: " << msg << std::endl;
+    this->msg = QString::fromStdString( msg );
+}
+const QString& ConversionException::what()
+{
+    return msg;
+}
+
+
 //////////////////////////
 //// BLACK/WARN LISTS ////
 BWlistException::BWlistException( const std::string& msg )
 {
-    std::cout << "LogDoctor: BWlistException: " << msg << std::endl;
     std::cerr << "LogDoctor: BWlistException: " << msg << std::endl;
     /*this->msg = QString::fromStdString( msg );*/
 }
@@ -91,3 +106,16 @@ BWlistException::BWlistException( const std::string& msg )
 {
     return msg;
 }*/
+
+
+//////////////////
+//// DATABASE ////
+DatabaseException::DatabaseException( QString&& msg )
+    : msg{ std::move(msg) }
+{
+
+}
+const QString& DatabaseException::what() const noexcept
+{
+    return msg;
+}

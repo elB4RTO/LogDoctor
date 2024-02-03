@@ -7,6 +7,22 @@
 #include <exception>
 
 
+//! LogDoctorException
+/*!
+    Base class for some internal exceptions.
+    Used on its own when a message has already been shown,
+    or there is no need to show one.
+    \see CrapviewException, DatabaseException
+ */
+class LogDoctorException {};
+
+
+struct DoNotCatchException final
+{
+    explicit DoNotCatchException( const char* msg );
+};
+
+
 //! GenericException
 /*!
     Generic exception for general purposes
@@ -82,6 +98,20 @@ private:
 };
 
 
+//! ConversionException
+/*!
+    Exception related to failure in converting something
+*/
+class ConversionException final : public std::exception {
+public:
+    explicit ConversionException( const std::string& msg );
+    const QString& what();
+
+private:
+    QString msg;
+};
+
+
 //! BWlistException
 /*!
     Exception related to a blacklist/warnlist
@@ -94,6 +124,20 @@ public:
 private:
     QString msg;
     using std::exception::what;*/
+};
+
+
+//! DatabaseException
+/*!
+    Exception related to the database
+*/
+class DatabaseException final : public LogDoctorException {
+public:
+    explicit DatabaseException( QString&& msg );
+    const QString& what() const noexcept;
+
+private:
+    QString msg;
 };
 
 
