@@ -164,6 +164,9 @@ public:
     //! A selected log file appears twice in the selection
     static int choiceDuplicateFile( const QString& msg, QWidget* parent=nullptr );
 
+    //! An error occured while inserting the new files' hashes into the daabase
+    static void errFailedInsertUsedHashes( QWidget* parent=nullptr );
+
     ///////////////////
     //// LOGS SIZE ////
 
@@ -198,6 +201,16 @@ public:
 
     //! An error occured while parsing logs
     static void errFailedParsingLogs( const QString& message, QWidget* parent=nullptr );
+
+
+    ////////////////////
+    //// STATISTICS ////
+
+    //! An error occured while processing data
+    static void errProcessingStatsData( const QString& err, QWidget* parent=nullptr );
+
+    //! No data, cannot draw the chart
+    static void msgNoDataForStats( QWidget* parent=nullptr );
 
 
     ///////////////
@@ -240,6 +253,13 @@ public:
 
     //! Failed to create a directory
     static void errFailedMakeDir( const QString& msg, const QString& err, QWidget* parent=nullptr );
+
+
+    //////////////
+    //// DATA ////
+
+    //! Failed to convert some data from one type into another
+    static void errConvertingData( const QString& fromType, const QString& intoType, const QString& value, QWidget* parent=nullptr );
 
     /////////////////
     //// CHOICES ////
