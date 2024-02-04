@@ -7,7 +7,8 @@
 #include "globals/db_names.h"
 #include "globals/global_configs.h"
 
-#include "customs/treewidgetitems.h"
+#include "customs/logfile_treewidgetitem.h"
+#include "customs/models/logfields_listmodel.h"
 
 #include "utilities/checks.h"
 #include "utilities/colors.h"
@@ -24,6 +25,8 @@
 #include "modules/craphelp/craphelp.h"
 #include "modules/crapup/crapup.h"
 #include "modules/crapinfo/crapinfo.h"
+
+#include "modules/crapview/lib.h"
 #include "modules/crapview/modules/filters.h"
 
 #include "tools/crapnote/crapnote.h"
@@ -140,6 +143,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect( &this->craplog, &Craplog::finishedRefreshing, this, &MainWindow::refreshFinished);
     connect( this, &MainWindow::runCraplog, &this->craplog, &Craplog::startWorking);
     connect( &this->craplog, &Craplog::finishedWorking, this, &MainWindow::craplogFinished);
+
+
+    //////////////////
+    //// CRAPVIEW ////
+    this->ui->box_StatsDay_LogsField->setModel( new DaytimeLogFieldsListModel() );
+    this->ui->box_StatsRelat_LogsField_1->setModel( new RelationslLogFieldsListModel() );
+    this->ui->box_StatsRelat_LogsField_2->setModel( new RelationslLogFieldsListModel() );
 
 
     ///////////////////
@@ -1034,7 +1044,7 @@ void MainWindow::backupDatabase() const
     bool proceed{ true };
     std::error_code err;
     QString err_msg;
-    if ( IOutils::checkFile( this->db_data_path+"/collection.db" ) ) {
+    if ( IOutils::checkFile( this->db_data_path+"/"+DatabasesNames::data ) ) {
         // db exists and is a file
         const std::string path{ this->db_data_path+"/backups" };
         if ( std::filesystem::exists( path ) ) {
@@ -1090,8 +1100,8 @@ void MainWindow::backupDatabase() const
     if ( proceed ) {
         // copy the database to a new file
         proceed = std::filesystem::copy_file(
-            this->db_data_path+"/collection.db",
-            this->db_data_path+"/backups/collection.db.0",
+            this->db_data_path+"/"+DatabasesNames::data,
+            this->db_data_path+"/backups/"+DatabasesNames::data+".0",
             std::filesystem::copy_options::update_existing,
             err );
         if ( ! proceed ) {
@@ -1102,7 +1112,7 @@ void MainWindow::backupDatabase() const
             DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ), err_msg );
         } else {
             // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
-            std::string path{ this->db_data_path+"/backups/collection.db."+std::to_string(this->db_backups_number) };
+            std::string path{ this->db_data_path+"/backups/"+DatabasesNames::data+"."+std::to_string(this->db_backups_number) };
             std::string new_path;
             if ( std::filesystem::exists( path ) ) {
                 std::ignore = std::filesystem::remove_all( path, err );
@@ -1119,9 +1129,9 @@ void MainWindow::backupDatabase() const
             if ( proceed ) {
                 // cascade rename
                 for ( int n=this->db_backups_number-1; n>=0; --n ) {
-                    path = this->db_data_path+"/backups/collection.db."+std::to_string( n );
+                    path = this->db_data_path+"/backups/"+DatabasesNames::data+"."+std::to_string( n );
                     if ( std::filesystem::exists( path ) ) {
-                        new_path = this->db_data_path+"/backups/collection.db."+std::to_string( n+1 );
+                        new_path = this->db_data_path+"/backups/"+DatabasesNames::data+"."+std::to_string( n+1 );
                         std::filesystem::rename( path, new_path, err );
                         if ( err.value() ) {
                             err_msg = QString::fromStdString( err.message() );
@@ -1782,48 +1792,31 @@ void MainWindow::updateUiLanguage()
         this->ui->retranslateUi( this );
         // stats warn table header
         {
-            const QStringList h{
-                this->crapview.getLogFieldString(0),
-                TR::tr( WORDS__DATE.c_str() ),
-                TR::tr( WORDS__TIME.c_str() ),
-                this->crapview.getLogFieldString(10),
-                this->crapview.getLogFieldString(11),
-                this->crapview.getLogFieldString(12),
-                this->crapview.getLogFieldString(13),
-                this->crapview.getLogFieldString(14),
-                this->crapview.getLogFieldString(21),
-                this->crapview.getLogFieldString(20),
-                this->crapview.getLogFieldString(22),
-                this->crapview.getLogFieldString(18),
-                this->crapview.getLogFieldString(17),
-                this->crapview.getLogFieldString(16),
-                this->crapview.getLogFieldString(15)  };
+            const QStringList h{ this->crapview.getWarnHeaderColumns() };
             this->ui->table_StatsWarn->setColumnCount( h.size() );
             this->ui->table_StatsWarn->setHorizontalHeaderLabels( h );
         }
         // stats speed table header
         {
-            const QStringList h{
-                this->crapview.getLogFieldString(15),
-                this->crapview.getLogFieldString(12),
-                this->crapview.getLogFieldString(13),
-                this->crapview.getLogFieldString(11),
-                this->crapview.getLogFieldString(10),
-                this->crapview.getLogFieldString(14),
-                TR::tr( WORDS__TIME.c_str() ) };
+            const QStringList h{ this->crapview.getSpeedHeaderColumns() };
             this->ui->table_StatsSpeed->setColumnCount( h.size() );
             this->ui->table_StatsSpeed->setHorizontalHeaderLabels( h );
         }
         // stats count buttons
-        this->ui->button_StatsCount_Protocol->setText(  this->crapview.getLogFieldString( 10 ) );
-        this->ui->button_StatsCount_Method->setText(    this->crapview.getLogFieldString( 11 ) );
-        this->ui->button_StatsCount_Uri->setText(       this->crapview.getLogFieldString( 12 ) );
-        this->ui->button_StatsCount_Query->setText(     this->crapview.getLogFieldString( 13 ) );
-        this->ui->button_StatsCount_Response->setText(  this->crapview.getLogFieldString( 14 ) );
-        this->ui->button_StatsCount_Referrer->setText(  this->crapview.getLogFieldString( 18 ) );
-        this->ui->button_StatsCount_Cookie->setText(    this->crapview.getLogFieldString( 22 ) );
-        this->ui->button_StatsCount_UserAgent->setText( this->crapview.getLogFieldString( 21 ) );
-        this->ui->button_StatsCount_Client->setText(    this->crapview.getLogFieldString( 20 ) );
+        this->ui->button_StatsCount_Protocol->setText(  TR::tr( FIELDS__PROTOCOL.c_str()      ) );
+        this->ui->button_StatsCount_Method->setText(    TR::tr( FIELDS__METHOD.c_str()        ) );
+        this->ui->button_StatsCount_Uri->setText(       TR::tr( FIELDS__URI.c_str()           ) );
+        this->ui->button_StatsCount_Query->setText(     TR::tr( FIELDS__QUERY.c_str()         ) );
+        this->ui->button_StatsCount_Response->setText(  TR::tr( FIELDS__RESPONSE_CODE.c_str() ) );
+        this->ui->button_StatsCount_Referrer->setText(  TR::tr( FIELDS__REFERRER.c_str()      ) );
+        this->ui->button_StatsCount_Cookie->setText(    TR::tr( FIELDS__COOKIE.c_str()        ) );
+        this->ui->button_StatsCount_UserAgent->setText( TR::tr( FIELDS__USER_AGENT.c_str()    ) );
+        this->ui->button_StatsCount_Client->setText(    TR::tr( FIELDS__CLIENT.c_str()        ) );
+        // stats day log fields
+        dynamic_cast<LogFieldsListModel*>(this->ui->box_StatsDay_LogsField->model())->translate();
+        // stats relat log fields
+        dynamic_cast<LogFieldsListModel*>(this->ui->box_StatsRelat_LogsField_1->model())->translate();
+        dynamic_cast<LogFieldsListModel*>(this->ui->box_StatsRelat_LogsField_2->model())->translate();
         // configs
         {
             QTreeWidgetItemIterator it( this->ui->tree_ConfSections );
@@ -1836,12 +1829,12 @@ void MainWindow::updateUiLanguage()
         // configs warn/black-lists
         {
             const QStringList wl{
-                this->crapview.getLogFieldString( 11 ),
-                this->crapview.getLogFieldString( 12 ),
-                this->crapview.getLogFieldString( 21 ),
-                this->crapview.getLogFieldString( 20 ) };
+                TR::tr( FIELDS__METHOD.c_str()     ),
+                TR::tr( FIELDS__URI.c_str()        ),
+                TR::tr( FIELDS__USER_AGENT.c_str() ),
+                TR::tr( FIELDS__CLIENT.c_str()     ) };
             const QStringList bl{
-                this->crapview.getLogFieldString( 20 ) };
+                TR::tr( FIELDS__CLIENT.c_str() ) };
             // set
             this->ui->box_ConfApache_Warnlist_Field->clear();
             this->ui->box_ConfApache_Warnlist_Field->addItems( wl );
@@ -1973,19 +1966,19 @@ void MainWindow::makeInitialChecks()
 
     if ( ok ) {
         // statistics' database
-        if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/collection.db" ) ) {
+        if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/" + DatabasesNames::data ) ) {
             // checks failed, abort
             ok &= false;
         } else {
             this->crapview.setDbPath( this->db_data_path );
             this->craplog.setStatsDatabasePath( this->db_data_path );
             // used-files' hashes' database
-            if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path + "/hashes.db" ) ) {
+            if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path + "/" + DatabasesNames::hashes ) ) {
                 // checks failed, abort
                 ok &= false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/hashes.db" );
+                this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/" + DatabasesNames::hashes );
             }
         }
     }
@@ -2038,11 +2031,11 @@ void MainWindow::makeInitialChecks()
 
 bool MainWindow::checkDataDB()
 {
-    if ( ! this->initiating ) { // avoid recursions
+    if ( this->initiating ) { // avoid recursions
         return false;
     }
 
-    const std::string path{ this->db_data_path + "/collection.db" };
+    const std::string path{ this->db_data_path + "/" + DatabasesNames::data };
     if ( ! CheckSec::checkCollectionDatabase( path ) ) {
         // db invalid and failed to create a new one or user refused to do so
         this->crapview.clearDates();
@@ -2521,7 +2514,6 @@ void MainWindow::on_button_Tab_StatsGlob_clicked()
 }
 
 
-
 ////////////
 //// DB ////
 ////////////
@@ -2557,10 +2549,10 @@ bool MainWindow::dbUsable()
 {
     if ( ! this->db_working ) {
         if ( this->db_ok ) {
-            const std::string path{ this->db_data_path + "/collection.db" };
+            const std::string path{ this->db_data_path + "/" + DatabasesNames::data };
             return IOutils::checkFile( path, true );
         } else {
-            this->checkDataDB(); // db is invalid, attempt to renew
+            return this->checkDataDB(); // db is invalid, attempt to renew
         }
     }
     return false;
@@ -3679,7 +3671,7 @@ void MainWindow::checkStatsDayDrawable()
             aux &= false;
         }
         // check filter string validity
-        if ( !this->getStatsDayParsedFilter().has_value() ) {
+        if ( ! this->getStatsDayParsedFilter().has_value() ) {
             aux &= false;
         }
         this->ui->button_StatsDay_Draw->setEnabled( aux );
@@ -3690,10 +3682,15 @@ void MainWindow::checkStatsDayDrawable()
     }
 }
 
+LogField MainWindow::getStatsDayLogField() const
+{
+    const QModelIndex idx{ this->ui->box_StatsDay_LogsField->model()->index(
+        this->ui->box_StatsDay_LogsField->currentIndex(), 0 ) };
+    return this->ui->box_StatsDay_LogsField->model()->data(idx,Qt::UserRole).value<LogField>();
+}
 std::optional<QString> MainWindow::getStatsDayParsedFilter() const
 {
-    const int fld_i{ this->ui->box_StatsDay_LogsField->currentIndex() };
-    if ( fld_i == 4 ) {
+    if ( this->getStatsDayLogField() == LogField::ResponseCode ) {
         return FilterOps::parseNumericFilter( this->ui->inLine_StatsDay_Filter->text() );
     } else {
         return FilterOps::parseTextualFilter( this->ui->inLine_StatsDay_Filter->text() );
@@ -3702,14 +3699,9 @@ std::optional<QString> MainWindow::getStatsDayParsedFilter() const
 
 void MainWindow::on_box_StatsDay_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsDay_LogsField->clear();
     this->ui->box_StatsDay_FromYear->clear();
     this->ui->box_StatsDay_ToYear->clear();
     if ( index >= 0 ) {
-        // refresh fields
-        this->ui->box_StatsDay_LogsField->addItems(
-            this->crapview.getFields( "Daytime" ));
-        this->ui->box_StatsDay_LogsField->setCurrentIndex( 0 );
         // refresh dates
         const QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
         this->ui->box_StatsDay_FromYear->addItems( years );
@@ -3908,10 +3900,11 @@ void MainWindow::drawStatsDay()
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
         this->ui->box_StatsDay_FromDay->currentText(),
-        ( period ) ? this->ui->box_StatsDay_ToYear->currentText() : "",
-        ( period ) ? this->ui->box_StatsDay_ToMonth->currentText() : "",
-        ( period ) ? this->ui->box_StatsDay_ToDay->currentText() : "",
+        period ? this->ui->box_StatsDay_ToYear->currentText()  : QString(),
+        period ? this->ui->box_StatsDay_ToMonth->currentText() : QString(),
+        period ? this->ui->box_StatsDay_ToDay->currentText()   : QString(),
         this->ui->box_StatsDay_LogsField->currentText(),
+        this->getStatsDayLogField(),
         this->getStatsDayParsedFilter().value() );
     ColorSec::applyChartTheme(
         this->fonts,
@@ -3976,34 +3969,41 @@ void MainWindow::checkStatsRelatDrawable()
     }
 }
 
+
+LogField MainWindow::getStatsRelatLogField( const int filter_num ) const
+{
+    const QComboBox* cb{ ( filter_num == 1 )
+                         ? this->ui->box_StatsRelat_LogsField_1
+                         : this->ui->box_StatsRelat_LogsField_2 };
+
+    const QModelIndex idx{ cb->model()->index( cb->currentIndex(), 0 ) };
+    return cb->model()->data(idx,Qt::UserRole).value<LogField>();
+}
 std::optional<QString> MainWindow::getStatsRelatParsedFilter( const int filter_num ) const
 {
-    const int fld_i{ ( filter_num == 1 )
-                     ? this->ui->box_StatsRelat_LogsField_1->currentIndex()
-                     : this->ui->box_StatsRelat_LogsField_2->currentIndex() };
     const QString fld_t{ ( filter_num == 1 )
                          ? this->ui->inLine_StatsRelat_Filter_1->text()
                          : this->ui->inLine_StatsRelat_Filter_2->text() };
-    if ( fld_i >= 4 && fld_i <= 7 ) {
-        return FilterOps::parseNumericFilter( fld_t );
-    } else {
-        return FilterOps::parseTextualFilter( fld_t );
+
+    switch ( this->getStatsRelatLogField( filter_num ) ) {
+        case LogField::ResponseCode:
+            [[fallthrough]];
+        case LogField::TimeTaken:
+            [[fallthrough]];
+        case LogField::BytesReceived:
+            [[fallthrough]];
+        case LogField::BytesSent:
+            return FilterOps::parseNumericFilter( fld_t );
+        default:
+            return FilterOps::parseTextualFilter( fld_t );
     }
 }
 
 void MainWindow::on_box_StatsRelat_WebServer_currentIndexChanged(int index)
 {
-    this->ui->box_StatsRelat_LogsField_1->clear();
-    this->ui->box_StatsRelat_LogsField_2->clear();
     this->ui->box_StatsRelat_FromYear->clear();
     this->ui->box_StatsRelat_ToYear->clear();
     if ( index >= 0 ) {
-        // refresh fields
-        const QStringList fields{ this->crapview.getFields( "Relational" ) };
-        this->ui->box_StatsRelat_LogsField_1->addItems( fields );
-        this->ui->box_StatsRelat_LogsField_2->addItems( fields );
-        this->ui->box_StatsRelat_LogsField_1->setCurrentIndex( 0 );
-        this->ui->box_StatsRelat_LogsField_2->setCurrentIndex( 0 );
         // refresh dates
         const QStringList years{ this->crapview.getYears( this->wsFromIndex( index ) ) };
         // from
@@ -4197,8 +4197,10 @@ void MainWindow::drawStatsRelat()
         this->ui->box_StatsRelat_ToMonth->currentText(),
         this->ui->box_StatsRelat_ToDay->currentText(),
         this->ui->box_StatsRelat_LogsField_1->currentText(),
+        this->getStatsRelatLogField( 1 ),
         this->getStatsRelatParsedFilter( 1 ).value(),
         this->ui->box_StatsRelat_LogsField_2->currentText(),
+        this->getStatsRelatLogField( 2 ),
         this->getStatsRelatParsedFilter( 2 ).value() );
     ColorSec::applyChartTheme(
         this->fonts,

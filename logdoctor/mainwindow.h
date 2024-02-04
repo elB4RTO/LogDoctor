@@ -29,6 +29,8 @@ class QCloseEvent;
 class QTranslator;
 class QTreeWidgetItem;
 
+enum class LogField;
+
 
 namespace Ui {
     class MainWindow;
@@ -865,9 +867,11 @@ private:
     void resetStatsCountButtons();
 
     // day-time
+    LogField getStatsDayLogField() const;
     std::optional<QString> getStatsDayParsedFilter() const;
 
     // relational
+    LogField getStatsRelatLogField( const int filter_num ) const;
     std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
 
     // globals
