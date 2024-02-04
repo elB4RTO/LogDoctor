@@ -15,50 +15,86 @@ struct Warnlists final
 
     explicit Warnlists() noexcept = default;
 
-    //! \throw DoNotCatchException
+    //! Returns whether the requested warnlist is in use
+    /*!
+        \throw DoNotCatchException
+    */
     inline bool isUsed( const WebServer ws, const WarnlistField fld )
     { return get( ws ).isUsed( fld ); }
 
-    //! \throw DoNotCatchException
+    //! Sets the requested warnlist in the given in-use condition
+    /*!
+        \throw DoNotCatchException
+    */
     inline void setUsed( const WebServer ws, const WarnlistField fld, const bool used )
     { get( ws ).setUsed( fld, used ); }
 
-    //! \throw DoNotCatchException
+    //! Returns a reference to the requested warnlist
+    /*!
+        \throw DoNotCatchException
+    */
     Warnlist& get( const WebServer ws );
 
-    //! \throw DoNotCatchException
+    //! Returns a reference to the requested warnlist
+    /*!
+        \throw DoNotCatchException
+    */
     inline WarnlistItem& get( const WebServer ws, const WarnlistField fld )
     { return get( ws ).get( fld ); }
 
-    //! \throw DoNotCatchException
+    //! Returns a reference to the requested warnlist
+    /*!
+        \throw DoNotCatchException
+    */
     inline std::vector<std::string>& getList( const WebServer ws, const WarnlistField fld )
     { return get( ws, fld ).list; }
 
-    //! \throw DoNotCatchException
+    //! Returns a const reference to the requested warnlist
+    /*!
+        \throw DoNotCatchException
+    */
     inline const std::vector<std::string>& getListConst( const WebServer ws, const WarnlistField fld )
     { return get( ws, fld ).list; }
 
-    //! \throw BWlistException, DoNotCatchException
+    //! Replaces the requested warnlist with the one provided
+    /*!
+        \throw BWlistException, DoNotCatchException
+    */
     inline void setList( const WebServer ws, const WarnlistField fld, const std::vector<std::string>& list )
     { get( ws, fld ).set( list ); }
 
-    //! \throw BWlistException, DoNotCatchException
+    //! Clears the requested warnlist
+    /*!
+        \throw BWlistException, DoNotCatchException
+    */
     inline void clearList( const WebServer ws, const WarnlistField fld )
     { getList( ws, fld ).clear(); }
 
-    //! \throw BWlistException, DoNotCatchException
+    //! Adds the provided item to the requested warnlist
+    /*!
+        \throw BWlistException, DoNotCatchException
+    */
     inline void addItem( const WebServer ws, const WarnlistField fld, const std::string& item )
     { get( ws, fld ).add( item ); }
 
-    //! \throw BWlistException
+    //! Remove the requested item from the requested warnlist
+    /*!
+        \throw BWlistException
+    */
     inline void removeItem( const WebServer ws, const WarnlistField fld, const std::string& item )
     { get( ws, fld ).remove( item ); }
 
-    //! \throw BWlistException
+    //! Moves the requested item one position up in the requested warnlist
+    /*!
+        \throw BWlistException
+    */
     inline int moveUpItem( const WebServer ws, const WarnlistField fld, const std::string& item )
     { return get( ws, fld ).moveUp( item ); }
 
-    //! \throw BWlistException
+    //! Moves the requested item one position down in the requested warnlist
+    /*!
+        \throw BWlistException
+    */
     inline int moveDownItem( const WebServer ws, const WarnlistField fld, const std::string& item )
     { return get( ws, fld ).moveDown( item ); }
 };

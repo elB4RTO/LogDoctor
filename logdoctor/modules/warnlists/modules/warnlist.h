@@ -14,14 +14,23 @@ struct Warnlist final
 
     explicit Warnlist() noexcept;
 
-    //! \throw DoNotCatchException
+    //! Returns a reference to the requested warnlist item
+    /*!
+        \throw DoNotCatchException
+    */
     WarnlistItem& get( const WarnlistField field );
 
-    //! \throw DoNotCatchException
+    //! Returns whether the requested warnlist is in use
+    /*!
+        \throw DoNotCatchException
+    */
     inline bool isUsed( const WarnlistField field )
     { return get( field ).used; }
 
-    //! \throw DoNotCatchException
+    //! Sets the requested warnlist in the given in-use condition
+    /*!
+        \throw DoNotCatchException
+    */
     inline void setUsed( const WarnlistField field, const bool used )
     { get( field ).used = used; }
 };

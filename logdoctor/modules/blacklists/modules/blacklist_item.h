@@ -19,26 +19,52 @@ struct BlacklistItem final
     BlacklistItem( const bool use, const BlacklistField fld ) noexcept
         : used{use}, field{fld} {}
 
-    //! \throw DoNotCatchException
+    //! Returns the name of the field to which the list is associated
+    /*!
+        The name is translatable
+        \throw DoNotCatchException
+    */
     const char* fieldName() const;
 
-    //! \throw BWlistException, DoNotCatchException
+    //! Replaces the current list with the one provided
+    /*!
+        All the items will be sanitized before actually
+        becoming part of the list
+        \throw BWlistException, DoNotCatchException
+    */
     void set( const std::vector<std::string>& new_list );
 
-    //! \throw BWlistException, DoNotCatchException
+    //! Adds the provided item to the list
+    /*!
+        The item will be sanitized before actually
+        being added to the list
+        \throw BWlistException, DoNotCatchException
+    */
     void add( const std::string& item );
 
-    //! \throw BWlistException
+    //! Remove the requested item from the list
+    /*!
+        \throw BWlistException
+    */
     void remove( const std::string& item );
 
-    //! \throw BWlistException
+    //! Moves the requested item one position up in the list
+    /*!
+        \throw BWlistException
+    */
     int moveUp( const std::string& item );
 
-    //! \throw BWlistException
+    //! Moves the requested item one position down in the list
+    /*!
+        \throw BWlistException
+    */
     int moveDown( const std::string& item );
 
 private:
-    //! \throw BWlistException, DoNotCatchException
+    //! Returns a sanitized item
+    /*!
+        \throw BWlistException, DoNotCatchException
+    */
     std::string sanitized( const std::string& item ) const;
 };
 

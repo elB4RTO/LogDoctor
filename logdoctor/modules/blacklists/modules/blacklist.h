@@ -11,14 +11,23 @@ struct Blacklist final
 
     explicit Blacklist() noexcept;
 
-    //! \throw DoNotCatchException
+    //! Returns a reference to the requested blacklist item
+    /*!
+        \throw DoNotCatchException
+    */
     BlacklistItem& get( const BlacklistField field );
 
-    //! \throw DoNotCatchException
+    //! Returns whether the requested blacklist is in use
+    /*!
+        \throw DoNotCatchException
+    */
     inline bool isUsed( const BlacklistField field )
     { return get( field ).used; }
 
-    //! \throw DoNotCatchException
+    //! Sets the requested blacklist in the given in-use condition
+    /*!
+        \throw DoNotCatchException
+    */
     inline void setUsed( const BlacklistField field, const bool used )
     { get( field ).used = used; }
 };
