@@ -139,6 +139,7 @@ set(PROJECT_SOURCES
     modules/craplog/modules/workers/parser.cpp
     modules/craplog/modules/workers/impl/loglinedata.cpp
 
+    modules/crapview/lib.h
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
     modules/crapview/modules/lib.h
