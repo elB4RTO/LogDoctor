@@ -7,7 +7,8 @@
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
-#include "modules/craplog/modules/lib.h"
+
+#include "modules/warnlists/modules/warnlist.h"
 
 #include "modules/crapview/modules/lib.h"
 
@@ -163,7 +164,7 @@ void Crapview::sliceClicked( QPieSlice* slice )
 }
 
 
-void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString web_server, const QString year, const QString month, const QString day, const QString hour, const std::unordered_map<int, BWlist>& warnlists ) const
+void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::ChartTheme& theme, const QString web_server, const QString year, const QString month, const QString day, const QString hour, const Warnlist& warnlist ) const
 {
     std::optional<stats_warn_items_t> result;
 
@@ -191,38 +192,38 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
     const auto items{ std::move(*result) };
 
     const auto check_warnings{
-        [&warnlists](const std::array<QString,18>& line)->std::tuple<bool,std::vector<int>>
+        [&warnlist](const std::array<QString,18>& line)->std::tuple<bool,std::vector<int>>
         {
             bool is_warning{ false };
             std::vector<int> warning_cols;
             warning_cols.reserve(4ul);
-            if ( warnlists.at( 11ul ).used ) { // method
-                if ( VecOps::contains( warnlists.at( 11ul ).list, line.at( 7ul ).toStdString() ) ) {
+            if ( warnlist.method.used ) {
+                if ( VecOps::contains( warnlist.method.list, line.at( 7ul ).toStdString() ) ) {
                     is_warning |= true;
                     warning_cols.emplace_back( 4 );
                 }
             }
-            if ( warnlists.at( 12ul ).used ) { // uri
+            if ( warnlist.uri.used ) {
                 const auto target{ line.at( 8ul ).toStdString() };
-                const auto& list{ warnlists.at( 12ul ).list };
+                const auto& list{ warnlist.uri.list };
                 if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
                     // match found! skip this line
                     is_warning |= true;
                     warning_cols.emplace_back( 5 );
                 }
             }
-            if ( warnlists.at( 20ul ).used ) { // client
+            if ( warnlist.client.used ) {
                 const auto target{ line.at( 12ul ).toStdString() };
-                const auto& list{ warnlists.at( 20ul ).list };
+                const auto& list{ warnlist.client.list };
                 if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
                     // match found! skip this line
                     is_warning |= true;
                     warning_cols.emplace_back( 9 );
                 }
             }
-            if ( warnlists.at( 21ul ).used ) { // user-agent
+            if ( warnlist.user_agent.used ) {
                 const auto target{ line.at( 11ul ).toStdString() };
-                const auto& list{ warnlists.at( 21ul ).list };
+                const auto& list{ warnlist.user_agent.list };
                 if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
                     // match found! skip this line
                     is_warning |= true;

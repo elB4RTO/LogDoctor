@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<size_t>();
     qRegisterMetaType<LogFile>();
     qRegisterMetaType<WorkerDialog>();
+    qRegisterMetaType<Blacklists>();
 
     MainWindow w;
     w.show();

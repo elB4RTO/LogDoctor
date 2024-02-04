@@ -9,7 +9,7 @@
 #include <string>
 
 
-struct BWlist;
+struct Warnlist;
 
 class QTableWidget;
 
@@ -123,14 +123,14 @@ public:
         \param month The printable month name
         \param day The day
         \param hout The hour
-        \param warnlists The warnlists to check against
+        \param warnlist The warnlists to check against
     */
     void drawWarn(
         QTableWidget* table, QChartView* chart,
         const QChart::ChartTheme& theme,
         const QString web_server,
         const QString year, const QString month, const QString day, const QString hour,
-        const std::unordered_map<int, BWlist>& warnlists
+        const Warnlist& warnlist
     ) const;
 
 

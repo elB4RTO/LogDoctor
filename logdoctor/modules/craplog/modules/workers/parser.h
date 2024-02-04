@@ -6,12 +6,13 @@
 
 #include "modules/craplog/modules/lib.h"
 
+#include "modules/blacklists/modules/blacklist.h"
+
 #include <QObject>
 
 #include <unordered_map>
 
 
-struct BWlist;
 struct LogLineData;
 
 class DatabaseWrapper;
@@ -25,7 +26,6 @@ class CraplogParser final : public QObject
 
     using logs_file_t     = std::tuple<std::string,std::string>;
     using worker_files_t  = std::vector<logs_file_t>;
-    using bw_lists_t      = std::unordered_map<int, BWlist>;
 
 public:
 
@@ -35,7 +35,7 @@ public:
         const std::string& db_data_path,
         const std::string& db_hashes_path,
         const LogsFormat& logs_format,
-        const bw_lists_t& blacklists,
+        const Blacklist& blacklist,
         const worker_files_t& log_files,
         QObject* parent=nullptr
     );
@@ -100,8 +100,7 @@ private:
     ///////////////////
     //// BLACKLIST ////
 
-    // { log_field_id : BWlist }
-    const bw_lists_t blacklists;
+    const Blacklist blacklist;
 
     //////////////
     //// LOGS ////

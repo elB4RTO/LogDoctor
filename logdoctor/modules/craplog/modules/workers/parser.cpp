@@ -19,13 +19,13 @@
 #include <QSqlError>
 
 
-CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const bw_lists_t& blacklists, const worker_files_t& log_files, QObject* parent )
+CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const Blacklist& blacklist, const worker_files_t& log_files, QObject* parent )
     : QObject        { parent         }
     , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
     , db_data_path   { db_data_path   }
     , db_hashes_path { db_hashes_path }
-    , blacklists     { blacklists     }
+    , blacklist      { blacklist      }
     , logs_format    { logs_format    }
     , files_to_use   { log_files      }
 {
@@ -358,11 +358,11 @@ void CraplogParser::storeLogLines()
 bool CraplogParser::storeData( DatabaseWrapper& db, const QString& db_name )
 {
     // get blacklist items
-    const bool check_bl_cli { this->blacklists.at( 20 ).used };
+    const bool check_bl_cli { this->blacklist.client.used };
 
     const std::vector<std::string> empty;
     const std::vector<std::string>& bl_cli_list{ (check_bl_cli)
-        ? this->blacklists.at( 20 ).list
+        ? this->blacklist.client.list
         : empty };
 
     // prepare the database related studd
