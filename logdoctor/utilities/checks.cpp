@@ -88,7 +88,7 @@ bool newCollectionDatabase( DatabaseWrapper db, const std::string& db_path, cons
 {
     try {
 
-        db.open( db_path, true );
+        db.openNew( db_path );
 
         // succesfully creted database file, now create the tables
         const QString stmt{ QStringLiteral(R"(
@@ -133,7 +133,7 @@ bool newCollectionDatabase( DatabaseWrapper db, const std::string& db_path, cons
     }
 
     DialogSec::msgDatabaseCreated( db.name() );
-    return true;
+    return checkCollectionDatabase( db_path );
 }
 
 
@@ -149,7 +149,7 @@ bool newHashesDatabase( DatabaseWrapper db, const std::string& db_path, const st
 {
     try {
 
-        db.open( db_path, true );
+        db.openNew( db_path );
 
         // succesfully creted database file, now create the tables
         const QString stmt{ QStringLiteral(R"(
@@ -178,7 +178,7 @@ bool newHashesDatabase( DatabaseWrapper db, const std::string& db_path, const st
     }
 
     DialogSec::msgDatabaseCreated( db.name() );
-    return true;
+    return checkHashesDatabase( db_path );
 }
 
 } // namespace (private)
