@@ -3535,7 +3535,80 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                <item row="0" column="4" rowspan="3">
                 <widget class="QFrame" name="frame_StatsDay_Field">
                  <layout class="QGridLayout" name="gridLayout_8">
-                  <item row="2" column="1">
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="box_StatsDay_LogsField">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>192</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>32</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>Select a log field to view</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_StatsDay_LogsField">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Field:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_StatsDay_Filter">
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Filter:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <spacer name="horizontalSpacer_8">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="2" column="1" colspan="2">
                    <widget class="QLineEdit" name="inLine_StatsDay_Filter">
                     <property name="minimumSize">
                      <size>
@@ -3560,7 +3633,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="0" colspan="2">
+                  <item row="0" column="0" colspan="3">
                    <spacer name="verticalSpacer">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
@@ -3575,60 +3648,6 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      </size>
                     </property>
                    </spacer>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_StatsDay_LogsField">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Field:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QComboBox" name="box_StatsDay_LogsField">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>160</width>
-                      <height>32</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="toolTip">
-                     <string>Select a log field to view</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_StatsDay_Filter">
-                    <property name="font">
-                     <font>
-                      <pointsize>13</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Filter:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
                   </item>
                  </layout>
                 </widget>
@@ -4151,9 +4170,15 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item row="2" column="1" rowspan="2">
                    <widget class="QComboBox" name="box_StatsRelat_LogsField_2">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>160</width>
+                      <width>192</width>
                       <height>32</height>
                      </size>
                     </property>
@@ -4200,9 +4225,15 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                   </item>
                   <item row="0" column="1" rowspan="2">
                    <widget class="QComboBox" name="box_StatsRelat_LogsField_1">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>160</width>
+                      <width>192</width>
                       <height>32</height>
                      </size>
                     </property>
@@ -4526,7 +4557,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>315</width>
+                      <width>181</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -4882,7 +4913,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>315</width>
+                      <width>164</width>
                       <height>348</height>
                      </rect>
                     </property>
@@ -5137,7 +5168,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>431</width>
+                      <width>151</width>
                       <height>276</height>
                      </rect>
                     </property>
@@ -5402,7 +5433,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>431</width>
+                      <width>181</width>
                       <height>276</height>
                      </rect>
                     </property>
