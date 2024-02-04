@@ -54,6 +54,14 @@ public:
     */
     void open( const std::string& path, const bool explain_err );
 
+    //! Opens the database file at the given path
+    /*!
+        Used when creating a new database file.
+        Throws if opening fails.
+        \throw LogDoctorException
+    */
+    void openNew( const std::string& path );
+
     //! Starts an ACID transaction on the database
     /*!
         Throws in case of failure

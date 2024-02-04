@@ -17,7 +17,7 @@
 //////////////////////////
 
 DatabaseWrapper::DatabaseWrapper( const QString& database, const QString& name, const bool readonly )
-    : db{ QSqlDatabase::database( database ) }
+    : db{ QSqlDatabase::database( database, false ) }
     , db_name{ name }
     , ongoing_transaction{ false }
 {
@@ -46,6 +46,15 @@ void DatabaseWrapper::open( const std::string& path, const bool explain_err )
         throw LogDoctorException();
     } else if ( ! this->db.open() ) {
         DialogSec::errDatabaseFailedOpening( this->db_name, explain_err ? this->db.lastError().text() : QString{} );
+        throw LogDoctorException();
+    }
+}
+
+void DatabaseWrapper::openNew( const std::string& path )
+{
+    this->db.setDatabaseName( QString::fromStdString( path ));
+    if ( ! this->db.open() ) {
+        DialogSec::errDatabaseFailedOpening( this->db_name, db.lastError().text() );
         throw LogDoctorException();
     }
 }
@@ -124,23 +133,23 @@ size_t QueryWrapper::size()
 
 DatabaseHandler::DatabaseHandler()
 {
-    QSqlDatabase::addDatabase( "QSQLITE", DatabasesNames::data );
-    QSqlDatabase::addDatabase( "QSQLITE", DatabasesNames::hashes );
+    QSqlDatabase::addDatabase( "QSQLITE", DatabasesConnections::data );
+    QSqlDatabase::addDatabase( "QSQLITE", DatabasesConnections::hashes );
 }
 
 DatabaseHandler::~DatabaseHandler()
 {
-    QSqlDatabase::removeDatabase( DatabasesNames::data );
-    QSqlDatabase::removeDatabase( DatabasesNames::hashes );
+    QSqlDatabase::removeDatabase( DatabasesConnections::data );
+    QSqlDatabase::removeDatabase( DatabasesConnections::hashes );
 }
 
 DatabaseWrapper DatabaseHandler::get( const DatabaseType db_type, const bool readonly )
 {
     switch ( db_type ) {
         case DatabaseType::Data:
-            return DatabaseWrapper( DatabasesNames::data, QStringLiteral("collection.db"), readonly );
+            return DatabaseWrapper( DatabasesConnections::data, QString(DatabasesNames::data), readonly );
         case DatabaseType::Hashes:
-            return DatabaseWrapper( DatabasesNames::hashes, QStringLiteral("hashes.db"), readonly );
+            return DatabaseWrapper( DatabasesConnections::hashes, QString(DatabasesNames::hashes), readonly );
         default:
             throw DoNotCatchException( "Unexpected DatabaseType" );
     }
