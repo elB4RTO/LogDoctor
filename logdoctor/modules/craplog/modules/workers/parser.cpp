@@ -12,24 +12,33 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
-#include "modules/database/database.h"
-
 #include "modules/craplog/modules/workers/lib.h"
 
+#include <QWaitCondition>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QSqlError>
+#include <QMutex>
 
 
-CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& db_data_path, const std::string& db_hashes_path, const LogsFormat& logs_format, const Blacklist& blacklist, const worker_files_t& log_files, QObject* parent )
-    : QObject        { parent         }
-    , web_server     { web_server     }
-    , dialogs_level  { dialogs_level  }
-    , db_data_path   { db_data_path   }
-    , db_hashes_path { db_hashes_path }
-    , blacklist      { blacklist      }
-    , logs_format    { logs_format    }
-    , files_to_use   { log_files      }
+CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const LogsFormat& logs_format, const Blacklist& blacklist, worker_files_t&& log_files, const std::string& data_db_path, QObject* parent )
+    : QObject        { parent                     }
+    , web_server     { web_server                 }
+    , dialogs_level  { dialogs_level              }
+    , db_path        { data_db_path               }
+    , db_name        { DatabasesConnections::data }
+    , blacklist      { blacklist                  }
+    , logs_format    { logs_format                }
+    , files_to_use   { std::move( log_files )     }
 {
 
+}
+
+CraplogParser::~CraplogParser()
+{
+    if ( QSqlDatabase::contains( this->db_conn_name ) ) {
+        QSqlDatabase::removeDatabase( this->db_conn_name );
+    }
 }
 
 
@@ -68,11 +77,25 @@ void CraplogParser::work()
         }
         // clear log lines data
         this->logs_lines.clear();
+        this->proceed = !this->data_collection.empty();
 
-        if ( this->proceed && !this->data_collection.empty() ) [[likely]]  {
+        if ( this->proceed ) [[likely]] {
+            // tell craplog to store the hashes before to proceed
+            QWaitCondition wc;
+            emit this->readyStoringData( &wc, &this->proceed );
+            QMutex mutex; mutex.lock();
+            wc.wait( &mutex );
+            mutex.unlock();
+        }
+
+        if ( this->proceed ) [[likely]] {
             // store the new data
-            this->storeLogLines();
+            auto db{ QSqlDatabase::addDatabase( "QSQLITE", this->db_conn_name ) };
+            this->storeLogLines( db );
             this->db_edited |= this->proceed;
+            if ( db.isOpen() ) {
+                db.close();
+            }
         }
 
     } catch ( GenericException& e ) {
@@ -119,11 +142,9 @@ void CraplogParser::joinLogLines()
 
     std::string aux;
     std::vector<std::string> content;
-    for ( const auto& file : this->files_to_use ) {
+    for ( const auto& file_path : this->files_to_use ) {
 
         if ( ! this->proceed ) { break; }
-
-        const std::string& file_path = std::get<0>( file );
 
         // collect lines
         try {
@@ -242,74 +263,69 @@ void CraplogParser::parseLogLines()
 
 
 
-void CraplogParser::storeLogLines()
+void CraplogParser::storeLogLines( QSqlDatabase& db )
 {
-    QString db_path{ QString::fromStdString( this->db_data_path ) };
-    QString db_name{ QString::fromStdString( this->db_data_path.substr( this->db_data_path.find_last_of( '/' ) + 1ul ) ) };
+    db.setDatabaseName( QString::fromStdString( this->db_path ) );
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
-
-    db->setDatabaseName( db_path );
-
-    if ( ! this->checkDatabaseFile( db_name ) ) [[unlikely]] {
+    if ( ! this->checkDatabaseFile() ) [[unlikely]] {
         this->proceed &= false;
         return;
     }
 
-    if ( ! db->open() ) [[unlikely]] {
+    if ( ! db.open() ) [[unlikely]] {
         this->proceed &= false;
         QString err_msg;
         if ( this->dialogs_level == DL_EXPLANATORY ) {
-            err_msg = db->lastError().text();
+            err_msg = db.lastError().text();
         }
         emit this->showDialog( WorkerDialog::errDatabaseFailedOpening,
-                              {db_name, err_msg} );
+                              {this->db_name, err_msg} );
         return;
     }
 
     try {
 
-        if ( ! db->transaction() ) [[unlikely]] {
+        if ( ! db.transaction() ) [[unlikely]] {
             this->proceed &= false;
             QString stmt_msg, err_msg;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
                 stmt_msg.append( "db.transaction()" );
                 if ( this->dialogs_level == DL_EXPLANATORY ) {
-                    err_msg = db->lastError().text();
+                    err_msg = db.lastError().text();
                 }
             }
             emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
-                                   {db_name, stmt_msg, err_msg} );
+                                   {this->db_name, stmt_msg, err_msg} );
             return;
 
-        } else if ( this->storeData( db, db_name ) ) [[likely]] {
+        } else if ( this->storeData( db ) ) [[likely]] {
 
-            if ( ! db->commit() ) [[unlikely]] {
+            if ( ! db.commit() ) [[unlikely]] {
                 this->proceed &= false;
                 QString stmt_msg, err_msg;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
                     stmt_msg.append( "db.commit()" );
                     if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        err_msg.append( db->lastError().text() );
+                        err_msg.append( db.lastError().text() );
                     }
                 }
                 emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
-                                       {db_name, stmt_msg, err_msg} );
+                                       {this->db_name, stmt_msg, err_msg} );
             }
         }
 
         if ( ! this->proceed ) [[unlikely]] {
             // rollback the transaction
-            if ( ! db->rollback() ) {
+            if ( ! db.rollback() ) {
                 QString stmt_msg, err_msg;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
                     stmt_msg = "db.rollback()";
                     if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        err_msg = db->lastError().text();
+                        err_msg = db.lastError().text();
                     }
                 }
                 emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
-                                       {db_name, stmt_msg, err_msg} );
+                                       {this->db_name, stmt_msg, err_msg} );
                 return;
             }
         }
@@ -355,7 +371,7 @@ void CraplogParser::storeLogLines()
         stmt.append( QStringLiteral("NULL") );\
     }
 
-bool CraplogParser::storeData( DatabaseWrapper& db, const QString& db_name )
+bool CraplogParser::storeData( QSqlDatabase& db )
 {
     // get blacklist items
     const bool check_bl_cli { this->blacklist.client.used };
@@ -430,7 +446,7 @@ bool CraplogParser::storeData( DatabaseWrapper& db, const QString& db_name )
 
         stmt.append( ");" );
 
-        if ( QSqlQuery query(*db); !query.exec( stmt ) ) [[unlikely]] {
+        if ( QSqlQuery query(db); !query.exec( stmt ) ) [[unlikely]] {
             // error finalizing step
             QString query_msg, err_msg;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
@@ -440,7 +456,7 @@ bool CraplogParser::storeData( DatabaseWrapper& db, const QString& db_name )
                 }
             }
             emit this->showDialog( WorkerDialog::errDatabaseFailedExecuting,
-                                   {db_name, query_msg, err_msg} );
+                                   {this->db_name, query_msg, err_msg} );
             return false;
         }
     }
@@ -449,19 +465,19 @@ bool CraplogParser::storeData( DatabaseWrapper& db, const QString& db_name )
 }
 
 
-bool CraplogParser::checkDatabaseFile( const QString& db_name ) noexcept
+bool CraplogParser::checkDatabaseFile() noexcept
 {
-    if ( ! IOutils::exists( this->db_data_path ) ) {
-        emit this->showDialog( WorkerDialog::errDatabaseFileNotFound, {db_name} );
+    if ( ! IOutils::exists( this->db_path ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotFound, {this->db_name} );
         return false;
-    } else if ( ! IOutils::isFile( this->db_data_path ) ) {
-        emit this->showDialog( WorkerDialog::errDatabaseFileNotFile, {db_name} );
+    } else if ( ! IOutils::isFile( this->db_path ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotFile, {this->db_name} );
         return false;
-    } else if ( ! IOutils::checkFile( this->db_data_path, true ) ) {
-        emit this->showDialog( WorkerDialog::errDatabaseFileNotReadable, {db_name} );
+    } else if ( ! IOutils::checkFile( this->db_path, true ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotReadable, {this->db_name} );
         return false;
-    } else if ( ! IOutils::checkFile( this->db_data_path, false, true ) ) {
-        emit this->showDialog( WorkerDialog::errDatabaseFileNotWritable, {db_name} );
+    } else if ( ! IOutils::checkFile( this->db_path, false, true ) ) {
+        emit this->showDialog( WorkerDialog::errDatabaseFileNotWritable, {this->db_name} );
         return false;
     }
     return true;

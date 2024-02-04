@@ -13,6 +13,8 @@
 
 struct Blacklists;
 
+class QWaitCondition;
+
 
 //! Craplog
 /*!
@@ -279,6 +281,8 @@ signals:
 
     void pushLogFile( const LogFile& log_file );
 
+    void doneStoringFilesHashes( const bool successful );
+
     void finishedRefreshing();
 
     void finishedWorking();
@@ -309,6 +313,8 @@ public slots:
 
     void showWorkerDialog( const WorkerDialog dialog_type,
                            const QStringList args ) const noexcept;
+
+    void storeFilesHashes( QWaitCondition* wc, bool* successful ) noexcept;
 
 
 private:

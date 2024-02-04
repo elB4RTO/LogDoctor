@@ -1,6 +1,8 @@
 
 #include "craplog.h"
 
+#include "globals/db_names.h"
+
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -21,6 +23,7 @@
 #include "modules/craplog/modules/workers/parser.h"
 
 #include <QPainter>
+#include <QWaitCondition>
 
 #include <filesystem>
 #include <thread>
@@ -97,11 +100,11 @@ const std::string& Craplog::getHashesDatabasePath() const noexcept
 
 void Craplog::setStatsDatabasePath( const std::string& path ) noexcept
 {
-    this->db_stats_path = path + "/collection.db";
+    this->db_stats_path = path + "/" + DatabasesNames::data;
 }
 void Craplog::setHashesDatabasePath( const std::string& path ) noexcept
 {
-    this->db_hashes_path = path + "/hashes.db";
+    this->db_hashes_path = path + "/" + DatabasesNames::hashes;
 }
 
 size_t Craplog::getWarningSize() const noexcept
@@ -669,14 +672,19 @@ void Craplog::startWorking( const Blacklists& blacklists )
 }
 void Craplog::hireWorker( const Blacklists& blacklists ) const
 {
+    std::vector<std::string> files;
+    files.reserve( this->log_files_to_use.size() );
+    std::transform(
+        this->log_files_to_use.cbegin(), this->log_files_to_use.cend(), std::back_inserter(files),
+        [](const auto& tpl){ return std::get<0>(tpl); } );
+
     CraplogParser* worker{ new CraplogParser(
         this->current_web_server,
         this->dialogs_level,
-        this->db_stats_path,
-        this->db_hashes_path,
         this->logs_formats.at( this->current_web_server ),
         blacklists.getConst( this->current_web_server ),
-        this->log_files_to_use
+        std::move(files),
+        this->db_stats_path
     ) };
     QThread* worker_thread{ new QThread() };
     worker->moveToThread( worker_thread );
@@ -695,6 +703,9 @@ void Craplog::hireWorker( const Blacklists& blacklists ) const
     // receive chart data, only received when worker has done
     connect( worker, &CraplogParser::chartData,
              this, &Craplog::updateChartData );
+    // store the files hashes
+    connect( worker, &CraplogParser::readyStoringData,
+             this, &Craplog::storeFilesHashes );
     // show a dialog
     connect( worker, &CraplogParser::showDialog,
              this, &Craplog::showWorkerDialog );
@@ -718,11 +729,6 @@ void Craplog::stopWorking( const bool successful )
     this->db_edited = successful;
     if ( successful ) {
         // insert the hashes of the used files
-        try {
-            this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
-        } catch (...) {
-            DialogSec::errFailedInsertUsedHashes();
-        }
     }
     emit this->finishedWorking();
 }
@@ -789,6 +795,18 @@ void Craplog::updateChartData( const size_t total_size, const size_t total_lines
     this->total_size  = total_size;
     this->total_lines = total_lines;
     this->blacklisted_size = blacklisted_size;
+}
+
+void Craplog::storeFilesHashes( QWaitCondition* wc, bool* successful) noexcept
+{
+    try {
+        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
+        *successful |= true;
+    } catch (...) {
+        DialogSec::errFailedInsertUsedHashes();
+        *successful &= false;
+    }
+    wc->wakeAll();
 }
 
 

@@ -19,26 +19,30 @@ class DatabaseWrapper;
 
 enum class WorkerDialog;
 
+class QWaitCondition;
+
+class QSqlDatabase;
+
 
 class CraplogParser final : public QObject
 {
     Q_OBJECT
 
-    using logs_file_t     = std::tuple<std::string,std::string>;
-    using worker_files_t  = std::vector<logs_file_t>;
+    using worker_files_t  = std::vector<std::string>;
 
 public:
 
     explicit CraplogParser(
         const WebServer web_server,
         const DialogsLevel dialogs_level,
-        const std::string& db_data_path,
-        const std::string& db_hashes_path,
         const LogsFormat& logs_format,
         const Blacklist& blacklist,
-        const worker_files_t& log_files,
+        worker_files_t&& log_files,
+        const std::string& data_db_path,
         QObject* parent=nullptr
     );
+
+    ~CraplogParser();
 
 signals:
 
@@ -54,6 +58,8 @@ signals:
     void showDialog(
         const WorkerDialog dialog_type,
         const QStringList arg );
+
+    void readyStoringData( QWaitCondition* wc, bool* successful );
 
     void startedParsing();
 
@@ -83,10 +89,13 @@ private:
     //// DATABASES ////
 
     bool db_edited{ false };
-    std::string db_data_path;
-    std::string db_hashes_path;
 
-    bool checkDatabaseFile( const QString& db_name ) noexcept;
+    std::string db_path;
+
+    const QString db_name;
+    const QString db_conn_name{ QStringLiteral("Parser_LogsData") };
+
+    bool checkDatabaseFile() noexcept;
 
     //////////////////////
     //// PERFORMANCES ////
@@ -130,19 +139,18 @@ private:
 
     //! Handles the process of storing data in the database
     /*!
+        \param db The database instance, not initialized already
         \see storeData()
     */
-    void storeLogLines();
+    void storeLogLines( QSqlDatabase& db );
 
     //! Stores the data collection in the logs Collection database
     /*!
-        \param db A database instance, already initizlized
-        \param db_name The database in use, to be shown in the dialogs
+        \param db The database instance, already initialized
         \return Whether the operation has been successful or not
         \throw WebServerException
     */
-    bool storeData( DatabaseWrapper& db , const QString& db_name );
-
+    bool storeData( QSqlDatabase& db );
 };
 
 
