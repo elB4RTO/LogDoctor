@@ -19,7 +19,7 @@ class LogDoctorException {};
 
 struct DoNotCatchException final
 {
-    explicit DoNotCatchException( const char* msg );
+    explicit DoNotCatchException( const std::string& msg );
 };
 
 

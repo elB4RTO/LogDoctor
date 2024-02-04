@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPLOG__LIB_H
-#define LOGDOCTOR__CRAPLOG__LIB_H
+#ifndef LOGDOCTOR__CRAPLOG__MODULES__LIB_H
+#define LOGDOCTOR__CRAPLOG__MODULES__LIB_H
 
 
 #include <QString>
@@ -15,10 +15,11 @@
 */
 enum class LogType
 #ifdef _MSC_VER
-    : __int8 {
+    : __int8
 #else
-    : __INT8_TYPE__ {
+    : __INT8_TYPE__
 #endif
+{
     Failed    = -1, //!< Failed to determine the type
     Discarded =  0, //!< Not a valid file, will be discarded
     Access    =  1  //!< Valid access logs file type
@@ -26,7 +27,8 @@ enum class LogType
 
 
 //! Holds informations about a log file
-struct LogFile final {
+struct LogFile final
+{
     explicit LogFile() noexcept = default;
     explicit LogFile(const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt) noexcept
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
@@ -70,7 +72,8 @@ Q_DECLARE_METATYPE( LogFile )
 
 
 //! Holds informations about a log format
-struct LogsFormat final {
+struct LogsFormat final
+{
     explicit LogsFormat() noexcept = default;
     explicit LogsFormat
         (const std::string& str,std::string&& itl,std::string&& fnl,std::vector<std::string>&& seps,std::vector<std::string>&& flds,const unsigned nl) noexcept
@@ -84,11 +87,4 @@ struct LogsFormat final {
 };
 
 
-//! Hold the items of a blacklist/warnlist
-struct BWlist final {
-    bool used;                     //!< Whether the list is set to be used or not
-    std::vector<std::string> list; //!< The list of items
-};
-
-
-#endif // LOGDOCTOR__CRAPLOG__LIB_H
+#endif // LOGDOCTOR__CRAPLOG__MODULES__LIB_H

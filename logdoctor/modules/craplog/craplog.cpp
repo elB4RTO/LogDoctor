@@ -217,7 +217,7 @@ void Craplog::setCurrentWebServer( const WebServer web_server ) noexcept
     this->setCurrentLogFormat();
 }
 
-WebServer Craplog::getCurrentWSID() const noexcept
+WebServer Craplog::getCurrentWebServer() const noexcept
 {
     return this->current_web_server;
 }

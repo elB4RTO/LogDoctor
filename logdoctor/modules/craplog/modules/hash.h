@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPLOG__HASH_H
-#define LOGDOCTOR__CRAPLOG__HASH_H
+#ifndef LOGDOCTOR__CRAPLOG__MODULES__HASH_H
+#define LOGDOCTOR__CRAPLOG__MODULES__HASH_H
 
 
 #include "main_lib.h"
@@ -83,4 +83,4 @@ private:
 };
 
 
-#endif // LOGDOCTOR__CRAPLOG__HASH_H
+#endif // LOGDOCTOR__CRAPLOG__MODULES__HASH_H

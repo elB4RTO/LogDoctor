@@ -70,7 +70,7 @@ public:
     /*!
         \return The Web Server ID
     */
-    WebServer getCurrentWSID() const noexcept;
+    WebServer getCurrentWebServer() const noexcept;
 
     //! Uses the current Web Server to set the relative logs format
     /*!

@@ -1999,7 +1999,7 @@ void MainWindow::makeInitialChecks()
         // get a fresh list of log files
         this->on_button_LogFiles_RefreshList_clicked();
         // set the default WS as the current one
-        switch ( this->craplog.getCurrentWSID() ) {
+        switch ( this->craplog.getCurrentWebServer() ) {
             case WS_APACHE:
                 this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
                 this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
@@ -2615,7 +2615,7 @@ void MainWindow::checkMakeStats_Makable()
 // switch to apache web server
 void MainWindow::on_button_LogFiles_Apache_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != WS_APACHE ) {
+    if ( this->craplog.getCurrentWebServer() != WS_APACHE ) {
         // flat/unflat
         this->ui->button_LogFiles_Apache->setFlat( false );
         this->ui->button_LogFiles_Nginx->setFlat( true );
@@ -2636,7 +2636,7 @@ void MainWindow::on_button_LogFiles_Apache_clicked()
 // switch to nginx web server
 void MainWindow::on_button_LogFiles_Nginx_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != WS_NGINX ) {
+    if ( this->craplog.getCurrentWebServer() != WS_NGINX ) {
         // flat/unflat
         this->ui->button_LogFiles_Nginx->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
@@ -2657,7 +2657,7 @@ void MainWindow::on_button_LogFiles_Nginx_clicked()
 // switch to iis web server
 void MainWindow::on_button_LogFiles_Iis_clicked()
 {
-    if ( this->craplog.getCurrentWSID() != WS_IIS ) {
+    if ( this->craplog.getCurrentWebServer() != WS_IIS ) {
         // flat/unflat
         this->ui->button_LogFiles_Iis->setFlat( false );
         this->ui->button_LogFiles_Apache->setFlat( true );
@@ -4866,7 +4866,7 @@ void MainWindow::on_button_ConfApache_Format_Save_clicked()
         this->ui->inLine_ConfApache_Format_String->text().trimmed().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfApache_Format_Save->setEnabled( false );
-        if ( this->craplog.getCurrentWSID() == WS_APACHE ) {
+        if ( this->craplog.getCurrentWebServer() == WS_APACHE ) {
             this->craplog.setCurrentLogFormat();
         }
     }
@@ -5237,7 +5237,7 @@ void MainWindow::on_button_ConfNginx_Format_Save_clicked()
         this->ui->inLine_ConfNginx_Format_String->text().trimmed().toStdString() ) };
     if ( success ) {
         this->ui->button_ConfNginx_Format_Save->setEnabled( false );
-        if ( this->craplog.getCurrentWSID() == WS_NGINX ) {
+        if ( this->craplog.getCurrentWebServer() == WS_NGINX ) {
             this->craplog.setCurrentLogFormat();
         }
     }
@@ -5605,7 +5605,7 @@ void MainWindow::on_radio_ConfIis_Format_W3C_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->clear();
             this->ui->inLine_ConfIis_Format_String->setEnabled( true );
             this->ui->inLine_ConfIis_Format_String->setFocus();
-            if ( this->craplog.getCurrentWSID() == WS_IIS ) {
+            if ( this->craplog.getCurrentWebServer() == WS_IIS ) {
                 this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
@@ -5623,7 +5623,7 @@ void MainWindow::on_radio_ConfIis_Format_NCSA_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_IIS ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
-            if ( this->craplog.getCurrentWSID() == WS_IIS ) {
+            if ( this->craplog.getCurrentWebServer() == WS_IIS ) {
                 this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
@@ -5641,7 +5641,7 @@ void MainWindow::on_radio_ConfIis_Format_IIS_toggled(bool checked)
             this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_IIS ) ) );
             this->ui->inLine_ConfIis_Format_String->setEnabled( false );
             this->ui->button_ConfIis_Format_Save->setEnabled( false );
-            if ( this->craplog.getCurrentWSID() == WS_IIS ) {
+            if ( this->craplog.getCurrentWebServer() == WS_IIS ) {
                 this->craplog.setCurrentLogFormat();
                 this->on_button_LogFiles_RefreshList_clicked();
             }
@@ -5671,7 +5671,7 @@ void MainWindow::on_button_ConfIis_Format_Save_clicked()
         this->getIisLogsModule() ) };
     if ( success ) {
         this->ui->button_ConfIis_Format_Save->setEnabled( false );
-        if ( this->craplog.getCurrentWSID() == WS_IIS ) {
+        if ( this->craplog.getCurrentWebServer() == WS_IIS ) {
             this->craplog.setCurrentLogFormat();
         }
     }

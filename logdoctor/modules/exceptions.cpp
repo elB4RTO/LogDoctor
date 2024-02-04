@@ -6,7 +6,7 @@
 #include <QString>
 
 
-DoNotCatchException::DoNotCatchException( const char* msg )
+DoNotCatchException::DoNotCatchException( const std::string& msg )
 {
     std::cerr << "LogDoctor: Exception: " << msg << std::endl;
 }
