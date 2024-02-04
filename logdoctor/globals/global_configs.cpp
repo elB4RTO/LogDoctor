@@ -1,6 +1,8 @@
 
 #include "global_configs.h"
 
+#include <QString>
+
 
 namespace GlobalConfigs
 {

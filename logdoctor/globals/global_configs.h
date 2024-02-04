@@ -2,7 +2,7 @@
 #define LOGDOCTOR__GLOBALS__GLOBAL_CONFIGS_H
 
 
-#include <QString>
+class QString;
 
 typedef unsigned char themes_t;
 
