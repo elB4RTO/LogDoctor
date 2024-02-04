@@ -98,6 +98,22 @@ set(PROJECT_SOURCES
     modules/dialogs/ida_dialog.h
     modules/dialogs/ida_dialog.cpp
 
+    modules/blacklists/blacklists.h
+    modules/blacklists/blacklists.cpp
+    modules/blacklists/modules/lib.h
+    modules/blacklists/modules/blacklist.h
+    modules/blacklists/modules/blacklist.cpp
+    modules/blacklists/modules/blacklist_item.h
+    modules/blacklists/modules/blacklist_item.cpp
+
+    modules/warnlists/warnlists.h
+    modules/warnlists/warnlists.cpp
+    modules/warnlists/modules/lib.h
+    modules/warnlists/modules/warnlist.h
+    modules/warnlists/modules/warnlist.cpp
+    modules/warnlists/modules/warnlist_item.h
+    modules/warnlists/modules/warnlist_item.cpp
+
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
     modules/craplog/modules/lib.h
