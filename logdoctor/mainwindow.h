@@ -10,6 +10,9 @@
 
 #include "modules/database/database.h"
 
+#include "modules/blacklists/blacklists.h"
+#include "modules/warnlists/warnlists.h"
+
 #include "modules/craplog/craplog.h"
 #include "modules/crapview/crapview.h"
 
@@ -49,7 +52,7 @@ signals:
 
     void refreshLogs();
 
-    void runCraplog();
+    void runCraplog( const Blacklists& blacklists );
 
 
 private slots:
@@ -775,6 +778,17 @@ private:
 
     //! Checks the integrity of the logs data collection database
     bool checkDataDB();
+
+
+    //////////////////////////////
+    //// BLACKLIST / WARNLIST ////
+    //////////////////////////////
+
+    Blacklists blacklists;
+    Warnlists warnlists;
+
+    BlacklistField blacklistFieldFromString( const QString& str );
+    WarnlistField warnlistFieldFromString( const QString& str );
 
 
     //////////////////

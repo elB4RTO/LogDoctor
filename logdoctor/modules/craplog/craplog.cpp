@@ -13,12 +13,13 @@
 #include "modules/exceptions.h"
 #include "modules/shared.h"
 
+#include "modules/blacklists/blacklists.h"
+
 #include "modules/craplog/modules/donuts.h"
 #include "modules/craplog/modules/logs.h"
 #include "modules/craplog/modules/workers/lister.h"
 #include "modules/craplog/modules/workers/parser.h"
 
-#include <QUrl>
 #include <QPainter>
 
 #include <filesystem>
@@ -32,17 +33,6 @@ Craplog::Craplog()
     ////////////////////////
     //// INITIALIZATION ////
     ////////////////////////
-    // blacklists / whitelists
-    for ( const WebServer& w : {WS_APACHE,WS_NGINX,WS_IIS} ) {
-        this->warnlists.emplace(  w, std::unordered_map<int, BWlist>(4) );
-        this->blacklists.emplace( w, std::unordered_map<int, BWlist>(1) );
-        // default data
-        this->warnlists.at( w ).emplace( 11, BWlist{ .used=false, .list={} } );
-        this->warnlists.at( w ).emplace( 12, BWlist{ .used=false, .list={} } );
-        this->warnlists.at( w ).emplace( 20, BWlist{ .used=false, .list={} } );
-        this->warnlists.at( w ).emplace( 21, BWlist{ .used=false, .list={} } );
-        this->blacklists.at( w ).emplace( 20, BWlist{ .used=false, .list={} } );
-    }
 
     // default format strings
     this->logs_format_strings.emplace(
@@ -122,162 +112,6 @@ size_t Craplog::getWarningSize() const noexcept
 void Craplog::setWarningSize(const size_t new_size ) noexcept
 {
     this->warning_size = new_size;
-}
-
-
-////////////////////
-//// WARN/BLACK ////
-bool Craplog::isBlacklistUsed( const WebServer& web_server, const int& log_field_id ) const noexcept
-{
-    return this->blacklists.at( web_server ).at( log_field_id ).used;
-}
-bool Craplog::isWarnlistUsed( const WebServer& web_server, const int& log_field_id ) const noexcept
-{
-    return this->warnlists.at( web_server ).at( log_field_id ).used;
-}
-
-void Craplog::setBlacklistUsed( const WebServer& web_server, const int& log_field_id, const bool used ) noexcept
-{
-    this->blacklists.at( web_server ).at( log_field_id ).used = used;
-}
-void Craplog::setWarnlistUsed( const WebServer& web_server, const int& log_field_id, const bool used ) noexcept
-{
-    this->warnlists.at( web_server ).at( log_field_id ).used = used;
-}
-
-const std::vector<std::string>& Craplog::getBlacklist( const WebServer& web_server, const int& log_field_id ) const noexcept
-{
-    return this->blacklists.at( web_server ).at( log_field_id ).list;
-}
-const std::vector<std::string>& Craplog::getWarnlist( const WebServer& web_server, const int& log_field_id ) const noexcept
-{
-    return this->warnlists.at( web_server ).at( log_field_id ).list;
-}
-const std::unordered_map<int, BWlist>& Craplog::getWarnlists( const WebServer& web_server ) const noexcept
-{
-    return this->warnlists.at( web_server );
-}
-
-void Craplog::setBlacklist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list )
-{
-    this->blacklists.at( web_server ).at( log_field_id ).list.clear();
-    for ( const std::string& item : new_list ) {
-        this->blacklistAdd( web_server, log_field_id, item );
-    }
-}
-void Craplog::setWarnlist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list )
-{
-    this->warnlists.at( web_server ).at( log_field_id ).list.clear();
-    for ( const std::string& item : new_list ) {
-        this->warnlistAdd( web_server, log_field_id, item );
-    }
-}
-
-void Craplog::blacklistAdd( const WebServer& web_server, const int& log_field_id, const std::string& new_item )
-{
-    this->blacklists.at( web_server ).at( log_field_id ).list.push_back(
-        this->sanitizeBWitem( log_field_id, new_item ) );
-}
-void Craplog::warnlistAdd( const WebServer& web_server, const int& log_field_id, const std::string& new_item )
-{
-    this->warnlists.at( web_server ).at( log_field_id ).list.push_back(
-        this->sanitizeBWitem( log_field_id, new_item ) );
-}
-
-void Craplog::blacklistRemove( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept
-{
-    auto& list{ this->blacklists.at( web_server ).at( log_field_id ).list };
-    if ( const auto it{ std::find( list.cbegin(), list.cend(), item ) }; it != list.cend() ) {
-        list.erase( it );
-    }
-}
-void Craplog::warnlistRemove( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept
-{
-    auto& list{ this->warnlists.at( web_server ).at( log_field_id ).list };
-    if ( const auto it{ std::find( list.cbegin(), list.cend(), item ) }; it != list.cend() ) {
-        list.erase( it );
-    }
-}
-
-int Craplog::blacklistMoveUp( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept
-{
-    auto& list{ this->blacklists.at( web_server ).at( log_field_id ).list };
-    if ( auto it{ std::find( std::next(list.begin()), list.end(), item ) }; it != list.cend() ) {
-        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) - 1 };
-        std::swap( *it, *std::prev(it) );
-        return pos;
-    }
-    return -1;
-}
-int Craplog::warnlistMoveUp( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept
-{
-    auto& list{ this->warnlists.at( web_server ).at( log_field_id ).list };
-    if ( auto it{ std::find( std::next(list.begin()), list.end(), item ) }; it != list.cend() ) {
-        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) - 1 };
-        std::swap( *it, *std::prev(it) );
-        return pos;
-    }
-    return -1;
-}
-
-int Craplog::blacklistMoveDown( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept
-{
-    auto& list{ this->blacklists.at( web_server ).at( log_field_id ).list };
-    if ( auto it{ std::find( list.begin(), std::prev(list.end()), item ) }; it != list.cend() ) {
-        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) + 1 };
-        std::swap( *it, *std::next(it) );
-        return pos;
-    }
-    return -1;
-}
-int Craplog::warnlistMoveDown( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept
-{
-    auto& list{ this->warnlists.at( web_server ).at( log_field_id ).list };
-    if ( auto it{ std::find( list.begin(), std::prev(list.end()), item ) }; it != list.cend() ) {
-        const int pos{ static_cast<int>( std::distance(list.begin(), it) ) + 1 };
-        std::swap( *it, *std::next(it) );
-        return pos;
-    }
-    return -1;
-}
-
-std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
-{
-    switch ( log_field_id ) {
-        case 11:
-        {
-            const std::string sanitized_item{ StringOps::strip( new_item ) };
-            if ( ! StringOps::isAlphabetic( sanitized_item ) ) {
-                // only letters allowed
-                throw BWlistException("Invalid Method");
-            }
-            return StringOps::toUpper( sanitized_item );
-        }
-        case 12:
-        {
-            const std::string sanitized_item{ StringOps::lstrip( new_item ) };
-            if ( sanitized_item.empty() ) {
-                throw BWlistException("Invalid URI");
-            }
-            return QUrl::toPercentEncoding(
-                QString::fromStdString( sanitized_item ),
-                "/#&?=+").toStdString();
-        }
-        case 20:
-        {
-            const std::string sanitized_item{ StringOps::strip( new_item ) };
-            if ( ! StringOps::isIP( sanitized_item ) ) {
-                // only IPv4/IPv6 allowed
-                throw BWlistException("Invalid Client");
-            }
-            return sanitized_item;
-        }
-        case 21:
-            return StringOps::replace( new_item, "\"", "\\\"" );
-        default:
-            // shouldn't be here
-            throw GenericException("Unexpected LogField ID: "+std::to_string(log_field_id));
-    }
 }
 
 
@@ -821,7 +655,7 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
     }
 }
 
-void Craplog::startWorking()
+void Craplog::startWorking( const Blacklists& blacklists )
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->proceed |= true;
@@ -831,9 +665,9 @@ void Craplog::startWorking()
     this->parsed_size  = 0ul;
     this->blacklisted_size = 0ul;
     // hire a worker
-    this->hireWorker();
+    this->hireWorker( blacklists );
 }
-void Craplog::hireWorker() const
+void Craplog::hireWorker( const Blacklists& blacklists ) const
 {
     CraplogParser* worker{ new CraplogParser(
         this->current_web_server,
@@ -841,7 +675,7 @@ void Craplog::hireWorker() const
         this->db_stats_path,
         this->db_hashes_path,
         this->logs_formats.at( this->current_web_server ),
-        this->blacklists.at( this->current_web_server ),
+        blacklists.getConst( this->current_web_server ),
         this->log_files_to_use
     ) };
     QThread* worker_thread{ new QThread() };

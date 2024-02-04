@@ -4,13 +4,14 @@
 
 #include <QtCharts>
 
-#include "main_lib.h"
-
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/formats.h"
 
 #include "modules/craplog/modules/workers/lib.h"
+
+
+struct Blacklists;
 
 
 //! Craplog
@@ -233,161 +234,6 @@ public:
     // logs usage control
     HashOps hashOps;
 
-    //////////////////////////////
-    //// BLACKLIST / WARNLIST ////
-
-    //! Returns whether the relative blacklist is set to be used or not
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \return Whether the list is used or not
-        \see BWlist
-    */
-    bool isBlacklistUsed( const WebServer& web_server, const int& log_field_id ) const noexcept;
-
-    //! Returns whether the relative warnlist is set to be used or not
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \return Whether the list is used or not
-        \see BWlist
-    */
-    bool isWarnlistUsed( const WebServer& web_server, const int& log_field_id ) const noexcept;
-
-    //! Sets the relative blacklist to be used or not
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param used Whether the list is to be used or not
-        \see BWlist
-    */
-    void setBlacklistUsed( const WebServer& web_server, const int& log_field_id, const bool used ) noexcept;
-
-    //! Sets the relative warnlist to be used or not
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param used Whether the list is to be used or not
-        \see BWlist
-    */
-    void setWarnlistUsed( const WebServer& web_server, const int& log_field_id, const bool used ) noexcept;
-
-    //! Returns the relative items list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \return The list of items in the given blacklist
-        \see BWlist
-    */
-    const std::vector<std::string>& getBlacklist( const WebServer& web_server, const int& log_field_id ) const noexcept;
-
-    //! Returns the relative items list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \return The list of items in the givenwarnlist
-        \see BWlist
-    */
-    const std::vector<std::string>& getWarnlist( const WebServer& web_server, const int& log_field_id ) const noexcept;
-
-    //! Returns the relative list
-    /*!
-        \param web_server The Web Server
-        \return The list of items in the givenwarnlist
-        \see BWlist
-    */
-    const std::unordered_map<int, BWlist>& getWarnlists( const WebServer& web_server ) const noexcept;
-
-    //! Sets the relative items list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param new_list The new items list
-        \see BWlist
-    */
-    void setBlacklist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list );
-
-    //! Sets the relative items list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param new_list The new items list
-        \see BWlist
-    */
-    void setWarnlist( const WebServer& web_server, const int& log_field_id, const std::vector<std::string>& new_list );
-
-    //! Adds an item to the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param new_list The new items list
-        \see BWlist
-    */
-    void blacklistAdd( const WebServer& web_server, const int& log_field_id, const std::string& new_item );
-
-    //! Adds an item to the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param new_item The new item to add to the list
-        \see BWlist
-    */
-    void warnlistAdd( const WebServer& web_server, const int& log_field_id, const std::string& new_item );
-
-    //! Removes an item from the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param item The item to remove from the list
-        \see BWlist
-    */
-    void blacklistRemove( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
-
-    //! Removes an item from the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param item The item to remove from the list
-        \see BWlist
-    */
-    void warnlistRemove( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
-
-    //! Moves an item one position up in the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param item The item to move
-        \see BWlist
-    */
-    int blacklistMoveUp( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
-
-    //! Moves an item one position up in the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param item The item to move
-        \see BWlist
-    */
-    int warnlistMoveUp( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
-
-    //! Moves an item one position down in the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param item The item to move
-        \see BWlist
-    */
-    int blacklistMoveDown( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
-
-    //! Moves an item one position down in the relative list
-    /*!
-        \param web_server The Web Server
-        \param log_field_id The ID of the log field
-        \param item The item to move
-        \see BWlist
-    */
-    int warnlistMoveDown( const WebServer& web_server, const int& log_field_id, const std::string& item ) noexcept;
-
 
     //////////////
     //// WORK ////
@@ -446,7 +292,7 @@ public slots:
 
     void logsDirScanned() noexcept;
 
-    void startWorking();
+    void startWorking( const Blacklists& blacklists );
 
     void workerStartedParsing() noexcept;
 
@@ -491,7 +337,7 @@ private:
     std::mutex mutex;
 
     //! Hires a worker to parse the selected logs
-    void hireWorker() const;
+    void hireWorker( const Blacklists& blacklists ) const;
 
 
     //////////////////////
@@ -521,25 +367,6 @@ private:
 
     // warning size, in Bytes
     size_t warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
-
-
-    //////////////////////////////
-    //// BLACKLIST / WARNLIST ////
-
-    // { web_server : { log_field_id : BWlist } }
-    std::unordered_map<WebServer, std::unordered_map<int, BWlist>> blacklists;
-    std::unordered_map<WebServer, std::unordered_map<int, BWlist>> warnlists;
-
-    //! Sanitizes an item removing the unwanted elements
-    /*!
-        Called when adding a new item to a list
-        \param log_field_id The ID of the log field
-        \param new_item The item to be sanitized
-        \return The sanitized item
-        \throw BWlistException, GenericException
-        \see BWlist
-    */
-    std::string sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const;
 
 
     ////////////////////
