@@ -203,11 +203,16 @@ int DbQuery::countMonths( QStringView from_year, QStringView from_month, QString
 }
 
 
+const QString& DbQuery::getDbField( const LogField fld ) const
+{
+    return this->LogFields_to_DbFields.at( fld );
+}
+
 const QString& DbQuery::getDbField( QStringView tr_fld ) const
 {
     for ( const auto& [id,str] : this->FIELDS ) {
         if ( TR::tr(str.c_str()) == tr_fld ) {
-            return this->LogFields_to_DbFields.at( str );
+            return this->LogFields_to_DbFields.at( id );
         }
     }
     throw DatabaseException( std::move(QStringLiteral("Unexpected DbField: ").append(tr_fld)) );
@@ -603,7 +608,7 @@ void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QString
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, QStringView log_field_, QStringView field_filter ) const
+void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
 {
     stats_day_items_t data{ // std::unordered_map<int, std::unordered_map<int, int>>
         {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
@@ -736,7 +741,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView log_field_1_, QStringView field_filter_1, QStringView log_field_2_, QStringView field_filter_2 ) const
+void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
     stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
     int gap = 20;
@@ -881,7 +886,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
 
 
-void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, QStringView log_field_1_, QStringView field_filter_1, QStringView log_field_2_, QStringView field_filter_2 ) const
+void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
     stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
 

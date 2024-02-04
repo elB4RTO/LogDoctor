@@ -1,6 +1,8 @@
 
 #include "crapview.h"
 
+#include "globals/db_names.h"
+
 #include "utilities/printables.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
@@ -30,27 +32,9 @@ void Crapview::setDialogsLevel( const DialogsLevel new_level ) noexcept
 
 void Crapview::setDbPath( const std::string& path ) noexcept
 {
-    this->dbQuery.setDbPath( path + "/collection.db" );
+    this->dbQuery.setDbPath( path + "/" + DatabasesNames::data );
 }
 
-
-
-QString Crapview::getLogFieldString ( const size_t field_id ) const noexcept
-{
-    return TR::tr( this->dbQuery.FIELDS.at( field_id ).c_str() );
-}
-
-int Crapview::getLogFieldID ( const QString& field_str ) const noexcept
-{
-    int f{ 0 };
-    for ( const auto& [id,str] : this->dbQuery.FIELDS ) {
-        if ( TR::tr(str.c_str()) == field_str ) {
-            f = id;
-            break;
-        }
-    }
-    return f;
-}
 
 
 int Crapview::getMonthNumber( const QString& month_str ) const noexcept
@@ -143,14 +127,38 @@ QStringList Crapview::getHours() const noexcept
     return hours;
 }
 
-QStringList Crapview::getFields( const std::string& tab ) const noexcept
+QStringList Crapview::getWarnHeaderColumns() const noexcept
 {
-    QStringList list;
-    const auto& f{ this->fields.at( tab ) };
-    std::transform( f.cbegin(), f.cend(),
-                    std::back_inserter( list ),
-                    [](const auto& field){ return TR::tr( field.c_str() ); } );
-    return list;
+    return {
+        TR::tr( FIELDS__WARNING.c_str()        ),
+        TR::tr( WORDS__DATE.c_str()            ),
+        TR::tr( WORDS__TIME.c_str()            ),
+        TR::tr( FIELDS__PROTOCOL.c_str()       ),
+        TR::tr( FIELDS__METHOD.c_str()         ),
+        TR::tr( FIELDS__URI.c_str()            ),
+        TR::tr( FIELDS__QUERY.c_str()          ),
+        TR::tr( FIELDS__RESPONSE_CODE.c_str()  ),
+        TR::tr( FIELDS__USER_AGENT.c_str()     ),
+        TR::tr( FIELDS__CLIENT.c_str()         ),
+        TR::tr( FIELDS__COOKIE.c_str()         ),
+        TR::tr( FIELDS__REFERRER.c_str()       ),
+        TR::tr( FIELDS__BYTES_RECEIVED.c_str() ),
+        TR::tr( FIELDS__BYTES_SENT.c_str()     ),
+        TR::tr( FIELDS__TIME_TAKEN.c_str()     )
+    };
+}
+
+QStringList Crapview::getSpeedHeaderColumns() const noexcept
+{
+    return {
+        TR::tr( FIELDS__TIME_TAKEN.c_str()     ),
+        TR::tr( FIELDS__URI.c_str()            ),
+        TR::tr( FIELDS__QUERY.c_str()          ),
+        TR::tr( FIELDS__METHOD.c_str()         ),
+        TR::tr( FIELDS__PROTOCOL.c_str()       ),
+        TR::tr( FIELDS__RESPONSE_CODE.c_str()  ),
+        TR::tr( WORDS__TIME.c_str()            )
+    };
 }
 
 
@@ -615,7 +623,7 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
 
 
 
-void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field , const QString filter ) const
+void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_str, const LogField field, const QString filter ) const
 {
     std::optional<stats_day_items_t> result;
 
@@ -712,7 +720,7 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
     QChart* b_chart{ new QChart() };
     b_chart->setTheme( theme );
     b_chart->addSeries( bars );
-    b_chart->setTitle( QStringLiteral("%1: %2").arg( TR::tr( "Time of Day Count" ), field ) );
+    b_chart->setTitle( QStringLiteral("%1: %2").arg( TR::tr( "Time of Day Count" ), field_str ) );
     b_chart->legend()->setVisible( false );
     /*b_chart->legend()->setAlignment( Qt::AlignBottom );
     b_chart->setAnimationOptions( QChart::SeriesAnimations );*/
@@ -742,7 +750,7 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
 
 
 
-void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_1, const QString filter_1, const QString field_2, const QString filter_2 ) const
+void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_1_str, const LogField field_1, const QString filter_1, const QString field_2_str, const LogField field_2, const QString filter_2 ) const
 {
     const bool period{ from_day != to_day || from_month != to_month || from_year != to_year };
 
@@ -822,7 +830,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
     a_chart->setTheme( theme );
     a_chart->addSeries( area );
     a_chart->addSeries( area_ );
-    a_chart->setTitle( QStringLiteral("%1: %2 -> %3").arg( TR::tr( "Time of Day Count" ), field_1, field_2) );
+    a_chart->setTitle( QStringLiteral("%1: %2 -> %3").arg( TR::tr( "Time of Day Count" ), field_1_str, field_2_str) );
     a_chart->legend()->setVisible( false );
     /*a_chart->legend()->setFont( fonts.at( "main_small" ) );
     a_chart->legend()->setAlignment( Qt::AlignBottom );*/

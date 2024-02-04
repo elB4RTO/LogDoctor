@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPVIEW__LIB_H
-#define LOGDOCTOR__CRAPVIEW__LIB_H
+#ifndef LOGDOCTOR__CRAPVIEW__MODULES__LIB_H
+#define LOGDOCTOR__CRAPVIEW__MODULES__LIB_H
 
 
 #include <array>
@@ -65,4 +65,4 @@ struct GlobalsData final
     Q_DISABLE_COPY(GlobalsData)
 };
 
-#endif // LOGDOCTOR__CRAPVIEW__LIB_H
+#endif // LOGDOCTOR__CRAPVIEW__MODULES__LIB_H

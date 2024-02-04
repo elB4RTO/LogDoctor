@@ -1,11 +1,13 @@
-#ifndef LOGDOCTOR__CRAPVIEW__QUERY_H
-#define LOGDOCTOR__CRAPVIEW__QUERY_H
+#ifndef LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
+#define LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
 
 #include "lib.h"
 
 #include "main_lib.h"
 
 #include "modules/shared.h"
+
+#include "modules/crapview/lib.h"
 
 #include <unordered_map>
 #include <optional>
@@ -17,14 +19,21 @@ class DbQuery final
 
 public:
 
-    // convert log fields IDs to log fields
-    const std::unordered_map<int, std::string> FIELDS{
-        {0, FIELDS__WARNING},
-        {10,FIELDS__PROTOCOL},   {11,FIELDS__METHOD},
-        {12,FIELDS__URI},        {13,FIELDS__QUERY},      {14,FIELDS__RESPONSE_CODE},
-        {15,FIELDS__TIME_TAKEN}, {16,FIELDS__BYTES_SENT}, {17,FIELDS__BYTES_RECEIVED},
-        {18,FIELDS__REFERRER},   {22,FIELDS__COOKIE},
-        {20,FIELDS__CLIENT},     {21,FIELDS__USER_AGENT} };
+    // log fields enums to log fields strings
+    const std::unordered_map<LogField, std::string> FIELDS{
+        {LogField::Warning,       FIELDS__WARNING},
+        {LogField::Protocol,      FIELDS__PROTOCOL},
+        {LogField::Method,        FIELDS__METHOD},
+        {LogField::Uri,           FIELDS__URI},
+        {LogField::Query,         FIELDS__QUERY},
+        {LogField::ResponseCode,  FIELDS__RESPONSE_CODE},
+        {LogField::TimeTaken,     FIELDS__TIME_TAKEN},
+        {LogField::BytesSent,     FIELDS__BYTES_SENT},
+        {LogField::BytesReceived, FIELDS__BYTES_RECEIVED},
+        {LogField::Referrer,      FIELDS__REFERRER},
+        {LogField::Cookie,        FIELDS__COOKIE},
+        {LogField::Client,        FIELDS__CLIENT},
+        {LogField::UserAgent,     FIELDS__USER_AGENT} };
 
     // convert month numbers to month names
     const std::unordered_map<int, std::string> MONTHS{
@@ -177,7 +186,7 @@ public:
         QStringView web_server,
         QStringView from_year_, QStringView from_month_, QStringView from_day_,
         QStringView to_year_,   QStringView to_month_,   QStringView to_day_,
-        QStringView log_field_, QStringView field_filter
+        const LogField log_field_, QStringView field_filter
     ) const;
 
 
@@ -203,8 +212,8 @@ public:
         std::optional<stats_relat_items_t>& result,
         QStringView web_server,
         QStringView year_,        QStringView month_,         QStringView day_,
-        QStringView log_field_1_, QStringView field_filter_1,
-        QStringView log_field_2_, QStringView field_filter_2
+        const LogField log_field_1_, QStringView field_filter_1,
+        const LogField log_field_2_, QStringView field_filter_2
     ) const;
 
     //! Retrieves the data needed for the Relational statistics
@@ -233,8 +242,8 @@ public:
         QStringView web_server,
         QStringView from_year_,   QStringView from_month_,    QStringView from_day_,
         QStringView to_year_,     QStringView to_month_,      QStringView to_day_,
-        QStringView log_field_1_, QStringView field_filter_1,
-        QStringView log_field_2_, QStringView field_filter_2
+        const LogField log_field_1_, QStringView field_filter_1,
+        const LogField log_field_2_, QStringView field_filter_2
     ) const;
 
 
@@ -274,21 +283,29 @@ private:
     QString db_name;
 
     // convert log fields to database fields
-    const std::unordered_map<std::string, QString> LogFields_to_DbFields{
-        {this->FIELDS.at( 0), "warning"},
-        {this->FIELDS.at(10), "protocol"},
-        {this->FIELDS.at(11), "method"},
-        {this->FIELDS.at(12), "uri"},
-        {this->FIELDS.at(13), "query"},
-        {this->FIELDS.at(14), "response"},
-        {this->FIELDS.at(15), "time_taken"},
-        {this->FIELDS.at(16), "bytes_sent"},
-        {this->FIELDS.at(17), "bytes_received"},
-        {this->FIELDS.at(18), "referrer"},
-        {this->FIELDS.at(20), "client"},
-        {this->FIELDS.at(21), "user_agent"},
-        {this->FIELDS.at(22), "cookie"}
+    const std::unordered_map<LogField, QString> LogFields_to_DbFields{
+        {LogField::Warning,       "warning"},
+        {LogField::Protocol,      "protocol"},
+        {LogField::Method,        "method"},
+        {LogField::Uri,           "uri"},
+        {LogField::Query,         "query"},
+        {LogField::ResponseCode,  "response"},
+        {LogField::TimeTaken,     "time_taken"},
+        {LogField::BytesSent,     "bytes_sent"},
+        {LogField::BytesReceived, "bytes_received"},
+        {LogField::Referrer,      "referrer"},
+        {LogField::Client,        "client"},
+        {LogField::UserAgent,     "user_agent"},
+        {LogField::Cookie,        "cookie"}
     };
+
+    //! Returns the database field corresponding to the relative log field
+    /*!
+        \param fld The log field
+        \return The database field
+        \throw CrapviewException
+    */
+    const QString& getDbField( const LogField fld ) const;
 
     //! Returns the database field corresponding to the relative log field
     /*!
@@ -359,4 +376,4 @@ private:
 };
 
 
-#endif // LOGDOCTOR__CRAPVIEW__QUERY_H
+#endif // LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
