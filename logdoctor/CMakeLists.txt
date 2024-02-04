@@ -55,6 +55,8 @@ set(PROJECT_SOURCES
 
     customs/treewidgetitems.h
 
+    utilities/bwlists.h
+    utilities/bwutils.cpp
     utilities/chars.h
     utilities/checks.h
     utilities/checks.cpp
