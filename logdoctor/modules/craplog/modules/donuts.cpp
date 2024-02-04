@@ -34,7 +34,7 @@ QString MainSlice::name() const
 void MainSlice::updateLabel()
 {
     this->setLabel( this->m_name );
-    //this->setLabel(QString("%1 %2%").arg(this->m_name).arg(this->percentage() * 100, 0, 'f', 2));
+    //this->setLabel(QStringLiteral("%1 %2%").arg(this->m_name).arg(this->percentage() * 100, 0, 'f', 2));
 }
 
 
@@ -125,7 +125,7 @@ void DonutBreakdown::updateLegendMarkers()
                 // modify markers from breakdown series
                 const QString& aux = pieMarker->slice()->label();
                 if ( aux.at( aux.indexOf('@')+1 ) != '#' ) {
-                    pieMarker->setLabel( QString("%1 %2%")
+                    pieMarker->setLabel( QStringLiteral("%1 %2%")
                                             .arg( aux.mid( 0, aux.indexOf('@') ) )
                                             .arg( pieMarker->slice()->percentage() * 100, 0, 'f', 2) );
                     pieMarker->setFont( QFont("Arial", 8) );

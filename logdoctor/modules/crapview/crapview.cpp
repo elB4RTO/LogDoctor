@@ -942,7 +942,7 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
                     const size_t d{ max_c<10.0 ? static_cast<size_t>(max_c*100.0)%100ul : static_cast<size_t>(max_c*10.0)%10ul };
                     QString count{ QString::number( f ) };
                     if ( d > 0 ) {
-                        count += QString(".%1").arg( d );
+                        count += QString::number( d ).prepend(QLatin1Char('.'));
                     }
                     QString value{ op ? TR::tr(this->dbQuery.DAYS.at(max_i+1).c_str())
                                       : QStringLiteral("%1").arg(max_i, 2, 10, QChar('0')) };

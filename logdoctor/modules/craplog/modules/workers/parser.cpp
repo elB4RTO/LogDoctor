@@ -87,7 +87,6 @@ void CraplogParser::work()
             wc.wait( &mutex );
             mutex.unlock();
         }
-
         if ( this->proceed ) [[likely]] {
             // store the new data
             auto db{ QSqlDatabase::addDatabase( "QSQLITE", this->db_conn_name ) };
@@ -178,21 +177,21 @@ void CraplogParser::joinLogLines()
         // re-catched in run()
         } catch ( const GenericException& ) {
             // failed closing gzip file pointer
-            throw GenericException( QString("%1:\n%2").arg(
+            throw GenericException( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("An error occured while reading the gzipped file"),
                     QString::fromStdString( file_path )
                 ).toStdString() );
 
         } catch ( const std::ios_base::failure& ) {
             // failed reading as text
-            throw GenericException( QString("%1:\n%2").arg(
+            throw GenericException( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("An error occured while reading the file"),
                     QString::fromStdString( file_path )
                 ).toStdString() );
 
         } catch (...) {
             // failed somehow
-            throw GenericException( QString("%1:\n%2").arg(
+            throw GenericException( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("Something failed while handling the file"),
                     QString::fromStdString( file_path )
                 ).toStdString() );
@@ -353,7 +352,7 @@ void CraplogParser::storeLogLines( QSqlDatabase& db )
 #define CONCAT_TO_QUERY_AS_STRING(LOG_FIELD)\
     stmt.append( QStringLiteral(", ") );\
     if ( LOG_FIELD ) {\
-        stmt.append( QString("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace(QLatin1Char('\''),QLatin1String("''")) ) );\
+        stmt.append( QStringLiteral("'%1'").arg( QString::fromStdString( *LOG_FIELD ).replace(QLatin1Char('\''),QLatin1String("''")) ) );\
     } else {\
         stmt.append( QStringLiteral("NULL") );\
     }

@@ -103,7 +103,7 @@ void DialogSec::errFailedApplyingConfigsItem( const QString& msg, QWidget* paren
     DialogMsg dialog{
         DialogSec::tr("Failed applying configuration"),
         QStringLiteral("%1\n%2").arg(
-            (msg.isEmpty()) ? msg : QString("%1\n").arg(msg),
+            (msg.isEmpty()) ? msg : QString(msg).append(QLatin1Char('\n')),
             DialogSec::tr("Skipping") ),
         QString(), MsgType::Error, parent };
     std::ignore = dialog.exec();
@@ -541,7 +541,7 @@ void DialogSec::errFailedReadFile( const QString& file , const bool skipping, QW
         QStringLiteral("%1:\n%2%3").arg(
             DialogSec::tr("An error occured while writing the file"),
             file,
-            (skipping) ? QString("\n\n%1").arg(DialogSec::tr("Skipping")) : QString() ),
+            (skipping) ? QStringLiteral("\n\n%1").arg(DialogSec::tr("Skipping")) : QString() ),
         QString(), MsgType::Error, parent };
     std::ignore = dialog.exec();
 }*/

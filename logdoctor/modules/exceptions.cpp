@@ -59,7 +59,7 @@ const QString& LogFormatException::what()
 LogParserException::LogParserException( const std::string& txt , const std::string& val )
 {
     std::cerr << "LogDoctor: LogParserException: " << txt << ": '" << val << "'" << std::endl;
-    this->msg = QString("%1:\n'%2'").arg(
+    this->msg = QStringLiteral("%1:\n'%2'").arg(
         QString::fromStdString( txt ),
         QString::fromStdString( val ) );
 }

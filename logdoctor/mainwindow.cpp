@@ -471,7 +471,7 @@ void MainWindow::readConfigs()
                         this->setWebServerFromString( val );
                     } catch ( const GenericException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             TR::tr("Unexpected WebServer"),
                             QString::fromStdString( val ) ) );
                     }
@@ -560,9 +560,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_APACHE, WarnlistField::Method, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Apache -> %1 (%2)").arg(
+                            QStringLiteral("Apache -> %1 (%2)").arg(
                                 TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -574,9 +574,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_APACHE, WarnlistField::Uri, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Apache -> %1 (%2)").arg(
+                            QStringLiteral("Apache -> %1 (%2)").arg(
                                 TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -588,9 +588,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_APACHE, WarnlistField::Client, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Apache -> %1 (%2)").arg(
+                            QStringLiteral("Apache -> %1 (%2)").arg(
                                 TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -602,9 +602,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_APACHE, WarnlistField::UserAgent, this->string2list( val, true ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Apache -> %1 (%2)").arg(
+                            QStringLiteral("Apache -> %1 (%2)").arg(
                                 TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -616,9 +616,9 @@ void MainWindow::readConfigs()
                         this->blacklists.setList( WS_APACHE, BlacklistField::Client, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Apache -> %1 (%2)").arg(
+                            QStringLiteral("Apache -> %1 (%2)").arg(
                                 TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
                     }
 
@@ -641,9 +641,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_NGINX, WarnlistField::Method, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Nginx -> %1 (%2)").arg(
+                            QStringLiteral("Nginx -> %1 (%2)").arg(
                                 TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -655,9 +655,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_NGINX, WarnlistField::Uri, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Nginx -> %1 (%2)").arg(
+                            QStringLiteral("Nginx -> %1 (%2)").arg(
                                 TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -669,9 +669,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_NGINX, WarnlistField::Client, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Nginx -> %1 (%2)").arg(
+                            QStringLiteral("Nginx -> %1 (%2)").arg(
                                 TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -683,9 +683,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_NGINX, WarnlistField::UserAgent, this->string2list( val, true ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Nginx -> %1 (%2)").arg(
+                            QStringLiteral("Nginx -> %1 (%2)").arg(
                                 TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -697,9 +697,9 @@ void MainWindow::readConfigs()
                         this->blacklists.setList( WS_NGINX, BlacklistField::Client, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("Nginx -> %1 (%2)").arg(
+                            QStringLiteral("Nginx -> %1 (%2)").arg(
                                 TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
                     }
 
@@ -735,9 +735,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_IIS, WarnlistField::Method, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("IIS -> %1 (%2)").arg(
+                            QStringLiteral("IIS -> %1 (%2)").arg(
                                 TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -749,9 +749,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_IIS, WarnlistField::Uri, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("IIS -> %1 (%2)").arg(
+                            QStringLiteral("IIS -> %1 (%2)").arg(
                                 TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -763,9 +763,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_IIS, WarnlistField::Client, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("IIS -> %1 (%2)").arg(
+                            QStringLiteral("IIS -> %1 (%2)").arg(
                                 TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -777,9 +777,9 @@ void MainWindow::readConfigs()
                         this->warnlists.setList( WS_IIS, WarnlistField::UserAgent, this->string2list( val, true ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("IIS -> %1 (%2)").arg(
+                            QStringLiteral("IIS -> %1 (%2)").arg(
                                 TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
                     }
 
@@ -791,9 +791,9 @@ void MainWindow::readConfigs()
                         this->blacklists.setList( WS_IIS, BlacklistField::Client, this->string2list( val ) );
                     } catch ( const BWlistException& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QString("%1:\n%2").arg(
+                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
                             DialogSec::tr("One of the lists has an invalid item"),
-                            QString("IIS -> %1 (%2)").arg(
+                            QStringLiteral("IIS -> %1 (%2)").arg(
                                 TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
                     }
 
@@ -1324,69 +1324,69 @@ void MainWindow::updateUiIcons()
         // main tabs
         const int m_index{ this->ui->stackedPages_Sections->currentIndex() };
         this->ui->button_Tab_Log->setIcon(
-            QIcon(QString(":/icons/icons/%1/log_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/log_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (m_index==0) ? "on" : "off" )) );
         this->ui->button_Tab_View->setIcon(
-            QIcon(QString(":/icons/icons/%1/view_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/view_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (m_index==1) ? "on" : "off" )) );
         this->ui->button_Tab_Conf->setIcon(
-            QIcon(QString(":/icons/icons/%1/conf_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/conf_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (m_index==2) ? "on" : "off" )) );
         // view logs
         this->ui->button_LogFiles_ViewFile->setIcon(
-            QIcon(QString(":/icons/icons/%1/show_file.png").arg(GlobalConfigs::icons_set)) );
+            QIcon(QStringLiteral(":/icons/icons/%1/show_file.png").arg(GlobalConfigs::icons_set)) );
         this->ui->button_LogFiles_RefreshList->setIcon(
-            QIcon(QString(":/icons/icons/%1/refresh.png").arg(GlobalConfigs::icons_set)) );
+            QIcon(QStringLiteral(":/icons/icons/%1/refresh.png").arg(GlobalConfigs::icons_set)) );
         // parse logs
         this->ui->icon_MakeStats_Size->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_size.png").arg(GlobalConfigs::icons_set)) );
+            QPixmap(QStringLiteral(":/icons/icons/%1/mk_size.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Lines->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_lines.png").arg(GlobalConfigs::icons_set)) );
+            QPixmap(QStringLiteral(":/icons/icons/%1/mk_lines.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Time->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_time.png").arg(GlobalConfigs::icons_set)) );
+            QPixmap(QStringLiteral(":/icons/icons/%1/mk_time.png").arg(GlobalConfigs::icons_set)) );
         this->ui->icon_MakeStats_Speed->setPixmap(
-            QPixmap(QString(":/icons/icons/%1/mk_speed.png").arg(GlobalConfigs::icons_set)) );
+            QPixmap(QStringLiteral(":/icons/icons/%1/mk_speed.png").arg(GlobalConfigs::icons_set)) );
         // stats
         const int s_index{ this->ui->stackedPages_Stats->currentIndex() };
         // stats warn
         this->ui->button_Tab_StatsWarn->setIcon(
-            QIcon(QString(":/icons/icons/%1/warn_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/warn_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (s_index==0) ? "on" : "off" )) );
         this->ui->button_StatsWarn_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
+            QIcon(QStringLiteral(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats speed
         this->ui->button_Tab_StatsSpeed->setIcon(
-            QIcon(QString(":/icons/icons/%1/speed_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/speed_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (s_index==1) ? "on" : "off" )) );
         this->ui->button_StatsSpeed_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
+            QIcon(QStringLiteral(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats count
         this->ui->button_Tab_StatsCount->setIcon(
-            QIcon(QString(":/icons/icons/%1/count_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/count_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (s_index==2) ? "on" : "off" )) );
         // stats daytime
         this->ui->button_Tab_StatsDay->setIcon(
-            QIcon(QString(":/icons/icons/%1/daytime_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/daytime_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (s_index==3) ? "on" : "off" )) );
         this->ui->button_StatsDay_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
+            QIcon(QStringLiteral(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats relational
         this->ui->button_Tab_StatsRelat->setIcon(
-            QIcon(QString(":/icons/icons/%1/relational_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/relational_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (s_index==4) ? "on" : "off" )) );
         this->ui->button_StatsRelat_Draw->setIcon(
-            QIcon(QString(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
+            QIcon(QStringLiteral(":/icons/icons/%1/draw.png").arg(GlobalConfigs::icons_set)) );
         // stats globals
         this->ui->button_Tab_StatsGlob->setIcon(
-            QIcon(QString(":/icons/icons/%1/global_%2.png").arg(
+            QIcon(QStringLiteral(":/icons/icons/%1/global_%2.png").arg(
                 GlobalConfigs::icons_set,
                 (s_index==5) ? "on" : "off" )) );
         // configs tree
@@ -1395,117 +1395,125 @@ void MainWindow::updateUiIcons()
             QString icon_name;
             const QString text{ (*it)->text(0) };
             if ( text == tr("General") ) {
-                icon_name = "conf_general";
+                icon_name += "conf_general";
             } else if ( text == tr("Window") ) {
-                icon_name = "conf_window";
+                icon_name += "conf_window";
             } else if ( text == tr("Dialogs") ) {
-                icon_name = "conf_dialogs";
+                icon_name += "conf_dialogs";
             } else if ( text == tr("Charts") ) {
-                icon_name = "conf_charts";
+                icon_name += "conf_charts";
             } else if ( text == tr("TextBrowser") ) {
-                icon_name = "conf_textbrowser";
+                icon_name += "conf_textbrowser";
             } else if ( text == tr("Databases") ) {
-                icon_name = "conf_databases";
+                icon_name += "conf_databases";
             } else if ( text == tr("Logs") ) {
-                icon_name = "conf_logs";
+                icon_name += "conf_logs";
             } else if ( text == tr("Defaults") ) {
-                icon_name = "conf_defaults";
+                icon_name += "conf_defaults";
             } else if ( text == tr("Control") ) {
-                icon_name = "conf_control";
+                icon_name += "conf_control";
             } else if ( text == tr("Path") ) {
-                icon_name = "conf_path";
+                icon_name += "conf_path";
             } else if ( text == tr("Format") ) {
-                icon_name = "conf_format";
+                icon_name += "conf_format";
             } else if ( text == tr("Warnlists") ) {
-                icon_name = "conf_warnlists";
+                icon_name += "conf_warnlists";
             } else if ( text == tr("Blacklists") ) {
-                icon_name = "conf_blacklists";
+                icon_name += "conf_blacklists";
             } else if ( text == tr("Apache2")
                      || text == tr("Nginx")
                      || text == tr("IIS") ) {
-                icon_name = "conf_webservers";
+                icon_name += "conf_webservers";
             } else {
                 throw GenericException( "Unexpected Configs section: "+text.toStdString(), true );
             }
             (*it)->setIcon(0,
-                QIcon(QString(":/icons/icons/%1/%2.png").arg(GlobalConfigs::icons_set, icon_name)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/%2.png").arg(GlobalConfigs::icons_set, icon_name)) );
             ++it;
         }
         // conf databases
-        this->ui->button_ConfDatabases_Data_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfDatabases_Hashes_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        // conf apache
-        this->ui->button_ConfApache_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Warnlist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Warnlist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Warnlist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Warnlist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Blacklist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Blacklist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Blacklist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfApache_Blacklist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
-        // conf nginx
-        this->ui->button_ConfNginx_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Warnlist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Warnlist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Warnlist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Warnlist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Blacklist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Blacklist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Blacklist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfNginx_Blacklist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
-        // conf iis
-        this->ui->button_ConfIis_Path_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Format_Save->setIcon(
-            QIcon(QString(":/icons/icons/%1/save.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Format_Help->setIcon(
-            QIcon(QString(":/icons/icons/%1/help.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Warnlist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Warnlist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Warnlist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Warnlist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Blacklist_Add->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_add.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Blacklist_Remove->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_rem.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Blacklist_Up->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_up.png").arg(GlobalConfigs::icons_set)) );
-        this->ui->button_ConfIis_Blacklist_Down->setIcon(
-            QIcon(QString(":/icons/icons/%1/list_down.png").arg(GlobalConfigs::icons_set)) );
+        {
+            const QString save_template{ QStringLiteral(":/icons/icons/%1/save.png")      };
+            const QString help_template{ QStringLiteral(":/icons/icons/%1/help.png")      };
+            const QString add_template{  QStringLiteral(":/icons/icons/%1/list_add.png")  };
+            const QString rem_template{  QStringLiteral(":/icons/icons/%1/list_rem.png")  };
+            const QString up_template{   QStringLiteral(":/icons/icons/%1/list_up.png")   };
+            const QString down_template{ QStringLiteral(":/icons/icons/%1/list_down.png") };
 
+            this->ui->button_ConfDatabases_Data_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfDatabases_Hashes_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            // conf apache
+            this->ui->button_ConfApache_Path_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Format_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Format_Help->setIcon(
+                QIcon(help_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Warnlist_Add->setIcon(
+                QIcon(add_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Warnlist_Remove->setIcon(
+                QIcon(rem_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Warnlist_Up->setIcon(
+                QIcon(up_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Warnlist_Down->setIcon(
+                QIcon(down_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Blacklist_Add->setIcon(
+                QIcon(add_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Blacklist_Remove->setIcon(
+                QIcon(rem_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Blacklist_Up->setIcon(
+                QIcon(up_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfApache_Blacklist_Down->setIcon(
+                QIcon(down_template.arg(GlobalConfigs::icons_set)) );
+            // conf nginx
+            this->ui->button_ConfNginx_Path_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Format_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Format_Help->setIcon(
+                QIcon(help_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Warnlist_Add->setIcon(
+                QIcon(add_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Warnlist_Remove->setIcon(
+                QIcon(rem_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Warnlist_Up->setIcon(
+                QIcon(up_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Warnlist_Down->setIcon(
+                QIcon(down_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Blacklist_Add->setIcon(
+                QIcon(add_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Blacklist_Remove->setIcon(
+                QIcon(rem_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Blacklist_Up->setIcon(
+                QIcon(up_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfNginx_Blacklist_Down->setIcon(
+                QIcon(down_template.arg(GlobalConfigs::icons_set)) );
+            // conf iis
+            this->ui->button_ConfIis_Path_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Format_Save->setIcon(
+                QIcon(save_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Format_Help->setIcon(
+                QIcon(help_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Warnlist_Add->setIcon(
+                QIcon(add_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Warnlist_Remove->setIcon(
+                QIcon(rem_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Warnlist_Up->setIcon(
+                QIcon(up_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Warnlist_Down->setIcon(
+                QIcon(down_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Blacklist_Add->setIcon(
+                QIcon(add_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Blacklist_Remove->setIcon(
+                QIcon(rem_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Blacklist_Up->setIcon(
+                QIcon(up_template.arg(GlobalConfigs::icons_set)) );
+            this->ui->button_ConfIis_Blacklist_Down->setIcon(
+                QIcon(down_template.arg(GlobalConfigs::icons_set)) );
+        }
     }
 }
 
@@ -1786,7 +1794,7 @@ void MainWindow::updateUiLanguage()
 {
     // remove the old translator
     QCoreApplication::removeTranslator( &this->translator );
-    if ( this->translator.load( QString(":/translations/%1").arg(QString::fromStdString( this->language )) ) ) {
+    if ( this->translator.load( QStringLiteral(":/translations/%1").arg(QString::fromStdString( this->language )) ) ) {
         // apply the new translator
         QCoreApplication::installTranslator( &this->translator );
         this->ui->retranslateUi( this );
@@ -2066,11 +2074,11 @@ QString MainWindow::wsFromIndex( const int index ) const
 {
     switch (index) {
         case 0:
-            return QString("apache");
+            return QStringLiteral("apache");
         case 1:
-            return QString("nginx");
+            return QStringLiteral("nginx");
         case 2:
-            return QString("iis");
+            return QStringLiteral("iis");
         default:
             throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
     }
@@ -2329,19 +2337,19 @@ void MainWindow::switchMainTab( const int new_index )
             // make
             this->ui->button_Tab_Log->setFlat( true );
             this->ui->button_Tab_Log->setIcon(
-                QIcon(QString(":/icons/icons/%1/log_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/log_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // view
             this->ui->button_Tab_View->setFlat( true );
             this->ui->button_Tab_View->setIcon(
-                QIcon(QString(":/icons/icons/%1/view_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/view_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // config
             this->ui->button_Tab_Conf->setFlat( true );
             this->ui->button_Tab_Conf->setIcon(
-                QIcon(QString(":/icons/icons/%1/conf_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/conf_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected Tabs index: "+std::to_string(old_index));
@@ -2353,19 +2361,19 @@ void MainWindow::switchMainTab( const int new_index )
             // make
             this->ui->button_Tab_Log->setFlat( false );
             this->ui->button_Tab_Log->setIcon(
-                QIcon(QString(":/icons/icons/%1/log_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/log_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // view
             this->ui->button_Tab_View->setFlat( false );
             this->ui->button_Tab_View->setIcon(
-                QIcon(QString(":/icons/icons/%1/view_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/view_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // config
             this->ui->button_Tab_Conf->setFlat( false );
             this->ui->button_Tab_Conf->setIcon(
-                QIcon(QString(":/icons/icons/%1/conf_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/conf_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected MainTabs index: "+std::to_string(new_index));
@@ -2401,37 +2409,37 @@ void MainWindow::switchStatsTab( const int new_index )
             // warning
             this->ui->button_Tab_StatsWarn->setFlat( true );
             this->ui->button_Tab_StatsWarn->setIcon(
-                QIcon(QString(":/icons/icons/%1/warn_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/warn_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // speed
             this->ui->button_Tab_StatsSpeed->setFlat( true );
             this->ui->button_Tab_StatsSpeed->setIcon(
-                QIcon(QString(":/icons/icons/%1/speed_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/speed_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // counts
             this->ui->button_Tab_StatsCount->setFlat( true );
             this->ui->button_Tab_StatsCount->setIcon(
-                QIcon(QString(":/icons/icons/%1/count_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/count_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 3:
             // daytime
             this->ui->button_Tab_StatsDay->setFlat( true );
             this->ui->button_Tab_StatsDay->setIcon(
-                QIcon(QString(":/icons/icons/%1/daytime_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/daytime_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 4:
             // relational
             this->ui->button_Tab_StatsRelat->setFlat( true );
             this->ui->button_Tab_StatsRelat->setIcon(
-                QIcon(QString(":/icons/icons/%1/relational_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/relational_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 5:
             // globals
             this->ui->button_Tab_StatsGlob->setFlat( true );
             this->ui->button_Tab_StatsGlob->setIcon(
-                QIcon(QString(":/icons/icons/%1/global_off.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/global_off.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected StatsTabs index: "+std::to_string(old_index));
@@ -2443,37 +2451,37 @@ void MainWindow::switchStatsTab( const int new_index )
             // warning
             this->ui->button_Tab_StatsWarn->setFlat( false );
             this->ui->button_Tab_StatsWarn->setIcon(
-                QIcon(QString(":/icons/icons/%1/warn_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/warn_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 1:
             // speed
             this->ui->button_Tab_StatsSpeed->setFlat( false );
             this->ui->button_Tab_StatsSpeed->setIcon(
-                QIcon(QString(":/icons/icons/%1/speed_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/speed_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 2:
             // counts
             this->ui->button_Tab_StatsCount->setFlat( false );
             this->ui->button_Tab_StatsCount->setIcon(
-                QIcon(QString(":/icons/icons/%1/count_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/count_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 3:
             // daytime
             this->ui->button_Tab_StatsDay->setFlat( false );
             this->ui->button_Tab_StatsDay->setIcon(
-                QIcon(QString(":/icons/icons/%1/daytime_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/daytime_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 4:
             // relational
             this->ui->button_Tab_StatsRelat->setFlat( false );
             this->ui->button_Tab_StatsRelat->setIcon(
-                QIcon(QString(":/icons/icons/%1/relational_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/relational_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         case 5:
             // globals
             this->ui->button_Tab_StatsGlob->setFlat( false );
             this->ui->button_Tab_StatsGlob->setIcon(
-                QIcon(QString(":/icons/icons/%1/global_on.png").arg(GlobalConfigs::icons_set)) );
+                QIcon(QStringLiteral(":/icons/icons/%1/global_on.png").arg(GlobalConfigs::icons_set)) );
             break;
         default:
             throw("Unexpected StatsTabs index: "+std::to_string(new_index));
@@ -2784,11 +2792,11 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     // exceeds the warning size
                     QString msg{ item.name() };
                     if ( this->dialogs_level >= DL_NORMAL ) {
-                        msg += QString("\n\n%1:\n%2").arg(
+                        msg += QStringLiteral("\n\n%1:\n%2").arg(
                             DialogSec::tr("Size of the file"),
                             PrintSec::printableSize( item.size() ) );
                         if ( this->dialogs_level == DL_EXPLANATORY ) {
-                            msg += QString("\n\n%1:\n%2").arg(
+                            msg += QStringLiteral("\n\n%1:\n%2").arg(
                                 DialogSec::tr("Warning size parameter"),
                                 PrintSec::printableSize( warn_size ) );
                         }
@@ -2828,7 +2836,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                 // failed closing gzip file pointer
                 proceed &= false;
                 // >> e.what() << //
-                DialogSec::errGeneric( QString("%1:\n%2").arg(
+                DialogSec::errGeneric( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("Failed to read gzipped file"),
                     item.name()) );
 

@@ -66,9 +66,11 @@ void TextBrowser::setFont( const QFont& font ) noexcept
 // preview
 void TextBrowser::makePreview( QString& content ) const noexcept
 {
-    content += QString("<!DOCTYPE html><html><head></head><body");
+    const QString span_template{ QStringLiteral("<span style=\"color:%1\">") };
+
+    content += "<!DOCTYPE html><html><head></head><body";
     if ( this->color_scheme_id > 0 ) {
-        content += QString(" style=\"background:%1; color:%2\"")
+        content += QStringLiteral(" style=\"background:%1; color:%2\"")
             .arg( this->color_scheme.at("background"),
                   this->color_scheme.at("text") );
     }
@@ -81,7 +83,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += "<b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("time") );
+            content += span_template.arg( this->color_scheme.at("time") );
         }
         content += "2000-01-01 23:59:59";
         if ( this->color_scheme_id > 0 ) {
@@ -91,7 +93,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " <b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("req") );
+            content += span_template.arg( this->color_scheme.at("req") );
         }
         content += "HTTP/1.1 GET /index.php query=x";
         if ( this->color_scheme_id > 0 ) {
@@ -101,7 +103,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " <b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("res") );
+            content += span_template.arg( this->color_scheme.at("res") );
         }
         content += "404</b>";
         if ( this->color_scheme_id > 0 ) {
@@ -111,7 +113,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " <b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("x") );
+            content += span_template.arg( this->color_scheme.at("x") );
         }
         content += "123 1234 1000";
         if ( this->color_scheme_id > 0 ) {
@@ -121,7 +123,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " \"<b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("x") );
+            content += span_template.arg( this->color_scheme.at("x") );
         }
         content += "http://www.referrer.site";
         if ( this->color_scheme_id > 0 ) {
@@ -131,7 +133,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " \"<b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("x") );
+            content += span_template.arg( this->color_scheme.at("x") );
         }
         content += "aCookie=abc123";
         if ( this->color_scheme_id > 0 ) {
@@ -141,7 +143,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " \"<b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("ua") );
+            content += span_template.arg( this->color_scheme.at("ua") );
         }
         content += "UserAgent/3.0 (Details stuff) Info/123";
         if ( this->color_scheme_id > 0 ) {
@@ -151,7 +153,7 @@ void TextBrowser::makePreview( QString& content ) const noexcept
 
         content += " <b>";
         if ( this->color_scheme_id > 0 ) {
-            content += QString("<span style=\"color:%1\">").arg( this->color_scheme.at("ip") );
+            content += span_template.arg( this->color_scheme.at("ip") );
         }
         content += "192.168.1.123";
         if ( this->color_scheme_id > 0 ) {

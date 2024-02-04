@@ -79,21 +79,21 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash )
     // re-catched in craplog
     } catch ( const GenericException& ) {
         // failed closing gzip file pointer
-        throw GenericException( QString("%1:\n%2").arg(
+        throw GenericException( QStringLiteral("%1:\n%2").arg(
             DialogSec::tr("An error occured while reading the gzipped file"),
             QString::fromStdString( file_path )
             ).toStdString() );
 
     } catch ( const std::ios_base::failure& ) {
         // failed reading as text
-        throw GenericException( QString("%1:\n%2").arg(
+        throw GenericException( QStringLiteral("%1:\n%2").arg(
             DialogSec::tr("An error occured while reading the file"),
             QString::fromStdString( file_path )
             ).toStdString() );
 
     } catch (...) {
         // failed somehow
-        throw GenericException( QString("%1:\n%2").arg(
+        throw GenericException( QStringLiteral("%1:\n%2").arg(
             DialogSec::tr("Something failed while handling the file"),
             QString::fromStdString( file_path )
             ).toStdString() );
