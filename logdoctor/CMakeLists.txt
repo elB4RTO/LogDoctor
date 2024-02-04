@@ -53,7 +53,7 @@ set(PROJECT_SOURCES
     globals/global_configs.h
     globals/global_configs.cpp
 
-    customs/treewidgetitems.h
+    customs/logfile_treewidgetitem.h
 
     utilities/bwlists.h
     utilities/bwutils.cpp
