@@ -29,6 +29,7 @@
 #include "modules/crapview/lib.h"
 #include "modules/crapview/modules/filters.h"
 
+#include "tools/crappath/crappath.h"
 #include "tools/crapnote/crapnote.h"
 
 #include "games/crisscross/game.h"
@@ -4656,6 +4657,26 @@ void MainWindow::refreshChartsPreview()
 ///////////////////
 //// DATABASES ////
 // data collection
+void MainWindow::on_tool_ConfDatabases_Data_Dialog_clicked()
+{
+    this->crappath.reset( new Crappath( this ) );
+
+    const QString current_path{ this->ui->inLine_ConfDatabases_Data_Path->text() };
+    if ( ! current_path.isEmpty() ) {
+        crappath->setDirectory( current_path );
+    } else if ( ! this->db_data_path.empty() ) {
+        crappath->setDirectory( QString::fromStdString( this->db_data_path ) );
+    } else {
+        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+    }
+
+    if ( crappath->exec() ) {
+        const QStringList selection{ crappath->selectedFiles() };
+        if ( ! selection.isEmpty() ) {
+            this->ui->inLine_ConfDatabases_Data_Path->setText( selection[0] );
+        }
+    }
+}
 void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
@@ -4700,6 +4721,26 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 }
 
 // usef files hashes
+void MainWindow::on_tool_ConfDatabases_Hashes_Dialog_clicked()
+{
+    this->crappath.reset( new Crappath( this ) );
+
+    const QString current_path{ this->ui->inLine_ConfDatabases_Hashes_Path->text() };
+    if ( ! current_path.isEmpty() ) {
+        crappath->setDirectory( current_path );
+    } else if ( ! this->db_hashes_path.empty() ) {
+        crappath->setDirectory( QString::fromStdString( this->db_hashes_path ) );
+    } else {
+        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+    }
+
+    if ( crappath->exec() ) {
+        const QStringList selection{ crappath->selectedFiles() };
+        if ( ! selection.isEmpty() ) {
+            this->ui->inLine_ConfDatabases_Hashes_Path->setText( selection[0] );
+        }
+    }
+}
 void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
@@ -4817,6 +4858,27 @@ void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 ////////////////
 //// APACHE ////
 // paths
+void MainWindow::on_tool_ConfApache_Path_Dialog_clicked()
+{
+    this->crappath.reset( new Crappath( this ) );
+
+    const QString current_path{ this->ui->inLine_ConfApache_Path_String->text() };
+    const std::string& logs_path{ this->craplog.getLogsPath( WS_APACHE ) };
+    if ( ! current_path.isEmpty() ) {
+        crappath->setDirectory( current_path );
+    } else if ( ! logs_path.empty() ) {
+        crappath->setDirectory( QString::fromStdString( logs_path ) );
+    } else {
+        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+    }
+
+    if ( crappath->exec() ) {
+        const QStringList selection{ crappath->selectedFiles() };
+        if ( ! selection.isEmpty() ) {
+            this->ui->inLine_ConfApache_Path_String->setText( selection[0] );
+        }
+    }
+}
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString& arg1)
 {
     if ( arg1.size() > 0 ) {
@@ -5188,6 +5250,27 @@ void MainWindow::on_button_ConfApache_Blacklist_Down_clicked()
 ////////////////
 //// NGINX ////
 // paths
+void MainWindow::on_tool_ConfNginx_Path_Dialog_clicked()
+{
+    this->crappath.reset( new Crappath( this ) );
+
+    const QString current_path{ this->ui->inLine_ConfNginx_Path_String->text() };
+    const std::string& logs_path{ this->craplog.getLogsPath( WS_NGINX ) };
+    if ( ! current_path.isEmpty() ) {
+        crappath->setDirectory( current_path );
+    } else if ( ! logs_path.empty() ) {
+        crappath->setDirectory( QString::fromStdString( logs_path ) );
+    } else {
+        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+    }
+
+    if ( crappath->exec() ) {
+        const QStringList selection{ crappath->selectedFiles() };
+        if ( ! selection.isEmpty() ) {
+            this->ui->inLine_ConfNginx_Path_String->setText( selection[0] );
+        }
+    }
+}
 void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
@@ -5559,6 +5642,27 @@ void MainWindow::on_button_ConfNginx_Blacklist_Down_clicked()
 ////////////////
 //// IIS ////
 // paths
+void MainWindow::on_tool_ConfIis_Path_Dialog_clicked()
+{
+    this->crappath.reset( new Crappath( this ) );
+
+    const QString current_path{ this->ui->inLine_ConfIis_Path_String->text() };
+    const std::string& logs_path{ this->craplog.getLogsPath( WS_IIS ) };
+    if ( ! current_path.isEmpty() ) {
+        crappath->setDirectory( current_path );
+    } else if ( ! logs_path.empty() ) {
+        crappath->setDirectory( QString::fromStdString( logs_path ) );
+    } else {
+        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+    }
+
+    if ( crappath->exec() ) {
+        const QStringList selection{ crappath->selectedFiles() };
+        if ( ! selection.isEmpty() ) {
+            this->ui->inLine_ConfIis_Path_String->setText( selection[0] );
+        }
+    }
+}
 void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {

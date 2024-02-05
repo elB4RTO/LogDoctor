@@ -17,6 +17,7 @@
 #include "modules/crapview/crapview.h"
 
 
+class Crappath;
 class Craphelp;
 class Crapup;
 class Crapinfo;
@@ -307,11 +308,15 @@ private slots:
 
     //// DATABASES ////
 
+    void on_tool_ConfDatabases_Data_Dialog_clicked();
+
     void on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1);
 
     void on_inLine_ConfDatabases_Data_Path_returnPressed();
 
     void on_button_ConfDatabases_Data_Save_clicked();
+
+    void on_tool_ConfDatabases_Hashes_Dialog_clicked();
 
     void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1);
 
@@ -340,6 +345,8 @@ private slots:
     void on_spinBox_ConfControl_Size_editingFinished();
 
     //// APACHE ////
+
+    void on_tool_ConfApache_Path_Dialog_clicked();
 
     void on_inLine_ConfApache_Path_String_textChanged(const QString& arg1);
 
@@ -395,6 +402,8 @@ private slots:
 
     //// NGINX ////
 
+    void on_tool_ConfNginx_Path_Dialog_clicked();
+
     void on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfNginx_Path_String_returnPressed();
@@ -448,6 +457,8 @@ private slots:
     void on_button_ConfNginx_Blacklist_Down_clicked();
 
     //// IIS ////
+
+    void on_tool_ConfIis_Path_Dialog_clicked();
 
     void on_inLine_ConfIis_Path_String_textChanged(const QString& arg1);
 
@@ -889,6 +900,13 @@ private:
     void refreshChartsPreview();
 
     int getIisLogsModule() const;
+
+
+    //////////////////
+    //// CRAPPATH ////
+    //////////////////
+
+    QSharedPointer<Crappath> crappath;
 
 
     //////////////////
