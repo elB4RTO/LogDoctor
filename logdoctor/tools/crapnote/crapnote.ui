@@ -161,7 +161,7 @@
        <number>16</number>
       </property>
       <item row="0" column="0">
-       <widget class="QTextEdit" name="textEdit">
+       <widget class="QTextEdit" name="text_Note">
         <property name="markdown">
          <string notr="true"/>
         </property>

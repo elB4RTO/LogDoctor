@@ -172,6 +172,8 @@ set(PROJECT_SOURCES
     tools/crapnote/crapnote.ui
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
+    tools/crapnote/modules/stylesheets.h
+    tools/crapnote/modules/stylesheets.cpp
 
     games/game_dialog.ui
     games/game_dialog.h

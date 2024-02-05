@@ -2268,9 +2268,7 @@ void MainWindow::menu_actionBlockNote_triggered()
         this->crapnote->activateWindow();
 
     } else {
-        this->crapnote.reset( new Crapnote() );
-        this->crapnote->setTextFont( this->TB.getFont() );
-        this->crapnote->setColorScheme( this->TB.getColorSchemeID() );
+        this->crapnote.reset( new Crapnote( this->TB.getColorSchemeID(), this->TB.getFont() ) );
         this->crapnote->show();
     }
 }

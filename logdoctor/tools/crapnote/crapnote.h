@@ -19,13 +19,13 @@ class Crapnote final : public QWidget
     Q_OBJECT
 
 public:
-    explicit Crapnote( QWidget* parent=nullptr );
+    explicit Crapnote( const int color_scheme_id, QFont font, QWidget* parent=nullptr );
 
     //! Sets the given font
-    void setTextFont( const QFont& font ) noexcept;
+    void setTextFont( QFont font ) noexcept;
 
     //! Sets the given color-scheme
-    void setColorScheme( const int& color_scheme_id );
+    void setColorScheme( const int color_scheme_id );
 
 
 private slots:
