@@ -27,6 +27,14 @@ enum class ChartsTheme : themes_t {
     Dark  = 1
 };
 
+//! Available color schemes for the text browsers
+enum class ColorsScheme : themes_t {
+    None    = 0,
+    Breeze  = 1,
+    Monokai = 2,
+    Radical = 3
+};
+
 
 //! GlobalConfigs
 /*!
@@ -42,6 +50,8 @@ extern IconsTheme icons_theme;
 extern ChartsTheme charts_theme;
 
 extern QString icons_set;
+
+extern ColorsScheme colors_scheme;
 
 } // namespace GlobalConfigs
 

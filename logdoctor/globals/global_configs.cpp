@@ -8,9 +8,13 @@ namespace GlobalConfigs
 {
 
 WindowTheme window_theme = WindowTheme::Native;
-IconsTheme  icons_theme  = IconsTheme::Auto;
+
+IconsTheme icons_theme = IconsTheme::Auto;
+
 ChartsTheme charts_theme = ChartsTheme::Light;
 
 QString icons_set = "";
+
+ColorsScheme colors_scheme = ColorsScheme::Breeze;
 
 } // namespace GlobalConfigs
