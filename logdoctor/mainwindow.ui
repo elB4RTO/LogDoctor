@@ -7389,38 +7389,40 @@ li.checked::marker { content: &quot;\2612&quot;; }
              <item>
               <widget class="QFrame" name="frame_ConfDatabases">
                <layout class="QGridLayout" name="gridLayout_62">
-                <item row="6" column="3">
-                 <widget class="QPushButton" name="button_ConfDatabases_Hashes_Save">
-                  <property name="enabled">
-                   <bool>false</bool>
+                <item row="4" column="2" colspan="3">
+                 <spacer name="spacer_ConfDatabases_Paths_1">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
                   </property>
-                  <property name="minimumSize">
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
                    <size>
-                    <width>32</width>
-                    <height>32</height>
+                    <width>20</width>
+                    <height>8</height>
                    </size>
                   </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>16</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="toolTip">
-                   <string>Apply the current path</string>
-                  </property>
-                 </widget>
+                 </spacer>
                 </item>
-                <item row="1" column="1">
-                 <widget class="QLabel" name="label_ConfDatabases_Data">
+                <item row="1" column="0" rowspan="6">
+                 <spacer name="spacer_ConfDatabases_Paths_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>178</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QLineEdit" name="inLine_ConfDatabases_Data_Path">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -7434,103 +7436,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
                    </size>
                   </property>
                   <property name="toolTip">
-                   <string>Path where the logs data collection database is located</string>
-                  </property>
-                  <property name="text">
-                   <string>Logs data</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="2">
-                 <widget class="QLabel" name="icon_ConfDatabases_Hashes_Wrong">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>a Arbei Berry</family>
-                    <pointsize>16</pointsize>
-                   </font>
-                  </property>
-                  <property name="toolTip">
-                   <string>The given path doen't exists, or doesn't point to a folder</string>
-                  </property>
-                  <property name="text">
-                   <string notr="true"/>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resources/resources.qrc">:/icons/icons/err.png</pixmap>
-                  </property>
-                  <property name="scaledContents">
-                   <bool>true</bool>
+                   <string>Insert the base path only, file name excluded</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="3">
-                 <widget class="QPushButton" name="button_ConfDatabases_Data_Save">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>16</pointsize>
-                   </font>
-                  </property>
-                  <property name="cursor">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="toolTip">
-                   <string>Apply the current path</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QLabel" name="label_ConfDatabases_Hashes">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Path where the used files hashes database is located</string>
-                  </property>
-                  <property name="text">
-                   <string>Used files</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
                  <widget class="QLabel" name="icon_ConfDatabases_Data_Wrong">
                   <property name="enabled">
                    <bool>true</bool>
@@ -7567,58 +7477,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1" colspan="3">
-                 <spacer name="spacer_ConfDatabases_Paths_1">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>8</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="inLine_ConfDatabases_Data_Path">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Insert the base path only, file name excluded</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" rowspan="6">
-                 <spacer name="spacer_ConfDatabases_Paths_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>16</width>
-                    <height>178</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="0" column="0" colspan="4">
+                <item row="0" column="0" colspan="5">
                  <widget class="QLabel" name="label_ConfDatabases_Paths">
                   <property name="minimumSize">
                    <size>
@@ -7645,7 +7504,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
+                <item row="6" column="2">
                  <widget class="QLineEdit" name="inLine_ConfDatabases_Hashes_Path">
                   <property name="minimumSize">
                    <size>
@@ -7661,6 +7520,209 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   </property>
                   <property name="toolTip">
                    <string>Insert the base path only, file name excluded</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="3">
+                 <widget class="QLabel" name="icon_ConfDatabases_Hashes_Wrong">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>a Arbei Berry</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>The given path doen't exists, or doesn't point to a folder</string>
+                  </property>
+                  <property name="text">
+                   <string notr="true"/>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap resource="resources/resources.qrc">:/icons/icons/err.png</pixmap>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="4">
+                 <widget class="QPushButton" name="button_ConfDatabases_Hashes_Save">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="toolTip">
+                   <string>Apply the current path</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="4">
+                 <widget class="QPushButton" name="button_ConfDatabases_Data_Save">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="toolTip">
+                   <string>Apply the current path</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QToolButton" name="tool_ConfDatabases_Data_Dialog">
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Select the path through a dialog window</string>
+                  </property>
+                  <property name="text">
+                   <string notr="true">...</string>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::InstantPopup</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1" colspan="2">
+                 <widget class="QLabel" name="label_ConfDatabases_Data">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Path where the logs data collection database is located</string>
+                  </property>
+                  <property name="text">
+                   <string>Logs data</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QToolButton" name="tool_ConfDatabases_Hashes_Dialog">
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Select the path through a dialog window</string>
+                  </property>
+                  <property name="text">
+                   <string notr="true">...</string>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::InstantPopup</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1" colspan="2">
+                 <widget class="QLabel" name="label_ConfDatabases_Hashes">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Path where the used files hashes database is located</string>
+                  </property>
+                  <property name="text">
+                   <string>Used files</string>
                   </property>
                  </widget>
                 </item>
@@ -8231,8 +8293,33 @@ li.checked::marker { content: &quot;\2612&quot;; }
                  <height>184</height>
                 </size>
                </property>
-               <layout class="QGridLayout" name="gridLayout_10">
+               <layout class="QGridLayout" name="gridLayout_2">
                 <item row="1" column="0">
+                 <widget class="QToolButton" name="tool_ConfApache_Path_Dialog">
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Select the path through a dialog window</string>
+                  </property>
+                  <property name="text">
+                   <string notr="true">...</string>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::InstantPopup</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
                  <widget class="QLineEdit" name="inLine_ConfApache_Path_String">
                   <property name="minimumSize">
                    <size>
@@ -8242,7 +8329,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="1" column="2">
                  <widget class="QLabel" name="icon_ConfApache_Path_Wrong">
                   <property name="enabled">
                    <bool>true</bool>
@@ -8279,7 +8366,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
+                <item row="1" column="3">
                  <widget class="QPushButton" name="button_ConfApache_Path_Save">
                   <property name="enabled">
                    <bool>false</bool>
@@ -8315,7 +8402,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="3">
+                <item row="0" column="0" colspan="4">
                  <widget class="QLabel" name="label_ConfApache_Path_Path">
                   <property name="minimumSize">
                    <size>
@@ -8495,7 +8582,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>62</width>
+                     <width>648</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -9193,8 +9280,33 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                  <height>184</height>
                 </size>
                </property>
-               <layout class="QGridLayout" name="gridLayout_54">
+               <layout class="QGridLayout" name="gridLayout_10">
                 <item row="1" column="0">
+                 <widget class="QToolButton" name="tool_ConfNginx_Path_Dialog">
+                  <property name="minimumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Select the path through a dialog window</string>
+                  </property>
+                  <property name="text">
+                   <string notr="true">...</string>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::InstantPopup</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
                  <widget class="QLineEdit" name="inLine_ConfNginx_Path_String">
                   <property name="minimumSize">
                    <size>
@@ -9204,7 +9316,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="1" column="2">
                  <widget class="QLabel" name="icon_ConfNginx_Path_Wrong">
                   <property name="enabled">
                    <bool>true</bool>
@@ -9241,7 +9353,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
+                <item row="1" column="3">
                  <widget class="QPushButton" name="button_ConfNginx_Path_Save">
                   <property name="enabled">
                    <bool>false</bool>
@@ -9277,7 +9389,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="3">
+                <item row="0" column="0" colspan="4">
                  <widget class="QLabel" name="label_ConfNginx_Path_Path">
                   <property name="minimumSize">
                    <size>
@@ -9344,7 +9456,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>62</width>
+                     <width>648</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -10175,27 +10287,33 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                  <height>184</height>
                 </size>
                </property>
-               <layout class="QGridLayout" name="gridLayout_58">
-                <item row="0" column="0" colspan="3">
-                 <widget class="QLabel" name="label_ConfIis_Path_Path">
+               <layout class="QGridLayout" name="gridLayout_3">
+                <item row="1" column="0">
+                 <widget class="QToolButton" name="tool_ConfIis_Path_Dialog">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
+                    <width>32</width>
                     <height>32</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16777215</width>
+                    <width>32</width>
                     <height>32</height>
                    </size>
                   </property>
+                  <property name="toolTip">
+                   <string>Select the path through a dialog window</string>
+                  </property>
                   <property name="text">
-                   <string>Logs folder</string>
+                   <string notr="true">...</string>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::InstantPopup</enum>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="0">
+                <item row="1" column="1">
                  <widget class="QLineEdit" name="inLine_ConfIis_Path_String">
                   <property name="minimumSize">
                    <size>
@@ -10205,7 +10323,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="1" column="2">
                  <widget class="QLabel" name="icon_ConfIis_Path_Wrong">
                   <property name="enabled">
                    <bool>true</bool>
@@ -10242,7 +10360,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
+                <item row="1" column="3">
                  <widget class="QPushButton" name="button_ConfIis_Path_Save">
                   <property name="enabled">
                    <bool>false</bool>
@@ -10275,6 +10393,25 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <width>22</width>
                     <height>22</height>
                    </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="4">
+                 <widget class="QLabel" name="label_ConfIis_Path_Path">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Logs folder</string>
                   </property>
                  </widget>
                 </item>
@@ -10517,7 +10654,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>62</width>
+                     <width>648</width>
                      <height>54</height>
                     </rect>
                    </property>
