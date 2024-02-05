@@ -58,7 +58,7 @@
          <string>Reduce the font size</string>
         </property>
         <property name="text">
-         <string notr="true"></string>
+         <string notr="true">-</string>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -122,7 +122,7 @@
          <string>Increase the font size</string>
         </property>
         <property name="text">
-         <string notr="true"></string>
+         <string notr="true">+</string>
         </property>
         <property name="flat">
          <bool>true</bool>
