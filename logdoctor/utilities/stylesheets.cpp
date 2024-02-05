@@ -96,7 +96,7 @@ enum StyleId : uint32_t {
 
 using StyleMap = std::unordered_map<StyleId, QString>;
 
-const StyleMap makeStyleMap()
+StyleMap makeStyleMap()
 {
     switch ( GlobalConfigs::window_theme ) {
         case WindowTheme::Light:
@@ -508,6 +508,15 @@ void getStyleSheet( QString& stylesheet )
         "}"
         "QPushButton::disabled {"
         "   background-color: "+style.at(BUTTONS_BASE_DISABLED)+";"
+        "}"
+        // tool buttons
+        "QToolButton {"
+        "   border: 1px solid "+style.at(BORDER_PRIMARY)+";"
+        "   border-radius: 16px;"
+        "   background-color: transparent;"
+        "}"
+        "QToolButton:hover {"
+        "   border: 1px solid "+style.at(BORDER_SECONDARY)+";"
         "}"
         // line edits
         "QLineEdit {"
