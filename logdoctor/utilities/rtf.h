@@ -32,7 +32,7 @@ public:
         QString& rich_content,
         const std::string& content,
         const LogsFormat& logs_format,
-        TextBrowser& TB
+        const TextBrowser& TB
     );
 
     //! Provides the default string

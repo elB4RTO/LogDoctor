@@ -1,23 +1,27 @@
 
 #include "rtf.h"
 
-#include "utilities/strings.h"
-#include "modules/craplog/modules/lib.h"
+#include "globals/global_configs.h"
+
 #include "modules/tb.h"
+
+#include "modules/craplog/modules/lib.h"
+
+#include "utilities/strings.h"
 
 #include <QString>
 
 
-void RichText::enrichLogs( QString& rich_content, const std::string& content, const LogsFormat& logs_format, TextBrowser& TB )
+void RichText::enrichLogs( QString& rich_content, const std::string& content, const LogsFormat& logs_format, const TextBrowser& TB )
 {
     const std::unordered_map<std::string, QString>& colors{ TB.getColorScheme() };
-    const int color_scheme{ TB.getColorSchemeID() };
+    const bool using_colors_scheme{ TB.getColorSchemeID() != ColorsScheme::None };
     const bool wide_lines{ TB.getWideLinesUsage() };
     // enrich the text
     rich_content.clear();
     rich_content.reserve( static_cast<int>(content.size()*2ul) );
     rich_content += "<!DOCTYPE html><html><head></head><body";
-    if ( color_scheme > 0 ) {
+    if ( using_colors_scheme ) {
         rich_content += QStringLiteral(R"( style="background:%1; color:%2")")
             .arg( colors.at("background"), colors.at("text") );
     }
@@ -155,7 +159,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
             }
             rich_line += "<b>";
             class_name.clear();
-            if ( color_scheme > 0 ) {
+            if ( using_colors_scheme ) {
                 class_name += R"(<span style="color:)";
                 if ( fld == "client" ) {
                     class_name += colors.at("ip");
@@ -177,7 +181,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
             // add the class name as span
             rich_line += class_name;
             rich_line += QString::fromStdString( fld_str );
-            if ( color_scheme > 0 ) {
+            if ( using_colors_scheme ) {
                 rich_line += "</span>";
             }
             rich_line += "</b>";

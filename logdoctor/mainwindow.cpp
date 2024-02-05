@@ -50,7 +50,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow{ parent }
     , ui{ new Ui::MainWindow }
-    , tb_color_schemes{ ColorSec::getColorSchemes() }
+    , tb_colors_schemes{ ColorSec::getColorSchemes() }
     , colors{ ColorSec::getColors() }
 {
     //////////////////
@@ -95,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->mainwidget->setFont( this->fonts.at( "main_big" ) );
 
     // TextBrowser for the LogFiles
-    this->TB.setColorScheme( 1, this->tb_color_schemes.at( 1 ) );
+    this->TB.setColorScheme( ColorsScheme::Breeze, this->tb_colors_schemes.at( ColorsScheme::Breeze ) );
     this->TB.setFont( this->fonts.at( "main" ) );
     this->ui->textLogFiles->setFont( this->TB.getFont() );
 
@@ -211,7 +211,7 @@ MainWindow::MainWindow(QWidget *parent)
     // text browser
     this->ui->box_ConfTextBrowser_Font->setCurrentText( this->TB.getFontFamily() );
     this->ui->checkBox_ConfTextBrowser_WideLines->setChecked( this->TB.getWideLinesUsage() );
-    this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( this->TB.getColorSchemeID() );
+    this->ui->box_ConfTextBrowser_ColorScheme->setCurrentIndex( static_cast<int>(this->TB.getColorSchemeID()) );
     this->refreshTextBrowserPreview();
     // charts
     this->ui->box_ConfCharts_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::charts_theme) );
@@ -519,7 +519,9 @@ void MainWindow::readConfigs()
 
                 } else if ( var == "ColorScheme" ) {
                     try {
-                        this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( std::stoi( val ) );
+                        const int v{ std::stoi( val ) };
+                        GlobalConfigs::colors_scheme = static_cast<ColorsScheme>( v );
+                        this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( v );
                     } catch ( const std::exception& ) {
                         invalid_lines.emplaceBack( QString::fromStdString( line ) );
                     }
@@ -966,7 +968,7 @@ void MainWindow::writeConfigs()
         configs += "\n\n[TextBrowser]";
         configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
         configs += "\nWideLines=" + this->b2s.at( this->TB.getWideLinesUsage() );
-        configs += "\nColorScheme=" + std::to_string( this->TB.getColorSchemeID() );
+        configs += "\nColorScheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::colors_scheme) );
         //// CRAPLOG ////
         configs += "\n\n[Craplog]";
         configs += "\nCraplogDialogsLevel=" + toString( this->craplog.getDialogsLevel() );
@@ -4509,9 +4511,11 @@ void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)
 }
 void MainWindow::on_box_ConfTextBrowser_ColorScheme_currentIndexChanged(int index)
 {
-    this->TB.setColorScheme( index, this->tb_color_schemes.at( index ) );
+    ColorsScheme cs{ static_cast<ColorsScheme>( index ) };
+    GlobalConfigs::colors_scheme = cs;
+    this->TB.setColorScheme( cs, this->tb_colors_schemes.at( cs ) );
     if ( !this->crapnote.isNull() ) {
-        this->crapnote->setColorScheme( index );
+        this->crapnote->setColorScheme( cs );
     }
     this->refreshTextBrowserPreview();
 }

@@ -31,49 +31,53 @@ std::unordered_map<std::string, QColor> getColors() noexcept
 }
 
 
-std::unordered_map<int, std::unordered_map<std::string, QString>> getColorSchemes() noexcept
+std::unordered_map<ColorsScheme, std::unordered_map<std::string, QString>> getColorSchemes() noexcept
 {
     return {
-        // none
-        {0,{{"background",""},
-            {"text",""},
-            {"x",""},
-            {"ip",""},
-            {"byte",""},
-            {"time",""},
-            {"ua",""},
-            {"req",""},
-            {"res",""} }},
-        // breeze
-        {1,{{"background","#ffffff"},
-            {"text","#9c9c9b"},
-            {"x","#1f1c1b"},
-            {"ip","#644a9b"},
-            {"byte","#d5bc79"},
-            {"time","#d685d6"},
-            {"ua","#006e28"},
-            {"req","#54b8ff"},
-            {"res","#d24f4f"} }},
-        // monokai
-        {2,{{"background","#272822"},
-            {"text","#706c5a"},
-            {"x","#a6a6a0"},
-            {"ip","#57adbc"},
-            {"byte","#c1b864"},
-            {"time","#9773db"},
-            {"ua","#a6e22e"},
-            {"req","#d1d1cb"},
-            {"res","#f92672"} }},
-        // radical
-        {3,{{"background","#141322"},
-            {"text","#749295"},
-            {"x","#7c9c9e"},
-            {"ip","#fda8bc"},
-            {"byte","#ff85a1"},
-            {"time","#a8c0c2"},
-            {"ua","#42a784"},
-            {"req","#d5358f"},
-            {"res","#56e8e4"} }}
+        {ColorsScheme::None,{
+            {"background", ""},
+            {"text",       ""},
+            {"x",          ""},
+            {"ip",         ""},
+            {"byte",       ""},
+            {"time",       ""},
+            {"ua",         ""},
+            {"req",        ""},
+            {"res",        ""}}
+        },
+        {ColorsScheme::Breeze,{
+            {"background", "#ffffff"},
+            {"text",       "#9c9c9b"},
+            {"x",          "#1f1c1b"},
+            {"ip",         "#644a9b"},
+            {"byte",       "#d5bc79"},
+            {"time",       "#d685d6"},
+            {"ua",         "#006e28"},
+            {"req",        "#54b8ff"},
+            {"res",        "#d24f4f"}}
+        },
+        {ColorsScheme::Monokai,{
+            {"background", "#272822"},
+            {"text",       "#706c5a"},
+            {"x",          "#a6a6a0"},
+            {"ip",         "#57adbc"},
+            {"byte",       "#c1b864"},
+            {"time",       "#9773db"},
+            {"ua",         "#a6e22e"},
+            {"req",        "#d1d1cb"},
+            {"res",        "#f92672"}}
+        },
+        {ColorsScheme::Radical,{
+            {"background", "#141322"},
+            {"text",       "#749295"},
+            {"x",          "#7c9c9e"},
+            {"ip",         "#fda8bc"},
+            {"byte",       "#ff85a1"},
+            {"time",       "#a8c0c2"},
+            {"ua",         "#42a784"},
+            {"req",        "#d5358f"},
+            {"res",        "#56e8e4"}}
+        }
     };
 }
 

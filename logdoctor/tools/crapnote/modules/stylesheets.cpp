@@ -79,7 +79,7 @@ StyleMap makeStyleMap()
 namespace StyleSec::Crapnote
 {
 
-QString getStyleSheet( const int color_scheme )
+QString getStyleSheet( const ColorsScheme colors_scheme )
 {
     QString icons_theme;
     switch ( GlobalConfigs::window_theme ) {
@@ -95,9 +95,8 @@ QString getStyleSheet( const int color_scheme )
             throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
     }
     QString note_bg, note_txt;
-    // update the colors palette
-    switch ( color_scheme ) {
-        case 0:
+    switch ( colors_scheme ) {
+        case ColorsScheme::None:
             if ( GlobalConfigs::window_theme == WindowTheme::Light ) {
                 note_bg  = "rgb( 255, 255, 255 )";
                 note_txt = "rgb(   0,   0,   0 )";
@@ -106,24 +105,21 @@ QString getStyleSheet( const int color_scheme )
                 note_txt = "rgb( 255, 255, 255 )";
             }
             break;
-        case 1:
-            // breeze
+        case ColorsScheme::Breeze:
             note_bg  = "rgb( 255, 198, 102 )";
             note_txt = "rgb(  31,  28,  27 )";
             break;
-        case 2:
-            // monokai
+        case ColorsScheme::Monokai:
             note_bg  = "rgb( 166, 226,  46 )";
             note_txt = "rgb(  39,  40,  34 )";
             break;
-        case 3:
-            // radical
+        case ColorsScheme::Radical:
             note_bg  = "rgb(  20,  19,  34 )";
             note_txt = "rgb( 213,  53, 143 )";
             break;
         default:
             // wrong
-            throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( color_scheme ), true ); // leave un-catched
+            throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( static_cast<themes_t>(colors_scheme) ), true ); // leave un-catched
     }
 
     const StyleMap style{ makeStyleMap() };

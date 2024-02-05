@@ -31,6 +31,7 @@ class QTranslator;
 class QTreeWidgetItem;
 
 enum class LogField;
+enum class ColorsScheme : unsigned char;
 
 
 namespace Ui {
@@ -701,7 +702,7 @@ private:
     };
 
     // color schemes
-    const std::unordered_map<int, std::unordered_map<std::string, QString>> tb_color_schemes;
+    const std::unordered_map<ColorsScheme, std::unordered_map<std::string, QString>> tb_colors_schemes;
 
     // colors
     const std::unordered_map<std::string, QColor> colors;

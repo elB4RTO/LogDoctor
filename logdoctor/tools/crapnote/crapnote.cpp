@@ -9,13 +9,13 @@
 #include "modules/exceptions.h"
 
 
-Crapnote::Crapnote( const int color_scheme_id, QFont font, QWidget* parent )
+Crapnote::Crapnote( const ColorsScheme colors_scheme, QFont font, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapnote }
 {
     ui->setupUi(this);
 
-    this->setColorScheme( color_scheme_id );
+    this->setColorScheme( colors_scheme );
     this->setTextFont( font );
 }
 
@@ -26,35 +26,32 @@ void Crapnote::setTextFont( QFont font ) noexcept
     this->ui->text_Note->setFont( font );
 }
 
-void Crapnote::setColorScheme( const int color_scheme_id )
+void Crapnote::setColorScheme( const ColorsScheme colors_scheme )
 {
     if ( GlobalConfigs::window_theme != WindowTheme::Native ) {
-        this->setStyleSheet( StyleSec::Crapnote::getStyleSheet( color_scheme_id ) );
+        this->setStyleSheet( StyleSec::Crapnote::getStyleSheet( colors_scheme ) );
     } else {
         this->setStyleSheet("");
         QPalette p;
         // update the colors palette
-        switch ( color_scheme_id ) {
-            case 0:
+        switch ( colors_scheme ) {
+            case ColorsScheme::None:
                 break;
-            case 1:
-                // breeze
+            case ColorsScheme::Breeze:
                 p.setColor( QPalette::Base, QColor( 255, 198, 102 ) );
                 p.setColor( QPalette::Text, QColor(  31,  28,  27 ) );
                 break;
-            case 2:
-                // monokai
+            case ColorsScheme::Monokai:
                 p.setColor( QPalette::Base, QColor( 166, 226,  46 ) );
                 p.setColor( QPalette::Text, QColor(  39,  40,  34 ) );
                 break;
-            case 3:
-                // radical
+            case ColorsScheme::Radical:
                 p.setColor( QPalette::Base, QColor(  20,  19,  34 ) );
                 p.setColor( QPalette::Text, QColor( 213,  53, 143 ) );
                 break;
             default:
                 // wrong
-                throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( color_scheme_id ), true ); // leave un-catched
+                throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( static_cast<themes_t>(colors_scheme) ), true ); // leave un-catched
         }
         this->ui->text_Note->setPalette( p );
     }
