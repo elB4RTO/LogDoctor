@@ -166,6 +166,9 @@ set(PROJECT_SOURCES
     modules/crapinfo/modules/stylesheets.h
     modules/crapinfo/modules/stylesheets.cpp
 
+    tools/crappath/crappath.h
+    tools/crappath/crappath.cpp
+
     tools/crapnote/crapnote.ui
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
