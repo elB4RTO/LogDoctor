@@ -1278,16 +1278,13 @@ void MainWindow::updateUiTheme()
             this->updateUiIcons();
             break;
         case WindowTheme::Light:
+            [[fallthrough]];
         case WindowTheme::Dark:
-            {
             // icons first
             this->updateUiIcons();
             // window last
-            QString ss;
-            StyleSec::getStyleSheet( ss );
-            this->setStyleSheet( ss );
+            this->setStyleSheet( StyleSec::getStyleSheet() );
             break;
-            }
         default:
             // wrong
             throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );

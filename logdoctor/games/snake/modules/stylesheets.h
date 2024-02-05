@@ -8,7 +8,7 @@ class QString;
 namespace StyleSec::Games::Snake
 {
 
-void getStyleSheet( QString& stylesheet );
+QString getStyleSheet();
 
 } // namespace StyleSec::Games::Snake
 

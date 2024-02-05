@@ -6,6 +6,7 @@
 #include "modules/exceptions.h"
 
 #include <QString>
+#include <QtCore/QStringBuilder>
 
 #include <unordered_map>
 
@@ -33,7 +34,7 @@ enum StyleId : uint32_t {
 
 using StyleMap = std::unordered_map<StyleId, QString>;
 
-const StyleMap makeStyleMap()
+StyleMap makeStyleMap()
 {
     switch ( GlobalConfigs::window_theme ) {
         case WindowTheme::Light:
@@ -69,7 +70,6 @@ const StyleMap makeStyleMap()
                 {SCORE_BORDER,
                     "transparent"}
             };
-            break;
         case WindowTheme::Dark:
             return {
                 {TEXT,
@@ -103,10 +103,8 @@ const StyleMap makeStyleMap()
                 {SCORE_BORDER,
                     "transparent"}
             };
-            break;
         default:
             throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
     }
 }
 
@@ -116,12 +114,12 @@ const StyleMap makeStyleMap()
 namespace StyleSec::Games::Snake
 {
 
-void getStyleSheet( QString& stylesheet )
+QString getStyleSheet()
 {
     QString icons_theme;
     switch ( GlobalConfigs::window_theme ) {
         case WindowTheme::Native:
-            return;
+            return "";
         case WindowTheme::Light:
             icons_theme = "dark";
             break;
@@ -130,35 +128,34 @@ void getStyleSheet( QString& stylesheet )
             break;
         default:
             throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
     }
     const StyleMap style{ makeStyleMap() };
-    stylesheet =
+    return
         "* {"
-        "   color: "+style.at(TEXT)+";"
+        "   color: "% style.at(TEXT) %";"
         "}"
         "QWidget#SnakeGame {"
-        "   background-color: "+style.at(WINDOW_BASE_SECONDARY)+";"
+        "   background-color: "% style.at(WINDOW_BASE_SECONDARY) %";"
         "}"
         "QWidget#stackedWidget_GameDisplay {"
-        "   border: 1px solid "+style.at(WINDOW_BORDER)+";"
+        "   border: 1px solid "% style.at(WINDOW_BORDER) %";"
         "}"
         "QWidget#stackedPage_GameMenu {"
         "   border-radius: 16px;"
-        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
+        "   background-color: "% style.at(WINDOW_BASE_PRIMARY) %";"
         "}"
         "QWidget#stackedPage_GameBoard {"
         "   border-radius: 6px;"
-        "   background-color: "+style.at(WINDOW_BASE_PRIMARY)+";"
+        "   background-color: "% style.at(WINDOW_BASE_PRIMARY) %";"
         "}"
         "QComboBox {"
         "   border-radius: 8px;"
-        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "   background-color: "% style.at(BOXES_BASE_PRIMARY) %";"
         "}"
         "QComboBox:on {"
         "   border-bottom-left-radius: 0px;"
-        "   border-bottom: 2px solid "+style.at(BOXES_DECO)+";"
-        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
+        "   border-bottom: 2px solid "% style.at(BOXES_DECO) %";"
+        "   background-color: "% style.at(BOXES_BASE_SECONDARY) %";"
         "}"
         "QComboBox::drop-down {"
         "   border-top-right-radius: 8px;"
@@ -166,21 +163,21 @@ void getStyleSheet( QString& stylesheet )
         "   border-left: 3px solid"
         "                QLinearGradient("
         "                   x0:0, y0:0, x1:0, y1:1,"
-        "                   stop:0 "+style.at(BOXES_BASE_PRIMARY)+","
-        "                   stop:0.1 "+style.at(BOXES_BASE_PRIMARY)+","
-        "                   stop:0.5 "+style.at(BOXES_DECO)+","
-        "                   stop:0.9 "+style.at(BOXES_BASE_PRIMARY)+","
-        "                   stop:1 "+style.at(BOXES_BASE_PRIMARY)+");"
-        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
-        "   selection-background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
+        "                   stop:0 "% style.at(BOXES_BASE_PRIMARY) %","
+        "                   stop:0.1 "% style.at(BOXES_BASE_PRIMARY) %","
+        "                   stop:0.5 "% style.at(BOXES_DECO) %","
+        "                   stop:0.9 "% style.at(BOXES_BASE_PRIMARY) %","
+        "                   stop:1 "% style.at(BOXES_BASE_PRIMARY) %");"
+        "   background-color: "% style.at(BOXES_BASE_PRIMARY) %";"
+        "   selection-background-color: "% style.at(BOXES_BASE_PRIMARY) %";"
         "}"
         "QComboBox::drop-down:on {"
         "   border-bottom-right-radius: 0px;"
         "   border-left-color: transparent;"
-        "   background-color: "+style.at(BOXES_BASE_SECONDARY)+";"
+        "   background-color: "% style.at(BOXES_BASE_SECONDARY) %";"
         "}"
         "QComboBox::down-arrow {"
-        "   image: url(:/icons/icons/"+icons_theme+"/combobox_arrow.png);"
+        "   image: url(:/icons/icons/"% icons_theme %"/combobox_arrow.png);"
         "}"
         "QComboBox::down-arrow:on {"
         "   image: url();"
@@ -188,26 +185,26 @@ void getStyleSheet( QString& stylesheet )
         "QComboBox QAbstractItemView {"
         "   border-bottom-left-radius: 8px;"
         "   border-bottom-right-radius: 8px;"
-        "   background-color: "+style.at(BOXES_BASE_PRIMARY)+";"
-        "   selection-background-color: "+style.at(BOXES_BASE_SELECTION)+";"
+        "   background-color: "% style.at(BOXES_BASE_PRIMARY) %";"
+        "   selection-background-color: "% style.at(BOXES_BASE_SELECTION) %";"
         "}"
         "QPushButton#button_Play {"
         "   border-radius: 8px;"
         "   border: 0px;"
-        "   background-color: "+style.at(PLAY_BUTTON_BASE)+";"
+        "   background-color: "% style.at(PLAY_BUTTON_BASE) %";"
         "}"
         "QPushButton#button_Play:hover {"
-        "   background-color: "+style.at(PLAY_BUTTON_BASE_HOVER)+";"
+        "   background-color: "% style.at(PLAY_BUTTON_BASE_HOVER) %";"
         "}"
         "QFrame#frame_Score {"
         "   border-radius: 4px;"
-        "   border: 1px solid "+style.at(SCORE_FRAME_BORDER)+";"
-        "   background-color: "+style.at(SCORE_FRAME_BASE)+";"
+        "   border: 1px solid "% style.at(SCORE_FRAME_BORDER) %";"
+        "   background-color: "% style.at(SCORE_FRAME_BASE) %";"
         "}"
         "QLCDNumber#lcd_Score {"
-        "   border: 1px solid "+style.at(SCORE_BORDER)+";"
-        "   color: "+style.at(SCORE_TEXT)+";"
-        "   background-color: "+style.at(SCORE_BASE)+";"
+        "   border: 1px solid "% style.at(SCORE_BORDER) %";"
+        "   color: "% style.at(SCORE_TEXT) %";"
+        "   background-color: "% style.at(SCORE_BASE) %";"
         "}";
 }
 

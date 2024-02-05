@@ -74,7 +74,6 @@ StyleMap makeStyleMap()
             {BUTTONS_BASE_DISABLED,
                 "rgb( 200, 219, 238 )"}
         };
-        break;
     case WindowTheme::Dark:
         return {
             {BUTTONS_BASE,
@@ -86,10 +85,8 @@ StyleMap makeStyleMap()
             {BUTTONS_BASE_DISABLED,
                 "rgb( 21, 71, 21 )"}
         };
-        break;
     default:
         throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-        break;
     }
 }
 

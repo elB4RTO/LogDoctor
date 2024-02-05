@@ -17,9 +17,7 @@ CrissCross::CrissCross( QWidget* parent )
 {
     this->ui->setupUi(this);
 
-    QString stylesheet;
-    StyleSec::Games::CrissCross::getStyleSheet( stylesheet );
-    this->setStyleSheet( stylesheet );
+    this->setStyleSheet( StyleSec::Games::CrissCross::getStyleSheet() );
 
     // verify that one player is human and the other is not
     if ( !(p1_human^p2_human)  ) {

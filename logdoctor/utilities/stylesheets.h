@@ -14,9 +14,9 @@ namespace StyleSec
 
 //! Provides the requested stylesheet
 /*!
-    \param stylesheet Will hold the stylesheet
+    \return The stylesheet string
 */
-void getStyleSheet( QString& stylesheet );
+QString getStyleSheet();
 
 } // namespace StyleSec
 

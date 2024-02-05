@@ -8,7 +8,7 @@ class QString;
 namespace StyleSec::Crapinfo
 {
 
-void getStyleSheet( QString& stylesheet );
+QString getStyleSheet();
 
 } // namespace StyleSec::Crapinfo
 

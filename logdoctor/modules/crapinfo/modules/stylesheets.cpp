@@ -6,6 +6,7 @@
 #include "modules/exceptions.h"
 
 #include <QString>
+#include <QtCore/QStringBuilder>
 
 #include <unordered_map>
 
@@ -36,7 +37,7 @@ enum StyleId : uint32_t {
 
 using StyleMap = std::unordered_map<StyleId, QString>;
 
-const StyleMap makeStyleMap()
+StyleMap makeStyleMap()
 {
     switch ( GlobalConfigs::window_theme ) {
         case WindowTheme::Light:
@@ -78,7 +79,6 @@ const StyleMap makeStyleMap()
                 {SEPARATORS,
                     "rgb( 88, 80, 80 )"}
             };
-            break;
         case WindowTheme::Dark:
             return {
                 {TEXT,
@@ -118,10 +118,8 @@ const StyleMap makeStyleMap()
                 {SEPARATORS,
                     "rgb( 96, 96, 96 )"}
             };
-            break;
         default:
             throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
     }
 }
 
@@ -131,114 +129,115 @@ const StyleMap makeStyleMap()
 namespace StyleSec::Crapinfo
 {
 
-void getStyleSheet( QString& stylesheet )
+QString getStyleSheet()
 {
-    if ( GlobalConfigs::window_theme != WindowTheme::Native ) {
-        const StyleMap style{ makeStyleMap() };
-        stylesheet =
-            "QWidget#Crapinfo {"
-            "   color: "+style.at(TEXT)+";"
-            "   background-color: "+style.at(WINDOW_SECONDARY)+";"
-            "}"
-            "QFrame {"
-            "   border: 0px;"
-            "   background-color: transparent;"
-            "}"
-            "QLabel {"
-            "   color: "+style.at(TEXT)+";"
-            "}"
-            "QPushButton:pressed {"
-            "   background-color: "+style.at(WINDOW_PRIMARY)+";"
-            "}"
-            "QWidget#page_LogDoc,"
-            "QWidget#page_Paths,"
-            "QWidget#scrollAreaContents_LogDoc {"
-            "   border: 1px solid "+style.at(BORDER)+";"
-            "   border-top: 0px;"
-            "   border-radius: 4px;"
-            "   border-top-left-radius: 0px;"
-            "   border-top-right-radius: 0px;"
-            "   background-color: "+style.at(WINDOW_PRIMARY)+";"
-            "}"
-            "QToolBox::tab {"
-            "   border: 1px solid "+style.at(BORDER_UNSELECTED)+";"
-            "   border-radius: 8px;"
-            "   color: "+style.at(TEXT_UNSELECTED)+";"
-            "   background-color: "+style.at(TOOLBOX_TAB_BASE)+";"
-            "}"
-            "QToolBox::tab:!selected:hover {"
-            "   border-color: "+style.at(BORDER_HOVER)+";"
-            "   color: "+style.at(TEXT)+";"
-            "   background-color: "+style.at(TOOLBOX_TAB_BASE)+";"
-            "}"
-            "QToolBox::tab:selected {"
-            "   border-color: "+style.at(BORDER)+";"
-            "   border-top: 4px solid "+style.at(BORDER)+";"
-            "   border-bottom: 0px;"
-            "   border-bottom-left-radius: 0px;"
-            "   border-bottom-right-radius: 0px;"
-            "   color: "+style.at(TEXT)+";"
-            "   background-color: "+style.at(TOOLBOX_TAB_BASE_SELECTED)+";"
-            "}"
-            "QScrollBar {"
-            "   border: 0px solid transparent;"
-            "}"
-            "QScrollBar:horizontal {"
-            "   height: 12px;"
-            "   background-color: "+style.at(SCROLLBAR_BASE)+";"
-            "}"
-            "QScrollBar::handle:horizontal {"
-            "   min-width: 16px;"
-            "   margin: 5px 0px 5px 0px;"
-            "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
-            "}"
-            "QScrollBar::handle:horizontal:hover {"
-            "   margin: 4px 0px 4px 0px;"
-            "   border-radius: 2px;"
-            "}"
-            "QScrollBar:vertical {"
-            "   width: 12px;"
-            "   background-color: "+style.at(SCROLLBAR_BASE)+";"
-            "}"
-            "QScrollBar::handle:vertical {"
-            "   min-width: 16px;"
-            "   margin: 0px 5px 0px 5px;"
-            "   background-color: "+style.at(SCROLLBAR_HANDLER)+";"
-            "}"
-            "QScrollBar::handle:vertical:hover {"
-            "   margin: 0px 4px 0px 4px;"
-            "   border-radius: 2px;"
-            "}"
-            "QScrollBar::add-line,"
-            "QScrollBar::sub-line,"
-            "QScrollBar::add-pae,"
-            "QScrollBar::sub-pae,"
-            "QScrollBar::up-arrow,"
-            "QScrollBar::down-arrow,"
-            "QScrollBar::left-arrow,"
-            "QScrollBar::right-arrow {"
-            "   border: 0px;"
-            "   background-color: "+style.at(SCROLLBAR_CONTROLS)+";"
-            "}"
-            "QLineEdit {"
-            "   border-radius: 4px;"
-            "   color: "+style.at(LINEDIT_TEXT)+";"
-            "   selection-color: "+style.at(LINEDIT_TEXT_SELECTION)+";"
-            "   background-color: "+style.at(LINEDIT_BASE)+";"
-            "   selection-background-color: "+style.at(LINEDIT_BASE_SELECTION)+";"
-            "}"
-            "QWidget#scrollAreaContents_Paths_Executable,"
-            "QWidget#scrollAreaContents_Paths_ConfigFile,"
-            "QWidget#scrollAreaContents_Paths_AppData {"
-            "   border-radius: 8px;"
-            "   background-color: "+style.at(PATHS_FRAME_BASE)+";"
-            "}"
-            "QFrame#gline_Version {"
-            "   border: 1px solid "+style.at(WINDOW_PRIMARY)+";"
-            "   margin: 2px 0px 3px 0px;"
-            "   background-color: "+style.at(SEPARATORS)+";"
-            "}";
+    if ( GlobalConfigs::window_theme == WindowTheme::Native ) {
+        return "";
     }
+    const StyleMap style{ makeStyleMap() };
+    return
+        "QWidget#Crapinfo {"
+        "   color: "% style.at(TEXT) %";"
+        "   background-color: "% style.at(WINDOW_SECONDARY) %";"
+        "}"
+        "QFrame {"
+        "   border: 0px;"
+        "   background-color: transparent;"
+        "}"
+        "QLabel {"
+        "   color: "% style.at(TEXT) %";"
+        "}"
+        "QPushButton:pressed {"
+        "   background-color: "% style.at(WINDOW_PRIMARY) %";"
+        "}"
+        "QWidget#page_LogDoc,"
+        "QWidget#page_Paths,"
+        "QWidget#scrollAreaContents_LogDoc {"
+        "   border: 1px solid "% style.at(BORDER) %";"
+        "   border-top: 0px;"
+        "   border-radius: 4px;"
+        "   border-top-left-radius: 0px;"
+        "   border-top-right-radius: 0px;"
+        "   background-color: "% style.at(WINDOW_PRIMARY) %";"
+        "}"
+        "QToolBox::tab {"
+        "   border: 1px solid "% style.at(BORDER_UNSELECTED) %";"
+        "   border-radius: 8px;"
+        "   color: "% style.at(TEXT_UNSELECTED) %";"
+        "   background-color: "% style.at(TOOLBOX_TAB_BASE) %";"
+        "}"
+        "QToolBox::tab:!selected:hover {"
+        "   border-color: "% style.at(BORDER_HOVER) %";"
+        "   color: "% style.at(TEXT) %";"
+        "   background-color: "% style.at(TOOLBOX_TAB_BASE) %";"
+        "}"
+        "QToolBox::tab:selected {"
+        "   border-color: "% style.at(BORDER) %";"
+        "   border-top: 4px solid "% style.at(BORDER) %";"
+        "   border-bottom: 0px;"
+        "   border-bottom-left-radius: 0px;"
+        "   border-bottom-right-radius: 0px;"
+        "   color: "% style.at(TEXT) %";"
+        "   background-color: "% style.at(TOOLBOX_TAB_BASE_SELECTED) %";"
+        "}"
+        "QScrollBar {"
+        "   border: 0px solid transparent;"
+        "}"
+        "QScrollBar:horizontal {"
+        "   height: 12px;"
+        "   background-color: "% style.at(SCROLLBAR_BASE) %";"
+        "}"
+        "QScrollBar::handle:horizontal {"
+        "   min-width: 16px;"
+        "   margin: 5px 0px 5px 0px;"
+        "   background-color: "% style.at(SCROLLBAR_HANDLER) %";"
+        "}"
+        "QScrollBar::handle:horizontal:hover {"
+        "   margin: 4px 0px 4px 0px;"
+        "   border-radius: 2px;"
+        "}"
+        "QScrollBar:vertical {"
+        "   width: 12px;"
+        "   background-color: "% style.at(SCROLLBAR_BASE) %";"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "   min-width: 16px;"
+        "   margin: 0px 5px 0px 5px;"
+        "   background-color: "% style.at(SCROLLBAR_HANDLER) %";"
+        "}"
+        "QScrollBar::handle:vertical:hover {"
+        "   margin: 0px 4px 0px 4px;"
+        "   border-radius: 2px;"
+        "}"
+        "QScrollBar::add-line,"
+        "QScrollBar::sub-line,"
+        "QScrollBar::add-pae,"
+        "QScrollBar::sub-pae,"
+        "QScrollBar::up-arrow,"
+        "QScrollBar::down-arrow,"
+        "QScrollBar::left-arrow,"
+        "QScrollBar::right-arrow {"
+        "   border: 0px;"
+        "   background-color: "% style.at(SCROLLBAR_CONTROLS) %";"
+        "}"
+        "QLineEdit {"
+        "   border-radius: 4px;"
+        "   color: "% style.at(LINEDIT_TEXT) %";"
+        "   selection-color: "% style.at(LINEDIT_TEXT_SELECTION) %";"
+        "   background-color: "% style.at(LINEDIT_BASE) %";"
+        "   selection-background-color: "% style.at(LINEDIT_BASE_SELECTION) %";"
+        "}"
+        "QWidget#scrollAreaContents_Paths_Executable,"
+        "QWidget#scrollAreaContents_Paths_ConfigFile,"
+        "QWidget#scrollAreaContents_Paths_AppData {"
+        "   border-radius: 8px;"
+        "   background-color: "% style.at(PATHS_FRAME_BASE) %";"
+        "}"
+        "QFrame#gline_Version {"
+        "   border: 1px solid "% style.at(WINDOW_PRIMARY) %";"
+        "   margin: 2px 0px 3px 0px;"
+        "   background-color: "% style.at(SEPARATORS) %";"
+        "}";
 }
 
 } // namespace StyleSec::Crapinfo
