@@ -1,6 +1,5 @@
-#include "strings.h"
 
-#include "chars.h"
+#include "strings.h"
 
 #include <QStringView>
 
@@ -36,7 +35,7 @@ std::string strip( const std::string& str, const char chr ) noexcept
     return std::string{};
 }
 
-std::string strip( const std::string& str, std::string_view chars ) noexcept
+std::string strip( const std::string& str, const char* chars ) noexcept
 {
     if (const size_t start{ str.find_first_not_of( chars ) }; start != std::string::npos ) {
         const size_t stop{ str.find_last_not_of( chars ) };
@@ -54,7 +53,7 @@ std::string lstrip( const std::string& str, const char chr ) noexcept
     return std::string{};
 }
 
-std::string lstrip( const std::string& str, std::string_view chars ) noexcept
+std::string lstrip( const std::string& str, const char* chars ) noexcept
 {
     if (const size_t start{ str.find_first_not_of( chars ) }; start != std::string::npos ) {
         return str.substr( start );
@@ -71,7 +70,7 @@ std::string rstrip( const std::string &str, const char chr ) noexcept
     return std::string{};
 }
 
-std::string rstrip( const std::string& str, std::string_view chars ) noexcept
+std::string rstrip( const std::string& str, const char* chars ) noexcept
 {
     if (const size_t stop{ str.find_last_not_of( chars ) }; stop != std::string::npos ) {
         return str.substr( 0ul, stop+1ul );
@@ -139,7 +138,7 @@ void split( std::vector<std::string>& list, const std::string& target_str, std::
 }
 
 
-void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator, std::string_view strips ) noexcept
+void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator, const char* strips ) noexcept
 {
     split( list, strip( target_str, strips ), separator );
     std::transform( list.begin(), list.end(), list.begin(),
@@ -147,7 +146,7 @@ void splitrip( std::vector<std::string>& list, const std::string& target_str, co
                              { return strip( str, strips ); } );
 }
 
-void splitrip( std::vector<std::string>& list, const std::string& target_str, std::string_view separator, std::string_view strips ) noexcept
+void splitrip(std::vector<std::string>& list, const std::string& target_str, const char* separator, const char* strips ) noexcept
 {
     split( list, strip( target_str, strips ), separator );
     std::transform( list.begin(), list.end(), list.begin(),

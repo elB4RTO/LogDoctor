@@ -165,7 +165,7 @@ std::string strip( const std::string& str, const char chr ) noexcept;
     \param chars The characters to strip away
     \return The result string
 */
-std::string strip( const std::string& str, std::string_view chars=" \n\t\b\r\v" ) noexcept;
+std::string strip( const std::string& str, const char* chars=" \n\t\b\r\v" ) noexcept;
 
 //!  Strips the given character from the left side of a string
 /*!
@@ -181,7 +181,7 @@ std::string lstrip( const std::string& str, const char chr ) noexcept;
     \param chars The characters to strip away
     \return The result string
 */
-std::string lstrip( const std::string& str, std::string_view chars=" \n\t\b\r\v" ) noexcept;
+std::string lstrip( const std::string& str, const char* chars=" \n\t\b\r\v" ) noexcept;
 
 //! Strips the given character from the right side of a string
 /*!
@@ -197,7 +197,7 @@ std::string rstrip( const std::string &str, const char chr ) noexcept;
     \param chars The characters to strip away
     \return The result string
 */
-std::string rstrip( const std::string& str, std::string_view chars=" \n\t\b\r\v" ) noexcept;
+std::string rstrip( const std::string& str, const char* chars=" \n\t\b\r\v" ) noexcept;
 
 //! Strips everything from a string starting from the left side untill the delimiter is found (a.k.a. cut)
 /*!
@@ -232,7 +232,7 @@ void split( std::vector<std::string>& list, const std::string& target_str, std::
     \param separator The sequence to use as separator
     \param strip The characters to strip away
 */
-void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator='\n', std::string_view strips=" \n\t\b\r\v" ) noexcept;
+void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator='\n', const char* strips=" \n\t\b\r\v" ) noexcept;
 
 //! Splits a string and strips all the splitted items
 /*!
@@ -241,7 +241,7 @@ void splitrip( std::vector<std::string>& list, const std::string& target_str, co
     \param separator The sequence to use as separator
     \param strip The characters to strip away
 */
-void splitrip( std::vector<std::string>& list, const std::string& target_str, std::string_view separator, std::string_view strips=" \n\t\b\r\v" ) noexcept;
+void splitrip( std::vector<std::string>& list, const std::string& target_str, const char* separator, const char* strips=" \n\t\b\r\v" ) noexcept;
 
 //! Replaces all the occurrences of a sequence with another
 /*!
