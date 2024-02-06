@@ -227,7 +227,7 @@ void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
         {11, {}}, {12, {}}, {13, {}}
     };
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -263,7 +263,7 @@ void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, QStrin
 {
     stats_warn_items_t items; // std::vector<std::vector<std::vector<std::array<QString,18>>>>
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -357,7 +357,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringV
 {
     stats_speed_items_t data; // std::vector<std::tuple<long long, std::array<QString,6>>>
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -565,7 +565,7 @@ void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QString
     QHash<QString, unsigned> aux_items;
     stats_count_items_t items; // std::map<QString, unsigned int>>
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -625,7 +625,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
         {22, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {23, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
     };
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -746,7 +746,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
     stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
     int gap = 20;
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -890,7 +890,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 {
     stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
 
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
@@ -1138,7 +1138,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
 void DbQuery::getGlobalCounts( std::optional<GlobalsData>& result, QStringView web_server, const stats_dates_t& dates ) const
 {
-    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, true ) };
+    DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 

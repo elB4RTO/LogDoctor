@@ -167,4 +167,8 @@ struct DatabaseHandler
     static DatabaseWrapper get( const DatabaseType db_type, const bool readonly=false );
 };
 
+
+#define DB_READONLY true
+
+
 #endif // LOGDOCTOR__DATABASE_H
