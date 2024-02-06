@@ -134,7 +134,7 @@ void HashOps::insertUsedHashes( const std::string& db_path, const std::vector<st
 
         for ( const std::string& hash : hashes ) {
 
-            if ( VecOps::contains( this->hashes.at( web_server ), hash ) ) {
+            if ( ! VecOps::contains( this->hashes.at( web_server ), hash ) ) {
 
                 db.getQuery()( QStringLiteral(R"(INSERT INTO "%1" ( hash ) VALUES ( '%2' );)")
                                 .arg( this->ws_names.at(web_server), QString::fromStdString(hash).replace(QLatin1Char('\''),QLatin1String("''")) ) );
