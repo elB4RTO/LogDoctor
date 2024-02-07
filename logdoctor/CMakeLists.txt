@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(MSVC)
@@ -57,6 +57,7 @@ set(PROJECT_SOURCES
     customs/models/logfields_listmodel.h
     customs/models/logfields_listmodel.cpp
 
+    utilities/arrays.h
     utilities/bwlists.h
     utilities/bwutils.cpp
     utilities/chars.h

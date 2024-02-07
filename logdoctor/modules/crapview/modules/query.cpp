@@ -6,6 +6,7 @@
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
 
+#include "utilities/arrays.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
 
@@ -13,7 +14,6 @@
 
 #include <map>
 #include <vector>
-#include <ranges>
 
 
 int toInt( const QString& str )
@@ -1338,7 +1338,9 @@ void DbQuery::getGlobalCounts( std::optional<GlobalsData>& result, QStringView w
     }
 
     // process the day of the week
-    for ( auto [total,count] : std::views::zip( data.traf.day, week_days_count ) ) {
+    /*std::ranges::for_each( std::views::zip( data.traf.day, week_days_count ),
+        [](auto tc){ if (auto& [t,c]{tc}; c>0.0){ t/=c; } });*/
+    for ( auto [total,count] : ArrayOps::zip( data.traf.day, week_days_count ) ) {
         if ( count > 0.0 ) {
             total /= count;
         }

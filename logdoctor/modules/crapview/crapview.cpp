@@ -3,6 +3,7 @@
 
 #include "globals/db_names.h"
 
+#include "utilities/arrays.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
@@ -13,8 +14,6 @@
 #include "modules/warnlists/modules/warnlist.h"
 
 #include "modules/crapview/modules/lib.h"
-
-#include <ranges>
 
 #include <QGraphicsItem>
 #include <QTableWidget>
@@ -932,11 +931,17 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
             {
                 double max_c{ 0.0 };
                 size_t max_i{ traf.size() };
-                std::ranges::for_each( std::views::enumerate(traf),
+                /*std::ranges::for_each( std::views::enumerate(traf),
                     [&max_c,&max_i](const auto ic)
-                    { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });
+                    { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });*/
+                for( const auto [index,count] : ArrayOps::enumerate(traf) ) {
+                    if ( count > max_c ) {
+                        max_c = count;
+                        max_i = index;
+                    }
+                };
                 if ( max_i == traf.size() ) {
-                    traffic_list.push_back( std::make_tuple( __dash, __zero ) );
+                    traffic_list.emplace_back( __dash, __zero );
                 } else {
                     const size_t f{ static_cast<size_t>(max_c) };
                     const size_t d{ max_c<10.0 ? static_cast<size_t>(max_c*100.0)%100ul : static_cast<size_t>(max_c*10.0)%10ul };
@@ -944,9 +949,9 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
                     if ( d > 0 ) {
                         count += QString::number( d ).prepend(QLatin1Char('.'));
                     }
-                    QString value{ op ? TR::tr(this->dbQuery.DAYS.at(max_i+1).c_str())
-                                      : QStringLiteral("%1").arg(max_i, 2, 10, QChar('0')) };
-                    traffic_list.push_back( std::make_tuple( value, count ) );
+                    const QString value{ op ? TR::tr(this->dbQuery.DAYS.at(max_i+1).c_str())
+                                            : QStringLiteral("%1").arg(max_i, 2, 10, QChar('0')) };
+                    traffic_list.emplace_back( value, count );
                 }
             }
         };
