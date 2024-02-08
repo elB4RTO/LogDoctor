@@ -1,6 +1,8 @@
 
 #include "datetime.h"
 
+#include "lib.h"
+
 #include "modules/exceptions.h"
 #include "utilities/strings.h"
 
@@ -57,12 +59,12 @@ const std::string convertMonth( std::string_view month )
 } // namespace (private)
 
 
-std::vector<std::string> processDateTime( std::string_view datetime_, std::string_view format )
+std::vector<std::string> processDateTime( std::string_view datetime_, const LogsFormatField format )
 {
-    std::string aux, datetime{datetime_};
+    std::string datetime{datetime_};
     std::string year, month, day, hour, minute, second;
 
-    if ( format == "ncsa" ) {
+    if ( format == date_time_ncsa ) {
         datetime = StringOps::strip( datetime, "[ ]" );
         day    = datetime.substr( 0ul, 2ul );
         month  = convertMonth( datetime.substr( 3ul, 3ul ) );
@@ -71,7 +73,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, std::strin
         minute = datetime.substr( 15ul, 2ul );
         second = datetime.substr( 18ul, 2ul );
 
-    } else if ( format == "mcs" ) {
+    } else if ( format == date_time_mcs ) {
         month  = convertMonth( datetime.substr( 4ul, 3ul ) );
         day    = datetime.substr( 8ul,  2ul );
         hour   = datetime.substr( 11ul, 2ul );
@@ -79,7 +81,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, std::strin
         second = datetime.substr( 17ul, 2ul );
         year   = datetime.substr( datetime.size()-4 );
 
-    } else if ( format == "gmt" ) {
+    } else if ( format == date_time_gmt ) {
         size_t start{ datetime.find( ", " ) + 2ul };
         day    = datetime.substr( start, 2ul );
         start += 3ul;
@@ -93,7 +95,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, std::strin
         start += 3ul;
         second = datetime.substr( start, 2ul );
 
-    } else if ( StringOps::startsWith( format, "iso" ) ) {
+    } else if ( format == date_time_iso ) {
         year   = datetime.substr( 0ul,  4ul );
         month  = datetime.substr( 5ul,  2ul );
         day    = datetime.substr( 8ul,  2ul );
@@ -101,31 +103,36 @@ std::vector<std::string> processDateTime( std::string_view datetime_, std::strin
         minute = datetime.substr( 14ul, 2ul );
         second = datetime.substr( 17ul, 2ul );
 
-    } else if ( StringOps::startsWith( format, "utc" ) ) {
-        if ( format == "utc_d" ) {
+    } else if ( _DATE_TIME_UTC & format ) {
+        if ( format == date_time_utc_d ) {
             // date
             year   = datetime.substr( 0ul, 4ul );
             month  = datetime.substr( 5ul, 2ul );
             day    = datetime.substr( 8ul, 2ul );
-        } else {
+        } else if ( format == date_time_utc_t ) {
             // time
             hour   = datetime.substr( 0ul, 2ul );
             minute = datetime.substr( 3ul, 2ul );
             second = datetime.substr( 6ul, 2ul );
+        } else [[unlikely]] {
+            // wronthing went some ...
+            throw DateTimeException("Unexpected DateTime UTC: "+std::string{datetime_}+" - format: "+std::to_string(format));
         }
 
-    } else if ( StringOps::startsWith( format, "epoch_" ) ) {
-        aux = format.substr( 6ul );
+    } else if ( _DATE_TIME_EPOCH & format ) {
         // convert to seconds
-        if ( aux == "us" ) {
+        if ( format == date_time_epoch_us ) {
             // from microseconds
             datetime.resize( datetime.size()-6ul );
-        } else if ( aux == "ms" ) {
+        } else if ( format == date_time_epoch_ms ) {
             // from milliseconds
             datetime.resize( datetime.size()-3ul );
-        } else if ( aux == "s.ms" ) {
+        } else if ( format == date_time_epoch_s_ms ) {
             // from seconds.milliseconds
             datetime = std::to_string( std::stoi( datetime ) );
+        } else if ( format != date_time_epoch_s ) [[unlikely]] {
+            // wronthing went some ...
+            throw DateTimeException("Unexpected DateTime EPOCH: "+std::string{datetime_}+" - format: "+std::to_string(format));
         }
         // convert to iso date format
         const QDateTime e{ QDateTime::fromSecsSinceEpoch( std::stoi( datetime ) ) };
@@ -139,20 +146,20 @@ std::vector<std::string> processDateTime( std::string_view datetime_, std::strin
         minute = datetime.substr( 14ul, 2ul );
         second = datetime.substr( 17ul, 2ul );
 
-    } else {
-        if ( format == "YYYYMMDD" ) {
+    } else if ( _DATE_TIME_DATE & format ) {
+        if ( format == date_time_yyyymmdd ) {
             year   = datetime.substr( 0ul, 4ul );
             month  = datetime.substr( 5ul, 2ul );
             day    = datetime.substr( 8ul, 2ul );
 
-        } else if ( format == "MMDDYY" ) {
+        } else if ( format == date_time_mmddyy ) {
             const int y{ std::stoi( datetime.substr( 6ul, 2ul ) ) };
             month  = datetime.substr( 0ul, 2ul );
             day    = datetime.substr( 3ul, 2ul );
             year   = (y<70) ? "20" : "19";
             year  += (y<10) ? "0"+std::to_string( y ) : std::to_string( y );
 
-        } else if ( format == "MDYYYY" ) {
+        } else if ( format == date_time_mdyyyy ) {
             size_t aux_;
             if ( datetime.at(2) == '/' ) {
                 month = datetime.substr( 0ul, 2ul );
@@ -170,63 +177,65 @@ std::vector<std::string> processDateTime( std::string_view datetime_, std::strin
             }
             year = datetime.substr( aux_ );
 
-        } else if ( StringOps::startsWith( format, "year" ) ) {
-            year = datetime;
-            if ( format == "year_short" ) {
-                const int y{ std::stoi( year ) };
-                year  = (y<70) ? "20" : "19";
-                year += year;
-            }
-
-        } else if ( StringOps::startsWith( format, "month" ) ) {
-            if ( format.size() <= 5ul ) {
-                month = datetime;
-            } else {
-                datetime.resize( 3ul ); // may be the full name
-                month = convertMonth( datetime );
-            }
-
-        } else if ( format == "day" ) {
-            day = datetime;
-
-        } else if ( StringOps::startsWith( format, "clock_" ) ) {
-            aux = format.substr( 6ul );
-            if ( aux == "24" ) {
-                hour   = datetime.substr( 0ul, 2ul );
-                minute = datetime.substr( 3ul, 2ul );
-                second = datetime.substr( 6ul, 2ul );
-
-            } else if ( aux == "12" ) {
-                hour   = datetime.substr( 0ul, 2ul );
-                minute = datetime.substr( 3ul, 2ul );
-                second = datetime.substr( 6ul, 2ul );
-                if ( datetime.substr( 9ul, 2ul ) == "pm" ) {
-                    hour = std::to_string( 12 + std::stoi(hour) );
-                }
-
-            } else if ( aux == "short" ) {
-                hour   = datetime.substr( 0ul, 2ul );
-                minute = datetime.substr( 3ul, 2ul );
-
-            } else if ( aux == "meridian" ) {
-                if ( datetime == "pm" ) {
-                    hour = "PM"; // to mark for final update
-                }
-            }
-
-        } else if ( format == "hour" ) {
-            hour = datetime;
-
-        } else if ( format == "minute" ) {
-            minute = datetime;
-
-        } else if ( format == "second" ) {
-            second = datetime;
-
-        } else {
+        } else [[unlikely]] {
             // wronthing went some ...
-            throw DateTimeException("Unexpected DateTime format: "+std::string{datetime_});
+            throw DateTimeException("Unexpected DateTime DATE: "+std::string{datetime_}+" - format: "+std::to_string(format));
         }
+
+    } else if ( _DATE_TIME_CLOCK & format ) {
+        if ( format == date_time_clock_24 ) {
+            hour   = datetime.substr( 0ul, 2ul );
+            minute = datetime.substr( 3ul, 2ul );
+            second = datetime.substr( 6ul, 2ul );
+
+        } else if ( format == date_time_clock_12 ) {
+            hour   = datetime.substr( 0ul, 2ul );
+            minute = datetime.substr( 3ul, 2ul );
+            second = datetime.substr( 6ul, 2ul );
+            if ( datetime.substr( 9ul, 2ul ) == "pm" ) {
+                hour = std::to_string( 12 + std::stoi(hour) );
+            }
+
+        } else if ( format == date_time_clock_short ) {
+            hour   = datetime.substr( 0ul, 2ul );
+            minute = datetime.substr( 3ul, 2ul );
+
+        } else [[unlikely]] {
+            // wronthing went some ...
+            throw DateTimeException("Unexpected DateTime CLOCK: "+std::string{datetime_}+" - format: "+std::to_string(format));
+        }
+
+    } else if ( _DATE_TIME_YEAR & format ) {
+        year = datetime;
+        if ( format == date_time_year_short ) {
+            const int y{ std::stoi( year ) };
+            year  = (y<70) ? "20" : "19";
+            year += year;
+        }
+
+    } else if ( _DATE_TIME_MONTH & format ) {
+        if ( format == date_time_month ) {
+            month = datetime;
+        } else {
+            datetime.resize( 3ul ); // may be the full name
+            month = convertMonth( datetime );
+        }
+
+    } else if ( format == date_time_day ) {
+        day = datetime;
+
+    } else if ( format == date_time_hour ) {
+        hour = datetime;
+
+    } else if ( format == date_time_minute ) {
+        minute = datetime;
+
+    } else if ( format == date_time_second ) {
+        second = datetime;
+
+    } else [[unlikely]] {
+        // wronthing went some ...
+        throw DateTimeException("Unexpected DateTime: "+std::string{datetime_}+" - format: "+std::to_string(format));
     }
 
     return { year, month, day, hour, minute, second };

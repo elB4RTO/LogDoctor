@@ -36,30 +36,31 @@ struct LogFile final
     LogFile& operator=(LogFile&& other) noexcept = default;
     LogFile(const LogFile& other) noexcept = default;
     LogFile& operator=(const LogFile& other) noexcept = default;
-    //! Wheter the file has been selected to be used or not
+
+    //! Returns whether the file has been selected to be used or not
     inline bool isSelected() const noexcept
-        { return this->selected; }
+    { return this->selected; }
     //! Sets the file as selected
     inline void setSelected() noexcept
-        { this->selected |= true; }
+    { this->selected |= true; }
     //! Sets the file as unselected
     inline void setUnselected() noexcept
-        { this->selected &= false; }
-    //! Wheter the file has been used already or not
+    { this->selected &= false; }
+    //! Returns whether the file has been used already or not
     inline bool hasBeenUsed() const noexcept
-        { return this->used_already; }
-    //! The size of the file
+    { return this->used_already; }
+    //! Returns the size of the file
     inline size_t size() const noexcept
-        { return this->size_; }
-    //! The name of the file, to be displayed in the list
+    { return this->size_; }
+    //! Returns the name of the file, to be displayed in the list
     inline const QString& name() const noexcept
-        { return this->name_; }
-    //! The sha256 hash of the content
+    { return this->name_; }
+    //! Returns the sha256 hash of the content
     inline const std::string& hash() const noexcept
-        { return this->hash_; }
-    //! The path of the file, including the file name
+    { return this->hash_; }
+    //! Returns the path of the file, including the file name
     inline const std::string& path() const noexcept
-        { return this->path_; }
+    { return this->path_; }
 private:
     bool selected;
     bool used_already;
@@ -149,16 +150,16 @@ enum LogsFormatField : uint32_t {
 //! Holds informations about a log format
 struct LogsFormat final
 {
-    explicit LogsFormat() noexcept = default;
-    explicit LogsFormat
-        (const std::string& str,std::string&& itl,std::string&& fnl,std::vector<std::string>&& seps,std::vector<LogsFormatField>&& flds,const unsigned nl) noexcept
-        :string{str},initial{std::move(itl)},final{std::move(fnl)},separators{std::move(seps)},fields{std::move(flds)},new_lines{nl}{}
     std::string string;                  //!< The logs format string
     std::string initial;                 //!< The initial separator
     std::string final;                   //!< The final separator
     std::vector<std::string> separators; //!< The separators in the middle
-    std::vector<LogsFormatField> fields; //!< The fields
-    size_t new_lines;                    //!< The number of new lines
+    std::vector<LogsFormatField> fields; //!< The logged fields
+    size_t new_lines;                    //!< The number of new lines within the string
+
+    explicit LogsFormat() noexcept = default;
+    explicit LogsFormat(const std::string& str,std::string&& itl,std::string&& fnl,std::vector<std::string>&& seps,std::vector<LogsFormatField>&& flds,const size_t nl) noexcept
+        :string{str},initial{std::move(itl)},final{std::move(fnl)},separators{std::move(seps)},fields{std::move(flds)},new_lines{nl}{}
 };
 
 

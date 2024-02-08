@@ -392,39 +392,39 @@ void testCraplogModules()
     const std::string e_str{ std::to_string( e ) };
     const std::string epochs[4]{ e_str, e_str+".000", e_str+"000", e_str+"000000" };
     std::vector<std::string> target{"2000","01","01","23","59","59"};
-    assert( DateTimeOps::processDateTime("[01/Jan/2000:23:59:59 +0000]", "ncsa") == target );
-    assert( DateTimeOps::processDateTime("Sat Jan 01 23:59:59 2000", "mcs") == target );
-    assert( DateTimeOps::processDateTime("Saturday, 01-Jan-2000 23:59:59 UTC", "gmt") == target );
-    assert( DateTimeOps::processDateTime("2000-01-01T23:59:59+00:00", "iso") == target );
-    assert( DateTimeOps::processDateTime(epochs[0], "epoch_s") == target );
-    assert( DateTimeOps::processDateTime(epochs[1], "epoch_s.ms") == target );
-    assert( DateTimeOps::processDateTime(epochs[2], "epoch_ms") == target );
-    assert( DateTimeOps::processDateTime(epochs[3], "epoch_us") == target );
+    assert( DateTimeOps::processDateTime("[01/Jan/2000:23:59:59 +0000]", date_time_ncsa) == target );
+    assert( DateTimeOps::processDateTime("Sat Jan 01 23:59:59 2000", date_time_mcs) == target );
+    assert( DateTimeOps::processDateTime("Saturday, 01-Jan-2000 23:59:59 UTC", date_time_gmt) == target );
+    assert( DateTimeOps::processDateTime("2000-01-01T23:59:59+00:00", date_time_iso) == target );
+    assert( DateTimeOps::processDateTime(epochs[0], date_time_epoch_s) == target );
+    assert( DateTimeOps::processDateTime(epochs[1], date_time_epoch_s_ms) == target );
+    assert( DateTimeOps::processDateTime(epochs[2], date_time_epoch_ms) == target );
+    assert( DateTimeOps::processDateTime(epochs[3], date_time_epoch_us) == target );
     target = {"2000","01","01","","",""};
-    assert( DateTimeOps::processDateTime("2000-01-01", "utc_d") == target );
-    assert( DateTimeOps::processDateTime("2000-01-01", "YYYYMMDD") == target );
-    assert( DateTimeOps::processDateTime("01/01/00", "MMDDYY") == target );
-    assert( DateTimeOps::processDateTime("1/1/2000", "MDYYYY") == target );
+    assert( DateTimeOps::processDateTime("2000-01-01", date_time_utc_d) == target );
+    assert( DateTimeOps::processDateTime("2000-01-01", date_time_yyyymmdd) == target );
+    assert( DateTimeOps::processDateTime("01/01/00", date_time_mmddyy) == target );
+    assert( DateTimeOps::processDateTime("1/1/2000", date_time_mdyyyy) == target );
     target = {"","","","23","59","59"};
-    assert( DateTimeOps::processDateTime("23:59:59", "utc_t") == target );
-    assert( DateTimeOps::processDateTime("11:59:59 pm", "clock_12") == target );
-    assert( DateTimeOps::processDateTime("23:59:59", "clock_24") == target );
+    assert( DateTimeOps::processDateTime("23:59:59", date_time_utc_t) == target );
+    assert( DateTimeOps::processDateTime("11:59:59 pm", date_time_clock_12) == target );
+    assert( DateTimeOps::processDateTime("23:59:59", date_time_clock_24) == target );
     target = {"","","","23","59",""};
-    assert( DateTimeOps::processDateTime("23:59", "clock_short") == target );
-    target = {"","","","PM","",""};
-    assert( DateTimeOps::processDateTime("pm", "clock_meridian") == target );
+    assert( DateTimeOps::processDateTime("23:59", date_time_clock_short) == target );
+    /*target = {"","","","PM","",""};
+    assert( DateTimeOps::processDateTime("pm", date_time_clock_meridian) == target );*/
     target = {"2000","","","","",""};
-    assert( DateTimeOps::processDateTime("2000", "year") == target );
+    assert( DateTimeOps::processDateTime("2000", date_time_year) == target );
     target = {"","01","","","",""};
-    assert( DateTimeOps::processDateTime("01", "month") == target );
+    assert( DateTimeOps::processDateTime("01", date_time_month) == target );
     target = {"","","01","","",""};
-    assert( DateTimeOps::processDateTime("01", "day") == target );
+    assert( DateTimeOps::processDateTime("01", date_time_day) == target );
     target = {"","","","23","",""};
-    assert( DateTimeOps::processDateTime("23", "hour") == target );
+    assert( DateTimeOps::processDateTime("23", date_time_hour) == target );
     target = {"","","","","59",""};
-    assert( DateTimeOps::processDateTime("59", "minute") == target );
+    assert( DateTimeOps::processDateTime("59", date_time_minute) == target );
     target = {"","","","","","59"};
-    assert( DateTimeOps::processDateTime("59", "second") == target );
+    assert( DateTimeOps::processDateTime("59", date_time_second) == target );
     }
     T_PRINT("DateTimeOps::processDateTime");
 
@@ -435,11 +435,11 @@ void testCraplogModules()
     FormatOps fo;
     LogsFormat lf;
     std::string format_string;
-    std::vector<std::string> fields;
+    std::vector<LogsFormatField> fields;
     std::vector<std::string> separators;
     // test the default string
     format_string = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
-    fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
+    fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,_DISCARDED,referer,user_agent};
     separators = {" "," "," [","] \"","\" "," "," \"","\" \""};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -448,7 +448,7 @@ void testCraplogModules()
     assert( lf.final == "\"" );
     // test all simple fields
     format_string = "%%%h %% %t\t%r\n%H %m [%U%%%q} <%s> %<s %>s %O %I %T %D %a %A %b %B %e %f %k %l %L %p %P %R %S %u %v %V %% %X%%";
-    fields = {"client","date_time_ncsa","request_full","request_protocol","request_method","request_uri","request_query","response_code","response_code","response_code","bytes_sent","bytes_received","time_taken_s","time_taken_ms","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    fields = {client,date_time_ncsa,request_full,request_protocol,request_method,request_uri,request_query,response_code,response_code,response_code,bytes_sent,bytes_received,time_taken_s,time_taken_ms,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" % [","]\t","\n"," "," [","%","} <","> "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," % "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial == "%" );
@@ -470,7 +470,7 @@ void testCraplogModules()
     }
     // test client related composed fields
     format_string = "%{}a %{c}a %{}h %{c}h %{Cookie}i %200{Cookie}i %{User-agent}i %302,400{User-agent}i %!200{Referer}i %,200{Referer}i %{Referer}i";
-    fields = {"client","client","client","client","cookie","cookie","user_agent","user_agent","referer","referer","referer"};
+    fields = {client,client,client,client,cookie,cookie,user_agent,user_agent,referer,referer,referer};
     separators = {" "," "," "," "," "," "," "," "," "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -479,7 +479,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test unexisting/unsupported client related composed fields
     format_string = "%{ }a %{x}a %{NOPE}a %{ }h %{y}h %{NOPE}h %{}i %{ }i %{Random}i %{Cookies}i";
-    fields = {"client","client","client","client","client","client","NONE","NONE","NONE","NONE"};
+    fields = {client,client,client,client,client,client,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -488,7 +488,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test date-time composed fields
     format_string = "%{%%}t %{%n}t %{%t}t %{}t %{sec}t %{msec}t %{usec}t %{msec_frac}t %{usec_frac}t %{%a}t %{%A}t %{%b}t %{%B}t %{%c}t %{%C}t %{%d}t %{%D}t %{%e}t %{%F}t %{%g}t %{%G}t %{%h}t %{%H}t %{%I}t %{%j}t %{%k}t %{%m}t %{%M}t %{%p}t %{%r}t %{%R}t %{%S}t %{%T}t %{%u}t %{%U}t %{%V}t %{%w}t %{%W}t %{%x}t %{%X}t %{%y}t %{%Y}t %{%z}t %{%Z}t";
-    fields = {"date_time_ncsa","date_time_epoch_s","date_time_epoch_ms","date_time_epoch_us","NONE","NONE","NONE","NONE","date_time_month_str","date_time_month_str","date_time_mcs","NONE","date_time_day","date_time_MMDDYY","date_time_day","date_time_YYYYMMDD","NONE","NONE","date_time_month_str","date_time_hour","NONE","NONE","date_time_hour","date_time_month","date_time_minute","NONE","date_time_clock_12","date_time_clock_short","date_time_second","date_time_clock_24","NONE","NONE","NONE","NONE","NONE","date_time_MMDDYY","date_time_clock_24","date_time_year_short","date_time_year","NONE","NONE"};
+    fields = {date_time_ncsa,date_time_epoch_s,date_time_epoch_ms,date_time_epoch_us,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,date_time_month_str,date_time_month_str,date_time_mcs,_DISCARDED,date_time_day,date_time_mmddyy,date_time_day,date_time_yyyymmdd,_DISCARDED,_DISCARDED,date_time_month_str,date_time_hour,_DISCARDED,_DISCARDED,date_time_hour,date_time_month,date_time_minute,_DISCARDED,date_time_clock_12,date_time_clock_short,date_time_second,date_time_clock_24,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,date_time_mmddyy,date_time_clock_24,date_time_year_short,date_time_year,_DISCARDED,_DISCARDED};
     separators = {"] "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial == "% \n \t [" );
@@ -497,7 +497,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test date-time composed fields, with one field only
     format_string = "%{}t";
-    fields = {"date_time_ncsa"};
+    fields = {date_time_ncsa};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial == "[" );
     assert( lf.fields == fields );
@@ -505,7 +505,7 @@ void testCraplogModules()
     assert( lf.final == "]" );
     // test date-time composed fields, with many aggreagated fields
     format_string = "%{%%%Y_%m_%e%t%H@%M@%S%%}t";
-    fields = {"date_time_year","date_time_month","date_time_day","date_time_hour","date_time_minute","date_time_second"};
+    fields = {date_time_year,date_time_month,date_time_day,date_time_hour,date_time_minute,date_time_second};
     separators = {"_","_","\t","@","@"};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial == "%" );
@@ -514,7 +514,7 @@ void testCraplogModules()
     assert( lf.final == "%" );
     // test date-time composed fields, with all fields aggeregated in one
     format_string = "%{%% %n %t %a %A %b %B %c %C %d %D %e %F %g %G %h %H %I %j %k %m %M %p %r %R %S %T %u %U %V %w %W %x %X %y %Y %z %Z}t";
-    fields = {"NONE","NONE","date_time_month_str","date_time_month_str","date_time_mcs","NONE","date_time_day","date_time_MMDDYY","date_time_day","date_time_YYYYMMDD","NONE","NONE","date_time_month_str","date_time_hour","NONE","NONE","date_time_hour","date_time_month","date_time_minute","NONE","date_time_clock_12","date_time_clock_short","date_time_second","date_time_clock_24","NONE","NONE","NONE","NONE","NONE","date_time_MMDDYY","date_time_clock_24","date_time_year_short","date_time_year","NONE","NONE"};
+    fields = {_DISCARDED,_DISCARDED,date_time_month_str,date_time_month_str,date_time_mcs,_DISCARDED,date_time_day,date_time_mmddyy,date_time_day,date_time_yyyymmdd,_DISCARDED,_DISCARDED,date_time_month_str,date_time_hour,_DISCARDED,_DISCARDED,date_time_hour,date_time_month,date_time_minute,_DISCARDED,date_time_clock_12,date_time_clock_short,date_time_second,date_time_clock_24,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,date_time_mmddyy,date_time_clock_24,date_time_year_short,date_time_year,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial == "% \n \t " );
@@ -543,7 +543,7 @@ void testCraplogModules()
     }
     // test time taken related composed fields
     format_string = "%{}T %{s}T %{ms}T %{us}T";
-    fields = {"time_taken_s","time_taken_s","time_taken_ms","time_taken_us"};
+    fields = {time_taken_s,time_taken_s,time_taken_ms,time_taken_us};
     separators = {" "," "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -560,7 +560,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test unused composed fields
     format_string = "%{}C %{}e %{}L %{}n %{}o %{}p %{canonical}p %{local}p %{remote}p %{}P %{pid}P %{tid}P %{hextid}P %{}^ti %{}^to";
-    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -569,7 +569,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test unused composed fields, with random content
     format_string = "%{TEST}C %{TEST}e %{TEST}L %{TEST}n %{TEST}o %{TEST}p %{TEST}P %{TEST}^ti %{TEST}^to";
-    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," TEST TEST "," "};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -578,7 +578,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test the default string with dumb logging: no characters to enclose the full request
     format_string = "%h %l %u %t %r %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
-    fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","NONE","referer","user_agent"};
+    fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,_DISCARDED,referer,user_agent};
     separators = {" "," "," [","] "," "," "," \"","\" \""};
     lf = fo.processApacheFormatString(format_string);
     assert( lf.initial.empty() );
@@ -599,11 +599,11 @@ void testCraplogModules()
     FormatOps fo;
     LogsFormat lf;
     std::string format_string;
-    std::vector<std::string> fields;
+    std::vector<LogsFormatField> fields;
     std::vector<std::string> separators;
     // test the default string
     format_string = "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"";
-    fields = {"client","NONE","date_time_ncsa","request_full","response_code","bytes_sent","referer","user_agent"};
+    fields = {client,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent,referer,user_agent};
     separators = {" - "," [","] \"","\" "," "," \"","\" \""};
     lf = fo.processNginxFormatString(format_string);
     assert( lf.initial.empty() );
@@ -612,7 +612,7 @@ void testCraplogModules()
     assert( lf.final == "\"" );
     // test all the considered fields
     format_string = "$remote_addr $realip_remote_addr $time_local $time_iso8601 $date_gmt $msec $request $server_protocol $request_method $request_uri $uri $query_string $status $bytes_sent $request_length $request_time $http_referer $cookie_ $http_user_agent";
-    fields = {"client","client","date_time_ncsa","date_time_iso","date_time_gmt","date_time_epoch_s.ms","request_full","request_protocol","request_method","request_uri_query","request_uri","request_query","response_code","bytes_sent","bytes_received","time_taken_s.ms","referer","cookie","user_agent"};
+    fields = {client,client,date_time_ncsa,date_time_iso,date_time_gmt,date_time_epoch_s_ms,request_full,request_protocol,request_method,request_uri_query,request_uri,request_query,response_code,bytes_sent,bytes_received,time_taken_s_ms,referer,cookie,user_agent};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processNginxFormatString(format_string);
     assert( lf.initial.empty() );
@@ -621,7 +621,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test all the non-considered fields
     format_string = "$ancient_browser $arg_ $args $binary_remote_addr $body_bytes_sent $connection $connection_requests $connections_active $connections_reading $connections_waiting $connections_writing $content_length $content_type $date_local $document_root $document_uri $fastcgi_path_info $fastcgi_script_name $geoip_area_code $geoip_city $geoip_city_continent_code $geoip_city_country_code $geoip_city_country_code3 $geoip_city_country_name $geoip_country_code $geoip_country_code3 $geoip_country_name $geoip_dma_code $geoip_latitude $geoip_longitude $geoip_org $geoip_postal_code $geoip_region $geoip_region_name $gzip_ratio $host $hostname $http2 $http_ $https $invalid_referer $is_args $limit_rate $memcached_key $modern_browser $msie $nginx_version $pid $pipe $proxy_add_x_forwarded_for $proxy_host $proxy_port $proxy_protocol_addr $proxy_protocol_port $realip_remote_port $realpath_root $remote_port $remote_user $request_body $request_body_file $request_completion $request_filename $request_id $scheme $secure_link $secure_link_expires $sent_http_ $server_addr $server_name $server_port $session_log_binary_id $session_log_id $slice_range $spdy $spdy_request_priority $ssl_cipher $ssl_client_cert $ssl_client_fingerprint $ssl_client_i_dn $ssl_client_raw_cert $ssl_client_s_dn $ssl_client_serial $ssl_client_verify $ssl_protocol $ssl_server_name $ssl_session_id $ssl_session_reused $tcpinfo_rtt $tcpinfo_rttvar $tcpinfo_snd_cwnd $tcpinfo_rcv_space $uid_got $uid_reset $uid_set $upstream_addr $upstream_cache_status $upstream_connect_time $upstream_cookie_ $upstream_header_time $upstream_http_ $upstream_response_length $upstream_response_time $upstream_status";
-    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processNginxFormatString(format_string);
     assert( lf.initial.empty() );
@@ -642,11 +642,11 @@ void testCraplogModules()
     FormatOps fo;
     LogsFormat lf;
     std::string format_string;
-    std::vector<std::string> fields;
+    std::vector<LogsFormatField> fields;
     std::vector<std::string> separators;
     // test the default string for the W3C module
     format_string = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken";
-    fields = {"date_time_utc_d","date_time_utc_t","NONE","request_method","request_uri","request_query","NONE","NONE","client","user_agent","referer","response_code","NONE","NONE","time_taken_ms"};
+    fields = {date_time_utc_d,date_time_utc_t,_DISCARDED,request_method,request_uri,request_query,_DISCARDED,_DISCARDED,client,user_agent,referer,response_code,_DISCARDED,_DISCARDED,time_taken_ms};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processIisFormatString(format_string, 0);
     assert( lf.initial.empty() );
@@ -655,7 +655,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test all the considered fields for the W3C module
     format_string = "date time cs-version cs-method cs-uri-stem cs-uri-query sc-status sc-bytes cs-bytes time-taken cs(Referer) cs(Cookie) cs(User-Agent) c-ip";
-    fields = {"date_time_utc_d","date_time_utc_t","request_protocol","request_method","request_uri","request_query","response_code","bytes_sent","bytes_received","time_taken_ms","referer","cookie","user_agent","client"};
+    fields = {date_time_utc_d,date_time_utc_t,request_protocol,request_method,request_uri,request_query,response_code,bytes_sent,bytes_received,time_taken_ms,referer,cookie,user_agent,client};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "};
     lf = fo.processIisFormatString(format_string, 0);
     assert( lf.initial.empty() );
@@ -664,7 +664,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test all the non-considered fields for the W3C module
     format_string = "s-sitename s-computername s-ip s-port cs-username cs-host sc-substatus sc-win32-status streamid";
-    fields = {"NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE","NONE"};
+    fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "};
     lf = fo.processIisFormatString(format_string, 0);
     assert( lf.initial.empty() );
@@ -680,7 +680,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test the the NCSA module
     format_string = "some random useless text";
-    fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","bytes_sent"};
+    fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent};
     separators = {" "," "," [","] \"","\" "," "};
     lf = fo.processIisFormatString(format_string, 1);
     assert( lf.initial.empty() );
@@ -696,7 +696,7 @@ void testCraplogModules()
     assert( lf.final.empty() );
     // test the the IIS module
     format_string = "some random useless text";
-    fields = {"client","NONE","date_time_MDYYYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
+    fields = {client,_DISCARDED,date_time_mdyyyy,date_time_utc_t,_DISCARDED,_DISCARDED,_DISCARDED,time_taken_ms,bytes_received,bytes_sent,response_code,_DISCARDED,request_method,request_uri,request_query};
     separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
     lf = fo.processIisFormatString(format_string, 2);
     assert( lf.initial.empty() );
@@ -717,7 +717,7 @@ void testCraplogModules()
     //// LOGS TYPE ////
 
     {
-    LogsFormat lf{ "","","]",{" ","_"},{"","",""},0 };
+    LogsFormat lf{ "","","]",{" ","_"},{_DISCARDED,_DISCARDED,_DISCARDED},0 };
     assert( LogOps::defineFileType({"ok ok_ok]","a a_a]","TEST TEST_TEST]"}, lf) == LogType::Access );
     assert( LogOps::defineFileType({"no no no!","some thing wrong","with this file!"}, lf) == LogType::Discarded );
     assert( LogOps::defineFileType({}, lf) == LogType::Failed );

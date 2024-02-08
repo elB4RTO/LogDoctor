@@ -273,18 +273,20 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
     const auto& f_map_v { this->APACHE_ALF_V };
 
     std::string initial, final;
-    std::vector<std::string> separators, fields;
+    std::vector<std::string> separators;
+    std::vector<LogsFormatField> fields;
     // parse the string to convert keyargs in craplog's fields format
-    bool is_strftime_sep;
+    bool is_strftime_sep{ false };
     int n_fld{ 0 };
     size_t start, stop{0ul}, aux, aux_start, aux_stop;
     const size_t max{ f_str.size()-1ul };
-    std::string aux_fld, aux_fld_v, cur_fld, cur_sep;
+    std::string aux_fld, aux_fld_v, cur_sep;
+    LogsFormatField cur_fld{ _INVALID };
     // find and convert any field
     while (true) {
         // start after the last found field
         start = stop;
-        if ( cur_fld == "date_time_ncsa" ) {
+        if ( cur_fld == date_time_ncsa ) {
             // NCAS time format is always enclosed inside brackets
             cur_sep += "]";
         }
@@ -381,7 +383,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     const auto& aux_map{ f_map_v.at( aux_fld_v ) };
                     if ( aux_map.empty() ) {
                         // module not considered and always giving out something, even if invalid varname is passed
-                        cur_fld = "NONE";
+                        cur_fld = _DISCARDED;
 
                     } else if ( aux_fld.empty() ) {
                         // no need to check further, the dafault is used in this case
@@ -393,11 +395,12 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     } else if ( aux_fld_v == "p" || aux_fld_v == "P" || aux_fld_v == "T" ) {
                         // still not considered (except 'T'), but invalid fields get used as text
                         // field concatenation not allowed, whole content used as varname
-                        if ( aux_map.find( aux_fld ) != aux_map.end() ) {
+                        if ( aux_map.contains( aux_fld ) ) {
                             // valid varname
                             cur_fld = aux_map.at( aux_fld );
                         } else {
                             // invalid varname, use as text
+                            cur_fld = _INVALID;
                             cur_sep += aux_fld;
                             start = stop = aux_stop;
                             continue;
@@ -406,15 +409,15 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     } else if ( aux_fld_v == "a" || aux_fld_v == "h" ) {
                         // whatever the varname is (valid, invalid, empty), always returns the client
                         // field concatenation not allowed, the entire content is used as varname
-                        cur_fld = "client" ;
+                        cur_fld = client;
 
                     } else if ( aux_fld_v == "i" ) {
                         // always giving a result, may the varname be valid or not ('-' if invalid/empty)
                         // field concatenation not allowed, the entire content is used as varname
-                        if ( aux_map.find( aux_fld ) != aux_map.end() ) {
+                        if ( aux_map.contains( aux_fld ) ) {
                             cur_fld = aux_map.at( aux_fld );
                         } else {
-                            cur_fld = "NONE";
+                            cur_fld = _DISCARDED;
                         }
 
                     } else /*if ( aux_fld_v == "t" )*/ {
@@ -423,12 +426,13 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                         if ( aux_aux == std::string::npos ) {
                             // no concatenation, only valid fields used, anything else used as text
                             // whole content used as varname
-                            if ( aux_map.find( aux_fld ) != aux_map.end() ) {
+                            if ( aux_map.contains( aux_fld ) ) {
                                 // valid
                                 cur_fld = aux_map.at( aux_fld );
                                 is_strftime_sep = true;
                             } else {
                                 // invalid, append to current separator
+                                cur_fld = _INVALID;
                                 cur_sep += aux_fld;
                                 start = stop = aux_stop;
                                 continue;
@@ -475,7 +479,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                                 aux_aux_fld = aux_fld.substr( aux_aux, 2ul );
                                 aux_aux_stop = aux_aux+2ul;
                                 // check if the field is valid
-                                if ( aux_map.find( aux_aux_fld ) != aux_map.end() ) {
+                                if ( aux_map.contains( aux_aux_fld ) ) {
                                     // valid, append
                                     cur_fld = aux_map.at( aux_aux_fld );
                                     // append the separator
@@ -517,10 +521,10 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
                     ++ aux_stop;
                 }
                 // check if the module is valid
-                if ( f_map.find( aux_fld ) != f_map.end() ) {
+                if ( f_map.contains( aux_fld ) ) {
                     // valid
                     cur_fld = f_map.at( aux_fld );
-                    if ( cur_fld == "date_time_ncsa" ) {
+                    if ( cur_fld == date_time_ncsa ) {
                         // apache's NCSA time format is always enclosed inside brackets
                         cur_sep += "[";
                     }
@@ -544,7 +548,7 @@ LogsFormat FormatOps::processApacheFormatString( const std::string& f_str ) cons
             break;
         }
 
-        if ( cur_fld.empty() ) {
+        if ( cur_fld == _INVALID ) {
             // invalid field, used as text (namely, added to current separator)
             continue;
         }
@@ -608,7 +612,8 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
     const auto& f_map{ this->NGINX_ALF };
 
     std::string initial, final;
-    std::vector<std::string> separators, fields;
+    std::vector<std::string> separators;
+    std::vector<LogsFormatField> fields;
     // parse the string to convert keyargs in craplog's fields format
     bool finished{ false };
     size_t start, aux, stop{0ul};
@@ -654,14 +659,14 @@ LogsFormat FormatOps::processNginxFormatString( const std::string& f_str ) const
         }
 
         // check if the field is valid
-        if ( f_map.find( cur_fld ) != f_map.end() ) {
+        if ( const auto it{ f_map.find( cur_fld ) }; it != f_map.end() ) {
             // valid, append
             if ( start == 0ul ) {
                 initial = parseNginxEscapes( cur_sep );
             } else {
                 separators.push_back( parseNginxEscapes( cur_sep ) );
             }
-            fields.push_back( f_map.at( cur_fld ) );
+            fields.push_back( it->second );
             if ( finished ) {
                 // this was the last field
                 break;
@@ -705,18 +710,19 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
 {
     checkIisString( f_str );
     std::string initial, final;
-    std::vector<std::string> separators, fields;
+    std::vector<std::string> separators;
+    std::vector<LogsFormatField> fields;
     switch ( l_mod ) {
         case 2:
             // IIS logging module
             final = ",";
             separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
-            fields = {"client","NONE","date_time_MDYYYY","date_time_utc_t","NONE","NONE","NONE","time_taken_ms","bytes_received","bytes_sent","response_code","NONE","request_method","request_uri","request_query"};
+            fields = {client,_DISCARDED,date_time_mdyyyy,date_time_utc_t,_DISCARDED,_DISCARDED,_DISCARDED,time_taken_ms,bytes_received,bytes_sent,response_code,_DISCARDED,request_method,request_uri,request_query};
             break;
         case 1:
             // NCSA logging module
             separators = {" "," "," [","] \"","\" "," "};
-            fields = {"client","NONE","NONE","date_time_ncsa","request_full","response_code","bytes_sent"};
+            fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent};
             break;
         case 0:
             // W3C logging module
@@ -745,9 +751,9 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
                     ++ stop;
 
                     // check if the module is valid
-                    if ( f_map.find( cur_fld ) != f_map.end() ) {
+                    if ( const auto it{ f_map.find( cur_fld ) }; it != f_map.end() ) {
                         // valid, append
-                        fields.push_back( f_map.at( cur_fld ) );
+                        fields.push_back( it->second );
                         if ( ! finished ) {
                             separators.push_back( cur_sep );
                         } else {

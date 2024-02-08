@@ -4,13 +4,13 @@
 
 #include <QtCharts>
 
-#include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/formats.h"
 
 #include "modules/craplog/modules/workers/lib.h"
 
 
+struct LogFile;
 struct Blacklists;
 
 class QWaitCondition;

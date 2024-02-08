@@ -17,6 +17,7 @@
 
 #include "modules/blacklists/blacklists.h"
 
+#include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/donuts.h"
 #include "modules/craplog/modules/logs.h"
 #include "modules/craplog/modules/workers/lister.h"

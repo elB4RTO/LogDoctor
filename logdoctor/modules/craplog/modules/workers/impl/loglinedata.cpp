@@ -13,7 +13,8 @@
 
 LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 {
-    bool add_pm{false};
+    using F = LogsFormatField;
+
     size_t start, stop{logs_format.initial.size()},
            sep_i{0};
     const size_t line_size{ line.size()-1ul },
@@ -46,11 +47,11 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
             // should be unreachable
             throw ("Unexpected section reached");
         }
-        const size_t sep_size = sep.size();
+        const size_t sep_size{ sep.size() };
 
         // get the field
-        const std::string& fld = logs_format.fields.at( sep_i );
-        if ( fld != "NONE" ) {
+        const F fld{ logs_format.fields.at( sep_i ) };
+        if ( _DISCARDED | fld ) {
             // only parse the considered fields
 
             std::string fld_str{ line.substr(start, stop-start) };
@@ -59,34 +60,30 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                 // not the last separator, check for mistakes
                 size_t aux_stop = stop;
 
-                if ( sep == " " ) {
+                if ( (_MAY_HAVE_SPACES & fld) && sep == " " ) {
                     // check the fields with whitespace-separated values
-                    const size_t n{ fld == "request_full"   ? 2ul
-                                  : fld == "date_time_ncsa" ? 1ul
-                                  : fld == "date_time_mcs"  ? 4ul
-                                  : fld == "date_time_gmt"  ? 3ul
-                                                            : 0ul };
-                    if ( n > 0ul ) {
-                        size_t c{ StringOps::count( fld_str, ' ' ) };
-                        if ( c < n ) {
-                            // loop until the correct number of whitespaces is reached
-                            size_t aux_start = line[stop+1ul] == ' ' ? stop : stop+1ul;
-                            while ( c < n ) {
-                                aux_stop = line.find( sep, aux_start );
-                                if ( aux_stop == std::string::npos ) {
-                                    // not found
-                                    throw LogParserException( "Separator not found", std::string{sep} );
-                                }
-                                aux_start = aux_stop+1ul;
-                                ++c;
+                    const size_t n{ fld == request_full ? 2ul
+                                  : fld & _COUNT_SPACES };
+
+                    size_t c{ StringOps::count( fld_str, ' ' ) };
+                    if ( c < n ) {
+                        // loop until the correct number of whitespaces is reached
+                        size_t aux_start = line[stop+1ul] == ' ' ? stop : stop+1ul;
+                        while ( c < n ) {
+                            aux_stop = line.find( sep, aux_start );
+                            if ( aux_stop == std::string::npos ) {
+                                // not found
+                                throw LogParserException( "Separator not found", std::string{sep} );
                             }
-                        } else if ( c > n ) [[unlikely]] {
-                            // should be unreachable
-                            throw LogParserException( "Unexpected count for separator", std::string{sep} );
+                            aux_start = aux_stop+1ul;
+                            ++c;
                         }
+                    } else if ( c > n ) [[unlikely]] {
+                        // should be unreachable
+                        throw LogParserException( "Unexpected count for separator", std::string{sep} );
                     }
 
-                } else if ( sep.front() == '"' && fld == "user_agent" ) {
+                } else if ( sep.front() == '"' && fld == F::user_agent ) {
                     // atm the only support is for escaped quotes
                     if ( fld_str.back() == '\\' ) {
                         // the found separator is not actually the separator but is part of the user-agent string
@@ -115,20 +112,19 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 
             if ( ! fld_str.empty() ) {
                 // process the field
-                const int& fld_id{ this->field2id.at(fld) };
-                if ( fld_id > 0 ) {
+                if ( _NO_PARSE_NEEDED & fld ) {
                     // no need to process, append directly if non-empty
-                    if ( fld_id == 13 && fld_str == "-" ) {
+                    if ( fld == request_query && fld_str == "-" ) {
                         continue;
                     }
-                    this->data( fld_id ) = FieldData( std::move(fld_str) );
+                    this->data( fld ) = FieldData( std::move(fld_str) );
 
                 } else {
                     // process the field
 
                     // process the date to get year, month, day, hour and minute
-                    if ( StringOps::startsWith( fld, "date_time" ) ) {
-                        auto dt = DateTimeOps::processDateTime( fld_str, fld.substr( 10 ) ); // cut away the "date_time_" part
+                    if ( _DATE_TIME & fld ) {
+                        auto dt = DateTimeOps::processDateTime( fld_str, fld ); // cut away the "date_time_" part
                         if ( auto& year{ dt.at(0) }; !year.empty() ) {
                             // year
                             this->year = FieldData( std::move(year) );
@@ -143,11 +139,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                         }
                         if ( auto& hour{ dt.at(3) }; !hour.empty() ) {
                             // hour
-                            if ( hour == "PM" ) {
-                                add_pm |= true;
-                            } else {
-                                this->hour = FieldData( std::move(hour) );
-                            }
+                            this->hour = FieldData( std::move(hour) );
                         }
                         if ( auto& minute{ dt.at(4) }; !minute.empty() ) {
                             // minute
@@ -159,8 +151,21 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                         }
 
 
+                    // process the time taken to convert to milliseconds
+                    } else if ( _TIME_TAKEN & fld ) {
+                        float t{ std::stof( fld_str ) };
+                        if ( fld == time_taken_us ) {
+                            // from microseconds
+                            t /= 1000.0f;
+                        } else if ( fld & time_taken_s ) {
+                            // from seconds or seconds.milliseconds
+                            t *= 1000.0f;
+                        }
+                        this->time_taken = FieldData( std::to_string( static_cast<int>( t ) ) );
+
+
                     // process the request to get the protocol, method, resource and query
-                    } else if ( fld == "request_full" ) {
+                    } else if ( fld == request_full ) {
                         // check whether the request string has the proper number of spaces
                         const size_t n_spaces{ StringOps::count( fld_str, ' ' ) };
 
@@ -212,7 +217,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 
 
                     // process the request to get uri and query
-                    } else if ( fld == "request_uri_query" ) {
+                    } else if ( fld == request_uri_query ) {
                         // search for the query
                         std::string uri, query;
                         const size_t aux_{ fld_str.find( '?' ) };
@@ -231,24 +236,10 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                         }
 
 
-                    // process the time taken to convert to milliseconds
-                    } else if ( fld.rfind("time_taken_",0ul) == 0ul ) {
-                        float t{ std::stof( fld_str ) };
-                        const std::string u{ fld.substr( 11ul ) };
-                        if ( u == "us" ) {
-                            // from microseconds
-                            t /= 1000.0f;
-                        } else if ( u == "s" || u == "s.ms" ) {
-                            // from seconds
-                            t *= 1000.0f;
-                        }
-                        this->time_taken = FieldData( std::to_string( static_cast<int>( t ) ) );
-
-
                     // something went wrong
                     } else {
                         // hmmm.. no...
-                        throw LogParserException( "Unexpected LogField", fld );
+                        throw LogParserException( "Unexpected LogFormatField", std::to_string(fld) );
                     }
                 }
             }
@@ -262,15 +253,6 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
             break;
         }
 
-    }
-
-    if ( add_pm ) {
-        try {
-            // add +12 hours for PM
-            this->hour = FieldData( std::to_string( 12 + std::stoi(*this->hour) ) );
-        } catch (...) {
-            // no hour data
-        }
     }
 }
 
@@ -532,46 +514,48 @@ size_t LogLineData::size() const noexcept
          + this->cookie;
 }
 
-FieldData& LogLineData::data(const int& id)
+FieldData& LogLineData::data(const LogsFormatField id)
 {
+    using F = LogsFormatField;
+
     switch (id) {
-        case 1:
+        case F::date_time_year:
             return this->year;
-        case 2:
+        case F::date_time_month:
             return this->month;
-        case 3:
+        case F::date_time_day:
             return this->day;
-        case 4:
+        case F::date_time_hour:
             return this->hour;
-        case 5:
+        case F::date_time_minute:
             return this->minute;
-        case 6:
+        case F::date_time_second:
             return this->second;
-        case 10:
+        case F::request_protocol:
             return this->protocol;
-        case 11:
+        case F::request_method:
             return this->method;
-        case 12:
+        case F::request_uri:
             return this->uri;
-        case 13:
+        case F::request_query:
             return this->query;
-        case 14:
+        case F::response_code:
             return this->response_code;
-        case 15:
+        case F::time_taken_s:
             return this->time_taken;
-        case 16:
+        case F::bytes_sent:
             return this->bytes_sent;
-        case 17:
+        case F::bytes_received:
             return this->bytes_received;
-        case 18:
+        case F::referer:
             return this->referrer;
-        case 20:
+        case F::client:
             return this->client;
-        case 21:
+        case F::user_agent:
             return this->user_agent;
-        case 22:
+        case F::cookie:
             return this->cookie;
         default:
-            throw LogParserException( "Unexpected LogField ID", std::to_string(id) );
+            throw LogParserException( "Unexpected LogFormatField", std::to_string(id) );
     }
 }
