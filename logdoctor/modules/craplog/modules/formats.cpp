@@ -1,7 +1,6 @@
 
 #include "formats.h"
 
-#include "lib.h"
 #include "modules/exceptions.h"
 #include "utilities/strings.h"
 
@@ -706,25 +705,25 @@ QString FormatOps::getNginxLogSample( const LogsFormat& log_format ) const noexc
 
 
 
-LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const int& l_mod ) const
+LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const IISLogsModule l_mod ) const
 {
     checkIisString( f_str );
     std::string initial, final;
     std::vector<std::string> separators;
     std::vector<LogsFormatField> fields;
     switch ( l_mod ) {
-        case 2:
+        case IISLogsModule::IIS:
             // IIS logging module
             final = ",";
             separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
             fields = {client,_DISCARDED,date_time_mdyyyy,date_time_utc_t,_DISCARDED,_DISCARDED,_DISCARDED,time_taken_ms,bytes_received,bytes_sent,response_code,_DISCARDED,request_method,request_uri,request_query};
             break;
-        case 1:
+        case IISLogsModule::NCSA:
             // NCSA logging module
             separators = {" "," "," [","] \"","\" "," "};
             fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent};
             break;
-        case 0:
+        case IISLogsModule::W3C:
             // W3C logging module
             if ( f_str.size() > 0ul ) {
                 bool finished{ false };
@@ -771,7 +770,7 @@ LogsFormat FormatOps::processIisFormatString( const std::string& f_str, const in
 
         default:
             // shouldn't be here
-            throw LogFormatException( "Unexpected LogModule for IIS: "+std::to_string( l_mod ) );
+            throw LogFormatException( "Unexpected LogModule for IIS: "+std::to_string( static_cast<unsigned char>(l_mod) ) );
     }
 
     return LogsFormat(

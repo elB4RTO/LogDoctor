@@ -1327,7 +1327,7 @@ void testCraplogModules()
     format_string = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken";
     fields = {date_time_utc_d,date_time_utc_t,_DISCARDED,request_method,request_uri,request_query,_DISCARDED,_DISCARDED,client,user_agent,referer,response_code,_DISCARDED,_DISCARDED,time_taken_ms};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processIisFormatString(format_string, 0);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
@@ -1336,7 +1336,7 @@ void testCraplogModules()
     format_string = "date time cs-version cs-method cs-uri-stem cs-uri-query sc-status sc-bytes cs-bytes time-taken cs(Referer) cs(Cookie) cs(User-Agent) c-ip";
     fields = {date_time_utc_d,date_time_utc_t,request_protocol,request_method,request_uri,request_query,response_code,bytes_sent,bytes_received,time_taken_ms,referer,cookie,user_agent,client};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processIisFormatString(format_string, 0);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
@@ -1345,14 +1345,14 @@ void testCraplogModules()
     format_string = "s-sitename s-computername s-ip s-port cs-username cs-host sc-substatus sc-win32-status streamid";
     fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "};
-    lf = fo.processIisFormatString(format_string, 0);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
     assert( lf.final.empty() );
     // test an empty string for the W3C module
     format_string.erase();
-    lf = fo.processIisFormatString(format_string, 0);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
     assert( lf.initial.empty() );
     assert( lf.fields.empty() );
     assert( lf.separators.empty() );
@@ -1361,14 +1361,14 @@ void testCraplogModules()
     format_string = "some random useless text";
     fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent};
     separators = {" "," "," [","] \"","\" "," "};
-    lf = fo.processIisFormatString(format_string, 1);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::NCSA);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
     assert( lf.final.empty() );
     // test an empty string for the NCSA module
     format_string.erase();
-    lf = fo.processIisFormatString(format_string, 1);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::NCSA);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
@@ -1377,14 +1377,14 @@ void testCraplogModules()
     format_string = "some random useless text";
     fields = {client,_DISCARDED,date_time_mdyyyy,date_time_utc_t,_DISCARDED,_DISCARDED,_DISCARDED,time_taken_ms,bytes_received,bytes_sent,response_code,_DISCARDED,request_method,request_uri,request_query};
     separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
-    lf = fo.processIisFormatString(format_string, 2);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::IIS);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );
     assert( lf.final == "," );
     // test an empty string for the IIS module
     format_string.erase();
-    lf = fo.processIisFormatString(format_string, 2);
+    lf = fo.processIisFormatString(format_string, IISLogsModule::IIS);
     assert( lf.initial.empty() );
     assert( lf.fields == fields );
     assert( lf.separators == separators );

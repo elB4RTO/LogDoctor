@@ -2,12 +2,14 @@
 #define LOGDOCTOR__CRAPLOG_H
 
 
-#include <QtCharts>
+#include "lib.h"
 
 #include "modules/craplog/modules/hash.h"
 #include "modules/craplog/modules/formats.h"
 
 #include "modules/craplog/modules/workers/lib.h"
+
+#include <QtCharts>
 
 
 struct LogFile;
@@ -188,7 +190,7 @@ public:
         \return Whether the process was successful or not
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processIisFormatString()
     */
-    bool setIisLogFormat( const std::string& format_string, const int log_module ) noexcept;
+    bool setIisLogFormat( const std::string& format_string, const IISLogsModule log_module ) noexcept;
 
     //! Returns the logs format string for the given Web Server
     /*!
@@ -398,11 +400,11 @@ private:
 
     //! Changes the name criterions for IIS logs files names depending on the given module
     /*!
-        \param module_id The ID of the module to use to set the criterions
+        \param log_module The ID of the module to use to set the criterions
         \throw GenericException
         \see LogName
     */
-    void changeIisLogsBaseNames( const int module_id );
+    void changeIisLogsBaseNames( const IISLogsModule log_module );
 
 
     ///////////////////

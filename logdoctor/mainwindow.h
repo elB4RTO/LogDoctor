@@ -900,7 +900,7 @@ private:
 
     void refreshChartsPreview();
 
-    int getIisLogsModule() const;
+    IISLogsModule getIisLogsModule() const;
 
 
     //////////////////

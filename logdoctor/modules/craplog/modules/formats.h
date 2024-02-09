@@ -4,9 +4,12 @@
 
 #include "lib.h"
 
+#include "modules/craplog/lib.h"
+
 #include <QString>
 
 #include <unordered_map>
+
 
 struct LogsFormat;
 
@@ -49,7 +52,7 @@ public:
         \throw LogFormatException
         \see LogsFormat
     */
-    LogsFormat processIisFormatString( const std::string& format_string, const int& log_module ) const;
+    LogsFormat processIisFormatString( const std::string& format_string, const IISLogsModule log_module ) const;
 
 
     /////////////////

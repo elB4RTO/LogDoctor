@@ -164,7 +164,7 @@ bool Craplog::setNginxLogFormat( const std::string& format_string ) noexcept
     }
     return true;
 }
-bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module ) noexcept
+bool Craplog::setIisLogFormat( const std::string& format_string, const IISLogsModule log_module ) noexcept
 {
     try {
         this->logs_formats.at( WS_IIS ) =
@@ -351,18 +351,18 @@ void Craplog::logsDirScanned() noexcept
 }
 
 
-void Craplog::changeIisLogsBaseNames( const int module_id )
+void Craplog::changeIisLogsBaseNames( const IISLogsModule log_module )
 {
-    switch ( module_id ) {
-        case 0: // W3C
+    switch ( log_module ) {
+        case IISLogsModule::W3C:
             this->logs_base_names.at( WS_IIS ).contains = "_ex"; break;
-        case 1: // NCSA
+        case IISLogsModule::NCSA:
             this->logs_base_names.at( WS_IIS ).contains = "_nc"; break;
-        case 2: // IIS
+        case IISLogsModule::IIS:
             this->logs_base_names.at( WS_IIS ).contains = "_in"; break;
 
         default: // shouldn't be reachable
-            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
+            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( static_cast<unsigned char>(log_module) ), true ); // leave un-catched
     }
 }
 
