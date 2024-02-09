@@ -54,7 +54,7 @@ StyleMap makeStyleMap()
                     "rgb( 27, 30, 33 )"}
             };
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 }
 

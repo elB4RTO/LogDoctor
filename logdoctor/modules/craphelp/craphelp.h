@@ -31,6 +31,7 @@ public:
         \param path The path of the file resource to be displayed
         \param font The font to be used
         \param colors_scheme_id The ID of the color-scheme to be used
+        \throw DoNotCatchException
     */
     void helpLogsFormat( const std::string& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept;
 
@@ -41,12 +42,14 @@ public:
         \param file_name The file that was supposed to be shown
         \param font The font to be used
         \param colors_scheme_id The ID of the color-scheme to be used
+        \throw DoNotCatchException
     */
     void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept;
 
 private:
     QSharedPointer<Ui::Craphelp> ui;
 
+    // \throw DoNotCatchException
     std::unordered_map<std::string, QString> getColorScheme( const ColorsScheme scheme_id ) const;
 
     void defaultApacheFormat( std::string& str ) const noexcept;

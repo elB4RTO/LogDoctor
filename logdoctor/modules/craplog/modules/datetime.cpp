@@ -52,7 +52,7 @@ const std::string convertMonth( std::string_view month )
         return "12";
     } else {
         // nope
-        throw DateTimeException("Unexpected month format: "+std::string{month});
+        throw DateTimeException("Unexpected month format", std::string{month});
     }
 }
 
@@ -116,7 +116,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
             second = datetime.substr( 6ul, 2ul );
         } else [[unlikely]] {
             // wronthing went some ...
-            throw DateTimeException("Unexpected DateTime UTC: "+std::string{datetime_}+" - format: "+std::to_string(format));
+            throw DateTimeException("Unexpected DateTime UTC", std::string{datetime_}+" - format: "+std::to_string(format));
         }
 
     } else if ( _DATE_TIME_EPOCH & format ) {
@@ -132,7 +132,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
             datetime = std::to_string( std::stoi( datetime ) );
         } else if ( format != date_time_epoch_s ) [[unlikely]] {
             // wronthing went some ...
-            throw DateTimeException("Unexpected DateTime EPOCH: "+std::string{datetime_}+" - format: "+std::to_string(format));
+            throw DateTimeException("Unexpected DateTime EPOCH", std::string{datetime_}+" - format: "+std::to_string(format));
         }
         // convert to iso date format
         const QDateTime e{ QDateTime::fromSecsSinceEpoch( std::stoi( datetime ) ) };
@@ -179,7 +179,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
 
         } else [[unlikely]] {
             // wronthing went some ...
-            throw DateTimeException("Unexpected DateTime DATE: "+std::string{datetime_}+" - format: "+std::to_string(format));
+            throw DateTimeException("Unexpected DateTime DATE", std::string{datetime_}+" - format: "+std::to_string(format));
         }
 
     } else if ( _DATE_TIME_CLOCK & format ) {
@@ -202,7 +202,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
 
         } else [[unlikely]] {
             // wronthing went some ...
-            throw DateTimeException("Unexpected DateTime CLOCK: "+std::string{datetime_}+" - format: "+std::to_string(format));
+            throw DateTimeException("Unexpected DateTime CLOCK", std::string{datetime_}+" - format: "+std::to_string(format));
         }
 
     } else if ( _DATE_TIME_YEAR & format ) {
@@ -235,7 +235,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
 
     } else [[unlikely]] {
         // wronthing went some ...
-        throw DateTimeException("Unexpected DateTime: "+std::string{datetime_}+" - format: "+std::to_string(format));
+        throw DateTimeException("Unexpected DateTime", std::string{datetime_}+" - format: "+std::to_string(format));
     }
 
     return { year, month, day, hour, minute, second };

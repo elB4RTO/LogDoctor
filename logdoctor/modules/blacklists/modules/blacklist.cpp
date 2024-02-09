@@ -16,6 +16,6 @@ BlacklistItem& Blacklist::get( const BlacklistField field )
         case BlacklistField::Client:
             return this->client;
         default:
-            throw DoNotCatchException( "Unexpected BlacklistField" );
+            throw DoNotCatchException( "Unexpected BlacklistField", std::to_string(static_cast<int>(field)) );
     }
 }

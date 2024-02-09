@@ -28,6 +28,9 @@ public:
     void setTextFont( QFont font ) noexcept;
 
     //! Sets the given color-scheme
+    /*!
+        \throw DoNotCatchException
+    */
     void setColorScheme( const ColorsScheme colors_scheme );
 
 

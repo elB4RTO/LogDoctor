@@ -30,7 +30,7 @@ public:
     /*!
         \param db_path The path of the log files' Hashes database
         \return Whether the operation has been successful or not
-        \throw LogDoctorException
+        \throw VoidException
     */
     bool loadUsedHashesLists( const std::string& db_path ) noexcept;
 
@@ -56,7 +56,7 @@ public:
         \param db_path The path of the Hashes database
         \param hashes The list of hashes to insert
         \param web_server_id The ID of the Web Server which generated the file
-        \throw LogDoctorException
+        \throw VoidException
     */
     void insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server );
 

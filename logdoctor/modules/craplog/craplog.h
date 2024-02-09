@@ -115,6 +115,7 @@ public:
     /*!
         \param name The name of the file
         \return Wheter it does respect the criterions or not
+        \throw DoNotCatchException
         \see LogName
     */
     bool isFileNameValid( const std::string& name ) const;
@@ -188,6 +189,7 @@ public:
         \param format_string The logs format string
         \param log_module The IIS logs module to be used to parse the format string
         \return Whether the process was successful or not
+        \throw DoNotCatchException
         \see FormatOps, FormatOps::LogsFormat, FormatOps::processIisFormatString()
     */
     bool setIisLogFormat( const std::string& format_string, const IISLogsModule log_module ) noexcept;
@@ -212,7 +214,7 @@ public:
     /*!
         \param web_server ID of the Web Server
         \return The sample of a log line
-        \throw WebServerException
+        \throw DoNotCatchException
         \see FormatOps::getApacheLogSample(), FormatOps::getNginxLogSample(), FormatOps::getIisLogSample()
     */
     QString getLogsFormatSample( const WebServer& web_server ) const;
@@ -401,7 +403,7 @@ private:
     //! Changes the name criterions for IIS logs files names depending on the given module
     /*!
         \param log_module The ID of the module to use to set the criterions
-        \throw GenericException
+        \throw DoNotCatchException
         \see LogName
     */
     void changeIisLogsBaseNames( const IISLogsModule log_module );

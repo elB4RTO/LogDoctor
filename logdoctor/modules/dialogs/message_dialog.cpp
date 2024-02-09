@@ -13,9 +13,6 @@
 #include <unordered_map> // leave this here for clang
 
 
-namespace /*private*/
-{
-
 enum StyleId : uint32_t {
     TEXT,
     WINDOW,
@@ -87,8 +84,7 @@ QString getStylesheet()
             };
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 
     return
@@ -141,8 +137,6 @@ QString getStylesheet()
         "   background-color: "+style.at(SCROLLBAR_CONTROLS)+";"
         "}";
 }
-
-} //namespace (private)
 
 
 DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& additional, const MsgType type, QWidget* parent )

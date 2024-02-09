@@ -10,6 +10,10 @@ class QString;
 namespace StyleSec::Crapnote
 {
 
+//! Returns the proper style sheet
+/*!
+    \throw DoNotCatchException
+*/
 QString getStyleSheet( const ColorsScheme colors_scheme );
 
 } // namespacce StyleSec::Crapnote

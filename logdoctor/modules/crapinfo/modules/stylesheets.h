@@ -8,6 +8,10 @@ class QString;
 namespace StyleSec::Crapinfo
 {
 
+//! Returns the proper style sheet
+/*!
+    \throw DoNotCatchException
+*/
 QString getStyleSheet();
 
 } // namespace StyleSec::Crapinfo

@@ -14,6 +14,7 @@ namespace{ using size_t = unsigned long; }
 //! Returns the available (free) memory in the system
 /*!
     \return The amount of memory in Bytes
+    \throw DoNotCatchException
 */
 size_t availableMemory();
 

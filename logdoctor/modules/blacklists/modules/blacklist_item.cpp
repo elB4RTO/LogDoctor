@@ -15,7 +15,7 @@ const char* BlacklistItem::fieldName() const
             return FIELDS__CLIENT.c_str();
         default:
             // should be unreachable
-            throw DoNotCatchException( "Unexpected BlacklistField" );
+            throw DoNotCatchException( "Unexpected BlacklistField", std::to_string(static_cast<int>(this->field)) );
     }
 }
 
@@ -71,6 +71,6 @@ std::string BlacklistItem::sanitized(const std::string& item ) const
             return BWutils::sanitizedClient( item );
         default:
             // should be unreachable
-            throw DoNotCatchException( "Unexpected BlacklistField" );
+            throw DoNotCatchException( "Unexpected BlacklistField", std::to_string(static_cast<int>(this->field)) );
     }
 }

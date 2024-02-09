@@ -50,7 +50,7 @@ public:
     //! Opens the database file at the given path
     /*!
         Throws if the file cannot be opened or if opening fails
-        \throw LogDoctorException
+        \throw VoidException
     */
     void open( const std::string& path, const bool explain_err );
 
@@ -58,28 +58,28 @@ public:
     /*!
         Used when creating a new database file.
         Throws if opening fails.
-        \throw LogDoctorException
+        \throw VoidException
     */
     void openNew( const std::string& path );
 
     //! Starts an ACID transaction on the database
     /*!
         Throws in case of failure
-        \throw LogDoctorException
+        \throw VoidException
     */
     void startTransaction( const bool explain_msg, const bool explain_err );
 
     //! Commits an ongoing transaction
     /*!
         Throws in case of failure
-        \throw LogDoctorException
+        \throw VoidException
     */
     void commitTransaction( const bool explain_msg, const bool explain_err );
 
     //! Rolls back an ongoing transaction
     /*!
         Throws in case of failure
-        \throw LogDoctorException
+        \throw VoidException
     */
     void rollbackTransaction( const bool explain_msg, const bool explain_err );
 
@@ -119,7 +119,7 @@ public:
     //! Executes the query using the internal statement
     /*!
         Throws in case of failure
-        \throw LogDoctorException
+        \throw VoidException
     */
     inline void operator ()()
     { operator()(stmt); }
@@ -127,7 +127,7 @@ public:
     //! Executes the query using the given statement
     /*!
         Throws in case of failure
-        \throw LogDoctorException
+        \throw VoidException
     */
     void operator ()( const QString& text );
 

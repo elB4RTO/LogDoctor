@@ -2,7 +2,9 @@
 #define LOGDOCTOR__CRAPLOG__LIB_H
 
 
-enum class IISLogsModule : unsigned char {
+typedef unsigned char iis_logs_module_t;
+
+enum class IISLogsModule : iis_logs_module_t {
     W3C  = 0,
     NCSA = 1,
     IIS  = 2

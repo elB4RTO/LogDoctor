@@ -104,11 +104,11 @@ StyleMap makeStyleMap()
                     "transparent"}
             };
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 }
 
-} // namespace (private)
+} //namespace (private)
 
 
 namespace StyleSec::Games::Snake
@@ -127,7 +127,7 @@ QString getStyleSheet()
             icons_theme = "light";
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
     const StyleMap style{ makeStyleMap() };
     return

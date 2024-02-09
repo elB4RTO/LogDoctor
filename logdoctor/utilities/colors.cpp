@@ -106,7 +106,7 @@ void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QChar
             break;
         default:
             // shouldn't be here
-            throw GenericException( "Unexpeced ChartsTheme ID: "+std::to_string(static_cast<themes_t>(GlobalConfigs::charts_theme)), true );
+            throw DoNotCatchException( "Unexpeced ChartsTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::charts_theme)) );
             break;
     }
     axis_pen.setWidthF( 1.1 );

@@ -15,7 +15,7 @@ const Blacklist& Blacklists::getConst( const WebServer ws ) const
             return this->iis;
         default:
             // should be unreachable
-            throw DoNotCatchException( "Unexpected WebServer" );
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(ws)) );
     }
 }
 
@@ -30,6 +30,6 @@ Blacklist& Blacklists::get( const WebServer ws )
             return this->iis;
         default:
             // should be unreachable
-            throw DoNotCatchException( "Unexpected WebServer" );
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(ws)) );
     }
 }

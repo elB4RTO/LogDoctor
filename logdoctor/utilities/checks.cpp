@@ -29,7 +29,8 @@ namespace /*private*/
 /*!
     \param query Query instance from the target database
     \return Whether the database is valid or not
-    \throw LogDoctorException, MakeNewDatabase
+    \throw VoidException
+    \throw MakeNewDatabase
     \see checkCollectionDatabase(), checkHashesDatabase(), newCollectionDatabase(), newHashesDatabase()
 */
 bool checkDatabaseTablesNames( QueryWrapper query )
@@ -123,7 +124,7 @@ bool newCollectionDatabase( DatabaseWrapper db, const std::string& db_path, cons
                     db.name(),
                     QStringLiteral(R"(CREATE TABLE "%1" (...))").arg( ws_name ),
                     query->lastError().text() );
-                throw LogDoctorException{};
+                throw VoidException{};
             }
         }
 
@@ -168,7 +169,7 @@ bool newHashesDatabase( DatabaseWrapper db, const std::string& db_path, const st
                     db.name(),
                     QStringLiteral(R"(CREATE TABLE "%1" (...))").arg( ws_name ),
                     query->lastError().text() );
-                throw LogDoctorException{};
+                throw VoidException{};
             }
         }
 
@@ -322,7 +323,7 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
         }
         return newCollectionDatabase( DatabaseHandler::get( DatabaseType::Data ), db_path, ws_names );
 
-    } catch (const LogDoctorException&) {
+    } catch (const VoidException&) {
         return false;
     }
 
@@ -415,7 +416,7 @@ bool checkHashesDatabase( const std::string& db_path ) noexcept
         }
         return newHashesDatabase( DatabaseHandler::get( DatabaseType::Hashes ), db_path, ws_names );
 
-    } catch (const LogDoctorException&) {
+    } catch (const VoidException&) {
         return false;
     }
 

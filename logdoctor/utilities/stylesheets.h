@@ -12,9 +12,9 @@ class QString;
 namespace StyleSec
 {
 
-//! Provides the requested stylesheet
+//! Returns the proper style sheet
 /*!
-    \return The stylesheet string
+    \throw DoNotCatchException
 */
 QString getStyleSheet();
 

@@ -191,7 +191,7 @@ QString Craplog::getLogsFormatSample( const WebServer& web_server ) const
         case WS_IIS:
             return this->formatOps.getIisLogSample( this->logs_formats.at( web_server ) );
         default:
-            throw WebServerException( "Unexpected WebServer: " + toString(web_server) );
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(web_server)) );
     }
 }
 
@@ -362,7 +362,7 @@ void Craplog::changeIisLogsBaseNames( const IISLogsModule log_module )
             this->logs_base_names.at( WS_IIS ).contains = "_in"; break;
 
         default: // shouldn't be reachable
-            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( static_cast<unsigned char>(log_module) ), true ); // leave un-catched
+            throw DoNotCatchException( "Unexpected LogFormatModule", std::to_string(static_cast<iis_logs_module_t>(log_module)) );
     }
 }
 
@@ -447,7 +447,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
         }break;
 
         default:
-            throw WebServerException( "Unexpected WebServer: " + toString(this->current_web_server) );
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(this->current_web_server)) );
     }
 
     return true;
@@ -637,17 +637,9 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
             DialogSec::errDatabaseNotWritable( args.at(0) );
             break;
         case WorkerDialog::errDatabaseFailedOpening:
-            if ( args.size() < 2 ) {
-                // do not throw, just print to stderr
-                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
-            }
             DialogSec::errDatabaseFailedOpening( args.at(0), args.at(1) );
             break;
         case WorkerDialog::errDatabaseFailedExecuting:
-            if ( args.size() < 3 ) {
-                // do not throw, just print to stderr
-                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
-            }
             DialogSec::errDatabaseFailedExecuting( args.at(0), args.at(1), args.at(2) );
             break;
         case WorkerDialog::warnFileNotReadable:

@@ -119,11 +119,11 @@ StyleMap makeStyleMap()
                     "rgb( 96, 96, 96 )"}
             };
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 }
 
-} // namespace (private)
+} //namespace (private)
 
 
 namespace StyleSec::Crapinfo

@@ -51,7 +51,7 @@ void Crapnote::setColorScheme( const ColorsScheme colors_scheme )
                 break;
             default:
                 // wrong
-                throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( static_cast<themes_t>(colors_scheme) ), true ); // leave un-catched
+                throw DoNotCatchException( "Unexpected ColorScheme for Crapnote", std::to_string(static_cast<themes_t>(colors_scheme)) );
         }
         this->ui->text_Note->setPalette( p );
     }

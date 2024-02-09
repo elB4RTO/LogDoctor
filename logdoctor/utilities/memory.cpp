@@ -31,7 +31,7 @@ size_t availableMemory() {
     mach_msg_type_number_t count{ HOST_VM_INFO_COUNT };
     vm_statistics_data_t vmstat;
     if ( host_statistics( mach_host_self(), HOST_VM_INFO, (host_info_t)&vmstat, &count ) != KERN_SUCCESS ) {
-        throw GenericException("Failed to get host infos", true);
+        throw DoNotCatchException("Failed to get host infos",);
     }
     const natural_t n_pages{ vmstat.free_count };
     const long page_size{ sysconf( _SC_PAGE_SIZE ) };
@@ -45,10 +45,10 @@ size_t availableMemory() {
     size_t vmt_size{ sizeof(vmt) };
     size_t uint_size{ sizeof(page_size) };
     if ( sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) < 0 ) {
-        throw GenericException("Failed to get vmtotal", true);
+        throw DoNotCatchException("Failed to get vmtotal");
     }
     if ( sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) < 0 ) {
-        throw GenericException("Failed to get v_page_size", true);
+        throw DoNotCatchException("Failed to get v_page_size");
     }
     return vmt.t_free * static_cast<size_t>( page_size );
 #elif defined( Q_OS_UNIX )

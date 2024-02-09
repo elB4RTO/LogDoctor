@@ -25,7 +25,7 @@ int toInt( const QString& str )
             QStringLiteral("QString"),
             QStringLiteral("int"),
             str );
-        throw LogDoctorException{};
+        throw VoidException{};
     }
     return result;
 }
@@ -38,7 +38,7 @@ int toInt( QStringView str )
             QStringLiteral("QStringView"),
             QStringLiteral("int"),
             str.toString() );
-        throw LogDoctorException{};
+        throw VoidException{};
     }
     return result;
 }
@@ -49,7 +49,7 @@ int toInt( const QVariant& v )
             QStringLiteral("QVariant"),
             QStringLiteral("int"),
             v.toString() );
-        throw LogDoctorException{};
+        throw VoidException{};
     }
     return v.toInt();
 }
@@ -61,7 +61,7 @@ QString toString( const QVariant& v )
             QStringLiteral("QVariant"),
             QStringLiteral("QString"),
             v.toString() );
-        throw LogDoctorException{};
+        throw VoidException{};
     }
     return v.toString();
 }
@@ -84,7 +84,7 @@ int DbQuery::getMinuteGap( const int minute, const int gap )
     int m{ -1 };
     if ( minute < 0 || minute >= 60 ) {
         // unexpected value
-        throw DateTimeException( "Unexpected Minute: " + std::to_string( minute ) );
+        throw DateTimeException( "Unexpected Minute", std::to_string( minute ) );
     }
     int n{ 0 };
     for ( int g{0}; g<60; g+=gap ) {
@@ -115,7 +115,7 @@ int DbQuery::getMonthDays( const int year, const int month )
         case 12: n_days = 31; break;
         default:
             // unexpected month
-            throw DateTimeException( "Unexpected Month number: " + std::to_string( month ) );
+            throw DateTimeException( "Unexpected Month number", std::to_string( month ) );
     }
     return n_days;
 }
@@ -128,7 +128,7 @@ int DbQuery::getMonthNumber( QStringView month_str ) const
             return num;
         }
     }
-    throw DateTimeException( "Unexpected Month name: " + month_str.toString().toStdString() );
+    throw DateTimeException( "Unexpected Month name", month_str.toString().toStdString() );
 }
 
 

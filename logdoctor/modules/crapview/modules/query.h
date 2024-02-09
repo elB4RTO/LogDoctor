@@ -83,7 +83,7 @@ public:
     //! Refreshes the dates which are available in the database
     /*!
         \param result Holds the data only if the operation completed succssfully
-        \throw LogDoctorException
+        \throw VoidException
         \throw ConversionException
     */
     void refreshDates( std::optional<database_dates_t>& result ) noexcept;
@@ -97,7 +97,7 @@ public:
         \param month_ The month
         \param day_ The day
         \param hour_ The hour
-        \throw LogDoctorException
+        \throw VoidException
         \throw ConversionException
         \throw DateTimeException
     */
@@ -123,7 +123,7 @@ public:
         \param uri_f The filter for the URI field
         \param query_f The filter for the Query field
         \param response_f The filter for the Response field
-        \throw LogDoctorException
+        \throw VoidException
         \throw CrapviewException
         \throw ConversionException
         \throw DateTimeException
@@ -150,7 +150,7 @@ public:
         \param month The month
         \param day The day
         \param log_field The log field
-        \throw LogDoctorException
+        \throw VoidException
         \throw CrapviewException
         \throw DateTimeException
     */
@@ -176,7 +176,7 @@ public:
         \param to_day_ The final day
         \param log_field_ The log field to filter
         \param field_filter The filter to apply
-        \throw LogDoctorException
+        \throw VoidException
         \throw CrapviewException
         \throw ConversionException
         \throw DateTimeException
@@ -202,7 +202,7 @@ public:
         \param field_filter_1 The filter to apply to the first field
         \param log_field_2_ The second log field to filter
         \param field_filter_2 The filter to apply to the second fiend
-        \throw LogDoctorException
+        \throw VoidException
         \throw CrapviewException
         \throw ConversionException
         \throw DateTimeException
@@ -231,7 +231,7 @@ public:
         \param field_filter_1 The filter to apply to the first field
         \param log_field_2_ The second log field to filter
         \param field_filter_2 The filter to apply to the second fiend
-        \throw LogDoctorException
+        \throw VoidException
         \throw CrapviewException
         \throw ConversionException
         \throw DateTimeException
@@ -252,7 +252,7 @@ public:
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
         \param dates The dates to query
-        \throw LogDoctorException
+        \throw VoidException
         \throw CrapviewException
         \throw ConversionException
     */

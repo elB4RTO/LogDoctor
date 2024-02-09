@@ -55,7 +55,7 @@ void Crapview::refreshDates()
 
         this->dbQuery.refreshDates( result );
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return;
     }
@@ -183,7 +183,7 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
         DialogSec::errProcessingStatsData( e.what() );
         return;
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return;
     }
@@ -407,7 +407,7 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
         DialogSec::errProcessingStatsData( e.what() );
         return;
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return;
     }
@@ -561,7 +561,7 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
         DialogSec::errProcessingStatsData( e.what() );
         return;
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return;
     }
@@ -634,7 +634,7 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
         DialogSec::errProcessingStatsData( e.what() );
         return;
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return;
     }
@@ -766,7 +766,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
         DialogSec::errProcessingStatsData( e.what() );
         return;
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return;
     }
@@ -885,7 +885,7 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
         DialogSec::errProcessingStatsData( e.what() );
         return false;
 
-    } catch ( const LogDoctorException& ) {
+    } catch ( const VoidException& ) {
         // dialog already shown
         return false;
     }

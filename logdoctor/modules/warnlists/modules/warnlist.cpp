@@ -25,6 +25,6 @@ WarnlistItem& Warnlist::get( const WarnlistField field )
         case WarnlistField::UserAgent:
             return this->user_agent;
         default:
-            throw DoNotCatchException( "Unexpected WarnlistField" );
+            throw DoNotCatchException( "Unexpected WarnlistField", std::to_string(static_cast<int>(field)) );
     }
 }

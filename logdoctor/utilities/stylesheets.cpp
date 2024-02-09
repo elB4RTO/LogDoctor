@@ -11,9 +11,6 @@
 #include <unordered_map>
 
 
-namespace /*private*/
-{
-
 enum StyleId : uint32_t {
     TEXT_PRIMARY,
     TEXT_DISABLED,
@@ -421,12 +418,10 @@ StyleMap makeStyleMap()
             };
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
             break;
     }
 }
-
-} // namespace (private)
 
 
 namespace StyleSec

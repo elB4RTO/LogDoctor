@@ -2,6 +2,8 @@
 #define LOGDOCTOR__LIB_H
 
 
+#include "modules/exceptions.h"
+
 #include <string>
 
 
@@ -50,8 +52,7 @@ inline std::string toString(const WebServer ws) noexcept
         case WebServer::IIS:
             return "IIS";
         default:
-            // used in exceptions handling, do not throw
-            return "?UNKNOWN?";
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(ws)) );
     }
 }
 
@@ -66,7 +67,7 @@ inline std::string toString(const DialogsLevel lvl)
         case DialogsLevel::Explanatory:
             return "2";
         default:
-            throw( "Unexpected DialogsLevel: " + std::to_string(static_cast<int>(lvl)) );
+            throw DoNotCatchException( "Unexpected DialogsLevel", std::to_string(static_cast<int>(lvl)) );
     }
 }
 

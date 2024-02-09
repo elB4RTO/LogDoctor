@@ -193,7 +193,7 @@ MainWindow::MainWindow(QWidget *parent)
             break;
         default:
             // shouldn't be here
-            throw WebServerException( "Unexpected WebServer: " + toString(this->default_web_server) );
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(this->default_web_server)) );
     }
     this->craplog.setCurrentWebServer( this->default_web_server );
 
@@ -334,7 +334,7 @@ void MainWindow::defineOSspec()
 
     #else
         // shouldn't be here
-        throw GenericException( "Unexpected OS", true );
+        static_assert( false, "Unexpected OS" );
     #endif
 }
 
@@ -854,7 +854,7 @@ void MainWindow::readConfigs()
             proceed &= false;
             invalid_lines.clear();
             err_msg = DialogSec::tr("An error occured while reading the configuration file");
-        } catch (...) {
+        } catch ( const LogDoctorException& ) {
             // something failed
             proceed &= false;
             invalid_lines.clear();
@@ -1225,7 +1225,7 @@ DialogsLevel MainWindow::dialogsLevelFromInt( const int dialogs_level )
     if ( dialogs_level >= 0 && dialogs_level <= 2) {
         return static_cast<DialogsLevel>( dialogs_level );
     } else {
-        throw GenericException( "Unexpected DialogsLevel: " + std::to_string(dialogs_level), true );
+        throw DoNotCatchException( "Unexpected DialogsLevel", std::to_string(dialogs_level) );
     }
 }
 
@@ -1239,7 +1239,7 @@ void MainWindow::setWebServerFromString(const std::string& web_server )
     } else if ( web_server == "IIS" || web_server == "13" ) {
         this->default_web_server = WebServer::IIS;
     } else {
-        throw GenericException( "Unexpected WebServer: " + web_server, true );
+        throw DoNotCatchException( "Unexpected WebServer", web_server );
     }
 }
 
@@ -1297,7 +1297,7 @@ void MainWindow::detectIconsTheme()
             GlobalConfigs::icons_set = "light";
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
             break;
     }
 }
@@ -1323,7 +1323,7 @@ void MainWindow::updateUiTheme()
             break;
         default:
             // wrong
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
             break;
     }
     // fallback stylesheets
@@ -1350,7 +1350,7 @@ void MainWindow::updateUiIcons()
                                        : "dark";
             break;
         default:
-            throw GenericException( "Unexpected IconsTheme index: "+std::to_string(static_cast<themes_t>(GlobalConfigs::icons_theme)), true );
+            throw DoNotCatchException( "Unexpected IconsTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::icons_theme)) );
             break;
     }
 
@@ -1459,7 +1459,7 @@ void MainWindow::updateUiIcons()
                      || text == tr("IIS") ) {
                 icon_name += "conf_webservers";
             } else {
-                throw GenericException( "Unexpected Configs section: "+text.toStdString(), true );
+                throw DoNotCatchException( "Unexpected Configs section", text.toStdString() );
             }
             (*it)->setIcon(0,
                 QIcon(QStringLiteral(":/icons/icons/%1/%2.png").arg(GlobalConfigs::icons_set, icon_name)) );
@@ -2058,7 +2058,7 @@ void MainWindow::makeInitialChecks()
                 break;
             default:
                 // shouldn't be here
-                throw WebServerException( "Unexpected WebServer: " + toString(this->default_web_server) );
+                throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(this->default_web_server)) );
         }
         this->initiating &= false;
         // effectively check if draw buttons can be enabled
@@ -2114,7 +2114,7 @@ QString MainWindow::wsFromIndex( const int index ) const
         case 2:
             return QStringLiteral("iis");
         default:
-            throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
+            throw DoNotCatchException( "Unexpected WebServer index", std::to_string(index) );
     }
 }
 WebServer MainWindow::wsEnumFromIndex( const int index ) const
@@ -2127,7 +2127,7 @@ WebServer MainWindow::wsEnumFromIndex( const int index ) const
         case 2:
             return WS_IIS;
         default:
-            throw WebServerException( "Unexpected WebServer index: "+std::to_string( index ) );
+            throw DoNotCatchException( "Unexpected WebServer index", std::to_string(index) );
     }
 }
 
@@ -2202,7 +2202,7 @@ BlacklistField MainWindow::blacklistFieldFromString( const QString& str )
     if ( TR::tr(FIELDS__CLIENT.c_str()) == str ) {
         return BlacklistField::Client;
     }
-    throw DoNotCatchException( "Unexpected BlacklistField string: "+str.toStdString() );
+    throw DoNotCatchException( "Unexpected BlacklistField string", str.toStdString() );
 }
 
 WarnlistField MainWindow::warnlistFieldFromString( const QString& str )
@@ -2216,7 +2216,7 @@ WarnlistField MainWindow::warnlistFieldFromString( const QString& str )
     } else if ( TR::tr(FIELDS__USER_AGENT.c_str()) == str ) {
         return WarnlistField::UserAgent;
     }
-    throw DoNotCatchException( "Unexpected WarnlistField string: "+str.toStdString() );
+    throw DoNotCatchException( "Unexpected WarnlistField string", str.toStdString() );
 }
 
 
@@ -4526,7 +4526,7 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
         case 2:
             f = "script"; break;
         default:
-            throw GenericException( "Unexpected Font index: "+std::to_string(index), true );
+            throw DoNotCatchException( "Unexpected Font index", std::to_string(index) );
     }
     const QFont& font{ this->fonts.at( f ) };
     this->TB.setFont( font );

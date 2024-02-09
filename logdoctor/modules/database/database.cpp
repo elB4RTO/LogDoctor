@@ -43,10 +43,10 @@ void DatabaseWrapper::open( const std::string& path, const bool explain_err )
 {
     this->db.setDatabaseName( QString::fromStdString( path ));
     if ( ! CheckSec::checkDatabaseFile( path, this->db_name ) ) {
-        throw LogDoctorException();
+        throw VoidException();
     } else if ( ! this->db.open() ) {
         DialogSec::errDatabaseFailedOpening( this->db_name, explain_err ? this->db.lastError().text() : QString{} );
-        throw LogDoctorException();
+        throw VoidException();
     }
 }
 
@@ -55,7 +55,7 @@ void DatabaseWrapper::openNew( const std::string& path )
     this->db.setDatabaseName( QString::fromStdString( path ));
     if ( ! this->db.open() ) {
         DialogSec::errDatabaseFailedOpening( this->db_name, db.lastError().text() );
-        throw LogDoctorException();
+        throw VoidException();
     }
 }
 
@@ -66,7 +66,7 @@ void DatabaseWrapper::startTransaction(const bool explain_msg, const bool explai
             db_name,
             explain_msg ? QStringLiteral("db.transaction()") : QString(),
             explain_err ? this->db.lastError().text() : QString() );
-        throw LogDoctorException();
+        throw VoidException();
     }
     this->ongoing_transaction |= true;
 }
@@ -78,7 +78,7 @@ void DatabaseWrapper::commitTransaction( const bool explain_msg, const bool expl
             db_name,
             explain_msg ? QStringLiteral("db.commit()") : QString(),
             explain_err ? this->db.lastError().text() : QString() );
-        throw LogDoctorException();
+        throw VoidException();
     }
     this->ongoing_transaction &= false;
 }
@@ -90,7 +90,7 @@ void DatabaseWrapper::rollbackTransaction( const bool explain_msg, const bool ex
             db_name,
             explain_msg ? QStringLiteral("db.rollback()") : QString(),
             explain_err ? this->db.lastError().text() : QString() );
-        throw LogDoctorException();
+        throw VoidException();
     }
     this->ongoing_transaction &= false;
 }
@@ -109,7 +109,7 @@ void QueryWrapper::operator()( const QString& text )
 {
     if ( !query.exec( text ) ) {
         DialogSec::errDatabaseFailedExecuting( db_name, query.lastQuery(), query.lastError().text() );
-        throw LogDoctorException();
+        throw VoidException();
     }
 }
 
@@ -151,7 +151,7 @@ DatabaseWrapper DatabaseHandler::get( const DatabaseType db_type, const bool rea
         case DatabaseType::Hashes:
             return DatabaseWrapper( DatabasesConnections::hashes, QString(DatabasesNames::hashes), readonly );
         default:
-            throw DoNotCatchException( "Unexpected DatabaseType" );
+            throw DoNotCatchException( "Unexpected DatabaseType", std::to_string(static_cast<int>(db_type)) );
     }
 
 }

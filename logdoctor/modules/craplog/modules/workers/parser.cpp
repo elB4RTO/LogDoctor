@@ -393,8 +393,8 @@ bool CraplogParser::storeData( QSqlDatabase& db )
             table.append( "iis" );
             break;
         default:
-            // wrong WebServerID, but should be unreachable because of the previous operations
-            throw WebServerException( "Unexpected WebServer: " + toString(this->web_server) );
+            // wrong WebServer, but should be unreachable because of the previous operations
+            throw LogParserException( "Unexpected WebServer", std::to_string(static_cast<int>(this->web_server)) );
     }
 
     const QString stmt_template{

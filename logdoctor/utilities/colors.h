@@ -28,8 +28,9 @@ std::unordered_map<ColorsScheme, std::unordered_map<std::string, QString>> getCo
 
 //! Applies the choosen theme to the given chart
 /*!
-  \param fonts The fonts set
-  \param chart_view The chart on which the theme will be applied
+    \param fonts The fonts set
+    \param chart_view The chart on which the theme will be applied
+    \throw DoNotCatchException
 */
 void applyChartTheme( const std::unordered_map<std::string, QFont>& fonts, QChartView* chart_view );
 

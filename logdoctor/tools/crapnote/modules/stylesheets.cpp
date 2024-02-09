@@ -69,11 +69,11 @@ StyleMap makeStyleMap()
                 "rgb( 47, 99, 47 )"}
         };
     default:
-        throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+        throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 }
 
-} // namespacce (private)
+} //namespace (private)
 
 
 namespace StyleSec::Crapnote
@@ -92,7 +92,7 @@ QString getStyleSheet( const ColorsScheme colors_scheme )
             icons_theme = "light";
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
     QString note_bg, note_txt;
     switch ( colors_scheme ) {
@@ -119,7 +119,7 @@ QString getStyleSheet( const ColorsScheme colors_scheme )
             break;
         default:
             // wrong
-            throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( static_cast<themes_t>(colors_scheme) ), true ); // leave un-catched
+            throw DoNotCatchException( "Unexpected ColorScheme for Crapnote", std::to_string(static_cast<themes_t>(colors_scheme)) );
     }
 
     const StyleMap style{ makeStyleMap() };

@@ -60,7 +60,7 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const ColorsS
 
         default:
             // wrong, shouldn't be here
-            throw GenericException( "Unexpected ColorScheme ID: "+std::to_string( static_cast<themes_t>(scheme_id) ), true ); // leave un-catched
+            throw DoNotCatchException( "Unexpected ColorScheme", std::to_string(static_cast<themes_t>(scheme_id)) );
     }
 }
 

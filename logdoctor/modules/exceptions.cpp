@@ -6,39 +6,23 @@
 #include <QString>
 
 
-DoNotCatchException::DoNotCatchException( const std::string& msg )
+DoNotCatchException::DoNotCatchException( const char* header, const std::string& body )
 {
-    std::cerr << "LogDoctor: Exception: " << msg << std::endl;
+    std::cerr << "LogDoctor: Exception: " << header << ": " << body << std::endl;
 }
 
 
 /////////////////
 //// GENERIC ////
-GenericException::GenericException( const std::string& msg, const bool to_sys )
+GenericException::GenericException( const std::string& msg )
+    : msg{ QString::fromStdString( msg ) }
 {
-    if ( to_sys ) { // when sys, leave un-catched
-        std::cerr << "LogDoctor: GenericException: " << msg << std::endl;
-    } else {
-        this->msg = QString::fromStdString( msg );
-    }
+
 }
 const QString& GenericException::what()
 {
     return msg;
 }
-
-
-////////////////////
-//// WEB SERVER ////
-WebServerException::WebServerException( const std::string& msg ) // leave un-catched
-{
-    std::cerr << "LogDoctor: WebServerException: " << msg << std::endl;
-    /*this->msg = QString::fromStdString( msg );*/
-}
-/*const QString& WebServerException::what()
-{
-    return msg;
-}*/
 
 
 ////////////////////
@@ -71,27 +55,9 @@ const QString& LogParserException::what()
 
 ///////////////////
 //// DATE-TIME ////
-DateTimeException::DateTimeException( const std::string& msg ) // leave un-catched
+DateTimeException::DateTimeException( const char* header, const std::string& body )
 {
-    std::cerr << "LogDoctor: DateTimeException: " << msg << std::endl;
-    /*this->msg = QString::fromStdString( msg );*/
-}
-/*const QString& DateTimeException::what()
-{
-    return msg;
-}*/
-
-
-////////////////////
-//// CONVERSION ////
-ConversionException::ConversionException( const std::string& msg )
-{
-    //std::cerr << "LogDoctor: ConversionException: " << msg << std::endl;
-    this->msg = QString::fromStdString( msg );
-}
-const QString& ConversionException::what()
-{
-    return msg;
+    std::cerr << "LogDoctor: DateTimeException: " << header << ": " << body << std::endl;
 }
 
 
@@ -100,12 +66,7 @@ const QString& ConversionException::what()
 BWlistException::BWlistException( const std::string& msg )
 {
     std::cerr << "LogDoctor: BWlistException: " << msg << std::endl;
-    /*this->msg = QString::fromStdString( msg );*/
 }
-/*const QString& DateTimeException::what()
-{
-    return msg;
-}*/
 
 
 //////////////////

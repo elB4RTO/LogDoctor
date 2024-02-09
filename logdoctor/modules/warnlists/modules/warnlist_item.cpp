@@ -21,7 +21,7 @@ const char* WarnlistItem::fieldName() const
             return FIELDS__USER_AGENT.c_str();
         default:
             // should be unreachable
-            throw DoNotCatchException( "Unexpected WarnlistField" );
+            throw DoNotCatchException( "Unexpected WarnlistField", std::to_string(static_cast<int>(this->field)) );
     }
 }
 
@@ -83,6 +83,6 @@ std::string WarnlistItem::sanitized( const std::string& item ) const
             return BWutils::sanitizedUserAgent( item );
         default:
             // should be unreachable
-            throw DoNotCatchException( "Unexpected WarnlistField" );
+            throw DoNotCatchException( "Unexpected WarnlistField", std::to_string(static_cast<int>(this->field)) );
     }
 }
