@@ -384,6 +384,685 @@ void testUtilities()
 
 void testCraplogModules()
 {
+    //// LOGS FORMAT FIELDS ////
+
+    {
+    // test for truth
+    assert( _NO_PARSE_NEEDED & date_time_year );
+    assert( _NO_PARSE_NEEDED & date_time_month );
+    assert( _NO_PARSE_NEEDED & date_time_day );
+    assert( _NO_PARSE_NEEDED & date_time_hour );
+    assert( _NO_PARSE_NEEDED & date_time_minute );
+    assert( _NO_PARSE_NEEDED & date_time_second );
+    assert( _NO_PARSE_NEEDED & request_protocol );
+    assert( _NO_PARSE_NEEDED & request_method );
+    assert( _NO_PARSE_NEEDED & request_uri );
+    assert( _NO_PARSE_NEEDED & request_query );
+    assert( _NO_PARSE_NEEDED & response_code );
+    assert( _NO_PARSE_NEEDED & bytes_received );
+    assert( _NO_PARSE_NEEDED & bytes_sent );
+    assert( _NO_PARSE_NEEDED & time_taken_ms );
+    assert( _NO_PARSE_NEEDED & client );
+    assert( _NO_PARSE_NEEDED & user_agent );
+    assert( _NO_PARSE_NEEDED & cookie );
+    assert( _NO_PARSE_NEEDED & referer );
+    // test for false
+    assert( !( _NO_PARSE_NEEDED & _INVALID ) );
+    assert( !( _NO_PARSE_NEEDED & _DISCARDED ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_epoch_us ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_epoch_ms ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_epoch_s ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_epoch_s_ms ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_ncsa ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_iso ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_gmt ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_mcs ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_utc_d ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_utc_t ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_yyyymmdd ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_mmddyy ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_mdyyyy ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_year_short ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_month_str ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_clock_24 ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_clock_12 ) );
+    assert( !( _NO_PARSE_NEEDED & date_time_clock_short ) );
+    assert( !( _NO_PARSE_NEEDED & request_uri_query ) );
+    assert( !( _NO_PARSE_NEEDED & request_full ) );
+    assert( !( _NO_PARSE_NEEDED & time_taken_us ) );
+    assert( !( _NO_PARSE_NEEDED & time_taken_s ) );
+    assert( !( _NO_PARSE_NEEDED & time_taken_s_ms ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME & date_time_epoch_us );
+    assert( _DATE_TIME & date_time_epoch_ms );
+    assert( _DATE_TIME & date_time_epoch_s );
+    assert( _DATE_TIME & date_time_epoch_s_ms );
+    assert( _DATE_TIME & date_time_ncsa );
+    assert( _DATE_TIME & date_time_iso );
+    assert( _DATE_TIME & date_time_gmt );
+    assert( _DATE_TIME & date_time_mcs );
+    assert( _DATE_TIME & date_time_utc_d );
+    assert( _DATE_TIME & date_time_utc_t );
+    assert( _DATE_TIME & date_time_yyyymmdd );
+    assert( _DATE_TIME & date_time_mmddyy );
+    assert( _DATE_TIME & date_time_mdyyyy );
+    assert( _DATE_TIME & date_time_year_short );
+    assert( _DATE_TIME & date_time_month_str );
+    assert( _DATE_TIME & date_time_year );
+    assert( _DATE_TIME & date_time_month );
+    assert( _DATE_TIME & date_time_day );
+    assert( _DATE_TIME & date_time_hour );
+    assert( _DATE_TIME & date_time_minute );
+    assert( _DATE_TIME & date_time_second );
+    assert( _DATE_TIME & date_time_clock_short );
+    assert( _DATE_TIME & date_time_clock_12 );
+    assert( _DATE_TIME & date_time_clock_24 );
+    // test for false
+    assert( !( _DATE_TIME & _INVALID ) );
+    assert( !( _DATE_TIME & _DISCARDED ) );
+    assert( !( _DATE_TIME & request_protocol ) );
+    assert( !( _DATE_TIME & request_method ) );
+    assert( !( _DATE_TIME & request_uri ) );
+    assert( !( _DATE_TIME & request_query ) );
+    assert( !( _DATE_TIME & request_uri_query ) );
+    assert( !( _DATE_TIME & request_full ) );
+    assert( !( _DATE_TIME & response_code ) );
+    assert( !( _DATE_TIME & bytes_received ) );
+    assert( !( _DATE_TIME & bytes_sent ) );
+    assert( !( _DATE_TIME & time_taken_us ) );
+    assert( !( _DATE_TIME & time_taken_ms ) );
+    assert( !( _DATE_TIME & time_taken_s ) );
+    assert( !( _DATE_TIME & time_taken_s_ms ) );
+    assert( !( _DATE_TIME & client ) );
+    assert( !( _DATE_TIME & user_agent ) );
+    assert( !( _DATE_TIME & cookie ) );
+    assert( !( _DATE_TIME & referer ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_FULL & date_time_epoch_us );
+    assert( _DATE_TIME_FULL & date_time_epoch_ms );
+    assert( _DATE_TIME_FULL & date_time_epoch_s );
+    assert( _DATE_TIME_FULL & date_time_epoch_s_ms );
+    assert( _DATE_TIME_FULL & date_time_ncsa );
+    assert( _DATE_TIME_FULL & date_time_iso );
+    assert( _DATE_TIME_FULL & date_time_gmt );
+    assert( _DATE_TIME_FULL & date_time_mcs );
+    // test for false
+    assert( !( _DATE_TIME_FULL & date_time_utc_d ) );
+    assert( !( _DATE_TIME_FULL & date_time_utc_t ) );
+    assert( !( _DATE_TIME_FULL & date_time_yyyymmdd ) );
+    assert( !( _DATE_TIME_FULL & date_time_mmddyy ) );
+    assert( !( _DATE_TIME_FULL & date_time_mdyyyy ) );
+    assert( !( _DATE_TIME_FULL & date_time_year_short ) );
+    assert( !( _DATE_TIME_FULL & date_time_month_str ) );
+    assert( !( _DATE_TIME_FULL & date_time_year ) );
+    assert( !( _DATE_TIME_FULL & date_time_month ) );
+    assert( !( _DATE_TIME_FULL & date_time_day ) );
+    assert( !( _DATE_TIME_FULL & date_time_hour ) );
+    assert( !( _DATE_TIME_FULL & date_time_minute ) );
+    assert( !( _DATE_TIME_FULL & date_time_second ) );
+    assert( !( _DATE_TIME_FULL & date_time_clock_short ) );
+    assert( !( _DATE_TIME_FULL & date_time_clock_12 ) );
+    assert( !( _DATE_TIME_FULL & date_time_clock_24 ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_EPOCH & date_time_epoch_us );
+    assert( _DATE_TIME_EPOCH & date_time_epoch_ms );
+    assert( _DATE_TIME_EPOCH & date_time_epoch_s );
+    assert( _DATE_TIME_EPOCH & date_time_epoch_s_ms );
+    // test for false
+    assert( !( _DATE_TIME_EPOCH & date_time_ncsa ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_iso ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_gmt ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_mcs ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_utc_d ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_utc_t ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_yyyymmdd ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_mmddyy ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_mdyyyy ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_year_short ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_month_str ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_year ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_month ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_day ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_hour ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_minute ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_second ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_clock_short ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_clock_12 ) );
+    assert( !( _DATE_TIME_EPOCH & date_time_clock_24 ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_UTC & date_time_utc_d );
+    assert( _DATE_TIME_UTC & date_time_utc_t );
+    // test for false
+    assert( !( _DATE_TIME_UTC & date_time_epoch_us ) );
+    assert( !( _DATE_TIME_UTC & date_time_epoch_ms ) );
+    assert( !( _DATE_TIME_UTC & date_time_epoch_s ) );
+    assert( !( _DATE_TIME_UTC & date_time_epoch_s_ms ) );
+    assert( !( _DATE_TIME_UTC & date_time_ncsa ) );
+    assert( !( _DATE_TIME_UTC & date_time_iso ) );
+    assert( !( _DATE_TIME_UTC & date_time_gmt ) );
+    assert( !( _DATE_TIME_UTC & date_time_mcs ) );
+    assert( !( _DATE_TIME_UTC & date_time_yyyymmdd ) );
+    assert( !( _DATE_TIME_UTC & date_time_mmddyy ) );
+    assert( !( _DATE_TIME_UTC & date_time_mdyyyy ) );
+    assert( !( _DATE_TIME_UTC & date_time_year_short ) );
+    assert( !( _DATE_TIME_UTC & date_time_month_str ) );
+    assert( !( _DATE_TIME_UTC & date_time_year ) );
+    assert( !( _DATE_TIME_UTC & date_time_month ) );
+    assert( !( _DATE_TIME_UTC & date_time_day ) );
+    assert( !( _DATE_TIME_UTC & date_time_hour ) );
+    assert( !( _DATE_TIME_UTC & date_time_minute ) );
+    assert( !( _DATE_TIME_UTC & date_time_second ) );
+    assert( !( _DATE_TIME_UTC & date_time_clock_short ) );
+    assert( !( _DATE_TIME_UTC & date_time_clock_12 ) );
+    assert( !( _DATE_TIME_UTC & date_time_clock_24 ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_DATE & date_time_utc_d );
+    assert( _DATE_TIME_DATE & date_time_yyyymmdd );
+    assert( _DATE_TIME_DATE & date_time_mmddyy );
+    assert( _DATE_TIME_DATE & date_time_mdyyyy );
+    // test for false
+    assert( !( _DATE_TIME_DATE & date_time_epoch_us ) );
+    assert( !( _DATE_TIME_DATE & date_time_epoch_ms ) );
+    assert( !( _DATE_TIME_DATE & date_time_epoch_s ) );
+    assert( !( _DATE_TIME_DATE & date_time_epoch_s_ms ) );
+    assert( !( _DATE_TIME_DATE & date_time_ncsa ) );
+    assert( !( _DATE_TIME_DATE & date_time_iso ) );
+    assert( !( _DATE_TIME_DATE & date_time_gmt ) );
+    assert( !( _DATE_TIME_DATE & date_time_mcs ) );
+    assert( !( _DATE_TIME_DATE & date_time_utc_t ) );
+    assert( !( _DATE_TIME_DATE & date_time_year_short ) );
+    assert( !( _DATE_TIME_DATE & date_time_month_str ) );
+    assert( !( _DATE_TIME_DATE & date_time_year ) );
+    assert( !( _DATE_TIME_DATE & date_time_month ) );
+    assert( !( _DATE_TIME_DATE & date_time_day ) );
+    assert( !( _DATE_TIME_DATE & date_time_hour ) );
+    assert( !( _DATE_TIME_DATE & date_time_minute ) );
+    assert( !( _DATE_TIME_DATE & date_time_second ) );
+    assert( !( _DATE_TIME_DATE & date_time_clock_short ) );
+    assert( !( _DATE_TIME_DATE & date_time_clock_12 ) );
+    assert( !( _DATE_TIME_DATE & date_time_clock_24 ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_YEAR & date_time_year_short );
+    assert( _DATE_TIME_YEAR & date_time_year );
+    // test for false
+    assert( !( _DATE_TIME_YEAR & date_time_epoch_us ) );
+    assert( !( _DATE_TIME_YEAR & date_time_epoch_ms ) );
+    assert( !( _DATE_TIME_YEAR & date_time_epoch_s ) );
+    assert( !( _DATE_TIME_YEAR & date_time_epoch_s_ms ) );
+    assert( !( _DATE_TIME_YEAR & date_time_ncsa ) );
+    assert( !( _DATE_TIME_YEAR & date_time_iso ) );
+    assert( !( _DATE_TIME_YEAR & date_time_gmt ) );
+    assert( !( _DATE_TIME_YEAR & date_time_mcs ) );
+    assert( !( _DATE_TIME_YEAR & date_time_utc_d ) );
+    assert( !( _DATE_TIME_YEAR & date_time_utc_t ) );
+    assert( !( _DATE_TIME_YEAR & date_time_yyyymmdd ) );
+    assert( !( _DATE_TIME_YEAR & date_time_mmddyy ) );
+    assert( !( _DATE_TIME_YEAR & date_time_mdyyyy ) );
+    assert( !( _DATE_TIME_YEAR & date_time_month_str ) );
+    assert( !( _DATE_TIME_YEAR & date_time_month ) );
+    assert( !( _DATE_TIME_YEAR & date_time_day ) );
+    assert( !( _DATE_TIME_YEAR & date_time_hour ) );
+    assert( !( _DATE_TIME_YEAR & date_time_minute ) );
+    assert( !( _DATE_TIME_YEAR & date_time_second ) );
+    assert( !( _DATE_TIME_YEAR & date_time_clock_short ) );
+    assert( !( _DATE_TIME_YEAR & date_time_clock_12 ) );
+    assert( !( _DATE_TIME_YEAR & date_time_clock_24 ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_MONTH & date_time_month_str );
+    assert( _DATE_TIME_MONTH & date_time_month );
+    // test for false
+    assert( !( _DATE_TIME_MONTH & date_time_epoch_us ) );
+    assert( !( _DATE_TIME_MONTH & date_time_epoch_ms ) );
+    assert( !( _DATE_TIME_MONTH & date_time_epoch_s ) );
+    assert( !( _DATE_TIME_MONTH & date_time_epoch_s_ms ) );
+    assert( !( _DATE_TIME_MONTH & date_time_ncsa ) );
+    assert( !( _DATE_TIME_MONTH & date_time_iso ) );
+    assert( !( _DATE_TIME_MONTH & date_time_gmt ) );
+    assert( !( _DATE_TIME_MONTH & date_time_mcs ) );
+    assert( !( _DATE_TIME_MONTH & date_time_utc_d ) );
+    assert( !( _DATE_TIME_MONTH & date_time_utc_t ) );
+    assert( !( _DATE_TIME_MONTH & date_time_yyyymmdd ) );
+    assert( !( _DATE_TIME_MONTH & date_time_mmddyy ) );
+    assert( !( _DATE_TIME_MONTH & date_time_mdyyyy ) );
+    assert( !( _DATE_TIME_MONTH & date_time_year_short ) );
+    assert( !( _DATE_TIME_MONTH & date_time_year ) );
+    assert( !( _DATE_TIME_MONTH & date_time_day ) );
+    assert( !( _DATE_TIME_MONTH & date_time_hour ) );
+    assert( !( _DATE_TIME_MONTH & date_time_minute ) );
+    assert( !( _DATE_TIME_MONTH & date_time_second ) );
+    assert( !( _DATE_TIME_MONTH & date_time_clock_short ) );
+    assert( !( _DATE_TIME_MONTH & date_time_clock_12 ) );
+    assert( !( _DATE_TIME_MONTH & date_time_clock_24 ) );
+    }{
+    // test for truth
+    assert( _DATE_TIME_CLOCK & date_time_clock_short );
+    assert( _DATE_TIME_CLOCK & date_time_clock_12 );
+    assert( _DATE_TIME_CLOCK & date_time_clock_24 );
+    // test for false
+    assert( !( _DATE_TIME_CLOCK & date_time_epoch_us ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_epoch_ms ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_epoch_s ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_epoch_s_ms ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_ncsa ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_iso ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_gmt ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_mcs ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_utc_d ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_utc_t ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_yyyymmdd ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_mmddyy ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_mdyyyy ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_year_short ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_month_str ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_year ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_month ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_day ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_hour ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_minute ) );
+    assert( !( _DATE_TIME_CLOCK & date_time_second ) );
+    }{
+    // test for truth
+    assert( _REQUEST & request_protocol );
+    assert( _REQUEST & request_method );
+    assert( _REQUEST & request_uri );
+    assert( _REQUEST & request_query );
+    assert( _REQUEST & request_uri_query );
+    assert( _REQUEST & request_full );
+    // test for false
+    assert( !( _REQUEST & _INVALID ) );
+    assert( !( _REQUEST & _DISCARDED ) );
+    assert( !( _REQUEST & date_time_epoch_us ) );
+    assert( !( _REQUEST & date_time_epoch_ms ) );
+    assert( !( _REQUEST & date_time_epoch_s ) );
+    assert( !( _REQUEST & date_time_epoch_s_ms ) );
+    assert( !( _REQUEST & date_time_ncsa ) );
+    assert( !( _REQUEST & date_time_iso ) );
+    assert( !( _REQUEST & date_time_gmt ) );
+    assert( !( _REQUEST & date_time_mcs ) );
+    assert( !( _REQUEST & date_time_utc_d ) );
+    assert( !( _REQUEST & date_time_utc_t ) );
+    assert( !( _REQUEST & date_time_yyyymmdd ) );
+    assert( !( _REQUEST & date_time_mmddyy ) );
+    assert( !( _REQUEST & date_time_mdyyyy ) );
+    assert( !( _REQUEST & date_time_year_short ) );
+    assert( !( _REQUEST & date_time_month_str ) );
+    assert( !( _REQUEST & date_time_year ) );
+    assert( !( _REQUEST & date_time_month ) );
+    assert( !( _REQUEST & date_time_day ) );
+    assert( !( _REQUEST & date_time_hour ) );
+    assert( !( _REQUEST & date_time_minute ) );
+    assert( !( _REQUEST & date_time_second ) );
+    assert( !( _REQUEST & date_time_clock_short ) );
+    assert( !( _REQUEST & date_time_clock_12 ) );
+    assert( !( _REQUEST & date_time_clock_24 ) );
+    assert( !( _REQUEST & response_code ) );
+    assert( !( _REQUEST & bytes_received ) );
+    assert( !( _REQUEST & bytes_sent ) );
+    assert( !( _REQUEST & time_taken_us ) );
+    assert( !( _REQUEST & time_taken_ms ) );
+    assert( !( _REQUEST & time_taken_s ) );
+    assert( !( _REQUEST & time_taken_s_ms ) );
+    assert( !( _REQUEST & client ) );
+    assert( !( _REQUEST & user_agent ) );
+    assert( !( _REQUEST & cookie ) );
+    assert( !( _REQUEST & referer ) );
+    }{
+    // test for truth
+    assert( _RESPONSE_CODE & response_code );
+    // test for false
+    assert( !( _RESPONSE_CODE & _INVALID ) );
+    assert( !( _RESPONSE_CODE & _DISCARDED ) );
+    assert( !( _RESPONSE_CODE & date_time_epoch_us ) );
+    assert( !( _RESPONSE_CODE & date_time_epoch_ms ) );
+    assert( !( _RESPONSE_CODE & date_time_epoch_s ) );
+    assert( !( _RESPONSE_CODE & date_time_epoch_s_ms ) );
+    assert( !( _RESPONSE_CODE & date_time_ncsa ) );
+    assert( !( _RESPONSE_CODE & date_time_iso ) );
+    assert( !( _RESPONSE_CODE & date_time_gmt ) );
+    assert( !( _RESPONSE_CODE & date_time_mcs ) );
+    assert( !( _RESPONSE_CODE & date_time_utc_d ) );
+    assert( !( _RESPONSE_CODE & date_time_utc_t ) );
+    assert( !( _RESPONSE_CODE & date_time_yyyymmdd ) );
+    assert( !( _RESPONSE_CODE & date_time_mmddyy ) );
+    assert( !( _RESPONSE_CODE & date_time_mdyyyy ) );
+    assert( !( _RESPONSE_CODE & date_time_year_short ) );
+    assert( !( _RESPONSE_CODE & date_time_month_str ) );
+    assert( !( _RESPONSE_CODE & date_time_year ) );
+    assert( !( _RESPONSE_CODE & date_time_month ) );
+    assert( !( _RESPONSE_CODE & date_time_day ) );
+    assert( !( _RESPONSE_CODE & date_time_hour ) );
+    assert( !( _RESPONSE_CODE & date_time_minute ) );
+    assert( !( _RESPONSE_CODE & date_time_second ) );
+    assert( !( _RESPONSE_CODE & date_time_clock_short ) );
+    assert( !( _RESPONSE_CODE & date_time_clock_12 ) );
+    assert( !( _RESPONSE_CODE & date_time_clock_24 ) );
+    assert( !( _RESPONSE_CODE & request_protocol ) );
+    assert( !( _RESPONSE_CODE & request_method ) );
+    assert( !( _RESPONSE_CODE & request_uri ) );
+    assert( !( _RESPONSE_CODE & request_query ) );
+    assert( !( _RESPONSE_CODE & request_uri_query ) );
+    assert( !( _RESPONSE_CODE & request_full ) );
+    assert( !( _RESPONSE_CODE & bytes_received ) );
+    assert( !( _RESPONSE_CODE & bytes_sent ) );
+    assert( !( _RESPONSE_CODE & time_taken_us ) );
+    assert( !( _RESPONSE_CODE & time_taken_ms ) );
+    assert( !( _RESPONSE_CODE & time_taken_s ) );
+    assert( !( _RESPONSE_CODE & time_taken_s_ms ) );
+    assert( !( _RESPONSE_CODE & client ) );
+    assert( !( _RESPONSE_CODE & user_agent ) );
+    assert( !( _RESPONSE_CODE & cookie ) );
+    assert( !( _RESPONSE_CODE & referer ) );
+    }{
+    // test for truth
+    assert( _DATA_TRANSFER & bytes_received );
+    assert( _DATA_TRANSFER & bytes_sent );
+    // test for false
+    assert( !( _DATA_TRANSFER & _INVALID ) );
+    assert( !( _DATA_TRANSFER & _DISCARDED ) );
+    assert( !( _DATA_TRANSFER & date_time_epoch_us ) );
+    assert( !( _DATA_TRANSFER & date_time_epoch_ms ) );
+    assert( !( _DATA_TRANSFER & date_time_epoch_s ) );
+    assert( !( _DATA_TRANSFER & date_time_epoch_s_ms ) );
+    assert( !( _DATA_TRANSFER & date_time_ncsa ) );
+    assert( !( _DATA_TRANSFER & date_time_iso ) );
+    assert( !( _DATA_TRANSFER & date_time_gmt ) );
+    assert( !( _DATA_TRANSFER & date_time_mcs ) );
+    assert( !( _DATA_TRANSFER & date_time_utc_d ) );
+    assert( !( _DATA_TRANSFER & date_time_utc_t ) );
+    assert( !( _DATA_TRANSFER & date_time_yyyymmdd ) );
+    assert( !( _DATA_TRANSFER & date_time_mmddyy ) );
+    assert( !( _DATA_TRANSFER & date_time_mdyyyy ) );
+    assert( !( _DATA_TRANSFER & date_time_year_short ) );
+    assert( !( _DATA_TRANSFER & date_time_month_str ) );
+    assert( !( _DATA_TRANSFER & date_time_year ) );
+    assert( !( _DATA_TRANSFER & date_time_month ) );
+    assert( !( _DATA_TRANSFER & date_time_day ) );
+    assert( !( _DATA_TRANSFER & date_time_hour ) );
+    assert( !( _DATA_TRANSFER & date_time_minute ) );
+    assert( !( _DATA_TRANSFER & date_time_second ) );
+    assert( !( _DATA_TRANSFER & date_time_clock_short ) );
+    assert( !( _DATA_TRANSFER & date_time_clock_12 ) );
+    assert( !( _DATA_TRANSFER & date_time_clock_24 ) );
+    assert( !( _DATA_TRANSFER & request_protocol ) );
+    assert( !( _DATA_TRANSFER & request_method ) );
+    assert( !( _DATA_TRANSFER & request_uri ) );
+    assert( !( _DATA_TRANSFER & request_query ) );
+    assert( !( _DATA_TRANSFER & request_uri_query ) );
+    assert( !( _DATA_TRANSFER & request_full ) );
+    assert( !( _DATA_TRANSFER & response_code ) );
+    assert( !( _DATA_TRANSFER & time_taken_us ) );
+    assert( !( _DATA_TRANSFER & time_taken_ms ) );
+    assert( !( _DATA_TRANSFER & time_taken_s ) );
+    assert( !( _DATA_TRANSFER & time_taken_s_ms ) );
+    assert( !( _DATA_TRANSFER & client ) );
+    assert( !( _DATA_TRANSFER & user_agent ) );
+    assert( !( _DATA_TRANSFER & cookie ) );
+    assert( !( _DATA_TRANSFER & referer ) );
+    }{
+    // test for truth
+    assert( _TIME_TAKEN & time_taken_us );
+    assert( _TIME_TAKEN & time_taken_ms );
+    assert( _TIME_TAKEN & time_taken_s );
+    assert( _TIME_TAKEN & time_taken_s_ms );
+    // test for false
+    assert( !( _TIME_TAKEN & _INVALID ) );
+    assert( !( _TIME_TAKEN & _DISCARDED ) );
+    assert( !( _TIME_TAKEN & date_time_epoch_us ) );
+    assert( !( _TIME_TAKEN & date_time_epoch_ms ) );
+    assert( !( _TIME_TAKEN & date_time_epoch_s ) );
+    assert( !( _TIME_TAKEN & date_time_epoch_s_ms ) );
+    assert( !( _TIME_TAKEN & date_time_ncsa ) );
+    assert( !( _TIME_TAKEN & date_time_iso ) );
+    assert( !( _TIME_TAKEN & date_time_gmt ) );
+    assert( !( _TIME_TAKEN & date_time_mcs ) );
+    assert( !( _TIME_TAKEN & date_time_utc_d ) );
+    assert( !( _TIME_TAKEN & date_time_utc_t ) );
+    assert( !( _TIME_TAKEN & date_time_yyyymmdd ) );
+    assert( !( _TIME_TAKEN & date_time_mmddyy ) );
+    assert( !( _TIME_TAKEN & date_time_mdyyyy ) );
+    assert( !( _TIME_TAKEN & date_time_year_short ) );
+    assert( !( _TIME_TAKEN & date_time_month_str ) );
+    assert( !( _TIME_TAKEN & date_time_year ) );
+    assert( !( _TIME_TAKEN & date_time_month ) );
+    assert( !( _TIME_TAKEN & date_time_day ) );
+    assert( !( _TIME_TAKEN & date_time_hour ) );
+    assert( !( _TIME_TAKEN & date_time_minute ) );
+    assert( !( _TIME_TAKEN & date_time_second ) );
+    assert( !( _TIME_TAKEN & date_time_clock_short ) );
+    assert( !( _TIME_TAKEN & date_time_clock_12 ) );
+    assert( !( _TIME_TAKEN & date_time_clock_24 ) );
+    assert( !( _TIME_TAKEN & request_protocol ) );
+    assert( !( _TIME_TAKEN & request_method ) );
+    assert( !( _TIME_TAKEN & request_uri ) );
+    assert( !( _TIME_TAKEN & request_query ) );
+    assert( !( _TIME_TAKEN & request_uri_query ) );
+    assert( !( _TIME_TAKEN & request_full ) );
+    assert( !( _TIME_TAKEN & response_code ) );
+    assert( !( _TIME_TAKEN & bytes_received ) );
+    assert( !( _TIME_TAKEN & bytes_sent ) );
+    assert( !( _TIME_TAKEN & client ) );
+    assert( !( _TIME_TAKEN & user_agent ) );
+    assert( !( _TIME_TAKEN & cookie ) );
+    assert( !( _TIME_TAKEN & referer ) );
+    }{
+    // test for truth
+    assert( _CLIENT_DATA & client );
+    assert( _CLIENT_DATA & user_agent );
+    assert( _CLIENT_DATA & cookie );
+    assert( _CLIENT_DATA & referer );
+    // test for false
+    assert( !( _CLIENT_DATA & _INVALID ) );
+    assert( !( _CLIENT_DATA & _DISCARDED ) );
+    assert( !( _CLIENT_DATA & date_time_epoch_us ) );
+    assert( !( _CLIENT_DATA & date_time_epoch_ms ) );
+    assert( !( _CLIENT_DATA & date_time_epoch_s ) );
+    assert( !( _CLIENT_DATA & date_time_epoch_s_ms ) );
+    assert( !( _CLIENT_DATA & date_time_ncsa ) );
+    assert( !( _CLIENT_DATA & date_time_iso ) );
+    assert( !( _CLIENT_DATA & date_time_gmt ) );
+    assert( !( _CLIENT_DATA & date_time_mcs ) );
+    assert( !( _CLIENT_DATA & date_time_utc_d ) );
+    assert( !( _CLIENT_DATA & date_time_utc_t ) );
+    assert( !( _CLIENT_DATA & date_time_yyyymmdd ) );
+    assert( !( _CLIENT_DATA & date_time_mmddyy ) );
+    assert( !( _CLIENT_DATA & date_time_mdyyyy ) );
+    assert( !( _CLIENT_DATA & date_time_year_short ) );
+    assert( !( _CLIENT_DATA & date_time_month_str ) );
+    assert( !( _CLIENT_DATA & date_time_year ) );
+    assert( !( _CLIENT_DATA & date_time_month ) );
+    assert( !( _CLIENT_DATA & date_time_day ) );
+    assert( !( _CLIENT_DATA & date_time_hour ) );
+    assert( !( _CLIENT_DATA & date_time_minute ) );
+    assert( !( _CLIENT_DATA & date_time_second ) );
+    assert( !( _CLIENT_DATA & date_time_clock_short ) );
+    assert( !( _CLIENT_DATA & date_time_clock_12 ) );
+    assert( !( _CLIENT_DATA & date_time_clock_24 ) );
+    assert( !( _CLIENT_DATA & request_protocol ) );
+    assert( !( _CLIENT_DATA & request_method ) );
+    assert( !( _CLIENT_DATA & request_uri ) );
+    assert( !( _CLIENT_DATA & request_query ) );
+    assert( !( _CLIENT_DATA & request_uri_query ) );
+    assert( !( _CLIENT_DATA & request_full ) );
+    assert( !( _CLIENT_DATA & response_code ) );
+    assert( !( _CLIENT_DATA & bytes_received ) );
+    assert( !( _CLIENT_DATA & bytes_sent ) );
+    assert( !( _CLIENT_DATA & time_taken_us ) );
+    assert( !( _CLIENT_DATA & time_taken_ms ) );
+    assert( !( _CLIENT_DATA & time_taken_s ) );
+    assert( !( _CLIENT_DATA & time_taken_s_ms ) );
+    }{
+    // test for exact matches
+    assert( (_NO_PARSE_NEEDED & date_time_year) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & date_time_month) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & date_time_day) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & date_time_hour) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & date_time_minute) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & date_time_second) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & request_protocol) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & request_method) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & request_uri) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & request_query) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & response_code) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & bytes_received) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & bytes_sent) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & time_taken_ms) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & client) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & user_agent) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & cookie) == _NO_PARSE_NEEDED );
+    assert( (_NO_PARSE_NEEDED & referer) == _NO_PARSE_NEEDED );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME & date_time_epoch_us) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_epoch_ms) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_epoch_s) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_epoch_s_ms) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_ncsa) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_iso) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_gmt) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_mcs) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_utc_d) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_utc_t) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_yyyymmdd) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_mmddyy) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_mdyyyy) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_year_short) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_month_str) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_year) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_month) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_day) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_hour) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_minute) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_second) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_clock_short) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_clock_12) == _DATE_TIME );
+    assert( (_DATE_TIME & date_time_clock_24) == _DATE_TIME );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_FULL & date_time_epoch_us) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_epoch_ms) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_epoch_s) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_epoch_s_ms) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_ncsa) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_iso) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_gmt) == _DATE_TIME_FULL );
+    assert( (_DATE_TIME_FULL & date_time_mcs) == _DATE_TIME_FULL );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_EPOCH & date_time_epoch_us) == _DATE_TIME_EPOCH );
+    assert( (_DATE_TIME_EPOCH & date_time_epoch_ms) == _DATE_TIME_EPOCH );
+    assert( (_DATE_TIME_EPOCH & date_time_epoch_s) == _DATE_TIME_EPOCH );
+    assert( (_DATE_TIME_EPOCH & date_time_epoch_s_ms) == _DATE_TIME_EPOCH );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_UTC & date_time_utc_d) == _DATE_TIME_UTC );
+    assert( (_DATE_TIME_UTC & date_time_utc_t) == _DATE_TIME_UTC );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_DATE & date_time_utc_d) == _DATE_TIME_DATE );
+    assert( (_DATE_TIME_DATE & date_time_yyyymmdd) == _DATE_TIME_DATE );
+    assert( (_DATE_TIME_DATE & date_time_mmddyy) == _DATE_TIME_DATE );
+    assert( (_DATE_TIME_DATE & date_time_mdyyyy) == _DATE_TIME_DATE );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_YEAR & date_time_year_short) == _DATE_TIME_YEAR );
+    assert( (_DATE_TIME_YEAR & date_time_year) == _DATE_TIME_YEAR );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_MONTH & date_time_month_str) == _DATE_TIME_MONTH );
+    assert( (_DATE_TIME_MONTH & date_time_month) == _DATE_TIME_MONTH );
+    }{
+    // test for exact matches
+    assert( (_DATE_TIME_CLOCK & date_time_clock_short) == _DATE_TIME_CLOCK );
+    assert( (_DATE_TIME_CLOCK & date_time_clock_12) == _DATE_TIME_CLOCK );
+    assert( (_DATE_TIME_CLOCK & date_time_clock_24) == _DATE_TIME_CLOCK );
+    }{
+    // test for exact matches
+    assert( (_REQUEST & request_protocol) == _REQUEST );
+    assert( (_REQUEST & request_method) == _REQUEST );
+    assert( (_REQUEST & request_uri) == _REQUEST );
+    assert( (_REQUEST & request_query) == _REQUEST );
+    assert( (_REQUEST & request_uri_query) == _REQUEST );
+    assert( (_REQUEST & request_full) == _REQUEST );
+    }{
+    // test for exact matches
+    assert( (_RESPONSE_CODE & response_code) == _RESPONSE_CODE );
+    }{
+    // test for exact matches
+    assert( (_DATA_TRANSFER & bytes_received) == _DATA_TRANSFER );
+    assert( (_DATA_TRANSFER & bytes_sent) == _DATA_TRANSFER );
+    }{
+    // test for exact matches
+    assert( (_TIME_TAKEN & time_taken_us) == _TIME_TAKEN );
+    assert( (_TIME_TAKEN & time_taken_ms) == _TIME_TAKEN );
+    assert( (_TIME_TAKEN & time_taken_s) == _TIME_TAKEN );
+    assert( (_TIME_TAKEN & time_taken_s_ms) == _TIME_TAKEN );
+    }{
+    // test for exact matches
+    assert( (_CLIENT_DATA & client) == _CLIENT_DATA );
+    assert( (_CLIENT_DATA & user_agent) == _CLIENT_DATA );
+    assert( (_CLIENT_DATA & cookie) == _CLIENT_DATA );
+    assert( (_CLIENT_DATA & referer) == _CLIENT_DATA );
+    }{
+    // test for fields which contain a fixed number of spaces
+    assert( _MAY_HAVE_SPACES & request_full );
+    assert( _MAY_HAVE_SPACES & date_time_ncsa );
+    assert( _MAY_HAVE_SPACES & date_time_gmt );
+    assert( _MAY_HAVE_SPACES & date_time_mcs );
+    // test for fields which doesn't (supposedly) contain spaces
+    assert( !( _MAY_HAVE_SPACES & date_time_epoch_us ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_epoch_ms ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_epoch_s ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_epoch_s_ms ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_iso ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_utc_d ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_utc_t ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_yyyymmdd ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_mmddyy ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_mdyyyy ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_year_short ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_month_str ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_year ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_month ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_day ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_hour ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_minute ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_second ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_clock_short ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_clock_12 ) );
+    assert( !( _MAY_HAVE_SPACES & date_time_clock_24 ) );
+    assert( !( _MAY_HAVE_SPACES & request_protocol ) );
+    assert( !( _MAY_HAVE_SPACES & request_method ) );
+    assert( !( _MAY_HAVE_SPACES & request_uri ) );
+    assert( !( _MAY_HAVE_SPACES & request_query ) );
+    assert( !( _MAY_HAVE_SPACES & request_uri_query ) );
+    assert( !( _MAY_HAVE_SPACES & response_code ) );
+    assert( !( _MAY_HAVE_SPACES & bytes_received ) );
+    assert( !( _MAY_HAVE_SPACES & bytes_sent ) );
+    assert( !( _MAY_HAVE_SPACES & time_taken_us ) );
+    assert( !( _MAY_HAVE_SPACES & time_taken_ms ) );
+    assert( !( _MAY_HAVE_SPACES & time_taken_s ) );
+    assert( !( _MAY_HAVE_SPACES & time_taken_s_ms ) );
+    assert( !( _MAY_HAVE_SPACES & client ) );
+    assert( !( _MAY_HAVE_SPACES & user_agent ) );
+    assert( !( _MAY_HAVE_SPACES & cookie ) );
+    assert( !( _MAY_HAVE_SPACES & referer ) );
+    }{
+    // test for the correct amount of spaces
+    assert( (_COUNT_SPACES & date_time_ncsa) == 1ul );
+    assert( (_COUNT_SPACES & date_time_gmt) == 3ul );
+    assert( (_COUNT_SPACES & date_time_mcs) == 4ul );
+    assert( (request_full & 2) == 2 ); // useless, just a reminder is should have 2
+    }
+    T_PRINT("LogsFormatField");
+
+
     //// DATE-TIME ////
 
     {
