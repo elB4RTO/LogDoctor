@@ -2,35 +2,11 @@
 #define LOGDOCTOR__CRAPLOG__LIB_H
 
 
-#include <QMetaType>
-
-
-enum class LogField
-{
-    Year,
-    Month,
-    Day,
-    Hour,
-    Minute,
-    Second,
-    // request
-    Protocol,
-    Method,
-    Uri,
-    Query,
-    // server
-    ResponseCode,
-    TimeTaken,
-    BytesSent,
-    BytesReceived,
-    // client
-    Client,
-    Cookie,
-    UserAgent,
-    Referrer
+enum class IISLogsModule : unsigned char {
+    W3C  = 0,
+    NCSA = 1,
+    IIS  = 2
 };
-
-Q_DECLARE_METATYPE(LogField)
 
 
 #endif // LOGDOCTOR__CRAPLOG__LIB_H
