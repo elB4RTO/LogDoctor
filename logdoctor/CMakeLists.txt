@@ -167,6 +167,12 @@ set(PROJECT_SOURCES
     modules/crapinfo/modules/stylesheets.h
     modules/crapinfo/modules/stylesheets.cpp
 
+    modules/changelog/changelog.ui
+    modules/changelog/changelog.h
+    modules/changelog/changelog.cpp
+    modules/changelog/modules/stylesheets.h
+    modules/changelog/modules/stylesheets.cpp
+
     tools/crappath/crappath.h
     tools/crappath/crappath.cpp
 

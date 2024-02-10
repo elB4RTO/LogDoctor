@@ -26,6 +26,8 @@
 #include "modules/crapup/crapup.h"
 #include "modules/crapinfo/crapinfo.h"
 
+#include "modules/changelog/changelog.h"
+
 #include "modules/craplog/lib.h"
 
 #include "modules/crapview/lib.h"
@@ -127,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
     // utilities
     connect( this->ui->actionInfos, &QAction::triggered, this, &MainWindow::menu_actionInfos_triggered );
+    connect( this->ui->actionChangelog, &QAction::triggered, this, &MainWindow::menu_actionChangelog_triggered );
     connect( this->ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::menu_actionCheckUpdates_triggered );
     // games
     connect( this->ui->actionCrissCross, &QAction::triggered, this, &MainWindow::menu_actionCrissCross_triggered );
@@ -1572,6 +1575,7 @@ void MainWindow::updateUiFonts()
     this->ui->actionBlockNote->setFont( menu_font );
     this->ui->menuUtilities->setFont( menu_font );
     this->ui->actionInfos->setFont( menu_font );
+    this->ui->actionChangelog->setFont( menu_font );
     this->ui->actionCheckUpdates->setFont( menu_font );
     this->ui->menuGames->setFont( menu_font );
     this->ui->actionCrissCross->setFont( menu_font );
@@ -2311,12 +2315,30 @@ void MainWindow::menu_actionBlockNote_triggered()
 
 void MainWindow::menu_actionInfos_triggered()
 {
-    this->crapinfo.reset( new Crapinfo(
-        QString::number( this->version ),
-        QString::fromStdString( this->resolvePath( "./" ) ),
-        QString::fromStdString( this->configs_path ),
-        QString::fromStdString( this->logdoc_path ) ) );
-    this->crapinfo->show();
+    if ( !this->crapinfo.isNull() && this->crapinfo->isVisible() ) {
+        this->crapinfo->activateWindow();
+
+    } else {
+        this->crapinfo.reset( new Crapinfo(
+            QString::number( this->version ),
+            QString::fromStdString( this->resolvePath( "./" ) ),
+            QString::fromStdString( this->configs_path ),
+            QString::fromStdString( this->logdoc_path ) ) );
+        this->crapinfo->show();
+    }
+}
+
+void MainWindow::menu_actionChangelog_triggered()
+{
+    if ( !this->changelog.isNull() && this->changelog->isVisible() ) {
+        this->changelog->activateWindow();
+
+    } else {
+        this->changelog.reset( new Changelog(
+            this->fonts.at( "main" ),
+            this->TB.getFont() ) );
+        this->changelog->show();
+    }
 }
 
 void MainWindow::menu_actionCheckUpdates_triggered()
@@ -4536,6 +4558,9 @@ void MainWindow::on_box_ConfTextBrowser_Font_currentIndexChanged(int index)
     this->ui->preview_ConfIis_Format_Sample->setFont( font );
     if ( !this->crapnote.isNull() ) {
         this->crapnote->setTextFont( font );
+    }
+    if ( !this->changelog.isNull() ) {
+        this->changelog->setTextFont( font );
     }
 }
 void MainWindow::on_checkBox_ConfTextBrowser_WideLines_clicked(bool checked)

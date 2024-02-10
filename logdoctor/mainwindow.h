@@ -23,6 +23,8 @@ class Crapup;
 class Crapinfo;
 class Crapnote;
 
+class Changelog;
+
 class CrissCross;
 class SnakeGame;
 
@@ -545,6 +547,8 @@ private slots:
 
     void menu_actionInfos_triggered();
 
+    void menu_actionChangelog_triggered();
+
     void menu_actionCheckUpdates_triggered();
 
     //// GAMES ////
@@ -938,6 +942,13 @@ private:
     //////////////////
 
     QSharedPointer<Crapinfo> crapinfo;
+
+
+    ///////////////////
+    //// CRANGELOG ////
+    ///////////////////
+
+    QSharedPointer<Changelog> changelog;
 
 
     ///////////////////

@@ -2727,7 +2727,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>14</x>
+                    <x>0</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -8582,7 +8582,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>98</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -9456,7 +9456,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>98</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -10654,7 +10654,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>648</width>
+                     <width>98</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -11406,6 +11406,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
      <string>Utilities</string>
     </property>
     <addaction name="actionInfos"/>
+    <addaction name="actionChangelog"/>
     <addaction name="actionCheckUpdates"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -11511,6 +11512,9 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    <property name="text">
     <string>Infos</string>
    </property>
+   <property name="toolTip">
+    <string>Show some info about LogDoctor</string>
+   </property>
   </action>
   <action name="actionBlockNote">
    <property name="text">
@@ -11558,6 +11562,14 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
    </property>
    <property name="text">
     <string notr="true">Português</string>
+   </property>
+  </action>
+  <action name="actionChangelog">
+   <property name="text">
+    <string>Changelog</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the changelog</string>
    </property>
   </action>
  </widget>
