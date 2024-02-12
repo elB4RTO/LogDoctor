@@ -541,7 +541,7 @@ FieldData& LogLineData::data(const LogsFormatField id)
             return this->query;
         case F::response_code:
             return this->response_code;
-        case F::time_taken_s:
+        case F::time_taken_ms:
             return this->time_taken;
         case F::bytes_sent:
             return this->bytes_sent;

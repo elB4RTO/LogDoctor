@@ -77,6 +77,7 @@ inline size_t operator +(const size_t lhs, const FieldData& rhs) noexcept
 */
 struct LogLineData final
 {
+    //! \throw LogParserException
     LogLineData(const std::string& line, const LogsFormat& logs_format);
     ~LogLineData() noexcept = default;
     LogLineData(LogLineData&& other) noexcept = default;
