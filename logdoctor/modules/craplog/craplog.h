@@ -27,7 +27,9 @@ class Craplog final : public QObject
     Q_OBJECT
 
 public:
+
     explicit Craplog();
+    Q_DISABLE_COPY_MOVE(Craplog)
 
 
     /////////////////

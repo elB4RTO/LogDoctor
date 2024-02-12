@@ -19,13 +19,13 @@ class DialogBool final : public QDialog
 
 public:
 
-    //! Dialog constructor
     /*!
         \param title The title
         \param text The message
         \param parent The parent Widget
     */
     explicit DialogBool( const QString& title, const QString& text, QWidget *parent=nullptr );
+    Q_DISABLE_COPY_MOVE(DialogBool)
 
 private slots:
 

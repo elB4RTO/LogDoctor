@@ -25,6 +25,7 @@ class Craphelp final : public QWidget
 
 public:
     explicit Craphelp( QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Craphelp)
 
     //! Provides help about log formats
     /*!

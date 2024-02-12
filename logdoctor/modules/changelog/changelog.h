@@ -22,6 +22,7 @@ class Changelog : public QWidget
 
 public:
     explicit Changelog( const QFont& font, const QFont& tb_font, QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Changelog)
 
     //! Sets the given font for the changelog info
     void setTextFont( const QFont& font ) noexcept;

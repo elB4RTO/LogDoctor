@@ -24,12 +24,9 @@ class Crapup final : public QWidget
 
 public:
 
-    //! Class constructor
-    /*!
-        \param parent The parent Widget
-    */
     explicit Crapup( QWidget* parent=nullptr );
     ~Crapup();
+    Q_DISABLE_COPY_MOVE(Crapup)
 
 
     //! Performs a version check

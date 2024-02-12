@@ -19,6 +19,9 @@ class DbQuery final
 
 public:
 
+    explicit DbQuery() noexcept {}
+    Q_DISABLE_COPY_MOVE(DbQuery)
+
     // log fields enums to log fields strings
     const std::unordered_map<LogField, std::string> FIELDS{
         {LogField::Warning,       FIELDS__WARNING},

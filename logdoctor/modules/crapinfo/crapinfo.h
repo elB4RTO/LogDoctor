@@ -20,7 +20,6 @@ class Crapinfo final : public QWidget
 
 public:
 
-    //! Class constructor
     /*!
         \param version The version of LogDoctor actually running
         \param exec_path The path of the executable
@@ -29,6 +28,7 @@ public:
         \param parent The parent Widget
     */
     explicit Crapinfo( const QString& version, const QString& exec_path, const QString& conf_path, const QString& logdoc_path, QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Crapinfo)
 
 private:
     QSharedPointer<Ui::Crapinfo> ui;

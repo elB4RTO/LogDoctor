@@ -25,6 +25,9 @@ class Crapview final : public QObject
 
 public:
 
+    explicit Crapview() noexcept {}
+    Q_DISABLE_COPY_MOVE(Crapview)
+
     //! Returns the Dialogs level
     DialogsLevel getDialogsLevel() const noexcept;
 

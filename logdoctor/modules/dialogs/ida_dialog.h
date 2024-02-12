@@ -20,7 +20,6 @@ class DialogIda final : public QDialog
 
 public:
 
-    //! Dialog constructor
     /*!
         \param title The title
         \param text The message
@@ -30,6 +29,7 @@ public:
         \param parent The parent Widget
     */
     explicit DialogIda( const QString& title, const QString& text, const bool ignore=true, const bool discard=true, const bool abort=true, QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(DialogIda)
 
 private slots:
 

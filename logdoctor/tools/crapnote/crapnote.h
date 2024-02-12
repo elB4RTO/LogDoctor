@@ -22,7 +22,9 @@ class Crapnote final : public QWidget
     Q_OBJECT
 
 public:
+
     explicit Crapnote( const ColorsScheme colors_scheme, QFont font, QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Crapnote)
 
     //! Sets the given font
     void setTextFont( QFont font ) noexcept;

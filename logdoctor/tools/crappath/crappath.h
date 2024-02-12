@@ -11,6 +11,7 @@ class Crappath : public QFileDialog
 
 public:
     explicit Crappath( QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Crappath)
 };
 
 #endif // LOGDOCTOR__CRAPPATH_H

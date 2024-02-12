@@ -52,7 +52,7 @@ class MainWindow final : public QMainWindow
 public:
 
     explicit MainWindow( QWidget* parent=nullptr );
-
+    Q_DISABLE_COPY_MOVE(MainWindow)
 
 signals:
 
