@@ -1,11 +1,10 @@
 var searchData=
 [
-  ['hasbeenused_0',['hasbeenused',['../classHashOps.html#acc0ec2920945173835b3489a1b95164b',1,'HashOps::hasBeenUsed()'],['../classLogFile.html#a84287037ed72866b55ece09ad946efe3',1,'LogFile::hasBeenUsed() const']]],
-  ['hash_1',['hash',['../classLogFile.html#a4099a83df4e95c689a36378442cc547c',1,'LogFile']]],
+  ['hasbeenused_0',['hasBeenUsed',['../classHashOps.html#a250921916c76fc68ec937efb51b2a320',1,'HashOps::hasBeenUsed()'],['../structLogFile.html#a9475b134af9544cbf64f77ac016fa76b',1,'LogFile::hasBeenUsed() const noexcept']]],
+  ['hash_1',['hash',['../structLogFile.html#aecc6fb679bf7597dfd468f1334d41bfa',1,'LogFile']]],
   ['hashops_2',['HashOps',['../classHashOps.html',1,'']]],
-  ['helplogsformat_3',['helpLogsFormat',['../classCraphelp.html#a311257a3a833ec2fa8fe262fbd0646cb',1,'Craphelp']]],
-  ['helplogsformatdefault_4',['helpLogsFormatDefault',['../classCraphelp.html#acf0dd64949a11297fb23aa97971e241a',1,'Craphelp']]],
-  ['hireasyncworker_5',['hireAsyncWorker',['../classCraplog.html#a290000f88b366470fbfa370eb6edf3ae',1,'Craplog']]],
-  ['hireworker_6',['hireWorker',['../classCraplog.html#a6b8118aa003315fb83fe7c7edac59d22',1,'Craplog']]],
-  ['hunt_7',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea85dd070c26938d7a4184269c6ddacd1f',1,'SnakeGame']]]
+  ['helplogsformat_3',['helpLogsFormat',['../classCraphelp.html#a8009bde7d0c58925bb8b9031fedf8429',1,'Craphelp']]],
+  ['helplogsformatdefault_4',['helpLogsFormatDefault',['../classCraphelp.html#a598d158441d903b6505b05c879f55aac',1,'Craphelp']]],
+  ['hireworker_5',['hireWorker',['../classCraplog.html#a138768b187a349bca1f92c5fbfe636e2',1,'Craplog']]],
+  ['hunt_6',['Hunt',['../classSnakeGame.html#a146a1430f1f32269ad0ad4df759e6a2ea85dd070c26938d7a4184269c6ddacd1f',1,'SnakeGame']]]
 ];

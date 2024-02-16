@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ioutils_0',['IOutils',['../namespaceIOutils.html',1,'']]]
+  ['filterops_0',['FilterOps',['../namespaceFilterOps.html',1,'']]]
 ];

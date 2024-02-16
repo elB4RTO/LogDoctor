@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['sha256_0',['SHA256',['../classSHA256.html',1,'']]],
-  ['snake_1',['Snake',['../classSnake.html',1,'']]],
-  ['snakegame_2',['SnakeGame',['../classSnakeGame.html',1,'']]]
+  ['performancedata_0',['PerformanceData',['../structPerformanceData.html',1,'']]],
+  ['perfs_1',['Perfs',['../structPerfs.html',1,'']]]
 ];
