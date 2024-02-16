@@ -84,7 +84,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 - **From binary**:
   - C++ 20
-  - Qt6 *(Framework 6.4+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
+  - Qt6 *(Framework 6.6+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From source**:
   - *all the above*
   - CMake
