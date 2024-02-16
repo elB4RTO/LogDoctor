@@ -31,7 +31,7 @@ size_t availableMemory() {
     mach_msg_type_number_t count{ HOST_VM_INFO_COUNT };
     vm_statistics_data_t vmstat;
     if ( host_statistics( mach_host_self(), HOST_VM_INFO, (host_info_t)&vmstat, &count ) != KERN_SUCCESS ) {
-        throw DoNotCatchException("Failed to get host infos",);
+        throw DoNotCatchException("Failed to get host infos", "failed");
     }
     const natural_t n_pages{ vmstat.free_count };
     const long page_size{ sysconf( _SC_PAGE_SIZE ) };
