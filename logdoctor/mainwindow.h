@@ -562,7 +562,7 @@ private:
     QSharedPointer<Ui::MainWindow> ui;
 
     // current version of LogDoctor
-    const float version{ 3.00f };
+    const float version{ 4.00f };
 
     QString wsFromIndex( const int index ) const;
     WebServer wsEnumFromIndex( const int index ) const;
