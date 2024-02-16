@@ -390,9 +390,9 @@ This is because it is unlikely (supposedly impossible) that a hash equals anothe
 
 ### Estimated working speed
 
-10~100 MB/s
+10~200 MB/s
 
-May be higher or lower depending on the complexity of the logs, the complexity of the blacklist/warnlists, your hardware and the workload of your system during the execution.
+May be higher or lower depending on the complexity of the logs, the complexity of the blacklist, the build type, your hardware and the workload of your system during the execution.
 
 <br/><br/>
 
