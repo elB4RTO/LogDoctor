@@ -219,6 +219,27 @@ void Changelog::on_tree_Versions_itemClicked(QTreeWidgetItem* item, int index)
         content.append( tr("Fixes") );
         content.append( R"(</li><p></p>)" ); // leave the p tag
 
+    } else if ( version == "v4.00" ) {
+
+        content.append( R"(<li class="elem">)" );
+        content.append( tr("Fixes") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Code improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Performance improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Stability improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Tests improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Generating warnings dinamically") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("New tool:") );
+            content.append( R"(<ul><li>)" );
+            content.append( tr("Changelog") );
+            content.append( R"(</li></ul>)" );
+        content.append( R"(</li><p></p>)" ); // leave the p tag
+
     } else {
         throw DoNotCatchException( "Unexpected changelog version", version.toStdString() );
     }

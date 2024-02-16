@@ -72,6 +72,21 @@
         </column>
         <item>
          <property name="text">
+          <string>Version 4</string>
+         </property>
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <item>
+          <property name="text">
+           <string notr="true">v4.00</string>
+          </property>
+         </item>
+        </item>
+        <item>
+         <property name="text">
           <string>Version 3</string>
          </property>
          <property name="font">
