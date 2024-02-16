@@ -2,6 +2,257 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
+    <name>Changelog</name>
+    <message>
+        <source>Versions</source>
+        <translation>Versions</translation>
+    </message>
+    <message>
+        <source>Version 3</source>
+        <translation>Version 3</translation>
+    </message>
+    <message>
+        <source>Version 2</source>
+        <translation>Version 2</translation>
+    </message>
+    <message>
+        <source>Version 1</source>
+        <translation>Version 1</translation>
+    </message>
+    <message>
+        <source>C++17</source>
+        <translation>C++17</translation>
+    </message>
+    <message>
+        <source>Qt5</source>
+        <translation>Qt5</translation>
+    </message>
+    <message>
+        <source>Build scripts</source>
+        <translation>Build scripts</translation>
+    </message>
+    <message>
+        <source>Cross-platform compatibility:</source>
+        <translation>Cross-platform compatibility:</translation>
+    </message>
+    <message>
+        <source>Linux</source>
+        <translation>Linux</translation>
+    </message>
+    <message>
+        <source>BSD</source>
+        <translation>BSD</translation>
+    </message>
+    <message>
+        <source>Windows</source>
+        <translation>Windows</translation>
+    </message>
+    <message>
+        <source>OSX</source>
+        <translation>OSX</translation>
+    </message>
+    <message>
+        <source>Statistics:</source>
+        <translation>Statistics:</translation>
+    </message>
+    <message>
+        <source>Warnings</source>
+        <translation>Warnings</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Speed</translation>
+    </message>
+    <message>
+        <source>Counts</source>
+        <translation>Counts</translation>
+    </message>
+    <message>
+        <source>Daytime</source>
+        <translation>Daytime</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation>Relational</translation>
+    </message>
+    <message>
+        <source>Globals</source>
+        <translation>Globals</translation>
+    </message>
+    <message>
+        <source>Translations:</source>
+        <translation>Translations:</translation>
+    </message>
+    <message>
+        <source>Italian</source>
+        <translation>Italian</translation>
+    </message>
+    <message>
+        <source>Spanish</source>
+        <translation>Spanish</translation>
+    </message>
+    <message>
+        <source>French</source>
+        <translation>French</translation>
+    </message>
+    <message>
+        <source>Tools:</source>
+        <translation>Tools:</translation>
+    </message>
+    <message>
+        <source>Block note</source>
+        <translation>Block note</translation>
+    </message>
+    <message>
+        <source>Utilities:</source>
+        <translation>Utilities:</translation>
+    </message>
+    <message>
+        <source>Infos viewer</source>
+        <translation>Infos viewer</translation>
+    </message>
+    <message>
+        <source>Updates checker</source>
+        <translation>Updates checker</translation>
+    </message>
+    <message>
+        <source>Themes:</source>
+        <translation>Themes:</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Dark</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Light</translation>
+    </message>
+    <message>
+        <source>Improvements and fixes</source>
+        <translation>Improvements and fixes</translation>
+    </message>
+    <message>
+        <source>New themes:</source>
+        <translation>New themes:</translation>
+    </message>
+    <message>
+        <source>Ash</source>
+        <translation>Ash</translation>
+    </message>
+    <message>
+        <source>Candy</source>
+        <translation>Candy</translation>
+    </message>
+    <message>
+        <source>Forest</source>
+        <translation>Forest</translation>
+    </message>
+    <message>
+        <source>Powder</source>
+        <translation>Powder</translation>
+    </message>
+    <message>
+        <source>Restyled GUI</source>
+        <translation>Restyled GUI</translation>
+    </message>
+    <message>
+        <source>Restyled dialogs</source>
+        <translation>Restyled dialogs</translation>
+    </message>
+    <message>
+        <source>Doxygen documentation</source>
+        <translation>Doxygen documentation</translation>
+    </message>
+    <message>
+        <source>Mini-Games:</source>
+        <translation>Mini-Games:</translation>
+    </message>
+    <message>
+        <source>Criss-cross</source>
+        <translation>Criss-cross</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation>Snake</translation>
+    </message>
+    <message>
+        <source>Changed default paths</source>
+        <translation>Changed default paths</translation>
+    </message>
+    <message>
+        <source>New game modes for Snake</source>
+        <translation>New game modes for Snake</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation>Hunt</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation>Battle</translation>
+    </message>
+    <message>
+        <source>New translations:</source>
+        <translation>New translations:</translation>
+    </message>
+    <message>
+        <source>Japanese</source>
+        <translation>Japanese</translation>
+    </message>
+    <message>
+        <source>Portuguese</source>
+        <translation>Portuguese</translation>
+    </message>
+    <message>
+        <source>Code improvements</source>
+        <translation>Code improvements</translation>
+    </message>
+    <message>
+        <source>Performance improvements</source>
+        <translation>Performance improvements</translation>
+    </message>
+    <message>
+        <source>Added tests suite:</source>
+        <translation>Added tests suite:</translation>
+    </message>
+    <message>
+        <source>white box tests</source>
+        <translation>white box tests</translation>
+    </message>
+    <message>
+        <source>Customized charts themes</source>
+        <translation>Customized charts themes</translation>
+    </message>
+    <message>
+        <source>Fixes</source>
+        <translation>Fixes</translation>
+    </message>
+    <message>
+        <source>Tests improvements</source>
+        <translation>Tests improvements</translation>
+    </message>
+    <message>
+        <source>Docker support</source>
+        <translation>Docker support</translation>
+    </message>
+    <message>
+        <source>Upgrade to C++20</source>
+        <translation>Upgrade to C++20</translation>
+    </message>
+    <message>
+        <source>Upgrade to Qt6</source>
+        <translation>Upgrade to Qt6</translation>
+    </message>
+    <message>
+        <source>Restyled themes</source>
+        <translation>Restyled themes</translation>
+    </message>
+    <message>
+        <source>Redesigned configs section</source>
+        <translation>Redesigned configs section</translation>
+    </message>
+</context>
+<context>
     <name>Crapinfo</name>
     <message>
         <source>Version</source>
@@ -57,6 +308,17 @@
     <message>
         <source>Increase the font size</source>
         <translation>Increase the font size</translation>
+    </message>
+</context>
+<context>
+    <name>Crappath</name>
+    <message>
+        <source>Choose</source>
+        <translation>Choose</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
     </message>
 </context>
 <context>
@@ -431,10 +693,6 @@ version mark not found</translation>
         <translation>The directory is not writable</translation>
     </message>
     <message>
-        <source>Failed to retrieve the driver neede to handle the database</source>
-        <translation>Failed to retrieve the driver neede to handle the database</translation>
-    </message>
-    <message>
         <source>Failed to retrieve the database file</source>
         <translation>Failed to retrieve the database file</translation>
     </message>
@@ -583,14 +841,6 @@ please report this issue</translation>
         <translation>An error occured while working on the database</translation>
     </message>
     <message>
-        <source>An error occured while working on the database
-
-Aborting</source>
-        <translation>An error occured while working on the database
-
-Aborting</translation>
-    </message>
-    <message>
         <source>One of the lists has an invalid item</source>
         <translation>One of the lists has an invalid item</translation>
     </message>
@@ -715,6 +965,42 @@ Continue?</source>
 Continue?</source>
         <translation>If you choose to proceed, all of the unapplied configurations will be lost Continue?</translation>
     </message>
+    <message>
+        <source>Failed to retrieve the driver needed to handle the database</source>
+        <translation>Failed to retrieve the driver needed to handle the database</translation>
+    </message>
+    <message>
+        <source>Failed updating hashes</source>
+        <translation>Failed updating hashes</translation>
+    </message>
+    <message>
+        <source>An error occured while inserting the parsed files hashes into the database</source>
+        <translation>An error occured while inserting the parsed files hashes into the database</translation>
+    </message>
+    <message>
+        <source>Data conversion failed</source>
+        <translation>Data conversion failed</translation>
+    </message>
+    <message>
+        <source>Failed to convert from &apos;%1&apos; to &apos;%2&apos;</source>
+        <translation>Failed to convert from &apos;%1&apos; to &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>Failed to create statistics</source>
+        <translation>Failed to create statistics</translation>
+    </message>
+    <message>
+        <source>An error occured while processing</source>
+        <translation>An error occured while processing</translation>
+    </message>
+    <message>
+        <source>Cannot create statistics</source>
+        <translation>Cannot create statistics</translation>
+    </message>
+    <message>
+        <source>No data has been found that matches with the currently set parameters</source>
+        <translation>No data has been found that matches with the currently set parameters</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -808,10 +1094,6 @@ Continue?</source>
     <message>
         <source>Hour</source>
         <translation>Hour</translation>
-    </message>
-    <message>
-        <source>Update the database with current Warning States</source>
-        <translation>Update the database with current Warning States</translation>
     </message>
     <message>
         <source>Log line marked as Warning</source>
@@ -1437,6 +1719,22 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
+    <message>
+        <source>Select the path through a dialog window</source>
+        <translation>Select the path through a dialog window</translation>
+    </message>
+    <message>
+        <source>Show some info about LogDoctor</source>
+        <translation>Show some info about LogDoctor</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation>Changelog</translation>
+    </message>
+    <message>
+        <source>Show the changelog</source>
+        <translation>Show the changelog</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1529,10 +1827,6 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
     <message>
         <source>Parsed</source>
         <translation>Parsed</translation>
-    </message>
-    <message>
-        <source>Warnings</source>
-        <translation>Warnings</translation>
     </message>
     <message>
         <source>Blacklisted</source>
