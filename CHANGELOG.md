@@ -1,3 +1,15 @@
+# v4.00
+
+- Fixes
+- Code improvements
+- Performance improvements
+- Stability improvements
+- Tests improvements
+- Generating warnings dinamically
+- New tool:
+  - Changelog
+
+<br/><br/>
 
 # v3.00
 

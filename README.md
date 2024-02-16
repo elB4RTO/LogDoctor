@@ -2,7 +2,7 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-3.00-fff"/>
+  <img src="https://img.shields.io/badge/version-4.00-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-20-blue"/>
   <img src="https://img.shields.io/badge/Qt-6-blue"/>
   <br/>
@@ -84,7 +84,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 
 - **From binary**:
   - C++ 20
-  - Qt6 *(Framework 6.2+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
+  - Qt6 *(Framework 6.4+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From source**:
   - *all the above*
   - CMake
@@ -278,7 +278,7 @@ Each web server has its own list.
 #### Warnlist
 
 As for the *blacklist*, you can add elements to the **warnlist**.<br/>
-*Warnlists* will mark with a **warning** the lines triggering them. Warnings can be viewed and modified in the relative [statistics](#warnings) section.
+*Warnlists* will mark with a **warning** the lines triggering them. Warnings can be viewed in the relative [statistics](#warnings) section.
 
 Each web server has its own lists.
 
@@ -292,7 +292,8 @@ Most of the *statistics sections* allows you to set filters to the log fields, t
 
 ### Warnings
 
-In the *warning* section you can view the lines which triggered a warning, as well as remove any of the warnings and/or add your own.<br/>
+In the *warning* section you can view the lines which are triggering a warning.<br/>
+Warnings are generated dinamically depending on your [warnlists](#warnlist): changing the elements in the *warnlists* will produce different warnings.<br/>
 
 ![screenshot](https://raw.githubusercontent.com/elB4RTO/screenshots/main/LogDoctor/stats_warnings.png)
 
@@ -389,7 +390,7 @@ This is because it is unlikely (supposedly impossible) that a hash equals anothe
 
 ### Estimated working speed
 
-1~25 MB/s
+10~100 MB/s
 
 May be higher or lower depending on the complexity of the logs, the complexity of the blacklist/warnlists, your hardware and the workload of your system during the execution.
 

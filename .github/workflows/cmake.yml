@@ -7,7 +7,7 @@ on:
 #    branches: [ "main" ]
 
 env:
-  QT_VERSION: '6.2.*'
+  QT_VERSION: '6.4.*'
   BUILD_TYPE: 'MinSizeRel'
 
 jobs:
