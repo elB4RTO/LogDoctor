@@ -440,7 +440,7 @@ Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data
 {
     float results[]{ 1.f, 1.f, 1.f, 1.f };
     bool keep_current{ false };
-    Direction class_label;
+    Direction class_label{ this->head_direction };
 
     // process data
     for ( size_t i{0}; i<4ul; ++i ) {
@@ -473,9 +473,7 @@ Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data
     }
 
     // choose the best result
-    if ( keep_current ) {
-        class_label = this->head_direction;
-    } else {
+    if ( ! keep_current ) {
         max = 0.f;
         for ( size_t i{0}; i<4ul; ++i ) {
             if ( results[i] > max ) {

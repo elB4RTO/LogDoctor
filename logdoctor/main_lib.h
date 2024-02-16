@@ -42,7 +42,7 @@ inline bool operator>=(const DialogsLevel lhs, const DialogsLevel rhs)
 
 
 
-inline std::string toString(const WebServer ws) noexcept
+inline std::string toString(const WebServer ws)
 {
     switch (ws) {
         case WebServer::Apache:
