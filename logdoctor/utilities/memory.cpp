@@ -45,10 +45,10 @@ size_t availableMemory() {
     size_t vmt_size{ sizeof(vmt) };
     size_t uint_size{ sizeof(page_size) };
     if ( sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) < 0 ) {
-        throw DoNotCatchException("Failed to get vmtotal");
+        throw DoNotCatchException("Failed to get vmtotal", "failed");
     }
     if ( sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) < 0 ) {
-        throw DoNotCatchException("Failed to get v_page_size");
+        throw DoNotCatchException("Failed to get v_page_size", "failed");
     }
     return vmt.t_free * static_cast<size_t>( page_size );
 #elif defined( Q_OS_UNIX )
