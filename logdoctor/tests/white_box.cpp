@@ -82,16 +82,32 @@ void testOperators()
 
     {
     const FieldData fd;
+    #ifdef _MSC_VER
+    assert( operator+(0ul, fd) == 0ul );
+    #else
     assert( 0ul + fd == 0ul );
+    #endif
     }{
     const FieldData fd("");
+    #ifdef _MSC_VER
+    assert( operator+(0ul, fd) == 0ul );
+    #else
     assert( 0ul + fd == 0ul );
+    #endif
     }{
     const FieldData fd("1");
+    #ifdef _MSC_VER
+    assert(operator+(0ul, fd) == 1ul );
+    #else
     assert( 0ul + fd == 1ul );
+    #endif
     }{
     const FieldData fd("0123456789");
+    #ifdef _MSC_VER
+    assert( operator+(10ul, fd) == 20ul );
+    #else
     assert( 10ul + fd == 20ul );
+    #endif
     assert( fd + 10ul != 20ul ); // fd evaluates to bool (aka 1)
     }{
     const FieldData fd1;
@@ -112,7 +128,11 @@ void testOperators()
     }{
     const FieldData fd1("123");
     const FieldData fd2("456");
+    #ifdef _MSC_VER
+    assert( operator+(4ul, fd1) + fd2 == 10ul );
+    #else
     assert( 4ul + fd1 + fd2 == 10ul );
+    #endif
     }{
     const FieldData fd1("0123456789");
     const FieldData fd2("0123456789");
@@ -122,7 +142,11 @@ void testOperators()
     const FieldData fd1("0123456789");
     const FieldData fd2("0123456789");
     const FieldData fd3("0123456789");
+    #ifdef _MSC_VER
+    assert( operator+(70ul, fd1) + fd2 + fd3 == 100ul );
+    #else
     assert( 70ul + fd1 + fd2 + fd3 == 100ul );
+    #endif
     }{
     const FieldData fd1("0123456789");
     const FieldData fd2("0123456789");
@@ -132,7 +156,11 @@ void testOperators()
     const FieldData fd1("0123456789");
     const FieldData fd2("0123456789");
     const FieldData fd3("0123456789");
+    #ifdef _MSC_VER
+    assert( operator+(10ul, fd1) + fd2 + fd3 + 10ul == 50ul );
+    #else
     assert( 10ul + fd1 + fd2 + fd3 + 10ul == 50ul );
+    #endif
     }{
     const FieldData fd1("0123456789");
     const FieldData fd2("0123456789");
@@ -149,7 +177,11 @@ void testOperators()
     const FieldData fd3("0123456789");
     const FieldData fd4("0123456789");
     const FieldData fd5("0123456789");
+    #ifdef _MSC_VER
+    assert( operator+(10ul, fd1) + 20ul + fd2 + fd3 + 10ul + fd4 + 10ul + fd5 == 100ul );
+    #else
     assert( 10ul + fd1 + 20ul + fd2 + fd3 + 10ul + fd4 + 10ul + fd5 == 100ul );
+    #endif
     }
     T_PRINT("FieldData::operator +");
 }
