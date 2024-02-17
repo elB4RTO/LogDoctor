@@ -31,16 +31,10 @@ IF "%qt_base_path:~-1%"=="/" SET qt_base_path=%qt_base_path:~0,-1%
 
 
 :: Get Qt version
-SET qt_path=%qt_base_path%/6.2.4
+SET qt_path=%qt_base_path%/6.6.2
 IF EXIST "%qt_path%" GOTO :STEP_check_qt_path
 
-SET qt_path=%qt_base_path%/6.3.2
-IF EXIST "%qt_path%" GOTO :STEP_check_qt_path
-
-SET qt_path=%qt_base_path%/6.4.3
-IF EXIST "%qt_path%" GOTO :STEP_check_qt_path
-
-SET qt_path=%qt_base_path%/6.5.3
+SET qt_path=%qt_base_path%/6.6.1
 IF EXIST "%qt_path%" GOTO :STEP_check_qt_path
 
 SET qt_path=%qt_base_path%/6.6.0
@@ -56,7 +50,7 @@ IF NOT "%qt_path%" == "NONE" GOTO :STEP_set_cmake_path
 :LOOP_ask_qt_path
 ECHO:
 ECHO Qt not found, please insert the path of your Qt installation, including the version
-ECHO Eg: C:/your/path/to/Qt/6.2.4
+ECHO Eg: C:/your/path/to/Qt/6.6.2
 SET /P qt_path= :
 IF NOT EXIST "%qt_path%" (
 	ECHO Error: the given path doesn't exist
@@ -232,35 +226,51 @@ IF ERRORLEVEL 0 (
 
 :STEP_get_cl_path_1
 
-IF NOT EXIST "%vs_path%/VC/Tools/MSVC/14.35.32215" GOTO :STEP_get_cl_path_2
+IF NOT EXIST "%vs_path%/VC/Tools/MSVC/14.39.33519" GOTO :STEP_get_cl_path_2
+
+SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.39.33519/bin/Hostx86/x64/cl.exe
+IF EXIST "%cxx_compiler%" SET arch=x86_amd64 && GOTO :STEP_call_vc_dev_vars
+
+SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.39.33519/bin/Hostx64/x64/cl.exe
+IF EXIST "%cxx_compiler%" SET arch=amd64 && GOTO :STEP_call_vc_dev_vars
+
+SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.39.33519/bin/Hostx86/x86/cl.exe
+IF EXIST "%cxx_compiler%" SET arch=x86 && GOTO :STEP_call_vc_dev_vars
+
+SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.39.33519/bin/Hostx64/x86/cl.exe
+IF EXIST "%cxx_compiler%" SET arch=amd64_x86 && GOTO :STEP_call_vc_dev_vars
+
+:STEP_get_cl_path_2
+
+IF NOT EXIST "%vs_path%/VC/Tools/MSVC/14.35.32215" GOTO :STEP_get_cl_path_3
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.35.32215/bin/Hostx86/x64/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=x86_amd64 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=x86_amd64 && GOTO :STEP_call_vc_dev_vars
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.35.32215/bin/Hostx64/x64/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=amd64 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=amd64 && GOTO :STEP_call_vc_dev_vars
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.35.32215/bin/Hostx86/x86/cl.exe
 IF EXIST "%cxx_compiler%" SET arch=x86 && GOTO :STEP_call_vc_dev_vars
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.35.32215/bin/Hostx64/x86/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=amd64_x86 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=amd64_x86 && GOTO :STEP_call_vc_dev_vars
 
-:STEP_get_cl_path_2
+:STEP_get_cl_path_3
 
 IF NOT EXIST "%vs_path%/VC/Tools/MSVC/14.29.30133" GOTO :LOOP_ask_cl_path
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.29.30133/bin/HostX86/x64/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=x86_amd64 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=x86_amd64 && GOTO :STEP_call_vc_dev_vars
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=amd64 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=amd64 && GOTO :STEP_call_vc_dev_vars
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.29.30133/bin/HostX86/x86/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=x86 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=x86 && GOTO :STEP_call_vc_dev_vars
 
 SET cxx_compiler=%vs_path%/VC/Tools/MSVC/14.29.30133/bin/HostX64/x86/cl.exe
-IF EXIST "%cxx_compiler%" SET arch=amd64_x86 && GOTO :STEP_set_qt_dir
+IF EXIST "%cxx_compiler%" SET arch=amd64_x86 && GOTO :STEP_call_vc_dev_vars
 
 :LOOP_ask_cl_path
 ECHO:
@@ -293,7 +303,7 @@ GOTO :LOOP_ask_arch
 
 :: Call developer batch files to setup needed vars
 CALL "%vs_path%\Common7\Tools\VsDevCmd.bat"
-CALL "%vs_path%\VC\Auxiliary\Build\vcvarsall.bat %arch%"
+CALL "%vs_path%\VC\Auxiliary\Build\vcvarsall.bat" %arch%
 
 
 :STEP_set_qt_dir
@@ -434,7 +444,7 @@ IF EXIST LogDoctor rmdir /S /Q LogDoctor
 mkdir LogDoctor
 move LogDoctor.exe LogDoctor\
 SET prefix_path=%prefix_path:/=\%
-"%prefix_path%\bin\windeployqt.exe" LogDoctor\
+"%prefix_path%\bin\windeployqt.exe" LogDoctor\ --release --compiler-runtime -core -widgets -charts -sql -network --no-quick-import --no-translations
 
 :: Compilation finished
 ECHO:
