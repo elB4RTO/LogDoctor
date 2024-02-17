@@ -9,8 +9,8 @@
 template <typename Array>
 struct Zipperator
 {
-    using array_value       = Array::value_type;
-    using array_iterator    = Array::iterator;
+    using array_value       = typename Array::value_type;
+    using array_iterator    = typename Array::iterator;
 
     using iterator_category = std::forward_iterator_tag;
     using difference_type   = std::ptrdiff_t;
@@ -39,9 +39,9 @@ private:
 template <typename Array>
 struct Enumerator
 {
-    using array_size_t      = Array::size_type;
-    using array_value       = Array::value_type;
-    using array_iterator    = Array::const_iterator;
+    using array_size_t      = typename Array::size_type;
+    using array_value       = typename Array::value_type;
+    using array_iterator    = typename Array::const_iterator;
 
     using iterator_category = std::forward_iterator_tag;
     using difference_type   = std::ptrdiff_t;
