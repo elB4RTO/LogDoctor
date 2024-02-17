@@ -2,6 +2,257 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP">
 <context>
+    <name>Changelog</name>
+    <message>
+        <source>Versions</source>
+        <translation type="unfinished">バージョン</translation>
+    </message>
+    <message>
+        <source>Version 3</source>
+        <translation type="unfinished">バージョン3</translation>
+    </message>
+    <message>
+        <source>Version 2</source>
+        <translation type="unfinished">バージョン2</translation>
+    </message>
+    <message>
+        <source>Version 1</source>
+        <translation type="unfinished">バージョン1</translation>
+    </message>
+    <message>
+        <source>C++17</source>
+        <translation>C++17</translation>
+    </message>
+    <message>
+        <source>Qt5</source>
+        <translation>Qt5</translation>
+    </message>
+    <message>
+        <source>Build scripts</source>
+        <translation type="unfinished">ビルド用のファイル</translation>
+    </message>
+    <message>
+        <source>Cross-platform compatibility:</source>
+        <translation type="unfinished">クロスプラットフォームの互換性:</translation>
+    </message>
+    <message>
+        <source>Linux</source>
+        <translation type="unfinished">Linux</translation>
+    </message>
+    <message>
+        <source>BSD</source>
+        <translation type="unfinished">BSD</translation>
+    </message>
+    <message>
+        <source>Windows</source>
+        <translation type="unfinished">Windows</translation>
+    </message>
+    <message>
+        <source>OSX</source>
+        <translation type="unfinished">OSX</translation>
+    </message>
+    <message>
+        <source>Statistics:</source>
+        <translation type="unfinished">統計：</translation>
+    </message>
+    <message>
+        <source>Warnings</source>
+        <translation type="unfinished">警告</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished">スピード</translation>
+    </message>
+    <message>
+        <source>Counts</source>
+        <translation type="unfinished">カウント</translation>
+    </message>
+    <message>
+        <source>Daytime</source>
+        <translation type="unfinished">時刻</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation type="unfinished">関連した</translation>
+    </message>
+    <message>
+        <source>Globals</source>
+        <translation type="unfinished">グローバル</translation>
+    </message>
+    <message>
+        <source>Translations:</source>
+        <translation type="unfinished">翻訳:</translation>
+    </message>
+    <message>
+        <source>Italian</source>
+        <translation type="unfinished">イタリアの</translation>
+    </message>
+    <message>
+        <source>Spanish</source>
+        <translation type="unfinished">スペイン語</translation>
+    </message>
+    <message>
+        <source>French</source>
+        <translation type="unfinished">フランス語</translation>
+    </message>
+    <message>
+        <source>Tools:</source>
+        <translation type="unfinished">ツール:</translation>
+    </message>
+    <message>
+        <source>Block note</source>
+        <translation type="unfinished">ブロックメモ</translation>
+    </message>
+    <message>
+        <source>Utilities:</source>
+        <translation type="unfinished">ユーティリティ:</translation>
+    </message>
+    <message>
+        <source>Infos viewer</source>
+        <translation type="unfinished">情報ビューア</translation>
+    </message>
+    <message>
+        <source>Updates checker</source>
+        <translation type="unfinished">アップデートチェッカー</translation>
+    </message>
+    <message>
+        <source>Themes:</source>
+        <translation type="unfinished">テーマ:</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation type="unfinished">暗い</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation type="unfinished">光</translation>
+    </message>
+    <message>
+        <source>Improvements and fixes</source>
+        <translation type="unfinished">改善と修正</translation>
+    </message>
+    <message>
+        <source>New themes:</source>
+        <translation type="unfinished">新しいテーマ:</translation>
+    </message>
+    <message>
+        <source>Ash</source>
+        <translation type="unfinished">灰</translation>
+    </message>
+    <message>
+        <source>Candy</source>
+        <translation type="unfinished">あめ</translation>
+    </message>
+    <message>
+        <source>Forest</source>
+        <translation type="unfinished">森</translation>
+    </message>
+    <message>
+        <source>Powder</source>
+        <translation type="unfinished">粉</translation>
+    </message>
+    <message>
+        <source>Restyled GUI</source>
+        <translation type="unfinished">再スタイルされた GUI</translation>
+    </message>
+    <message>
+        <source>Restyled dialogs</source>
+        <translation type="unfinished">再スタイルされたダイアログ</translation>
+    </message>
+    <message>
+        <source>Doxygen documentation</source>
+        <translation type="unfinished">Doxygen を使用したドキュメント</translation>
+    </message>
+    <message>
+        <source>Mini-Games:</source>
+        <translation type="unfinished">ミニゲーム：</translation>
+    </message>
+    <message>
+        <source>Criss-cross</source>
+        <translation type="unfinished">十字</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation type="unfinished">蛇</translation>
+    </message>
+    <message>
+        <source>Changed default paths</source>
+        <translation type="unfinished">デフォルトのパスを変更しました</translation>
+    </message>
+    <message>
+        <source>New game modes for Snake</source>
+        <translation type="unfinished">スネークの新しいゲームモード</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation type="unfinished">ハント</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation type="unfinished">戦い</translation>
+    </message>
+    <message>
+        <source>New translations:</source>
+        <translation type="unfinished">新しい翻訳:</translation>
+    </message>
+    <message>
+        <source>Japanese</source>
+        <translation type="unfinished">日本語</translation>
+    </message>
+    <message>
+        <source>Portuguese</source>
+        <translation type="unfinished">ポルトガル語</translation>
+    </message>
+    <message>
+        <source>Code improvements</source>
+        <translation type="unfinished">コードの改善</translation>
+    </message>
+    <message>
+        <source>Performance improvements</source>
+        <translation type="unfinished">パフォーマンスの向上</translation>
+    </message>
+    <message>
+        <source>Added tests suite:</source>
+        <translation type="unfinished">追加されたテストスイート:</translation>
+    </message>
+    <message>
+        <source>white box tests</source>
+        <translation type="unfinished">ホワイトボックステスト</translation>
+    </message>
+    <message>
+        <source>Customized charts themes</source>
+        <translation type="unfinished">カスタマイズされたグラフのテーマ</translation>
+    </message>
+    <message>
+        <source>Fixes</source>
+        <translation type="unfinished">修正</translation>
+    </message>
+    <message>
+        <source>Tests improvements</source>
+        <translation type="unfinished">テストの改善</translation>
+    </message>
+    <message>
+        <source>Docker support</source>
+        <translation type="unfinished">Docker のサポート</translation>
+    </message>
+    <message>
+        <source>Upgrade to C++20</source>
+        <translation type="unfinished">C++20 へのアップグレード</translation>
+    </message>
+    <message>
+        <source>Upgrade to Qt6</source>
+        <translation type="unfinished">Qt6 にアップグレードする</translation>
+    </message>
+    <message>
+        <source>Restyled themes</source>
+        <translation type="unfinished">再スタイルされたテーマ</translation>
+    </message>
+    <message>
+        <source>Redesigned configs section</source>
+        <translation type="unfinished">再設計された構成セクション</translation>
+    </message>
+</context>
+<context>
     <name>Crapinfo</name>
     <message>
         <source>Version</source>
@@ -57,6 +308,17 @@
     <message>
         <source>Increase the font size</source>
         <translation type="unfinished">フォントサイズを大きくする</translation>
+    </message>
+</context>
+<context>
+    <name>Crappath</name>
+    <message>
+        <source>Choose</source>
+        <translation type="unfinished">選ぶ</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">キャンセル</translation>
     </message>
 </context>
 <context>
@@ -233,18 +495,6 @@ version mark not found</source>
     <message>
         <source>Create a new database?</source>
         <translation type="unfinished">新しいデータベースを作成しますか?</translation>
-    </message>
-    <message>
-        <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">このデータベースは末尾に「.copy」を付けて名前が変更され、新しいデータベースが作成されます。
-継続する？</translation>
-    </message>
-    <message>
-        <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">エントリは末尾に「.copy」を付けて名前が変更され、新しいエントリが作成されます。
-継続する？</translation>
     </message>
     <message>
         <source>An error occured</source>
@@ -427,10 +677,6 @@ Continue?</source>
         <translation type="unfinished">ファイルが空です</translation>
     </message>
     <message>
-        <source>An error accured while reading the file</source>
-        <translation type="unfinished">ファイルの読み取り中にエラーが発生しました</translation>
-    </message>
-    <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished">パスはフォルダーを指すはずでしたが、そうではありません</translation>
     </message>
@@ -445,10 +691,6 @@ Continue?</source>
     <message>
         <source>The directory is not writable</source>
         <translation type="unfinished">ディレクトリは書き込み不可です</translation>
-    </message>
-    <message>
-        <source>Failed to retrieve the driver neede to handle the database</source>
-        <translation type="unfinished">データベースを処理するために必要なドライバを取得できませんでした</translation>
     </message>
     <message>
         <source>Failed to retrieve the database file</source>
@@ -591,24 +833,12 @@ please report this issue</source>
         <translation type="unfinished">警告サイズ パラメータ</translation>
     </message>
     <message>
-        <source>An error accured while reading the gzipped file</source>
-        <translation type="unfinished">Gzip ファイルの読み取り中にエラーが発生しました</translation>
-    </message>
-    <message>
         <source>Something failed while handling the file</source>
         <translation type="unfinished">ファイルの処理中に何かが失敗しました</translation>
     </message>
     <message>
         <source>An error occured while working on the database</source>
         <translation type="unfinished">データベースでの作業中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>An error occured while working on the database
-
-Aborting</source>
-        <translation type="unfinished">データベースの作業中にエラーが発生しました
-
-中止中</translation>
     </message>
     <message>
         <source>One of the lists has an invalid item</source>
@@ -704,6 +934,76 @@ please follow the instruction on the repository page</source>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation type="unfinished">いくつかのリソースを解放し、ファイルを別の手順で解析するか、ファイルを小さな単位に分割してください</translation>
     </message>
+    <message>
+        <source>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">このデータベースは末尾に「.copy」を付けて名前が変更され、新しいデータベースが作成されます。
+継続する？</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the file</source>
+        <translation type="unfinished">ファイルの読み取り中にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">エントリは末尾に「.copy」を付けて名前が変更され、新しいエントリが作成されます。
+継続する？</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the gzipped file</source>
+        <translation type="unfinished">Gzip ファイルの読み取り中にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Invalid configuration lines</source>
+        <translation type="unfinished">無効な設定行</translation>
+    </message>
+    <message>
+        <source>Has not been possible to apply some of the configurations</source>
+        <translation type="unfinished">一部の構成を適用できませんでした</translation>
+    </message>
+    <message>
+        <source>If you choose to proceed, all of the unapplied configurations will be lost
+Continue?</source>
+        <translation type="unfinished">続行を選択すると、適用されていない設定はすべて失われます
+継続する？</translation>
+    </message>
+    <message>
+        <source>Failed to retrieve the driver needed to handle the database</source>
+        <translation type="unfinished">データベースの処理に必要なドライバーの取得に失敗しました</translation>
+    </message>
+    <message>
+        <source>Failed updating hashes</source>
+        <translation type="unfinished">ハッシュの更新に失敗しました</translation>
+    </message>
+    <message>
+        <source>An error occured while inserting the parsed files hashes into the database</source>
+        <translation type="unfinished">解析されたファイルのハッシュをデータベースに挿入中にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Data conversion failed</source>
+        <translation type="unfinished">データ変換に失敗しました</translation>
+    </message>
+    <message>
+        <source>Failed to convert from &apos;%1&apos; to &apos;%2&apos;</source>
+        <translation type="unfinished">&apos;%1&apos; から &apos;%2&apos; への変換に失敗しました</translation>
+    </message>
+    <message>
+        <source>Failed to create statistics</source>
+        <translation type="unfinished">統計の作成に失敗しました</translation>
+    </message>
+    <message>
+        <source>An error occured while processing</source>
+        <translation type="unfinished">処理中にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Cannot create statistics</source>
+        <translation type="unfinished">統計を作成できません</translation>
+    </message>
+    <message>
+        <source>No data has been found that matches with the currently set parameters</source>
+        <translation type="unfinished">現在設定されているパラメータと一致するデータが見つかりませんでした</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -797,10 +1097,6 @@ please follow the instruction on the repository page</source>
     <message>
         <source>Hour</source>
         <translation type="unfinished">時間</translation>
-    </message>
-    <message>
-        <source>Update the database with current Warning States</source>
-        <translation type="unfinished">現在の警告状態でデータベースを更新します</translation>
     </message>
     <message>
         <source>Log line marked as Warning</source>
@@ -1426,6 +1722,22 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
         <source>Auto</source>
         <translation type="unfinished">自動</translation>
     </message>
+    <message>
+        <source>Select the path through a dialog window</source>
+        <translation type="unfinished">ダイアログ ウィンドウでパスを選択します</translation>
+    </message>
+    <message>
+        <source>Show some info about LogDoctor</source>
+        <translation type="unfinished">LogDoctor に関する情報を表示します</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">変更履歴</translation>
+    </message>
+    <message>
+        <source>Show the changelog</source>
+        <translation type="unfinished">変更ログを表示する</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1518,10 +1830,6 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     <message>
         <source>Parsed</source>
         <translation type="unfinished">解析済み</translation>
-    </message>
-    <message>
-        <source>Warnings</source>
-        <translation type="unfinished">警告</translation>
     </message>
     <message>
         <source>Blacklisted</source>

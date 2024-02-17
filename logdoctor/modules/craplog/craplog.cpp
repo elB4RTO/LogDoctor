@@ -1,6 +1,8 @@
 
 #include "craplog.h"
 
+#include "globals/db_names.h"
+
 #include "utilities/checks.h"
 #include "utilities/gzip.h"
 #include "utilities/io.h"
@@ -13,14 +15,16 @@
 #include "modules/exceptions.h"
 #include "modules/shared.h"
 
+#include "modules/blacklists/blacklists.h"
+
+#include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/donuts.h"
 #include "modules/craplog/modules/logs.h"
 #include "modules/craplog/modules/workers/lister.h"
 #include "modules/craplog/modules/workers/parser.h"
-#include "modules/craplog/modules/workers/parser_async.h"
 
-#include <QUrl>
 #include <QPainter>
+#include <QWaitCondition>
 
 #include <filesystem>
 #include <thread>
@@ -33,53 +37,42 @@ Craplog::Craplog()
     ////////////////////////
     //// INITIALIZATION ////
     ////////////////////////
-    // blacklists / whitelists
-    for ( unsigned i{APACHE_ID}; i<=IIS_ID; i++ ) {
-        this->warnlists.emplace(  i, std::unordered_map<int, BWlist>{} );
-        this->blacklists.emplace( i, std::unordered_map<int, BWlist>{} );
-        // default data
-        this->warnlists.at( i ).emplace( 11, BWlist{ .used=false, .list={"DELETE","HEAD","OPTIONS","PUT","PATCH"} } );
-        this->warnlists.at( i ).emplace( 12, BWlist{ .used=true,  .list={"/robots.txt","/../","/./","/.env","/.htaccess","/phpmyadmin","/wp-admin","/wp-content","/wp-config.php","/config.py","/views.py","/routes.py","/setup.cgi","/cgi-bin"} } );
-        this->warnlists.at( i ).emplace( 20, BWlist{ .used=false, .list={} } );
-        this->warnlists.at( i ).emplace( 21, BWlist{ .used=false, .list={} } );
-        this->blacklists.at( i ).emplace( 20, BWlist{ .used=true,  .list={} } );
-    }
 
     // default format strings
     this->logs_format_strings.emplace(
-        APACHE_ID, "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" );
+        WS_APACHE, "" );
     this->logs_format_strings.emplace(
-        NGINX_ID,  "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"" );
+        WS_NGINX,  "" );
     this->logs_format_strings.emplace(
-        IIS_ID, "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken" );
+        WS_IIS,    "" );
 
     // initialize formats
     this->logs_formats.emplace(
-        APACHE_ID, this->formatOps.processApacheFormatString( this->logs_format_strings.at(APACHE_ID) ) );
+        WS_APACHE, LogsFormat() );
     this->logs_formats.emplace(
-        NGINX_ID,  this->formatOps.processNginxFormatString( this->logs_format_strings.at(NGINX_ID) ) );
+        WS_NGINX,  LogsFormat() );
     this->logs_formats.emplace(
-        IIS_ID,    this->formatOps.processIisFormatString( this->logs_format_strings.at(IIS_ID), 0 ) );
+        WS_IIS,    LogsFormat() );
 
-    this->current_LF = this->logs_formats.at( APACHE_ID );
+    this->current_log_format = this->logs_formats.at( WS_APACHE );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( APACHE_ID, "/var/log/apache2" );
+    this->logs_paths.emplace( WS_APACHE, std::string{} );
     // nginx access/error logs location
-    this->logs_paths.emplace( NGINX_ID, "/var/log/nginx" );
+    this->logs_paths.emplace( WS_NGINX, std::string{} );
     // iis access/error logs location
-    this->logs_paths.emplace( IIS_ID, "C:/inetpub/logs/LogFiles" );
+    this->logs_paths.emplace( WS_IIS, std::string{} );
 
     // apache2 access/error log files' names
-    this->logs_base_names.emplace( APACHE_ID, LogName{ .starts   = "access.log.",
+    this->logs_base_names.emplace( WS_APACHE, LogName{ .starts   = "access.log.",
                                                        .contains = "",
                                                        .ends     = "" } );
     // nginx access/error log files' names
-    this->logs_base_names.emplace( NGINX_ID, LogName{ .starts   = "access.log.",
+    this->logs_base_names.emplace( WS_NGINX, LogName{ .starts   = "access.log.",
                                                       .contains = "",
                                                       .ends     = "" });
     // iis access/error log files' names
-    this->logs_base_names.emplace( IIS_ID, LogName{ .starts   = "",
+    this->logs_base_names.emplace( WS_IIS, LogName{ .starts   = "",
                                                     .contains = "_ex",
                                                     .ends     = ".log" });
 }
@@ -87,345 +80,172 @@ Craplog::Craplog()
 
 //////////////////
 //// SETTINGS ////
-int Craplog::getDialogsLevel() const
+DialogsLevel Craplog::getDialogsLevel() const noexcept
 {
     return this->dialogs_level;
 }
-void Craplog::setDialogsLevel( const int new_level )
+void Craplog::setDialogsLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialogs_level = new_level;
     this->hashOps.setDialogLevel( new_level );
 }
 
-const std::string& Craplog::getStatsDatabasePath() const
+const std::string& Craplog::getStatsDatabasePath() const noexcept
 {
     return this->db_stats_path;
 }
-const std::string& Craplog::getHashesDatabasePath() const
+const std::string& Craplog::getHashesDatabasePath() const noexcept
 {
     return this->db_hashes_path;
 }
 
-void Craplog::setStatsDatabasePath( const std::string& path )
+void Craplog::setStatsDatabasePath( const std::string& path ) noexcept
 {
-    this->db_stats_path = path + "/collection.db";
+    this->db_stats_path = path + "/" + DatabasesNames::data;
 }
-void Craplog::setHashesDatabasePath( const std::string& path )
+void Craplog::setHashesDatabasePath( const std::string& path ) noexcept
 {
-    this->db_hashes_path = path + "/hashes.db";
+    this->db_hashes_path = path + "/" + DatabasesNames::hashes;
 }
 
-size_t Craplog::getWarningSize() const
+size_t Craplog::getWarningSize() const noexcept
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const size_t new_size )
+void Craplog::setWarningSize(const size_t new_size ) noexcept
 {
     this->warning_size = new_size;
-}
-
-
-////////////////////
-//// WARN/BLACK ////
-bool Craplog::isBlacklistUsed( const unsigned& web_server_id, const int& log_field_id ) const
-{
-    return this->blacklists.at( web_server_id ).at( log_field_id ).used;
-}
-bool Craplog::isWarnlistUsed( const unsigned& web_server_id, const int& log_field_id ) const
-{
-    return this->warnlists.at( web_server_id ).at( log_field_id ).used;
-}
-
-void Craplog::setBlacklistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
-{
-    this->blacklists.at( web_server_id ).at( log_field_id ).used = used;
-}
-void Craplog::setWarnlistUsed( const unsigned& web_server_id, const int& log_field_id, const bool used )
-{
-    this->warnlists.at( web_server_id ).at( log_field_id ).used = used;
-}
-
-const std::vector<std::string>& Craplog::getBlacklist( const unsigned& web_server_id, const int& log_field_id ) const
-{
-    return this->blacklists.at( web_server_id ).at( log_field_id ).list;
-}
-const std::vector<std::string>& Craplog::getWarnlist( const unsigned& web_server_id, const int& log_field_id ) const
-{
-    return this->warnlists.at( web_server_id ).at( log_field_id ).list;
-}
-
-void Craplog::setBlacklist( const unsigned& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list )
-{
-    this->blacklists.at( web_server_id ).at( log_field_id ).list.clear();
-    for ( const std::string& item : new_list ) {
-        this->blacklistAdd( web_server_id, log_field_id, item );
-    }
-}
-void Craplog::setWarnlist( const unsigned& web_server_id, const int& log_field_id, const std::vector<std::string>& new_list )
-{
-    this->warnlists.at( web_server_id ).at( log_field_id ).list.clear();
-    for ( const std::string& item : new_list ) {
-        this->warnlistAdd( web_server_id, log_field_id, item );
-    }
-}
-
-void Craplog::blacklistAdd( const unsigned& web_server_id, const int& log_field_id, const std::string& new_item )
-{
-    this->blacklists.at( web_server_id ).at( log_field_id ).list.push_back(
-        this->sanitizeBWitem( log_field_id, new_item ) );
-}
-void Craplog::warnlistAdd( const unsigned& web_server_id, const int& log_field_id, const std::string& new_item )
-{
-    this->warnlists.at( web_server_id ).at( log_field_id ).list.push_back(
-        this->sanitizeBWitem( log_field_id, new_item ) );
-}
-
-void Craplog::blacklistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
-{
-    auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
-    // move the item to the end, then pop it
-    const size_t max{ list.size()-1ul };
-    for ( size_t i{0}; i<max; i++ ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-        }
-    }
-    list.pop_back();
-}
-void Craplog::warnlistRemove( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
-{
-    auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
-    // move the item to the end, then pop it
-    const size_t max{ list.size()-1ul };
-    for ( size_t i{0}; i<max; i++ ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-        }
-    }
-    list.pop_back();
-}
-
-int Craplog::blacklistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
-{
-    auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 1 };
-    const size_t max{ list.size() };
-    for ( ; i<max; i++ ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i-1ul );
-            list.at( i-1ul ) = item;
-            i--;
-            break;
-        }
-    }
-    return static_cast<int>( i );
-}
-int Craplog::warnlistMoveUp( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
-{
-    auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 1 };
-    const size_t max{ list.size() };
-    for ( ; i<max; i++ ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i-1ul );
-            list.at( i-1ul ) = item;
-            i--;
-            break;
-        }
-    }
-    return static_cast<int>( i );
-}
-
-int Craplog::blacklistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
-{
-    auto& list = this->blacklists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 0 };
-    const size_t max{ list.size()-1ul };
-    for ( ; i<max; i++ ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-            i++;
-            break;
-        }
-    }
-    return static_cast<int>( i );
-}
-int Craplog::warnlistMoveDown( const unsigned& web_server_id, const int& log_field_id, const std::string& item )
-{
-    auto& list = this->warnlists.at( web_server_id ).at( log_field_id ).list;
-    size_t i{ 0 };
-    const size_t max{ list.size()-1ul };
-    for ( ; i<max; i++ ) {
-        if ( list.at( i ) == item ) {
-            list.at( i ) = list.at( i+1ul );
-            list.at( i+1ul ) = item;
-            i++;
-            break;
-        }
-    }
-    return static_cast<int>( i );
-}
-
-std::string Craplog::sanitizeBWitem( const int& log_field_id, const std::string& new_item ) const
-{
-    std::string sanitized_item;
-    switch ( log_field_id ) {
-        case 11:
-            sanitized_item = StringOps::strip( new_item );
-            if ( ! StringOps::isAlphabetic( sanitized_item ) ) {
-                // only letters allowed
-                throw BWlistException("Invalid Method");
-            }
-            sanitized_item = StringOps::toUpper( sanitized_item );
-            break;
-        case 12:
-            sanitized_item = StringOps::lstrip( new_item );
-            if ( sanitized_item.empty() ) {
-                throw BWlistException("Invalid URI");
-            }
-            sanitized_item = QUrl::toPercentEncoding(
-                QString::fromStdString( sanitized_item ),
-                "/#&?=+").toStdString();
-            break;
-        case 20:
-            sanitized_item = StringOps::strip( new_item );
-            if ( ! StringOps::isIP( sanitized_item ) ) {
-                // only IPv4/IPv6 allowed
-                throw BWlistException("Invalid Client");
-            }
-            break;
-        case 21:
-            sanitized_item = StringOps::replace( new_item, "\"", "\\\"" );
-            break;
-        default:
-            // shouldn't be here
-            throw GenericException("Unexpected LogField ID: "+std::to_string(log_field_id));
-            break;
-    }
-    return sanitized_item;
 }
 
 
 /////////////////
 //// FORMATS ////
 // get the logs format string
-const std::string& Craplog::getLogsFormatString( const unsigned& web_server_id ) const
+const std::string& Craplog::getLogsFormatString( const WebServer& web_server ) const noexcept
 {
-    return this->logs_format_strings.at( web_server_id );
+    return this->logs_format_strings.at( web_server );
 }
 
 // get the logs format
-const LogsFormat& Craplog::getLogsFormat(const unsigned& web_server_id ) const
+const LogsFormat& Craplog::getLogsFormat(const WebServer& web_server ) const noexcept
 {
-    return this->logs_formats.at( web_server_id );
+    return this->logs_formats.at( web_server );
 }
 
 // set the logs format
-bool Craplog::setApacheLogFormat( const std::string& format_string )
+bool Craplog::setApacheLogFormat( const std::string& format_string ) noexcept
 {
-    // apache
-    bool success{ true };
     try {
-        this->logs_formats.at( APACHE_ID ) =
+        this->logs_formats.at( WS_APACHE ) =
             this->formatOps.processApacheFormatString( format_string );
-        this->logs_format_strings.at( APACHE_ID ) = format_string;
+        this->logs_format_strings.at( WS_APACHE ) = format_string;
     } catch ( LogFormatException& e ) {
-        success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
+        return false;
     } catch (...) {
-        success &= false;
         DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
+        return false;
     }
-    return success;
+    return true;
 }
-bool Craplog::setNginxLogFormat( const std::string& format_string )
+bool Craplog::setNginxLogFormat( const std::string& format_string ) noexcept
 {
-    // nginx
-    bool success{ true };
     try {
-        this->logs_formats.at( NGINX_ID ) =
+        this->logs_formats.at( WS_NGINX ) =
             this->formatOps.processNginxFormatString( format_string );
-        this->logs_format_strings.at( NGINX_ID ) = format_string;
+        this->logs_format_strings.at( WS_NGINX ) = format_string;
     } catch ( LogFormatException& e ) {
-        success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
+        return false;
     } catch (...) {
-        success &= false;
         DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
+        return false;
     }
-    return success;
+    return true;
 }
-bool Craplog::setIisLogFormat( const std::string& format_string, const int log_module )
+bool Craplog::setIisLogFormat( const std::string& format_string, const IISLogsModule log_module ) noexcept
 {
-    // iis
-    bool success{ true };
     try {
-        this->logs_formats.at( IIS_ID ) =
+        this->logs_formats.at( WS_IIS ) =
             this->formatOps.processIisFormatString( format_string, log_module );
-        this->logs_format_strings.at( IIS_ID ) = format_string;
+        this->logs_format_strings.at( WS_IIS ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
-        success &= false;
         DialogSec::errInvalidLogFormatString( e.what() );
+        return false;
     } catch (...) {
-        success &= false;
         DialogSec::errGeneric( DialogSec::tr("An error occured while parsing the format string"), true );
+        return false;
     }
-    return success;
+    return true;
 }
 
-QString Craplog::getLogsFormatSample( const unsigned& web_server_id ) const
+QString Craplog::getLogsFormatSample( const WebServer& web_server ) const
 {
-    switch ( web_server_id ) {
-        case APACHE_ID:
-            return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server_id ) );
-        case NGINX_ID:
-            return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server_id ) );
-        case IIS_ID:
-            return this->formatOps.getIisLogSample( this->logs_formats.at( web_server_id ) );
+    switch ( web_server ) {
+        case WS_APACHE:
+            return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server ) );
+        case WS_NGINX:
+            return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server ) );
+        case WS_IIS:
+            return this->formatOps.getIisLogSample( this->logs_formats.at( web_server ) );
         default:
-            // unexpected WebServer
-            throw WebServerException( "Unexpected WebServerID: " + std::to_string( web_server_id ) );
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(web_server)) );
     }
+}
+
+bool Craplog::checkCurrentLogsFormat() const noexcept
+{
+    if ( this->current_log_format.string.empty() ) {
+            // format string not set
+            DialogSec::errLogFormatNotSet( nullptr );
+            return false;
+    } else if ( this->current_log_format.fields.empty() ) {
+            // no field, useless to parse
+            DialogSec::errLogFormatNoFields( nullptr );
+            return false;
+    } else if ( this->current_log_format.separators.size() < this->current_log_format.fields.size()-1 ) {
+            // at least one separator is missing between two (or more) fields
+            DialogSec::errLogFormatNoSeparators( nullptr );
+            return false;
+    }
+    return true;
 }
 
 
 // set the current Web Server
-void Craplog::setCurrentWSID( const unsigned web_server_id )
+void Craplog::setCurrentWebServer( const WebServer web_server ) noexcept
 {
-    this->current_WS = web_server_id;
+    this->current_web_server = web_server;
     this->setCurrentLogFormat();
 }
 
-unsigned Craplog::getCurrentWSID() const
+WebServer Craplog::getCurrentWebServer() const noexcept
 {
-    return this->current_WS;
+    return this->current_web_server;
 }
 
 // set the current access logs format
-void Craplog::setCurrentLogFormat()
+void Craplog::setCurrentLogFormat() noexcept
 {
-    this->current_LF = this->logs_formats.at( this->current_WS );
+    this->current_log_format = this->logs_formats.at( this->current_web_server );
 }
 
 // get the current access logs format
-const LogsFormat& Craplog::getCurrentLogFormat() const
+const LogsFormat& Craplog::getCurrentLogFormat() const noexcept
 {
-    return this->current_LF;
+    return this->current_log_format;
 }
 
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const unsigned& web_server ) const
+const std::string& Craplog::getLogsPath( const WebServer& web_server ) const noexcept
 {
     return this->logs_paths.at( web_server );
 }
-void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_path )
+void Craplog::setLogsPath( const WebServer& web_server, const std::string& new_path ) noexcept
 {
     this->logs_paths.at( web_server ) = new_path;
 }
@@ -434,13 +254,13 @@ void Craplog::setLogsPath( const unsigned& web_server, const std::string& new_pa
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-size_t Craplog::getLogsListSize() const
+size_t Craplog::getLogsListSize() const noexcept
 {
     return this->logs_list.size();
 }
 
-// return the list. rescan if fresh is true
-const std::vector<LogFile>& Craplog::getLogsList() const
+// return the current list
+const std::vector<LogFile>& Craplog::getLogsList() const noexcept
 {
     return this->logs_list;
 }
@@ -449,9 +269,8 @@ const std::vector<LogFile>& Craplog::getLogsList() const
 // return the LogFile instance of the file matching the given name
 const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
-    const auto& item{ std::find_if
-        ( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& it){ return it.name()==file_name; } ) };
+    const auto item{ std::find_if( this->logs_list.begin(), this->logs_list.end(),
+          [&file_name](const LogFile& file){ return file.name()==file_name; } ) };
     if ( item != this->logs_list.end() ) return *item;
     // should be unreachable
     throw GenericException("File item not found");
@@ -459,12 +278,10 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 
 
 // set a file as selected
-bool Craplog::setLogFileSelected( const QString& file_name )
+bool Craplog::setLogFileSelected( const QString& file_name ) noexcept
 {
-    const auto item{ std::find_if
-        ( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name]( const LogFile& it )
-                      { return it.name() == file_name; } ) };
+    const auto item{ std::find_if( this->logs_list.begin(), this->logs_list.end(),
+          [&file_name](const LogFile& file){ return file.name() == file_name; } ) };
     if ( item != this->logs_list.end() ) {
         item->setSelected();
         return true;
@@ -472,7 +289,7 @@ bool Craplog::setLogFileSelected( const QString& file_name )
     return false;
 }
 
-void Craplog::clearLogFilesSelection()
+void Craplog::clearLogFilesSelection() noexcept
 {
     std::ignore = std::for_each(
         this->logs_list.begin(), this->logs_list.end(),
@@ -487,10 +304,10 @@ void Craplog::scanLogsDir()
     this->logs_list.clear();
     // hire the worker
     CraplogLister* worker{ new CraplogLister(
-        this->current_WS,
+        this->current_web_server,
         this->dialogs_level,
-        this->logs_paths.at( this->current_WS ),
-        this->logs_formats.at( this->current_WS ),
+        this->logs_paths.at( this->current_web_server ),
+        this->logs_formats.at( this->current_web_server ),
         this->hashOps,
         [this]( const std::string& file_name)
               { return this->isFileNameValid( file_name ); }
@@ -522,62 +339,63 @@ void Craplog::scanLogsDir()
     worker_thread->start();
 }
 
-void Craplog::appendLogFile( const LogFile log_file )
+void Craplog::appendLogFile( const LogFile log_file ) noexcept
 {
     this->logs_list.push_back( std::move( log_file ) );
     emit this->pushLogFile( this->logs_list.back() );
 }
 
-void Craplog::logsDirScanned()
+void Craplog::logsDirScanned() noexcept
 {
     emit this->finishedRefreshing();
 }
 
 
-void Craplog::changeIisLogsBaseNames( const int module_id )
+void Craplog::changeIisLogsBaseNames( const IISLogsModule log_module )
 {
-    switch ( module_id ) {
-        case 0: // W3C
-            this->logs_base_names.at( IIS_ID ).contains = "_ex"; break;
-        case 1: // NCSA
-            this->logs_base_names.at( IIS_ID ).contains = "_nc"; break;
-        case 2: // IIS
-            this->logs_base_names.at( IIS_ID ).contains = "_in"; break;
+    switch ( log_module ) {
+        case IISLogsModule::W3C:
+            this->logs_base_names.at( WS_IIS ).contains = "_ex"; break;
+        case IISLogsModule::NCSA:
+            this->logs_base_names.at( WS_IIS ).contains = "_nc"; break;
+        case IISLogsModule::IIS:
+            this->logs_base_names.at( WS_IIS ).contains = "_in"; break;
 
         default: // shouldn't be reachable
-            throw GenericException( "Unexpected LogFormatModule ID: "+std::to_string( module_id ), true ); // leave un-catched
+            throw DoNotCatchException( "Unexpected LogFormatModule", std::to_string(static_cast<iis_logs_module_t>(log_module)) );
     }
 }
 
 bool Craplog::isFileNameValid( const std::string& name ) const
 {
-    bool valid{ true };
-    if ( ! this->logs_base_names.at( this->current_WS ).starts.empty() ) {
-        if ( ! StringOps::startsWith( name, this->logs_base_names.at( this->current_WS ).starts ) ) {
+    if ( ! this->logs_base_names.at( this->current_web_server ).starts.empty() ) {
+        if ( ! StringOps::startsWith( name, this->logs_base_names.at( this->current_web_server ).starts ) ) {
             return false;
         }
     }
-    if ( ! this->logs_base_names.at( this->current_WS ).contains.empty() ) {
-        if ( ! StringOps::contains( name.substr( this->logs_base_names.at( this->current_WS ).starts.size() ),
-                                    this->logs_base_names.at( this->current_WS ).contains ) ) {
+    if ( ! this->logs_base_names.at( this->current_web_server ).contains.empty() ) {
+        if ( ! StringOps::contains( name.substr( this->logs_base_names.at( this->current_web_server ).starts.size() ),
+                                    this->logs_base_names.at( this->current_web_server ).contains ) ) {
             return false;
         }
     }
-    if ( ! this->logs_base_names.at( this->current_WS ).ends.empty() ) {
-        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_WS ).ends )
+    if ( ! this->logs_base_names.at( this->current_web_server ).ends.empty() ) {
+        if ( ! StringOps::endsWith( name, this->logs_base_names.at( this->current_web_server ).ends )
           && ! StringOps::endsWith( name, ".gz" ) ) {
             return false;
         }
     }
 
-    switch ( this->current_WS ) {
-        size_t start, stop;
-        case APACHE_ID | NGINX_ID:
+    switch ( this->current_web_server ) {
+        case WS_APACHE:
+            [[fallthrough]];
+        case WS_NGINX:
+        {
             // further checks for apache / nginx
+            size_t start, stop;
             start = name.rfind(".log." );
             if ( start == std::string::npos ) {
-                valid &= false;
-                break;
+                return false;
             }
             start += 5ul;
             stop = name.size()-1ul;
@@ -585,20 +403,20 @@ bool Craplog::isFileNameValid( const std::string& name ) const
                 stop -= 3ul;
             }
             // serach for incremental numbers
-            for ( size_t i{start}; i<=stop; i++ ) {
-                if ( ! StringOps::isNumeric( name.at( i ) ) ) {
-                    valid &= false;
-                    break;
+            for ( size_t i{start}; i<=stop; ++i ) {
+                if ( ! CharOps::isNumeric( name.at( i ) ) ) {
+                    return false;
                 }
             }
-            break;
+        }break;
 
-        case IIS_ID:
+        case WS_IIS:
+        {
             // further checks for iis
-            start = name.find( this->logs_base_names.at( IIS_ID ).contains ) + 3ul;
+            size_t start, stop;
+            start = name.find( this->logs_base_names.at( WS_IIS ).contains ) + 3ul;
             if ( start == std::string::npos ) {
-                valid &= false;
-                break;
+                return false;
             }
             stop = name.size()-5ul; // removing the finel '.log' extension
             if ( StringOps::endsWith( name, ".gz" ) ) {
@@ -606,33 +424,33 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             }
             // search for date
             std::string date;
-            for ( size_t i{start}; i<=stop; i++ ) {
-                if ( ! StringOps::isNumeric( name.at( i ) ) ) {
-                    valid &= false;
-                    break;
+            for ( size_t i{start}; i<=stop; ++i ) {
+                if ( ! CharOps::isNumeric( name.at( i ) ) ) {
+                    return false;
                 }
                 date.push_back( name.at( i ) );
             }
-            if ( valid ) {
-                // check if the file has today's date
-                time_t t;
-                time( &t );
-                struct tm* tmp = localtime( &t );
-                char aux_date[7];
-                // using strftime to display time
-                strftime( aux_date, 7, "%y%m%d", tmp );
-                valid &= false;
-                for ( size_t i{0}; i<6ul; i++ ) {
-                    if ( date.at(i) != aux_date[i] ) {
-                        // different date, valid
-                        valid |= true;
-                        break;
-                    }
+            // check if the file has today's date
+            time_t t;
+            time( &t );
+            struct tm* tmp = localtime( &t );
+            char aux_date[7];
+            // using strftime to display time
+            strftime( aux_date, 7, "%y%m%d", tmp );
+            for ( size_t i{0}; i<6ul; ++i ) {
+                if ( date.at(i) != aux_date[i] ) {
+                    // different date, valid
+                    return true;
+                    break;
                 }
             }
-            break;
+        }break;
+
+        default:
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(this->current_web_server)) );
     }
-    return valid;
+
+    return true;
 }
 
 
@@ -656,8 +474,6 @@ bool Craplog::checkStuff()
     size_t logs_size{ 0ul };
     for ( const LogFile& file : this->logs_list ) {
 
-        if ( ! this->proceed ) { break; }
-
         if ( ! file.isSelected() ) {
             // not selected, skip
             continue;
@@ -667,14 +483,14 @@ bool Craplog::checkStuff()
         if ( file.hasBeenUsed() ) {
             // already used
             QString msg{ file.name() };
-            if ( this->dialogs_level == 2 ) {
+            if ( this->dialogs_level == DL_EXPLANATORY ) {
                 msg += "\n" + QString::fromStdString( file.hash() );
             }
             const int choice = DialogSec::choiceFileAlreadyUsed( msg );
             if ( choice == 0 ) {
                 // choosed to abort all
                 this->proceed &= false;
-                break;
+                return false;
             } else if ( choice == 1 ) {
                 // choosed to discard the file and continue
                 continue;
@@ -690,23 +506,23 @@ bool Craplog::checkStuff()
             if ( VecOps::contains( this->used_files_hashes, file.hash() ) ) {
                 // appears twice in the list
                 QString msg{ file.name() };
-                if ( this->dialogs_level == 2 ) {
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
                         msg += "\n" + QString::fromStdString( file.hash() );
                 }
                 const int choice = DialogSec::choiceDuplicateFile( msg );
                 if ( choice == 0 ) {
-                        // choosed to abort all
-                        this->proceed &= false;
-                        break;
+                    // choosed to abort all
+                    this->proceed &= false;
+                    return false;
                 } else if ( choice == 1 ) {
-                        // choosed to discard the file and continue
-                        continue;
+                    // choosed to discard the file and continue
+                    continue;
                 } else if ( choice == 2 ) {
-                        // choosed to ignore and use the file anyway
-                        ;
+                    // choosed to ignore and use the file anyway
+                    ;
                 } else {
-                        // shouldn't be here
-                        throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
+                    // shouldn't be here
+                    throw GenericException( "Unexpeced value returned: "+std::to_string(choice) );
                 }
             }
         }
@@ -716,12 +532,12 @@ bool Craplog::checkStuff()
             if ( file.size() > this->warning_size ) {
                 // exceeds the warning size
                 QString msg{ file.name() };
-                if ( this->dialogs_level >= 1 ) {
-                    msg += QString("\n\n%1:\n%2").arg(
+                if ( this->dialogs_level >= DL_NORMAL ) {
+                    msg += QStringLiteral("\n\n%1:\n%2").arg(
                         DialogSec::tr("Size of the file"),
                         PrintSec::printableSize( file.size() ) );
-                    if ( this->dialogs_level == 2 ) {
-                        msg += QString("\n\n%1:\n%2").arg(
+                    if ( this->dialogs_level == DL_EXPLANATORY ) {
+                        msg += QStringLiteral("\n\n%1:\n%2").arg(
                             DialogSec::tr("Warning size parameter"),
                             PrintSec::printableSize( this->warning_size ) );
                     }
@@ -730,7 +546,7 @@ bool Craplog::checkStuff()
                 if ( choice == 0 ) {
                     // choosed to abort all
                     this->proceed &= false;
-                    break;
+                    return false;
                 } else if ( choice == 1 ) {
                     // choosed to discard the file and continue
                     continue;
@@ -748,12 +564,12 @@ bool Craplog::checkStuff()
         if ( ! CheckSec::checkCollectionDatabase( this->db_stats_path ) ) {
             // checks failed, abort
             this->proceed &= false;
-            break;
+            return false;
         }
         if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path ) ) {
             // checks failed, abort
             this->proceed &= false;
-            break;
+            return false;
         }
 
         this->log_files_to_use.push_back(
@@ -764,34 +580,36 @@ bool Craplog::checkStuff()
     }
 
     // check if there are enough files to use
-    if ( this->proceed && this->log_files_to_use.size() == 0ul ) {
+    if ( this->log_files_to_use.empty() ) {
         // no files left, abort
         DialogSec::msgNoFileToParse();
         this->proceed &= false;
+        return false;
     }
 
     // check if the total size of the files do not exceed the available RAM
-    if ( this->proceed && logs_size >= MemOps::availableMemory() ) {
+    if ( logs_size >= MemOps::availableMemory() ) {
         // no files left, abort
         QString msg;
-        if ( this->dialogs_level >= 1 ) {
-            msg += QString("\n\n%1: %2").arg(
+        if ( this->dialogs_level >= DL_NORMAL ) {
+            msg += QStringLiteral("\n\n%1: %2").arg(
                 DialogSec::tr("Available memory"),
                 PrintSec::printableSize( MemOps::availableMemory() ) );
-            if ( this->dialogs_level == 2 ) {
-                msg += QString("\n%1: %2").arg(
+            if ( this->dialogs_level == DL_EXPLANATORY ) {
+                msg += QStringLiteral("\n%1: %2").arg(
                     DialogSec::tr("Size of the logs"),
                     PrintSec::printableSize( logs_size ) );
             }
         }
         DialogSec::msgNotEnoughMemory( msg );
         this->proceed &= false;
+        return false;
     }
 
-    return this->proceed;
+    return true;
 }
 
-void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringList args ) const
+void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringList args ) const noexcept
 {
     switch ( dialog_type ) {
         case WorkerDialog::errGeneric:
@@ -806,16 +624,22 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
         case WorkerDialog::errFailedParsingLogs:
             DialogSec::errFailedParsingLogs( args.at(0) );
             break;
+        case WorkerDialog::errDatabaseFileNotFound:
+            DialogSec::errDatabaseNotFound( args.at(0) );
+            break;
+        case WorkerDialog::errDatabaseFileNotFile:
+            DialogSec::errDatabaseNotFile( args.at(0) );
+            break;
+        case WorkerDialog::errDatabaseFileNotReadable:
+            DialogSec::errDatabaseNotReadable( args.at(0) );
+            break;
+        case WorkerDialog::errDatabaseFileNotWritable:
+            DialogSec::errDatabaseNotWritable( args.at(0) );
+            break;
         case WorkerDialog::errDatabaseFailedOpening:
-            if ( args.size() < 2 ) {
-                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
-            }
             DialogSec::errDatabaseFailedOpening( args.at(0), args.at(1) );
             break;
         case WorkerDialog::errDatabaseFailedExecuting:
-            if ( args.size() < 3 ) {
-                GenericException{ "call to showWorkerDialog() with invalid number of list items", true };
-            }
             DialogSec::errDatabaseFailedExecuting( args.at(0), args.at(1), args.at(2) );
             break;
         case WorkerDialog::warnFileNotReadable:
@@ -827,20 +651,7 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
     }
 }
 
-bool Craplog::shouldWorkAsync() const
-{
-    const size_t n_log_files{ this->log_files_to_use.size() };
-    const size_t average_size{
-        std::accumulate( this->logs_list.cbegin(), this->logs_list.cend(), 0ul,
-                         []( size_t sum, const LogFile& lf )
-                           { return lf.isSelected() ? sum+lf.size() : sum; })
-        / n_log_files
-    };
-    return (average_size > 1'048'576ul && n_log_files > 1)
-        || n_log_files > 150ul;
-}
-
-void Craplog::startWorking()
+void Craplog::startWorking( const Blacklists& blacklists )
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->proceed |= true;
@@ -848,26 +659,25 @@ void Craplog::startWorking()
     this->parsed_lines = 0ul;
     this->total_size   = 0ul;
     this->parsed_size  = 0ul;
-    this->warnlisted_size  = 0ul;
     this->blacklisted_size = 0ul;
     // hire a worker
-    if ( this->shouldWorkAsync() ) {
-        this->hireAsyncWorker();
-    } else {
-        this->hireWorker();
-    }
+    this->hireWorker( blacklists );
 }
-void Craplog::hireWorker() const
+void Craplog::hireWorker( const Blacklists& blacklists ) const
 {
+    std::vector<std::string> files;
+    files.reserve( this->log_files_to_use.size() );
+    std::transform(
+        this->log_files_to_use.cbegin(), this->log_files_to_use.cend(), std::back_inserter(files),
+        [](const auto& tpl){ return std::get<0>(tpl); } );
+
     CraplogParser* worker{ new CraplogParser(
-        this->current_WS,
+        this->current_web_server,
         this->dialogs_level,
-        this->db_stats_path,
-        this->db_hashes_path,
-        this->logs_formats.at( this->current_WS ),
-        this->blacklists.at( this->current_WS ),
-        this->warnlists.at( this->current_WS ),
-        this->log_files_to_use
+        this->logs_formats.at( this->current_web_server ),
+        blacklists.getConst( this->current_web_server ),
+        std::move(files),
+        this->db_stats_path
     ) };
     QThread* worker_thread{ new QThread() };
     worker->moveToThread( worker_thread );
@@ -886,6 +696,9 @@ void Craplog::hireWorker() const
     // receive chart data, only received when worker has done
     connect( worker, &CraplogParser::chartData,
              this, &Craplog::updateChartData );
+    // store the files hashes
+    connect( worker, &CraplogParser::readyStoringData,
+             this, &Craplog::storeFilesHashes );
     // show a dialog
     connect( worker, &CraplogParser::showDialog,
              this, &Craplog::showWorkerDialog );
@@ -904,80 +717,32 @@ void Craplog::hireWorker() const
     // make the worker work
     worker_thread->start();
 }
-void Craplog::hireAsyncWorker() const
-{
-    CraplogParserAsync* worker{ new CraplogParserAsync(
-        this->current_WS,
-        this->dialogs_level,
-        this->db_stats_path,
-        this->db_hashes_path,
-        this->logs_formats.at( this->current_WS ),
-        this->blacklists.at( this->current_WS ),
-        this->warnlists.at( this->current_WS ),
-        this->log_files_to_use
-    ) };
-    QThread* worker_thread{ new QThread() };
-    worker->moveToThread( worker_thread );
-    // start the worker
-    connect( worker_thread, &QThread::started,
-             worker, &CraplogParserAsync::work );
-    // worker started parsing
-    connect( worker, &CraplogParserAsync::startedParsing,
-             this, &Craplog::workerStartedParsing );
-    // worker finished parsing
-    connect( worker, &CraplogParserAsync::finishedParsing,
-             this, &Craplog::workerFinishedParsing );
-    // receive performance data
-    connect( worker, &CraplogParserAsync::perfData,
-             this, &Craplog::updatePerfData );
-    // receive chart data, only received when worker has done
-    connect( worker, &CraplogParserAsync::chartData,
-             this, &Craplog::updateChartData );
-    // show a dialog
-    connect( worker, &CraplogParserAsync::showDialog,
-             this, &Craplog::showWorkerDialog );
-    // worker finished its career
-    connect( worker, &CraplogParserAsync::done,
-             this, &Craplog::stopWorking );
-    // plan deleting the worker
-    connect( worker, &CraplogParserAsync::retire,
-             worker, &CraplogParserAsync::deleteLater );
-    // quit the thread
-    connect( worker, &CraplogParserAsync::retire,
-             worker_thread, &QThread::quit );
-    // plan deleting the thread
-    connect( worker_thread, &QThread::finished,
-             worker_thread, &QThread::deleteLater );
-    // make the worker work
-    worker_thread->start();
-}
 void Craplog::stopWorking( const bool successful )
 {
     this->db_edited = successful;
     if ( successful ) {
         // insert the hashes of the used files
-        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_WS );
     }
     emit this->finishedWorking();
 }
 
-bool Craplog::editedDatabase() const
+bool Craplog::editedDatabase() const noexcept
 {
     return this->db_edited;
 }
 
 
-size_t Craplog::getParsedSize()
+size_t Craplog::getParsedSize() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-size_t Craplog::getParsedLines()
+size_t Craplog::getParsedLines() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
 }
-QString Craplog::getParsingSpeed()
+QString Craplog::getParsingSpeed() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     auto stop{ ( is_parsing )
@@ -994,36 +759,47 @@ QString Craplog::getParsingSpeed()
         );
 }
 
-void Craplog::workerStartedParsing()
+void Craplog::workerStartedParsing() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->is_parsing |= true;
     this->parsing_time_start = std::chrono::system_clock::now();
 }
-void Craplog::workerFinishedParsing()
+void Craplog::workerFinishedParsing() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsing_time_stop = std::chrono::system_clock::now();
     this->is_parsing &= false;
 }
-bool Craplog::isParsing() const
+bool Craplog::isParsing() const noexcept
 {
     return this->is_parsing;
 }
 
-void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines )
+void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t warnlisted_size, const size_t blacklisted_size )
+void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t blacklisted_size ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;
     this->total_lines = total_lines;
-    this->warnlisted_size  = warnlisted_size;
     this->blacklisted_size = blacklisted_size;
+}
+
+void Craplog::storeFilesHashes( QWaitCondition* wc, bool* successful) noexcept
+{
+    try {
+        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
+        *successful |= true;
+    } catch (...) {
+        DialogSec::errFailedInsertUsedHashes();
+        *successful &= false;
+    }
+    wc->wakeAll();
 }
 
 
@@ -1033,19 +809,15 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
         size_chart_name        { TR::tr("Logs Size Breakdown") },
         ignored_slice_name     { TR::tr("Ignored")             },
         parsed_slice_name      { TR::tr("Parsed")              },
-        warning_slice_name     { TR::tr("Warnings")            },
         blacklisted_slice_name { TR::tr("Blacklisted")         };
 
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
     parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size ) );
-    const size_t parsed_size{ this->parsed_size - this->warnlisted_size - this->blacklisted_size };
+    const size_t parsed_size{ this->parsed_size - this->blacklisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         static_cast<qreal>( parsed_size ) );
-    parsedSize_donut->append(
-        "W@" + warning_slice_name + "@" + PrintSec::printableSize( this->warnlisted_size ),
-        static_cast<qreal>( this->warnlisted_size ) );
     parsedSize_donut->append(
         "B@" + blacklisted_slice_name + "@" + PrintSec::printableSize( this->blacklisted_size ),
         static_cast<qreal>( this->blacklisted_size ) );
@@ -1072,7 +844,9 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
         sizeBreakdown->legend()->setVisible( false );
         sizeBreakdown->setTitle("");
     }
-    sizeBreakdown->legend()->markers( ignoredSize_donut ).first()->setVisible( false );
+    if ( auto markers{ sizeBreakdown->legend()->markers( ignoredSize_donut ) }; !markers.isEmpty() ) {
+        markers.first()->setVisible( false );
+    }
 
     size_chart->setChart( sizeBreakdown );
     size_chart->setRenderHint( QPainter::Antialiasing );

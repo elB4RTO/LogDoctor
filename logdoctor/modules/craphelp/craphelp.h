@@ -7,6 +7,9 @@
 #include <unordered_map>
 
 
+enum class ColorsScheme : unsigned char;
+
+
 namespace Ui {
     class Craphelp;
 }
@@ -16,20 +19,22 @@ namespace Ui {
 /*!
     Displays an help window
 */
-class Craphelp : public QWidget
+class Craphelp final : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit Craphelp( QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Craphelp)
 
     //! Provides help about log formats
     /*!
         \param path The path of the file resource to be displayed
         \param font The font to be used
-        \param color_scheme_id The ID of the color-scheme to be used
+        \param colors_scheme_id The ID of the color-scheme to be used
+        \throw DoNotCatchException
     */
-    void helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const;
+    void helpLogsFormat( const std::string& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept;
 
     //! Provides help about log formats
     /*!
@@ -37,18 +42,20 @@ public:
         for the currently selected locale was not found or unreadable
         \param file_name The file that was supposed to be shown
         \param font The font to be used
-        \param color_scheme_id The ID of the color-scheme to be used
+        \param colors_scheme_id The ID of the color-scheme to be used
+        \throw DoNotCatchException
     */
-    void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const;
+    void helpLogsFormatDefault( std::string_view file_name, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept;
 
 private:
     QSharedPointer<Ui::Craphelp> ui;
 
-    std::unordered_map<std::string, QString> getColorScheme( const int scheme_id ) const;
+    // \throw DoNotCatchException
+    std::unordered_map<std::string, QString> getColorScheme( const ColorsScheme scheme_id ) const;
 
-    void defaultApacheFormat( std::string& str ) const;
-    void defaultNginxFormat( std::string& str ) const;
-    void defaultIisFormat( std::string& str ) const;
+    void defaultApacheFormat( std::string& str ) const noexcept;
+    void defaultNginxFormat( std::string& str ) const noexcept;
+    void defaultIisFormat( std::string& str ) const noexcept;
 };
 
 

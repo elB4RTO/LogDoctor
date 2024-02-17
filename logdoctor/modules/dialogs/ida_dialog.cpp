@@ -48,8 +48,7 @@ QString getStylesheet()
             };
             break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 
     return

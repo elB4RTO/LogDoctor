@@ -1,11 +1,15 @@
 var searchData=
 [
   ['abortrequest_0',['abortRequest',['../classCrapup.html#aab00b3d7f06317c5ff2753821d2b67d7',1,'Crapup']]],
-  ['addbreakdownseries_1',['addBreakdownSeries',['../classDonutBreakdown.html#a161ef5e8ca88f2735a4971d1f66f7a72',1,'DonutBreakdown']]],
-  ['ai_5fmakechoice_2',['AI_makeChoice',['../classCrissCross.html#a6f329792d3f7f51f3334a84e1f1001ef',1,'CrissCross']]],
-  ['ai_5fplayturn_3',['AI_playTurn',['../classCrissCross.html#aefa21dcac38b6729af095fdc70be9ca9',1,'CrissCross']]],
-  ['ai_5fupdateweights_4',['AI_updateWeights',['../classCrissCross.html#a8c8798850707c8090bc8bf3d0f313109',1,'CrissCross']]],
-  ['apache_5falf_5',['APACHE_ALF',['../classFormatOps.html#a1dd258c0c0bb9091e25c2b36c47b5ad1',1,'FormatOps']]],
-  ['applycharttheme_6',['applyChartTheme',['../namespaceColorSec.html#af2d0f21c73979f6b9363e1a47718628d',1,'ColorSec']]],
-  ['availablememory_7',['availableMemory',['../namespaceMemOps.html#ae86bbf78d7743f9b6b98da053bfcbd08',1,'MemOps']]]
+  ['add_1',['add',['../structBlacklistItem.html#a341214f4d4ee5d961db35fa06f956b38',1,'BlacklistItem::add()'],['../structWarnlistItem.html#aae8e8c1d366694d298db2b89038f1569',1,'WarnlistItem::add()']]],
+  ['addbreakdownseries_2',['addBreakdownSeries',['../classDonutBreakdown.html#a161ef5e8ca88f2735a4971d1f66f7a72',1,'DonutBreakdown']]],
+  ['additem_3',['addItem',['../structBlacklists.html#ab0e2168256dbdf32d1bdd55d023940da',1,'Blacklists::addItem()'],['../structWarnlists.html#a1c250a9862c7a9bbe5db346a7a580e5b',1,'Warnlists::addItem()']]],
+  ['ai_5fmakechoice_4',['AI_makeChoice',['../classCrissCross.html#aaa6af51d74e3c8250c0fdf8b734bff16',1,'CrissCross']]],
+  ['ai_5fplayturn_5',['AI_playTurn',['../classCrissCross.html#a9546863583b69a7246a216794b88d062',1,'CrissCross']]],
+  ['ai_5fupdateweights_6',['AI_updateWeights',['../classCrissCross.html#a2fc7d3a6f907718ea430e138681ba328',1,'CrissCross']]],
+  ['apache_5falf_7',['APACHE_ALF',['../classFormatOps.html#a82e05a03cb896eb06574f7e79e14d8fe',1,'FormatOps']]],
+  ['apache_5falf_5fv_8',['APACHE_ALF_V',['../classFormatOps.html#a7da91fdd84e450e6892a8a530e051734',1,'FormatOps']]],
+  ['applycharttheme_9',['applyChartTheme',['../namespaceColorSec.html#af2d0f21c73979f6b9363e1a47718628d',1,'ColorSec']]],
+  ['arrayops_10',['ArrayOps',['../namespaceArrayOps.html',1,'']]],
+  ['availablememory_11',['availableMemory',['../namespaceMemOps.html#ae86bbf78d7743f9b6b98da053bfcbd08',1,'MemOps']]]
 ];

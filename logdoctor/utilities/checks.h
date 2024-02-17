@@ -14,14 +14,14 @@ class QString;
 namespace CheckSec
 {
 
-//! Checks the database file
+//! Basic checks on a database file
 /*!
   \param db_path Path of the database file
   \param db_name Database's name, used by the dialogs if necessary
   \return The result of the check
   \see IOutils::exists(), IOutils::isFile(), IOutils::checkFile()
 */
-bool checkDatabaseFile( const std::string& db_path, const QString& db_name );
+bool checkDatabaseFile( const std::string& db_path, const QString& db_name ) noexcept;
 
 //! Checks the structure's integrity of the Collection database
 /*!
@@ -29,7 +29,7 @@ bool checkDatabaseFile( const std::string& db_path, const QString& db_name );
   \return The result of the check
   \see checkDatabaseTablesNames(), newCollectionDatabase(), newHashesDatabase()
 */
-bool checkCollectionDatabase( const std::string& db_path );
+bool checkCollectionDatabase( const std::string& db_path ) noexcept;
 
 //! Checks the structure's integrity of the Hashes database
 /*!
@@ -37,7 +37,7 @@ bool checkCollectionDatabase( const std::string& db_path );
   \return The result of the check
   \see checkDatabaseTablesNames(), newCollectionDatabase(), newHashesDatabase()
 */
-bool checkHashesDatabase( const std::string& db_path );
+bool checkHashesDatabase( const std::string& db_path ) noexcept;
 
 } // namespace CheckSec
 

@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['update_0',['update',['../classFood.html#a63d7fd88d5db54881de451b2429ed04d',1,'Food::update()'],['../structBodyPart.html#a6addb68ca5c7ac51dbb072e55ada5e33',1,'BodyPart::update()'],['../classSnake.html#ab3610a54cbc6b6ec8d44e24871d59301',1,'Snake::update()']]],
-  ['updategamescore_1',['updateGameScore',['../classSnakeGame.html#a420f3980fab86475ea4788a2e971597b',1,'SnakeGame']]],
-  ['updatelabel_2',['updateLabel',['../classMainSlice.html#aed2a6013aafca878143a8f05c391c590',1,'MainSlice']]],
-  ['updatelegendmarkers_3',['updateLegendMarkers',['../classDonutBreakdown.html#a682599f0fd4f13530b7bfe6dc3331578',1,'DonutBreakdown']]],
-  ['updateuifonts_4',['updateUiFonts',['../classMainWindow.html#a0b27c0bc56c7ffc801a32c90dbd529a6',1,'MainWindow']]],
-  ['updateuiicons_5',['updateUiIcons',['../classMainWindow.html#ab38da8951aefa2064b1e9d3bddd918ea',1,'MainWindow']]],
-  ['updateuilanguage_6',['updateUiLanguage',['../classMainWindow.html#a1f84f5977dc0d34a3f65f373be1214cd',1,'MainWindow']]],
-  ['updateuitheme_7',['updateUiTheme',['../classMainWindow.html#aa38e8aac36ede194803b378725fc123c',1,'MainWindow']]],
-  ['updatewarn_8',['updateWarn',['../classCrapview.html#a5936b20a36eb7293eb1ab7dffd5a28cf',1,'Crapview']]],
-  ['updatewarnings_9',['updateWarnings',['../classDbQuery.html#a6d86a91f0880d9d7ca27b6b9720257fd',1,'DbQuery']]],
-  ['used_10',['used',['../structBWlist.html#ae0664e12fbe88c18dc830cd93fbe6abc',1,'BWlist']]]
+  ['testcraplogmodules_0',['testCraplogModules',['../namespaceTesting.html#a26ca6af95ebd8bc1f45330d1f8e878ee',1,'Testing']]],
+  ['testcrapviewmodules_1',['testCrapviewModules',['../namespaceTesting.html#afda5137047f07a73c14a0da8a5ca35d6',1,'Testing']]],
+  ['testing_2',['Testing',['../namespaceTesting.html',1,'']]],
+  ['testoperators_3',['testOperators',['../namespaceTesting.html#a9ac32a7ffa8616455829bcf0f8496c3d',1,'Testing']]],
+  ['testutilities_4',['testUtilities',['../namespaceTesting.html#a61e6bd9fb48a1af951cb365b46e49924',1,'Testing']]],
+  ['textbrowser_5',['TextBrowser',['../classTextBrowser.html',1,'']]],
+  ['tile_6',['Tile',['../structSnake_1_1Tile.html',1,'Snake']]],
+  ['todo_20list_7',['Todo List',['../todo.html',1,'']]],
+  ['tolower_8',['toLower',['../namespaceStringOps.html#a5061aaadb5290959f7e14d6c54a491c5',1,'StringOps']]],
+  ['toupper_9',['toUpper',['../namespaceStringOps.html#a10bc74b0c6b388437925d6bf6c0cf6d1',1,'StringOps']]],
+  ['tr_10',['TR',['../classTR.html',1,'']]],
+  ['trafficdata_11',['TrafficData',['../structTrafficData.html',1,'']]]
 ];

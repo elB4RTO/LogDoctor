@@ -8,13 +8,22 @@
 
 #include "modules/tb.h"
 
+#include "modules/database/database.h"
+
+#include "modules/blacklists/blacklists.h"
+#include "modules/warnlists/warnlists.h"
+
 #include "modules/craplog/craplog.h"
 #include "modules/crapview/crapview.h"
 
+
+class Crappath;
 class Craphelp;
 class Crapup;
 class Crapinfo;
 class Crapnote;
+
+class Changelog;
 
 class CrissCross;
 class SnakeGame;
@@ -22,6 +31,9 @@ class SnakeGame;
 class QCloseEvent;
 class QTranslator;
 class QTreeWidgetItem;
+
+enum class LogField;
+enum class ColorsScheme : unsigned char;
 
 
 namespace Ui {
@@ -33,20 +45,20 @@ namespace Ui {
 /*!
     The parent window
 */
-class MainWindow : public QMainWindow
+class MainWindow final : public QMainWindow
 {
     Q_OBJECT
 
 public:
 
     explicit MainWindow( QWidget* parent=nullptr );
-
+    Q_DISABLE_COPY_MOVE(MainWindow)
 
 signals:
 
     void refreshLogs();
 
-    void runCraplog();
+    void runCraplog( const Blacklists& blacklists );
 
 
 private slots:
@@ -152,8 +164,6 @@ private slots:
     void on_box_StatsWarn_Hour_currentIndexChanged(int index);
 
     void on_button_StatsWarn_Draw_clicked();
-
-    void on_button_StatsWarn_Update_clicked();
 
     //// SPEED ////
 
@@ -301,11 +311,15 @@ private slots:
 
     //// DATABASES ////
 
+    void on_tool_ConfDatabases_Data_Dialog_clicked();
+
     void on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1);
 
     void on_inLine_ConfDatabases_Data_Path_returnPressed();
 
     void on_button_ConfDatabases_Data_Save_clicked();
+
+    void on_tool_ConfDatabases_Hashes_Dialog_clicked();
 
     void on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1);
 
@@ -334,6 +348,8 @@ private slots:
     void on_spinBox_ConfControl_Size_editingFinished();
 
     //// APACHE ////
+
+    void on_tool_ConfApache_Path_Dialog_clicked();
 
     void on_inLine_ConfApache_Path_String_textChanged(const QString& arg1);
 
@@ -389,6 +405,8 @@ private slots:
 
     //// NGINX ////
 
+    void on_tool_ConfNginx_Path_Dialog_clicked();
+
     void on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1);
 
     void on_inLine_ConfNginx_Path_String_returnPressed();
@@ -442,6 +460,8 @@ private slots:
     void on_button_ConfNginx_Blacklist_Down_clicked();
 
     //// IIS ////
+
+    void on_tool_ConfIis_Path_Dialog_clicked();
 
     void on_inLine_ConfIis_Path_String_textChanged(const QString& arg1);
 
@@ -527,6 +547,8 @@ private slots:
 
     void menu_actionInfos_triggered();
 
+    void menu_actionChangelog_triggered();
+
     void menu_actionCheckUpdates_triggered();
 
     //// GAMES ////
@@ -540,9 +562,10 @@ private:
     QSharedPointer<Ui::MainWindow> ui;
 
     // current version of LogDoctor
-    const float version{ 3.00f };
+    const float version{ 4.00f };
 
     QString wsFromIndex( const int index ) const;
+    WebServer wsEnumFromIndex( const int index ) const;
 
 
     //////////////////////////
@@ -630,13 +653,32 @@ private:
 
 
     /////////////////
-    //// GENERAL ////
+    //// DIALOGS ////
 
     // quantoty of informational dialogs to display
-    int dialogs_level{ 2 }; // 0: essential, 1: usefull, 2: explanatory
+    DialogsLevel dialogs_level{ DL_NORMAL };
+
+    //! Retrieves the dialogs level from the given string
+    /*!
+        \see readConfigs()
+    */
+    void setDialogsLevelFromString( const std::string& dialogs_level );
+
+    //! Returns the dialogs level corresponding to the given number
+    DialogsLevel dialogsLevelFromInt( const int dialogs_level );
+
+
+    ////////////////////
+    //// WEB SERVER ////
 
     // default web server
-    unsigned default_ws{ 11 };
+    WebServer default_web_server{ WS_APACHE };
+
+    //! Retrieves the Web Server from the given string
+    /*!
+        \see readConfigs()
+    */
+    void setWebServerFromString( const std::string& web_server );
 
 
     //////////////////
@@ -664,13 +706,13 @@ private:
     };
 
     // color schemes
-    std::unordered_map<int, std::unordered_map<std::string, QString>> TB_COLOR_SCHEMES;
+    const std::unordered_map<ColorsScheme, std::unordered_map<std::string, QString>> tb_colors_schemes;
 
     // colors
-    std::unordered_map<std::string, QColor> COLORS;
+    const std::unordered_map<std::string, QColor> colors;
 
     // fonts
-    std::unordered_map<std::string, QFont>  FONTS;
+    std::unordered_map<std::string, QFont>  fonts;
 
     int font_size       { 13 };
     int font_size_big   { 16 };
@@ -698,7 +740,7 @@ private:
 
 
     //! Resolves the given path and returns the canonical path
-    std::string resolvePath( const std::string& path ) const;
+    std::string resolvePath( const std::string& path ) const noexcept;
 
     //! Returns the parent folder of the given path
     std::string parentPath( const std::string& path ) const;
@@ -710,23 +752,23 @@ private:
 
     bool initiating{ true };
 
-    bool db_ok{ true };
-
     //! Makes the initial integrity checks
     void makeInitialChecks();
-
-    //! Checks the integrity of the logs data collection database
-    bool checkDataDB();
 
 
     ///////////////////
     //// DATABASES ////
     ///////////////////
 
+    DatabaseHandler dbHandler;
+
+    // true if a process edited the database and so a backup is required
     bool db_edited{ false };
 
+    // user-defined configuration: whether to make backups or not
     bool db_do_backup{ true };
 
+    // user-defined configuration: maximum number of backups to keep
     unsigned db_backups_number{ 3 };
 
     //! Backs-up the logs data collection database
@@ -735,13 +777,36 @@ private:
     std::string db_data_path;
     std::string db_hashes_path;
 
-    // actions when working on a db
+    // true when a process is working on a db
     bool db_working{ false };
 
     //! Called when a member begins/ends performing operations on the database
     void setDbWorkingState( const bool working );
 
+    //! Weak check on the logs data collection database
+    /*!
+        Returns true if the database is free (no other process is running
+        that may access it for read/write operations) and it exists
+        \see checkDataDB
+    */
     bool dbUsable();
+
+    // false if the logs data collection database is invalid
+    bool db_ok{ true };
+
+    //! Checks the integrity of the logs data collection database
+    bool checkDataDB();
+
+
+    //////////////////////////////
+    //// BLACKLIST / WARNLIST ////
+    //////////////////////////////
+
+    Blacklists blacklists;
+    Warnlists warnlists;
+
+    BlacklistField blacklistFieldFromString( const QString& str );
+    WarnlistField warnlistFieldFromString( const QString& str );
 
 
     //////////////////
@@ -818,9 +883,11 @@ private:
     void resetStatsCountButtons();
 
     // day-time
+    LogField getStatsDayLogField() const;
     std::optional<QString> getStatsDayParsedFilter() const;
 
     // relational
+    LogField getStatsRelatLogField( const int filter_num ) const;
     std::optional<QString> getStatsRelatParsedFilter( const int filter_num ) const;
 
     // globals
@@ -837,7 +904,14 @@ private:
 
     void refreshChartsPreview();
 
-    int getIisLogsModule() const;
+    IISLogsModule getIisLogsModule() const;
+
+
+    //////////////////
+    //// CRAPPATH ////
+    //////////////////
+
+    QSharedPointer<Crappath> crappath;
 
 
     //////////////////
@@ -868,6 +942,13 @@ private:
     //////////////////
 
     QSharedPointer<Crapinfo> crapinfo;
+
+
+    ///////////////////
+    //// CRANGELOG ////
+    ///////////////////
+
+    QSharedPointer<Changelog> changelog;
 
 
     ///////////////////

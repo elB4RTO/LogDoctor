@@ -6,6 +6,7 @@
 #include "modules/exceptions.h"
 
 #include <QString>
+#include <QtCore/QStringBuilder>
 
 #include <unordered_map>
 
@@ -21,7 +22,7 @@ enum StyleId : uint32_t {
 
 using StyleMap = std::unordered_map<StyleId, QString>;
 
-const StyleMap makeStyleMap()
+StyleMap makeStyleMap()
 {
     switch ( GlobalConfigs::window_theme ) {
         case WindowTheme::Light:
@@ -33,7 +34,6 @@ const StyleMap makeStyleMap()
                 {WINDOW_SECONDARY,
                     "rgb( 230, 230, 230 )"}
             };
-            break;
         case WindowTheme::Dark:
             return {
                 {TEXT,
@@ -43,34 +43,33 @@ const StyleMap makeStyleMap()
                 {WINDOW_SECONDARY,
                     "rgb( 27, 30, 33 )"}
             };
-            break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 }
 
-} // namespacce (private)
+} //namespace (private)
 
 
 namespace StyleSec::Crapup
 {
 
-void getStyleSheet( QString& stylesheet )
+QString getStyleSheet()
 {
-    if ( GlobalConfigs::window_theme != WindowTheme::Native ) {
-        const StyleMap style{ makeStyleMap() };
-        stylesheet =
-            "* {"
-            "   color: "+style.at(TEXT)+";"
-            "}"
-            "QWidget#Crapup {"
-            "   background-color: "+style.at(WINDOW_SECONDARY)+";"
-            "}"
-            "QFrame {"
-            "   background-color: "+style.at(WINDOW_PRIMARY)+";"
-            "}";
+    if ( GlobalConfigs::window_theme == WindowTheme::Native ) {
+        return "";
     }
+    const StyleMap style{ makeStyleMap() };
+    return
+        "* {"
+        "   color: "% style.at(TEXT) %";"
+        "}"
+        "QWidget#Crapup {"
+        "   background-color: "% style.at(WINDOW_SECONDARY) %";"
+        "}"
+        "QFrame {"
+        "   background-color: "% style.at(WINDOW_PRIMARY) %";"
+        "}";
 }
 
 } // namespacce StyleSec::Crapup

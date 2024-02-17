@@ -4,8 +4,36 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 
+BodyPart::BodyPart( const unsigned x, const unsigned y, const Direction d, const Direction pd, QGraphicsPixmapItem*const img ) noexcept
+    : x{ x }
+    , y{ y }
+    , direction{ d }
+    , prev_direction{ pd }
+    , image{ img }
+{
 
-void BodyPart::update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) {
+}
+BodyPart::BodyPart( BodyPart&& other ) noexcept
+    : x{ other.x }
+    , y{ other.y }
+    , direction{ other.direction }
+    , prev_direction{ other.prev_direction }
+    , image{ other.image }
+{
+    other.image = nullptr;
+}
+BodyPart& BodyPart::operator=( BodyPart&& other ) noexcept
+{
+    if ( this == &other ) return *this;
+    this->x = other.x;
+    this->y = other.y;
+    this->direction = other.direction;
+    this->prev_direction = other.prev_direction;
+    this->image = other.image;
+    other.image = nullptr;
+    return *this;
+}
+void BodyPart::update( const unsigned new_x, const unsigned new_y, const Direction& new_direction ) noexcept {
     this->x = new_x;
     this->y = new_y;
     this->image->setOffset( 16+(new_x*32), 16+(new_y*32) );
@@ -14,7 +42,7 @@ void BodyPart::update( const unsigned new_x, const unsigned new_y, const Directi
 }
 
 
-Snake::Snake( const bool is_adversary )
+Snake::Snake( const bool is_adversary ) noexcept
     : adversary( is_adversary )
 {
     if ( is_adversary ) {
@@ -24,7 +52,7 @@ Snake::Snake( const bool is_adversary )
 }
 
 
-const QPixmap& Snake::getHeadImage() const
+const QPixmap& Snake::getHeadImage() const noexcept
 {
     if ( this->adversary ) {
         return this->img_snakeHead_;
@@ -34,19 +62,19 @@ const QPixmap& Snake::getHeadImage() const
 }
 
 
-bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const
+bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const noexcept
 {
     if ( this->size() > 0 ) {
         size_t i{ 0 };
         size_t max{ this->size()-1ul };
         if ( !avoid_tail ) {
-            max ++;
+            ++ max;
         }
         for ( auto bp{ this->cbegin() }; bp != this->cend(); ++bp ) {
             if ( bp->x == x && bp->y == y ) {
                 return true;
             }
-            i++;
+            ++i;
             if ( i >= max ) {
                 break;
             }
@@ -56,16 +84,16 @@ bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) 
 }
 
 
-void Snake::setDirection( const Direction new_direction )
+void Snake::setDirection( const Direction new_direction ) noexcept
 {
     this->head_direction = new_direction;
 }
-const Direction& Snake::direction() const
+const Direction& Snake::direction() const noexcept
 {
     return this->head_direction;
 }
 
-void Snake::willGrow()
+void Snake::willGrow() noexcept
 {
     this->will_grow |= true;
 }
@@ -81,26 +109,26 @@ void Snake::grow( const bool is_borning )
         // one tile behind
         switch ( d ) {
             case Direction::UP:
-                y ++;
+                ++ y;
                 break;
             case Direction::DOWN:
-                y --;
+                -- y;
                 break;
             case Direction::LEFT:
-                x ++;
+                ++ x;
                 break;
             case Direction::RIGHT:
-                x --;
+                -- x;
                 break;
             default:
                 // should be unreachable
                 throw("Unexpected direction: "+std::to_string(d));
         }
     }
-    this->push_back(
-        { x, y,
-          d, ld,
-          new QGraphicsPixmapItem( (this->adversary) ? this->img_snakeTail_ : this->img_snakeTail ) }
+    this->emplace_back(
+        x, y,
+        d, ld,
+        new QGraphicsPixmapItem( (this->adversary) ? this->img_snakeTail_ : this->img_snakeTail )
     );
     this->update( nullptr, true );
     this->back().update( x, y, d );
@@ -366,7 +394,7 @@ void Snake::update( QGraphicsScene* field_scene, const bool dry , const bool is_
                 throw("Unexpected direction: "+std::to_string(bp->direction));
         }
         prev_body_d = bp->direction;
-        i++;
+        ++i;
     }
 }
 
@@ -399,7 +427,7 @@ void Snake::move( const Snake& adv_snake, const unsigned food_x, const unsigned 
 
     this->updateFieldMap( adv_snake, food_x, food_y );
 
-    for ( size_t i{0}; i<4ul; i++ ) {
+    for ( size_t i{0}; i<4ul; ++i ) {
         this->collectData( dataset.at(i), classes.at(i), adv_snake, food_x, food_y );
     }
 
@@ -408,17 +436,17 @@ void Snake::move( const Snake& adv_snake, const unsigned food_x, const unsigned 
 }
 
 
-Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const
+Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data, const std::array<float,7>& weights, const std::array<Direction,4>& classes ) const noexcept
 {
     float results[]{ 1.f, 1.f, 1.f, 1.f };
     bool keep_current{ false };
-    Direction class_label;
+    Direction class_label{ this->head_direction };
 
     // process data
-    for ( size_t i{0}; i<4ul; i++ ) {
+    for ( size_t i{0}; i<4ul; ++i ) {
         const std::array<float, 7>& d = data.at(i);
         float& r = results[i];
-        for ( size_t j{0}; j<7ul; j++ ) {
+        for ( size_t j{0}; j<7ul; ++j ) {
             r += d.at(j) * weights.at(j);
         }
     }
@@ -434,22 +462,20 @@ Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data
         }
     }
     if ( max != min ) {
-        for ( size_t i{0}; i<4ul; i++ ) {
+        for ( size_t i{0}; i<4ul; ++i ) {
             results[i] = (results[i]-min) / (max-min);
         }
     } else {
         keep_current |= true;
-        for ( size_t i{0}; i<4ul; i++ ) {
+        for ( size_t i{0}; i<4ul; ++i ) {
             results[i] = 0.f;
         }
     }
 
     // choose the best result
-    if ( keep_current ) {
-        class_label = this->head_direction;
-    } else {
+    if ( ! keep_current ) {
         max = 0.f;
-        for ( size_t i{0}; i<4ul; i++ ) {
+        for ( size_t i{0}; i<4ul; ++i ) {
             if ( results[i] > max ) {
                 class_label = classes.at(i);
                 max = results[i];
@@ -728,11 +754,11 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
 }
 
 
-void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y )
+void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y ) noexcept
 {
     // reset to default state
-    for ( size_t x{0}; x<16ul; x++ ) {
-        for ( size_t y{0}; y<16ul; y++ ) {
+    for ( size_t x{0}; x<16ul; ++x ) {
+        for ( size_t y{0}; y<16ul; ++y ) {
             Tile& t = this->field_map.at(x).at(y);
             t.entity = Entity::N;
             t.s_index = 0u;
@@ -746,7 +772,7 @@ void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, cons
         Tile& t = this->field_map.at(bp->x).at(bp->y);
         t.entity = Entity::S;
         t.s_index = i;
-        i--;
+        --i;
     }
     // update adversary
     i = static_cast<unsigned>( adv_snake.size() );
@@ -754,12 +780,12 @@ void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, cons
         Tile& t = this->field_map.at(bp.x).at(bp.y);
         t.entity = Entity::A;
         t.s_index = i;
-        i--;
+        --i;
     }
 }
 
 
-bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
+bool Snake::inTileAdv(const unsigned x, const unsigned y ) const noexcept
 {
     if ( x < 16 && y < 16 ) {
         switch ( this->field_map.at(x).at(y).entity ) {
@@ -772,7 +798,7 @@ bool Snake::inTileAdv(const unsigned x, const unsigned y ) const
     return false;
 }
 
-bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned steps ) const
+bool Snake::inTileMinusSteps(const unsigned x, const unsigned y, const unsigned steps ) const noexcept
 {
     switch ( this->field_map.at(x).at(y).entity ) {
         case Entity::S:
@@ -836,7 +862,7 @@ std::array<unsigned,8> Snake::checkAround( const Direction& direction, const uns
     }
 
     unsigned x_, y_;
-    for ( size_t i{0}; i<8ul; i++ ) {
+    for ( size_t i{0}; i<8ul; ++i ) {
         x_  = x;
         x_ += x_pattern.at(i);
         y_  = y;
@@ -1104,7 +1130,7 @@ unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y, cons
                     result = true;
                     break;
                 } else {
-                    steps ++;
+                    ++ steps;
                     if ( steps >= max_steps ) {
                         break;
                     }
@@ -1121,7 +1147,7 @@ unsigned Snake::isDeadHole( const unsigned start_x, const unsigned start_y, cons
             if ( !result ) {
                 steps = 0;
             }
-            i ++;
+            ++ i;
             if ( i == 2u ) {
                 break;
             }

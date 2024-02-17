@@ -12,6 +12,6 @@ RUN bash -c "scripts/DOCKER_private.sh"
 WORKDIR /
 RUN rm -rf /tmp/logdoctor
 
-LABEL logdoctor.version=3.00
+LABEL logdoctor.version=4.00
 
 ENTRYPOINT /usr/bin/logdoctor

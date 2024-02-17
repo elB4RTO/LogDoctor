@@ -1,24 +1,28 @@
 
 #include "rtf.h"
 
-#include "utilities/strings.h"
-#include "modules/craplog/modules/lib.h"
+#include "globals/global_configs.h"
+
 #include "modules/tb.h"
+
+#include "modules/craplog/modules/lib.h"
+
+#include "utilities/strings.h"
 
 #include <QString>
 
 
-void RichText::enrichLogs( QString& rich_content, const std::string& content, const LogsFormat& logs_format, TextBrowser& TB )
+void RichText::enrichLogs( QString& rich_content, const std::string& content, const LogsFormat& logs_format, const TextBrowser& TB )
 {
     const std::unordered_map<std::string, QString>& colors{ TB.getColorScheme() };
-    const int color_scheme{ TB.getColorSchemeID() };
+    const bool using_colors_scheme{ TB.getColorSchemeID() != ColorsScheme::None };
     const bool wide_lines{ TB.getWideLinesUsage() };
     // enrich the text
     rich_content.clear();
     rich_content.reserve( static_cast<int>(content.size()*2ul) );
     rich_content += "<!DOCTYPE html><html><head></head><body";
-    if ( color_scheme > 0 ) {
-        rich_content += QString(" style=\"background:%1; color:%2\"")
+    if ( using_colors_scheme ) {
+        rich_content += QStringLiteral(R"( style="background:%1; color:%2")")
             .arg( colors.at("background"), colors.at("text") );
     }
     rich_content += ">";
@@ -35,10 +39,10 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
     StringOps::splitrip( lines, content );
     size_t lines_left{ lines.size() };
     for ( const std::string& line : lines ) {
-        lines_left --;
+        -- lines_left;
         // check if the line is commented, usually from IIS logs
         if ( StringOps::startsWith( line, '#' ) && !StringOps::startsWith( logs_format.initial, '#' ) ) {
-            rich_line = QString("<p>%1</p>").arg( QString::fromStdString( line ) );
+            rich_line = QStringLiteral("<p>%1</p>").arg( QString::fromStdString( line ) );
             if ( wide_lines ) {
                 rich_line += "<br/>";
             }
@@ -74,7 +78,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
             }
             if ( stop == std::string::npos ) {
                 // separator not found, skip to the next one
-                i++;
+                ++i;
                 stop = start;
                 continue;
             }
@@ -112,7 +116,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
                                 break;
                             }
                             aux_start = aux_stop + 1;
-                            c++;
+                            ++c;
                         }
                     }
 
@@ -155,8 +159,8 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
             }
             rich_line += "<b>";
             class_name.clear();
-            if ( color_scheme > 0 ) {
-                class_name += "<span style=\"color:";
+            if ( using_colors_scheme ) {
+                class_name += R"(<span style="color:)";
                 if ( fld == "client" ) {
                     class_name += colors.at("ip");
                 } else if ( StringOps::startsWith( fld, "date_time" ) ) {
@@ -172,12 +176,12 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
                 } else {
                     class_name += colors.at("x");
                 }
-                class_name += "\">";
+                class_name += R"(">)";
             }
             // add the class name as span
             rich_line += class_name;
             rich_line += QString::fromStdString( fld_str );
-            if ( color_scheme > 0 ) {
+            if ( using_colors_scheme ) {
                 rich_line += "</span>";
             }
             rich_line += "</b>";
@@ -186,7 +190,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
                 stop = aux_stop;
             } else {
                 stop += sep_size;
-                i++;
+                ++i;
             }
             if ( stop > line_size ) {
                 // this was the final separator
@@ -215,8 +219,7 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
 
 void RichText::richLogsDefault( QString& rich_str )
 {
-    rich_str.clear();
-    rich_str += QString("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }</style></head><body style=\" font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;\"><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt; color:#6d6d6d;\">%1</span></p><p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt; color:#6d6d6d;\">%2</span></p></body></html>")
+    rich_str = QStringLiteral(R"(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }</style></head><body style=" font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;"><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt; color:#6d6d6d;">%1</span></p><p align="center" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt; color:#6d6d6d;">%2</span></p></body></html>)")
         .arg( RichText::tr("Select a file from the list"),
               RichText::tr("to inspect its content") );
 }
@@ -224,7 +227,6 @@ void RichText::richLogsDefault( QString& rich_str )
 
 void RichText::richLogsFailure( QString &rich_str )
 {
-    rich_str.clear();
-    rich_str += QString("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }</style></head><body style=\" font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;\"><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p><p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt; color:#aa0000;\">%1</span></p></body></html>")
+    rich_str = QStringLiteral(R"(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">p, li { white-space: pre-wrap; }hr { height: 1px; border-width: 0; }</style></head><body style=" font-family:'Noto Sans'; font-size:16pt; font-weight:400; font-style:normal;"><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;"><br /></p><p align="center" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt; color:#aa0000;">%1</span></p></body></html>)")
         .arg( RichText::tr("Failed to read") );
 }

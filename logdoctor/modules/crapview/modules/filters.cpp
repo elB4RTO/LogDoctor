@@ -3,160 +3,122 @@
 
 #include "utilities/strings.h"
 
-#include <QStringList>
+#include <QRegularExpression>
 
 
 namespace FilterOps
 {
 
-std::optional<QString> parseNull( const QString& filter_str, const bool to_clean )
+std::optional<QString> parseNull( const QString& filter_str, const bool to_clean ) noexcept
 {
     std::optional<QString> result;
     const QString aux{ ( to_clean )
                        ? filter_str.simplified().toUpper()
                        : filter_str };
     if ( !aux.isEmpty() ) { // here an empty string is considered invalid
-        if ( aux == "NULL" ) {
-            result.emplace( "NULL" );
-        } else if ( aux == "NOT NULL" || aux == "! NULL" || aux == "!NULL" ) {
-            result.emplace( "NOT NULL" );
+        if ( aux == "NULL" || aux == "NOT NULL" ) {
+            result.emplace( QStringLiteral(" IS %1").arg( aux ) );
+        } else if ( aux == "! NULL" || aux == "!NULL" ) {
+            result.emplace( QStringLiteral(" IS NOT NULL") );
         }
     }
     return result;
 }
 
 
-std::optional<QString> parseBooleanFilter( const QString& filter_str )
+std::optional<QString> parseNumericFilter( const QString& filter_str ) noexcept
 {
     using opt_t = std::optional<QString>;
-    opt_t result;
-    if ( filter_str.isEmpty() ) {
-        // an empty filter is not invalid
-        result.emplace("");
-        return result;
-    }
-    QString str{ filter_str.simplified().toUpper() };
-    // check if the filter is NULL or NOT NULL
-    if ( opt_t aux=parseNull( str, false ); aux.has_value() ) {
-        return aux;
-    }
-    // normalize the string
-    if ( str.startsWith("==") ) {
-        str.remove(0, 2);
-    } else if ( str.startsWith("=") ) {
-        str.remove(0, 1);
-    } else if ( str.startsWith("!=") ) {
-        str.replace("!=", "NOT ");
-    } else if ( str.startsWith("!") ) {
-        str.replace("!", "NOT ");
-    }
-    str = str.replace("0", "FALSE").replace("1", "TRUE").simplified();
-    // apply if valid
-    if ( str == "TRUE" || str == "NOT FALSE" ) {
-        result.emplace("= 1");
-    } else if ( str == "FALSE" || str == "NOT TRUE" ) {
-        result.emplace("= 0");
-    }
-    return result;
-}
 
-
-std::optional<QString> parseNumericFilter( const QString& filter_str )
-{
-    using opt_t = std::optional<QString>;
-    opt_t result;
-    if ( filter_str.isEmpty() ) {
-        // an empty filter is not invalid
-        result.emplace("");
-        return result;
-    }
-    // check if the filter is NULL or NOT NULL
-    if ( opt_t aux=parseNull( filter_str ); aux.has_value() ) {
-        return aux;
-    }
-    // normalize the comparison operator
-    QString aux{ filter_str.simplified() };
-    if ( aux.startsWith("==") ) {
-        aux.replace("==", "= ");
-    } else if ( aux.startsWith("=") ) {
-        aux.replace("=", "= ");
-    } else if ( aux.startsWith("!=") ) {
-        aux.replace("!=", "!= ");
-    } else if ( aux.startsWith("!") ) {
-        aux.replace("!", "!= ");
-    } else if ( aux.startsWith("<=") ) {
-        aux.replace("<=", "<= ");
-    } else if ( aux.startsWith("<") ) {
-        aux.replace("<", "< ");
-    } else if ( aux.startsWith(">=") ) {
-        aux.replace(">=", ">= ");
-    } else if ( aux.startsWith(">") ) {
-        aux.replace(">", "> ");
-    } else if ( aux.startsWith("eq ") ) {
-        aux.replace("eq ", "= ");
-    } else if ( aux.startsWith("ne ") ) {
-        aux.replace("ne ", "!= ");
-    } else if ( aux.startsWith("lt ") ) {
-        aux.replace("lt ", "< ");
-    } else if ( aux.startsWith("le ") ) {
-        aux.replace("le ", "<= ");
-    } else if ( aux.startsWith("gt ") ) {
-        aux.replace("gt ", "> ");
-    } else if ( aux.startsWith("ge ") ) {
-        aux.replace("ge ", ">= ");
-    }
-    const std::string str{ aux.simplified().toStdString() };
-    if ( StringOps::isNumeric( str ) ) {
-        // string is numeric, no need to check further
-        result.emplace( QString("= %1").arg(str.c_str()) );
-        return result;
-    }
     // a valid string is only composed by a comparison operator followed by a number
-    size_t i{ 0ul };
-    const size_t max{ str.size() };
-    if ( char c=str.at(i); c == '=' || c == '!' || c == '<' || c == '>' ) {
-        i ++;
-        if ( i >= max ) {
-            return result;
-        }
-        if ( str.at(i) == '=' ) {
-            i ++;
-            if ( i >= max ) {
-                return result;
-            }
-        }
-        if ( str.at(i) == ' ' ) {
-            i ++;
-            if ( i >= max ) {
-                return result;
-            }
-        }
-        if ( !StringOps::isNumeric( str.substr(i) ) ) {
-            return result;
-        }
-        result.emplace( QString::fromStdString( str ) );
+    static const QRegularExpression expected("^(=|==|!=|<|<=|>=|>)[0-9]+$");
+    // remove every space from the filter
+    static const QRegularExpression spaces(R"(\s*)");
+
+    if ( filter_str.isEmpty() ) {
+        // an empty filter is not invalid
+        return {filter_str};
+    }
+
+    // check if the filter is NULL or NOT NULL
+    if ( const opt_t aux{ parseNull( filter_str ) }; aux.has_value() ) {
+        return aux;
+    }
+
+    if ( expected.matchView( filter_str ).hasMatch() ) {
+        return {filter_str};
+    }
+
+    opt_t result;
+    // normalize the comparison operator
+    QString aux{ filter_str.toUpper().remove(spaces) };
+    if ( aux.isEmpty() ) {
+        return {aux};
+
+    } else if ( StringOps::isNumeric( aux ) ) {
+        aux.prepend( QLatin1Char('=') );
+
+    } else if ( aux.at(0) == QLatin1Char('!') && aux.at(1) != QLatin1Char('=') ) {
+        aux.insert(1, QLatin1Char('='));
+
+    } else if ( aux.startsWith(QLatin1String("EQ")) ) {
+        aux.replace(0, 2, QLatin1Char('='));
+
+    } else if ( aux.startsWith(QLatin1String("NE")) ) {
+        aux.replace(0, 2, QLatin1Char('=')).prepend(QLatin1Char('!'));
+
+    } else if ( aux.startsWith(QLatin1String("LT")) ) {
+        aux.replace(0, 2, QLatin1Char('<'));
+
+    } else if ( aux.startsWith(QLatin1String("LE")) ) {
+        aux.replace(0, 2, QLatin1Char('=')).prepend(QLatin1Char('<'));
+
+    } else if ( aux.startsWith(QLatin1String("GT")) ) {
+        aux.replace(0, 2, QLatin1Char('>'));
+
+    } else if ( aux.startsWith(QLatin1String("GE")) ) {
+        aux.replace(0, 2, QLatin1Char('=')).prepend(QLatin1Char('>'));
+    }
+
+    // final check
+    if ( expected.matchView( aux ).hasMatch() ) {
+        result.emplace( aux );
     }
     return result;
 }
 
 
-std::optional<QString> parseTextualFilter( const QString& filter_str )
+std::optional<QString> parseTextualFilter( const QString& filter_str ) noexcept
 {
     using opt_t =std::optional<QString>;
-    opt_t result;
+
     if ( filter_str.isEmpty() ) {
         // an empty filter is not invalid
-        result.emplace("");
-        return result;
+        return {filter_str};
     }
+
     // check if the filter is NULL or NOT NULL
-    if ( opt_t aux=parseNull( filter_str ); aux.has_value() ) {
+    if ( const opt_t aux{ parseNull( filter_str ) }; aux.has_value() ) {
         return aux;
     }
-    if ( filter_str == "*" ) {
-        result.emplace("NOT NULL");
+
+    opt_t result;
+    QString aux{ filter_str.trimmed() };
+    if ( aux.isEmpty() ) {
+        return {aux};
+
+    } else if ( aux == "*" ) {
+        result.emplace(QStringLiteral(" IS NOT NULL"));
+
     } else {
-        result.emplace( filter_str.trimmed() );
+        if ( aux.startsWith(QLatin1Char('!')) ) {
+            result.emplace( QStringLiteral(" NOT LIKE '%1'").arg( aux.removeFirst().trimmed().replace(QLatin1Char('\''),QLatin1String("''")) ) );
+        } else {
+            if ( aux.startsWith(QLatin1Char('\\')) ) {
+                aux.removeFirst();
+            }
+            result.emplace( QStringLiteral(" LIKE '%1'").arg( aux.replace(QLatin1Char('\''),QLatin1String("''")) ) );
+        }
     }
     return result;
 }

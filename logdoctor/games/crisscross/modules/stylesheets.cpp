@@ -6,6 +6,7 @@
 #include "modules/exceptions.h"
 
 #include <QString>
+#include <QtCore/QStringBuilder>
 
 #include <unordered_map>
 
@@ -23,7 +24,7 @@ enum StyleId : uint32_t {
 
 using StyleMap = std::unordered_map<StyleId, QString>;
 
-const StyleMap makeStyleMap()
+StyleMap makeStyleMap()
 {
     switch ( GlobalConfigs::window_theme ) {
         case WindowTheme::Light:
@@ -39,7 +40,6 @@ const StyleMap makeStyleMap()
                 {LINES_BORDER,
                     "rgb( 230, 230, 230 )"}
             };
-            break;
         case WindowTheme::Dark:
             return {
                 {WINDOW_BASE,
@@ -53,10 +53,8 @@ const StyleMap makeStyleMap()
                 {LINES_BORDER,
                     "rgb( 27, 30, 33 )"}
             };
-            break;
         default:
-            throw GenericException( "Unexpected WindowTheme: "+std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)), true );
-            break;
+            throw DoNotCatchException( "Unexpected WindowTheme", std::to_string(static_cast<themes_t>(GlobalConfigs::window_theme)) );
     }
 }
 
@@ -66,67 +64,68 @@ const StyleMap makeStyleMap()
 namespace StyleSec::Games::CrissCross
 {
 
-void getStyleSheet( QString& stylesheet )
+QString getStyleSheet()
 {
-    if ( GlobalConfigs::window_theme != WindowTheme::Native ) {
-        const StyleMap style{ makeStyleMap() };
-        stylesheet =
-            "QWidget#CrissCross {"
-            "   background-color: "+style.at(WINDOW_BASE)+";"
-            "}"
-            "QPushButton#button_NE,"
-            "QPushButton#button_N,"
-            "QPushButton#button_NW,"
-            "QPushButton#button_E,"
-            "QPushButton#button_C,"
-            "QPushButton#button_W,"
-            "QPushButton#button_SE,"
-            "QPushButton#button_S,"
-            "QPushButton#button_SW {"
-            "   border-radius: 4px;"
-            "   border: 1px solid "+style.at(WINDOW_BASE)+";"
-            "   background-color: "+style.at(WINDOW_BASE)+";"
-            "}"
-            "QPushButton#button_NE:hover,"
-            "QPushButton#button_N:hover,"
-            "QPushButton#button_NW:hover,"
-            "QPushButton#button_E:hover,"
-            "QPushButton#button_C:hover,"
-            "QPushButton#button_W:hover,"
-            "QPushButton#button_SE:hover,"
-            "QPushButton#button_S:hover,"
-            "QPushButton#button_SW:hover {"
-            "   border-color: "+style.at(TILES_BORDER_HOVER)+";"
-            "   background-color: "+style.at(TILES_BASE_HOVER)+";"
-            "}"
-            "QPushButton#button_NE::flat,"
-            "QPushButton#button_N::flat,"
-            "QPushButton#button_NW::flat,"
-            "QPushButton#button_E::flat,"
-            "QPushButton#button_C::flat,"
-            "QPushButton#button_W::flat,"
-            "QPushButton#button_SE::flat,"
-            "QPushButton#button_S::flat,"
-            "QPushButton#button_SW::flat {"
-            "   border-color: "+style.at(WINDOW_BASE)+";"
-            "   background-color: "+style.at(WINDOW_BASE)+";"
-            "}"
-            "QFrame#line_1,"
-            "QFrame#line_2,"
-            "QFrame#line_3,"
-            "QFrame#line_4,"
-            "QFrame#line_5,"
-            "QFrame#line_6,"
-            "QFrame#line_7,"
-            "QFrame#line_8,"
-            "QFrame#line_9,"
-            "QFrame#line_10,"
-            "QFrame#line_11,"
-            "QFrame#line_12 {"
-            "   border: 1px solid "+style.at(LINES_BORDER)+";"
-            "   background-color: "+style.at(LINES_BASE)+";"
-            "}";
+    if ( GlobalConfigs::window_theme == WindowTheme::Native ) {
+        return "";
     }
+    const StyleMap style{ makeStyleMap() };
+    return
+        "QWidget#CrissCross {"
+        "   background-color: "% style.at(WINDOW_BASE) %";"
+        "}"
+        "QPushButton#button_NE,"
+        "QPushButton#button_N,"
+        "QPushButton#button_NW,"
+        "QPushButton#button_E,"
+        "QPushButton#button_C,"
+        "QPushButton#button_W,"
+        "QPushButton#button_SE,"
+        "QPushButton#button_S,"
+        "QPushButton#button_SW {"
+        "   border-radius: 4px;"
+        "   border: 1px solid "% style.at(WINDOW_BASE) %";"
+        "   background-color: "% style.at(WINDOW_BASE) %";"
+        "}"
+        "QPushButton#button_NE:hover,"
+        "QPushButton#button_N:hover,"
+        "QPushButton#button_NW:hover,"
+        "QPushButton#button_E:hover,"
+        "QPushButton#button_C:hover,"
+        "QPushButton#button_W:hover,"
+        "QPushButton#button_SE:hover,"
+        "QPushButton#button_S:hover,"
+        "QPushButton#button_SW:hover {"
+        "   border-color: "% style.at(TILES_BORDER_HOVER) %";"
+        "   background-color: "% style.at(TILES_BASE_HOVER) %";"
+        "}"
+        "QPushButton#button_NE::flat,"
+        "QPushButton#button_N::flat,"
+        "QPushButton#button_NW::flat,"
+        "QPushButton#button_E::flat,"
+        "QPushButton#button_C::flat,"
+        "QPushButton#button_W::flat,"
+        "QPushButton#button_SE::flat,"
+        "QPushButton#button_S::flat,"
+        "QPushButton#button_SW::flat {"
+        "   border-color: "% style.at(WINDOW_BASE) %";"
+        "   background-color: "% style.at(WINDOW_BASE) %";"
+        "}"
+        "QFrame#line_1,"
+        "QFrame#line_2,"
+        "QFrame#line_3,"
+        "QFrame#line_4,"
+        "QFrame#line_5,"
+        "QFrame#line_6,"
+        "QFrame#line_7,"
+        "QFrame#line_8,"
+        "QFrame#line_9,"
+        "QFrame#line_10,"
+        "QFrame#line_11,"
+        "QFrame#line_12 {"
+        "   border: 1px solid "% style.at(LINES_BORDER) %";"
+        "   background-color: "% style.at(LINES_BASE) %";"
+        "}";
 }
 
 } // namespace StyleSec::Games::CrissCross

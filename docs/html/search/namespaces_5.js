@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['logops_0',['LogOps',['../namespaceLogOps.html',1,'']]]
+  ['globalconfigs_0',['GlobalConfigs',['../namespaceGlobalConfigs.html',1,'']]],
+  ['gzutils_1',['GZutils',['../namespaceGZutils.html',1,'']]]
 ];

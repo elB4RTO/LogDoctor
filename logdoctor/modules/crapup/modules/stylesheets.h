@@ -8,7 +8,11 @@ class QString;
 namespace StyleSec::Crapup
 {
 
-void getStyleSheet( QString& stylesheet );
+//! Returns the proper style sheet
+/*!
+    \throw DoNotCatchException
+*/
+QString getStyleSheet();
 
 } // namespacce StyleSec::Crapup
 

@@ -8,6 +8,9 @@ int main()
 {
     std::cout << "STARTING TEST SUITE" << std::endl;
 
+    std::cout << "\nTESTING: operators" << std::endl;
+    Testing::testOperators();
+
     std::cout << "\nTESTING: utilities" << std::endl;
     Testing::testUtilities();
 

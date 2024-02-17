@@ -17,9 +17,7 @@ CrissCross::CrissCross( QWidget* parent )
 {
     this->ui->setupUi(this);
 
-    QString stylesheet;
-    StyleSec::Games::CrissCross::getStyleSheet( stylesheet );
-    this->setStyleSheet( stylesheet );
+    this->setStyleSheet( StyleSec::Games::CrissCross::getStyleSheet() );
 
     // verify that one player is human and the other is not
     if ( !(p1_human^p2_human)  ) {
@@ -181,7 +179,7 @@ void CrissCross::nextTurn()
 }
 
 
-bool CrissCross::checkVictory()
+bool CrissCross::checkVictory() noexcept
 {
     bool result{ false };
     unsigned streak;
@@ -189,7 +187,7 @@ bool CrissCross::checkVictory()
         streak = 0;
         for ( const auto& index : sequence ) {
             if ( this->board[ index ] == this->p_turn ) {
-                streak ++;
+                ++streak;
                 this->victory_sequence.push_back( index );
             } else {
                 break;
@@ -206,11 +204,11 @@ bool CrissCross::checkVictory()
     return result;
 }
 
-void CrissCross::victory()
+void CrissCross::victory() noexcept
 {
     // disable all buttons except the victory sequence ones
     bool disable{ true };
-    for ( unsigned i=0; i<9; i++ ) {
+    for ( unsigned i=0; i<9; ++i ) {
         disable |= true;
         for ( const auto& j : this->victory_sequence ) {
             if ( i == j ) {
@@ -246,13 +244,13 @@ void CrissCross::victory()
 }
 
 
-bool CrissCross::gameDraw() const
+bool CrissCross::gameDraw() const noexcept
 {
     bool result{ false };
     unsigned empty_tiles{ 9 };
     for ( const auto& tile : this->board ) {
         if ( tile > 0 ) {
-            empty_tiles --;
+            -- empty_tiles;
         }
     }
     if ( empty_tiles == 0 ) {
@@ -262,7 +260,7 @@ bool CrissCross::gameDraw() const
     return result;
 }
 
-void CrissCross::draw()
+void CrissCross::draw() noexcept
 {
     // disable all buttons
     for ( const auto& button : this->board_buttons ) {
@@ -281,16 +279,16 @@ void CrissCross::draw()
 
 ////////////
 //// AI ////
-void CrissCross::AI_playTurn()
+void CrissCross::AI_playTurn() noexcept
 {
     this->AI_updateWeights();
     emit this->board_buttons[ this->AI_makeChoice() ]->clicked();
 }
 
-void CrissCross::AI_updateWeights()
+void CrissCross::AI_updateWeights() noexcept
 {
     // reset the weights
-    for ( size_t i{0ul}; i<9ul; i++ ) {
+    for ( size_t i{0ul}; i<9ul; ++i ) {
         this->board_weights[ i ] = 0;
     }
     // calculate the new weights
@@ -303,9 +301,9 @@ void CrissCross::AI_updateWeights()
         // check the tiles in the sequence
         for ( const auto index : sequence ) {
             if ( this->board[ index ] == this->p_turn ) {
-                win_streak ++;
+                ++ win_streak;
             } else if ( this->board[ index ] > 0 ) {
-                lose_streak ++;
+                ++ lose_streak;
             } else {
                 empty_tiles.emplace_back( std::move(index) );
             }
@@ -322,7 +320,7 @@ void CrissCross::AI_updateWeights()
     }
 }
 
-unsigned CrissCross::AI_makeChoice() const
+unsigned CrissCross::AI_makeChoice() const noexcept
 {
     // get a list of the heaviest tiles
     std::vector<unsigned> moves;
@@ -341,7 +339,7 @@ unsigned CrissCross::AI_makeChoice() const
             // lighter weight
             ;
         }*/
-        index ++;
+        ++ index;
     }
     // decide the movement (or better, randomly pick one)
     unsigned next_move;

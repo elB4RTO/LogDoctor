@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['globalconfigs_0',['GlobalConfigs',['../namespaceGlobalConfigs.html',1,'']]],
-  ['gzutils_1',['GZutils',['../namespaceGZutils.html',1,'']]]
+  ['databasesconnections_0',['DatabasesConnections',['../namespaceDatabasesConnections.html',1,'']]],
+  ['databasesnames_1',['DatabasesNames',['../namespaceDatabasesNames.html',1,'']]],
+  ['datetimeops_2',['DateTimeOps',['../namespaceDateTimeOps.html',1,'']]]
 ];

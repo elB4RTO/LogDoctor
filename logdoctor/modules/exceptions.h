@@ -4,36 +4,45 @@
 
 #include <QString>
 
-#include <exception>
+
+//! VoidException
+/*!
+    Base class for some internal exceptions.
+    Used when a message has already been shown,
+    or there is no need to show one.
+*/
+class VoidException {};
+
+
+//! DoNotCatchException
+/*!
+    Thrown when something really unexptional happens.
+    It's not supposed to be catched.
+*/
+struct DoNotCatchException final
+{
+    explicit DoNotCatchException( const char* header, const std::string& body );
+};
+
+
+//! LogDoctorException
+/*!
+    Base class for internal exceptions
+*/
+class LogDoctorException {};
 
 
 //! GenericException
 /*!
     Generic exception for general purposes
 */
-class GenericException : public std::exception {
+class GenericException final : public LogDoctorException {
 public:
-    explicit GenericException( const std::string& msg, const bool to_sys=false );
+    explicit GenericException( const std::string& msg );
     const QString& what();
 
 private:
     QString msg;
-    using std::exception::what;
-};
-
-
-//! WebServerException
-/*!
-    Exception related to a Web Server
-*/
-class WebServerException : public std::exception {
-public:
-    explicit WebServerException( const std::string& msg );
-    /*const QString& what();
-
-private:
-    QString msg;
-    using std::exception::what;*/
 };
 
 
@@ -41,14 +50,13 @@ private:
 /*!
     Exception related to a Logs Format
 */
-class LogFormatException : public std::exception {
+class LogFormatException final : public LogDoctorException {
 public:
     explicit LogFormatException( const std::string& msg );
     const QString& what();
 
 private:
     QString msg;
-    using std::exception::what;
 };
 
 
@@ -56,14 +64,13 @@ private:
 /*!
     Exception related to the logs parser
 */
-class LogParserException : public std::exception {
+class LogParserException final : public LogDoctorException {
 public:
     explicit LogParserException( const std::string& txt, const std::string& val );
     const QString& what();
 
 private:
     QString msg;
-    using std::exception::what;
 };
 
 
@@ -71,14 +78,9 @@ private:
 /*!
     Exception related to a date/time
 */
-class DateTimeException : public std::exception {
+class DateTimeException final : public LogDoctorException {
 public:
-    explicit DateTimeException( const std::string& msg );
-    /*const QString& what();
-
-private:
-    QString msg;
-    using std::exception::what;*/
+    explicit DateTimeException( const char* header, const std::string& body );
 };
 
 
@@ -86,14 +88,23 @@ private:
 /*!
     Exception related to a blacklist/warnlist
 */
-class BWlistException : public std::exception {
+class BWlistException final : public LogDoctorException {
 public:
     explicit BWlistException( const std::string& msg );
-    /*const QString& what();
+};
+
+
+//! DatabaseException
+/*!
+    Exception related to the database
+*/
+class DatabaseException final : public LogDoctorException {
+public:
+    explicit DatabaseException( QString&& msg );
+    const QString& what() const noexcept;
 
 private:
     QString msg;
-    using std::exception::what;*/
 };
 
 

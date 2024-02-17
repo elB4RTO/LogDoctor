@@ -13,51 +13,49 @@ Food::Food( const bool can_move )
     , y{ 0 }
 {
 }
-Food::Food( const Food& other )
-    : image{ new QGraphicsPixmapItem( (other.movable) ? this->img_rat : this->img_egg ) }
+Food::Food( Food&& other ) noexcept
+    : image{ other.image }
     , movable{ other.movable }
     , x{ other.x }
     , y{ other.y }
 {
+    other.image = nullptr;
 }
-const Food& Food::operator=( const Food& other )
+Food& Food::operator=( Food&& other ) noexcept
 {
-    if ( this == &other ) return other;
+    if ( this == &other ) return *this;
     this->x = other.x;
     this->y = other.y;
     this->movable = other.movable;
-    this->image = new QGraphicsPixmapItem( (this->movable) ? this->img_rat : this->img_egg );
+    this->image = other.image;
+    other.image = nullptr;
     return *this;
 }
 
 
-unsigned Food::X() const
+unsigned Food::X() const noexcept
 {
     return this->x;
 }
-unsigned Food::Y() const
+unsigned Food::Y() const noexcept
 {
     return this->y;
 }
 
 
-QGraphicsPixmapItem* Food::getImageItem() const
+QGraphicsPixmapItem* Food::getImageItem() const noexcept
 {
     return this->image;
 }
 
 
-bool Food::inTile(  const unsigned x, const unsigned y  ) const
+bool Food::inTile( const unsigned x, const unsigned y  ) const noexcept
 {
-    if ( this->x == x && this->y == y ) {
-        return true;
-    } else {
-        return false;
-    }
+    return this->x == x && this->y == y;
 }
 
 
-void Food::update( const unsigned new_x, const unsigned new_y )
+void Food::update( const unsigned new_x, const unsigned new_y ) noexcept
 {
     this->x = new_x;
     this->y = new_y;
@@ -65,7 +63,7 @@ void Food::update( const unsigned new_x, const unsigned new_y )
 }
 
 
-void Food::spawn( const Snake& snake, const Snake& snake_ )
+void Food::spawn( const Snake& snake, const Snake& snake_ ) noexcept
 {
     // pick a new random position
     unsigned new_x, new_y;

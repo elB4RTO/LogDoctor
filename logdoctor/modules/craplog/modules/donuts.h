@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPLOG__DONUTS_H
-#define LOGDOCTOR__CRAPLOG__DONUTS_H
+#ifndef LOGDOCTOR__CRAPLOG__MODULES__DONUTS_H
+#define LOGDOCTOR__CRAPLOG__MODULES__DONUTS_H
 
 
 #include <QGraphicsView>
@@ -13,7 +13,7 @@
 /*!
     Builds the donut chart to be displayed
 */
-class DonutBreakdown : public QChart
+class DonutBreakdown final : public QChart
 {
 public:
 
@@ -47,7 +47,7 @@ private:
 /*!
     A slice to be added at the donut
 */
-class MainSlice : public QPieSlice
+class MainSlice final : public QPieSlice
 {
     Q_OBJECT
 
@@ -84,4 +84,4 @@ private:
 };
 
 
-#endif // LOGDOCTOR__CRAPLOG__DONUTS_H
+#endif // LOGDOCTOR__CRAPLOG__MODULES__DONUTS_H

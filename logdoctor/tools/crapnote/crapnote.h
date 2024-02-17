@@ -5,6 +5,9 @@
 #include <QWidget>
 
 
+enum class ColorsScheme : unsigned char;
+
+
 namespace Ui {
     class Crapnote;
 }
@@ -14,18 +17,23 @@ namespace Ui {
 /*!
     A simple block-note like widget
 */
-class Crapnote : public QWidget
+class Crapnote final : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Crapnote( QWidget* parent=nullptr );
+
+    explicit Crapnote( const ColorsScheme colors_scheme, QFont font, QWidget* parent=nullptr );
+    Q_DISABLE_COPY_MOVE(Crapnote)
 
     //! Sets the given font
-    void setTextFont( const QFont& font );
+    void setTextFont( QFont font ) noexcept;
 
     //! Sets the given color-scheme
-    void setColorScheme( const int& color_scheme_id );
+    /*!
+        \throw DoNotCatchException
+    */
+    void setColorScheme( const ColorsScheme colors_scheme );
 
 
 private slots:

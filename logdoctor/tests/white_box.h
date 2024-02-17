@@ -9,6 +9,9 @@
 namespace Testing
 {
 
+//! A Test suit for the defined operators
+void testOperators();
+
 //! A Test suit for the utilities
 void testUtilities();
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 3.00 LANGUAGES CXX)
+project(LogDoctor VERSION 4.00 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -46,13 +46,21 @@ set(PROJECT_SOURCES
     mainwindow.h
     mainwindow.cpp
 
+    main_lib.h
+
+    globals/db_names.h
+    globals/db_names.cpp
     globals/global_configs.h
     globals/global_configs.cpp
 
-    defines/web_servers.h
+    customs/logfile_treewidgetitem.h
+    customs/models/logfields_listmodel.h
+    customs/models/logfields_listmodel.cpp
 
-    customs/treewidgetitems.h
-
+    utilities/arrays.h
+    utilities/bwlists.h
+    utilities/bwutils.cpp
+    utilities/chars.h
     utilities/checks.h
     utilities/checks.cpp
     utilities/colors.h
@@ -74,12 +82,14 @@ set(PROJECT_SOURCES
     utilities/vectors.h
 
     modules/shared.h
-    modules/shared.cpp
 
     modules/exceptions.h
     modules/exceptions.cpp
     modules/tb.h
     modules/tb.cpp
+
+    modules/database/database.h
+    modules/database/database.cpp
 
     modules/dialogs.h
     modules/dialogs.cpp
@@ -93,6 +103,23 @@ set(PROJECT_SOURCES
     modules/dialogs/ida_dialog.h
     modules/dialogs/ida_dialog.cpp
 
+    modules/blacklists/blacklists.h
+    modules/blacklists/blacklists.cpp
+    modules/blacklists/modules/lib.h
+    modules/blacklists/modules/blacklist.h
+    modules/blacklists/modules/blacklist.cpp
+    modules/blacklists/modules/blacklist_item.h
+    modules/blacklists/modules/blacklist_item.cpp
+
+    modules/warnlists/warnlists.h
+    modules/warnlists/warnlists.cpp
+    modules/warnlists/modules/lib.h
+    modules/warnlists/modules/warnlist.h
+    modules/warnlists/modules/warnlist.cpp
+    modules/warnlists/modules/warnlist_item.h
+    modules/warnlists/modules/warnlist_item.cpp
+
+    modules/craplog/lib.h
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
     modules/craplog/modules/lib.h
@@ -111,15 +138,14 @@ set(PROJECT_SOURCES
     modules/craplog/modules/workers/lib.h
     modules/craplog/modules/workers/lister.h
     modules/craplog/modules/workers/lister.cpp
-    modules/craplog/modules/workers/parser_interface.h
-    modules/craplog/modules/workers/parser_interface.cpp
     modules/craplog/modules/workers/parser.h
     modules/craplog/modules/workers/parser.cpp
-    modules/craplog/modules/workers/parser_async.h
-    modules/craplog/modules/workers/parser_async.cpp
+    modules/craplog/modules/workers/impl/loglinedata.cpp
 
+    modules/crapview/lib.h
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
+    modules/crapview/modules/lib.h
     modules/crapview/modules/filters.h
     modules/crapview/modules/filters.cpp
     modules/crapview/modules/query.h
@@ -141,9 +167,20 @@ set(PROJECT_SOURCES
     modules/crapinfo/modules/stylesheets.h
     modules/crapinfo/modules/stylesheets.cpp
 
+    modules/changelog/changelog.ui
+    modules/changelog/changelog.h
+    modules/changelog/changelog.cpp
+    modules/changelog/modules/stylesheets.h
+    modules/changelog/modules/stylesheets.cpp
+
+    tools/crappath/crappath.h
+    tools/crappath/crappath.cpp
+
     tools/crapnote/crapnote.ui
     tools/crapnote/crapnote.h
     tools/crapnote/crapnote.cpp
+    tools/crapnote/modules/stylesheets.h
+    tools/crapnote/modules/stylesheets.cpp
 
     games/game_dialog.ui
     games/game_dialog.h
@@ -229,6 +266,8 @@ add_executable(LogDocTester
     modules/exceptions.h
     modules/exceptions.cpp
     modules/craplog/modules/lib.h
+    modules/craplog/modules/workers/lib.h
+    modules/craplog/modules/workers/impl/loglinedata.cpp
     utilities/gzip.h
     utilities/gzip.cpp
     utilities/io.h

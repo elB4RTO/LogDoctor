@@ -21,13 +21,12 @@ namespace Ui {
 /*!
     A dialog message to provide informations to the user
 */
-class DialogMsg : public QDialog
+class DialogMsg final : public QDialog
 {
     Q_OBJECT
 
 public:
 
-    //! Dialog constructor
     /*!
         \param title The title
         \param text The message
@@ -35,6 +34,7 @@ public:
         \param parent The parent Widget
     */
     explicit DialogMsg( const QString& title, const QString& text, const QString& additional, const MsgType type, QWidget *parent=nullptr );
+    Q_DISABLE_COPY_MOVE(DialogMsg)
 
 private slots:
 

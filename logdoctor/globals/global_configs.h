@@ -2,7 +2,7 @@
 #define LOGDOCTOR__GLOBALS__GLOBAL_CONFIGS_H
 
 
-#include <QString>
+class QString;
 
 typedef unsigned char themes_t;
 
@@ -27,20 +27,31 @@ enum class ChartsTheme : themes_t {
     Dark  = 1
 };
 
+//! Available color schemes for the text browsers
+enum class ColorsScheme : themes_t {
+    None    = 0,
+    Breeze  = 1,
+    Monokai = 2,
+    Radical = 3
+};
+
 
 //! GlobalConfigs
 /*!
     Globally shared configurations
 */
-namespace GlobalConfigs {
+namespace GlobalConfigs
+{
 
-    extern WindowTheme window_theme;
+extern WindowTheme window_theme;
 
-    extern IconsTheme icons_theme;
+extern IconsTheme icons_theme;
 
-    extern ChartsTheme charts_theme;
+extern ChartsTheme charts_theme;
 
-    extern QString icons_set;
+extern QString icons_set;
+
+extern ColorsScheme colors_scheme;
 
 } // namespace GlobalConfigs
 

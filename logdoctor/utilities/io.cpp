@@ -10,27 +10,50 @@
 #include <fstream>
 
 
+//! RAII class to handle a file stream resource
+template<typename Stream>
+class FileHandler final
+{
+    Stream file;
+
+public:
+    explicit FileHandler( const std::string& path )
+    : file{ path }
+    {
+        if ( ! this->file.is_open() ) {
+            throw std::ios_base::failure( "file is not open" );
+        }
+        if ( ! this->file.good() ) {
+            throw std::ios_base::failure( "file is not good" );
+        }
+    }
+
+    ~FileHandler()
+    {
+        if ( this->file.is_open() ) {
+            this->file.close();
+        }
+    }
+
+    Q_DISABLE_COPY_MOVE(FileHandler)
+
+    inline Stream& operator*()
+    {
+        return this->file;
+    }
+
+    inline void setException( const std::ios_base::iostate e )
+    {
+        this->file.exceptions( e );
+    }
+};
+
+
+
 namespace IOutils
 {
 
-bool exists( std::string_view path )
-{
-    if ( path.empty() ) {
-        return false;
-    }
-    return std::filesystem::exists( path );
-}
-
-
-bool isFile( std::string_view path )
-{
-    if ( exists( path ) ) {
-        return std::filesystem::is_regular_file( path );
-    }
-    return false;
-}
-
-bool checkFile( std::string_view path, const bool readable, const bool writable )
+bool checkFile( std::string_view path, const bool readable, const bool writable ) noexcept
 {
     if ( isFile( path ) ) {
         // check the needed permissions
@@ -51,15 +74,7 @@ bool checkFile( std::string_view path, const bool readable, const bool writable 
 }
 
 
-bool isDir( std::string_view path )
-{
-    if ( exists( path )) {
-        return std::filesystem::is_directory( path );
-    }
-    return false;
-}
-
-bool checkDir( std::string_view path, const bool readable, const bool writable )
+bool checkDir( std::string_view path, const bool readable, const bool writable ) noexcept
 {
     if ( isDir( path ) ) {
         // check the needed permissions
@@ -80,7 +95,7 @@ bool checkDir( std::string_view path, const bool readable, const bool writable )
 }
 
 
-bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
+bool makeDir( std::string_view path, std::error_code& err ) noexcept
 {
     try {
         const bool failed{ !std::filesystem::create_directories( path, err ) };
@@ -95,7 +110,7 @@ bool makeDir( std::string_view path, std::error_code& err ) noexcept(true)
 
 
 // rename an entry with a trailing '.copy'
-bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true)
+bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept
 {
     try {
         std::string new_path{ path };
@@ -121,38 +136,21 @@ bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true)
 void readFile( const std::string& path, std::string& content )
 {
     // read the whole file
-    std::ifstream file;
     try {
-        /*constexpr std::size_t read_size = std::size_t(4096);*/
-        file = std::ifstream(path);
-        if ( ! file.is_open() ) {
-            throw std::ios_base::failure( "file is not open" );
-        }
-        if ( ! file.good() ) {
-            throw std::ios_base::failure( "file is not good" );
-        }
+        FileHandler<std::ifstream> file{ path }; // throws std::ios_base::failure on failure
         // add bit exceptions
-        file.exceptions( std::ifstream::failbit );
-        file.exceptions( std::ios_base::badbit );
+        file.setException( std::ifstream::failbit );
+        file.setException( std::ios_base::badbit );
         // read the whole file
         content = std::string(
-            std::istreambuf_iterator<char>( file ),
+            std::istreambuf_iterator<char>( *file ),
             std::istreambuf_iterator<char>() );
 
     } catch ( const std::ios_base::failure& ) {
         // failed reading
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw;
     } catch (...) {
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw std::exception(); // already catched
-    }
-    if ( file.is_open() ) {
-        file.close();
     }
 }
 
@@ -195,7 +193,7 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
                 srand( (unsigned)time(&nTime) );
                 size_t index;
                 std::vector<size_t> picked_indexes;
-                for( size_t i=0ul; i<n_lines ; i++ ) {
+                for( size_t i=0ul; i<n_lines ; ++i ) {
                     while (true) {
                         index = static_cast<size_t>(rand()) % max;
                         if ( VecOps::contains<size_t>( picked_indexes, index ) ) {
@@ -205,7 +203,7 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
                     }
                     const std::string& line{ aux_lines.at( index ) };
                     if ( StringOps::startsWith( line, '#' ) ) { // leave the "#" check for IIS logs
-                        i--;
+                        -- i;
                         continue;
                     }
                     lines.push_back( line );
@@ -227,12 +225,12 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
     } catch ( const GenericException& ) {
         // failed closing gzip file pointer
         lines.clear();
-        throw GenericException( "An error accured while reading the gzipped file" );
+        throw GenericException( "An error occured while reading the gzipped file" );
 
     } catch ( const std::ios_base::failure& ) {
         // failed reading
         lines.clear();
-        throw GenericException( "An error accured while reading the file" );
+        throw GenericException( "An error occured while reading the file" );
 
     } catch (...) {
         lines.clear();
@@ -243,36 +241,19 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
 
 void writeOnFile( const std::string& path, std::string_view content )
 {
-    std::ofstream file;
     try {
-        file.open( path );
-        if ( ! file.is_open() ) {
-            throw std::ios_base::failure( "file is not open" );
-        }
-        if ( ! file.good() ) {
-            throw std::ios_base::failure( "file is not good" );
-        }
+        FileHandler<std::ofstream> file{ path }; // throws std::ios_base::failure on failure
         // add bit exceptions
-        file.exceptions( std::ifstream::failbit );
-        file.exceptions( std::ios_base::badbit );
+        file.setException( std::ios_base::failbit );
+        file.setException( std::ios_base::badbit );
         // write the content
-        file << content << std::endl;
+        *file << content << std::endl;
 
     } catch ( const std::ios_base::failure& ) {
         // failed writing
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw;
     } catch (...) {
-        if ( file.is_open() ) {
-            file.close();
-        }
         throw std::exception(); // already catched
-    }
-
-    if ( file.is_open() ) {
-        file.close();
     }
 }
 

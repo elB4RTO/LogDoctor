@@ -13,9 +13,9 @@
 #include "modules/craplog/modules/workers/lib.h"
 
 
-CraplogLister::CraplogLister( const unsigned web_server_id, const unsigned dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const HashOps& hashOps, const std::function<bool(const std::string&)> check_filename, QObject* parent )
+CraplogLister::CraplogLister( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const HashOps& hashOps, const std::function<bool(const std::string&)> check_filename, QObject* parent )
     : QObject        { parent         }
-    , wsID           { web_server_id  }
+    , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
     , logs_path      { logs_path      }
     , logs_format    { logs_format    }
@@ -61,7 +61,7 @@ void CraplogLister::work()
             // it's a file, check the readability
             if ( ! IOutils::checkFile( path, true ) ) {
                 // not readable, skip
-                if ( this->dialogs_level == 2 ) {
+                if ( this->dialogs_level == DL_EXPLANATORY ) {
                     emit this->showDialog( WorkerDialog::warnFileNotReadable,
                                            {name} );
                 }
@@ -86,7 +86,7 @@ void CraplogLister::work()
         }
 
         if ( content.empty() ) {
-            if ( this->dialogs_level == 2 ) {
+            if ( this->dialogs_level == DL_EXPLANATORY ) {
                 emit this->showDialog( WorkerDialog::warnEmptyFile,
                                        {name} );
             }
@@ -120,7 +120,7 @@ void CraplogLister::work()
 
         // push in the list
         emit this->pushLogFile( LogFile{
-            false, this->hashOps.hasBeenUsed( hash, this->wsID ),
+            false, this->hashOps.hasBeenUsed( hash, this->web_server ),
             size, name, hash, path } );
     }
     this->quit();

@@ -2,6 +2,8 @@
 #include "craphelp.h"
 #include "ui_craphelp.h"
 
+#include "globals/global_configs.h"
+
 #include "modules/exceptions.h"
 
 #include "utilities/io.h"
@@ -15,11 +17,10 @@ Craphelp::Craphelp(QWidget *parent)
 }
 
 
-std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int scheme_id ) const
+std::unordered_map<std::string, QString> Craphelp::getColorScheme( const ColorsScheme scheme_id ) const
 {
     switch ( scheme_id ) {
-        case 0:
-            // none
+        case ColorsScheme::None:
             return {
                 {"background", ""},
                       {"text", ""},
@@ -27,8 +28,7 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int sch
                         {"h3", ""},
                       {"code", ""},
                       {"link", ""} };
-        case 1:
-            // breeze
+        case ColorsScheme::Breeze:
             return {
                 {"background", "#ffffff"},
                       {"text", "#1f1c1b"},
@@ -38,8 +38,7 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int sch
                       {"code", "#644a9b"},
                       {"link", "#d24f4f"} };
 
-        case 2:
-            // monokai
+        case ColorsScheme::Monokai:
             return {
                 {"background", "#272822"},
                       {"text", "#d1d1cb"},
@@ -49,8 +48,7 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int sch
                       {"code", "#57adbc"},
                       {"link", "#f92672"} };
 
-        case 3:
-            // radical
+        case ColorsScheme::Radical:
             return {
                 {"background", "#141322"},
                       {"text", "#a8c0c2"},
@@ -62,18 +60,18 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const int sch
 
         default:
             // wrong, shouldn't be here
-            throw GenericException( "Unexpected ColorScheme ID: "+std::to_string( scheme_id ), true ); // leave un-catched
+            throw DoNotCatchException( "Unexpected ColorScheme", std::to_string(static_cast<themes_t>(scheme_id)) );
     }
 }
 
 
-void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const int color_scheme_id ) const
+void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept
 {
-    std::unordered_map<std::string, QString> color_scheme{ this->getColorScheme( color_scheme_id ) };
+    std::unordered_map<std::string, QString> colors_scheme{ this->getColorScheme( colors_scheme_id ) };
     std::string aux;
     IOutils::readFile( path, aux );
     QString content;
-    if ( color_scheme_id == 0 ) {
+    if ( colors_scheme_id == ColorsScheme::None ) {
         // remove the style for the colors
         while (true) {
             const size_t start{ aux.find( "background-color:" ) };
@@ -96,13 +94,13 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
     } else {
         // replace with colors
         content = QString::fromStdString( aux )
-            .replace( "$BG$",   color_scheme.at("background") )
-            .replace( "$TEXT$", color_scheme.at("text") )
-            .replace( "$IT$",   color_scheme.at("italic") )
-            .replace( "$H1$",   color_scheme.at("h1") )
-            .replace( "$H3$",   color_scheme.at("h3") )
-            .replace( "$CODE$", color_scheme.at("code") )
-            .replace( "$LINK$", color_scheme.at("link") );
+            .replace( "$BG$",   colors_scheme.at("background") )
+            .replace( "$TEXT$", colors_scheme.at("text") )
+            .replace( "$IT$",   colors_scheme.at("italic") )
+            .replace( "$H1$",   colors_scheme.at("h1") )
+            .replace( "$H3$",   colors_scheme.at("h3") )
+            .replace( "$CODE$", colors_scheme.at("code") )
+            .replace( "$LINK$", colors_scheme.at("link") );
     }
     // show the content
     this->ui->helpBrowser->setText( content );
@@ -111,9 +109,9 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
 }
 
 
-void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const int color_scheme_id ) const
+void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept
 {
-    std::unordered_map<std::string, QString> color_scheme = this->getColorScheme( color_scheme_id );
+    std::unordered_map<std::string, QString> colors_scheme = this->getColorScheme( colors_scheme_id );
     std::string aux;
     if ( file_name == "apache_format" ) {
         this->defaultApacheFormat( aux );
@@ -123,7 +121,7 @@ void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& f
         this->defaultIisFormat( aux );
     }
     QString content;
-    if ( color_scheme_id == 0 ) {
+    if ( colors_scheme_id == ColorsScheme::None ) {
         // remove the style for the colors
         while (true) {
             const size_t start{ aux.find( "background-color:" ) };
@@ -146,13 +144,13 @@ void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& f
     } else {
         // replace with colors
         content = QString::fromStdString( aux )
-            .replace( "$BG$",   color_scheme.at("background") )
-            .replace( "$TEXT$", color_scheme.at("text") )
-            .replace( "$IT$",   color_scheme.at("italic") )
-            .replace( "$H1$",   color_scheme.at("h1") )
-            .replace( "$H3$",   color_scheme.at("h3") )
-            .replace( "$CODE$", color_scheme.at("code") )
-            .replace( "$LINK$", color_scheme.at("link") );
+            .replace( "$BG$",   colors_scheme.at("background") )
+            .replace( "$TEXT$", colors_scheme.at("text") )
+            .replace( "$IT$",   colors_scheme.at("italic") )
+            .replace( "$H1$",   colors_scheme.at("h1") )
+            .replace( "$H3$",   colors_scheme.at("h3") )
+            .replace( "$CODE$", colors_scheme.at("code") )
+            .replace( "$LINK$", colors_scheme.at("link") );
     }
     // show the content
     this->ui->helpBrowser->setText( content );
@@ -162,7 +160,7 @@ void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& f
 
 
 
-void Craphelp::defaultApacheFormat( std::string& str ) const
+void Craphelp::defaultApacheFormat( std::string& str ) const noexcept
 {
     str.append(
         "<!DOCTYPE html>"
@@ -420,7 +418,7 @@ void Craphelp::defaultApacheFormat( std::string& str ) const
     );
 }
 
-void Craphelp::defaultNginxFormat( std::string& str ) const
+void Craphelp::defaultNginxFormat( std::string& str ) const noexcept
 {
     str.append(
         "<!DOCTYPE html>"
@@ -618,7 +616,7 @@ void Craphelp::defaultNginxFormat( std::string& str ) const
     );
 }
 
-void Craphelp::defaultIisFormat( std::string& str ) const
+void Craphelp::defaultIisFormat( std::string& str ) const noexcept
 {
     str.append(
         "<!DOCTYPE html>"

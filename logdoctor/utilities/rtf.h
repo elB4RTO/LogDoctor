@@ -6,8 +6,8 @@
 
 #include <string>
 
+struct LogsFormat;
 class TextBrowser;
-class LogsFormat;
 class QString;
 
 
@@ -15,7 +15,7 @@ class QString;
 /*!
     Utilities for the TextBrowser
 */
-class RichText : public QObject
+class RichText final : public QObject
 {
     Q_OBJECT
 
@@ -32,7 +32,7 @@ public:
         QString& rich_content,
         const std::string& content,
         const LogsFormat& logs_format,
-        TextBrowser& TB
+        const TextBrowser& TB
     );
 
     //! Provides the default string

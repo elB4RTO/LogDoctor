@@ -23,7 +23,7 @@ namespace Ui {
 /*!
     A reproduction of the timeless classic game
 */
-class SnakeGame : public QWidget
+class SnakeGame final : public QWidget
 {
     Q_OBJECT
 
@@ -55,16 +55,16 @@ private:
         and W/S/A/D letters
         \see key_events, processNextKeyEvent()
     */
-    void keyPressEvent( QKeyEvent* event ) override;
+    void keyPressEvent( QKeyEvent* event ) noexcept override;
 
     //! Stores the key events
-    std::queue<unsigned short> key_events;
+    std::queue<Direction> key_events;
 
     //! Processes the key events in the queue
     /*!
         \see key_events, keyPressEvent()
     */
-    void processNextKeyEvent();
+    void processNextKeyEvent() noexcept;
 
 
     //////////////////
@@ -119,7 +119,7 @@ private:
 
     //! Instance of the egg/rat which will be eat by the snake
     Food food;
-    void newFood( const bool& movable );
+    void newFood( const bool movable ) noexcept;
 
     bool spawn_food{ false };
 

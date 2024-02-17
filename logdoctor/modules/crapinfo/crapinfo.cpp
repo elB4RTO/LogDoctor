@@ -13,9 +13,7 @@ Crapinfo::Crapinfo( const QString& version, const QString& exec_path, const QStr
 {
     ui->setupUi(this);
 
-    QString stylesheet;
-    StyleSec::Crapinfo::getStyleSheet( stylesheet );
-    this->setStyleSheet( stylesheet );
+    this->setStyleSheet( StyleSec::Crapinfo::getStyleSheet() );
 
     // fonts
     const QString ff{ QFontDatabase::applicationFontFamilies(

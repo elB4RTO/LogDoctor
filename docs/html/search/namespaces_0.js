@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['checksec_0',['CheckSec',['../namespaceCheckSec.html',1,'']]],
-  ['colorsec_1',['ColorSec',['../namespaceColorSec.html',1,'']]]
+  ['arrayops_0',['ArrayOps',['../namespaceArrayOps.html',1,'']]]
 ];

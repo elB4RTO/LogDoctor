@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['vecops_0',['VecOps',['../namespaceVecOps.html',1,'']]]
+  ['stringops_0',['StringOps',['../namespaceStringOps.html',1,'']]],
+  ['stylesec_1',['StyleSec',['../namespaceStyleSec.html',1,'']]]
 ];

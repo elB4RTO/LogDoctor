@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['datetimeops_0',['DateTimeOps',['../namespaceDateTimeOps.html',1,'']]]
+  ['bwutils_0',['BWutils',['../namespaceBWutils.html',1,'']]]
 ];

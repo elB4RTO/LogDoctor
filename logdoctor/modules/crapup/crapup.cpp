@@ -38,9 +38,7 @@ Crapup::Crapup( QWidget* parent )
 {
     this->ui->setupUi(this);
 
-    QString stylesheet;
-    StyleSec::Crapup::getStyleSheet( stylesheet );
-    this->setStyleSheet( stylesheet );
+    this->setStyleSheet( StyleSec::Crapup::getStyleSheet() );
 
     // fonts
     const QString ff{ QFontDatabase::applicationFontFamilies(

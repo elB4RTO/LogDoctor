@@ -10,7 +10,7 @@
     Implements various dialog models
     \see DialogMsg, DialogBool, DialogDia
 */
-class DialogSec : public QObject
+class DialogSec final : public QObject
 {
     Q_OBJECT
 
@@ -57,8 +57,14 @@ public:
     //! Missing read permission for the configuration file's directory
     static void errConfDirNotWritable( const QString& dir, const QString& err, QWidget* parent=nullptr );
 
-    //! Missing write permission for the configuration file's directory
-    static void errFailedApplyingConfigs( const QString& msg, QWidget* parent=nullptr );
+    //! An error occured while applying the value retrieved from the conf file
+    static void errFailedApplyingConfigsItem( const QString& msg, QWidget* parent=nullptr );
+
+    //! The lines in the list caused an error and cannot be applied
+    static void warnInvalidConfigsList( const QStringList& list, QWidget* parent=nullptr );
+
+    //! Failed to apply user provided configurations
+    static bool choiceFailedApplyingConfigs( const QString& msg, QWidget* parent=nullptr );
 
 
     //////////////
@@ -158,6 +164,9 @@ public:
     //! A selected log file appears twice in the selection
     static int choiceDuplicateFile( const QString& msg, QWidget* parent=nullptr );
 
+    //! An error occured while inserting the new files' hashes into the daabase
+    static void errFailedInsertUsedHashes( QWidget* parent=nullptr );
+
     ///////////////////
     //// LOGS SIZE ////
 
@@ -192,6 +201,16 @@ public:
 
     //! An error occured while parsing logs
     static void errFailedParsingLogs( const QString& message, QWidget* parent=nullptr );
+
+
+    ////////////////////
+    //// STATISTICS ////
+
+    //! An error occured while processing data
+    static void errProcessingStatsData( const QString& err, QWidget* parent=nullptr );
+
+    //! No data, cannot draw the chart
+    static void msgNoDataForStats( QWidget* parent=nullptr );
 
 
     ///////////////
@@ -234,6 +253,13 @@ public:
 
     //! Failed to create a directory
     static void errFailedMakeDir( const QString& msg, const QString& err, QWidget* parent=nullptr );
+
+
+    //////////////
+    //// DATA ////
+
+    //! Failed to convert some data from one type into another
+    static void errConvertingData( const QString& fromType, const QString& intoType, const QString& value, QWidget* parent=nullptr );
 
     /////////////////
     //// CHOICES ////

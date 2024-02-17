@@ -8,11 +8,14 @@
 #include <unordered_map>
 
 
+enum class ColorsScheme : unsigned char;
+
+
 //! TextBrowser
 /*!
     Perform operations for files visualization
 */
-class TextBrowser
+class TextBrowser final
 {
 public:
 
@@ -20,37 +23,37 @@ public:
     //// GETTERS ////
 
     //! Returns whether the wide lines option is set to be used or not
-    bool getWideLinesUsage() const;
+    bool getWideLinesUsage() const noexcept;
 
     //! Returns the ID of the color scheme in use
-    int getColorSchemeID() const;
+    ColorsScheme getColorSchemeID() const noexcept;
 
     //! Returns the color scheme in use
-    const std::unordered_map<std::string, QString>& getColorScheme() const;
+    const std::unordered_map<std::string, QString>& getColorScheme() const noexcept;
 
-    /*const int& getFontSize();*/
+    /*const int& getFontSize() noexcept;*/
 
     //! Returns the family of the font in use
-    const QString& getFontFamily() const;
+    const QString& getFontFamily() const noexcept;
 
     //! Returns the font in use
-    const QFont& getFont() const;
+    const QFont& getFont() const noexcept;
 
 
     /////////////////
     //// SETTERS ////
 
     //! Sets whether to use wide lines or not
-    void setWideLinesUsage( const bool& use_wide_lines );
+    void setWideLinesUsage( const bool use_wide_lines ) noexcept;
 
     //! Stes the given color scheme as the one in use
-    void setColorScheme( const int& color_scheme_id, const std::unordered_map<std::string, QString>& color_scheme );
+    void setColorScheme( const ColorsScheme colors_scheme_id, const std::unordered_map<std::string, QString>& colors_scheme ) noexcept;
 
-    /*void setFontSize( const int& font_size );
-    void setFontFamily( const QString& font_family );*/
+    /*void setFontSize( const int& font_size ) noexcept;
+    void setFontFamily( const QString& font_family ) noexcept;*/
 
     //! Sets the given font as the one in use
-    void setFont( const QFont& font );
+    void setFont( const QFont& font ) noexcept;
 
 
     /////////////////
@@ -60,14 +63,14 @@ public:
     /*!
         \param content Will hold the preview string
     */
-    void makePreview( QString& content ) const;
+    void makePreview( QString& content ) const noexcept;
 
 
 private:
 
     bool wide_lines{ false };
-    int  color_scheme_id{ 1 };
-    std::unordered_map<std::string, QString> color_scheme;
+    ColorsScheme  colors_scheme_id;
+    std::unordered_map<std::string, QString> colors_scheme;
     /*int  font_size = 13;*/
     QString font_family;
     QFont   font;

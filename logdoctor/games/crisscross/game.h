@@ -17,7 +17,7 @@ namespace Ui {
 /*!
     Player vs AI criss-cross game
 */
-class CrissCross : public QWidget
+class CrissCross final : public QWidget
 {
     Q_OBJECT
 
@@ -97,36 +97,36 @@ private:
 
 
     //! Checks whether somebody won or not
-    bool checkVictory();
+    bool checkVictory() noexcept;
 
     //! Checks whether the game is draw or not
-    bool gameDraw() const;
+    bool gameDraw() const noexcept;
 
     //! Someone won, process the victory
-    void victory();
+    void victory() noexcept;
 
     //! The match is over but nobody won, the game is draw
-    void draw();
+    void draw() noexcept;
 
 
     ////////////
     //// AI ////
 
     //! Main function for the AI to play its turn
-    void AI_playTurn();
+    void AI_playTurn() noexcept;
 
     //! Updates the weights of the tiles
     /*!
         \see AI_playTurn();
     */
-    void AI_updateWeights();
+    void AI_updateWeights() noexcept;
 
     //! Makes the choice depending on the weights
     /*!
         \return The tile to select
         \see AI_playTurn();
     */
-    unsigned AI_makeChoice() const;
+    unsigned AI_makeChoice() const noexcept;
 
 };
 

@@ -2,53 +2,58 @@
 #include "crapnote.h"
 #include "ui_crapnote.h"
 
+#include "globals/global_configs.h"
+
+#include "modules/stylesheets.h"
+
 #include "modules/exceptions.h"
 
 
-Crapnote::Crapnote(QWidget *parent)
+Crapnote::Crapnote( const ColorsScheme colors_scheme, QFont font, QWidget* parent )
     : QWidget{ parent }
     , ui{ new Ui::Crapnote }
 {
     ui->setupUi(this);
+
+    this->setColorScheme( colors_scheme );
+    this->setTextFont( font );
 }
 
 
-void Crapnote::setTextFont( const QFont& font )
+void Crapnote::setTextFont( QFont font ) noexcept
 {
-    QFont f{ font };
-    f.setPointSize( this->font_size );
-    this->ui->textEdit->setFont( f );
+    font.setPointSize( this->font_size );
+    this->ui->text_Note->setFont( font );
 }
 
-void Crapnote::setColorScheme( const int& color_scheme_id )
+void Crapnote::setColorScheme( const ColorsScheme colors_scheme )
 {
-    QColor b, t;
-    // update the colors palette
-    switch ( color_scheme_id ) {
-        case 0:
-            this->ui->textEdit->setPalette( QPalette() );
-            break;
-        case 1:
-            // breeze
-            b = QColor(255,198,102);
-            t = QColor(31,28,27);
-            this->ui->textEdit->setPalette( QPalette(t,b,b,b,b,t,b) );
-            break;
-        case 2:
-            // monokai
-            b = QColor(166,226,46);
-            t = QColor(39,40,34);
-            this->ui->textEdit->setPalette( QPalette(t,b,b,b,b,t,b) );
-            break;
-        case 3:
-            // radical
-            b = QColor(20,19,34);
-            t = QColor(213,53,143);
-            this->ui->textEdit->setPalette( QPalette(t,b,b,b,b,t,b) );
-            break;
-        default:
-            // wrong
-            throw GenericException( "Unexpected ColorScheme ID for Crapnote: "+std::to_string( color_scheme_id ), true ); // leave un-catched
+    if ( GlobalConfigs::window_theme != WindowTheme::Native ) {
+        this->setStyleSheet( StyleSec::Crapnote::getStyleSheet( colors_scheme ) );
+    } else {
+        this->setStyleSheet("");
+        QPalette p;
+        // update the colors palette
+        switch ( colors_scheme ) {
+            case ColorsScheme::None:
+                break;
+            case ColorsScheme::Breeze:
+                p.setColor( QPalette::Base, QColor( 255, 198, 102 ) );
+                p.setColor( QPalette::Text, QColor(  31,  28,  27 ) );
+                break;
+            case ColorsScheme::Monokai:
+                p.setColor( QPalette::Base, QColor( 166, 226,  46 ) );
+                p.setColor( QPalette::Text, QColor(  39,  40,  34 ) );
+                break;
+            case ColorsScheme::Radical:
+                p.setColor( QPalette::Base, QColor(  20,  19,  34 ) );
+                p.setColor( QPalette::Text, QColor( 213,  53, 143 ) );
+                break;
+            default:
+                // wrong
+                throw DoNotCatchException( "Unexpected ColorScheme for Crapnote", std::to_string(static_cast<themes_t>(colors_scheme)) );
+        }
+        this->ui->text_Note->setPalette( p );
     }
 }
 
@@ -56,7 +61,7 @@ void Crapnote::setColorScheme( const int& color_scheme_id )
 void Crapnote::on_spinBox_FontSize_valueChanged(int arg1)
 {
     this->font_size = arg1;
-    this->setTextFont( this->ui->textEdit->font() );
+    this->setTextFont( this->ui->text_Note->font() );
 }
 
 

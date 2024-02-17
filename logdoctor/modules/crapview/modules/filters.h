@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPVIEW__FILTERS_H
-#define LOGDOCTOR__CRAPVIEW__FILTERS_H
+#ifndef LOGDOCTOR__CRAPVIEW__MODULES__FILTERS_H
+#define LOGDOCTOR__CRAPVIEW__MODULES__FILTERS_H
 
 
 #include <optional>
@@ -23,17 +23,7 @@ namespace FilterOps
     \param to_clean Whether the filter_str should be cleaned before parsing (trimmed and uppercased)
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true );
-
-//! Parses a filter for a database field with boolean type
-/*!
-    Boolean filters are not locale-dependant,
-    meaning that English syntax must be used: 'TRUE', 'FALSE'.
-    This filter is case-insensitive.
-    \param field_str The given filter
-    \return The resulting filter to apply to the query, if valid
-*/
-std::optional<QString> parseBooleanFilter( const QString& filter_str );
+std::optional<QString> parseNull( const QString& filter_str, const bool to_clean=true ) noexcept;
 
 //! Parses a filter for a log field with integer type
 /*!
@@ -44,7 +34,7 @@ std::optional<QString> parseBooleanFilter( const QString& filter_str );
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseNumericFilter( const QString& filter_str );
+std::optional<QString> parseNumericFilter( const QString& filter_str ) noexcept;
 
 //! Parses a filter for a log field with text type
 /*!
@@ -53,9 +43,9 @@ std::optional<QString> parseNumericFilter( const QString& filter_str );
     \param field_str The given filter
     \return The resulting filter to apply to the query, if valid
 */
-std::optional<QString> parseTextualFilter( const QString& filter_str );
+std::optional<QString> parseTextualFilter( const QString& filter_str ) noexcept;
 
 }
 
 
-#endif // LOGDOCTOR__CRAPVIEW__FILTERS_H
+#endif // LOGDOCTOR__CRAPVIEW__MODULES__FILTERS_H

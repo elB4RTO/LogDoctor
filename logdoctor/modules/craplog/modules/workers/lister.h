@@ -2,24 +2,26 @@
 #define LOGDOCTOR__CRAPLOG__WORKERS__LISTER_H
 
 
+#include "main_lib.h"
+
 #include <QObject>
 
-class LogsFormat;
-class LogFile;
+struct LogsFormat;
+struct LogFile;
 class HashOps;
 
 enum class WorkerDialog;
 
 
-class CraplogLister : public QObject
+class CraplogLister final : public QObject
 {
     Q_OBJECT
 
 public:
 
     explicit CraplogLister(
-        const unsigned web_server_id,
-        const unsigned dialogs_level,
+        const WebServer web_server,
+        const DialogsLevel dialogs_level,
         const std::string& logs_path,
         const LogsFormat& logs_format,
         const HashOps& hashOps,
@@ -45,9 +47,9 @@ public slots:
 
 private:
 
-    const unsigned wsID;
+    const WebServer web_server;
 
-    const unsigned dialogs_level;
+    const DialogsLevel dialogs_level;
 
     const std::string& logs_path;
 

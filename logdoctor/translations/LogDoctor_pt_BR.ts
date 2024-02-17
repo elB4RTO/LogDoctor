@@ -2,6 +2,257 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pt_BR">
 <context>
+    <name>Changelog</name>
+    <message>
+        <source>Versions</source>
+        <translation type="unfinished">Versões</translation>
+    </message>
+    <message>
+        <source>Version 3</source>
+        <translation type="unfinished">Versão 3</translation>
+    </message>
+    <message>
+        <source>Version 2</source>
+        <translation type="unfinished">Versão 2</translation>
+    </message>
+    <message>
+        <source>Version 1</source>
+        <translation type="unfinished">Versão 1</translation>
+    </message>
+    <message>
+        <source>C++17</source>
+        <translation>C++17</translation>
+    </message>
+    <message>
+        <source>Qt5</source>
+        <translation>Qt5</translation>
+    </message>
+    <message>
+        <source>Build scripts</source>
+        <translation type="unfinished">Arquivos para construção</translation>
+    </message>
+    <message>
+        <source>Cross-platform compatibility:</source>
+        <translation type="unfinished">Compatibilidade entre plataformas:</translation>
+    </message>
+    <message>
+        <source>Linux</source>
+        <translation>Linux</translation>
+    </message>
+    <message>
+        <source>BSD</source>
+        <translation>BSD</translation>
+    </message>
+    <message>
+        <source>Windows</source>
+        <translation>Windows</translation>
+    </message>
+    <message>
+        <source>OSX</source>
+        <translation>OSX</translation>
+    </message>
+    <message>
+        <source>Statistics:</source>
+        <translation type="unfinished">Estatisticas:</translation>
+    </message>
+    <message>
+        <source>Warnings</source>
+        <translation type="unfinished">Avisos</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished">Velocidade</translation>
+    </message>
+    <message>
+        <source>Counts</source>
+        <translation type="unfinished">Conta</translation>
+    </message>
+    <message>
+        <source>Daytime</source>
+        <translation type="unfinished">Hora do dia</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation type="unfinished">Relacional</translation>
+    </message>
+    <message>
+        <source>Globals</source>
+        <translation type="unfinished">Globais</translation>
+    </message>
+    <message>
+        <source>Translations:</source>
+        <translation type="unfinished">Traduções:</translation>
+    </message>
+    <message>
+        <source>Italian</source>
+        <translation type="unfinished">Italiano</translation>
+    </message>
+    <message>
+        <source>Spanish</source>
+        <translation type="unfinished">Espanhol</translation>
+    </message>
+    <message>
+        <source>French</source>
+        <translation type="unfinished">Francês</translation>
+    </message>
+    <message>
+        <source>Tools:</source>
+        <translation type="unfinished">Instrumentos:</translation>
+    </message>
+    <message>
+        <source>Block note</source>
+        <translation type="unfinished">Bloco de notas</translation>
+    </message>
+    <message>
+        <source>Utilities:</source>
+        <translation type="unfinished">Utilidades:</translation>
+    </message>
+    <message>
+        <source>Infos viewer</source>
+        <translation type="unfinished">Visualizador de informações</translation>
+    </message>
+    <message>
+        <source>Updates checker</source>
+        <translation type="unfinished">Verificador de atualizações</translation>
+    </message>
+    <message>
+        <source>Themes:</source>
+        <translation type="unfinished">Temas:</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation type="unfinished">Escuro</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation type="unfinished">Claro</translation>
+    </message>
+    <message>
+        <source>Improvements and fixes</source>
+        <translation type="unfinished">Melhorias e correções</translation>
+    </message>
+    <message>
+        <source>New themes:</source>
+        <translation type="unfinished">Novos temas:</translation>
+    </message>
+    <message>
+        <source>Ash</source>
+        <translation type="unfinished">Cinzas</translation>
+    </message>
+    <message>
+        <source>Candy</source>
+        <translation type="unfinished">Doce</translation>
+    </message>
+    <message>
+        <source>Forest</source>
+        <translation type="unfinished">Floresta</translation>
+    </message>
+    <message>
+        <source>Powder</source>
+        <translation type="unfinished">Pó</translation>
+    </message>
+    <message>
+        <source>Restyled GUI</source>
+        <translation type="unfinished">GUI reestilizada</translation>
+    </message>
+    <message>
+        <source>Restyled dialogs</source>
+        <translation type="unfinished">Diálogos reestilizados</translation>
+    </message>
+    <message>
+        <source>Doxygen documentation</source>
+        <translation type="unfinished">Documentação Doxygen</translation>
+    </message>
+    <message>
+        <source>Mini-Games:</source>
+        <translation type="unfinished">Mini jogos:</translation>
+    </message>
+    <message>
+        <source>Criss-cross</source>
+        <translation type="unfinished">Cruzada</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation type="unfinished">Snake</translation>
+    </message>
+    <message>
+        <source>Changed default paths</source>
+        <translation type="unfinished">Caminhos padrão alterados</translation>
+    </message>
+    <message>
+        <source>New game modes for Snake</source>
+        <translation type="unfinished">Novos modos de jogo para Snake</translation>
+    </message>
+    <message>
+        <source>Hunt</source>
+        <translation type="unfinished">Caça</translation>
+    </message>
+    <message>
+        <source>Battle</source>
+        <translation type="unfinished">Batalha</translation>
+    </message>
+    <message>
+        <source>New translations:</source>
+        <translation type="unfinished">Novas traduções:</translation>
+    </message>
+    <message>
+        <source>Japanese</source>
+        <translation type="unfinished">japonês</translation>
+    </message>
+    <message>
+        <source>Portuguese</source>
+        <translation type="unfinished">Português</translation>
+    </message>
+    <message>
+        <source>Code improvements</source>
+        <translation type="unfinished">Melhorias de código</translation>
+    </message>
+    <message>
+        <source>Performance improvements</source>
+        <translation type="unfinished">Melhorias de desempenho</translation>
+    </message>
+    <message>
+        <source>Added tests suite:</source>
+        <translation type="unfinished">Conjunto de testes adicionado:</translation>
+    </message>
+    <message>
+        <source>white box tests</source>
+        <translation type="unfinished">testes de caixa branca</translation>
+    </message>
+    <message>
+        <source>Customized charts themes</source>
+        <translation type="unfinished">Temas de gráficos personalizados</translation>
+    </message>
+    <message>
+        <source>Fixes</source>
+        <translation type="unfinished">Correções</translation>
+    </message>
+    <message>
+        <source>Tests improvements</source>
+        <translation type="unfinished">Melhorias nos testes</translation>
+    </message>
+    <message>
+        <source>Docker support</source>
+        <translation type="unfinished">Suporte para Docker</translation>
+    </message>
+    <message>
+        <source>Upgrade to C++20</source>
+        <translation type="unfinished">Atualizar para C++20</translation>
+    </message>
+    <message>
+        <source>Upgrade to Qt6</source>
+        <translation type="unfinished">Atualizar para Qt6</translation>
+    </message>
+    <message>
+        <source>Restyled themes</source>
+        <translation type="unfinished">Temas reestilizados</translation>
+    </message>
+    <message>
+        <source>Redesigned configs section</source>
+        <translation type="unfinished">Seção de configurações redesenhada</translation>
+    </message>
+</context>
+<context>
     <name>Crapinfo</name>
     <message>
         <source>Version</source>
@@ -57,6 +308,17 @@
     <message>
         <source>Increase the font size</source>
         <translation type="unfinished">Aumentar o tamanho da fonte</translation>
+    </message>
+</context>
+<context>
+    <name>Crappath</name>
+    <message>
+        <source>Choose</source>
+        <translation type="unfinished">Escolher</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -247,24 +509,12 @@ marcador no encontrado</translation>
         <translation type="unfinished">Criar um novo banco de dados?</translation>
     </message>
     <message>
-        <source>This database will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">Esse banco de dados terá o final renomado para &apos;.copia&apos; e se criará um novo.
-¿Continuar?</translation>
-    </message>
-    <message>
         <source>Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?</source>
         <translation type="unfinished">Ignorar advertência e usar normalmente, abortar e continuar ou anular todo processo?</translation>
     </message>
     <message>
         <source>Proceed anyway?</source>
         <translation type="unfinished">Proceder de qualquer maneira?</translation>
-    </message>
-    <message>
-        <source>The entry will renamed with a trailing &apos;.copy&apos; and a new one will be created.
-Continue?</source>
-        <translation type="unfinished">A entrada será renomeada &apos;.copia&apos; e se criará uma nova.
-¿Continuar?</translation>
     </message>
     <message>
         <source>An error occured</source>
@@ -485,10 +735,6 @@ Por favor, corrija e tente novamente</translation>
         <translation type="unfinished">O arquivo está vazio</translation>
     </message>
     <message>
-        <source>An error accured while reading the file</source>
-        <translation type="unfinished">Erro na leitura do arquivo</translation>
-    </message>
-    <message>
         <source>The path was supposed to point to a folder, but it doesn&apos;t</source>
         <translation type="unfinished">A rota deveria apontar para uma pasta, mas não aponta</translation>
     </message>
@@ -503,10 +749,6 @@ Por favor, corrija e tente novamente</translation>
     <message>
         <source>The directory is not writable</source>
         <translation type="unfinished">Pasta não escrevível</translation>
-    </message>
-    <message>
-        <source>Failed to retrieve the driver neede to handle the database</source>
-        <translation type="unfinished">Erro ao recuperar driver necessário para administrar banco de dados</translation>
     </message>
     <message>
         <source>Failed to retrieve the database file</source>
@@ -649,24 +891,12 @@ por favor reporte este problema</translation>
         <translation type="unfinished">Parâmetro de aviso do tamanho</translation>
     </message>
     <message>
-        <source>An error accured while reading the gzipped file</source>
-        <translation type="unfinished">Erro ao ler o arquivo gzip</translation>
-    </message>
-    <message>
         <source>Something failed while handling the file</source>
         <translation type="unfinished">Algo deu errado ao manipular o arquivo</translation>
     </message>
     <message>
         <source>An error occured while working on the database</source>
         <translation type="unfinished">Erro ao trabalhar no banco de dados</translation>
-    </message>
-    <message>
-        <source>An error occured while working on the database
-
-Aborting</source>
-        <translation type="unfinished">Erro ao trabalhar no banco de dados
-
-Abortado</translation>
     </message>
     <message>
         <source>Duplicate file</source>
@@ -703,6 +933,76 @@ Abortado</translation>
     <message>
         <source>Please free some resources, parse the files in different steps or split them into smaller units</source>
         <translation type="unfinished">Por favor libere alguns recursos, analise os arquivos em diferentes etapas ou divida-os em unidades menores</translation>
+    </message>
+    <message>
+        <source>This database will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">Esse banco de dados terá o final renomado para &apos;.copia&apos; e se criará um novo.
+¿Continuar?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the file</source>
+        <translation type="unfinished">Erro na leitura do arquivo</translation>
+    </message>
+    <message>
+        <source>The entry will be renamed with a trailing &apos;.copy&apos; and a new one will be created.
+Continue?</source>
+        <translation type="unfinished">A entrada será renomeada &apos;.copia&apos; e se criará uma nova.
+¿Continuar?</translation>
+    </message>
+    <message>
+        <source>An error occured while reading the gzipped file</source>
+        <translation type="unfinished">Erro ao ler o arquivo gzip</translation>
+    </message>
+    <message>
+        <source>Invalid configuration lines</source>
+        <translation type="unfinished">Linhas de configuração inválidas</translation>
+    </message>
+    <message>
+        <source>Has not been possible to apply some of the configurations</source>
+        <translation type="unfinished">Não foi possível aplicar algumas das configurações</translation>
+    </message>
+    <message>
+        <source>If you choose to proceed, all of the unapplied configurations will be lost
+Continue?</source>
+        <translation type="unfinished">Se você optar por continuar, todas as configurações não aplicadas serão perdidas
+Continuar?</translation>
+    </message>
+    <message>
+        <source>Failed to retrieve the driver needed to handle the database</source>
+        <translation type="unfinished">Falha ao recuperar o driver necessário para manipular o banco de dados</translation>
+    </message>
+    <message>
+        <source>Failed updating hashes</source>
+        <translation type="unfinished">Falha ao atualizar hashes</translation>
+    </message>
+    <message>
+        <source>An error occured while inserting the parsed files hashes into the database</source>
+        <translation type="unfinished">Ocorreu um erro ao inserir os hashes dos arquivos analisados no banco de dados</translation>
+    </message>
+    <message>
+        <source>Data conversion failed</source>
+        <translation type="unfinished">Falha na conversão de dados</translation>
+    </message>
+    <message>
+        <source>Failed to convert from &apos;%1&apos; to &apos;%2&apos;</source>
+        <translation type="unfinished">Falha ao converter de &apos;%1&apos; para &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>Failed to create statistics</source>
+        <translation type="unfinished">Falha ao criar estatísticas</translation>
+    </message>
+    <message>
+        <source>An error occured while processing</source>
+        <translation type="unfinished">Ocorreu um erro durante o processamento</translation>
+    </message>
+    <message>
+        <source>Cannot create statistics</source>
+        <translation type="unfinished">Não é possível criar estatísticas</translation>
+    </message>
+    <message>
+        <source>No data has been found that matches with the currently set parameters</source>
+        <translation type="unfinished">Não foram encontrados dados que correspondam aos parâmetros definidos atualmente</translation>
     </message>
 </context>
 <context>
@@ -797,10 +1097,6 @@ Abortado</translation>
     <message>
         <source>Hour</source>
         <translation type="unfinished">Hora</translation>
-    </message>
-    <message>
-        <source>Update the database with current Warning States</source>
-        <translation type="unfinished">Atualize o banco de dados com os estados de aviso atuais</translation>
     </message>
     <message>
         <source>Log line marked as Warning</source>
@@ -1426,6 +1722,22 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <source>Auto</source>
         <translation type="unfinished">Auto</translation>
     </message>
+    <message>
+        <source>Select the path through a dialog window</source>
+        <translation type="unfinished">Selecione o caminho através de uma janela de diálogo</translation>
+    </message>
+    <message>
+        <source>Show some info about LogDoctor</source>
+        <translation type="unfinished">Mostrar algumas informações sobre o LogDoctor</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">Registro de alterações</translation>
+    </message>
+    <message>
+        <source>Show the changelog</source>
+        <translation type="unfinished">Mostrar o registro de alterações</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1518,10 +1830,6 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
     <message>
         <source>Parsed</source>
         <translation type="unfinished">Analizado</translation>
-    </message>
-    <message>
-        <source>Warnings</source>
-        <translation type="unfinished">Avisos</translation>
     </message>
     <message>
         <source>Blacklisted</source>

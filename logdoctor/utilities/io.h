@@ -19,21 +19,36 @@ namespace IOutils
     \param path The path of the entry
     \return The result of the check
 */
-bool exists( std::string_view path );
+inline bool exists( std::string_view path ) noexcept
+{
+    return path.empty()
+         ? false
+         : std::filesystem::exists( path );
+}
 
 //! Checks if a path exists and points to a file
 /*!
     \param path The path of the entry
     \return The result of the check
 */
-bool isFile( std::string_view path );
+inline bool isFile( std::string_view path ) noexcept
+{
+    return exists( path )
+         ? std::filesystem::is_regular_file( path )
+         : false;
+}
 
 //! Checks if a path exists and points to a directory
 /*!
     \param path The path of the entry
     \return The result of the checks
 */
-bool isDir( std::string_view path );
+inline bool isDir( std::string_view path ) noexcept
+{
+    return exists( path )
+         ? std::filesystem::is_directory( path )
+         : false;
+}
 
 //! Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it
 /*!
@@ -42,7 +57,7 @@ bool isDir( std::string_view path );
     \param writable Set to true to check for writability
     \return The result of the checks
 */
-bool checkFile( std::string_view path, const bool readable=false, const bool writable=false );
+bool checkFile( std::string_view path, const bool readable=false, const bool writable=false ) noexcept;
 
 //! Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it
 /*!
@@ -51,14 +66,14 @@ bool checkFile( std::string_view path, const bool readable=false, const bool wri
     \param writable Set to true to check for writability
     \return The result of the checks
 */
-bool checkDir( std::string_view path, const bool readable=false, const bool writable=false );
+bool checkDir( std::string_view path, const bool readable=false, const bool writable=false ) noexcept;
 
 //! Creates a directory
 /*!
     \param path The path of the new entry
     \return Wheter the operation was successful or not
 */
-bool makeDir( std::string_view path, std::error_code& err ) noexcept(true);
+bool makeDir( std::string_view path, std::error_code& err ) noexcept;
 
 //! Renames an entry with a trailing '.copy'
 /*!
@@ -66,7 +81,7 @@ bool makeDir( std::string_view path, std::error_code& err ) noexcept(true);
     \param err Will hold the error, if any
     \return Wheter the operation was successful or not
 */
-bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept(true);
+bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept;
 
 //! Randomly pick lines from a file
 /*!

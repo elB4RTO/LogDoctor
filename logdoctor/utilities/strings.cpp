@@ -1,213 +1,105 @@
+
 #include "strings.h"
 
-#include <algorithm>
+#include <QStringView>
 
 
 namespace StringOps
 {
 
-size_t count( std::string_view str, const char flag )
-{
-    return static_cast<size_t>( std::count( str.cbegin(), str.cend(), flag ) );
-}
-
-size_t count( std::string_view str, std::string_view flag )
+size_t count( std::string_view str, std::string_view flag ) noexcept
 {
     const size_t flg_size{ flag.size() };
     size_t count{ 0ul };
-    for ( size_t start{0ul}; (start=str.find(flag, start)) != std::string::npos; count++ ) {
+    for ( size_t start{0ul}; (start=str.find(flag, start)) != std::string::npos; ++count ) {
         start += flg_size;
     }
     return count;
 }
 
 
-bool isNumeric( const char& chr )
+bool isNumeric( QStringView str ) noexcept
 {
-    return chr > 47 && chr < 58;
+    return str.empty()
+         ? false
+         : std::all_of( str.cbegin(), str.cend(), [](const QChar c){ return c.isDigit(); } );
 }
 
-bool isNumeric( std::string_view str )
+
+std::string strip( const std::string& str, const char chr ) noexcept
 {
-    if ( str.empty() ) {
-        return false;
+    if (const size_t start{ str.find_first_not_of( chr ) }; start != std::string::npos ) {
+        const size_t stop{ str.find_last_not_of( chr ) };
+        return str.substr( start, stop-start+1ul );
     }
-    return !std::any_of( str.cbegin(), str.cend(),
-                         []( const char& chr )
-                           { return !isNumeric( chr ); });
+    return std::string{};
 }
 
-
-bool isAlphabetic( const char& chr )
+std::string strip( const std::string& str, const char* chars ) noexcept
 {
-    return (chr > 64 && chr < 91)
-        || (chr > 96 && chr < 123);
-}
-
-bool isAlphabetic( std::string_view str )
-{
-    if ( str.empty() ) {
-        return false;
+    if (const size_t start{ str.find_first_not_of( chars ) }; start != std::string::npos ) {
+        const size_t stop{ str.find_last_not_of( chars ) };
+        return str.substr( start, stop-start+1ul );
     }
-    return !std::any_of( str.cbegin(), str.cend(),
-                         []( const char& chr )
-                           { return !isAlphabetic( chr ); });
+    return std::string{};
 }
 
 
-bool isAlnum( const char& chr )
+std::string lstrip( const std::string& str, const char chr ) noexcept
 {
-    return isNumeric( chr )
-        || isAlphabetic( chr );
-}
-
-bool isAlnum( std::string_view str )
-{
-    if ( str.empty() ) {
-        return false;
-    }
-    return !std::any_of( str.cbegin(), str.cend(),
-                         []( const char& chr )
-                           { return !isAlnum( chr ); });
-}
-
-
-bool isHex( const char& chr )
-{
-    return (chr > 47 && chr < 58)
-        || (chr > 64 && chr < 71)
-        || (chr > 96 && chr < 103);
-}
-
-
-bool isIP( std::string_view str )
-{
-    if ( str.empty() ) {
-        return false;
-    }
-    for ( const char& chr : str ) {
-        if ( chr == '.' || chr == ':' ) {
-            continue;
-        } else if ( ! isHex( chr ) ) {
-            return false;
-        }
-    }
-    return true;
-}
-
-
-bool startsWith( std::string_view str, const char flag )
-{
-    return str.front() == flag;
-}
-
-bool startsWith( std::string_view str, std::string_view flag )
-{
-    return str.rfind( flag, 0ul ) == 0ul;
-}
-
-
-bool endsWith( std::string_view str, const char flag )
-{
-    return str.back() == flag;
-}
-
-bool endsWith( std::string_view str, std::string_view flag )
-{
-    return str.rfind( flag ) == str.size()-flag.size();
-}
-
-
-bool contains( std::string_view str, std::string_view flag )
-{
-    return str.find( flag ) != std::string::npos;
-}
-
-
-std::string strip( const std::string& str, const char chr )
-{
-    size_t start{ str.find_first_not_of( chr ) };
-    size_t stop{ str.find_last_not_of( chr ) };
-    if ( start == std::string::npos ) {
-        start++;
-    }
-    if ( stop == std::string::npos ) {
-        stop = str.size();
-    }
-    return str.substr( start, stop-start+1ul );
-}
-
-std::string strip( const std::string& str, std::string_view chars )
-{
-    size_t start{ str.find_first_not_of( chars ) };
-    size_t stop{ str.find_last_not_of( chars ) };
-    if ( start == std::string::npos ) {
-        start++;
-    }
-    if ( stop == std::string::npos ) {
-        stop = str.size();
-    }
-    return str.substr( start, stop-start+1ul );
-}
-
-
-std::string lstrip( const std::string& str, const char chr )
-{
-    const size_t start{ str.find_first_not_of( chr ) };
-    if ( start != std::string::npos ) {
+    if (const size_t start{ str.find_first_not_of( chr ) }; start != std::string::npos ) {
         return str.substr( start );
     }
     return std::string{};
 }
 
-std::string lstrip( const std::string& str, std::string_view chars )
+std::string lstrip( const std::string& str, const char* chars ) noexcept
 {
-    const size_t start{ str.find_first_not_of( chars ) };
-    if ( start != std::string::npos ) {
+    if (const size_t start{ str.find_first_not_of( chars ) }; start != std::string::npos ) {
         return str.substr( start );
     }
     return std::string{};
 }
 
 
-std::string rstrip( const std::string &str, const char chr )
+std::string rstrip( const std::string &str, const char chr ) noexcept
 {
-    const size_t stop{ str.find_last_not_of( chr ) };
-    if ( stop != std::string::npos ) {
+    if (const size_t stop{ str.find_last_not_of( chr ) }; stop != std::string::npos ) {
         return str.substr( 0ul, stop+1ul );
     }
     return std::string{};
 }
 
-std::string rstrip( const std::string& str, std::string_view chars )
+std::string rstrip( const std::string& str, const char* chars ) noexcept
 {
-    const size_t stop{ str.find_last_not_of( chars ) };
-    if ( stop != std::string::npos ) {
+    if (const size_t stop{ str.find_last_not_of( chars ) }; stop != std::string::npos ) {
         return str.substr( 0ul, stop+1ul );
     }
     return std::string{};
 }
 
 
-std::string lstripUntil( const std::string& str, const char delim, const bool inclusive, const bool consecutives )
+std::string lstripUntil( const std::string& str, const char delim, const bool inclusive, const bool consecutives ) noexcept
 {
-    size_t start{ str.find( delim ) };
-    if ( start == std::string::npos ) {
-        return str;
-    }
-    if ( inclusive ) {
-        start ++;
-        if ( consecutives ) {
-            while ( str.find( delim, start ) == start ) {
-                start ++;
+    if (size_t start{ str.find( delim ) }; start != std::string::npos ) {
+        if ( inclusive ) {
+            ++ start;
+            if ( consecutives ) {
+                if (str[start] == delim) {
+                    start = str.find_first_not_of( delim, start );
+                    if ( start == std::string::npos ) {
+                        return std::string{};
+                    }
+                }
             }
         }
+        return str.substr( start );
     }
-    return str.substr( start );
+    return str;
 }
 
 
-void split( std::vector<std::string>& list, const std::string& target_str, const char separator )
+void split( std::vector<std::string>& list, const std::string& target_str, const char separator ) noexcept
 {
     if ( target_str.empty() ) {
         return;
@@ -225,7 +117,7 @@ void split( std::vector<std::string>& list, const std::string& target_str, const
     }
 }
 
-void split( std::vector<std::string>& list, const std::string& target_str, std::string_view separator )
+void split( std::vector<std::string>& list, const std::string& target_str, std::string_view separator ) noexcept
 {
     if ( target_str.empty() ) {
         return;
@@ -246,7 +138,7 @@ void split( std::vector<std::string>& list, const std::string& target_str, std::
 }
 
 
-void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator, std::string_view strips )
+void splitrip( std::vector<std::string>& list, const std::string& target_str, const char separator, const char* strips ) noexcept
 {
     split( list, strip( target_str, strips ), separator );
     std::transform( list.begin(), list.end(), list.begin(),
@@ -254,16 +146,16 @@ void splitrip( std::vector<std::string>& list, const std::string& target_str, co
                              { return strip( str, strips ); } );
 }
 
-void splitrip( std::vector<std::string>& list, const std::string& target_str, std::string_view separator, std::string_view strips )
+void splitrip(std::vector<std::string>& list, const std::string& target_str, const char* separator, const char* strips ) noexcept
 {
     split( list, strip( target_str, strips ), separator );
     std::transform( list.begin(), list.end(), list.begin(),
-                    [&strips]( const std::string& str )
+                    [strips]( const std::string& str )
                              { return strip( str, strips ); } );
 }
 
 
-std::string replace( std::string_view str, std::string_view target, std::string_view replace )
+std::string replace( std::string_view str, std::string_view target, std::string_view replace ) noexcept
 {
     std::string s{ str };
     const size_t t_size{ target.size()  };
@@ -277,21 +169,21 @@ std::string replace( std::string_view str, std::string_view target, std::string_
 }
 
 
-std::string toUpper( std::string_view str )
+std::string toUpper( std::string_view str ) noexcept
 {
     std::string up{ str };
     std::transform( up.begin(), up.end(), up.begin(),
-                    []( const char& c )
+                    []( const char c )
                       { return std::toupper( c ); } );
     return up;
 }
 
 
-std::string toLower( std::string_view str )
+std::string toLower( std::string_view str ) noexcept
 {
     std::string low{ str };
     std::transform( low.begin(), low.end(), low.begin(),
-                    []( const char& c )
+                    []( const char c )
                       { return std::tolower( c ); } );
     return low;
 }

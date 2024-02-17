@@ -9,7 +9,7 @@
 namespace PrintSec
 {
 
-QString printableSize( const size_t bytes )
+QString printableSize( const size_t bytes ) noexcept
 {
     std::string size_sfx{" B"};
     double size{ static_cast<double>(bytes) };
@@ -29,12 +29,12 @@ QString printableSize( const size_t bytes )
     }
     size_t n_decimals{ 3ul };
     if ( size >= 100.0 ) {
-        n_decimals --;
+        -- n_decimals;
         if ( size >= 1000.0 ) {
-            n_decimals --;
+            -- n_decimals;
             if ( size >= 10000.0 ) {
-                n_decimals --;
-                cut_index --; // no decimals, no "dot"
+                -- n_decimals;
+                -- cut_index; // no decimals, no "dot"
             }
         }
     }
@@ -48,7 +48,7 @@ QString printableSize( const size_t bytes )
 }
 
 
-QString printableSpeed( const double bytes, const double secs_ )
+QString printableSpeed( const double bytes, const double secs_ ) noexcept
 {
     std::string speed_sfx{" B/s"};
     const double secs{ ( secs_ > 0.0 ) ? secs_ : ( secs_ < 0.0 ) ? -secs_ : 0.1 };
@@ -69,12 +69,12 @@ QString printableSpeed( const double bytes, const double secs_ )
     }
     size_t n_decimals{ 3ul };
     if ( speed >= 100.0 ) {
-        n_decimals --;
+        -- n_decimals;
         if ( speed >= 1000.0 ) {
-            n_decimals --;
+            -- n_decimals;
             if ( speed >= 10000.0 ) {
-                n_decimals --;
-                cut_index --; // no decimals, no "dot"
+                -- n_decimals;
+                -- cut_index; // no decimals, no "dot"
             }
         }
     }
@@ -88,72 +88,48 @@ QString printableSpeed( const double bytes, const double secs_ )
 }
 
 
-QString printableTime( const unsigned seconds )
+QString printableTime( const unsigned seconds ) noexcept
 {
     const unsigned mins{ seconds / 60u };
     const unsigned secs{ seconds - (mins*60u) };
-    return QString("%1:%2").arg(
-        (mins<10u)
-            ? QString("0%1").arg( mins )
-            : QString::number( mins ),
-        (secs<10u)
-            ? QString("0%1").arg( secs )
-            : QString::number( secs )
-    );
+    return QStringLiteral("%1:%2")
+        .arg( mins, 2, 10, QChar('0') )
+        .arg( secs, 2, 10, QChar('0') );
 }
 
 
-QString printableTime( const int hour, const int minute, const int second )
+QString printableTime( const int hour, const int minute, const int second ) noexcept
 {
-    return QString("%1:%2:%3").arg(
-        (hour<10)
-            ? QString("0%1").arg( hour )
-            : QString::number( hour ),
-        (minute<10)
-            ? QString("0%1").arg( minute )
-            : QString::number( minute ),
-        (second<10)
-            ? QString("0%1").arg( second )
-            : QString::number( second )
-    );
+    return QStringLiteral("%1:%2:%3")
+        .arg( hour,   2, 10, QChar('0') )
+        .arg( minute, 2, 10, QChar('0') )
+        .arg( second, 2, 10, QChar('0') );
 }
 
 
-QString printableDate( const QString& year, const int month, const QString& day )
+QString printableDate( const QString& year, const int month, const QString& day ) noexcept
 {
-    return QString("%1-%2-%3").arg(
-        year,
-        (month<10)
-            ? QString("0%1").arg( month )
-            : QString::number( month ),
-        (day.size()<2)
-            ? QString("0%1").arg( day )
-            : day
-    );
+    return QStringLiteral("%1-%2-%3")
+        .arg( year                     )
+        .arg( month, 2, 10, QChar('0') )
+        .arg( day,   2,     QChar('0') );
 }
 
 
-QString printableDate( const int year, const int month, const int day )
+QString printableDate( const int year, const int month, const int day ) noexcept
 {
-    return QString("%1-%2-%3").arg(
-        QString::number( year ),
-        (month<10)
-            ? QString("0%1").arg( month )
-            : QString::number( month ),
-        (day<10)
-            ? QString("0%1").arg( day )
-            : QString::number( day )
-    );
+    return QStringLiteral("%1-%2-%3")
+        .arg( year                     )
+        .arg( month, 2, 10, QChar('0') )
+        .arg( day,   2, 10, QChar('0') );
 }
 
 
-QString printableBool( const int value )
+QString printableBool( const int value ) noexcept
 {
-    if ( value == 0 ) {
-        return TR::tr( BOOLS__FALSE.c_str() );
-    } else {
-        return TR::tr( BOOLS__TRUE.c_str() );
-    }
+    return value == 0
+         ? TR::tr( BOOLS__FALSE.c_str() )
+         : TR::tr( BOOLS__TRUE.c_str()  );
 }
 
 } // namespace PrintSec
