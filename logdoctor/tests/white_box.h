@@ -1,5 +1,5 @@
-#ifndef WHITE_BOX_H
-#define WHITE_BOX_H
+#ifndef LOGDOCTESTER__WHITE_BOX_H
+#define LOGDOCTESTER__WHITE_BOX_H
 
 
 //! Testing
@@ -10,17 +10,17 @@ namespace Testing
 {
 
 //! A Test suit for the defined operators
-void testOperators();
+bool testOperators();
 
 //! A Test suit for the utilities
-void testUtilities();
+bool testUtilities();
 
 //! A Test suit for craplog's modules
-void testCraplogModules();
+bool testCraplogModules();
 
 //! A Test suit for crapview's modules
-void testCrapviewModules();
+bool testCrapviewModules();
 
 } // namespace Testing
 
-#endif // WHITE_BOX_H
+#endif // LOGDOCTESTER__WHITE_BOX_H

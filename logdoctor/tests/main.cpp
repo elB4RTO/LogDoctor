@@ -6,20 +6,21 @@
 
 int main()
 {
-    std::cout << "STARTING TEST SUITE" << std::endl;
+    std::cout << "LOGDOCTOR TESTER" << std::endl;
+    bool passed{ true };
 
-    std::cout << "\nTESTING: operators" << std::endl;
-    Testing::testOperators();
+    passed &= Testing::testOperators();
 
-    std::cout << "\nTESTING: utilities" << std::endl;
-    Testing::testUtilities();
+    passed &= Testing::testUtilities();
 
-    std::cout << "\nTESTING: craplog modules" << std::endl;
-    Testing::testCraplogModules();
+    passed &= Testing::testCraplogModules();
 
-    std::cout << "\nTESTING: crapview modules" << std::endl;
-    Testing::testCrapviewModules();
+    passed &= Testing::testCrapviewModules();
 
-    std::cout << "\nALL TESTS PASSED" << std::endl;
-    return 0;
+    if (passed)
+        std::cout << "\n\nALL TESTS PASSED" << std::endl;
+    else
+        std::cout << "\n\nSOME TEST FAILED" << std::endl;
+
+    return passed;
 }

@@ -209,6 +209,7 @@ qt_add_executable(LogDoctor
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
 )
+
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 if(WIN32)
@@ -260,6 +261,8 @@ include(CTest)
 enable_testing()
 add_executable(LogDocTester
     tests/main.cpp
+    # suites
+    tests/lib.h
     tests/white_box.h
     tests/white_box.cpp
     # 2 test
