@@ -2788,10 +2788,10 @@ void MainWindow::refreshFinished()
     // refresh finished, back to normal state
     if ( this->craplog.getLogsListSize() > 0ul ) {
         this->ui->checkBox_LogFiles_CheckAll->setEnabled( true );
+        this->ui->button_LogFiles_RefreshList->setEnabled( true );
+        this->ui->button_LogFiles_ViewFile->setEnabled( true );
         this->ui->listLogFiles->setEnabled( true );
     }
-    this->ui->button_LogFiles_RefreshList->setEnabled( true );
-    this->ui->button_LogFiles_ViewFile->setEnabled( true );
     this->ui->button_LogFiles_Apache->setEnabled( true );
     this->ui->button_LogFiles_Nginx->setEnabled( true );
     this->ui->button_LogFiles_Iis->setEnabled( true );

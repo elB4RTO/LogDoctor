@@ -37,8 +37,10 @@ void CraplogLister::work()
     const std::string& logs_path{ this->logs_path };
     if ( ! IOutils::isDir( logs_path ) ) {
         // this directory doesn't exists
-        emit this->showDialog( WorkerDialog::errDirNotExists,
-                               {QString::fromStdString( logs_path )} );
+        if ( ! logs_path.empty() ) {
+            emit this->showDialog( WorkerDialog::errDirNotExists,
+                                   {QString::fromStdString( logs_path )} );
+        }
         this->quit();
         return;
     }
