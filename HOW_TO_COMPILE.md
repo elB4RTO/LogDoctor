@@ -5,7 +5,7 @@
 ### Requirements / Dependencies
 
 - C++ 20
-- Qt6 *(Framework 6.2+, Linguist, Widgets, Charts, Sql, Network)*
+- Qt6 *(Framework 6.6+, Linguist, Widgets, Charts, Sql, Network)*
 - CMake
 - gcc / clang / msvc<br/><br/>
 
@@ -16,7 +16,7 @@
 - Prepare a build folder:
   <br/>`mkdir build && cd build`<br/><br/>
 - Prepare **CMake**'s build files:
-  <br/>`cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel`<br/><br/>
+  <br/>`cmake ../logdoctor -DCMAKE_BUILD_TYPE=Release`<br/><br/>
 - Use **CMake** to compile the entire project:
   <br/>`cmake --build ./ --target all`<br/><br/>
 
