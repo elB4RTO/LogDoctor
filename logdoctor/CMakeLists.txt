@@ -21,6 +21,14 @@ else()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 endif()
 
+if(CMAKE_BUILD_TYPE EQUAL "RELEASE")
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT supported)
+    if(supported)
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
+endif()
+
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Widgets Charts LinguistTools Sql Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Charts LinguistTools Sql Network)
 
