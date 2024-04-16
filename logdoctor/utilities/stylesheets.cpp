@@ -11,6 +11,9 @@
 #include <unordered_map>
 
 
+namespace /*private*/
+{
+
 enum StyleId : uint32_t {
     TEXT_PRIMARY,
     TEXT_DISABLED,
@@ -92,7 +95,11 @@ enum StyleId : uint32_t {
     CONFIGS_TREE_BASE
 };
 
+} //namespace (private)
+
+
 using StyleMap = std::unordered_map<StyleId, QString>;
+
 
 StyleMap makeStyleMap()
 {

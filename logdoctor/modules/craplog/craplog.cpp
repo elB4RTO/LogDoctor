@@ -198,17 +198,17 @@ QString Craplog::getLogsFormatSample( const WebServer& web_server ) const
 bool Craplog::checkCurrentLogsFormat() const noexcept
 {
     if ( this->current_log_format.string.empty() ) {
-            // format string not set
-            DialogSec::errLogFormatNotSet( nullptr );
-            return false;
+        // format string not set
+        DialogSec::errLogFormatNotSet( nullptr );
+        return false;
     } else if ( this->current_log_format.fields.empty() ) {
-            // no field, useless to parse
-            DialogSec::errLogFormatNoFields( nullptr );
-            return false;
+        // no field, useless to parse
+        DialogSec::errLogFormatNoFields( nullptr );
+        return false;
     } else if ( this->current_log_format.separators.size() < this->current_log_format.fields.size()-1 ) {
-            // at least one separator is missing between two (or more) fields
-            DialogSec::errLogFormatNoSeparators( nullptr );
-            return false;
+        // at least one separator is missing between two (or more) fields
+        DialogSec::errLogFormatNoSeparators( nullptr );
+        return false;
     }
     return true;
 }
@@ -270,7 +270,7 @@ const std::vector<LogFile>& Craplog::getLogsList() const noexcept
 const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
     const auto item{ std::find_if( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& file){ return file.name()==file_name; } ) };
+        [&file_name](const LogFile& file){ return file.name()==file_name; } ) };
     if ( item != this->logs_list.end() ) return *item;
     // should be unreachable
     throw GenericException("File item not found");
@@ -281,7 +281,7 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 bool Craplog::setLogFileSelected( const QString& file_name ) noexcept
 {
     const auto item{ std::find_if( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& file){ return file.name() == file_name; } ) };
+        [&file_name](const LogFile& file){ return file.name() == file_name; } ) };
     if ( item != this->logs_list.end() ) {
         item->setSelected();
         return true;
@@ -293,8 +293,7 @@ void Craplog::clearLogFilesSelection() noexcept
 {
     std::ignore = std::for_each(
         this->logs_list.begin(), this->logs_list.end(),
-        []( LogFile& it )
-          { if (it.isSelected()) it.setUnselected(); } );
+        [](LogFile& it){ if (it.isSelected()) it.setUnselected(); } );
 }
 
 
@@ -309,7 +308,7 @@ void Craplog::scanLogsDir()
         this->logs_paths.at( this->current_web_server ),
         this->logs_formats.at( this->current_web_server ),
         this->hashOps,
-        [this]( const std::string& file_name)
+        [this]( const std::string& file_name )
               { return this->isFileNameValid( file_name ); }
     ) };
     QThread* worker_thread{ new QThread() };
@@ -507,7 +506,7 @@ bool Craplog::checkStuff()
                 // appears twice in the list
                 QString msg{ file.name() };
                 if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        msg += "\n" + QString::fromStdString( file.hash() );
+                    msg += "\n" + QString::fromStdString( file.hash() );
                 }
                 const int choice = DialogSec::choiceDuplicateFile( msg );
                 if ( choice == 0 ) {
@@ -720,9 +719,6 @@ void Craplog::hireWorker( const Blacklists& blacklists ) const
 void Craplog::stopWorking( const bool successful )
 {
     this->db_edited = successful;
-    if ( successful ) {
-        // insert the hashes of the used files
-    }
     emit this->finishedWorking();
 }
 

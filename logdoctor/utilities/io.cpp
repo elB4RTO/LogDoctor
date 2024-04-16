@@ -10,6 +10,9 @@
 #include <fstream>
 
 
+namespace /*private*/
+{
+
 //! RAII class to handle a file stream resource
 template<typename Stream>
 class FileHandler final
@@ -47,6 +50,8 @@ public:
         this->file.exceptions( e );
     }
 };
+
+} //namespace (private)
 
 
 

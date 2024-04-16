@@ -24,6 +24,9 @@
 #define CHUNK 16384
 
 
+namespace /*private*/
+{
+
 //! RAII class to handle s file resource
 class FileHandler final
 {
@@ -72,6 +75,8 @@ public:
         this->file = nullptr;
     }
 };
+
+} //namespace (private)
 
 
 
