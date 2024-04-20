@@ -6,6 +6,19 @@
 #include <tuple>
 
 
+template <typename T>
+struct is_std_array : std::false_type {};
+
+template <typename T, std::size_t N>
+struct is_std_array<std::array<T,N>> : std::true_type {};
+
+template <typename T, std::size_t N>
+struct is_std_array<const std::array<T,N>> : std::true_type {};
+
+template <typename A>
+concept IsStdArray = is_std_array<A>::value;
+
+
 template <typename Array>
 struct Zipperator
 {
@@ -118,6 +131,7 @@ namespace ArrayOps
     \todo Replace with std::views::zip when clang will fully support it
 */
 template <typename Array>
+requires IsStdArray<Array>
 inline auto zip( Array& l_array, Array& r_array )
 {
     return ZippedArrays<Array>( l_array, r_array );
@@ -131,6 +145,7 @@ inline auto zip( Array& l_array, Array& r_array )
     \todo Replace with std::views::enumerate when clang will fully support it
 */
 template <typename Array>
+requires IsStdArray<Array>
 inline auto enumerate( const Array& array )
 {
     return EnumeratedArray<Array>( array );
