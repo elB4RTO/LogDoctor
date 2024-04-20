@@ -87,12 +87,12 @@ public:
 
 
 template <typename Array>
-class EnumeratdArray
+class EnumeratedArray
 {
     const Array& arr;
 
 public:
-    explicit EnumeratdArray( const Array& a )
+    explicit EnumeratedArray( const Array& a )
     : arr{a} {}
 
     inline auto begin() noexcept
@@ -133,7 +133,7 @@ inline auto zip( Array& l_array, Array& r_array )
 template <typename Array>
 inline auto enumerate( const Array& array )
 {
-    return EnumeratdArray<Array>( array );
+    return EnumeratedArray<Array>( array );
 }
 
 } // namespace ArrayOps
