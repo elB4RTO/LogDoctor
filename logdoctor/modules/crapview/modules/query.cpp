@@ -1143,7 +1143,7 @@ void DbQuery::getGlobalCounts( std::optional<GlobalsData>& result, QStringView w
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
     bool no_data{ true };
-    int max_date_year, max_date_month, max_date_day;
+    int max_date_year{0}, max_date_month{0}, max_date_day{0};
     double n_days{0.0};
     size_t max_date_count{0};
     std::array<double, 7> week_days_count{ 0, 0, 0, 0, 0, 0, 0 };
