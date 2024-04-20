@@ -61,7 +61,6 @@ void Crapview::refreshDates()
     }
 
     if ( result ) {
-        // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
         // { web_server_id : { year : { month : [ days ] } } }
         this->dates = std::move( *result );
     }
@@ -75,7 +74,7 @@ QStringList Crapview::getYears( const QString& web_server ) const noexcept
 {
     QStringList years;
     if ( ! this->dates.empty() ) {
-        const int ws{ this->WebServer_s2i.value( web_server ) };
+        const WebServer ws{ this->WebServer_s2e.value( web_server ) };
         if ( const auto& y{ this->dates.at( ws ) }; !y.empty() ) {
             std::transform( y.cbegin(), y.cend(),
                             std::back_inserter( years ),
@@ -88,10 +87,10 @@ QStringList Crapview::getMonths( const QString& web_server, const QString& year 
 {
     QStringList months;
     if ( ! this->dates.empty() ) {
-        const int ws{ this->WebServer_s2i.value( web_server ) };
+        const WebServer ws{ this->WebServer_s2e.value( web_server ) };
         if ( const auto& y{ this->dates.at( ws ) }; !y.empty() ) {
             const int year_{ year.toInt() };
-            if ( const auto& m{ this->dates.at( ws ).at( year_ ) }; !m.empty() ) {
+            if ( const auto& m{ y.at( year_ ) }; !m.empty() ) {
                 const auto& m_tr{ this->dbQuery.MONTHS };
                 std::transform( m.cbegin(), m.cend(),
                                 std::back_inserter( months ),
@@ -105,10 +104,10 @@ QStringList Crapview::getDays( const QString& web_server, const QString& year, c
 {
     QStringList days;
     if ( ! this->dates.empty() ) {
-        const int ws{ this->WebServer_s2i.value( web_server ) };
+        const WebServer ws{ this->WebServer_s2e.value( web_server ) };
         if ( const auto& y{ this->dates.at( ws ) }; !y.empty() ) {
             const int year_{ year.toInt() };
-            if ( const auto& m{ this->dates.at( ws ).at( year_ ) }; !m.empty() ) {
+            if ( const auto& m{ y.at( year_ ) }; !m.empty() ) {
                 const int month_{ this->getMonthNumber( month ) };
                 if ( const auto& d{ m.at( month_ ) }; !d.empty() ) {
                     std::transform( d.cbegin(), d.cend(),
@@ -193,7 +192,6 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
         return;
     }
 
-    // std::vector<std::vector<std::vector<std::array<QString,18>>>>
     // day  -> [ hours[ 10th_minutes[ lines[ log_data ] ] ] ]
     // hour -> [ 10th_minutes[ minute[ lines[ log_data ] ] ] ]
     const auto items{ std::move(*result) };
@@ -214,27 +212,24 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
                 const auto target{ line.at( 8ul ).toStdString() };
                 const auto& list{ warnlist.uri.list };
                 if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
-                    // match found! skip this line
                     is_warning |= true;
                     warning_cols.emplace_back( 5 );
-                }
-            }
-            if ( warnlist.client.used ) {
-                const auto target{ line.at( 12ul ).toStdString() };
-                const auto& list{ warnlist.client.list };
-                if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
-                    // match found! skip this line
-                    is_warning |= true;
-                    warning_cols.emplace_back( 9 );
                 }
             }
             if ( warnlist.user_agent.used ) {
                 const auto target{ line.at( 11ul ).toStdString() };
                 const auto& list{ warnlist.user_agent.list };
                 if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
-                    // match found! skip this line
                     is_warning |= true;
                     warning_cols.emplace_back( 8 );
+                }
+            }
+            if ( warnlist.client.used ) {
+                const auto target{ line.at( 12ul ).toStdString() };
+                const auto& list{ warnlist.client.list };
+                if ( std::any_of( list.cbegin(), list.cend(), [&target](std::string_view flag){ return StringOps::startsWith( target, flag ); } ) ) {
+                    is_warning |= true;
+                    warning_cols.emplace_back( 9 );
                 }
             }
             return std::make_tuple( is_warning, warning_cols );
@@ -272,7 +267,6 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
         }
     };
 
-    // bars
     std::vector<std::vector<QBarSet*>> sets;
 
     // build the bars and the table upon data
@@ -332,28 +326,25 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
     table->verticalHeader()->setVisible( false );
 
     // apply the colors and append to the series
-    QColor cols[]{ QColor(127,127,127), QColor(237,80,61) };
+    const QColor cols[]{ QColor(127,127,127), QColor(237,80,61) };
     std::vector<QStackedBarSeries*> b_series;
     const size_t max{ sets.size() };
     for ( size_t i{0}; i<max; ++i ) {
         const auto& set{ sets.at( i ) };
-        b_series.push_back( new QStackedBarSeries() );
+        auto* series{ new QStackedBarSeries() };
         for ( size_t w{0}; w<2ul; ++w ) {
-            QBarSet* b = set.at( w );
+            QBarSet* b{ set.at( w ) };
             b->setColor( cols[ w ] );
-            b_series.at( i )->append( b );
+            series->append( b );
         }
-    }
-    for ( auto *s : b_series ) {
-        s->setBarWidth( 1 );
+        series->setBarWidth( 1 );
+        b_series.push_back( series );
     }
 
     // set-up the bars chart
     QChart* b_chart{ new QChart() };
-    // apply the theme
     b_chart->setTheme( theme );
-    // append the bars
-    foreach ( auto& bars, b_series ) {
+    for ( auto* bars : b_series ) {
         b_chart->addSeries( bars );
     }
     b_chart->setTitle( TR::tr( "Log Lines Marked as Warning" ) );
@@ -388,7 +379,6 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
         s->attachAxis( axisY );
     }
 
-    // apply the chart to the view
     chart->setChart( b_chart );
     chart->setRenderHint( QPainter::Antialiasing );
 }
@@ -417,11 +407,9 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
         return;
     }
 
-    // std::vector<std::tuple<long long, std::vector<QString>>>
     // [ ( epoch_msec, [ log_data ] ) ]
     const auto items{ std::move(*result) };
 
-    // draw the speed chart
     QLineSeries* line{ new QLineSeries() };
 
     // build the line upon data
@@ -433,11 +421,10 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
     QDateTime dt;
     for ( const auto& item : items ) {
         ++i;
-        // append a value to the chart
         const qint64 aux_time{ std::get<0>(item) };
         const std::array<QString,6>& data{ std::get<1>(item) };
         aux_value = data.at( 0ul ).toInt();
-        // append only if the second is different, else sum
+        // only append if the second is different, else sum
         if ( aux_time > time ) {
             value = value/count;
             line->append( time, value );
@@ -449,7 +436,6 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
             count = 1;
             first_count |= true;
             if ( i == max_i ) {
-                // final
                 line->append( time, value );
                 if ( value > max_value ) {
                     max_value = value;
@@ -463,7 +449,6 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
             }
             value += aux_value;
             if ( i == max_i ) {
-                // final
                 value = value/count;
                 line->append( aux_time, value );
                 if ( value > max_value ) {
@@ -542,7 +527,6 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
     l_chart->addAxis( axisY, Qt::AlignLeft );
     line->attachAxis( axisY) ;
 
-    // add the chart to the view
     chart->setChart( l_chart );
     chart->setRenderHint(QPainter::Antialiasing);
 }
@@ -571,22 +555,18 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
         return;
     }
 
-    // std::vector<std::tuple<QString, int>>
     // [ ( log_item, count ) ]
     const auto items{ std::move(*result) };
 
-    // make the pie
     QPieSeries* pie{ new QPieSeries() };
     // cut off exdceeding elements for the chart
     const int max_items{ 15 };
-    int count, oth_count{0}, n_rows{0};
-    QString item;
+    int oth_count{0}, n_rows{0};
     // bring items in reverse order
-    stats_count_items_t::const_reverse_iterator iter = items.crbegin();
+    auto iter{ items.crbegin() };
     while ( iter != items.crend() ) {
-        item = iter->second;
-        count = iter->first;
-        ++iter;
+        const QString& item{ iter->second };
+        const unsigned count{ iter->first };
         if ( n_rows >= max_items ) {
             oth_count += count;
         } else {
@@ -598,6 +578,7 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
         table->setItem( n_rows, 0, ic );
         table->setItem( n_rows, 1, new QTableWidgetItem( item ));
         ++ n_rows;
+        ++ iter;
     }
     table->verticalHeader()->setVisible( false );
 
@@ -644,27 +625,26 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
         return;
     }
 
-    // std::unordered_map<int, std::unordered_map<int, int>>
     // { hour : { 10th_minutes : count } }
     const auto items{ std::move(*result) };
 
-    // draw the chart
     QString date;
+    if ( to_year.isEmpty() || to_month.isEmpty() || to_day.isEmpty() ) {
+        date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
+    } else {
+        date = QStringLiteral("%1 %2 %3 %4").arg(
+            TR::tr( "from" ),
+            PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+            TR::tr( "to" ),
+            PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ) );
+    }
+
     QColor col{ Qt::GlobalColor::darkGreen };
     QBarSet* b_10{ new QBarSet("") };
     b_10->setColor( col );
     QBarSet* b_20{ new QBarSet("") };
     b_20->setColor( col );
     QBarSet* b_30{ new QBarSet("") };
-    if ( to_year.isEmpty() || to_month.isEmpty() || to_day.isEmpty() ) {
-        date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
-    } else {
-        date = QStringLiteral("%1 %2 %3 %4")
-            .arg( TR::tr( "from" ),
-                  PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
-                  TR::tr( "to" ),
-                  PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ) );
-    }
     b_30->setColor( col );
     QBarSet* b_40{ new QBarSet("") };
     b_40->setColor( col );
@@ -675,47 +655,36 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
 
     // build the bars upon data
     int count, max_count{0};
+    const auto check_max_count{ [&count,&max_count](){
+        if ( count > max_count ) max_count = count;
+    }};
     for ( size_t h{0ul}; h<24ul; ++h ) {
-        auto& data = items.at( h );
+        const auto& data{ items.at( h ) };
         count = data.at( 0ul );
         *b_10 << count;
-        if ( count > max_count ) {
-            max_count = count;
-        }
+        check_max_count();
         count = data.at( 10ul );
         *b_20 << count;
-        if ( count > max_count ) {
-            max_count = count;
-        }
+        check_max_count();
         count = data.at( 20ul );
         *b_30 << count;
-        if ( count > max_count ) {
-            max_count = count;
-        }
+        check_max_count();
         count = data.at( 30ul );
         *b_40 << count;
-        if ( count > max_count ) {
-            max_count = count;
-        }
+        check_max_count();
         count = data.at( 40ul );
         *b_50 << count;
-        if ( count > max_count ) {
-            max_count = count;
-        }
+        check_max_count();
         count = data.at( 50ul );
         *b_60 << count;
-        if ( count > max_count ) {
-            max_count = count;
-        }
+        check_max_count();
     }
 
-    // apply the bars to the bars serie
     QBarSeries* bars{ new QBarSeries() };
     bars->append( b_10 ); bars->append( b_20 ); bars->append( b_30 );
     bars->append( b_40 ); bars->append( b_50 ); bars->append( b_60 );
     bars->setBarWidth( 1 );
 
-    // set-up the bars chart
     QChart* b_chart{ new QChart() };
     b_chart->setTheme( theme );
     b_chart->addSeries( bars );
@@ -742,7 +711,6 @@ void Crapview::drawDay( QChartView* chart, const QChart::ChartTheme& theme, cons
     b_chart->addAxis( axisY, Qt::AlignLeft );
     bars->attachAxis( axisY) ;
 
-    // apply the chart to the view
     chart->setChart( b_chart );
     chart->setRenderHint( QPainter::Antialiasing );
 }
@@ -762,6 +730,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
         } else {
             this->dbQuery.getRelationalCountsPeriod( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field_1, filter_1, field_2, filter_2 );
         }
+
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
         return;
@@ -776,11 +745,20 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
         return;
     }
 
-    // std::vector<std::tuple<long long, int>>
     // [ ( epoch_ms, count ) ]
     const auto items{ std::move(*result) };
 
-    // draw the relational chart
+    QString date;
+    if ( ! period ) {
+        date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
+    } else {
+        date = QStringLiteral("%1 %2 %3 %4").arg(
+            TR::tr( "from" ),
+            PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+            TR::tr( "to" ),
+            PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ));
+    }
+
     QLineSeries* line{ new QLineSeries() };
     // build the line upon data
     int max_count{0};
@@ -793,19 +771,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
         }
     }
 
-    // build the area
-    QString date;
     QAreaSeries* area{ new QAreaSeries( line ) };
-    if ( ! period ) {
-        date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
-    } else {
-        date = QStringLiteral("%1 %2 %3 %4")
-            .arg( TR::tr( "from" ),
-                  PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
-                  TR::tr( "to" ),
-                  PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ));
-    }
-
     // color the area
     QColor col1{ Qt::GlobalColor::red },
            col2{ Qt::GlobalColor::yellow },
@@ -829,7 +795,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
     a_chart->setTheme( theme );
     a_chart->addSeries( area );
     a_chart->addSeries( area_ );
-    a_chart->setTitle( QStringLiteral("%1: %2 -> %3").arg( TR::tr( "Time of Day Count" ), field_1_str, field_2_str) );
+    a_chart->setTitle( QStringLiteral("%1: %2 -> %3").arg( TR::tr( "Relational Count" ), field_1_str, field_2_str) );
     a_chart->legend()->setVisible( false );
     /*a_chart->legend()->setFont( fonts.at( "main_small" ) );
     a_chart->legend()->setAlignment( Qt::AlignBottom );*/
@@ -861,7 +827,6 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
     a_chart->addAxis( axisY, Qt::AlignLeft );
     area->attachAxis( axisY) ;
 
-    // add the chart to the view
     chart->setChart( a_chart );
     chart->setRenderHint(QPainter::Antialiasing);
 }
@@ -870,7 +835,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
 // calculate global informations
 bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list, std::vector<std::tuple<QString,QString>>& traffic_list, std::vector<std::tuple<QString,QString>>& perf_list, std::vector<QString>& work_list, const QString web_server ) const
 {
-    const auto& avl_dates{ this->dates.at( this->WebServer_s2i.value( web_server ) ) };
+    const auto& avl_dates{ this->dates.at( this->WebServer_s2e.value( web_server ) ) };
     if ( avl_dates.empty() ) {
         return false;
     }
@@ -895,7 +860,6 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
         return false;
     }
 
-    // std::vector<std::tuple<long long, int>>
     // [ ( epoch_ms, count ) ]
     const GlobalsData data{ std::move(*result) };
 

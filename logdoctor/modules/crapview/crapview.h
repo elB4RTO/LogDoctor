@@ -265,8 +265,8 @@ private:
 
 
     // converr Web Servers names to  Web Server IDs
-    const QHash<QString, int> WebServer_s2i{
-            {"apache",11}, {"nginx",12}, {"iis",13} };
+    const QHash<QString, WebServer> WebServer_s2e{
+        {"apache",WS_APACHE}, {"nginx",WS_NGINX}, {"iis",WS_IIS} };
 
     // convert months names to months numbers
     const QHash<QString, int> Months_s2i{

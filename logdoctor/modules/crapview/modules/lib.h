@@ -15,7 +15,7 @@
     using stats_day_items_t   = std::unordered_map<int, std::unordered_map<int, int>>;\
     using stats_relat_items_t = std::vector<std::tuple<qint64, int>>;\
     using stats_count_items_t = std::multimap<unsigned, QString>;\
-    using database_dates_t    = std::map<int, stats_dates_t>;
+    using database_dates_t    = std::map<WebServer, stats_dates_t>;
 
 
 struct RecurrenceData final

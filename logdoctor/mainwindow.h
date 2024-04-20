@@ -65,6 +65,7 @@ private slots:
 
     ///////////////////
     //// OVERRIDES ////
+
     void closeEvent( QCloseEvent* event ) override;
 
 

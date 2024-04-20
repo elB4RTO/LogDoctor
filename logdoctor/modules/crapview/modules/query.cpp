@@ -136,19 +136,17 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
 {
     int n_days{ 1 };
     if ( from_year == to_year ) {
-        // 1 year
         if ( from_month == to_month ) {
-            // 1 month
             n_days += to_day - from_day + 1;
         } else {
             n_days += getMonthDays( from_year, from_month ) - from_day; // first month's days
-            for ( int month=from_month+1; month<to_month; ++month ) {
+            for ( int month{from_month+1}; month<to_month; ++month ) {
                 n_days += getMonthDays( from_year, month );
             }
             n_days += to_day; // last month's days
         }
     } else {
-        n_days += getMonthDays( from_year, from_month ) - from_day;
+        n_days += getMonthDays( from_year, from_month ) - from_day; // first month's days
         if ( from_month < 12 ) {
             for ( int month{from_month+1}; month<=12; ++month ) {
                 n_days += getMonthDays( from_year, month );
@@ -158,7 +156,7 @@ int DbQuery::countDays( const int from_year, const int from_month, const int fro
             int last_month{ 12 };
             if ( year == to_year ) {
                 last_month = to_month-1;
-                n_days += to_day; // last month's days, added in advance
+                n_days += to_day; // last month's days
             }
             for ( int month{1}; month<=last_month; ++month ) {
                 n_days += getMonthDays( year, month );
@@ -172,19 +170,15 @@ int DbQuery::countMonths( const int from_year, const int from_month, const int t
 {
     int n_months{ 0 };
     if ( from_year == to_year ) {
-        // same year
         if ( from_month == to_month ) {
-            // same month
             n_months = 1;
         } else {
-            // different months
             n_months = to_month - from_month + 1;
         }
     } else {
-        // different years
         n_months += 13 - from_month; // months to the end of the first year
         n_months += to_month; // months from the beginning of the last year
-        n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every middle year (0 if none)
+        n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every year in the middle
     }
     return n_months;
 }
@@ -224,7 +218,7 @@ const QString& DbQuery::getDbField( QStringView tr_fld ) const
 void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
 {
     database_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
-        {11, {}}, {12, {}}, {13, {}}
+        {WS_APACHE, {}}, {WS_NGINX, {}}, {WS_IIS, {}}
     };
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
@@ -232,10 +226,11 @@ void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
     // recursively query years, months and days for every WebServer
-    static const std::vector<std::tuple<int, QString>> tables{
-        std::make_tuple(11,"apache"),
-        std::make_tuple(12,"nginx"),
-        std::make_tuple(13,"iis") };
+    static const std::vector<std::tuple<WebServer, QString>> tables{
+        std::make_tuple( WS_APACHE, QStringLiteral("apache") ),
+        std::make_tuple( WS_NGINX,  QStringLiteral("nginx")  ),
+        std::make_tuple( WS_IIS,    QStringLiteral("iis")    )
+    };
 
     for ( const auto& [ws,tbl] : tables ) {
 
