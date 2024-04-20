@@ -5,6 +5,7 @@
 
 #include "main_lib.h"
 
+#include "utilities/arrays.h"
 #include "utilities/io.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
@@ -442,6 +443,54 @@ bool testUtilities()
     T_ASSERT_NOT( VecOps::contains<char>({'a','b','c'}, 'z') );
     T_ASSERT( VecOps::contains<std::string>({"catch","the","flag"}, "flag") );
     T_ASSERT_NOT( VecOps::contains<std::string>({"catch","the","flag"}, "flac") );
+    T_TEST_RESULT()
+
+
+    //// ARRAYS ////
+
+    T_TEST_START("IsStdArray")
+    {
+    using Array = std::array<int,3>;
+    T_ASSERT( IsStdArray<Array> );
+    }{
+    using Vector = std::vector<int>;
+    T_ASSERT_NOT( IsStdArray<Vector> );
+    }
+    T_TEST_RESULT()
+
+    T_TEST_START("ArrayOps::zip")
+    {
+    const auto equality{ [](ZippedArrays<std::array<int,3>>& zipped, std::array<std::tuple<int,int>,3>& fake_zipped) -> bool {
+        size_t i{ 0ul };
+        for (const auto& tpl : zipped) {
+            if ( tpl != fake_zipped.at(i) ) return false;
+            ++i;
+        }
+        return true;
+    }};
+    std::array<int,3> a1{ 1,2,3 };
+    std::array<int,3> a2{ 10,20,30 };
+    std::array<std::tuple<int,int>,3> t{ std::make_tuple(1,10),std::make_tuple(2,20),std::make_tuple(3,30) };
+    ZippedArrays v{ ArrayOps::zip( a1, a2 ) };
+    T_ASSERT( equality( v, t) );
+    }
+    T_TEST_RESULT()
+
+    T_TEST_START("ArrayOps::enumerate")
+    {
+    const auto equality{ [](EnumeratedArray<std::array<int,3>>& enumerated, std::array<std::tuple<int,int>,3>& fake_enumerated) -> bool {
+        size_t i{ 0ul };
+        for (const auto& tpl : enumerated) {
+            if ( tpl != fake_enumerated.at(i) ) return false;
+            ++i;
+        }
+        return true;
+    }};
+    std::array<int,3> a{ 10,20,30 };
+    std::array<std::tuple<int,int>,3> t{ std::make_tuple(0,10),std::make_tuple(1,20),std::make_tuple(2,30) };
+    EnumeratedArray v{ ArrayOps::enumerate( a ) };
+    T_ASSERT( equality( v, t) );
+    }
     T_TEST_RESULT()
 
     T_FIN()
