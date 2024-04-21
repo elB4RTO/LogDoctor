@@ -61,14 +61,14 @@ public:
     void clearDates() noexcept;
 
 
-    //! Returns le list of available years, for the given web server
+    //! Returns the list of available years, for the given web server
     /*!
         \param web_server The printable Web Server name
         \return The list of yearss which are avaliable
     */
     QStringList getYears(  const QString& web_server ) const noexcept;
 
-    //! Returns le list of available months in the given year, for the given web server
+    //! Returns the list of available months in the given year, for the given web server
     /*!
         \param web_server The printable Web Server name
         \param year The year
@@ -76,7 +76,7 @@ public:
     */
     QStringList getMonths( const QString& web_server, const QString& year ) const noexcept;
 
-    //! Returns le list of available days in the given month and year, for the given web server
+    //! Returns the list of available days in the given month and year, for the given web server
     /*!
         \param web_server The printable Web Server name
         \param year The year
@@ -105,6 +105,56 @@ public:
         \return The list of fields
     */
     QStringList getSpeedHeaderColumns() const noexcept;
+
+
+    //! Sets the time interval for the Speed stats
+    /*!
+        \param interval The time interval to use
+    */
+    void setSpeedTimeInterval( const qint64 interval ) noexcept;
+
+    //! Returns the current time interval for the Speed stats
+    /*!
+        \return The time interval in use
+    */
+    qint64 getSpeedTimeInterval() const noexcept;
+
+    //! Sets the time format for the Speed labels on the X-axis
+    /*!
+        \param format The format to use
+    */
+    void setSpeedTimeFormat( const QString& format ) noexcept;
+
+    //! Returns the current time format for the Speed labels on the X-axis
+    /*!
+        \return The time format in use
+    */
+    const QString& getSpeedTimeFormat() const noexcept;
+
+
+    //! Sets the size of the pie chart for the Count stats
+    /*!
+        \param size The new size
+    */
+    void setCountPieSize( const qreal size ) noexcept;
+
+    //! Returns the current size of the pie chart for the Count stats
+    /*!
+        \return The size in use
+    */
+    qreal getCountPieSize() const noexcept;
+
+    //! Sets the maximum number of slices of pie chart for the Count stats
+    /*!
+        \param value The maximum number of slices
+    */
+    void setCountMaxSlices( const int value ) noexcept;
+
+    //! Returns the current maximum number of slices of pie chart for the Count stats
+    /*!
+        \return The maximum number of slices in use
+    */
+    int getCountMaxSlices() const noexcept;
 
 
     //! Draws the chart and fills the table for the Warnings stats
@@ -251,9 +301,6 @@ private:
     // quantity of information to display throught dialogs
     DialogsLevel dialogs_level{ DL_NORMAL };
 
-    // charts theme ID
-    int charts_theme{ 0 };
-
     const QColor warning_color{ 255, 140, 0, 255 };
 
     DbQuery dbQuery;
@@ -262,6 +309,12 @@ private:
     // db_dates_t = std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
     // { web_server_id : { year : { month : [ days ] } } }
     database_dates_t dates;
+
+    qint64 speed_interval{ 1ll };
+    QString speed_time_format{ "hh:mm" };
+
+    qreal count_pie_size{ 0.6 };
+    int count_max_slices{ 15 };
 
 
     // converr Web Servers names to  Web Server IDs

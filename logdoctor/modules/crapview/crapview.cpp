@@ -159,6 +159,42 @@ QStringList Crapview::getSpeedHeaderColumns() const noexcept
     };
 }
 
+void Crapview::setSpeedTimeInterval( const qint64 interval ) noexcept
+{
+    this->speed_interval = interval;
+}
+qint64 Crapview::getSpeedTimeInterval() const noexcept
+{
+    return this->speed_interval;
+}
+
+void Crapview::setSpeedTimeFormat( const QString& format ) noexcept
+{
+    this->speed_time_format = format;
+}
+const QString& Crapview::getSpeedTimeFormat() const noexcept
+{
+    return this->speed_time_format;
+}
+
+void Crapview::setCountPieSize( const qreal size ) noexcept
+{
+    this->count_pie_size = size;
+}
+qreal Crapview::getCountPieSize() const noexcept
+{
+    return this->count_pie_size;
+}
+
+void Crapview::setCountMaxSlices( const int value ) noexcept
+{
+    this->count_max_slices = value;
+}
+int Crapview::getCountMaxSlices() const noexcept
+{
+    return this->count_max_slices;
+}
+
 
 ////////////////
 //// CHARTS ////
@@ -391,7 +427,7 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
 
     try {
 
-        this->dbQuery.getSpeedData( result, web_server, year, month, day, protocol, method, uri, query, response );
+        this->dbQuery.getSpeedData( result, web_server, year, month, day, protocol, method, uri, query, response, this->speed_interval );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -404,6 +440,7 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
 
     if ( ! result ) {
         DialogSec::msgNoDataForStats();
+        chart->setChart( new QChart() );
         return;
     }
 
@@ -415,44 +452,64 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
     // build the line upon data
     size_t i{ 0 };
     const size_t max_i{ items.size() };
-    int value{0}, count{1}, aux_value, max_value{0}, n_rows{0};
-    bool first_count{ true };
-    qint64 time{ std::get<0>(items.at(0ul)) };
-    QDateTime dt;
-    for ( const auto& item : items ) {
-        ++i;
-        const qint64 aux_time{ std::get<0>(item) };
-        const std::array<QString,6>& data{ std::get<1>(item) };
-        aux_value = data.at( 0ul ).toInt();
-        // only append if the second is different, else sum
-        if ( aux_time > time ) {
-            value = value/count;
+    int value{0}, count{0}, aux_value, max_value{0}, n_rows{0};
+    qint64 time{ -1 };
+    const auto finalize_value{
+        [&value,&count]()
+        {
+            if ( value == -1 ) {
+                value = 0;
+            } else {
+                value /= count+1;
+            }
+        }
+    };
+    const auto push_to_line{
+        [&max_value]( QLineSeries*const line, const qint64 time, const int value )
+        {
             line->append( time, value );
             if ( value > max_value ) {
                 max_value = value;
             }
-            time = aux_time;
-            value = aux_value;
-            count = 1;
-            first_count |= true;
-            if ( i == max_i ) {
-                line->append( time, value );
-                if ( value > max_value ) {
-                    max_value = value;
-                }
+        }
+    };
+    const auto set_values{
+        [&time,&value,&count]( const qint64 t, const int v, const int c )
+        {
+            time = t; value = v; count = c;
+        }
+    };
+    for ( const auto& item : items ) {
+        ++i;
+        const qint64 aux_time{ std::get<0>(item) };
+        const std::array<QString,6>& data{ std::get<1>(item) };
+        if ( const auto tt{data.at(0ul)}; tt.isEmpty() ) {
+            if ( time != -1 ) {
+                finalize_value();
+                push_to_line( line, time, value );
             }
+            set_values( aux_time, -1, 0 );
+            push_to_line( line, time, 0 );
+            continue;
         } else {
-            if ( first_count ) {
-                first_count &= false;
+            aux_value = tt.toInt();
+            if ( aux_time > time ) {
+                finalize_value();
+                push_to_line( line, time, value );
+                set_values( aux_time, aux_value, 0 );
+                if ( i == max_i ) {
+                    push_to_line( line, time, value );
+                }
             } else {
-                ++ count;
-            }
-            value += aux_value;
-            if ( i == max_i ) {
-                value = value/count;
-                line->append( aux_time, value );
-                if ( value > max_value ) {
-                    max_value = value;
+                if ( value == -1 ) {
+                    value = 0;
+                } else {
+                    ++ count;
+                }
+                value += aux_value;
+                if ( i == max_i ) {
+                    value /= count+1;
+                    push_to_line( line, aux_time, value );
                 }
             }
         }
@@ -467,15 +524,12 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
             table->setItem( n_rows, 3, new QTableWidgetItem( data.at(3ul) ));
             table->setItem( n_rows, 4, new QTableWidgetItem( data.at(4ul) ));
             table->setItem( n_rows, 5, new QTableWidgetItem( data.at(5ul) ));
-            dt = QDateTime::fromMSecsSinceEpoch( aux_time );
+            QDateTime dt{ QDateTime::fromMSecsSinceEpoch( aux_time ) };
             table->setItem( n_rows, 6, new QTableWidgetItem( dt.time().toString("hh:mm:ss") ));
             ++ n_rows;
         }
     }
     table->verticalHeader()->setVisible( false );
-
-    // fictitious line
-    QLineSeries* line_{ new QLineSeries() };
 
     // color the area
     QColor col1{ Qt::GlobalColor::red   },
@@ -493,23 +547,17 @@ void Crapview::drawSpeed( QTableWidget* table, QChartView* chart, const QChart::
     pen.setWidth( 1 );
     line->setPen(pen);
 
-    pen = line_->pen();
-    pen.setBrush( gradient );
-    pen.setWidth( 1 );
-    line_->setPen(pen);
-
     // build the chart
     QChart* l_chart{ new QChart() };
     l_chart->setTheme( theme );
     l_chart->addSeries( line );
-    l_chart->addSeries( line_ );
     l_chart->setTitle( TR::tr( "Time Taken to Serve Requests" ) );
     /*l_chart->legend()->setAlignment( Qt::AlignBottom );*/
     l_chart->legend()->setVisible( false );
 
     // set-up the date-time axis (X)
     QDateTimeAxis* axisX{ new QDateTimeAxis() };
-    axisX->setFormat( "hh:mm" );
+    axisX->setFormat( this->speed_time_format );
     axisX->setTickCount( 25 );
     axisX->setTitleText( PrintSec::printableDate( year, this->getMonthNumber(month), day ) );
     l_chart->addAxis( axisX, Qt::AlignBottom );
@@ -560,14 +608,13 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
 
     QPieSeries* pie{ new QPieSeries() };
     // cut off exdceeding elements for the chart
-    const int max_items{ 15 };
     int oth_count{0}, n_rows{0};
     // bring items in reverse order
     auto iter{ items.crbegin() };
     while ( iter != items.crend() ) {
         const QString& item{ iter->second };
         const unsigned count{ iter->first };
-        if ( n_rows >= max_items ) {
+        if ( n_rows >= this->count_max_slices ) {
             oth_count += count;
         } else {
             pie->append( item, count );
@@ -587,7 +634,7 @@ void Crapview::drawCount( QTableWidget* table, QChartView* chart, const QChart::
         QPieSlice* slice = pie->slices().at( pie->count()-1 );
         slice->setBrush( Qt::gray );
     }
-    pie->setPieSize( 0.60 );
+    pie->setPieSize( this->count_pie_size );
     pie->setLabelsVisible( false );
     connect( pie, &QPieSeries::clicked, this, &Crapview::sliceClicked );
 

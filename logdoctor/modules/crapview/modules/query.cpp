@@ -256,7 +256,7 @@ void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
 // get daytime values for the warnings
 void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
 {
-    stats_warn_items_t items; // std::vector<std::vector<std::vector<std::array<QString,18>>>>
+    stats_warn_items_t items;
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -348,9 +348,9 @@ void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, QStrin
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f ) const
+void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
 {
-    stats_speed_items_t data; // std::vector<std::tuple<long long, std::array<QString,6>>>
+    stats_speed_items_t data;
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -396,154 +396,95 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringV
         return;
     }
 
-    int h, m, s;
-    const auto prev_instant{
-        [&h,&m,&s](const int hour, const int minute, const int second)
-        {
-            h=hour; m=minute; s=second;
-            if ( --s < 0 ) { s=59;
-            if ( --m < 0 ) { m=59;
-            if ( --h < 0 ) { h=m=s=0; }}}
-        }
-    };
-    const auto next_instant{
-        [&h,&m,&s](const int hour, const int minute, const int second)
-        {
-            h=hour; m=minute; s=second;
-            if ( ++s > 59 ) { s=0;
-            if ( ++m > 59 ) { m=0;
-            if ( ++h > 23 ) { h=23;m=59;s=59; }}}
-        }
-    };
-
     using data_t = std::array<QString,6>;
+
+    data_t query_data{};
 
     QDateTime time{
         QDate( year, month, day ),
         QTime( 0, 0, 0 )
     };
+    QDateTime current_interval{ time }, next_interval{ time };
 
     const auto push_empty{
-        [&data,&time]()
+        [&data,&current_interval]()
         {
-            data.emplace_back( time.toMSecsSinceEpoch(), data_t{} );
+            data.emplace_back( current_interval.toMSecsSinceEpoch(), data_t{} );
         }
     };
     const auto push_data{
-        [&data,&time](const auto ...args)
+        [&data,&current_interval,&query_data]()
         {
-            data.emplace_back( time.toMSecsSinceEpoch(), data_t{args...} );
+            data.emplace_back( current_interval.toMSecsSinceEpoch(), query_data );
         }
     };
 
     const auto set_time{
-        [&time](const auto ...args)
+        [&time](const QueryWrapper& query)
         {
-            time.setTime( QTime(args...) );
+            time.setTime( QTime( toInt(query[0]), toInt(query[1]), toInt(query[2]) ) );
         }
     };
 
-    int hour{-1},  next_hour,   prev_hour{0},
-        minute{0}, next_minute, prev_minute{0},
-        second{0}, next_second, prev_second{0};
-    QString tt, ur, qr, mt, pt, rs;
+    const auto set_data{
+        [&query_data](const QueryWrapper& query)
+        {
+            query_data = data_t{
+                toString( query[3] ), // time taken
+                toString( query[4] ), // uri
+                toString( query[5] ), // query
+                toString( query[6] ), // method
+                toString( query[7] ), // protocol
+                toString( query[8] )  // response
+            };
+        }
+    };
 
-    // append the first ficticious count
-    time.setMSecsSinceEpoch( time.toMSecsSinceEpoch() - 1000 ); // -1s
+    const auto in_current_interval{
+        [&current_interval,&next_interval,&time]()->bool
+        {
+            return current_interval <= time && time < next_interval;
+        }
+    };
+
+    const auto increase_intervals{
+        [&current_interval,&next_interval,&time_interval]()
+        {
+            current_interval = next_interval;
+            next_interval.setSecsSinceEpoch( next_interval.toSecsSinceEpoch() + time_interval );
+        }
+    };
+
     push_empty();
-    time.setMSecsSinceEpoch( time.toMSecsSinceEpoch() + 1000 ); // +1s
 
     while ( query->next() ) {
-        next_hour   = toInt( query[0] );
-        next_minute = toInt( query[1] );
-        next_second = toInt( query[2] );
+        set_time( query );
+        set_data( query );
 
-        if ( next_hour == hour && next_minute == minute && next_second == second ) {
-            set_time( hour, minute, second );
-            push_data( tt,ur,qr,mt,pt,rs );
+        if ( in_current_interval() ) {
+            push_data();
         } else {
-            if ( next_hour == hour ) {
-                prev_instant( hour, minute, second );
-                // append the second before the last one found, if it is not equal to the prev
-                if ( prev_hour < h || prev_minute < m || prev_second < s ) {
-                    set_time( h, m, s );
-                    push_empty();
-                }
-                // same hour new minute/second, append the last count
-                set_time( hour, minute, second );
-                push_data( tt,ur,qr,mt,pt,rs );
-                // append the second after the last one found, if it is not equal to the next
-                next_instant( hour, minute, second );
-                if ( next_hour > h || next_minute > m || next_second > s ) {
-                    set_time( h, m, s );
-                    push_empty();
-                }
-                prev_hour = hour; // update now to avoid getting next_hour's value
-            } else {
-                // minute & second are always different when the hour is different
-                if ( hour >= 0 ) {
-                    // append the prev as zero
-                    prev_instant( hour, minute, second );
-                    if ( prev_hour < h || prev_minute < m || prev_second < s ) {
-                        set_time( h, m, s );
-                        push_empty();
-                    }
-                    // apend the last p count if not in the first round of the loop
-                    set_time( hour, minute, second );
-                    push_data( tt,ur,qr,mt,pt,rs );
-                    // append the next as zero
-                    next_instant( hour, minute, second );
-                    if ( next_hour > h || next_minute > m || next_second > s ) {
-                        set_time( h, m, s );
-                        push_empty();
-                    }
-                } else {
-                    // hout < 0 only in the first round of the loop
-                    // append the second 0 of the day, if it is not the one found
-                    if ( next_hour > 0 || next_minute > 0 || next_second > 0 ) {
-                        push_empty();
-                        // append the second before the first found
-                        prev_instant( next_hour, next_minute, next_second );
-                        if ( h > 0 || m > 0 || s > 0 ) {
-                            set_time( h, m, s );
-                            push_empty();
-                        }
-                    }
-                }
-                prev_hour = hour;
-                hour = next_hour;
+            increase_intervals();
+            if ( ! in_current_interval() ) {
+                push_empty();
+                do    {   increase_intervals(); }
+                while ( ! in_current_interval() );
+                push_empty();
             }
-            prev_minute = minute;
-            minute = next_minute;
-            prev_second = second;
-            second = next_second;
+            push_data();
         }
-        tt = toString( query[3] ); // time taken
-        ur = toString( query[4] ); // uri
-        qr = toString( query[5] ); // query
-        mt = toString( query[6] ); // method
-        pt = toString( query[7] ); // protocol
-        rs = toString( query[8] ); // response
     }
-    // last one, append the prev count
-    prev_instant( hour, minute, second );
-    if ( prev_hour < h || prev_minute < m || prev_second < s ) {
-        set_time( h, m, s );
+
+    increase_intervals();
+    if ( ! in_current_interval() ) {
         push_empty();
     }
-    // append the last count
-    set_time( hour, minute, second );
-    push_data( tt,ur,qr,mt,pt,rs );
-    if ( hour < 23 && minute < 59 && second < 59 ) {
-        // append 1 second after the last
-        next_instant( hour, minute, second );
-        set_time( h, m, s );
-        push_empty();
-    }
-    // append the last fictitious count
+
     time.setTime( QTime( 23, 59, 59 ) );
-    time.setMSecsSinceEpoch( time.toMSecsSinceEpoch() + 1000 ); // +1s
-    push_empty();
+    if ( time > current_interval ) {
+        current_interval.setSecsSinceEpoch( time.toSecsSinceEpoch()+1 );
+        push_empty();
+    }
 
     if ( data.capacity() > data.size() ) {
         data.shrink_to_fit();
@@ -558,7 +499,7 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringV
 void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
 {
     QHash<QString, unsigned> aux_items;
-    stats_count_items_t items; // std::map<QString, unsigned int>>
+    stats_count_items_t items;
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -605,7 +546,7 @@ void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QString
 // get and count items with a 10 minutes gap for every hour of the day
 void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
 {
-    stats_day_items_t data{ // std::unordered_map<int, std::unordered_map<int, int>>
+    stats_day_items_t data{
         {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {2,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {3,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
         {4,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {5,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
@@ -738,7 +679,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
 // get and count how many times a specific item value brought to another
 void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
-    stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
+    stats_relat_items_t data;
     int gap = 20;
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
@@ -883,7 +824,7 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
 void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
-    stats_relat_items_t data; // std::vector<std::tuple<qint64, int>>
+    stats_relat_items_t data;
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 

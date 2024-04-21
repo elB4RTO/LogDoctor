@@ -126,6 +126,7 @@ public:
         \param uri_f The filter for the URI field
         \param query_f The filter for the Query field
         \param response_f The filter for the Response field
+        \param time_interval The time interval used to group the values
         \throw VoidException
         \throw CrapviewException
         \throw ConversionException
@@ -141,7 +142,8 @@ public:
         QStringView method_f,
         QStringView uri_f,
         QStringView query_f,
-        QStringView response_f
+        QStringView response_f,
+        const qint64 time_interval
     ) const;
 
 
