@@ -1441,6 +1441,12 @@ void MainWindow::updateUiIcons()
                 icon_name += "conf_dialogs";
             } else if ( text == tr("Charts") ) {
                 icon_name += "conf_charts";
+            } else if ( text == tr("Appearence") ) {
+                icon_name += "conf_charts_style";
+            } else if ( text == tr("Speed") ) {
+                icon_name += "conf_speed";
+            } else if ( text == tr("Count") ) {
+                icon_name += "conf_count";
             } else if ( text == tr("TextBrowser") ) {
                 icon_name += "conf_textbrowser";
             } else if ( text == tr("Databases") ) {
@@ -1561,9 +1567,10 @@ void MainWindow::updateUiFonts()
     const QFont& small_font{ this->fonts.at( "main_small" ) };
     const QFont& font{ this->fonts.at( "main" ) };
     const QFont& big_font{ this->fonts.at( "main_big" ) };
-    QFont menu_font{ this->fonts.at( "main_small" ) };
+    const QFont& tb_font{ this->TB.getFont() };
+    QFont menu_font{ small_font };
     menu_font.setPointSizeF( this->font_size_small+1.5 );
-    QFont header_font{ this->fonts.at( "main_small" ) };
+    QFont header_font{ small_font };
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
     this->ui->menuLanguage->setFont( menu_font );
@@ -1590,7 +1597,7 @@ void MainWindow::updateUiFonts()
     this->ui->listLogFiles->setFont( font );
     this->ui->listLogFiles->headerItem()->setFont( 0, header_font );
     this->ui->listLogFiles->headerItem()->setFont( 1, header_font );
-    this->ui->textLogFiles->setFont( this->TB.getFont() );
+    this->ui->textLogFiles->setFont( tb_font );
     // log files parse
     this->ui->label_MakeStats_Size->setFont( font );
     this->ui->label_MakeStats_Lines->setFont( font );
@@ -1752,11 +1759,19 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfTextBrowser_ColorScheme->setFont( big_font );
     this->ui->box_ConfTextBrowser_ColorScheme->setFont( font );
     this->ui->label_ConfTextBrowser_Preview->setFont( big_font );
-    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( this->TB.getFont() );
+    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( tb_font );
     // conf charts
     this->ui->label_ConfCharts_Theme->setFont( big_font );
     this->ui->box_ConfCharts_Theme->setFont( font );
     this->ui->label_ConfCharts_Preview->setFont( big_font );
+    this->ui->label_ConfCharts_Speed_TimeInterval->setFont( big_font );
+    this->ui->box_ConfCharts_Speed_TimeInterval->setFont( font );
+    this->ui->label_ConfCharts_Speed_TimeFormat->setFont( big_font );
+    this->ui->box_ConfCharts_Speed_TimeFormat->setFont( font );
+    this->ui->label_ConfCharts_Count_PieSize->setFont( big_font );
+    this->ui->doubleSpinBox_ConfCharts_Count_PieSize->setFont( font );
+    this->ui->label_ConfCharts_Count_MaxSlices->setFont( big_font );
+    this->ui->spinBox_ConfCharts_Count_MaxSlices->setFont( font );
     // conf databases
     this->ui->label_ConfDatabases_Paths->setFont( big_font );
     this->ui->label_ConfDatabases_Data->setFont( font );
@@ -1783,7 +1798,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfApache_Format_String->setFont( font );
     this->ui->inLine_ConfApache_Format_String->setFont( font );
     this->ui->button_ConfApache_Format_Sample->setFont( font );
-    this->ui->preview_ConfApache_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfApache_Format_Sample->setFont( tb_font );
     this->ui->box_ConfApache_Warnlist_Field->setFont( font );
     this->ui->checkBox_ConfApache_Warnlist_Used->setFont( font );
     this->ui->inLine_ConfApache_Warnlist_String->setFont( font );
@@ -1798,7 +1813,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfNginx_Format_String->setFont( font );
     this->ui->inLine_ConfNginx_Format_String->setFont( font );
     this->ui->button_ConfNginx_Format_Sample->setFont( font );
-    this->ui->preview_ConfNginx_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfNginx_Format_Sample->setFont( tb_font );
     this->ui->box_ConfNginx_Warnlist_Field->setFont( font );
     this->ui->checkBox_ConfNginx_Warnlist_Used->setFont( font );
     this->ui->inLine_ConfNginx_Warnlist_String->setFont( font );
@@ -1813,7 +1828,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfIis_Format_String->setFont( font );
     this->ui->inLine_ConfIis_Format_String->setFont( font );
     this->ui->button_ConfIis_Format_Sample->setFont( font );
-    this->ui->preview_ConfIis_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfIis_Format_Sample->setFont( tb_font );
     this->ui->box_ConfIis_Warnlist_Field->setFont( font );
     this->ui->checkBox_ConfIis_Warnlist_Used->setFont( font );
     this->ui->inLine_ConfIis_Warnlist_String->setFont( font );
@@ -4435,7 +4450,13 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
     } else if ( section == tr("Dialogs") ) {
         this->setConfigsPage( General_Dialogs );
     } else if ( section == tr("Charts") ) {
-        this->setConfigsPage( General_Charts );
+        return;
+    } else if ( section == tr("Appearence") ) {
+        this->setConfigsPage( General_Charts_Appearence );
+    } else if ( section == tr("Speed") ) {
+        this->setConfigsPage( General_Charts_Speed );
+    } else if ( section == tr("Count") ) {
+        this->setConfigsPage( General_Charts_Count );
     } else if ( section == tr("TextBrowser") ) {
         this->setConfigsPage( General_TextBrowser );
     } else if ( section == tr("Databases") ) {
@@ -4716,6 +4737,26 @@ void MainWindow::refreshChartsPreview()
     ColorSec::applyChartTheme(
         this->fonts,
         this->ui->chart_ConfCharts_Preview );
+}
+
+void MainWindow::on_box_ConfCharts_Speed_TimeInterval_currentTextChanged(const QString& arg1)
+{
+    this->crapview.setSpeedTimeInterval( arg1.toLong() );
+}
+
+void MainWindow::on_box_ConfCharts_Speed_TimeFormat_currentTextChanged(const QString& arg1)
+{
+    this->crapview.setSpeedTimeFormat( arg1 );
+}
+
+void MainWindow::on_doubleSpinBox_ConfCharts_Count_PieSize_valueChanged(double arg1)
+{
+    this->crapview.setCountPieSize( arg1 );
+}
+
+void MainWindow::on_spinBox_ConfCharts_Count_MaxSlices_valueChanged(int arg1)
+{
+    this->crapview.setCountMaxSlices( arg1 );
 }
 
 
