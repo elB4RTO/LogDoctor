@@ -223,6 +223,10 @@ MainWindow::MainWindow(QWidget *parent)
     // charts
     this->ui->box_ConfCharts_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::charts_theme) );
     this->refreshChartsPreview();
+    this->ui->box_ConfCharts_Speed_TimeInterval->setCurrentText( QString::number(this->crapview.getSpeedTimeInterval()) );
+    this->ui->box_ConfCharts_Speed_TimeFormat->setCurrentText( this->crapview.getSpeedTimeFormat() );
+    this->ui->doubleSpinBox_ConfCharts_Count_PieSize->setValue( this->crapview.getCountPieSize() );
+    this->ui->spinBox_ConfCharts_Count_MaxSlices->setValue( this->crapview.getCountMaxSlices() );
     // databases
     this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
@@ -849,6 +853,49 @@ void MainWindow::readConfigs()
                         invalid_lines.append( QString::fromStdString( line ) );
                     }
 
+                } else if ( var == "CrapviewSpeedTimeInterval" ) {
+                    try {
+                        const qint64 value{ std::stoll( val ) };
+                        if ( const int index{this->ui->box_ConfCharts_Speed_TimeInterval->findText( QString::fromStdString( val ) )}; index >= 0 ) {
+                            this->crapview.setSpeedTimeInterval( value );
+                        } else {
+                            invalid_lines.append( QString::fromStdString( line ) );
+                        }
+                    } catch ( ... ) { // std::exception
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewSpeedTimeFormat" ) {
+                    if ( val == "hh:mm" || val == "hh" ) {
+                        this->crapview.setSpeedTimeFormat( QString::fromStdString( val ) );
+                    } else {
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewCountPieSize" ) {
+                    try {
+                        const qreal value{ std::stod( val ) };
+                        if ( value >= 0.6 && value <= 0.8 ) {
+                            this->crapview.setCountPieSize( value );
+                        } else {
+                            invalid_lines.append( QString::fromStdString( line ) );
+                        }
+                    } catch ( ... ) { // std::exception
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewCountMaxSlices" ) {
+                    try {
+                        const int value{ std::stoi( val ) };
+                        if ( value >= 1 && value <= 31 ) {
+                            this->crapview.setCountMaxSlices( value );
+                        } else {
+                            invalid_lines.append( QString::fromStdString( line ) );
+                        }
+                    } catch ( ... ) { // std::exception
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
                 }/* else {
                     // not valid
                 }*/
@@ -1065,6 +1112,10 @@ void MainWindow::writeConfigs()
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
         configs += "\nCrapviewDialogsLevel=" + toString( this->crapview.getDialogsLevel() );
+        configs += "\nCrapviewSpeedTimeInterval=" + std::to_string( this->crapview.getSpeedTimeInterval() );
+        configs += "\nCrapviewSpeedTimeFormat=" + this->crapview.getSpeedTimeFormat().toStdString();
+        configs += "\nCrapviewCountPieSize=" + std::to_string( this->crapview.getCountPieSize() );
+        configs += "\nCrapviewCountMaxSlices=" + std::to_string( this->crapview.getCountMaxSlices() );
 
         // write on file
         try {
