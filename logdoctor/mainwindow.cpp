@@ -33,6 +33,8 @@
 #include "modules/crapview/lib.h"
 #include "modules/crapview/modules/filters.h"
 
+#include "modules/crapconf/lib.h"
+
 #include "tools/crappath/crappath.h"
 #include "tools/crapnote/crapnote.h"
 
@@ -4429,58 +4431,58 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
     if ( section == tr("General") ) {
         return;
     } else if ( section == tr("Window") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(0);
+        this->setConfigsPage( General_Window );
     } else if ( section == tr("Dialogs") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(1);
+        this->setConfigsPage( General_Dialogs );
     } else if ( section == tr("Charts") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(2);
+        this->setConfigsPage( General_Charts );
     } else if ( section == tr("TextBrowser") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(3);
+        this->setConfigsPage( General_TextBrowser );
     } else if ( section == tr("Databases") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(4);
+        this->setConfigsPage( General_Databases );
     } else if ( section == tr("Logs") ) {
         return;
     } else if ( section == tr("Defaults") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(5);
+        this->setConfigsPage( Logs_Defaults );
     } else if ( section == tr("Control") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(6);
+        this->setConfigsPage( Logs_Control );
     } else if ( section == tr("Apache2") || section == tr("Nginx") || section == tr("IIS") ) {
         return;
     } else if ( section == tr("Path") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(7);
+            this->setConfigsPage( Logs_Apache2_Path );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(11);
+            this->setConfigsPage( Logs_Nginx_Path );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(15);
+            this->setConfigsPage( Logs_IIS_Path );
         }
     } else if ( section == tr("Format") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(8);
+            this->setConfigsPage( Logs_Apache2_Format );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(12);
+            this->setConfigsPage( Logs_Nginx_Format );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(16);
+            this->setConfigsPage( Logs_IIS_Format );
         }
     } else if ( section == tr("Warnlists") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(9);
+            this->setConfigsPage( Logs_Apache2_Warnlists );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(13);
+            this->setConfigsPage( Logs_Nginx_Warnlists );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(17);
+            this->setConfigsPage( Logs_IIS_Warnlists );
         }
     } else if ( section == tr("Blacklists") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(10);
+            this->setConfigsPage( Logs_Apache2_Blacklists );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(14);
+            this->setConfigsPage( Logs_Nginx_Blacklists );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(18);
+            this->setConfigsPage( Logs_IIS_Blacklists );
         }
     } else {
         throw("Unexpected Conf section: "+section.toStdString());
@@ -4490,6 +4492,11 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
 void MainWindow::on_tree_ConfSections_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     this->on_tree_ConfSections_itemClicked( item, column );
+}
+
+void MainWindow::setConfigsPage( const ConfigsPage page )
+{
+    this->ui->stackedPages_Conf->setCurrentIndex( page );
 }
 
 /////////////////

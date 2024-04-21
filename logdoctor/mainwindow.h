@@ -35,6 +35,8 @@ class QTreeWidgetItem;
 enum class LogField;
 enum class ColorsScheme : unsigned char;
 
+enum ConfigsPage : unsigned char;
+
 
 namespace Ui {
     class MainWindow;
@@ -275,8 +277,8 @@ private slots:
     void on_button_StatsGlob_Iis_clicked();
 
 
-    /////////////////
-    //// CRAPSET ////
+    //////////////////
+    //// CRAPCONF ////
 
     void on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column);
 
@@ -897,9 +899,11 @@ private:
     void resetStatsGlob();
 
 
-    /////////////////
-    //// CRAPSET ////
-    /////////////////
+    //////////////////
+    //// CRAPCONF ////
+    //////////////////
+
+    void setConfigsPage( const ConfigsPage page );
 
     void refreshTextBrowserPreview();
 
