@@ -127,6 +127,8 @@ set(PROJECT_SOURCES
     modules/warnlists/modules/warnlist_item.h
     modules/warnlists/modules/warnlist_item.cpp
 
+    modules/crapconf/lib.h
+
     modules/craplog/lib.h
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
