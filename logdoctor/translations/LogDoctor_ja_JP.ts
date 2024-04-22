@@ -251,6 +251,26 @@
         <source>Redesigned configs section</source>
         <translation type="unfinished">再設計された構成セクション</translation>
     </message>
+    <message>
+        <source>Version 4</source>
+        <translation type="unfinished">バージョン4</translation>
+    </message>
+    <message>
+        <source>Stability improvements</source>
+        <translation type="unfinished">安定性の向上</translation>
+    </message>
+    <message>
+        <source>Generating warnings dinamically</source>
+        <translation type="unfinished">警告の動的な生成</translation>
+    </message>
+    <message>
+        <source>New tool:</source>
+        <translation type="unfinished">新しいツール:</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">変更履歴</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1738,6 +1758,138 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
         <source>Show the changelog</source>
         <translation type="unfinished">変更ログを表示する</translation>
     </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished">スピード</translation>
+    </message>
+    <message>
+        <source>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</source>
+        <translation type="unfinished">時間軸のステップを秒単位で表します。
+ 同じ間隔内にあるすべての値が結合され、平均値が使用されます。</translation>
+    </message>
+    <message>
+        <source>Time interval</source>
+        <translation type="unfinished">時間間隔</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished">1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished">2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation type="unfinished">3</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished">4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished">5</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation type="unfinished">10</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation type="unfinished">15</translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation type="unfinished">20</translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation type="unfinished">30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation type="unfinished">60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation type="unfinished">120</translation>
+    </message>
+    <message>
+        <source>180</source>
+        <translation type="unfinished">180</translation>
+    </message>
+    <message>
+        <source>240</source>
+        <translation type="unfinished">240</translation>
+    </message>
+    <message>
+        <source>300</source>
+        <translation type="unfinished">300</translation>
+    </message>
+    <message>
+        <source>600</source>
+        <translation type="unfinished">600</translation>
+    </message>
+    <message>
+        <source>900</source>
+        <translation type="unfinished">900</translation>
+    </message>
+    <message>
+        <source>1200</source>
+        <translation type="unfinished">1200</translation>
+    </message>
+    <message>
+        <source>1800</source>
+        <translation type="unfinished">1800</translation>
+    </message>
+    <message>
+        <source>3600</source>
+        <translation type="unfinished">3600</translation>
+    </message>
+    <message>
+        <source>The format to use for the labels of the time axis.</source>
+        <translation type="unfinished">時間軸のラベルに使用する形式。</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation type="unfinished">時刻形式</translation>
+    </message>
+    <message>
+        <source>hh:mm</source>
+        <translation type="unfinished">hh:mm</translation>
+    </message>
+    <message>
+        <source>hh</source>
+        <translation type="unfinished">hh</translation>
+    </message>
+    <message>
+        <source>The size of the pie</source>
+        <translation type="unfinished">パイの大きさ</translation>
+    </message>
+    <message>
+        <source>Pie size</source>
+        <translation type="unfinished">パイのサイズ</translation>
+    </message>
+    <message>
+        <source>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</source>
+        <translation type="unfinished">円を構成するスライスの最大数。
+ 超過したスライスは 1 つの包括的なスライスにグループ化されます。</translation>
+    </message>
+    <message>
+        <source>Maximum slices</source>
+        <translation type="unfinished">最大スライス数</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation type="unfinished">関連した</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation type="unfinished">外観</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -2038,6 +2190,10 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     <message>
         <source>Saturday</source>
         <translation type="unfinished">土曜日</translation>
+    </message>
+    <message>
+        <source>Relational Count</source>
+        <translation type="unfinished">リレーショナルカウント</translation>
     </message>
 </context>
 </TS>

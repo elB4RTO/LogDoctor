@@ -251,6 +251,26 @@
         <source>Redesigned configs section</source>
         <translation type="unfinished">Seção de configurações redesenhada</translation>
     </message>
+    <message>
+        <source>Version 4</source>
+        <translation type="unfinished">Versão 4</translation>
+    </message>
+    <message>
+        <source>Stability improvements</source>
+        <translation type="unfinished">Melhorias de estabilidade</translation>
+    </message>
+    <message>
+        <source>Generating warnings dinamically</source>
+        <translation type="unfinished">Geração dinâmica dos avisos</translation>
+    </message>
+    <message>
+        <source>New tool:</source>
+        <translation type="unfinished">Nova ferramenta:</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">Registro de alterações</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1738,6 +1758,138 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <source>Show the changelog</source>
         <translation type="unfinished">Mostrar o registro de alterações</translation>
     </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished">Velocidade</translation>
+    </message>
+    <message>
+        <source>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</source>
+        <translation type="unfinished">Representa uma etapa no eixo do tempo, em segundos.
+Todos os valores dentro do mesmo intervalo serão mesclados e o valor médio será usado.</translation>
+    </message>
+    <message>
+        <source>Time interval</source>
+        <translation type="unfinished">Intervalo de tempo</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation>3</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation>5</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation>10</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation>15</translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation>20</translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation>30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation>60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation>120</translation>
+    </message>
+    <message>
+        <source>180</source>
+        <translation>180</translation>
+    </message>
+    <message>
+        <source>240</source>
+        <translation>240</translation>
+    </message>
+    <message>
+        <source>300</source>
+        <translation>300</translation>
+    </message>
+    <message>
+        <source>600</source>
+        <translation>600</translation>
+    </message>
+    <message>
+        <source>900</source>
+        <translation>900</translation>
+    </message>
+    <message>
+        <source>1200</source>
+        <translation>1200</translation>
+    </message>
+    <message>
+        <source>1800</source>
+        <translation>1800</translation>
+    </message>
+    <message>
+        <source>3600</source>
+        <translation>3600</translation>
+    </message>
+    <message>
+        <source>The format to use for the labels of the time axis.</source>
+        <translation type="unfinished">O formato a ser usado para os rótulos do eixo do tempo.</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation type="unfinished">Formato de hora</translation>
+    </message>
+    <message>
+        <source>hh:mm</source>
+        <translation type="unfinished">hh:mm</translation>
+    </message>
+    <message>
+        <source>hh</source>
+        <translation type="unfinished">hh</translation>
+    </message>
+    <message>
+        <source>The size of the pie</source>
+        <translation type="unfinished">O tamanho do gráfico de pizza</translation>
+    </message>
+    <message>
+        <source>Pie size</source>
+        <translation type="unfinished">Tamanho da torta</translation>
+    </message>
+    <message>
+        <source>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</source>
+        <translation type="unfinished">O número máximo de fatias que comporão a torta.
+As fatias excedentes serão agrupadas em uma fatia abrangente.</translation>
+    </message>
+    <message>
+        <source>Maximum slices</source>
+        <translation type="unfinished">Número máximo de fatias</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation type="unfinished">Relacional</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation type="unfinished">Aparência</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -2038,6 +2190,10 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
     <message>
         <source>Saturday</source>
         <translation>Sábado</translation>
+    </message>
+    <message>
+        <source>Relational Count</source>
+        <translation type="unfinished">Contagem Relacional</translation>
     </message>
 </context>
 </TS>

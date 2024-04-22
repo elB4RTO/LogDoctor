@@ -251,6 +251,26 @@
         <source>Redesigned configs section</source>
         <translation>Redesigned configs section</translation>
     </message>
+    <message>
+        <source>Version 4</source>
+        <translation>Version 4</translation>
+    </message>
+    <message>
+        <source>Stability improvements</source>
+        <translation>Stability improvements</translation>
+    </message>
+    <message>
+        <source>Generating warnings dinamically</source>
+        <translation>Generating warnings dinamically</translation>
+    </message>
+    <message>
+        <source>New tool:</source>
+        <translation>New tool:</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation>Changelog</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1735,6 +1755,136 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
         <source>Show the changelog</source>
         <translation>Show the changelog</translation>
     </message>
+    <message>
+        <source>Speed</source>
+        <translation>Speed</translation>
+    </message>
+    <message>
+        <source>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</source>
+        <translation>Represents a step in the time axis, in seconds. All the values falling inside the same interval will be merged and the mean value will be used.</translation>
+    </message>
+    <message>
+        <source>Time interval</source>
+        <translation>Time interval</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation>3</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation>5</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation>10</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation>15</translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation>20</translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation>30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation>60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation>120</translation>
+    </message>
+    <message>
+        <source>180</source>
+        <translation>180</translation>
+    </message>
+    <message>
+        <source>240</source>
+        <translation>240</translation>
+    </message>
+    <message>
+        <source>300</source>
+        <translation>300</translation>
+    </message>
+    <message>
+        <source>600</source>
+        <translation>600</translation>
+    </message>
+    <message>
+        <source>900</source>
+        <translation>900</translation>
+    </message>
+    <message>
+        <source>1200</source>
+        <translation>1200</translation>
+    </message>
+    <message>
+        <source>1800</source>
+        <translation>1800</translation>
+    </message>
+    <message>
+        <source>3600</source>
+        <translation>3600</translation>
+    </message>
+    <message>
+        <source>The format to use for the labels of the time axis.</source>
+        <translation>The format to use for the labels of the time axis.</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>Time format</translation>
+    </message>
+    <message>
+        <source>hh:mm</source>
+        <translation>hh:mm</translation>
+    </message>
+    <message>
+        <source>hh</source>
+        <translation>hh</translation>
+    </message>
+    <message>
+        <source>The size of the pie</source>
+        <translation>The size of the pie</translation>
+    </message>
+    <message>
+        <source>Pie size</source>
+        <translation>Pie size</translation>
+    </message>
+    <message>
+        <source>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</source>
+        <translation>The maximum number of slices that the pie will be composed of. Exceeding slices will be grouped into one comprehensive slice.</translation>
+    </message>
+    <message>
+        <source>Maximum slices</source>
+        <translation>Maximum slices</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation>Relational</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Appearance</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -2035,6 +2185,10 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
     <message>
         <source>Saturday</source>
         <translation>Saturday</translation>
+    </message>
+    <message>
+        <source>Relational Count</source>
+        <translation>Relational Count</translation>
     </message>
 </context>
 </TS>
