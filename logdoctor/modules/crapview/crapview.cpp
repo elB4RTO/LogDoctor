@@ -195,6 +195,15 @@ int Crapview::getCountMaxSlices() const noexcept
     return this->count_max_slices;
 }
 
+void Crapview::setRelatTimeFormat( const QString& format ) noexcept
+{
+    this->relat_time_format = format;
+}
+const QString& Crapview::getRelatTimeFormat() const noexcept
+{
+    return this->relat_time_format;
+}
+
 
 ////////////////
 //// CHARTS ////
@@ -859,7 +868,7 @@ void Crapview::drawRelat( QChartView* chart, const QChart::ChartTheme& theme, co
         }
         axisX->setTickCount( ticks+1 );
     } else {
-        axisX->setFormat( "hh:mm" );
+        axisX->setFormat( this->relat_time_format );
         axisX->setTickCount( 25 );
     }
     axisX->setTitleText( date );

@@ -157,6 +157,19 @@ public:
     int getCountMaxSlices() const noexcept;
 
 
+    //! Sets the time format for the Relational labels on the X-axis
+    /*!
+        \param format The format to use
+    */
+    void setRelatTimeFormat( const QString& format ) noexcept;
+
+    //! Returns the current time format for the Relational labels on the X-axis
+    /*!
+        \return The time format in use
+    */
+    const QString& getRelatTimeFormat() const noexcept;
+
+
     //! Draws the chart and fills the table for the Warnings stats
     /*!
         \param table The table widget
@@ -315,6 +328,8 @@ private:
 
     qreal count_pie_size{ 0.6 };
     int count_max_slices{ 15 };
+
+    QString relat_time_format{ "hh:mm" };
 
 
     // converr Web Servers names to  Web Server IDs
