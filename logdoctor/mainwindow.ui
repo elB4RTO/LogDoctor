@@ -6010,7 +6010,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
              </property>
              <item>
               <property name="text">
-               <string>Appearence</string>
+               <string>Appearance</string>
               </property>
              </item>
              <item>
@@ -6021,6 +6021,11 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
              <item>
               <property name="text">
                <string>Count</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Relational</string>
               </property>
              </item>
             </item>
@@ -7486,6 +7491,111 @@ Exceeding slices will be grouped into one comprehensive slice.</string>
                 <size>
                  <width>20</width>
                  <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_Conf_General_Charts_Relat">
+            <layout class="QVBoxLayout" name="verticalLayout_32">
+             <item>
+              <widget class="QFrame" name="frame_ConfCharts_Relat_TimeFormat">
+               <layout class="QGridLayout" name="gridLayout_91">
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfCharts_Relat_1">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfCharts_Relat_TimeFormat">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>The format to use for the labels of the time axis.</string>
+                  </property>
+                  <property name="text">
+                   <string>Time format</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="box_ConfCharts_Relat_TimeFormat">
+                  <property name="minimumSize">
+                   <size>
+                    <width>96</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>hh:mm</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>hh</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfCharts_Relat_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_ConfCharts_Relat">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>608</width>
+                 <height>427</height>
                 </size>
                </property>
               </spacer>
