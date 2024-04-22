@@ -312,13 +312,15 @@ private slots:
 
     void on_box_ConfCharts_Theme_currentIndexChanged(int index);
 
-    void on_box_ConfCharts_Speed_TimeInterval_currentTextChanged(const QString &arg1);
+    void on_box_ConfCharts_Speed_TimeInterval_currentTextChanged(const QString& arg1);
 
-    void on_box_ConfCharts_Speed_TimeFormat_currentTextChanged(const QString &arg1);
+    void on_box_ConfCharts_Speed_TimeFormat_currentTextChanged(const QString& arg1);
 
     void on_doubleSpinBox_ConfCharts_Count_PieSize_valueChanged(double arg1);
 
     void on_spinBox_ConfCharts_Count_MaxSlices_valueChanged(int arg1);
+
+    void on_box_ConfCharts_Relat_TimeFormat_currentTextChanged(const QString& arg1);
 
     //// DATABASES ////
 

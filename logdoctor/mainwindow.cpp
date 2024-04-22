@@ -227,6 +227,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_ConfCharts_Speed_TimeFormat->setCurrentText( this->crapview.getSpeedTimeFormat() );
     this->ui->doubleSpinBox_ConfCharts_Count_PieSize->setValue( this->crapview.getCountPieSize() );
     this->ui->spinBox_ConfCharts_Count_MaxSlices->setValue( this->crapview.getCountMaxSlices() );
+    this->ui->box_ConfCharts_Relat_TimeFormat->setCurrentText( this->crapview.getRelatTimeFormat() );
     // databases
     this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
@@ -896,6 +897,13 @@ void MainWindow::readConfigs()
                         invalid_lines.append( QString::fromStdString( line ) );
                     }
 
+                } else if ( var == "CrapviewRelationalTimeFormat" ) {
+                    if ( val == "hh:mm" || val == "hh" ) {
+                        this->crapview.setRelatTimeFormat( QString::fromStdString( val ) );
+                    } else {
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
                 }/* else {
                     // not valid
                 }*/
@@ -1116,6 +1124,7 @@ void MainWindow::writeConfigs()
         configs += "\nCrapviewSpeedTimeFormat=" + this->crapview.getSpeedTimeFormat().toStdString();
         configs += "\nCrapviewCountPieSize=" + std::to_string( this->crapview.getCountPieSize() );
         configs += "\nCrapviewCountMaxSlices=" + std::to_string( this->crapview.getCountMaxSlices() );
+        configs += "\nCrapviewRelationalTimeFormat=" + this->crapview.getRelatTimeFormat().toStdString();
 
         // write on file
         try {
@@ -1492,12 +1501,14 @@ void MainWindow::updateUiIcons()
                 icon_name += "conf_dialogs";
             } else if ( text == tr("Charts") ) {
                 icon_name += "conf_charts";
-            } else if ( text == tr("Appearence") ) {
+            } else if ( text == tr("Appearance") ) {
                 icon_name += "conf_charts_style";
             } else if ( text == tr("Speed") ) {
                 icon_name += "conf_speed";
             } else if ( text == tr("Count") ) {
                 icon_name += "conf_count";
+            } else if ( text == tr("Relational") ) {
+                icon_name += "conf_relational";
             } else if ( text == tr("TextBrowser") ) {
                 icon_name += "conf_textbrowser";
             } else if ( text == tr("Databases") ) {
@@ -1823,6 +1834,8 @@ void MainWindow::updateUiFonts()
     this->ui->doubleSpinBox_ConfCharts_Count_PieSize->setFont( font );
     this->ui->label_ConfCharts_Count_MaxSlices->setFont( big_font );
     this->ui->spinBox_ConfCharts_Count_MaxSlices->setFont( font );
+    this->ui->label_ConfCharts_Relat_TimeFormat->setFont( big_font );
+    this->ui->box_ConfCharts_Relat_TimeFormat->setFont( font );
     // conf databases
     this->ui->label_ConfDatabases_Paths->setFont( big_font );
     this->ui->label_ConfDatabases_Data->setFont( font );
@@ -4502,12 +4515,14 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
         this->setConfigsPage( General_Dialogs );
     } else if ( section == tr("Charts") ) {
         return;
-    } else if ( section == tr("Appearence") ) {
-        this->setConfigsPage( General_Charts_Appearence );
+    } else if ( section == tr("Appearance") ) {
+        this->setConfigsPage( General_Charts_Appearance );
     } else if ( section == tr("Speed") ) {
         this->setConfigsPage( General_Charts_Speed );
     } else if ( section == tr("Count") ) {
         this->setConfigsPage( General_Charts_Count );
+    } else if ( section == tr("Relational") ) {
+        this->setConfigsPage( General_Charts_Relational );
     } else if ( section == tr("TextBrowser") ) {
         this->setConfigsPage( General_TextBrowser );
     } else if ( section == tr("Databases") ) {
@@ -4808,6 +4823,11 @@ void MainWindow::on_doubleSpinBox_ConfCharts_Count_PieSize_valueChanged(double a
 void MainWindow::on_spinBox_ConfCharts_Count_MaxSlices_valueChanged(int arg1)
 {
     this->crapview.setCountMaxSlices( arg1 );
+}
+
+void MainWindow::on_box_ConfCharts_Relat_TimeFormat_currentTextChanged(const QString& arg1)
+{
+    this->crapview.setRelatTimeFormat( arg1 );
 }
 
 
