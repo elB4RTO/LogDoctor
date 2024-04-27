@@ -175,6 +175,8 @@ set(PROJECT_SOURCES
     modules/crapview/modules/fetcher/utilities.cpp
     modules/crapview/utilities/charts.h
     modules/crapview/utilities/charts.cpp
+    modules/crapview/utilities/datetime.h
+    modules/crapview/utilities/datetime.cpp
     modules/crapview/utilities/filters.h
     modules/crapview/utilities/filters.cpp
     modules/crapview/utilities/globals.h

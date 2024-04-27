@@ -10,7 +10,7 @@
 
 #include "modules/database/database.h"
 
-#include <QString>
+#include <QDateTime>
 
 
 namespace FetcherPrivate

@@ -3322,7 +3322,8 @@ void MainWindow::drawStatsWarn()
 {
     const int wsIndex{ this->ui->box_StatsWarn_WebServer->currentIndex() };
     this->ui->table_StatsWarn->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
-    this->ui->table_StatsWarn->setRowCount(0);
+    this->ui->table_StatsWarn->setRowCount( 0 );
+    this->ui->chart_StatsWarn->setChart( new QChart() );
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -3506,7 +3507,8 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
 void MainWindow::drawStatsSpeed()
 {
     this->ui->table_StatsSpeed->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
-    this->ui->table_StatsSpeed->setRowCount(0);
+    this->ui->table_StatsSpeed->setRowCount( 0 );
+    this->ui->chart_StatsSpeed->setChart( new QChart() );
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_StatsSpeed,
@@ -3750,7 +3752,8 @@ void MainWindow::on_button_StatsCount_Client_clicked()
 void MainWindow::drawStatsCount()
 {
     this->ui->table_StatsCount->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
-    this->ui->table_StatsCount->setRowCount(0);
+    this->ui->table_StatsCount->setRowCount( 0 );
+    this->ui->chart_StatsCount->setChart( new QChart() );
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -4036,6 +4039,7 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 void MainWindow::drawStatsDay()
 {
     const bool period{ this->ui->checkBox_StatsDay_Period->isChecked() };
+    this->ui->chart_StatsDay->setChart( new QChart() );
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -4329,6 +4333,7 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 }
 void MainWindow::drawStatsRelat()
 {
+    this->ui->chart_StatsRelat->setChart( new QChart() );
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),

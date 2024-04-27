@@ -12,6 +12,9 @@
 #include <optional>
 
 
+class DateTime;
+
+
 //! Fetcher
 /*!
     Fetches data for the statistics from the database
@@ -67,24 +70,6 @@ public:
 
     /*const std::string getDbPath( const int web_server );*/
 
-    //! Returns the number of months in a given period
-    /*!
-        \overload const int getMonthsCount(const int& from_year, const int& from_month, const int& to_year, const int& to_month)
-        \param from_year The initial year
-        \param from_month The initial month
-        \param to_year The final Year
-        \param to_month The final month
-        \return The number of months in the period
-        \throw ConversionException
-        \throw DateTimeException
-    */
-    int countMonths(
-        QStringView from_year,
-        QStringView from_month,
-        QStringView to_year,
-        QStringView to_month
-    ) const;
-
 
     //! Refreshes the dates which are available in the database
     /*!
@@ -99,10 +84,7 @@ public:
     /*!
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
-        \param year_ The year
-        \param month_ The month
-        \param day_ The day
-        \param hour_ The hour
+        \param date The date to use for the wuery (may contain the hour)
         \throw VoidException
         \throw ConversionException
         \throw DateTimeException
@@ -110,10 +92,7 @@ public:
     void fetchWarningsData(
         std::optional<WarningData>& result,
         QStringView web_server,
-        QStringView year_,
-        QStringView month_,
-        QStringView day_,
-        QStringView hour_
+        const DateTime& date
     ) const;
 
 
@@ -121,9 +100,7 @@ public:
     /*!
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
-        \param year_ The year
-        \param month_ The month
-        \param day_ The day
+        \param date The date to use for the wuery
         \param protocol_f The filter for the Protocol field
         \param method_f The filter for the Method field
         \param uri_f The filter for the URI field
@@ -138,9 +115,7 @@ public:
     void fetchSpeedData(
         std::optional<SpeedData>& result,
         QStringView web_server,
-        QStringView year_,
-        QStringView month_,
-        QStringView day_,
+        const DateTime& date,
         QStringView protocol_f,
         QStringView method_f,
         QStringView uri_f,
@@ -154,9 +129,7 @@ public:
     /*!
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
-        \param year The year
-        \param month The month
-        \param day The day
+        \param date The date to use for the wuery
         \param log_field The log field
         \throw VoidException
         \throw CrapviewException
@@ -165,9 +138,7 @@ public:
     void fetchCountsData(
         std::optional<CountData>& result,
         QStringView web_server,
-        QStringView year,
-        QStringView month,
-        QStringView day,
+        const DateTime& date,
         QStringView log_field
     ) const;
 
@@ -176,12 +147,8 @@ public:
     /*!
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
-        \param from_year_ The initial year
-        \param from_month_ The initial month
-        \param from_day_ The initial day
-        \param to_year_ The final year
-        \param to_month_ The final month
-        \param to_day_ The final day
+        \param from_date The initial date to use for the wuery
+        \param date The final date to use for the wuery (may be invalid)
         \param log_field_ The log field to filter
         \param field_filter The filter to apply
         \throw VoidException
@@ -192,8 +159,8 @@ public:
     void fetchDaytimeData(
         std::optional<DaytimeData>& result,
         QStringView web_server,
-        QStringView from_year_, QStringView from_month_, QStringView from_day_,
-        QStringView to_year_,   QStringView to_month_,   QStringView to_day_,
+        const DateTime& from_date,
+        DateTime to_date,
         const LogField log_field_, QStringView field_filter
     ) const;
 
@@ -203,9 +170,7 @@ public:
         Used when querying a single day
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
-        \param year_ The year
-        \param month_ The month
-        \param day_ The day
+        \param date The date to use for the wuery
         \param log_field_1_ The first log field to filter
         \param field_filter_1 The filter to apply to the first field
         \param log_field_2_ The second log field to filter
@@ -219,7 +184,7 @@ public:
     void fetchRelationalDataDay(
         std::optional<RelationalData>& result,
         QStringView web_server,
-        QStringView year_,        QStringView month_,         QStringView day_,
+        const DateTime& date,
         const LogField log_field_1_, QStringView field_filter_1,
         const LogField log_field_2_, QStringView field_filter_2
     ) const;
@@ -229,12 +194,8 @@ public:
         Used when querying a period of time
         \param result Holds the data only if the operation completed succssfully
         \param web_server The ID of the Web Server to use
-        \param from_year_ The initial year
-        \param from_month_ The initial month
-        \param from_day_ The initial day
-        \param to_year_ The final year
-        \param to_month_ The final month
-        \param to_day_ The final day
+        \param from_date The date to use for the wuery
+        \param to_date The date to use for the wuery
         \param log_field_1_ The first log field to filter
         \param field_filter_1 The filter to apply to the first field
         \param log_field_2_ The second log field to filter
@@ -248,8 +209,8 @@ public:
     void fetchRelationalDataPeriod(
         std::optional<RelationalData>& result,
         QStringView web_server,
-        QStringView from_year_,   QStringView from_month_,    QStringView from_day_,
-        QStringView to_year_,     QStringView to_month_,      QStringView to_day_,
+        const DateTime& from_date,
+        DateTime to_date,
         const LogField log_field_1_, QStringView field_filter_1,
         const LogField log_field_2_, QStringView field_filter_2
     ) const;
@@ -322,14 +283,6 @@ private:
         \throw CrapviewException
     */
     const QString& getDbField( QStringView tr_fld ) const;
-
-    //! Returns the month number in the year
-    /*!
-        \param month_str The month
-        \return The month number
-        \throw DateTimeException
-    */
-    int getMonthNumber( QStringView month_str ) const;
 };
 
 

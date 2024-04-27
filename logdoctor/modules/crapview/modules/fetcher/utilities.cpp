@@ -3,6 +3,8 @@
 
 #include "modules/dialogs.h"
 
+#include "modules/shared.h"
+
 
 namespace FetcherPrivate
 {
@@ -63,6 +65,37 @@ int getMinuteGap( const int minute, const int gap=10 )
         ++n;
     }
     return m;
+}
+
+
+int getMonthNumber( QStringView month_str )
+{
+    if ( TR::tr( MONTHS__JANUARY.c_str() ) == month_str ) {
+        return 1;
+    } else if ( TR::tr( MONTHS__FEBRUARY.c_str() ) == month_str ) {
+        return 2;
+    } else if ( TR::tr( MONTHS__MARCH.c_str() ) == month_str ) {
+        return 3;
+    } else if ( TR::tr( MONTHS__APRIL.c_str() ) == month_str ) {
+        return 4;
+    } else if ( TR::tr( MONTHS__MAY.c_str() ) == month_str ) {
+        return 5;
+    } else if ( TR::tr( MONTHS__JUNE.c_str() ) == month_str ) {
+        return 6;
+    } else if ( TR::tr( MONTHS__JULY.c_str() ) == month_str ) {
+        return 7;
+    } else if ( TR::tr( MONTHS__AUGUST.c_str() ) == month_str ) {
+        return 8;
+    } else if ( TR::tr( MONTHS__SEPTEMBER.c_str() ) == month_str ) {
+        return 9;
+    } else if ( TR::tr( MONTHS__OCTOBER.c_str() ) == month_str ) {
+        return 10;
+    } else if ( TR::tr( MONTHS__NOVEMBER.c_str() ) == month_str ) {
+        return 11;
+    } else if ( TR::tr( MONTHS__DECEMBER.c_str() ) == month_str ) {
+        return 12;
+    }
+    throw DateTimeException( "Unexpected Month name", month_str.toString().toStdString() );
 }
 
 

@@ -5,6 +5,7 @@
 #include "fetcher/utilities.h"
 
 #include "modules/crapview/datatypes/fwd.h"
+#include "modules/crapview/utilities/datetime.h"
 
 #include "modules/database/database.h"
 
@@ -28,31 +29,6 @@ void Fetcher::setDbPath( std::string&& path ) noexcept
 {
     this->db_path = std::move(path);
     this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1ul ) );
-}
-
-
-int Fetcher::getMonthNumber( QStringView month_str ) const
-{
-    for ( const auto& [num,str] : this->MONTHS ) {
-        if ( TR::tr(str.c_str()) == month_str ) {
-            return num;
-        }
-    }
-    throw DateTimeException( "Unexpected Month name", month_str.toString().toStdString() );
-}
-
-
-int Fetcher::countMonths( QStringView from_year, QStringView from_month, QStringView to_year, QStringView to_month ) const
-{
-    const int from_year_{ toInt( from_year ) },
-              from_month_{ this->getMonthNumber( from_month ) };
-
-    return ::countMonths(
-        toInt( from_year ),
-        this->getMonthNumber( from_month ),
-        to_year.isEmpty() ? from_year_ : toInt( to_year ),
-        to_month.isEmpty() ? from_month_ : this->getMonthNumber( to_month )
-    );
 }
 
 
@@ -113,36 +89,31 @@ void Fetcher::fetchAllDates( std::optional<database_dates_t>& result ) noexcept
 
 
 // get daytime values for the warnings
-void Fetcher::fetchWarningsData( std::optional<WarningData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
+void Fetcher::fetchWarningsData( std::optional<WarningData>& result, QStringView web_server, const DateTime& date ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    // setup period limits
-    const int year{  toInt( year_ ) };
-    const int month{ this->getMonthNumber( month_ ) };
-    const int day{   toInt( day_ ) };
-    const int hour{  hour_.isEmpty() ? -1 : toInt( hour_ ) };
-
     QueryWrapper query{ db.getQuery() };
 
     query << QStringLiteral(R"(SELECT * FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
                 .arg( web_server )
-                .arg( year ).arg( month ).arg( day );
+                .arg( date.getYear() )
+                .arg( date.getMonth() )
+                .arg( date.getDay() );
 
     WarningData data;
 
-    if ( hour == -1 ) {
-        data.setTimelineAsDay();
-
-        query << R"( ORDER BY "hour","minute","second" ASC;)";
-
-    } else {
+    if ( date.isHourValid() ) {
         data.setTimelineAsHour();
 
         query << QStringLiteral(R"( AND "hour"=%1 ORDER BY "minute","second" ASC;)")
-                    .arg( hour );
+                    .arg( date.getHour() );
+    } else {
+        data.setTimelineAsDay();
+
+        query << R"( ORDER BY "hour","minute","second" ASC;)";
     }
 
     query();
@@ -154,21 +125,19 @@ void Fetcher::fetchWarningsData( std::optional<WarningData>& result, QStringView
 
 
 // get day-time values for the time-taken field
-void Fetcher::fetchSpeedData( std::optional<SpeedData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
+void Fetcher::fetchSpeedData( std::optional<SpeedData>& result, QStringView web_server, const DateTime& date, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    const int year{  toInt( year_ ) };
-    const int month{ this->getMonthNumber( month_ ) };
-    const int day{   toInt( day_ ) };
-
     QueryWrapper query{ db.getQuery() };
 
     query << QStringLiteral(R"(SELECT "hour","minute","second","time_taken","uri","query","method","protocol","response" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4 AND "time_taken" IS NOT NULL)")
                 .arg( web_server )
-                .arg( year ).arg( month ).arg( day );
+                .arg( date.getYear() )
+                .arg( date.getMonth() )
+                .arg( date.getDay() );
 
     if ( ! protocol_f.isEmpty() ) {
         query << QStringLiteral(R"( AND "protocol")").append( protocol_f );
@@ -194,7 +163,7 @@ void Fetcher::fetchSpeedData( std::optional<SpeedData>& result, QStringView web_
 
     query();
 
-    TimeManager time{ year, month, day, time_interval };
+    TimeManager time{ date.toTimeManager( time_interval ) };
 
     SpeedData data;
     if ( data.buildFromQuery( query, std::move(time) ) ) {
@@ -205,7 +174,7 @@ void Fetcher::fetchSpeedData( std::optional<SpeedData>& result, QStringView web_
 
 
 // get, group and count identical items of a specific field in a date
-void Fetcher::fetchCountsData( std::optional<CountData>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
+void Fetcher::fetchCountsData( std::optional<CountData>& result, QStringView web_server, const DateTime& date, QStringView log_field ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -216,10 +185,10 @@ void Fetcher::fetchCountsData( std::optional<CountData>& result, QStringView web
     query << QStringLiteral(R"(SELECT "%1" FROM "%2" WHERE "%3" IS NOT NULL AND "year"=%4 AND "month"=%5 AND "day"=%6;)")
                 .arg( this->getDbField( log_field ),
                       web_server,
-                      this->getDbField( log_field ),
-                      year,
-                      QString::number( this->getMonthNumber( month ) ),
-                      day )
+                      this->getDbField( log_field ) )
+                .arg( date.getYear()  )
+                .arg( date.getMonth() )
+                .arg( date.getDay()   )
                 .replace(QChar('\''),QLatin1String("''"));
 
     query();
@@ -234,26 +203,23 @@ void Fetcher::fetchCountsData( std::optional<CountData>& result, QStringView web
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
+void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView web_server, const DateTime& from_date, DateTime to_date, const LogField log_field_, QStringView field_filter ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    const int from_year{  toInt( from_year_ ) };
-    const int from_month{ this->getMonthNumber( from_month_ ) };
-    const int from_day{   toInt( from_day_ ) };
-    const int to_year{    to_year_.isEmpty()  ? from_year  : toInt( to_year_ )  };
-    const int to_month{   to_month_.isEmpty() ? from_month : this->getMonthNumber( to_month_ )  };
-    const int to_day{     to_day_.isEmpty()   ? from_day   : toInt( to_day_ )  };
+    if ( ! to_date.isValid() ) {
+        to_date = from_date;
+    }
 
     const QString& log_field{ this->getDbField( log_field_ ) };
 
     int n_days   { 0 },
-        n_months { ::countMonths( from_year, from_month, to_year, to_month ) };
+        n_months { from_date.countMonths( to_date ) };
 
-    int year  { from_year },
-        month { from_month };
+    int year  { from_date.getYear()  },
+        month { from_date.getMonth() };
 
     DaytimeData data;
 
@@ -263,7 +229,8 @@ void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView 
         query << QStringLiteral(R"(SELECT "day", "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
                     .arg( web_server )
                     .arg( year ).arg( month )
-                    .arg( from_day ).arg( to_day );
+                    .arg( from_date.getDay() )
+                    .arg( to_date.getDay() );
 
         if ( ! field_filter.isEmpty() ) {
             query << QStringLiteral(R"( AND "%1"%2)").arg( log_field, field_filter );
@@ -286,10 +253,10 @@ void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView 
 
             if ( m == 1 ) {
                 // first month, only get the days starting from the beginning day
-                query << QStringLiteral(R"( AND "day">=%1)").arg( from_day );
+                query << QStringLiteral(R"( AND "day">=%1)").arg( from_date.getDay() );
             } else if ( m == n_months ) {
                 // last month, only get the days until the ending day
-                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_day );
+                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_date.getDay() );
             }
 
             if ( ! field_filter.isEmpty() ) {
@@ -320,15 +287,11 @@ void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView 
 
 
 // get and count how many times a specific item value brought to another
-void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
+void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QStringView web_server, const DateTime& date, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
-
-    const int year{  toInt( year_ ) };
-    const int month{ this->getMonthNumber( month_ ) };
-    const int day{   toInt( day_ ) };
 
     const QString& log_field_1{ this->getDbField( log_field_1_ ) };
     const QString& log_field_2{ this->getDbField( log_field_2_ ) };
@@ -337,7 +300,9 @@ void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QSt
 
     query << QStringLiteral(R"(SELECT "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
                 .arg( web_server )
-                .arg( year ).arg( month ).arg( day );
+                .arg( date.getYear()  )
+                .arg( date.getMonth() )
+                .arg( date.getDay()   );
 
     if ( ! field_filter_1.isEmpty() ) {
         query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 );
@@ -354,7 +319,7 @@ void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QSt
     const qint64 time_interval_mins{ 20 };
     const qint64 time_interval_secs{ time_interval_mins * 60 };
 
-    TimeManager time{ year, month, day, time_interval_secs };
+    TimeManager time{ date.toTimeManager( time_interval_secs ) };
 
     RelationalData data;
     if ( data.buildFromQuery( query, std::move(time) ) ) {
@@ -364,26 +329,26 @@ void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QSt
 
 
 
-void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
+void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, QStringView web_server, const DateTime& from_date, DateTime to_date, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
 
-    const int from_year{  toInt( from_year_ ) };
-    const int from_month{ this->getMonthNumber( from_month_ ) };
-    const int from_day{   toInt( from_day_ ) };
-    const int to_year{    to_year_.isEmpty()  ? from_year  : toInt( to_year_ ) };
-    const int to_month{   to_month_.isEmpty() ? from_month : this->getMonthNumber( to_month_ ) };
-    const int to_day{     to_day_.isEmpty()   ? from_day   : toInt( to_day_ ) };
+    if ( ! to_date.isValid() ) {
+        to_date = from_date;
+    }
 
     const QString& log_field_1{ this->getDbField( log_field_1_ ) };
     const QString& log_field_2{ this->getDbField( log_field_2_ ) };
 
-    const int n_months{ ::countMonths( from_year, from_month, to_year, to_month ) };
+    const int n_months{ from_date.countMonths( to_date ) };
 
-    int year  { from_year  },
-        month { from_month };
+    int year  { from_date.getYear()  },
+        month { from_date.getMonth() };
+
+    DateManager date{ from_date.toDateManager() };
+    const auto last_date{ to_date.toQDate().addDays( 1 ) };
 
     if ( n_months == 1 ) {
         // 1 month, no need to loop
@@ -392,7 +357,8 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
         query << QStringLiteral(R"(SELECT "day" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
                     .arg( web_server )
                     .arg( year ).arg( month )
-                    .arg( from_day ).arg( to_day );
+                    .arg( from_date.getDay() )
+                    .arg( to_date.getDay() );
 
         if ( ! field_filter_1.isEmpty() ) {
             query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 );
@@ -406,10 +372,6 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
 
         query();
 
-        DateManager date{ from_year, from_month, from_day };
-
-        const auto last_date{ QDate( to_year, to_month, to_day ).addDays( 1 ) };
-
         RelationalData data;
         if ( data.buildFromQuery( query, std::move(date), std::move(last_date) ) ) {
             result.emplace( std::move(data) );
@@ -417,11 +379,9 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
 
 
     } else {
-        DateManager date{ from_year, from_month, from_day };
-
         RelationalData data;
-        data.reserveSpace( countDays( from_year, from_month, from_day, to_year, to_month, to_day ) * 2 );
-        bool no_data{ false };
+        data.reserveSpace( from_date.countDays( to_date ) * 2 );
+        bool data_found{ false };
 
         const QString query_filters{ QStringLiteral("%1%2").arg(
             !field_filter_1.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 ) : QString(),
@@ -432,8 +392,8 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
 
         for ( int m{1}; m<=n_months; ++m ) {
 
-            const int first_day{ m==1 ? from_day : 1 };
-            const int last_day{ m==n_months ? to_day : getMonthDays( year, month ) };
+            const int first_day{ m==1 ? from_date.getDay() : 1 };
+            const int last_day{ m==n_months ? to_date.getDay() : getMonthDays( year, month ) };
 
             QueryWrapper query{ db.getQuery() };
 
@@ -443,10 +403,10 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
 
             if ( m == 1 ) {
                 // first month, only get the day from the beginning day
-                query << QStringLiteral(R"( AND "day">=%1)").arg( from_day );
+                query << QStringLiteral(R"( AND "day">=%1)").arg( from_date.getDay() );
             } else if ( m == n_months ) {
                 // last month, only get the days until the ending day
-                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_day );
+                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_date.getDay() );
             }
 
             if ( ! query_filters.isEmpty() ) {
@@ -460,7 +420,7 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
             const QDate initial_date{ year, month, first_day };
             const QDate final_date{   year, month, last_day  };
 
-            no_data |= data.appendFromQuery( query, date, std::move(initial_date), std::move(final_date), last_day );
+            data_found |= data.appendFromQuery( query, date, std::move(initial_date), std::move(final_date), last_day );
 
             // increase the month
             if ( ++month > 12 ) {
@@ -468,13 +428,12 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
                 ++year;
             }
         }
-        if ( no_data ) {
-            return;
-        }
-
-        const auto last_date{ QDate( to_year, to_month, to_day ).addDays( 1 ) };
 
         data.appendLastEmpty( date, std::move(last_date) );
+
+        if ( data_found ) {
+            result.emplace( std::move(data) );
+        }
     }
 }
 

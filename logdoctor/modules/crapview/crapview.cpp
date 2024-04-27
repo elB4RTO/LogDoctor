@@ -5,6 +5,7 @@
 
 #include "modules/crapview/utilities/charts.h"
 #include "modules/crapview/utilities/globals.h"
+#include "modules/crapview/utilities/datetime.h"
 
 #include "utilities/printables.h"
 #include "utilities/strings.h"
@@ -219,9 +220,11 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
 {
     std::optional<WarningData> result;
 
+    const DateTime stats_date{ year, month, day, hour };
+
     try {
 
-        this->fetcher.fetchWarningsData( result, web_server, year, month, day, hour );
+        this->fetcher.fetchWarningsData( result, web_server, stats_date );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -257,12 +260,13 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
 
     ChartOps::Warnings::setupChart( b_chart, theme );
 
-    const QStringList categories{
-        hour.isEmpty() ? this->getHours() : QStringList{"00","10","20","30","40","50"}
+    const QStringList categories{ stats_date.isHourValid()
+        ? QStringList{"00","10","20","30","40","50"}
+        : this->getHours()
     };
-    const QString date{ hour.isEmpty()
-        ? PrintSec::printableDate( year, this->getMonthNumber( month ), day )
-        : PrintSec::printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour
+    const QString date{ stats_date.isHourValid()
+        ? PrintSec::printableDate( year, this->getMonthNumber( month ), day ) + ", h " + hour
+        : PrintSec::printableDate( year, this->getMonthNumber( month ), day )
     };
 
     ChartOps::Warnings::attachXAxis( b_chart, b_series, categories, date );
@@ -279,9 +283,11 @@ void Crapview::drawSpeed( QTableWidget*const table, QChartView*const chart, cons
 {
     std::optional<SpeedData> result;
 
+    const DateTime stats_date{ year, month, day };
+
     try {
 
-        this->fetcher.fetchSpeedData( result, web_server, year, month, day, protocol, method, uri, query, response, this->speed_interval );
+        this->fetcher.fetchSpeedData( result, web_server, stats_date, protocol, method, uri, query, response, this->speed_interval );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -294,7 +300,6 @@ void Crapview::drawSpeed( QTableWidget*const table, QChartView*const chart, cons
 
     if ( ! result ) {
         DialogSec::msgNoDataForStats();
-        chart->setChart( new QChart() );
         return;
     }
 
@@ -330,9 +335,11 @@ void Crapview::drawCount( QTableWidget*const table, QChartView*const chart, cons
 {
     std::optional<CountData> result;
 
+    const DateTime stats_date{ year, month, day };
+
     try {
 
-        this->fetcher.fetchCountsData( result, web_server, year, month, day, field );
+        this->fetcher.fetchCountsData( result, web_server, stats_date, field );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -361,6 +368,7 @@ void Crapview::drawCount( QTableWidget*const table, QChartView*const chart, cons
     connect( pie, &QPieSeries::clicked, this, &Crapview::sliceClicked );
 
     QChart*const p_chart{ new QChart() };
+    ChartOps::Count::appendToChart( p_chart, pie );
     ChartOps::Count::setupChart( p_chart, theme, field );
 
     chart->setChart( p_chart );
@@ -373,9 +381,12 @@ void Crapview::drawDay( QChartView*const chart, const QChart::ChartTheme& theme,
 {
     std::optional<DaytimeData> result;
 
+    const DateTime from_date{ from_year, from_month, from_day };
+    const DateTime to_date{   to_year,   to_month,   to_day };
+
     try {
 
-        this->fetcher.fetchDaytimeData( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field, filter );
+        this->fetcher.fetchDaytimeData( result, web_server, from_date, to_date, field, filter );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -416,6 +427,7 @@ void Crapview::drawDay( QChartView*const chart, const QChart::ChartTheme& theme,
     ChartOps::Daytime::setupSeries( bars, sets );
 
     QChart*const b_chart{ new QChart() };
+    ChartOps::Daytime::appendToChart( b_chart, bars );
     ChartOps::Daytime::setupChart( b_chart, theme, field_str );
 
     const QStringList categories{ this->getHours() };
@@ -442,16 +454,19 @@ void Crapview::drawDay( QChartView*const chart, const QChart::ChartTheme& theme,
 
 void Crapview::drawRelat( QChartView*const chart, const QChart::ChartTheme& theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_1_str, const LogField field_1, const QString filter_1, const QString field_2_str, const LogField field_2, const QString filter_2 ) const
 {
-    const bool period{ from_day != to_day || from_month != to_month || from_year != to_year };
-
     std::optional<RelationalData> result;
+
+    const DateTime from_date{ from_year, from_month, from_day };
+    const DateTime to_date{   to_year,   to_month,   to_day };
+
+    const bool period{ to_date.isValid() && from_date != to_date };
 
     try {
 
         if ( ! period ) {
-            this->fetcher.fetchRelationalDataDay( result, web_server, from_year, from_month, from_day, field_1, filter_1, field_2, filter_2 );
+            this->fetcher.fetchRelationalDataDay( result, web_server, from_date, field_1, filter_1, field_2, filter_2 );
         } else {
-            this->fetcher.fetchRelationalDataPeriod( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field_1, filter_1, field_2, filter_2 );
+            this->fetcher.fetchRelationalDataPeriod( result, web_server, from_date, to_date, field_1, filter_1, field_2, filter_2 );
         }
 
     } catch ( const DatabaseException& e ) {
@@ -492,21 +507,21 @@ void Crapview::drawRelat( QChartView*const chart, const QChart::ChartTheme& them
     QString time_format, date;
     if ( period ) {
         time_format = "yyyy-MM";
-        n_ticks = this->fetcher.countMonths( from_year, from_month, to_year, to_month );
+        n_ticks = from_date.countMonths( to_date );
         if ( n_ticks == 1 ) {
-            time_format = "yyyy-MM-dd";
-            n_ticks = to_day.toInt() - from_day.toInt() + 2;
+            time_format = "dd";
+            n_ticks = from_date.countDays( to_date );
         }
         ++n_ticks;
         date = QStringLiteral("%1 %2 %3 %4").arg(
             TR::tr( "from" ),
-            PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day ),
+            PrintSec::printableDate( from_year, from_date.getMonth(), from_day ),
             TR::tr( "to" ),
-            PrintSec::printableDate( to_year, this->getMonthNumber(to_month), to_day ));
+            PrintSec::printableDate( to_year, to_date.getMonth(), to_day ));
     } else {
         time_format = this->relat_time_format;
         n_ticks = 25;
-        date = PrintSec::printableDate( from_year, this->getMonthNumber(from_month), from_day );
+        date = PrintSec::printableDate( from_year, from_date.getMonth(), from_day );
     }
 
     ChartOps::Relational::attachXAxis( a_chart, area, n_ticks, time_format, date );

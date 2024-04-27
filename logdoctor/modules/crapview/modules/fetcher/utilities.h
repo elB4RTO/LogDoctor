@@ -43,6 +43,14 @@ QString toString( const QVariant& var );
 */
 int getMinuteGap( const int minute, const int gap=10 );
 
+//! Returns the month number in the year
+/*!
+        \param month_str The month string (translated)
+        \return The month number
+        \throw DateTimeException
+    */
+int getMonthNumber( QStringView month_str );
+
 
 //! Returns the number of days for a given month
 /*!
