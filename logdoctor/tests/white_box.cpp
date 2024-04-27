@@ -12,10 +12,10 @@
 
 #include "modules/exceptions.h"
 
-#include "modules/craplog/modules/datetime.h"
 #include "modules/craplog/modules/formats.h"
-#include "modules/craplog/modules/logs.h"
-#include "modules/craplog/modules/workers/lib.h"
+#include "modules/craplog/utilities/datetime.h"
+#include "modules/craplog/utilities/logs.h"
+#include "modules/craplog/workers/parser/logs_data.h"
 
 #include "modules/crapview/utilities/filters.h"
 

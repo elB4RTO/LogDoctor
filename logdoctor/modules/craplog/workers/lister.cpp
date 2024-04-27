@@ -7,19 +7,19 @@
 #include "modules/exceptions.h"
 
 #include "modules/craplog/modules/lib.h"
-#include "modules/craplog/modules/hash.h"
-#include "modules/craplog/modules/logs.h"
+#include "modules/craplog/modules/hasher.h"
+#include "modules/craplog/utilities/logs.h"
 
-#include "modules/craplog/modules/workers/lib.h"
+#include "modules/craplog/workers/lib.h"
 
 
-CraplogLister::CraplogLister( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const HashOps& hashOps, const std::function<bool(const std::string&)> check_filename, QObject* parent )
+CraplogLister::CraplogLister( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const Hasher& hasher, const std::function<bool(const std::string&)> check_filename, QObject* parent )
     : QObject        { parent         }
     , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
     , logs_path      { logs_path      }
     , logs_format    { logs_format    }
-    , hashOps        { hashOps        }
+    , hasher         { hasher         }
     , check_filename { check_filename }
 {
 
@@ -112,7 +112,7 @@ void CraplogLister::work()
 
         std::string hash;
         try {
-            this->hashOps.digestFile( path, hash );
+            this->hasher.digestFile( path, hash );
         } catch ( GenericException& e ) {
             // failed to digest
             emit this->showDialog( WorkerDialog::errGeneric,
@@ -122,7 +122,7 @@ void CraplogLister::work()
 
         // push in the list
         emit this->pushLogFile( LogFile{
-            false, this->hashOps.hasBeenUsed( hash, this->web_server ),
+            false, this->hasher.hasBeenUsed( hash, this->web_server ),
             size, name, hash, path } );
     }
     this->quit();

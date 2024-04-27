@@ -19,9 +19,9 @@
 
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/donuts.h"
-#include "modules/craplog/modules/logs.h"
-#include "modules/craplog/modules/workers/lister.h"
-#include "modules/craplog/modules/workers/parser.h"
+#include "modules/craplog/workers/lister.h"
+#include "modules/craplog/workers/parser.h"
+#include "modules/craplog/utilities/logs.h"
 
 #include <QPainter>
 #include <QWaitCondition>
@@ -87,7 +87,7 @@ DialogsLevel Craplog::getDialogsLevel() const noexcept
 void Craplog::setDialogsLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialogs_level = new_level;
-    this->hashOps.setDialogLevel( new_level );
+    this->hasher.setDialogLevel( new_level );
 }
 
 const std::string& Craplog::getStatsDatabasePath() const noexcept
@@ -307,7 +307,7 @@ void Craplog::scanLogsDir()
         this->dialogs_level,
         this->logs_paths.at( this->current_web_server ),
         this->logs_formats.at( this->current_web_server ),
-        this->hashOps,
+        this->hasher,
         [this]( const std::string& file_name )
               { return this->isFileNameValid( file_name ); }
     ) };
@@ -789,7 +789,7 @@ void Craplog::updateChartData( const size_t total_size, const size_t total_lines
 void Craplog::storeFilesHashes( QWaitCondition* wc, bool* successful) noexcept
 {
     try {
-        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
+        this->hasher.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
         *successful |= true;
     } catch (...) {
         DialogSec::errFailedInsertUsedHashes();

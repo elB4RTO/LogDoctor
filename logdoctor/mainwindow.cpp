@@ -2105,7 +2105,7 @@ void MainWindow::makeInitialChecks()
                 ok &= false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/" + DatabasesNames::hashes );
+                this->craplog.hasher.loadUsedHashesLists( this->db_hashes_path + "/" + DatabasesNames::hashes );
             }
         }
     }

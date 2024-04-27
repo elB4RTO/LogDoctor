@@ -1,33 +1,14 @@
-#ifndef LOGDOCTOR__CRAPLOG__WORKERS__LIB_H
-#define LOGDOCTOR__CRAPLOG__WORKERS__LIB_H
+#ifndef LOGDOCTOR__CRAPLOG__WORKERS__PARSER__LOGS_DATA_H
+#define LOGDOCTOR__CRAPLOG__WORKERS__PARSER__LOGS_DATA_H
 
 
-#include <QMetaType>
+#include <string>
+#include <vector>
 
 
-enum LogsFormatField : uint32_t;
+enum LogsFormatField : __uint32_t;
 
-struct LogsFormat;
-
-
-//! Signals which dialog to show
-enum class WorkerDialog {
-    errGeneric,                 // 1 arg
-    errDirNotExists,            // 1 arg
-    errFailedDefiningLogType,   // 1 arg
-    errFailedParsingLogs,       // 1 arg
-    errDatabaseFileNotFound,    // 1 arg
-    errDatabaseFileNotFile,     // 1 arg
-    errDatabaseFileNotReadable, // 1 arg
-    errDatabaseFileNotWritable, // 1 arg
-    errDatabaseFailedOpening,   // 2 args
-    errDatabaseFailedExecuting, // 3 args
-    warnFileNotReadable,        // 1 arg
-    warnEmptyFile,              // 1 arg
-};
-
-Q_DECLARE_METATYPE(WorkerDialog)
-
+class LogsFormat;
 
 
 //! FieldData
@@ -44,7 +25,8 @@ struct FieldData final
     ~FieldData() noexcept = default;
     FieldData(FieldData&& other) noexcept = default;
     FieldData& operator=(FieldData&& rhs) noexcept = default;
-    Q_DISABLE_COPY(FieldData)
+    FieldData(const FieldData &) = delete;
+    FieldData &operator=(const FieldData &) = delete;
 
     //! Returns whether the field contains data
     inline operator bool() const noexcept
@@ -82,7 +64,8 @@ struct LogLineData final
     ~LogLineData() noexcept = default;
     LogLineData(LogLineData&& other) noexcept = default;
     LogLineData& operator=(LogLineData&& rhs) noexcept = delete;
-    Q_DISABLE_COPY(LogLineData)
+    LogLineData(const LogLineData &) = delete;
+    LogLineData &operator=(const LogLineData &) = delete;
 
     //! Returns the total size of all the fields' data
     size_t size() const noexcept;
@@ -141,4 +124,4 @@ private:
 };
 
 
-#endif // LOGDOCTOR__CRAPLOG__WORKERS__LIB_H
+#endif // LOGDOCTOR__CRAPLOG__WORKERS__PARSER__LOGS_DATA_H

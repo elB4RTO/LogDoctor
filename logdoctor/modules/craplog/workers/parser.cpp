@@ -1,6 +1,10 @@
 
 #include "parser.h"
 
+#include "parser/logs_data.h"
+
+#include "lib.h"
+
 #include "globals/db_names.h"
 
 #include "utilities/checks.h"
@@ -11,8 +15,6 @@
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
-
-#include "modules/craplog/modules/workers/lib.h"
 
 #include <QWaitCondition>
 #include <QSqlDatabase>

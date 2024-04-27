@@ -1,10 +1,10 @@
 
-#include "../lib.h"
+#include "logs_data.h"
 
 #include "modules/exceptions.h"
 
 #include "modules/craplog/modules/lib.h"
-#include "modules/craplog/modules/datetime.h"
+#include "modules/craplog/utilities/datetime.h"
 
 #include "utilities/strings.h"
 #include "utilities/vectors.h"

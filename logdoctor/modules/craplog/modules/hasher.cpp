@@ -1,5 +1,7 @@
 
-#include "hash.h"
+#include "hasher.h"
+
+#include "hasher/sha256.h"
 
 #include "globals/db_names.h"
 
@@ -13,21 +15,19 @@
 
 #include "modules/database/database.h"
 
-#include "sha256.h"
-
 #include <ios>
 
 #include <QVariant>
 
 
-void HashOps::setDialogLevel( const DialogsLevel new_level ) noexcept
+void Hasher::setDialogLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialogs_level = new_level;
 }
 
 
 // reads the database holding the already used hashes
-bool HashOps::loadUsedHashesLists( const std::string& db_path ) noexcept
+bool Hasher::loadUsedHashesLists( const std::string& db_path ) noexcept
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
 
@@ -56,7 +56,7 @@ bool HashOps::loadUsedHashesLists( const std::string& db_path ) noexcept
 
 
 // returns the hash
-void HashOps::digestFile( const std::string& file_path, std::string& hash )
+void Hasher::digestFile( const std::string& file_path, std::string& hash )
 {
     std::string content;
     try {
@@ -109,7 +109,7 @@ void HashOps::digestFile( const std::string& file_path, std::string& hash )
 
 
 // check if the given hash is from a file which has been used already
-bool HashOps::hasBeenUsed( const std::string &file_hash, const WebServer& web_server) const noexcept
+bool Hasher::hasBeenUsed( const std::string &file_hash, const WebServer& web_server) const noexcept
 {
     const auto& ws_hashes{ this->hashes.at( web_server ) };
     return std::any_of(
@@ -119,7 +119,7 @@ bool HashOps::hasBeenUsed( const std::string &file_hash, const WebServer& web_se
 }
 
 
-void HashOps::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
+void Hasher::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
 {
     const bool explain_msg{ this->dialogs_level >  DL_ESSENTIAL   };
     const bool explain_err{ this->dialogs_level == DL_EXPLANATORY };

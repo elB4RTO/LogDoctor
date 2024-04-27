@@ -8,7 +8,7 @@
 
 struct LogsFormat;
 struct LogFile;
-class HashOps;
+class Hasher;
 
 enum class WorkerDialog;
 
@@ -24,7 +24,7 @@ public:
         const DialogsLevel dialogs_level,
         const std::string& logs_path,
         const LogsFormat& logs_format,
-        const HashOps& hashOps,
+        const Hasher& hasher,
         const std::function<bool(const std::string&)> check_filename,
         QObject* parent=nullptr
     );
@@ -55,7 +55,7 @@ private:
 
     const LogsFormat& logs_format;
 
-    const HashOps& hashOps;
+    const Hasher& hasher;
 
     const std::function<bool(const std::string&)> check_filename;
 

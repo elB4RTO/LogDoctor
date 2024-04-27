@@ -133,24 +133,25 @@ set(PROJECT_SOURCES
     modules/craplog/craplog.h
     modules/craplog/craplog.cpp
     modules/craplog/modules/lib.h
-    modules/craplog/modules/datetime.h
-    modules/craplog/modules/datetime.cpp
     modules/craplog/modules/donuts.h
     modules/craplog/modules/donuts.cpp
     modules/craplog/modules/formats.h
     modules/craplog/modules/formats.cpp
-    modules/craplog/modules/hash.h
-    modules/craplog/modules/hash.cpp
-    modules/craplog/modules/logs.h
-    modules/craplog/modules/logs.cpp
-    modules/craplog/modules/sha256.h
-    modules/craplog/modules/sha256.cpp
-    modules/craplog/modules/workers/lib.h
-    modules/craplog/modules/workers/lister.h
-    modules/craplog/modules/workers/lister.cpp
-    modules/craplog/modules/workers/parser.h
-    modules/craplog/modules/workers/parser.cpp
-    modules/craplog/modules/workers/impl/loglinedata.cpp
+    modules/craplog/modules/hasher.h
+    modules/craplog/modules/hasher.cpp
+    modules/craplog/modules/hasher/sha256.h
+    modules/craplog/modules/hasher/sha256.cpp
+    modules/craplog/utilities/datetime.h
+    modules/craplog/utilities/datetime.cpp
+    modules/craplog/utilities/logs.h
+    modules/craplog/utilities/logs.cpp
+    modules/craplog/workers/lib.h
+    modules/craplog/workers/lister.h
+    modules/craplog/workers/lister.cpp
+    modules/craplog/workers/parser.h
+    modules/craplog/workers/parser.cpp
+    modules/craplog/workers/parser/logs_data.h
+    modules/craplog/workers/parser/logs_data.cpp
 
     modules/crapview/lib.h
     modules/crapview/crapview.h
@@ -299,8 +300,9 @@ add_executable(LogDocTester
     modules/exceptions.h
     modules/exceptions.cpp
     modules/craplog/modules/lib.h
-    modules/craplog/modules/workers/lib.h
-    modules/craplog/modules/workers/impl/loglinedata.cpp
+    modules/craplog/workers/lib.h
+    modules/craplog/workers/parser/logs_data.h
+    modules/craplog/workers/parser/logs_data.cpp
     utilities/gzip.h
     utilities/gzip.cpp
     utilities/io.h
@@ -308,12 +310,12 @@ add_executable(LogDocTester
     utilities/strings.h
     utilities/strings.cpp
     utilities/vectors.h
-    modules/craplog/modules/datetime.h
-    modules/craplog/modules/datetime.cpp
     modules/craplog/modules/formats.h
     modules/craplog/modules/formats.cpp
-    modules/craplog/modules/logs.h
-    modules/craplog/modules/logs.cpp
+    modules/craplog/utilities/datetime.h
+    modules/craplog/utilities/datetime.cpp
+    modules/craplog/utilities/logs.h
+    modules/craplog/utilities/logs.cpp
     modules/crapview/utilities/filters.h
     modules/crapview/utilities/filters.cpp
 )

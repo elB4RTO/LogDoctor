@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPLOG__MODULES__HASH_H
-#define LOGDOCTOR__CRAPLOG__MODULES__HASH_H
+#ifndef LOGDOCTOR__CRAPLOG__MODULES__HASHER_H
+#define LOGDOCTOR__CRAPLOG__MODULES__HASHER_H
 
 
 #include "main_lib.h"
@@ -15,11 +15,11 @@ enum class WebServer;
 class QSqlQuery;
 
 
-//! HashOps
+//! Hasher
 /*!
-    Operations for the hashes
+    Operations on the logs hashes
 */
-class HashOps final
+class Hasher final
 {
 public:
 
@@ -83,4 +83,4 @@ private:
 };
 
 
-#endif // LOGDOCTOR__CRAPLOG__MODULES__HASH_H
+#endif // LOGDOCTOR__CRAPLOG__MODULES__HASHER_H

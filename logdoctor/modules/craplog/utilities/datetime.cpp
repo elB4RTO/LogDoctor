@@ -1,7 +1,7 @@
 
 #include "datetime.h"
 
-#include "lib.h"
+#include "modules/craplog/modules/lib.h"
 
 #include "modules/exceptions.h"
 #include "utilities/strings.h"
