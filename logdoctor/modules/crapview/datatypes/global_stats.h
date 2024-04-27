@@ -1,21 +1,11 @@
-#ifndef LOGDOCTOR__CRAPVIEW__MODULES__LIB_H
-#define LOGDOCTOR__CRAPVIEW__MODULES__LIB_H
+#ifndef LOGDOCTOR__CRAPVIEW__DATATYPES__GLOBALS_H
+#define LOGDOCTOR__CRAPVIEW__DATATYPES__GLOBALS_H
 
 
+#include <tuple>
 #include <array>
-#include <unordered_map>
 
 #include <QHash>
-
-
-#define CRAPVIEW_DATA_TYPEDEFS\
-    using stats_dates_t       = std::map<int, std::map<int, std::vector<int>>>;\
-    using stats_warn_items_t  = std::vector<std::vector<std::vector<std::array<QString,18>>>>;\
-    using stats_speed_items_t = std::vector<std::tuple<qint64, std::array<QString,6>>>;\
-    using stats_day_items_t   = std::unordered_map<int, std::unordered_map<int, int>>;\
-    using stats_relat_items_t = std::vector<std::tuple<qint64, int>>;\
-    using stats_count_items_t = std::multimap<unsigned, QString>;\
-    using database_dates_t    = std::map<WebServer, stats_dates_t>;
 
 
 struct RecurrenceData final
@@ -65,4 +55,5 @@ struct GlobalsData final
     Q_DISABLE_COPY(GlobalsData)
 };
 
-#endif // LOGDOCTOR__CRAPVIEW__MODULES__LIB_H
+
+#endif // LOGDOCTOR__CRAPVIEW__DATATYPES__GLOBALS_H

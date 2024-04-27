@@ -155,11 +155,29 @@ set(PROJECT_SOURCES
     modules/crapview/lib.h
     modules/crapview/crapview.h
     modules/crapview/crapview.cpp
-    modules/crapview/modules/lib.h
+    modules/crapview/datatypes/fwd.h
+    modules/crapview/datatypes/count_stats.h
+    modules/crapview/datatypes/count_stats.cpp
+    modules/crapview/datatypes/daytime_stats.h
+    modules/crapview/datatypes/daytime_stats.cpp
+    modules/crapview/datatypes/global_stats.h
+    modules/crapview/datatypes/relational_stats.h
+    modules/crapview/datatypes/relational_stats.cpp
+    modules/crapview/datatypes/speed_stats.h
+    modules/crapview/datatypes/speed_stats.cpp
+    modules/crapview/datatypes/warning_stats.h
+    modules/crapview/datatypes/warning_stats.cpp
+    modules/crapview/datatypes/typedefs.h
     modules/crapview/modules/filters.h
     modules/crapview/modules/filters.cpp
     modules/crapview/modules/query.h
     modules/crapview/modules/query.cpp
+    modules/crapview/modules/query/date_time.h
+    modules/crapview/modules/query/utilities.h
+    modules/crapview/modules/query/utilities.cpp
+    modules/crapview/utilities/charts.h
+    modules/crapview/utilities/charts.cpp
+    modules/crapview/utilities/globals.h
 
     modules/craphelp/craphelp.ui
     modules/craphelp/craphelp.h

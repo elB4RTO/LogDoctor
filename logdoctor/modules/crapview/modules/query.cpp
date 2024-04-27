@@ -1,70 +1,22 @@
 
 #include "query.h"
 
-#include "modules/database/database.h"
+#include "query/date_time.h"
+#include "query/utilities.h"
 
-#include "modules/dialogs.h"
-#include "modules/exceptions.h"
+#include "modules/crapview/datatypes/fwd.h"
+
+#include "modules/database/database.h"
 
 #include "utilities/arrays.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
 
-#include <QDateTime>
-
 #include <map>
 #include <vector>
 
 
-int toInt( const QString& str )
-{
-    bool ok;
-    const int result{ str.toInt( &ok ) };
-    if ( ! ok ) {
-        DialogSec::errConvertingData(
-            QStringLiteral("QString"),
-            QStringLiteral("int"),
-            str );
-        throw VoidException{};
-    }
-    return result;
-}
-int toInt( QStringView str )
-{
-    bool ok;
-    const int result{ str.toInt( &ok ) };
-    if ( ! ok ) {
-        DialogSec::errConvertingData(
-            QStringLiteral("QStringView"),
-            QStringLiteral("int"),
-            str.toString() );
-        throw VoidException{};
-    }
-    return result;
-}
-int toInt( const QVariant& v )
-{
-    if ( ! v.canConvert( QMetaType(QMetaType::Int) ) ) {
-        DialogSec::errConvertingData(
-            QStringLiteral("QVariant"),
-            QStringLiteral("int"),
-            v.toString() );
-        throw VoidException{};
-    }
-    return v.toInt();
-}
-
-QString toString( const QVariant& v )
-{
-    if ( ! v.canConvert( QMetaType(QMetaType::QString) ) ) {
-        DialogSec::errConvertingData(
-            QStringLiteral("QVariant"),
-            QStringLiteral("QString"),
-            v.toString() );
-        throw VoidException{};
-    }
-    return v.toString();
-}
+using namespace QueryPrivate;
 
 
 void DbQuery::setDialogLevel( const DialogsLevel new_level ) noexcept
@@ -79,48 +31,6 @@ void DbQuery::setDbPath( std::string&& path ) noexcept
 }
 
 
-int DbQuery::getMinuteGap( const int minute, const int gap )
-{
-    int m{ -1 };
-    if ( minute < 0 || minute >= 60 ) {
-        // unexpected value
-        throw DateTimeException( "Unexpected Minute", std::to_string( minute ) );
-    }
-    int n{ 0 };
-    for ( int g{0}; g<60; g+=gap ) {
-        if ( minute >= g && minute < g+gap ) {
-            m = gap * n;
-            break;
-        }
-        ++n;
-    }
-    return m;
-}
-
-int DbQuery::getMonthDays( const int year, const int month )
-{
-    int n_days;
-    switch (month) {
-        case 1:  n_days = 31; break;
-        case 2:  n_days = ( year%4 == 0 ) ? 29 : 28 ; break;
-        case 3:  n_days = 31; break;
-        case 4:  n_days = 30; break;
-        case 5:  n_days = 31; break;
-        case 6:  n_days = 30; break;
-        case 7:  n_days = 31; break;
-        case 8:  n_days = 31; break;
-        case 9:  n_days = 30; break;
-        case 10: n_days = 31; break;
-        case 11: n_days = 30; break;
-        case 12: n_days = 31; break;
-        default:
-            // unexpected month
-            throw DateTimeException( "Unexpected Month number", std::to_string( month ) );
-    }
-    return n_days;
-}
-
-
 int DbQuery::getMonthNumber( QStringView month_str ) const
 {
     for ( const auto& [num,str] : this->MONTHS ) {
@@ -132,63 +42,12 @@ int DbQuery::getMonthNumber( QStringView month_str ) const
 }
 
 
-int DbQuery::countDays( const int from_year, const int from_month, const int from_day, const int to_year, const int to_month, const int to_day )
-{
-    int n_days{ 1 };
-    if ( from_year == to_year ) {
-        if ( from_month == to_month ) {
-            n_days += to_day - from_day + 1;
-        } else {
-            n_days += getMonthDays( from_year, from_month ) - from_day; // first month's days
-            for ( int month{from_month+1}; month<to_month; ++month ) {
-                n_days += getMonthDays( from_year, month );
-            }
-            n_days += to_day; // last month's days
-        }
-    } else {
-        n_days += getMonthDays( from_year, from_month ) - from_day; // first month's days
-        if ( from_month < 12 ) {
-            for ( int month{from_month+1}; month<=12; ++month ) {
-                n_days += getMonthDays( from_year, month );
-            }
-        }
-        for ( int year{from_year+1}; year<=to_year; ++year ) {
-            int last_month{ 12 };
-            if ( year == to_year ) {
-                last_month = to_month-1;
-                n_days += to_day; // last month's days
-            }
-            for ( int month{1}; month<=last_month; ++month ) {
-                n_days += getMonthDays( year, month );
-            }
-        }
-    }
-    return n_days;
-}
-
-int DbQuery::countMonths( const int from_year, const int from_month, const int to_year, const int to_month ) noexcept
-{
-    int n_months{ 0 };
-    if ( from_year == to_year ) {
-        if ( from_month == to_month ) {
-            n_months = 1;
-        } else {
-            n_months = to_month - from_month + 1;
-        }
-    } else {
-        n_months += 13 - from_month; // months to the end of the first year
-        n_months += to_month; // months from the beginning of the last year
-        n_months += 12 * ( to_year - from_year - 1 ); // 12 months for every year in the middle
-    }
-    return n_months;
-}
-
 int DbQuery::countMonths( QStringView from_year, QStringView from_month, QStringView to_year, QStringView to_month ) const
 {
     const int from_year_{ toInt( from_year ) },
               from_month_{ this->getMonthNumber( from_month ) };
 
-    return this->countMonths(
+    return ::countMonths(
         toInt( from_year ),
         this->getMonthNumber( from_month ),
         to_year.isEmpty() ? from_year_ : toInt( to_year ),
@@ -254,10 +113,8 @@ void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
 
 
 // get daytime values for the warnings
-void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
+void DbQuery::getWarningsData( std::optional<WarningData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
 {
-    stats_warn_items_t items;
-
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
@@ -268,90 +125,37 @@ void DbQuery::getWarningsData( std::optional<stats_warn_items_t>& result, QStrin
     const int day{   toInt( day_ ) };
     const int hour{  hour_.isEmpty() ? -1 : toInt( hour_ ) };
 
-    const auto from_query_data{
-        [](const QueryWrapper& query)->std::array<QString,18>
-        {
-            return {
-                toString(query[0]), toString(query[1]), toString(query[2]), // year, month, day
-                toString(query[3]), toString(query[4]), toString(query[5]), // hour, minute, second
-                toString(query[6]), toString(query[7]), // protocol, method
-                toString(query[8]), toString(query[9]), // uri, query
-                toString(query[10]), // response
-                toString(query[15]), // user agent
-                toString(query[14]), // client
-                toString(query[16]), // cookie
-                toString(query[17]), // referer
-                toString(query[13]), // bytes received
-                toString(query[12]), // bytes sent
-                toString(query[11])  // time taken
-            };
-        }
-    };
-
     QueryWrapper query{ db.getQuery() };
 
     query << QStringLiteral(R"(SELECT * FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
                 .arg( web_server )
                 .arg( year ).arg( month ).arg( day );
 
+    WarningData data;
+
     if ( hour == -1 ) {
-        // entire day
-        items.reserve( 24ul );
-        for ( size_t h{0ul}; h<24ul; ++h ) {
-            items.emplace_back( std::vector<std::vector<std::array<QString,18>>>{} );
-            auto& aux{ items.at( h ) };
-            aux.reserve( 6ul );
-            for ( int m{0}; m<60; m+=10 ) {
-                aux.emplace_back( std::vector<std::array<QString,18>>{} );
-            }
-        }
+        data.setTimelineAsDay();
 
         query << R"( ORDER BY "hour","minute","second" ASC;)";
 
-        query();
-
-        while ( query->next() ) {
-            // append the line
-            items.at( static_cast<size_t>( toInt( query[3] ) ) )
-                 .at( static_cast<size_t>( this->getMinuteGap( toInt( query[4] ) )/10 ) )
-                 .push_back( from_query_data( query ) );
-        }
-
     } else {
-        // 1 hour
-        items.reserve( 6ul );
-        for ( size_t g{0ul}; g<6ul; ++g ) {
-            items.emplace_back( std::vector<std::vector<std::array<QString,18>>>{} );
-            auto& aux{ items.at( g ) };
-            aux.reserve( 10ul );
-            for ( int m{0}; m<10; ++m ) {
-                aux.emplace_back( std::vector<std::array<QString,18>>{} );
-            }
-        }
+        data.setTimelineAsHour();
 
         query << QStringLiteral(R"( AND "hour"=%5 ORDER BY "minute","second" ASC;)")
                     .arg( hour );
-
-        query();
-
-        while ( query->next() ) {
-            // append the line
-            const int min{ toInt( query[4] ) };
-            items.at( static_cast<size_t>( this->getMinuteGap( min )/10 ) )
-                 .at( static_cast<size_t>( min % 10 ) )
-                 .push_back( from_query_data( query ) );
-        }
     }
 
-    result.emplace( std::move(items) );
+    query();
+
+    if ( data.buildFromQuery( query ) ) {
+        result.emplace( std::move(data) );
+    }
 }
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
+void DbQuery::getSpeedData( std::optional<SpeedData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
 {
-    stats_speed_items_t data;
-
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
@@ -390,117 +194,19 @@ void DbQuery::getSpeedData( std::optional<stats_speed_items_t>& result, QStringV
 
     query();
 
-    if ( const size_t size{ query.size() }; size > 0ul ) {
-        data.reserve( size * 3 );
-    } else {
-        return;
+    TimeManager time{ year, month, day, time_interval };
+
+    SpeedData data;
+    if ( data.buildFromQuery( query, std::move(time) ) ) {
+        result.emplace( std::move(data) );
     }
-
-    using data_t = std::array<QString,6>;
-
-    data_t query_data{};
-
-    QDateTime time{
-        QDate( year, month, day ),
-        QTime( 0, 0, 0 )
-    };
-    QDateTime current_interval{ time }, next_interval{ time };
-
-    const auto push_empty{
-        [&data,&current_interval]()
-        {
-            data.emplace_back( current_interval.toMSecsSinceEpoch(), data_t{} );
-        }
-    };
-    const auto push_data{
-        [&data,&current_interval,&query_data]()
-        {
-            data.emplace_back( current_interval.toMSecsSinceEpoch(), query_data );
-        }
-    };
-
-    const auto set_time{
-        [&time](const QueryWrapper& query)
-        {
-            time.setTime( QTime( toInt(query[0]), toInt(query[1]), toInt(query[2]) ) );
-        }
-    };
-
-    const auto set_data{
-        [&query_data](const QueryWrapper& query)
-        {
-            query_data = data_t{
-                toString( query[3] ), // time taken
-                toString( query[4] ), // uri
-                toString( query[5] ), // query
-                toString( query[6] ), // method
-                toString( query[7] ), // protocol
-                toString( query[8] )  // response
-            };
-        }
-    };
-
-    const auto in_current_interval{
-        [&current_interval,&next_interval,&time]()->bool
-        {
-            return current_interval <= time && time < next_interval;
-        }
-    };
-
-    const auto increase_intervals{
-        [&current_interval,&next_interval,&time_interval]()
-        {
-            current_interval = next_interval;
-            next_interval.setSecsSinceEpoch( next_interval.toSecsSinceEpoch() + time_interval );
-        }
-    };
-
-    push_empty();
-
-    while ( query->next() ) {
-        set_time( query );
-        set_data( query );
-
-        if ( in_current_interval() ) {
-            push_data();
-        } else {
-            increase_intervals();
-            if ( ! in_current_interval() ) {
-                push_empty();
-                do    {   increase_intervals(); }
-                while ( ! in_current_interval() );
-                push_empty();
-            }
-            push_data();
-        }
-    }
-
-    increase_intervals();
-    if ( ! in_current_interval() ) {
-        push_empty();
-    }
-
-    time.setTime( QTime( 23, 59, 59 ) );
-    if ( time > current_interval ) {
-        current_interval.setSecsSinceEpoch( time.toSecsSinceEpoch()+1 );
-        push_empty();
-    }
-
-    if ( data.capacity() > data.size() ) {
-        data.shrink_to_fit();
-    }
-
-    result.emplace( std::move(data) );
 }
 
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
+void DbQuery::getItemsCount( std::optional<CountData>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
 {
-    QHash<QString, unsigned> aux_items;
-    stats_count_items_t items;
-
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
@@ -518,49 +224,18 @@ void DbQuery::getItemsCount( std::optional<stats_count_items_t>& result, QString
 
     query();
 
-    if ( const size_t size{ query.size() }; size > 0ul ) {
-        aux_items.reserve( size * 3 );
-    } else {
-        return;
-    }
+    CountData data;
 
-    while ( query->next() ) {
-        const QString item{ toString( query[0] ) };
-        if ( ! item.isEmpty() ) {
-            ++ aux_items[ item ];
-        }
+    if ( data.buildFromQuery( query ) ) {
+        result.emplace( std::move(data) );
     }
-
-    // morph tha QHash into an ordered map
-    QHashIterator iter{ aux_items };
-    while ( iter.hasNext() ) {
-        iter.next();
-        items.emplace( iter.value(), iter.key() );
-    }
-
-    result.emplace( std::move(items) );
 }
 
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
+void DbQuery::getDaytimeCounts( std::optional<DaytimeData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
 {
-    stats_day_items_t data{
-        {0,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {1,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {2,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {3,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {4,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {5,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {6,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {7,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {8,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {9,  {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {10, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {11, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {12, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {13, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {14, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {15, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {16, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {17, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {18, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {19, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {20, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {21, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-        {22, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},  {23, {{0,0},{10,0},{20,0},{30,0},{40,0},{50,0}}},
-    };
-
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
@@ -575,15 +250,14 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
     const QString& log_field{ this->getDbField( log_field_ ) };
 
     int n_days   { 0 },
-        n_months { this->countMonths( from_year, from_month, to_year, to_month ) };
+        n_months { ::countMonths( from_year, from_month, to_year, to_month ) };
 
     int year  { from_year },
         month { from_month };
-    std::unordered_map<int,int> days_l;
-    days_l.reserve( 31ul );
+
+    DaytimeData data;
 
     if ( n_months == 1 ) {
-        // 1 month, no need to loop
         QueryWrapper query{ db.getQuery() };
 
         query << QStringLiteral(R"(SELECT "day", "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
@@ -599,17 +273,7 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
 
         query();
 
-        while ( query->next() ) {
-            const int day{    toInt( query[0] ) };
-            const int hour{   toInt( query[1] ) };
-            const int minute{ toInt( query[2] ) };
-            // increase the count
-            ++ data.at( hour ).at( this->getMinuteGap( minute ) );
-            // append the day as newly found if not found yet
-            ++ days_l[ day ];
-        }
-        n_days += static_cast<int>(days_l.size());
-
+        n_days += data.buildFromQuery( query );
 
     } else {
         for ( int m{1}; m<=n_months; ++m ) {
@@ -636,40 +300,19 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
 
             query();
 
-            while ( query->next() ) {
-                const int day{    toInt( query[0] ) };
-                const int hour{   toInt( query[1] ) };
-                const int minute{ toInt( query[2] ) };
-                // increase the count
-                ++ data.at( hour ).at( this->getMinuteGap( minute ) );
-                // append the day as newly found if not found yet
-                ++ days_l[ day ];
-            }
-            n_days += static_cast<int>(days_l.size());
-            ++ month;
-            if ( month > 12 ) {
+            n_days += data.buildFromQuery( query );
+
+            if ( ++month > 12 ) {
                 month = 1;
-                ++ year;
+                ++year;
             }
         }
     }
     if ( n_days == 0 ) {
-        // no data
         return;
     }
 
-    // divide the count by the number of days to get the mean value
-    for ( const auto& [h,data_] : data ) {
-        for ( const auto& [m,c] : data_ ) {
-            int& count{ data.at( h ).at( m ) };
-            if ( count > 0 ) {
-                count /= n_days;
-                if ( count == 0 ) {
-                    ++ count;
-                }
-            }
-        }
-    }
+    data.adjustCounts( n_days );
 
     result.emplace( std::move(data) );
 }
@@ -677,11 +320,8 @@ void DbQuery::getDaytimeCounts( std::optional<stats_day_items_t>& result, QStrin
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
+void DbQuery::getRelationalCountsDay( std::optional<RelationalData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
-    stats_relat_items_t data;
-    int gap = 20;
-
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
@@ -711,121 +351,21 @@ void DbQuery::getRelationalCountsDay( std::optional<stats_relat_items_t>& result
 
     query();
 
-    if ( query.size() == 0ul ) {
-        return;
+    const qint64 time_interval_mins{ 20 };
+    const qint64 time_interval_secs{ time_interval_mins * 60 };
+
+    TimeManager time{ year, month, day, time_interval_secs };
+
+    RelationalData data;
+    if ( data.buildFromQuery( query, std::move(time) ) ) {
+        result.emplace( std::move(data) );
     }
-
-    QDateTime time{
-        QDate( year, month, day ),
-        QTime( 0, 0, 0 )
-    };
-
-    data.reserve( static_cast<size_t>( 24*(60/gap) ) );
-
-    const auto push_data{
-        [&data,&time](const int count)
-        {
-            data.emplace_back( time.toMSecsSinceEpoch(), count );
-        }
-    };
-
-    const auto set_time{
-        [&time](const auto ...args)
-        {
-            time.setTime( QTime(args...) );
-        }
-    };
-
-    int hour{-1},  next_hour,
-        minute{0}, next_minute,
-        count{0};
-
-    while ( query->next() ) {
-        next_hour   = toInt( query[0] );
-        next_minute = this->getMinuteGap( toInt( query[1] ), gap );
-        if ( next_hour == hour && next_minute == minute ) {
-            ++ count;
-        } else {
-            if ( next_hour == hour ) {
-                // same hour new minute gap, append the last count
-                set_time( hour, minute );
-                push_data( count );
-                // and any missing gap
-                for ( int m{minute+gap}; m<next_minute; m+=gap ) {
-                    set_time( hour, m );
-                    push_data( 0 );
-                }
-            } else {
-                // minute is always different when the hour is different
-                if ( hour >= 0 ) {
-                    // apend the last minute-gap count if not in the first round of the loop
-                    set_time( hour, minute );
-                    push_data( count );
-                    // append any missing gap in the current hour
-                    for ( int m{minute+gap}; m<60; m+=gap ) {
-                        set_time( hour, m );
-                        push_data( 0 );
-                    }
-                    ++ hour;
-                } else {
-                    // prepare to add missing gaps from 00:00 (+gap will be added to the minute)
-                    hour = 0;
-                }
-                // append any missing gap in every hour between the current and the next found (aux)
-                for ( int h{hour}; h<next_hour; ++h ) {
-                    for ( int m{0}; m<60; m+=gap ) {
-                        set_time( h, m );
-                        push_data( 0 );
-                    }
-                }
-                // append any missing gap in the netx found hour
-                for ( int m{0}; m<next_minute; m+=gap ) {
-                    set_time( next_hour, m );
-                    push_data( 0 );
-                }
-                hour = next_hour;
-            }
-            minute = next_minute;
-            count = 1;
-        }
-    }
-    // append the last count
-    set_time( hour, minute );
-    push_data( count );
-    // append any missing gap in the last hour
-    for ( int m{minute+gap}; m<60; m+=gap ) {
-        set_time( hour, m );
-        push_data( 0 );
-    }
-    // append any missing data up to the end of the day
-    for ( int h{hour+1}; h<24; ++h ) {
-        for ( int m{0}; m<60; m+=gap ) {
-            set_time( h, m );
-            push_data( 0 );
-        }
-    }
-    // append the real last fictitious count
-    int d{ day }, m{ month }, y{ year };
-    if ( ++d > this->getMonthDays( year, month ) ) {
-        if ( ++m > 12 ) {
-            m = 1;
-            ++y;
-        }
-        d = 1;
-    }
-    time.setDate( QDate( y, m , d ) );
-    time.setTime( QTime( 0, 0, 0 ) );
-    push_data( 0 );
-
-    result.emplace( std::move(data) );
 }
 
 
 
-void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
+void DbQuery::getRelationalCountsPeriod( std::optional<RelationalData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
-    stats_relat_items_t data;
-
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
     db.open( this->db_path, this->dialog_level==DL_EXPLANATORY );
@@ -840,46 +380,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
     const QString& log_field_1{ this->getDbField( log_field_1_ ) };
     const QString& log_field_2{ this->getDbField( log_field_2_ ) };
 
-    const int n_months{ this->countMonths( from_year, from_month, to_year, to_month ) };
-
-    QDateTime time;
-
-    const auto set_date{
-        [&time](const auto ...args)
-        {
-            time.setDate( QDate(args...) );
-        }
-    };
-
-    const auto push_data{
-        [&data,&time](const int count)
-        {
-            data.emplace_back( time.toMSecsSinceEpoch(), count );
-        }
-    };
-
-    const auto prev_instant{
-        [this](int& y, int& m, int& d)
-        {
-            if ( --d < 1 ) {
-                if ( --m < 1 ) {
-                    m=12; --y;
-                }
-                d = this->getMonthDays( y, m );
-            }
-        }
-    };
-    const auto next_instant{
-        [this](int& y, int& m, int& d)
-        {
-            if ( ++d > this->getMonthDays( y, m ) ) {
-                if ( ++m > 12 ) {
-                    m=1; ++y;
-                }
-                d = 1;
-            }
-        }
-    };
+    const int n_months{ ::countMonths( from_year, from_month, to_year, to_month ) };
 
     int year  { from_year  },
         month { from_month };
@@ -905,68 +406,34 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
         query();
 
-        if ( query.size() == 0ul ) {
-            return;
-        }
+        DateManager date{ from_year, from_month, from_day };
 
-        data.reserve( to_day - from_day );
+        const auto last_date{ QDate( to_year, to_month, to_day ).addDays( 1 ) };
 
-        int day{0}, count{0};
-
-        while ( query->next() ) {
-            const int next_day{ toInt( query[0] ) };
-            if ( next_day == day ) {
-                ++ count;
-                continue; // avoids resetting the count at the end
-
-            } else if ( day > 0 ) {
-                // any loop-round except the first
-                set_date( year, month , day );
-                push_data( count );
-                for ( int d{day+1}; d<next_day; ++d ) {
-                    // append any missing day with a zero value
-                    set_date( year, month , d );
-                    push_data( 0 );
-                }
-
-            } else {
-                // day == 0 only in the first round of the loop
-                // append any missing day from 1 day before the first until the next found
-                int d{ from_day }, m{ month }, y{ year };
-                prev_instant( y, m, d );
-                while ( d!=next_day ) {
-                    set_date( y, m , d );
-                    push_data( 0 );
-                    next_instant( y, m, d );
-                }
-            }
-            day = next_day;
-            count = 1;
-        }
-        // append the last count
-        set_date( year, month , day );
-        push_data( count );
-        // append any missing day from the last found until 1 day after the last one
-        next_instant( year, month, day );
-        int max_day{ to_day }, max_month{ to_month }, max_year{ to_year };
-        next_instant( max_year, max_month, max_day );
-        while ( year<=max_year && month<=max_month && day<=max_day ) {
-            set_date( year, month , day );
-            push_data( 0 );
-            next_instant( year, month, day );
+        RelationalData data;
+        if ( data.buildFromQuery( query, std::move(date), std::move(last_date) ) ) {
+            result.emplace( std::move(data) );
         }
 
 
     } else {
-        data.reserve( this->countDays( from_year, from_month, from_day, to_year, to_month, to_day ) );
-        bool no_data{ true };
+        DateManager date{ from_year, from_month, from_day };
+
+        RelationalData data;
+        data.reserveSpace( countDays( from_year, from_month, from_day, to_year, to_month, to_day ) * 2 );
+        bool no_data{ false };
 
         const QString query_filters{ QStringLiteral("%1%2").arg(
             !field_filter_1.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 ) : QString(),
             !field_filter_2.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field_2, field_filter_2 ) : QString())
         };
 
+        data.appendFirstEmpty( date );
+
         for ( int m{1}; m<=n_months; ++m ) {
+
+            const int first_day{ m==1 ? from_day : 1 };
+            const int last_day{ m==n_months ? to_day : getMonthDays( year, month ) };
 
             QueryWrapper query{ db.getQuery() };
 
@@ -990,63 +457,11 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
 
             query();
 
-            if ( query.size() == 0ul ) {
-                // no data found for this month, append missing days with 0 value
-                const int max_d{ m==n_months ? to_day : this->getMonthDays( year, month ) };
-                int d{ m==1 ? from_day : 1 };
-                for ( ; d<=max_d; ++d ) {
-                    set_date( year, month , d );
-                    push_data( 0 );
-                }
+            const QDate initial_date{ year, month, first_day };
+            const QDate final_date{   year, month, last_day  };
 
-            } else {
-                no_data &= false;
+            no_data |= data.appendFromQuery( query, date, std::move(initial_date), std::move(final_date), last_day );
 
-                int day{0}, count{0};
-                while ( query->next() ) {
-                    const int next_day{ toInt( query[0] ) };
-                    if ( next_day == day ) {
-                        ++ count;
-                        continue; // avoids resetting the count at the end
-
-                    } else  if ( day > 0 ) {
-                        // any loop-round except the first
-                        set_date( year, month, day++ );
-                        push_data( count );
-                        while ( day<next_day ) {
-                            // append any missing day with a zero value
-                            set_date( year, month, day++ );
-                            push_data( 0 );
-                        }
-
-                    } else {
-                        // day == 0 only in the first round of the loop
-                        // append any missing day until one before the next day with a zero value
-                        int d{ m==1 ? from_day : 2 }, m{ month }, y{ year };
-                        prev_instant( y, m, d );
-                        while ( y<=year && m<=month && d<next_day ) {
-                            set_date( y, m, d );
-                            push_data( 0 );
-                            next_instant( y, m, d );
-                        }
-                    }
-                    day = next_day;
-                    count = 1;
-                }
-                // append the last count
-                if ( day > 0 ) {
-                    set_date( year, month , day );
-                    push_data( count );
-                }
-                // append any missing day up to the last one with a zero value
-                const int max_d{ m==n_months ? to_day : this->getMonthDays( year, month ) };
-                int d{ day>0 ? day : 1 }, m{ month }, y{ year };
-                while ( y<=year && m<=month && d<=max_d ) {
-                    set_date( y, m, d );
-                    push_data( 0 );
-                    next_instant( y, m, d );
-                }
-            }
             // increase the month
             if ( ++month > 12 ) {
                 month = 1;
@@ -1056,18 +471,11 @@ void DbQuery::getRelationalCountsPeriod( std::optional<stats_relat_items_t>& res
         if ( no_data ) {
             return;
         }
-        // append one day after the last one
-        int day{ to_day };
-        next_instant( year, month, day );
-        set_date( year, month , day );
-        push_data( 0 );
-    }
 
-    if ( data.capacity() > data.size() ) {
-        data.shrink_to_fit();
-    }
+        const auto last_date{ QDate( to_year, to_month, to_day ).addDays( 1 ) };
 
-    result.emplace( std::move(data) );
+        data.appendLastEmpty( date, std::move(last_date) );
+    }
 }
 
 

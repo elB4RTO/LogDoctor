@@ -1,13 +1,12 @@
 #ifndef LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
 #define LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
 
-#include "lib.h"
-
 #include "main_lib.h"
 
 #include "modules/shared.h"
 
 #include "modules/crapview/lib.h"
+#include "modules/crapview/datatypes/fwd.h"
 
 #include <unordered_map>
 #include <optional>
@@ -105,7 +104,7 @@ public:
         \throw DateTimeException
     */
     void getWarningsData(
-        std::optional<stats_warn_items_t>& result,
+        std::optional<WarningData>& result,
         QStringView web_server,
         QStringView year_,
         QStringView month_,
@@ -133,7 +132,7 @@ public:
         \throw DateTimeException
     */
     void getSpeedData(
-        std::optional<stats_speed_items_t>& result,
+        std::optional<SpeedData>& result,
         QStringView web_server,
         QStringView year_,
         QStringView month_,
@@ -160,7 +159,7 @@ public:
         \throw DateTimeException
     */
     void getItemsCount(
-        std::optional<stats_count_items_t>& result,
+        std::optional<CountData>& result,
         QStringView web_server,
         QStringView year,
         QStringView month,
@@ -187,7 +186,7 @@ public:
         \throw DateTimeException
     */
     void getDaytimeCounts(
-        std::optional<stats_day_items_t>& result,
+        std::optional<DaytimeData>& result,
         QStringView web_server,
         QStringView from_year_, QStringView from_month_, QStringView from_day_,
         QStringView to_year_,   QStringView to_month_,   QStringView to_day_,
@@ -214,7 +213,7 @@ public:
         \see getRelationalCountsPeriod()
     */
     void getRelationalCountsDay(
-        std::optional<stats_relat_items_t>& result,
+        std::optional<RelationalData>& result,
         QStringView web_server,
         QStringView year_,        QStringView month_,         QStringView day_,
         const LogField log_field_1_, QStringView field_filter_1,
@@ -243,7 +242,7 @@ public:
         \see getRelationalCountsDay()
     */
     void getRelationalCountsPeriod(
-        std::optional<stats_relat_items_t>& result,
+        std::optional<RelationalData>& result,
         QStringView web_server,
         QStringView from_year_,   QStringView from_month_,    QStringView from_day_,
         QStringView to_year_,     QStringView to_month_,      QStringView to_day_,
@@ -320,26 +319,6 @@ private:
     */
     const QString& getDbField( QStringView tr_fld ) const;
 
-
-    //! Returns the minute gap for the given minute with the given gap
-    /*!
-        \param minute The minute of the hour
-        \param gap The gap used to split the hour
-        \return The gap index
-        \throw DateTimeException
-    */
-    static int getMinuteGap( const int minute, const int gap=10 );
-
-
-    //! Returns the number of days for a given month
-    /*!
-        \param year The year, used to handle leap years
-        \param month The month
-        \return The number of days
-        \throw DateTimeException
-    */
-    static int getMonthDays( const int year, const int month );
-
     //! Returns the month number in the year
     /*!
         \param month_str The month
@@ -347,37 +326,6 @@ private:
         \throw DateTimeException
     */
     int getMonthNumber( QStringView month_str ) const;
-
-
-    //! Returns the number of days in a given period
-    /*!
-        \param from_year The initial year
-        \param from_month The initial month
-        \param from_day The initial day
-        \param to_year The final Year
-        \param to_month The final month
-        \param to_day The final day
-        \return The number of days
-        \throw DateTimeException
-    */
-    static int countDays(
-        const int from_year, const int from_month, const int from_day,
-        const int to_year, const int to_month, const int to_day
-    );
-
-
-    //! Returns the number of months in a given period
-    /*!
-        \param from_year The initial year
-        \param from_month The initial month
-        \param to_year The final Year
-        \param to_month The final month
-        \return The number of months in the period
-    */
-    static int countMonths(
-        const int from_year, const int from_month,
-        const int to_year,   const int to_month
-    ) noexcept;
 };
 
 

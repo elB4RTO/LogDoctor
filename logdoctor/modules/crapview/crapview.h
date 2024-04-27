@@ -207,7 +207,7 @@ public:
         \param response The given filter for the Response
     */
     void drawSpeed(
-        QTableWidget* table, QChartView* chart,
+        QTableWidget*const table, QChartView*const chart,
         const QChart::ChartTheme& theme,
         const QString web_server,
         const QString year, const QString month, const QString day,
@@ -227,7 +227,7 @@ public:
         \param field The printable log field
     */
     void drawCount(
-        QTableWidget* table, QChartView* chart,
+        QTableWidget*const table, QChartView*const chart,
         const QChart::ChartTheme& theme,
         const QString web_server,
         const QString year, const QString month, const QString day,
@@ -250,7 +250,7 @@ public:
         \param filter The give filter string
     */
     void drawDay(
-        QChartView* chart,
+        QChartView*const chart,
         const QChart::ChartTheme& theme,
         const QString web_server,
         const QString from_year, const QString from_month, const QString from_day,
@@ -276,7 +276,7 @@ public:
         \param filter_2 The give filter string for the second field
     */
     void drawRelat(
-        QChartView* chart,
+        QChartView*const chart,
         const QChart::ChartTheme& theme,
         const QString web_server,
         const QString from_year, const QString from_month, const QString from_day,
@@ -314,7 +314,7 @@ private:
     // quantity of information to display throught dialogs
     DialogsLevel dialogs_level{ DL_NORMAL };
 
-    const QColor warning_color{ 255, 140, 0, 255 };
+    const QColor warning_color{ 255, 127, 0, 255 };
 
     DbQuery dbQuery;
 
