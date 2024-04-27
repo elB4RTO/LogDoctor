@@ -38,210 +38,30 @@ if(${QT_VERSION_MAJOR} LESS 6)
 endif()
 
 
-set(TS_FILES
-    translations/LogDoctor_en_GB.ts
-    translations/LogDoctor_es_ES.ts
-    translations/LogDoctor_fr_FR.ts
-    translations/LogDoctor_it_IT.ts
-    translations/LogDoctor_ja_JP.ts
-    translations/LogDoctor_pt_BR.ts
-)
+include(cmake/main.cmake)
+include(cmake/customs.cmake)
+include(cmake/games.cmake)
+include(cmake/globals.cmake)
+include(cmake/modules.cmake)
+include(cmake/tools.cmake)
+include(cmake/utilities.cmake)
 
 
 set(PROJECT_SOURCES
-    main.cpp
-    mainwindow.ui
-    mainwindow.h
-    mainwindow.cpp
-
-    main_lib.h
-
-    globals/db_names.h
-    globals/db_names.cpp
-    globals/global_configs.h
-    globals/global_configs.cpp
-
-    customs/logfile_treewidgetitem.h
-    customs/models/logfields_listmodel.h
-    customs/models/logfields_listmodel.cpp
-
-    utilities/arrays.h
-    utilities/bwlists.h
-    utilities/bwutils.cpp
-    utilities/chars.h
-    utilities/checks.h
-    utilities/checks.cpp
-    utilities/colors.h
-    utilities/colors.cpp
-    utilities/gzip.h
-    utilities/gzip.cpp
-    utilities/io.h
-    utilities/io.cpp
-    utilities/memory.h
-    utilities/memory.cpp
-    utilities/printables.h
-    utilities/printables.cpp
-    utilities/rtf.h
-    utilities/rtf.cpp
-    utilities/strings.h
-    utilities/strings.cpp
-    utilities/stylesheets.h
-    utilities/stylesheets.cpp
-    utilities/vectors.h
-
-    modules/shared.h
-
-    modules/exceptions.h
-    modules/exceptions.cpp
-    modules/tb.h
-    modules/tb.cpp
-
-    modules/database/database.h
-    modules/database/database.cpp
-
-    modules/dialogs.h
-    modules/dialogs.cpp
-    modules/dialogs/message_dialog.ui
-    modules/dialogs/message_dialog.h
-    modules/dialogs/message_dialog.cpp
-    modules/dialogs/boolean_dialog.ui
-    modules/dialogs/boolean_dialog.h
-    modules/dialogs/boolean_dialog.cpp
-    modules/dialogs/ida_dialog.ui
-    modules/dialogs/ida_dialog.h
-    modules/dialogs/ida_dialog.cpp
-
-    modules/blacklists/blacklists.h
-    modules/blacklists/blacklists.cpp
-    modules/blacklists/modules/lib.h
-    modules/blacklists/modules/blacklist.h
-    modules/blacklists/modules/blacklist.cpp
-    modules/blacklists/modules/blacklist_item.h
-    modules/blacklists/modules/blacklist_item.cpp
-
-    modules/warnlists/warnlists.h
-    modules/warnlists/warnlists.cpp
-    modules/warnlists/modules/lib.h
-    modules/warnlists/modules/warnlist.h
-    modules/warnlists/modules/warnlist.cpp
-    modules/warnlists/modules/warnlist_item.h
-    modules/warnlists/modules/warnlist_item.cpp
-
-    modules/crapconf/lib.h
-
-    modules/craplog/lib.h
-    modules/craplog/craplog.h
-    modules/craplog/craplog.cpp
-    modules/craplog/modules/lib.h
-    modules/craplog/modules/donuts.h
-    modules/craplog/modules/donuts.cpp
-    modules/craplog/modules/formats.h
-    modules/craplog/modules/formats.cpp
-    modules/craplog/modules/hasher.h
-    modules/craplog/modules/hasher.cpp
-    modules/craplog/modules/hasher/sha256.h
-    modules/craplog/modules/hasher/sha256.cpp
-    modules/craplog/utilities/datetime.h
-    modules/craplog/utilities/datetime.cpp
-    modules/craplog/utilities/logs.h
-    modules/craplog/utilities/logs.cpp
-    modules/craplog/workers/lib.h
-    modules/craplog/workers/lister.h
-    modules/craplog/workers/lister.cpp
-    modules/craplog/workers/parser.h
-    modules/craplog/workers/parser.cpp
-    modules/craplog/workers/parser/logs_data.h
-    modules/craplog/workers/parser/logs_data.cpp
-
-    modules/crapview/lib.h
-    modules/crapview/crapview.h
-    modules/crapview/crapview.cpp
-    modules/crapview/datatypes/fwd.h
-    modules/crapview/datatypes/count_stats.h
-    modules/crapview/datatypes/count_stats.cpp
-    modules/crapview/datatypes/daytime_stats.h
-    modules/crapview/datatypes/daytime_stats.cpp
-    modules/crapview/datatypes/global_stats.h
-    modules/crapview/datatypes/relational_stats.h
-    modules/crapview/datatypes/relational_stats.cpp
-    modules/crapview/datatypes/speed_stats.h
-    modules/crapview/datatypes/speed_stats.cpp
-    modules/crapview/datatypes/warning_stats.h
-    modules/crapview/datatypes/warning_stats.cpp
-    modules/crapview/datatypes/typedefs.h
-    modules/crapview/modules/fetcher.h
-    modules/crapview/modules/fetcher.cpp
-    modules/crapview/modules/fetcher/date_time.h
-    modules/crapview/modules/fetcher/utilities.h
-    modules/crapview/modules/fetcher/utilities.cpp
-    modules/crapview/utilities/charts.h
-    modules/crapview/utilities/charts.cpp
-    modules/crapview/utilities/datetime.h
-    modules/crapview/utilities/datetime.cpp
-    modules/crapview/utilities/filters.h
-    modules/crapview/utilities/filters.cpp
-    modules/crapview/utilities/globals.h
-
-    modules/craphelp/craphelp.ui
-    modules/craphelp/craphelp.h
-    modules/craphelp/craphelp.cpp
-
-    modules/crapup/crapup.ui
-    modules/crapup/crapup.h
-    modules/crapup/crapup.cpp
-    modules/crapup/modules/stylesheets.h
-    modules/crapup/modules/stylesheets.cpp
-
-    modules/crapinfo/crapinfo.ui
-    modules/crapinfo/crapinfo.h
-    modules/crapinfo/crapinfo.cpp
-    modules/crapinfo/modules/stylesheets.h
-    modules/crapinfo/modules/stylesheets.cpp
-
-    modules/changelog/changelog.ui
-    modules/changelog/changelog.h
-    modules/changelog/changelog.cpp
-    modules/changelog/modules/stylesheets.h
-    modules/changelog/modules/stylesheets.cpp
-
-    tools/crappath/crappath.h
-    tools/crappath/crappath.cpp
-
-    tools/crapnote/crapnote.ui
-    tools/crapnote/crapnote.h
-    tools/crapnote/crapnote.cpp
-    tools/crapnote/modules/stylesheets.h
-    tools/crapnote/modules/stylesheets.cpp
-
-    games/game_dialog.ui
-    games/game_dialog.h
-    games/game_dialog.cpp
-    games/crisscross/crisscross.ui
-    games/crisscross/game.h
-    games/crisscross/game.cpp
-    games/crisscross/modules/stylesheets.h
-    games/crisscross/modules/stylesheets.cpp
-
-    games/snake/snake.ui
-    games/snake/game.h
-    games/snake/game.cpp
-    games/snake/snake.h
-    games/snake/snake.cpp
-    games/snake/food.h
-    games/snake/food.cpp
-    games/snake/modules/stylesheets.h
-    games/snake/modules/stylesheets.cpp
-
+    ${MAIN_SOURCES}
+    ${GLOBALS_SOURCES}
+    ${CUSTOMS_SOURCES}
+    ${UTILITIES_SOURCES}
+    ${MODULES_SOURCES}
+    ${TOOLS_SOURCES}
+    ${GAMES_SOURCES}
     resources/resources.qrc
-    ${TS_FILES}
 )
 
 qt_add_executable(LogDoctor
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
 )
-
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic -lstdc++ -lwinpthread")
@@ -267,7 +87,6 @@ else()
     target_link_libraries(LogDoctor PRIVATE ${ZLIB_LIBRARIES})
 endif()
 
-
 if(WIN32)
     set_target_properties(LogDoctor PROPERTIES
         WIN32_EXECUTABLE TRUE
@@ -283,6 +102,11 @@ elseif(APPLE)
     )
 endif()
 
+
+include(cmake/translations.cmake)
+qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+
+
 qt_finalize_executable(LogDoctor)
 
 
@@ -290,34 +114,15 @@ qt_finalize_executable(LogDoctor)
 # CTest
 include(CTest)
 enable_testing()
+include(cmake/tests.cmake)
 add_executable(LogDocTester
     tests/main.cpp
     # suites
     tests/lib.h
     tests/white_box.h
     tests/white_box.cpp
-    # 2 test
-    modules/exceptions.h
-    modules/exceptions.cpp
-    modules/craplog/modules/lib.h
-    modules/craplog/workers/lib.h
-    modules/craplog/workers/parser/logs_data.h
-    modules/craplog/workers/parser/logs_data.cpp
-    utilities/gzip.h
-    utilities/gzip.cpp
-    utilities/io.h
-    utilities/io.cpp
-    utilities/strings.h
-    utilities/strings.cpp
-    utilities/vectors.h
-    modules/craplog/modules/formats.h
-    modules/craplog/modules/formats.cpp
-    modules/craplog/utilities/datetime.h
-    modules/craplog/utilities/datetime.cpp
-    modules/craplog/utilities/logs.h
-    modules/craplog/utilities/logs.cpp
-    modules/crapview/utilities/filters.h
-    modules/crapview/utilities/filters.cpp
+    # to test
+    ${TO_TESTS_SOURCES}
 )
 if(WIN32)
     target_link_libraries(LogDocTester PRIVATE
