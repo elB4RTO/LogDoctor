@@ -84,6 +84,7 @@ set(MODULES_SOURCES
     modules/crapview/modules/fetcher.h
     modules/crapview/modules/fetcher.cpp
     modules/crapview/modules/fetcher/date_time.h
+    modules/crapview/modules/fetcher/queries.h
     modules/crapview/modules/fetcher/utilities.h
     modules/crapview/modules/fetcher/utilities.cpp
     modules/crapview/utilities/charts.h

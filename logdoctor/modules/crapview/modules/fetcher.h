@@ -234,17 +234,6 @@ public:
 
 private:
 
-    // leave TR::tr here to make them appear in the translatable phrases
-    const std::string MSG_ERR_UNX_WS{ TR::tr("Unexpected WebServer").toStdString() };
-    const std::string MSG_ERR_PROCESSING{ TR::tr("An error occured while processing").toStdString() };
-    const std::string MSG_ERR_PROCESSING_DATES{ TR::tr("An error occured while processing dates").toStdString() };
-    const std::string MSG_ERR_PARSING_YMD{ TR::tr("An error occured while parsing %1 from the database").toStdString() };
-    const std::string WORD_YEARS{  TR::tr("Years").toStdString() };
-    const std::string WORD_MONTHS{ TR::tr("Months").toStdString() };
-    const std::string WORD_DAYS{   TR::tr("Days").toStdString() };
-    const std::string MSG_RESPONSIBLE_VALUE{ TR::tr("Value responsible for the error").toStdString() };
-    const std::string MSG_TABLE_NAME{ TR::tr("Database table name").toStdString() };
-
     // quantity of information to display throught dialogs
     DialogsLevel dialog_level{ DL_NORMAL };
 

@@ -2,12 +2,10 @@
 #include "fetcher.h"
 
 #include "fetcher/date_time.h"
+#include "fetcher/queries.h"
 #include "fetcher/utilities.h"
 
 #include "modules/crapview/datatypes/fwd.h"
-#include "modules/crapview/utilities/datetime.h"
-
-#include "modules/database/database.h"
 
 #include "utilities/arrays.h"
 #include "utilities/printables.h"
@@ -71,7 +69,9 @@ void Fetcher::fetchAllDates( std::optional<database_dates_t>& result ) noexcept
 
         QueryWrapper query{ db.getQuery() };
 
-        query( QStringLiteral(R"(SELECT DISTINCT "year", "month", "day" FROM "%1" ORDER BY "year", "month", "day" ASC;)").arg(tbl) );
+        QueryFactory::allDates( query, tbl );
+
+        query();
 
         auto& years = dates.at( ws );
 
@@ -97,26 +97,17 @@ void Fetcher::fetchWarningsData( std::optional<WarningData>& result, QStringView
 
     QueryWrapper query{ db.getQuery() };
 
-    query << QStringLiteral(R"(SELECT * FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
-                .arg( web_server )
-                .arg( date.getYear() )
-                .arg( date.getMonth() )
-                .arg( date.getDay() );
+    QueryFactory::warningsData( query, web_server, date );
+
+    query();
 
     WarningData data;
 
     if ( date.isHourValid() ) {
         data.setTimelineAsHour();
-
-        query << QStringLiteral(R"( AND "hour"=%1 ORDER BY "minute","second" ASC;)")
-                    .arg( date.getHour() );
     } else {
         data.setTimelineAsDay();
-
-        query << R"( ORDER BY "hour","minute","second" ASC;)";
     }
-
-    query();
 
     if ( data.buildFromQuery( query ) ) {
         result.emplace( std::move(data) );
@@ -133,33 +124,7 @@ void Fetcher::fetchSpeedData( std::optional<SpeedData>& result, QStringView web_
 
     QueryWrapper query{ db.getQuery() };
 
-    query << QStringLiteral(R"(SELECT "hour","minute","second","time_taken","uri","query","method","protocol","response" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4 AND "time_taken" IS NOT NULL)")
-                .arg( web_server )
-                .arg( date.getYear() )
-                .arg( date.getMonth() )
-                .arg( date.getDay() );
-
-    if ( ! protocol_f.isEmpty() ) {
-        query << QStringLiteral(R"( AND "protocol")").append( protocol_f );
-    }
-
-    if ( ! method_f.isEmpty() ) {
-        query << QStringLiteral(R"( AND "method")").append( method_f );
-    }
-
-    if ( ! uri_f.isEmpty() ) {
-        query << QStringLiteral(R"( AND "uri")").append( uri_f );
-    }
-
-    if ( ! query_f.isEmpty() ) {
-        query << QStringLiteral(R"( AND "query")").append( query_f );
-    }
-
-    if ( ! response_f.isEmpty() ) {
-        query << QStringLiteral(R"( AND "response")").append( response_f );
-    }
-
-    query << R"( ORDER BY "hour","minute","second" ASC;)";
+    QueryFactory::speedData( query, web_server, date, protocol_f, method_f, uri_f, query_f, response_f );
 
     query();
 
@@ -182,14 +147,9 @@ void Fetcher::fetchCountsData( std::optional<CountData>& result, QStringView web
 
     QueryWrapper query{ db.getQuery() };
 
-    query << QStringLiteral(R"(SELECT "%1" FROM "%2" WHERE "%3" IS NOT NULL AND "year"=%4 AND "month"=%5 AND "day"=%6;)")
-                .arg( this->getDbField( log_field ),
-                      web_server,
-                      this->getDbField( log_field ) )
-                .arg( date.getYear()  )
-                .arg( date.getMonth() )
-                .arg( date.getDay()   )
-                .replace(QChar('\''),QLatin1String("''"));
+    const QString& field{ this->getDbField( log_field ) };
+
+    QueryFactory::countData( query, web_server, field, date );
 
     query();
 
@@ -215,55 +175,39 @@ void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView 
 
     const QString& log_field{ this->getDbField( log_field_ ) };
 
-    int n_days   { 0 },
-        n_months { from_date.countMonths( to_date ) };
-
-    int year  { from_date.getYear()  },
-        month { from_date.getMonth() };
+    int n_days   { 0 };
+    int n_months { from_date.countMonths( to_date ) };
 
     DaytimeData data;
 
     if ( n_months == 1 ) {
         QueryWrapper query{ db.getQuery() };
 
-        query << QStringLiteral(R"(SELECT "day", "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
-                    .arg( web_server )
-                    .arg( year ).arg( month )
-                    .arg( from_date.getDay() )
-                    .arg( to_date.getDay() );
-
-        if ( ! field_filter.isEmpty() ) {
-            query << QStringLiteral(R"( AND "%1"%2)").arg( log_field, field_filter );
-        }
-
-        query << ";";
+        QueryFactory::daytimeDataPartialMonth( query, web_server, from_date, to_date, log_field, field_filter );
 
         query();
 
         n_days += data.buildFromQuery( query );
 
     } else {
+        int year  { from_date.getYear()  };
+        int month { from_date.getMonth() };
+
+        const QString query_filter{
+            !field_filter.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field, field_filter ) : QString()
+        };
+
         for ( int m{1}; m<=n_months; ++m ) {
 
             QueryWrapper query{ db.getQuery() };
 
-            query << QStringLiteral(R"(SELECT "day", "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3)")
-                        .arg( web_server )
-                        .arg( year ).arg( month );
-
             if ( m == 1 ) {
-                // first month, only get the days starting from the beginning day
-                query << QStringLiteral(R"( AND "day">=%1)").arg( from_date.getDay() );
+                QueryFactory::daytimeDataFirstMonth( query, web_server, year, month, from_date.getDay(), query_filter );
             } else if ( m == n_months ) {
-                // last month, only get the days until the ending day
-                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_date.getDay() );
+                QueryFactory::daytimeDataLastMonth( query, web_server, year, month, to_date.getDay(), query_filter );
+            } else {
+                QueryFactory::daytimeDataEntireMonth( query, web_server, year, month, query_filter );
             }
-
-            if ( ! field_filter.isEmpty() ) {
-                query << QStringLiteral(R"( AND "%1"%2)").arg( log_field, field_filter );
-            }
-
-            query << ";";
 
             query();
 
@@ -298,21 +242,7 @@ void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QSt
 
     QueryWrapper query{ db.getQuery() };
 
-    query << QStringLiteral(R"(SELECT "hour", "minute" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day"=%4)")
-                .arg( web_server )
-                .arg( date.getYear()  )
-                .arg( date.getMonth() )
-                .arg( date.getDay()   );
-
-    if ( ! field_filter_1.isEmpty() ) {
-        query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 );
-    }
-
-    if ( ! field_filter_2.isEmpty() ) {
-        query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_2, field_filter_2 );
-    }
-
-    query << QStringLiteral(R"( ORDER BY "hour","minute" ASC;)");
+    QueryFactory::relationalDataSingleDay( query, web_server, date, log_field_1, field_filter_1, log_field_2, field_filter_2 );
 
     query();
 
@@ -344,9 +274,6 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
 
     const int n_months{ from_date.countMonths( to_date ) };
 
-    int year  { from_date.getYear()  },
-        month { from_date.getMonth() };
-
     DateManager date{ from_date.toDateManager() };
     const auto last_date{ to_date.toQDate().addDays( 1 ) };
 
@@ -354,23 +281,7 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
         // 1 month, no need to loop
         QueryWrapper query{ db.getQuery() };
 
-        query << QStringLiteral(R"(SELECT "day" FROM "%1" WHERE "year"=%2 AND "month"=%3 AND "day">=%4 AND "day"<=%5)")
-                    .arg( web_server )
-                    .arg( year ).arg( month )
-                    .arg( from_date.getDay() )
-                    .arg( to_date.getDay() );
-
-        if ( ! field_filter_1.isEmpty() ) {
-            query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 );
-        }
-
-        if ( ! field_filter_2.isEmpty() ) {
-            query << QStringLiteral(R"( AND "%1"%2)").arg( log_field_2, field_filter_2 );
-        }
-
-        query << R"( ORDER BY "day" ASC;)";
-
-        query();
+        QueryFactory::relationalDataPartialMonth( query, web_server, from_date, to_date, log_field_1, field_filter_1, log_field_2, field_filter_2 );
 
         RelationalData data;
         if ( data.buildFromQuery( query, std::move(date), std::move(last_date) ) ) {
@@ -382,6 +293,9 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
         RelationalData data;
         data.reserveSpace( from_date.countDays( to_date ) * 2 );
         bool data_found{ false };
+
+        int year  { from_date.getYear()  };
+        int month { from_date.getMonth() };
 
         const QString query_filters{ QStringLiteral("%1%2").arg(
             !field_filter_1.isEmpty() ? QStringLiteral(R"( AND "%1"%2)").arg( log_field_1, field_filter_1 ) : QString(),
@@ -397,23 +311,13 @@ void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, 
 
             QueryWrapper query{ db.getQuery() };
 
-            query << QStringLiteral(R"(SELECT "day" FROM "%1" WHERE "year"=%2 AND "month"=%3)")
-                        .arg( web_server )
-                        .arg( year ).arg( month );
-
             if ( m == 1 ) {
-                // first month, only get the day from the beginning day
-                query << QStringLiteral(R"( AND "day">=%1)").arg( from_date.getDay() );
+                QueryFactory::relationalDataFirstMonth( query, web_server, year, month, from_date.getDay(), query_filters );
             } else if ( m == n_months ) {
-                // last month, only get the days until the ending day
-                query << QStringLiteral(R"( AND "day"<=%1)").arg( to_date.getDay() );
+                QueryFactory::relationalDataLastMonth( query, web_server, year, month, to_date.getDay(), query_filters );
+            } else {
+                QueryFactory::relationalDataEntireMonth( query, web_server, year, month, query_filters );
             }
-
-            if ( ! query_filters.isEmpty() ) {
-                query << query_filters;
-            }
-
-            query << R"( ORDER BY "day" ASC;)";
 
             query();
 
@@ -484,9 +388,9 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
 
             QueryWrapper query{ db.getQuery() };
 
-            query( QStringLiteral(R"(SELECT "day","hour","protocol","method","uri","user_agent","time_taken","bytes_sent","bytes_received" FROM "%1" WHERE "year"=%2 AND "month"=%3 ORDER BY "day","hour" ASC;)")
-                        .arg( web_server )
-                        .arg( year ).arg( month ) );
+            QueryFactory::globalsData( query, web_server, year, month );
+
+            query();
 
             if ( query.size() == 0ul ) {
                 // no data in this month
