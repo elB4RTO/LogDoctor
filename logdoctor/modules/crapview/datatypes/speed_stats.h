@@ -20,7 +20,6 @@ class SpeedDatum final
     using TimeManager = FetcherPrivate::TimeManager;
 
 public:
-    SpeedDatum() = default;
     SpeedDatum( const qint64 chart_timestamp );
     SpeedDatum( const QueryWrapper& query, const TimeManager& time );
 

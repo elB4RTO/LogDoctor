@@ -8,7 +8,7 @@
 
 
 class QueryWrapper;
-class Warnlist;
+struct Warnlist;
 
 class QColor;
 class QBarSet;

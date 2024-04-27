@@ -8,7 +8,7 @@
 
 enum LogsFormatField : __uint32_t;
 
-class LogsFormat;
+struct LogsFormat;
 
 
 //! FieldData

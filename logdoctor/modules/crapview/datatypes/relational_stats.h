@@ -10,7 +10,7 @@ class QueryWrapper;
 namespace FetcherPrivate {
 class TimeManager;
 class DateManager;
-class IManager;
+struct IManager;
 }
 
 class QLineSeries;
@@ -19,7 +19,6 @@ class QTableWidget;
 
 struct RelationalDatum final
 {
-    RelationalDatum() = default;
     RelationalDatum( const qint64 timestamp );
     RelationalDatum( const qint64 timestamp, const int count );
 
