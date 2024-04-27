@@ -2,7 +2,7 @@
 #define LOGDOCTOR__CRAPVIEW_H
 
 
-#include "modules/crapview/modules/query.h"
+#include "modules/crapview/modules/fetcher.h"
 
 #include <QtCharts>
 
@@ -41,7 +41,7 @@ public:
 
     //! Sets the new path for the logs Collection database
     /*!
-        \see DbQuery::setDbPath()
+        \see Fetcher::setDbPath()
     */
     void setDbPath( const std::string& path ) noexcept;
 
@@ -316,7 +316,7 @@ private:
 
     const QColor warning_color{ 255, 127, 0, 255 };
 
-    DbQuery dbQuery;
+    Fetcher fetcher;
 
     // collection of available dates
     // db_dates_t = std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
@@ -338,18 +338,18 @@ private:
 
     // convert months names to months numbers
     const QHash<QString, int> Months_s2i{
-        {QString::fromStdString(this->dbQuery.MONTHS.at(1)),   1},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(2)),   2},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(3)),   3},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(4)),   4},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(5)),   5},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(6)),   6},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(7)),   7},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(8)),   8},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(9)),   9},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(10)), 10},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(11)), 11},
-        {QString::fromStdString(this->dbQuery.MONTHS.at(12)), 12}};
+        {QString::fromStdString(this->fetcher.MONTHS.at(1)),   1},
+        {QString::fromStdString(this->fetcher.MONTHS.at(2)),   2},
+        {QString::fromStdString(this->fetcher.MONTHS.at(3)),   3},
+        {QString::fromStdString(this->fetcher.MONTHS.at(4)),   4},
+        {QString::fromStdString(this->fetcher.MONTHS.at(5)),   5},
+        {QString::fromStdString(this->fetcher.MONTHS.at(6)),   6},
+        {QString::fromStdString(this->fetcher.MONTHS.at(7)),   7},
+        {QString::fromStdString(this->fetcher.MONTHS.at(8)),   8},
+        {QString::fromStdString(this->fetcher.MONTHS.at(9)),   9},
+        {QString::fromStdString(this->fetcher.MONTHS.at(10)), 10},
+        {QString::fromStdString(this->fetcher.MONTHS.at(11)), 11},
+        {QString::fromStdString(this->fetcher.MONTHS.at(12)), 12}};
 
 };
 

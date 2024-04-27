@@ -17,7 +17,7 @@
 #include "modules/craplog/modules/logs.h"
 #include "modules/craplog/modules/workers/lib.h"
 
-#include "modules/crapview/modules/filters.h"
+#include "modules/crapview/utilities/filters.h"
 
 #include <QTimeZone>
 

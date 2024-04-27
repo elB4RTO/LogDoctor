@@ -2,7 +2,7 @@
 #include "count_stats.h"
 
 #include "modules/database/database.h"
-#include "modules/crapview/modules/query/utilities.h"
+#include "modules/crapview/modules/fetcher/utilities.h"
 
 #include <QPieSeries>
 #include <QTableWidget>
@@ -10,7 +10,7 @@
 #include <ranges>
 
 
-using namespace QueryPrivate;
+using namespace FetcherPrivate;
 
 
 bool CountData::buildFromQuery( QueryWrapper& query )

@@ -7,7 +7,7 @@
 
 class QueryWrapper;
 
-namespace QueryPrivate {
+namespace FetcherPrivate {
 class TimeManager;
 }
 
@@ -17,7 +17,7 @@ class QTableWidget;
 
 class SpeedDatum final
 {
-    using TimeManager = QueryPrivate::TimeManager;
+    using TimeManager = FetcherPrivate::TimeManager;
 
 public:
     SpeedDatum() = default;
@@ -39,7 +39,7 @@ public:
 
 class SpeedData final
 {
-    using TimeManager = QueryPrivate::TimeManager;
+    using TimeManager = FetcherPrivate::TimeManager;
 
 public:
     SpeedData() = default;

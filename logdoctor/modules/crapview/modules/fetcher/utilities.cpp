@@ -4,7 +4,7 @@
 #include "modules/dialogs.h"
 
 
-namespace QueryPrivate
+namespace FetcherPrivate
 {
 
 int toInt( QStringView str )
@@ -141,4 +141,4 @@ int countMonths( const int from_year, const int from_month, const int to_year, c
     return n_months;
 }
 
-} // namespace QueryPrivate
+} // namespace FetcherPrivate

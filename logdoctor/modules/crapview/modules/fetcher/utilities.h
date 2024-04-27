@@ -1,11 +1,11 @@
-#ifndef LOGDOCTOR__CRAPVIEW__MODULES__QUERY__UTILITIES_H
-#define LOGDOCTOR__CRAPVIEW__MODULES__QUERY__UTILITIES_H
+#ifndef LOGDOCTOR__CRAPVIEW__MODULES__FETCHER__UTILITIES_H
+#define LOGDOCTOR__CRAPVIEW__MODULES__FETCHER__UTILITIES_H
 
 
 #include <QString>
 
 
-namespace QueryPrivate
+namespace FetcherPrivate
 {
 
 //! Converts the given string to int
@@ -78,7 +78,7 @@ int countDays( const int from_year, const int from_month, const int from_day, co
 */
 int countMonths( const int from_year, const int from_month, const int to_year, const int to_month ) noexcept;
 
-} // namespace QueryPrivate
+} // namespace FetcherPrivate
 
 
-#endif // LOGDOCTOR__CRAPVIEW__MODULES__QUERY__UTILITIES_H
+#endif // LOGDOCTOR__CRAPVIEW__MODULES__FETCHER__UTILITIES_H

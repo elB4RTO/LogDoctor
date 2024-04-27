@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
-#define LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
+#ifndef LOGDOCTOR__CRAPVIEW__MODULES__FETCHER_H
+#define LOGDOCTOR__CRAPVIEW__MODULES__FETCHER_H
 
 #include "main_lib.h"
 
@@ -12,14 +12,18 @@
 #include <optional>
 
 
-class DbQuery final
+//! Fetcher
+/*!
+    Fetches data for the statistics from the database
+*/
+class Fetcher final
 {
     CRAPVIEW_DATA_TYPEDEFS
 
 public:
 
-    explicit DbQuery() noexcept {}
-    Q_DISABLE_COPY_MOVE(DbQuery)
+    explicit Fetcher() noexcept {}
+    Q_DISABLE_COPY_MOVE(Fetcher)
 
     // log fields enums to log fields strings
     const std::unordered_map<LogField, std::string> FIELDS{
@@ -88,7 +92,7 @@ public:
         \throw VoidException
         \throw ConversionException
     */
-    void refreshDates( std::optional<database_dates_t>& result ) noexcept;
+    void fetchAllDates( std::optional<database_dates_t>& result ) noexcept;
 
 
     //! Retrieves the data needed for the Warnings statistics
@@ -103,7 +107,7 @@ public:
         \throw ConversionException
         \throw DateTimeException
     */
-    void getWarningsData(
+    void fetchWarningsData(
         std::optional<WarningData>& result,
         QStringView web_server,
         QStringView year_,
@@ -131,7 +135,7 @@ public:
         \throw ConversionException
         \throw DateTimeException
     */
-    void getSpeedData(
+    void fetchSpeedData(
         std::optional<SpeedData>& result,
         QStringView web_server,
         QStringView year_,
@@ -158,7 +162,7 @@ public:
         \throw CrapviewException
         \throw DateTimeException
     */
-    void getItemsCount(
+    void fetchCountsData(
         std::optional<CountData>& result,
         QStringView web_server,
         QStringView year,
@@ -185,7 +189,7 @@ public:
         \throw ConversionException
         \throw DateTimeException
     */
-    void getDaytimeCounts(
+    void fetchDaytimeData(
         std::optional<DaytimeData>& result,
         QStringView web_server,
         QStringView from_year_, QStringView from_month_, QStringView from_day_,
@@ -212,7 +216,7 @@ public:
         \throw DateTimeException
         \see getRelationalCountsPeriod()
     */
-    void getRelationalCountsDay(
+    void fetchRelationalDataDay(
         std::optional<RelationalData>& result,
         QStringView web_server,
         QStringView year_,        QStringView month_,         QStringView day_,
@@ -241,7 +245,7 @@ public:
         \throw DateTimeException
         \see getRelationalCountsDay()
     */
-    void getRelationalCountsPeriod(
+    void fetchRelationalDataPeriod(
         std::optional<RelationalData>& result,
         QStringView web_server,
         QStringView from_year_,   QStringView from_month_,    QStringView from_day_,
@@ -260,7 +264,7 @@ public:
         \throw CrapviewException
         \throw ConversionException
     */
-    void getGlobalCounts(
+    void fetchGlobalsData(
         std::optional<GlobalsData>& result,
         QStringView web_server,
         const stats_dates_t& dates
@@ -329,4 +333,4 @@ private:
 };
 
 
-#endif // LOGDOCTOR__CRAPVIEW__MODULES__QUERY_H
+#endif // LOGDOCTOR__CRAPVIEW__MODULES__FETCHER_H

@@ -1,5 +1,5 @@
-#ifndef LOGDOCTOR__CRAPVIEW__MODULES__QUERY__DATE_TIME_H
-#define LOGDOCTOR__CRAPVIEW__MODULES__QUERY__DATE_TIME_H
+#ifndef LOGDOCTOR__CRAPVIEW__MODULES__FETCHER__DATE_TIME_H
+#define LOGDOCTOR__CRAPVIEW__MODULES__FETCHER__DATE_TIME_H
 
 
 #include "utilities.h"
@@ -13,7 +13,7 @@
 #include <QString>
 
 
-namespace QueryPrivate
+namespace FetcherPrivate
 {
 
 //! IManager
@@ -227,7 +227,7 @@ private:
     }
 };
 
-} // namespace QueryPrivate
+} // namespace FetcherPrivate
 
 
-#endif // LOGDOCTOR__CRAPVIEW__MODULES__QUERY__DATE_TIME_H
+#endif // LOGDOCTOR__CRAPVIEW__MODULES__FETCHER__DATE_TIME_H

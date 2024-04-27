@@ -1,8 +1,8 @@
 
-#include "query.h"
+#include "fetcher.h"
 
-#include "query/date_time.h"
-#include "query/utilities.h"
+#include "fetcher/date_time.h"
+#include "fetcher/utilities.h"
 
 #include "modules/crapview/datatypes/fwd.h"
 
@@ -16,22 +16,22 @@
 #include <vector>
 
 
-using namespace QueryPrivate;
+using namespace FetcherPrivate;
 
 
-void DbQuery::setDialogLevel( const DialogsLevel new_level ) noexcept
+void Fetcher::setDialogLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialog_level = new_level;
 }
 
-void DbQuery::setDbPath( std::string&& path ) noexcept
+void Fetcher::setDbPath( std::string&& path ) noexcept
 {
     this->db_path = std::move(path);
     this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1ul ) );
 }
 
 
-int DbQuery::getMonthNumber( QStringView month_str ) const
+int Fetcher::getMonthNumber( QStringView month_str ) const
 {
     for ( const auto& [num,str] : this->MONTHS ) {
         if ( TR::tr(str.c_str()) == month_str ) {
@@ -42,7 +42,7 @@ int DbQuery::getMonthNumber( QStringView month_str ) const
 }
 
 
-int DbQuery::countMonths( QStringView from_year, QStringView from_month, QStringView to_year, QStringView to_month ) const
+int Fetcher::countMonths( QStringView from_year, QStringView from_month, QStringView to_year, QStringView to_month ) const
 {
     const int from_year_{ toInt( from_year ) },
               from_month_{ this->getMonthNumber( from_month ) };
@@ -56,12 +56,12 @@ int DbQuery::countMonths( QStringView from_year, QStringView from_month, QString
 }
 
 
-const QString& DbQuery::getDbField( const LogField fld ) const
+const QString& Fetcher::getDbField( const LogField fld ) const
 {
     return this->LogFields_to_DbFields.at( fld );
 }
 
-const QString& DbQuery::getDbField( QStringView tr_fld ) const
+const QString& Fetcher::getDbField( QStringView tr_fld ) const
 {
     for ( const auto& [id,str] : this->FIELDS ) {
         if ( TR::tr(str.c_str()) == tr_fld ) {
@@ -74,7 +74,7 @@ const QString& DbQuery::getDbField( QStringView tr_fld ) const
 
 
 // get a fresh map of available dates
-void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
+void Fetcher::fetchAllDates( std::optional<database_dates_t>& result ) noexcept
 {
     database_dates_t dates{ // std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>>
         {WS_APACHE, {}}, {WS_NGINX, {}}, {WS_IIS, {}}
@@ -113,7 +113,7 @@ void DbQuery::refreshDates( std::optional<database_dates_t>& result ) noexcept
 
 
 // get daytime values for the warnings
-void DbQuery::getWarningsData( std::optional<WarningData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
+void Fetcher::fetchWarningsData( std::optional<WarningData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView hour_ ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -141,7 +141,7 @@ void DbQuery::getWarningsData( std::optional<WarningData>& result, QStringView w
     } else {
         data.setTimelineAsHour();
 
-        query << QStringLiteral(R"( AND "hour"=%5 ORDER BY "minute","second" ASC;)")
+        query << QStringLiteral(R"( AND "hour"=%1 ORDER BY "minute","second" ASC;)")
                     .arg( hour );
     }
 
@@ -154,7 +154,7 @@ void DbQuery::getWarningsData( std::optional<WarningData>& result, QStringView w
 
 
 // get day-time values for the time-taken field
-void DbQuery::getSpeedData( std::optional<SpeedData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
+void Fetcher::fetchSpeedData( std::optional<SpeedData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, QStringView protocol_f, QStringView method_f, QStringView uri_f, QStringView query_f, QStringView response_f, const qint64 time_interval ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -205,7 +205,7 @@ void DbQuery::getSpeedData( std::optional<SpeedData>& result, QStringView web_se
 
 
 // get, group and count identical items of a specific field in a date
-void DbQuery::getItemsCount( std::optional<CountData>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
+void Fetcher::fetchCountsData( std::optional<CountData>& result, QStringView web_server, QStringView year, QStringView month, QStringView day, QStringView log_field ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -234,7 +234,7 @@ void DbQuery::getItemsCount( std::optional<CountData>& result, QStringView web_s
 
 
 // get and count items with a 10 minutes gap for every hour of the day
-void DbQuery::getDaytimeCounts( std::optional<DaytimeData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
+void Fetcher::fetchDaytimeData( std::optional<DaytimeData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_, QStringView field_filter ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -320,7 +320,7 @@ void DbQuery::getDaytimeCounts( std::optional<DaytimeData>& result, QStringView 
 
 
 // get and count how many times a specific item value brought to another
-void DbQuery::getRelationalCountsDay( std::optional<RelationalData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
+void Fetcher::fetchRelationalDataDay( std::optional<RelationalData>& result, QStringView web_server, QStringView year_, QStringView month_, QStringView day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -364,7 +364,7 @@ void DbQuery::getRelationalCountsDay( std::optional<RelationalData>& result, QSt
 
 
 
-void DbQuery::getRelationalCountsPeriod( std::optional<RelationalData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
+void Fetcher::fetchRelationalDataPeriod( std::optional<RelationalData>& result, QStringView web_server, QStringView from_year_, QStringView from_month_, QStringView from_day_, QStringView to_year_, QStringView to_month_, QStringView to_day_, const LogField log_field_1_, QStringView field_filter_1, const LogField log_field_2_, QStringView field_filter_2 ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 
@@ -480,7 +480,7 @@ void DbQuery::getRelationalCountsPeriod( std::optional<RelationalData>& result, 
 
 
 
-void DbQuery::getGlobalCounts( std::optional<GlobalsData>& result, QStringView web_server, const stats_dates_t& dates ) const
+void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView web_server, const stats_dates_t& dates ) const
 {
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data, DB_READONLY ) };
 

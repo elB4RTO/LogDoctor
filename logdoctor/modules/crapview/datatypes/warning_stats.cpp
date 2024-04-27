@@ -1,7 +1,7 @@
 
 #include "warning_stats.h"
 
-#include "modules/crapview/modules/query/utilities.h"
+#include "modules/crapview/modules/fetcher/utilities.h"
 
 #include "modules/database/database.h"
 
@@ -17,7 +17,7 @@
 #include <ranges>
 
 
-using namespace QueryPrivate;
+using namespace FetcherPrivate;
 
 
 namespace /*private*/

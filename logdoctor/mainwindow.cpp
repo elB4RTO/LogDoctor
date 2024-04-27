@@ -31,7 +31,7 @@
 #include "modules/craplog/lib.h"
 
 #include "modules/crapview/lib.h"
-#include "modules/crapview/modules/filters.h"
+#include "modules/crapview/utilities/filters.h"
 
 #include "modules/crapconf/lib.h"
 

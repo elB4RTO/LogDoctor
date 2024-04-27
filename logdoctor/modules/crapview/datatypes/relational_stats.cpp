@@ -2,13 +2,13 @@
 #include "relational_stats.h"
 
 #include "modules/database/database.h"
-#include "modules/crapview/modules/query/date_time.h"
+#include "modules/crapview/modules/fetcher/date_time.h"
 
 #include <QLineSeries>
 #include <QTableWidget>
 
 
-using namespace QueryPrivate;
+using namespace FetcherPrivate;
 
 
 RelationalDatum::RelationalDatum( const qint64 timestamp )

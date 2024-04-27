@@ -31,16 +31,16 @@ void Crapview::setDialogsLevel( const DialogsLevel new_level ) noexcept
 
 void Crapview::setDbPath( const std::string& path ) noexcept
 {
-    this->dbQuery.setDbPath( path + "/" + DatabasesNames::data );
+    this->fetcher.setDbPath( path + "/" + DatabasesNames::data );
 }
 
 
 
 int Crapview::getMonthNumber( const QString& month_str ) const noexcept
 {
-    const auto pos{ std::find_if( this->dbQuery.MONTHS.cbegin(), this->dbQuery.MONTHS.cend(),
+    const auto pos{ std::find_if( this->fetcher.MONTHS.cbegin(), this->fetcher.MONTHS.cend(),
         [&month_str](const auto& it){ return TR::tr(it.second.c_str()) == month_str; } ) };
-    if ( pos != this->dbQuery.MONTHS.cend() ) {
+    if ( pos != this->fetcher.MONTHS.cend() ) {
         return pos->first;
     }
     return 0;
@@ -53,7 +53,7 @@ void Crapview::refreshDates()
 
     try {
 
-        this->dbQuery.refreshDates( result );
+        this->fetcher.fetchAllDates( result );
 
     } catch ( const VoidException& ) {
         // dialog already shown
@@ -91,7 +91,7 @@ QStringList Crapview::getMonths( const QString& web_server, const QString& year 
         if ( const auto& y{ this->dates.at( ws ) }; !y.empty() ) {
             const int year_{ year.toInt() };
             if ( const auto& m{ y.at( year_ ) }; !m.empty() ) {
-                const auto& m_tr{ this->dbQuery.MONTHS };
+                const auto& m_tr{ this->fetcher.MONTHS };
                 std::transform( m.cbegin(), m.cend(),
                                 std::back_inserter( months ),
                                 [&m_tr](const auto& p){ return TR::tr(m_tr.at( p.first ).c_str()); } );
@@ -221,7 +221,7 @@ void Crapview::drawWarn( QTableWidget* table, QChartView* chart, const QChart::C
 
     try {
 
-        this->dbQuery.getWarningsData( result, web_server, year, month, day, hour );
+        this->fetcher.fetchWarningsData( result, web_server, year, month, day, hour );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -281,7 +281,7 @@ void Crapview::drawSpeed( QTableWidget*const table, QChartView*const chart, cons
 
     try {
 
-        this->dbQuery.getSpeedData( result, web_server, year, month, day, protocol, method, uri, query, response, this->speed_interval );
+        this->fetcher.fetchSpeedData( result, web_server, year, month, day, protocol, method, uri, query, response, this->speed_interval );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -332,7 +332,7 @@ void Crapview::drawCount( QTableWidget*const table, QChartView*const chart, cons
 
     try {
 
-        this->dbQuery.getItemsCount( result, web_server, year, month, day, field );
+        this->fetcher.fetchCountsData( result, web_server, year, month, day, field );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -375,7 +375,7 @@ void Crapview::drawDay( QChartView*const chart, const QChart::ChartTheme& theme,
 
     try {
 
-        this->dbQuery.getDaytimeCounts( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field, filter );
+        this->fetcher.fetchDaytimeData( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field, filter );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -449,9 +449,9 @@ void Crapview::drawRelat( QChartView*const chart, const QChart::ChartTheme& them
     try {
 
         if ( ! period ) {
-            this->dbQuery.getRelationalCountsDay( result, web_server, from_year, from_month, from_day, field_1, filter_1, field_2, filter_2 );
+            this->fetcher.fetchRelationalDataDay( result, web_server, from_year, from_month, from_day, field_1, filter_1, field_2, filter_2 );
         } else {
-            this->dbQuery.getRelationalCountsPeriod( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field_1, filter_1, field_2, filter_2 );
+            this->fetcher.fetchRelationalDataPeriod( result, web_server, from_year, from_month, from_day, to_year, to_month, to_day, field_1, filter_1, field_2, filter_2 );
         }
 
     } catch ( const DatabaseException& e ) {
@@ -492,7 +492,7 @@ void Crapview::drawRelat( QChartView*const chart, const QChart::ChartTheme& them
     QString time_format, date;
     if ( period ) {
         time_format = "yyyy-MM";
-        n_ticks = this->dbQuery.countMonths( from_year, from_month, to_year, to_month );
+        n_ticks = this->fetcher.countMonths( from_year, from_month, to_year, to_month );
         if ( n_ticks == 1 ) {
             time_format = "yyyy-MM-dd";
             n_ticks = to_day.toInt() - from_day.toInt() + 2;
@@ -530,7 +530,7 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
 
     try {
 
-        this->dbQuery.getGlobalCounts( result, web_server, avl_dates );
+        this->fetcher.fetchGlobalsData( result, web_server, avl_dates );
 
     } catch ( const DatabaseException& e ) {
         DialogSec::errProcessingStatsData( e.what() );
@@ -559,7 +559,7 @@ bool Crapview::calcGlobals( std::vector<std::tuple<QString,QString>>& recur_list
 
     traffic_list.push_back( std::move( data.traf.date ) );
     const auto [max_i_d,max_c_d] = GlobalsOps::getMaxIndexCount( data.traf.day );
-    GlobalsOps::appendMostTrafficked( traffic_list, data.traf.day, max_i_d, max_c_d, TR::tr(this->dbQuery.DAYS.at(max_i_d+1).c_str()), __dash, __zero );
+    GlobalsOps::appendMostTrafficked( traffic_list, data.traf.day, max_i_d, max_c_d, TR::tr(this->fetcher.DAYS.at(max_i_d+1).c_str()), __dash, __zero );
     const auto [max_i_h,max_c_h] = GlobalsOps::getMaxIndexCount( data.traf.hour );
     GlobalsOps::appendMostTrafficked( traffic_list, data.traf.hour, max_i_h, max_c_h, QStringLiteral("%1").arg(max_i_h, 2, 10, QChar('0')), __dash, __zero );
 

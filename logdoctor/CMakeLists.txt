@@ -168,15 +168,15 @@ set(PROJECT_SOURCES
     modules/crapview/datatypes/warning_stats.h
     modules/crapview/datatypes/warning_stats.cpp
     modules/crapview/datatypes/typedefs.h
-    modules/crapview/modules/filters.h
-    modules/crapview/modules/filters.cpp
-    modules/crapview/modules/query.h
-    modules/crapview/modules/query.cpp
-    modules/crapview/modules/query/date_time.h
-    modules/crapview/modules/query/utilities.h
-    modules/crapview/modules/query/utilities.cpp
+    modules/crapview/modules/fetcher.h
+    modules/crapview/modules/fetcher.cpp
+    modules/crapview/modules/fetcher/date_time.h
+    modules/crapview/modules/fetcher/utilities.h
+    modules/crapview/modules/fetcher/utilities.cpp
     modules/crapview/utilities/charts.h
     modules/crapview/utilities/charts.cpp
+    modules/crapview/utilities/filters.h
+    modules/crapview/utilities/filters.cpp
     modules/crapview/utilities/globals.h
 
     modules/craphelp/craphelp.ui
@@ -312,8 +312,8 @@ add_executable(LogDocTester
     modules/craplog/modules/formats.cpp
     modules/craplog/modules/logs.h
     modules/craplog/modules/logs.cpp
-    modules/crapview/modules/filters.h
-    modules/crapview/modules/filters.cpp
+    modules/crapview/utilities/filters.h
+    modules/crapview/utilities/filters.cpp
 )
 if(WIN32)
     target_link_libraries(LogDocTester PRIVATE

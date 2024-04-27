@@ -7,7 +7,7 @@
 
 class QueryWrapper;
 
-namespace QueryPrivate {
+namespace FetcherPrivate {
 class TimeManager;
 class DateManager;
 class IManager;
@@ -30,9 +30,9 @@ struct RelationalDatum final
 
 class RelationalData final
 {
-    using IManager    = QueryPrivate::IManager;
-    using TimeManager = QueryPrivate::TimeManager;
-    using DateManager = QueryPrivate::DateManager;
+    using IManager    = FetcherPrivate::IManager;
+    using TimeManager = FetcherPrivate::TimeManager;
+    using DateManager = FetcherPrivate::DateManager;
 
 public:
     RelationalData() = default;

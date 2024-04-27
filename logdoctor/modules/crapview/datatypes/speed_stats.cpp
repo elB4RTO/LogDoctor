@@ -2,7 +2,7 @@
 #include "speed_stats.h"
 
 #include "modules/database/database.h"
-#include "modules/crapview/modules/query/date_time.h"
+#include "modules/crapview/modules/fetcher/date_time.h"
 
 #include <QLineSeries>
 #include <QTableWidget>
@@ -10,7 +10,7 @@
 #include <ranges>
 
 
-using namespace QueryPrivate;
+using namespace FetcherPrivate;
 
 
 SpeedDatum::SpeedDatum( const qint64 chart_timestamp )
