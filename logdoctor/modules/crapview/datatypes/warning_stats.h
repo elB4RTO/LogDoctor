@@ -66,6 +66,7 @@ public:
 
     void checkWarnings( const Warnlist& warnlist );
 
+    //! \throw DoNotCatchException
     int insertInChart( std::vector<std::vector<QBarSet*>>& bars ) const;
 
     void insertInTable( QTableWidget*const table, const QColor& warning_color ) const;

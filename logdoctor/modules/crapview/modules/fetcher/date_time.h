@@ -116,22 +116,26 @@ public:
     */
     inline void increaseIntervalUntil()
     {
-        do {
-            increaseInterval();
-            checkValidity();
-        } while ( ! inCurrentInterval()  );
+        do    {  increaseInterval(); }
+        while ( !inCurrentInterval() );
+        assertValid();
         decreaseInterval();
     }
 
 private:
 
+    //! Decreases the time interval by one step
     inline void decreaseInterval()
     {
         time_interval_beg.setSecsSinceEpoch( time_interval_beg.toSecsSinceEpoch() - time_interval_step );
         time_interval_end.setSecsSinceEpoch( time_interval_end.toSecsSinceEpoch() - time_interval_step );
     }
 
-    inline void checkValidity() const
+    //! Asserts that the current time is after the beginning of the current interval
+    /*!
+        \throw DoNotCatchException
+    */
+    inline void assertValid() const
     {
         if ( time < time_interval_beg ) {
             throw DoNotCatchException{"Unexpected TimeManager state", "time interval exceeds current time"};
@@ -211,15 +215,18 @@ public:
     */
     inline void increaseIntervalUntil()
     {
-        do {
-            increaseInterval();
-            checkValidity();
-        } while ( ! inCurrentInterval()  );
+        do    {  increaseInterval(); }
+        while ( !inCurrentInterval() );
+        assertValid();
         decreaseInterval();
     }
 
 private:
-    inline void checkValidity() const
+    //! Asserts that the current date is after the beginning of the current interval
+    /*!
+        \throw DoNotCatchException
+    */
+    inline void assertValid() const
     {
         if ( date < date_interval ) {
             throw DoNotCatchException{"Unexpected DateManager state", "date interval exceeds current date"};
