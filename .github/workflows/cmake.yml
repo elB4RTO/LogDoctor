@@ -63,7 +63,7 @@ jobs:
 
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --target all
+      run: cmake --build ${{github.workspace}}/build --target all -j16
 
     - name: Test
       working-directory: ${{github.workspace}}/build
