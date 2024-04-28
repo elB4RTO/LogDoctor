@@ -6,7 +6,11 @@
 #include <vector>
 
 
+#ifdef _MSC_VER
+enum LogsFormatField : uint32_t;
+#else
 enum LogsFormatField : __uint32_t;
+#endif
 
 struct LogsFormat;
 
