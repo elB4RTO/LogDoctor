@@ -174,8 +174,7 @@ When you parse a file, it will be hashed using the **SHA256** algorithm and the 
 
 ##### Note
 
-If you don't know, *SHA256* produces an irreversible hash, which means that no information about the file can be retrieved from the hash.<br/>
-You have full control on the hashes database (same as for the logs-data database): you can move, delete, view or edit it the way you want (but you must keep the original file-name).<br/>
+The *SHA256* algorithm produces an irreversible hash, which means that no information about the file can be retrieved from the hash.<br/>
 LogDoctor will **never** grab and/or use any information about you or the usage you make of it.
 
 <br/>
@@ -190,7 +189,7 @@ It can be the default system folder or any folder you decide to use, just set it
 #### Logs format
 
 Before to start parsing logs, you must set-up the *log format* that LogDoctor will have to use.<br/>
-Head to the **configurations** section, tap `Logs`, select the **Web Server** you want to configure and tap `Format`.<br/>
+Head to the **configurations** section, under `Logs` select the **Web Server** you want to configure and tap `Format`.<br/>
 Once inside the **Format** section, you can insert the *log format string* you're using. Don't forget to use the `Generete preview` button to generate a *log line sample* and **check the correctness** of the format!<br/>
 
 For reliability reasons, LogDoctor **does not** support the usage of the **Carriage Return** inside the log format string.
@@ -384,7 +383,7 @@ A new backup is made every time you quit LogDoctor after doing a job which affec
 #### Note
 
 Only the *logs-data database* will be backed-up, the *hashes database* **won't**.<br/>
-This is because it is unlikely (supposedly impossible) that a hash equals another, therefore they're supposed to be useful for a short period of time (that is, since you or your web server delete the original log files).
+This is because it is unlikely (supposedly impossible) that a hash equals another, therefore they're supposed to be useful for a short period of time (that is, until you or your web server delete the original log files).
 
 <br/>
 
@@ -392,7 +391,7 @@ This is because it is unlikely (supposedly impossible) that a hash equals anothe
 
 10~200 MB/s
 
-May be higher or lower depending on the complexity of the logs, the complexity of the blacklist, the build type, your hardware and the workload of your system during the execution.
+Take this estimation with a grain of salt, it may be even higher or lower depending on a variety of factors, like: the build type, your hardware, the complexity of the logs, the complexity of the blacklist, the workload of your system during the execution...
 
 <br/><br/>
 
