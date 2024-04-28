@@ -53,7 +53,7 @@ then
 fi
 
 # Build the project
-cmake --build ./ --target all -j$(nproc)
+cmake --build ./ --target LogDoctor -j$(nproc)
 if [[ "$?" == "0" ]]
 then
 	# compiled succesfully

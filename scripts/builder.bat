@@ -430,7 +430,7 @@ IF ERRORLEVEL 1 (
 )
 
 :: Build the project
-"%cmake_path%" --build ./ --target all -j%NUMBER_OF_PROCESSORS%
+"%cmake_path%" --build ./ --target LogDoctor -j%NUMBER_OF_PROCESSORS%
 IF ERRORLEVEL 1 (
 	ECHO:
 	ECHO Error: failed to compile
