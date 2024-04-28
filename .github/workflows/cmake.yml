@@ -8,7 +8,7 @@ on:
 
 env:
   QT_VERSION: '6.6.*'
-  BUILD_TYPE: 'MinSizeRel'
+  BUILD_TYPE: 'Release'
 
 jobs:
   build:
