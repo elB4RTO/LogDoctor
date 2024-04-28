@@ -22,5 +22,5 @@ int main()
     else
         std::cout << "\n\nSOME TEST FAILED" << std::endl;
 
-    return passed;
+    return passed ? 0 : 1;
 }

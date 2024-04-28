@@ -1,5 +1,5 @@
 
-function(logdoc_add_tests)
+macro(logdoc_add_tests)
 
     include(CTest)
 
@@ -55,4 +55,4 @@ function(logdoc_add_tests)
       COMMAND $<TARGET_FILE:LogDocTester>
     )
 
-endfunction()
+endmacro()

@@ -25,7 +25,7 @@ logdoc_add_lupdate_target()
 qt_finalize_executable(LogDoctor)
 
 
-# CTest
+# Test
 include(cmake/tests.cmake)
 logdoc_add_tests()
 
