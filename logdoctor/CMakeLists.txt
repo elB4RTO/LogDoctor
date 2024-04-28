@@ -19,7 +19,8 @@ logdoc_set_linker_options()
 logdoc_set_target_properties()
 
 include(cmake/translations.cmake)
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+logdoc_add_lupdate_target()
+#logdoc_add_lrelease_target()
 
 qt_finalize_executable(LogDoctor)
 
