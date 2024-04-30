@@ -12,7 +12,7 @@
 
 #include "modules/exceptions.h"
 
-#include "modules/craplog/modules/formats.h"
+#include "modules/craplog/modules/formats/parse.h"
 #include "modules/craplog/utilities/datetime.h"
 #include "modules/craplog/utilities/logs.h"
 #include "modules/craplog/workers/parser/logs_data.h"
@@ -1229,9 +1229,8 @@ bool testCraplogModules()
 
     //// FORMATS ////
 
-    T_TEST_START("FormatOps::processApacheFormatString")
+    T_TEST_START("FormatOps::Private::parseApacheFormatString")
     {
-    FormatOps fo;
     LogsFormat lf;
     std::string format_string;
     std::vector<LogsFormatField> fields;
@@ -1240,7 +1239,7 @@ bool testCraplogModules()
     format_string = "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
     fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,_DISCARDED,referer,user_agent};
     separators = {" "," "," [","] \"","\" "," "," \"","\" \""};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1249,7 +1248,7 @@ bool testCraplogModules()
     format_string = "%%%h %% %t\t%r\n%H %m [%U%%%q} <%s> %<s %>s %O %I %T %D %a %A %b %B %e %f %k %l %L %p %P %R %S %u %v %V %% %X%%";
     fields = {client,date_time_ncsa,request_full,request_protocol,request_method,request_uri,request_query,response_code,response_code,response_code,bytes_sent,bytes_received,time_taken_s,time_taken_ms,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" % [","]\t","\n"," "," [","%","} <","> "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," % "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "%" );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1259,7 +1258,7 @@ bool testCraplogModules()
         REDIRECT_STDOUT()
         REDIRECT_STDERR()
         try {
-            std::ignore = fo.processApacheFormatString(fs);
+            std::ignore = FormatOps::Private::parseApacheFormatString(fs);
             RESTORE_STDOUT()
             RESTORE_STDERR()
             T_ASSERT( false );
@@ -1271,7 +1270,7 @@ bool testCraplogModules()
     format_string = "%{}a %{c}a %{}h %{c}h %{Cookie}i %200{Cookie}i %{User-agent}i %302,400{User-agent}i %!200{Referer}i %,200{Referer}i %{Referer}i";
     fields = {client,client,client,client,cookie,cookie,user_agent,user_agent,referer,referer,referer};
     separators = {" "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1280,7 +1279,7 @@ bool testCraplogModules()
     format_string = "%{ }a %{x}a %{NOPE}a %{ }h %{y}h %{NOPE}h %{}i %{ }i %{Random}i %{Cookies}i";
     fields = {client,client,client,client,client,client,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1289,7 +1288,7 @@ bool testCraplogModules()
     format_string = "%{%%}t %{%n}t %{%t}t %{}t %{sec}t %{msec}t %{usec}t %{msec_frac}t %{usec_frac}t %{%a}t %{%A}t %{%b}t %{%B}t %{%c}t %{%C}t %{%d}t %{%D}t %{%e}t %{%F}t %{%g}t %{%G}t %{%h}t %{%H}t %{%I}t %{%j}t %{%k}t %{%m}t %{%M}t %{%p}t %{%r}t %{%R}t %{%S}t %{%T}t %{%u}t %{%U}t %{%V}t %{%w}t %{%W}t %{%x}t %{%X}t %{%y}t %{%Y}t %{%z}t %{%Z}t";
     fields = {date_time_ncsa,date_time_epoch_s,date_time_epoch_ms,date_time_epoch_us,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,date_time_month_str,date_time_month_str,date_time_mcs,_DISCARDED,date_time_day,date_time_mmddyy,date_time_day,date_time_yyyymmdd,_DISCARDED,_DISCARDED,date_time_month_str,date_time_hour,_DISCARDED,_DISCARDED,date_time_hour,date_time_month,date_time_minute,_DISCARDED,date_time_clock_12,date_time_clock_short,date_time_second,date_time_clock_24,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,date_time_mmddyy,date_time_clock_24,date_time_year_short,date_time_year,_DISCARDED,_DISCARDED};
     separators = {"] "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "% \n \t [" );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1297,7 +1296,7 @@ bool testCraplogModules()
     // test date-time composed fields, with one field only
     format_string = "%{}t";
     fields = {date_time_ncsa};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "[" );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators.empty() );
@@ -1306,7 +1305,7 @@ bool testCraplogModules()
     format_string = "%{%%%Y_%m_%e%t%H@%M@%S%%}t";
     fields = {date_time_year,date_time_month,date_time_day,date_time_hour,date_time_minute,date_time_second};
     separators = {"_","_","\t","@","@"};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "%" );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1315,14 +1314,14 @@ bool testCraplogModules()
     format_string = "%{%% %n %t %a %A %b %B %c %C %d %D %e %F %g %G %h %H %I %j %k %m %M %p %r %R %S %T %u %U %V %w %W %x %X %y %Y %z %Z}t";
     fields = {_DISCARDED,_DISCARDED,date_time_month_str,date_time_month_str,date_time_mcs,_DISCARDED,date_time_day,date_time_mmddyy,date_time_day,date_time_yyyymmdd,_DISCARDED,_DISCARDED,date_time_month_str,date_time_hour,_DISCARDED,_DISCARDED,date_time_hour,date_time_month,date_time_minute,_DISCARDED,date_time_clock_12,date_time_clock_short,date_time_second,date_time_clock_24,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,date_time_mmddyy,date_time_clock_24,date_time_year_short,date_time_year,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "% \n \t " );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
     T_ASSERT( lf.final.empty() );
     // test unexisting/unsupported date-time composed fields
     format_string = "%{ }t %{nope}t %{%}t %{%?}t %{%E}t %{%q}t";
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "  nope % %? %E %q" );
     T_ASSERT( lf.fields.empty() );
     T_ASSERT( lf.separators.empty() );
@@ -1332,7 +1331,7 @@ bool testCraplogModules()
         REDIRECT_STDOUT()
         REDIRECT_STDERR()
         try {
-            std::ignore = fo.processApacheFormatString(fs);
+            std::ignore = FormatOps::Private::parseApacheFormatString(fs);
             RESTORE_STDOUT()
             RESTORE_STDERR()
             T_ASSERT( false );
@@ -1344,7 +1343,7 @@ bool testCraplogModules()
     format_string = "%{}T %{s}T %{ms}T %{us}T";
     fields = {time_taken_s,time_taken_s,time_taken_ms,time_taken_us};
     separators = {" "," "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1352,7 +1351,7 @@ bool testCraplogModules()
     // test unexisting/unsupported time taken related composed fields
     format_string = "%{ }T %{%s}T %{msec}T";
     fields = {};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial == "  %s msec" );
     T_ASSERT( lf.fields.empty() );
     T_ASSERT( lf.separators.empty() );
@@ -1361,7 +1360,7 @@ bool testCraplogModules()
     format_string = "%{}C %{}e %{}L %{}n %{}o %{}p %{canonical}p %{local}p %{remote}p %{}P %{pid}P %{tid}P %{hextid}P %{}^ti %{}^to";
     fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1370,7 +1369,7 @@ bool testCraplogModules()
     format_string = "%{TEST}C %{TEST}e %{TEST}L %{TEST}n %{TEST}o %{TEST}p %{TEST}P %{TEST}^ti %{TEST}^to";
     fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," TEST TEST "," "};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1379,14 +1378,14 @@ bool testCraplogModules()
     format_string = "%h %l %u %t %r %>s %b \"%{Referer}i\" \"%{User-agent}i\"";
     fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,_DISCARDED,referer,user_agent};
     separators = {" "," "," [","] "," "," "," \"","\" \""};
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
     T_ASSERT( lf.final == "\"" );
     // test an empty string
     format_string.erase();
-    lf = fo.processApacheFormatString(format_string);
+    lf = FormatOps::Private::parseApacheFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields.empty() );
     T_ASSERT( lf.separators.empty() );
@@ -1394,9 +1393,8 @@ bool testCraplogModules()
     }
     T_TEST_RESULT()
 
-    T_TEST_START("FormatOps::processNginxFormatString")
+    T_TEST_START("FormatOps::Private::parseNginxFormatString")
     {
-    FormatOps fo;
     LogsFormat lf;
     std::string format_string;
     std::vector<LogsFormatField> fields;
@@ -1405,7 +1403,7 @@ bool testCraplogModules()
     format_string = "$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\"";
     fields = {client,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent,referer,user_agent};
     separators = {" - "," [","] \"","\" "," "," \"","\" \""};
-    lf = fo.processNginxFormatString(format_string);
+    lf = FormatOps::Private::parseNginxFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1414,7 +1412,7 @@ bool testCraplogModules()
     format_string = "$remote_addr $realip_remote_addr $time_local $time_iso8601 $date_gmt $msec $request $server_protocol $request_method $request_uri $uri $query_string $status $bytes_sent $request_length $request_time $http_referer $cookie_ $http_user_agent";
     fields = {client,client,date_time_ncsa,date_time_iso,date_time_gmt,date_time_epoch_s_ms,request_full,request_protocol,request_method,request_uri_query,request_uri,request_query,response_code,bytes_sent,bytes_received,time_taken_s_ms,referer,cookie,user_agent};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processNginxFormatString(format_string);
+    lf = FormatOps::Private::parseNginxFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1423,14 +1421,14 @@ bool testCraplogModules()
     format_string = "$ancient_browser $arg_ $args $binary_remote_addr $body_bytes_sent $connection $connection_requests $connections_active $connections_reading $connections_waiting $connections_writing $content_length $content_type $date_local $document_root $document_uri $fastcgi_path_info $fastcgi_script_name $geoip_area_code $geoip_city $geoip_city_continent_code $geoip_city_country_code $geoip_city_country_code3 $geoip_city_country_name $geoip_country_code $geoip_country_code3 $geoip_country_name $geoip_dma_code $geoip_latitude $geoip_longitude $geoip_org $geoip_postal_code $geoip_region $geoip_region_name $gzip_ratio $host $hostname $http2 $http_ $https $invalid_referer $is_args $limit_rate $memcached_key $modern_browser $msie $nginx_version $pid $pipe $proxy_add_x_forwarded_for $proxy_host $proxy_port $proxy_protocol_addr $proxy_protocol_port $realip_remote_port $realpath_root $remote_port $remote_user $request_body $request_body_file $request_completion $request_filename $request_id $scheme $secure_link $secure_link_expires $sent_http_ $server_addr $server_name $server_port $session_log_binary_id $session_log_id $slice_range $spdy $spdy_request_priority $ssl_cipher $ssl_client_cert $ssl_client_fingerprint $ssl_client_i_dn $ssl_client_raw_cert $ssl_client_s_dn $ssl_client_serial $ssl_client_verify $ssl_protocol $ssl_server_name $ssl_session_id $ssl_session_reused $tcpinfo_rtt $tcpinfo_rttvar $tcpinfo_snd_cwnd $tcpinfo_rcv_space $uid_got $uid_reset $uid_set $upstream_addr $upstream_cache_status $upstream_connect_time $upstream_cookie_ $upstream_header_time $upstream_http_ $upstream_response_length $upstream_response_time $upstream_status";
     fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processNginxFormatString(format_string);
+    lf = FormatOps::Private::parseNginxFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
     T_ASSERT( lf.final.empty() );
     // test an empty string
     format_string.erase();
-    lf = fo.processNginxFormatString(format_string);
+    lf = FormatOps::Private::parseNginxFormatString(format_string);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields.empty() );
     T_ASSERT( lf.separators.empty() );
@@ -1438,9 +1436,8 @@ bool testCraplogModules()
     }
     T_TEST_RESULT()
 
-    T_TEST_START("FormatOps::processIisFormatString")
+    T_TEST_START("FormatOps::Private::parseIisFormatString")
     {
-    FormatOps fo;
     LogsFormat lf;
     std::string format_string;
     std::vector<LogsFormatField> fields;
@@ -1449,7 +1446,7 @@ bool testCraplogModules()
     format_string = "date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken";
     fields = {date_time_utc_d,date_time_utc_t,_DISCARDED,request_method,request_uri,request_query,_DISCARDED,_DISCARDED,client,user_agent,referer,response_code,_DISCARDED,_DISCARDED,time_taken_ms};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::W3C);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1458,7 +1455,7 @@ bool testCraplogModules()
     format_string = "date time cs-version cs-method cs-uri-stem cs-uri-query sc-status sc-bytes cs-bytes time-taken cs(Referer) cs(Cookie) cs(User-Agent) c-ip";
     fields = {date_time_utc_d,date_time_utc_t,request_protocol,request_method,request_uri,request_query,response_code,bytes_sent,bytes_received,time_taken_ms,referer,cookie,user_agent,client};
     separators = {" "," "," "," "," "," "," "," "," "," "," "," "," "};
-    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::W3C);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1467,14 +1464,14 @@ bool testCraplogModules()
     format_string = "s-sitename s-computername s-ip s-port cs-username cs-host sc-substatus sc-win32-status streamid";
     fields = {_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED,_DISCARDED};
     separators = {" "," "," "," "," "," "," "," "};
-    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::W3C);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
     T_ASSERT( lf.final.empty() );
     // test an empty string for the W3C module
     format_string.erase();
-    lf = fo.processIisFormatString(format_string, IISLogsModule::W3C);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::W3C);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields.empty() );
     T_ASSERT( lf.separators.empty() );
@@ -1483,14 +1480,14 @@ bool testCraplogModules()
     format_string = "some random useless text";
     fields = {client,_DISCARDED,_DISCARDED,date_time_ncsa,request_full,response_code,bytes_sent};
     separators = {" "," "," [","] \"","\" "," "};
-    lf = fo.processIisFormatString(format_string, IISLogsModule::NCSA);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::NCSA);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
     T_ASSERT( lf.final.empty() );
     // test an empty string for the NCSA module
     format_string.erase();
-    lf = fo.processIisFormatString(format_string, IISLogsModule::NCSA);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::NCSA);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1499,14 +1496,14 @@ bool testCraplogModules()
     format_string = "some random useless text";
     fields = {client,_DISCARDED,date_time_mdyyyy,date_time_utc_t,_DISCARDED,_DISCARDED,_DISCARDED,time_taken_ms,bytes_received,bytes_sent,response_code,_DISCARDED,request_method,request_uri,request_query};
     separators = {", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", ",", "};
-    lf = fo.processIisFormatString(format_string, IISLogsModule::IIS);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::IIS);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
     T_ASSERT( lf.final == "," );
     // test an empty string for the IIS module
     format_string.erase();
-    lf = fo.processIisFormatString(format_string, IISLogsModule::IIS);
+    lf = FormatOps::Private::parseIisFormatString(format_string, IISLogsModule::IIS);
     T_ASSERT( lf.initial.empty() );
     T_ASSERT( lf.fields == fields );
     T_ASSERT( lf.separators == separators );
@@ -1531,11 +1528,10 @@ bool testCraplogModules()
 
     T_TEST_START("LogLineData::LogLineData")
     {
-    FormatOps fo;
     LogsFormat lf;
     std::string log_line;
     {
-    lf = fo.processApacheFormatString(R"(%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-agent}i")");
+    lf = FormatOps::Private::parseApacheFormatString(R"(%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-agent}i")");
     log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] "GET /index.php?query=x HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
     LogLineData line_data( log_line, lf );
     T_ASSERT( line_data.year == true && *line_data.year == "2000" );
@@ -1566,7 +1562,7 @@ bool testCraplogModules()
     T_ASSERT( line_data.query == false && *line_data.query == "" );
     }{
     // dumb logging, without any surrounding character to enclose the request
-    lf = fo.processApacheFormatString(R"(%h %l %u %t %r %>s %O "%{Referer}i" "%{User-agent}i")");
+    lf = FormatOps::Private::parseApacheFormatString(R"(%h %l %u %t %r %>s %O "%{Referer}i" "%{User-agent}i")");
     log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] GET /index.php?query=x HTTP/1.1 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
     LogLineData line_data( log_line, lf );
     T_ASSERT( line_data.year == true && *line_data.year == "2000" );
@@ -1589,7 +1585,7 @@ bool testCraplogModules()
     T_ASSERT( line_data.referrer == true && *line_data.referrer == "http://www.referrer.site" );
     }{
     // dumb logging, without any surrounding character to enclose the request and the user-agent
-    lf = fo.processApacheFormatString(R"(%h %l %u %t %r %>s %O "%{Referer}i" %{User-agent}i)");
+    lf = FormatOps::Private::parseApacheFormatString(R"(%h %l %u %t %r %>s %O "%{Referer}i" %{User-agent}i)");
     log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] GET /index.php?query=x HTTP/1.1 200 1024 "http://www.referrer.site" UserAgent/3.0 (Details stuff) Info/123)";
     LogLineData line_data( log_line, lf );
     T_ASSERT( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );
@@ -1606,7 +1602,7 @@ bool testCraplogModules()
     T_ASSERT( line_data.referrer == true && *line_data.referrer == "http://www.referrer.site" );
     }{
     // malformed request with empty method
-    lf = fo.processApacheFormatString(R"(%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-agent}i")");
+    lf = FormatOps::Private::parseApacheFormatString(R"(%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-agent}i")");
     log_line = R"(192.168.1.123 - - [01/Jan/2000:23:59:59 +0000] " /index.php?query=x HTTP/1.1" 200 1024 "http://www.referrer.site" "UserAgent/3.0 (Details stuff) Info/123")";
     LogLineData line_data( log_line, lf );
     T_ASSERT( line_data.protocol == true && *line_data.protocol == "HTTP/1.1" );

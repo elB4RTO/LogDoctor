@@ -16,17 +16,18 @@ macro(logdoc_add_tests)
         modules/exceptions.cpp
 
         modules/craplog/modules/lib.h
-        modules/craplog/modules/formats.h
-        modules/craplog/modules/formats.cpp
+        modules/craplog/modules/formats/parse.h
+        modules/craplog/modules/formats/parse.cpp
         modules/craplog/utilities/datetime.h
         modules/craplog/utilities/datetime.cpp
         modules/craplog/utilities/logs.h
         modules/craplog/utilities/logs.cpp
-        modules/crapview/utilities/filters.h
-        modules/crapview/utilities/filters.cpp
         modules/craplog/workers/lib.h
         modules/craplog/workers/parser/logs_data.h
         modules/craplog/workers/parser/logs_data.cpp
+
+        modules/crapview/utilities/filters.h
+        modules/crapview/utilities/filters.cpp
 
         utilities/gzip.h
         utilities/gzip.cpp
