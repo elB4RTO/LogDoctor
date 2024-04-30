@@ -19,6 +19,7 @@
 
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/donuts.h"
+#include "modules/craplog/modules/formats.h"
 #include "modules/craplog/workers/lister.h"
 #include "modules/craplog/workers/parser.h"
 #include "modules/craplog/utilities/logs.h"
@@ -138,7 +139,7 @@ bool Craplog::setApacheLogFormat( const std::string& format_string ) noexcept
 {
     try {
         this->logs_formats.at( WS_APACHE ) =
-            this->formatOps.processApacheFormatString( format_string );
+            FormatOps::processApacheFormatString( format_string );
         this->logs_format_strings.at( WS_APACHE ) = format_string;
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -153,7 +154,7 @@ bool Craplog::setNginxLogFormat( const std::string& format_string ) noexcept
 {
     try {
         this->logs_formats.at( WS_NGINX ) =
-            this->formatOps.processNginxFormatString( format_string );
+            FormatOps::processNginxFormatString( format_string );
         this->logs_format_strings.at( WS_NGINX ) = format_string;
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -168,7 +169,7 @@ bool Craplog::setIisLogFormat( const std::string& format_string, const IISLogsMo
 {
     try {
         this->logs_formats.at( WS_IIS ) =
-            this->formatOps.processIisFormatString( format_string, log_module );
+            FormatOps::processIisFormatString( format_string, log_module );
         this->logs_format_strings.at( WS_IIS ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
@@ -183,16 +184,8 @@ bool Craplog::setIisLogFormat( const std::string& format_string, const IISLogsMo
 
 QString Craplog::getLogsFormatSample( const WebServer& web_server ) const
 {
-    switch ( web_server ) {
-        case WS_APACHE:
-            return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server ) );
-        case WS_NGINX:
-            return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server ) );
-        case WS_IIS:
-            return this->formatOps.getIisLogSample( this->logs_formats.at( web_server ) );
-        default:
-            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(web_server)) );
-    }
+    return FormatOps::getLogLineSample(
+        web_server, this->logs_formats.at( web_server ) );
 }
 
 bool Craplog::checkCurrentLogsFormat() const noexcept

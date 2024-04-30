@@ -4,8 +4,8 @@
 
 #include "lib.h"
 
+#include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/hasher.h"
-#include "modules/craplog/modules/formats.h"
 
 #include "modules/craplog/workers/lib.h"
 
@@ -420,8 +420,6 @@ private:
 
     /////////////////////
     //// LOGS FORMAT ////
-
-    FormatOps formatOps;
 
     std::unordered_map<WebServer, std::string> logs_format_strings;
 
