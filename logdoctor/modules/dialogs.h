@@ -186,7 +186,7 @@ public:
     //! Failed to process a logs format string
     static void errInvalidLogFormatString( const QString& msg, QWidget* parent=nullptr );
 
-    //! The logs format has not been set for the web server in use
+    //! The log format has not been set for the web server in use
     static void errLogFormatNotSet( QWidget* parent=nullptr );
 
     //! The log format in use has no log fields
@@ -194,6 +194,12 @@ public:
 
     //! The log format in use has no log separators
     static void errLogFormatNoSeparators( QWidget* parent=nullptr );
+
+    //! The provided log format is missing an important field
+    static bool choiceLogFormatMissingField( const QString& field, QWidget* parent=nullptr );
+
+    //! The provided log format contains the CR control character
+    static bool choiceLogFormatWithCarriageReturn( QWidget* parent=nullptr );
 
 
     /////////////////////

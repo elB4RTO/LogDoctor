@@ -20,8 +20,14 @@ public:
 const std::string BOOLS__FALSE { TR::tr("FALSE").toStdString() };
 const std::string BOOLS__TRUE  { TR::tr("TRUE").toStdString()  };
 
-const std::string WORDS__DATE { TR::tr("Date").toStdString() };
-const std::string WORDS__TIME { TR::tr("Time").toStdString() };
+const std::string WORDS__DATE   { TR::tr("Date").toStdString() };
+const std::string WORDS__YEAR   { TR::tr("Year").toStdString() };
+const std::string WORDS__MONTH  { TR::tr("Month").toStdString() };
+const std::string WORDS__DAY    { TR::tr("Day").toStdString() };
+const std::string WORDS__TIME   { TR::tr("Time").toStdString() };
+const std::string WORDS__HOUR   { TR::tr("Hour").toStdString() };
+const std::string WORDS__MINUTE { TR::tr("Minute").toStdString() };
+const std::string WORDS__SECOND { TR::tr("Second").toStdString() };
 
 const std::string FIELDS__WARNING        { TR::tr("Warning").toStdString()  };
 const std::string FIELDS__PROTOCOL       { TR::tr("Protocol").toStdString() };
