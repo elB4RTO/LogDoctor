@@ -271,6 +271,18 @@
         <source>Changelog</source>
         <translation type="unfinished">Registro de cambios</translation>
     </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation type="unfinished">Estructura del proyecto mejorada</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation type="unfinished">Uso modernizado de Cmake</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation type="unfinished">Parámetros modificables para algunos de los gráficos:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -467,7 +479,7 @@ marcador no encontrado</translation>
     <name>DialogMsg</name>
     <message>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation type="unfinished">Ok</translation>
     </message>
 </context>
 <context>
@@ -1023,6 +1035,28 @@ Continue?</source>
     <message>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation type="unfinished">No se han encontrado datos que coincidan con los parámetros establecidos actualmente</translation>
+    </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation type="unfinished">Campo faltante en formato de registro</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation type="unfinished">Falta un campo importante en el formato proporcionado:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation type="unfinished">La calidad de las estadísticas puede verse seriamente comprometida</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation type="unfinished">&apos;Carriage Return&apos; en formato de registro</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation type="unfinished">El formato proporcionado contiene el &apos;Carriage Return&apos;.
+Esto puede provocar pérdidas de datos o fallos si no se utiliza con precaución</translation>
     </message>
 </context>
 <context>
@@ -2024,38 +2058,6 @@ Los sectores excedentes se agruparán en un sector comprensivo.</translation>
         <translation type="unfinished">WebServer inesperdado</translation>
     </message>
     <message>
-        <source>An error occured while processing</source>
-        <translation type="unfinished">Ocurrió un error durante el procesamiento</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation type="unfinished">Ocurrió un error al procesar las fechas</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation type="unfinished">Ocurrió un error al procesar los %1 en la base de datos</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Años</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation>Meses</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation>Días</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation type="unfinished">Valor responsable del error</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation type="unfinished">Nombre de la tabla de la base de datos</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">Fecha</translation>
     </message>
@@ -2194,6 +2196,30 @@ Los sectores excedentes se agruparán en un sector comprensivo.</translation>
     <message>
         <source>Relational Count</source>
         <translation type="unfinished">Recuento relacional</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished">Año</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation type="unfinished">Mes</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation type="unfinished">Día</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation type="unfinished">Hora</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation type="unfinished">Minuto</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation type="unfinished">Segundo</translation>
     </message>
 </context>
 </TS>

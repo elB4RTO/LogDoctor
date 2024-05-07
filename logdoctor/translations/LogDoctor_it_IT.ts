@@ -271,6 +271,18 @@
         <source>Changelog</source>
         <translation>Cambiamenti</translation>
     </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation>Miglirata la struttura del progetto</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation>Modernizzato l&apos;uso di CMake</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation>Tweakable parameters for some of the charts:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1023,6 +1035,28 @@ Continuare?</translation>
     <message>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation>Nessun dato trovato che corrisponda ai parametri attualmente in uso</translation>
+    </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation>Campo mancante nel formato dei log</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation>Manca un campo importante nel formato fornito:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation>La qualità delle statistiche potrebbe venire seriamente compromessa</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation>&apos;Carriage Return&apos; nel formato dei log</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation>Il formato fornito contiene il &apos;Carriage Return&apos;.
+Ciò potrebbe comportare perdite di dati o crash se non usato con cautela</translation>
     </message>
 </context>
 <context>
@@ -2025,38 +2059,6 @@ Le porzioni in eccesso verratto raggruppate in una singola fetta.</translation>
         <translation>WebServer inaspettato</translation>
     </message>
     <message>
-        <source>An error occured while processing</source>
-        <translation>È avvenuto un errore nel processare</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation>È avvenuto un errore nel processare le date</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation>È avvenuto un errore nel processare &apos;%1&apos; dal database</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Anni</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation>Mesi</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation>Giorni</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation>Valore responsabile per l&apos;errore</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation>Nome della tabella del database</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Data</translation>
     </message>
@@ -2195,6 +2197,30 @@ Le porzioni in eccesso verratto raggruppate in una singola fetta.</translation>
     <message>
         <source>Relational Count</source>
         <translation>Conteggio relazionale</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Anno</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mese</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Giorno</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation>Ora</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation>Minuto</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation>Secondo</translation>
     </message>
 </context>
 </TS>

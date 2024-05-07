@@ -271,6 +271,18 @@
         <source>Changelog</source>
         <translation>Changelog</translation>
     </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation>Improved project structure</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation>Modernized Cmake usage</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation>Tweakable parameters for some of the charts:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1020,6 +1032,28 @@ Continue?</source>
     <message>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation>No data has been found that matches with the currently set parameters</translation>
+    </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation>Missing field in log format</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation>An important field is missing from the provided format:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation>The quality of the statistics may be seriously compromized</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation>&apos;Carriage Return&apos; in log format</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</translation>
     </message>
 </context>
 <context>
@@ -2019,38 +2053,6 @@ Exceeding slices will be grouped into one comprehensive slice.</source>
         <translation>Unexpected WebServer</translation>
     </message>
     <message>
-        <source>An error occured while processing</source>
-        <translation>An error occured while processing</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation>An error occured while processing dates</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation>An error occured while parsing %1 from the database</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Years</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation>Months</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation>Days</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation>Value responsible for the error</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation>Database table name</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -2189,6 +2191,30 @@ Exceeding slices will be grouped into one comprehensive slice.</source>
     <message>
         <source>Relational Count</source>
         <translation>Relational Count</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Year</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Month</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Day</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation>Hour</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation>Minute</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation>Second</translation>
     </message>
 </context>
 </TS>

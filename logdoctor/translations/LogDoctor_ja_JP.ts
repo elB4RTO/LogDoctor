@@ -271,6 +271,18 @@
         <source>Changelog</source>
         <translation type="unfinished">変更履歴</translation>
     </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation type="unfinished">プロジェクト構造の改善</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation type="unfinished">最新の Cmake の使用</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation type="unfinished">一部のチャートの調整可能なパラメーター:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1023,6 +1035,28 @@ Continue?</source>
     <message>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation type="unfinished">現在設定されているパラメータと一致するデータが見つかりませんでした</translation>
+    </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation type="unfinished">ログ形式にフィールドがありません</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation type="unfinished">提供された形式に重要なフィールドがありません:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation type="unfinished">統計の品質が著しく損なわれる可能性があります</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation type="unfinished">ログ形式で「Carriage Return」</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation type="unfinished">提供された形式には「Carriage Return」が含まれています。
+注意して使用しないと、データの損失やクラッシュが発生する可能性があります</translation>
     </message>
 </context>
 <context>
@@ -2024,38 +2058,6 @@ Exceeding slices will be grouped into one comprehensive slice.</source>
         <translation type="unfinished">予期しない Web サーバー</translation>
     </message>
     <message>
-        <source>An error occured while processing</source>
-        <translation type="unfinished">処理中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation type="unfinished">日付の処理中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation type="unfinished">データベースから %1 を解析中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation type="unfinished">年</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation type="unfinished">月</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation type="unfinished">日々</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation type="unfinished">エラーの原因となる値</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation type="unfinished">データベース テーブル名</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">日にち</translation>
     </message>
@@ -2194,6 +2196,30 @@ Exceeding slices will be grouped into one comprehensive slice.</source>
     <message>
         <source>Relational Count</source>
         <translation type="unfinished">リレーショナルカウント</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished">年</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation type="unfinished">月</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation type="unfinished">日</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation type="unfinished">時間</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation type="unfinished">分</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation type="unfinished">秒</translation>
     </message>
 </context>
 </TS>

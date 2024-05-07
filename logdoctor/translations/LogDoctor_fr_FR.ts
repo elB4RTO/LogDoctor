@@ -271,6 +271,18 @@
         <source>Changelog</source>
         <translation type="unfinished">Journal des modifications</translation>
     </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation type="unfinished">Structure de projet améliorée</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation type="unfinished">Utilisation modernisée de Cmake</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation type="unfinished">Paramètres modifiables pour certains graphiques:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -467,7 +479,7 @@ marqueur pas trouvé</translation>
     <name>DialogMsg</name>
     <message>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation type="unfinished">Ok</translation>
     </message>
 </context>
 <context>
@@ -1023,6 +1035,28 @@ Continuer?</translation>
     <message>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation type="unfinished">Aucune donnée correspondant aux paramètres actuellement définis n&apos;a été trouvée</translation>
+    </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation type="unfinished">Champ manquant au format journal</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation type="unfinished">Un champ important manque dans le format fourni:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation type="unfinished">La qualité des statistiques peut être sérieusement compromise</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation type="unfinished">&apos;Carriage Return&apos; au format journal</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation type="unfinished">Le format fourni contient le &apos;Carriage Return&apos;.
+Cela peut entraîner des pertes de données ou des plantages s&apos;il n&apos;est pas utilisé avec prudence</translation>
     </message>
 </context>
 <context>
@@ -2024,38 +2058,6 @@ Les tranches excédentaires seront regroupées en une seule tranche compréhensi
         <translation type="unfinished">WebServer inattendu</translation>
     </message>
     <message>
-        <source>An error occured while processing</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors du traitement</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors du traitement des dates</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation type="unfinished">Erreur lors du traitement de &apos;%1&apos; dans la database</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Ans</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation>Mois</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation>Journées</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation type="unfinished">Valeur responsable de l&apos;erreur</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation type="unfinished">Nom de la table de la base de données</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation type="unfinished">Date</translation>
     </message>
@@ -2194,6 +2196,30 @@ Les tranches excédentaires seront regroupées en une seule tranche compréhensi
     <message>
         <source>Relational Count</source>
         <translation type="unfinished">Nombre relationnel</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished">An</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation type="unfinished">Mois</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation type="unfinished">Jour</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation type="unfinished">Heure</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation type="unfinished">Minute</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation type="unfinished">Seconde</translation>
     </message>
 </context>
 </TS>
