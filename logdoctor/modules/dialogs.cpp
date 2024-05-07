@@ -430,7 +430,7 @@ bool DialogSec::choiceLogFormatMissingField( const QString& field, QWidget* pare
         QStringLiteral("%1:\n%2\n\n%3\n%4").arg(
             DialogSec::tr("An important field is missing from the provided format:"),
             field,
-            DialogSec::tr("The quality of the statistics may be seriously affected"),
+            DialogSec::tr("The quality of the statistics may be seriously compromized"),
             DialogSec::tr("Proceed anyway?") ),
         parent };
     return dialog.exec();
@@ -439,9 +439,9 @@ bool DialogSec::choiceLogFormatMissingField( const QString& field, QWidget* pare
 bool DialogSec::choiceLogFormatWithCarriageReturn( QWidget* parent )
 {
     DialogBool dialog{
-        DialogSec::tr("Carriage Return in log format"),
+        DialogSec::tr("'Carriage Return' in log format"),
         QStringLiteral("%1\n\n%2").arg(
-            DialogSec::tr("The provided format contains the Carriage Return.\nThis may lead to data losses or crashes if not used with caution"),
+            DialogSec::tr("The provided format contains the 'Carriage Return'.\nThis may lead to data losses or crashes if not used with caution"),
             DialogSec::tr("Proceed anyway?") ),
         parent };
     return dialog.exec();
