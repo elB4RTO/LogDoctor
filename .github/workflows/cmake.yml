@@ -24,10 +24,10 @@ jobs:
 
     steps:
     - name: Get LogDoctor
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     
-    - name: Install Qt6 (!OSX)
+    - name: Install Qt6
       uses: jurplel/install-qt-action@v3
       with:
         target: 'desktop'
@@ -37,19 +37,11 @@ jobs:
         archives: 'icu qtbase qttools qttranslations'
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
-        setup-python: 'true'
-    
-    
-#    - name: Install Qt6 (OSX)
-#      if: runner.os == 'macos'
-#      run: |
-#        brew update
-#        brew install qt
     
     
     - name: Get MSVC (WIN)
       if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1.12.1
+      uses: ilammy/msvc-dev-cmd@v1.13.0
     
     
     - name: Append PATHs (WIN)
