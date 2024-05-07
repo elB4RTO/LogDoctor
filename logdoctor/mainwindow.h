@@ -51,6 +51,9 @@ class MainWindow final : public QMainWindow
 {
     Q_OBJECT
 
+    // current version of LogDoctor
+    const float version{ 4.01f };
+
 public:
 
     explicit MainWindow( QWidget* parent=nullptr );
@@ -573,9 +576,6 @@ private slots:
 
 private:
     QSharedPointer<Ui::MainWindow> ui;
-
-    // current version of LogDoctor
-    const float version{ 4.00f };
 
     QString wsFromIndex( const int index ) const;
     WebServer wsEnumFromIndex( const int index ) const;
