@@ -28,7 +28,6 @@ jobs:
 
     
     - name: Install Qt6 (!OSX)
-      if: runner.os != 'macos'
       uses: jurplel/install-qt-action@v3
       with:
         target: 'desktop'
@@ -38,14 +37,14 @@ jobs:
         archives: 'icu qtbase qttools qttranslations'
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
-        setup-python: 'false'
+        setup-python: 'true'
     
     
-    - name: Install Qt6 (OSX)
-      if: runner.os == 'macos'
-      run: |
-        brew update
-        brew install qt
+#    - name: Install Qt6 (OSX)
+#      if: runner.os == 'macos'
+#      run: |
+#        brew update
+#        brew install qt
     
     
     - name: Get MSVC (WIN)
