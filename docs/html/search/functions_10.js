@@ -4,7 +4,7 @@ var searchData=
   ['readconfigs_1',['readConfigs',['../classMainWindow.html#aae306cbf256c5a686cc8d9f2a1dbb18b',1,'MainWindow']]],
   ['readfile_2',['readFile',['../namespaceGZutils.html#a72f6960bddea2b816af84e7773d5c6b2',1,'GZutils::readFile()'],['../namespaceIOutils.html#a185c38eff9d9f4432c8138404941915e',1,'IOutils::readFile()']]],
   ['recalculateangles_3',['recalculateAngles',['../classDonutBreakdown.html#acd747ee2bbd23ce84eaf9d4db57938e3',1,'DonutBreakdown']]],
-  ['refreshdates_4',['refreshDates',['../classCrapview.html#ac98b1cbc75604b5145b5cff36e96eb78',1,'Crapview::refreshDates()'],['../classDbQuery.html#adb3206452fd6f9a35e88e260e502c511',1,'DbQuery::refreshDates()']]],
+  ['refreshdates_4',['refreshDates',['../classCrapview.html#ac98b1cbc75604b5145b5cff36e96eb78',1,'Crapview']]],
   ['refreshstatsdates_5',['refreshStatsDates',['../classMainWindow.html#ac8f4c84b43d14b6dcc6cb7b5f75ce343',1,'MainWindow']]],
   ['remove_6',['remove',['../structBlacklistItem.html#a878fdb847386aadb0e09bc78f5782b09',1,'BlacklistItem::remove()'],['../structWarnlistItem.html#a7a6c5acd0e4fcb67257c0650d2d86d8f',1,'WarnlistItem::remove()']]],
   ['removeitem_7',['removeItem',['../structBlacklists.html#a08effb45b137d0c65d0d14e0fa3563f0',1,'Blacklists::removeItem()'],['../structWarnlists.html#ac5677ce2a63277eef300c12b09a84702',1,'Warnlists::removeItem()']]],

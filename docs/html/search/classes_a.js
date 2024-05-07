@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['querywrapper_0',['QueryWrapper',['../classQueryWrapper.html',1,'']]]
+  ['performancedata_0',['PerformanceData',['../structPerformanceData.html',1,'']]],
+  ['perfs_1',['Perfs',['../structPerfs.html',1,'']]]
 ];

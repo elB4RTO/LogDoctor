@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['ends_0',['ends',['../structCraplog_1_1LogName.html#a84d26cb4dc6f8efd87b26ad77d048e15',1,'Craplog::LogName']]]
+  ['fields_0',['fields',['../structLogsFormat.html#af59e2f67fcf791a98e4003e894f694f9',1,'LogsFormat']]],
+  ['final_1',['final',['../structLogsFormat.html#ac3e0736a6c3544a39c3c85f719eb1553',1,'LogsFormat']]],
+  ['food_2',['food',['../classSnakeGame.html#a24bb09f513593f8c816b41134f8684c3',1,'SnakeGame']]]
 ];

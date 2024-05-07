@@ -7,9 +7,8 @@ var searchData=
   ['ai_5fmakechoice_4',['AI_makeChoice',['../classCrissCross.html#aaa6af51d74e3c8250c0fdf8b734bff16',1,'CrissCross']]],
   ['ai_5fplayturn_5',['AI_playTurn',['../classCrissCross.html#a9546863583b69a7246a216794b88d062',1,'CrissCross']]],
   ['ai_5fupdateweights_6',['AI_updateWeights',['../classCrissCross.html#a2fc7d3a6f907718ea430e138681ba328',1,'CrissCross']]],
-  ['apache_5falf_7',['APACHE_ALF',['../classFormatOps.html#a82e05a03cb896eb06574f7e79e14d8fe',1,'FormatOps']]],
-  ['apache_5falf_5fv_8',['APACHE_ALF_V',['../classFormatOps.html#a7da91fdd84e450e6892a8a530e051734',1,'FormatOps']]],
-  ['applycharttheme_9',['applyChartTheme',['../namespaceColorSec.html#af2d0f21c73979f6b9363e1a47718628d',1,'ColorSec']]],
-  ['arrayops_10',['ArrayOps',['../namespaceArrayOps.html',1,'']]],
-  ['availablememory_11',['availableMemory',['../namespaceMemOps.html#ae86bbf78d7743f9b6b98da053bfcbd08',1,'MemOps']]]
+  ['applycharttheme_7',['applyChartTheme',['../namespaceColorSec.html#af2d0f21c73979f6b9363e1a47718628d',1,'ColorSec']]],
+  ['arrayops_8',['ArrayOps',['../namespaceArrayOps.html',1,'']]],
+  ['assertvalid_9',['assertValid',['../classFetcherPrivate_1_1TimeManager.html#a8d29e3d1f1966ad8ec18a022884e84d7',1,'FetcherPrivate::TimeManager::assertValid()'],['../classFetcherPrivate_1_1DateManager.html#a83f6feb1ffba8931e2760d7588e10b1c',1,'FetcherPrivate::DateManager::assertValid()']]],
+  ['availablememory_10',['availableMemory',['../namespaceMemOps.html#ae86bbf78d7743f9b6b98da053bfcbd08',1,'MemOps']]]
 ];

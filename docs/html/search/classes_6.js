@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hashops_0',['HashOps',['../classHashOps.html',1,'']]]
+  ['hasher_0',['Hasher',['../classHasher.html',1,'']]]
 ];

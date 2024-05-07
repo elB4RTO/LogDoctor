@@ -24,7 +24,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;4.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;4.01</span>
    </div>
    <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
@@ -84,26 +84,29 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4acbd634bddcf1acd35cf7830e37f262" id="r_a4acbd634bddcf1acd35cf7830e37f262"><td class="memTemplParams" colspan="2">template&lt;typename Array &gt; </td></tr>
-<tr class="memitem:a4acbd634bddcf1acd35cf7830e37f262"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a4acbd634bddcf1acd35cf7830e37f262">zip</a> (Array &amp;l_array, Array &amp;r_array)</td></tr>
-<tr class="memdesc:a4acbd634bddcf1acd35cf7830e37f262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zips two arrays.  <br /></td></tr>
-<tr class="separator:a4acbd634bddcf1acd35cf7830e37f262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec332afe52ccb712ba86f0a126702f49" id="r_aec332afe52ccb712ba86f0a126702f49"><td class="memTemplParams" colspan="2">template&lt;typename Array &gt; </td></tr>
-<tr class="memitem:aec332afe52ccb712ba86f0a126702f49"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aec332afe52ccb712ba86f0a126702f49">enumerate</a> (const Array &amp;array)</td></tr>
-<tr class="memdesc:aec332afe52ccb712ba86f0a126702f49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates an array.  <br /></td></tr>
-<tr class="separator:aec332afe52ccb712ba86f0a126702f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4109aa4735cf78cfc67928b703252b9a" id="r_a4109aa4735cf78cfc67928b703252b9a"><td class="memTemplParams" colspan="2">template&lt;typename Array &gt; <br />
+requires <a class="el" href="conceptIsStdArray.html">IsStdArray</a>&lt;Array&gt;</td></tr>
+<tr class="memitem:a4109aa4735cf78cfc67928b703252b9a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a4109aa4735cf78cfc67928b703252b9a">zip</a> (Array &amp;l_array, Array &amp;r_array)</td></tr>
+<tr class="memdesc:a4109aa4735cf78cfc67928b703252b9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zips two arrays.  <br /></td></tr>
+<tr class="separator:a4109aa4735cf78cfc67928b703252b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa841b6c561df9eda0b2abc5df8e027c8" id="r_aa841b6c561df9eda0b2abc5df8e027c8"><td class="memTemplParams" colspan="2">template&lt;typename Array &gt; <br />
+requires <a class="el" href="conceptIsStdArray.html">IsStdArray</a>&lt;Array&gt;</td></tr>
+<tr class="memitem:aa841b6c561df9eda0b2abc5df8e027c8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa841b6c561df9eda0b2abc5df8e027c8">enumerate</a> (const Array &amp;array)</td></tr>
+<tr class="memdesc:aa841b6c561df9eda0b2abc5df8e027c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates an array.  <br /></td></tr>
+<tr class="separator:aa841b6c561df9eda0b2abc5df8e027c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespaceArrayOps.html" title="ArrayOps.">ArrayOps</a>. </p>
 <p>Utilities for the arrays </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="aec332afe52ccb712ba86f0a126702f49" name="aec332afe52ccb712ba86f0a126702f49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec332afe52ccb712ba86f0a126702f49">&#9670;&#160;</a></span>enumerate()</h2>
+<a id="aa841b6c561df9eda0b2abc5df8e027c8" name="aa841b6c561df9eda0b2abc5df8e027c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa841b6c561df9eda0b2abc5df8e027c8">&#9670;&#160;</a></span>enumerate()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Array &gt; </div>
+template&lt;typename Array &gt; <br />
+requires <a class="el" href="conceptIsStdArray.html">IsStdArray</a>&lt;Array&gt;</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -134,13 +137,14 @@ template&lt;typename Array &gt; </div>
 
 </div>
 </div>
-<a id="a4acbd634bddcf1acd35cf7830e37f262" name="a4acbd634bddcf1acd35cf7830e37f262"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4acbd634bddcf1acd35cf7830e37f262">&#9670;&#160;</a></span>zip()</h2>
+<a id="a4109aa4735cf78cfc67928b703252b9a" name="a4109aa4735cf78cfc67928b703252b9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4109aa4735cf78cfc67928b703252b9a">&#9670;&#160;</a></span>zip()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Array &gt; </div>
+template&lt;typename Array &gt; <br />
+requires <a class="el" href="conceptIsStdArray.html">IsStdArray</a>&lt;Array&gt;</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

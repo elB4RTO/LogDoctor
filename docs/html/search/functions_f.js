@@ -11,10 +11,10 @@ var searchData=
   ['printablesize_8',['printableSize',['../namespacePrintSec.html#a403edb539662a165dd79f5756ded42e4',1,'PrintSec']]],
   ['printablespeed_9',['printableSpeed',['../namespacePrintSec.html#a4a6a0bc389a6ffb47bfcc6c9dbb70602',1,'PrintSec']]],
   ['printabletime_10',['printableTime',['../namespacePrintSec.html#aff2f11c41388c7bf69dd356e0c8ca684',1,'PrintSec::printableTime(const unsigned seconds) noexcept'],['../namespacePrintSec.html#a4effe535f84fd9f38c2103ff574def5c',1,'PrintSec::printableTime(const int hour, const int minute, const int second) noexcept']]],
-  ['processapacheformatstring_11',['processApacheFormatString',['../classFormatOps.html#a156fe7cba5df1112b3da21af52375105',1,'FormatOps']]],
+  ['processapacheformatstring_11',['processApacheFormatString',['../namespaceFormatOps.html#ae91a969cdd31902a33bd7057892dbc6e',1,'FormatOps']]],
   ['processdatetime_12',['processDateTime',['../namespaceDateTimeOps.html#ad17a4cbaa6d80857a134ecc9db50d761',1,'DateTimeOps']]],
   ['processgamelogic_13',['processGameLogic',['../classSnakeGame.html#aeaa13da59d09abc40e25fd769fb96963',1,'SnakeGame']]],
-  ['processiisformatstring_14',['processIisFormatString',['../classFormatOps.html#a97dfe752848f74025a022ebea3e7cf8c',1,'FormatOps']]],
+  ['processiisformatstring_14',['processIisFormatString',['../namespaceFormatOps.html#a5e0e6cbff339d73a3bf2b6322132914a',1,'FormatOps']]],
   ['processnextkeyevent_15',['processNextKeyEvent',['../classSnakeGame.html#a1c5701b13d56599b6ece295a4a091e40',1,'SnakeGame']]],
-  ['processnginxformatstring_16',['processNginxFormatString',['../classFormatOps.html#afd175180e69aa5784bfb2ec2911bedc3',1,'FormatOps']]]
+  ['processnginxformatstring_16',['processNginxFormatString',['../namespaceFormatOps.html#a6b98e73f2f34d24e85456f8a395cf586',1,'FormatOps']]]
 ];

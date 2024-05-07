@@ -24,7 +24,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;4.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;4.01</span>
    </div>
    <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
@@ -116,13 +116,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 <tr class="memdesc:ab5731c52c4989cfe2258089bb80cfdce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases the list of available dates. <br /></td></tr>
 <tr class="separator:ab5731c52c4989cfe2258089bb80cfdce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d54cba5cf55fe148ce2316f26343f9" id="r_a73d54cba5cf55fe148ce2316f26343f9"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73d54cba5cf55fe148ce2316f26343f9">getYears</a> (const QString &amp;web_server) const noexcept</td></tr>
-<tr class="memdesc:a73d54cba5cf55fe148ce2316f26343f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available years, for the given web server.  <br /></td></tr>
+<tr class="memdesc:a73d54cba5cf55fe148ce2316f26343f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of available years, for the given web server.  <br /></td></tr>
 <tr class="separator:a73d54cba5cf55fe148ce2316f26343f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab04f8c6a4e5c057b8130127fc8b810dd" id="r_ab04f8c6a4e5c057b8130127fc8b810dd"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab04f8c6a4e5c057b8130127fc8b810dd">getMonths</a> (const QString &amp;web_server, const QString &amp;year) const noexcept</td></tr>
-<tr class="memdesc:ab04f8c6a4e5c057b8130127fc8b810dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available months in the given year, for the given web server.  <br /></td></tr>
+<tr class="memdesc:ab04f8c6a4e5c057b8130127fc8b810dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of available months in the given year, for the given web server.  <br /></td></tr>
 <tr class="separator:ab04f8c6a4e5c057b8130127fc8b810dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a953574337d84ecc63082904b806f0149" id="r_a953574337d84ecc63082904b806f0149"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a953574337d84ecc63082904b806f0149">getDays</a> (const QString &amp;web_server, const QString &amp;year, const QString &amp;month) const noexcept</td></tr>
-<tr class="memdesc:a953574337d84ecc63082904b806f0149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns le list of available days in the given month and year, for the given web server.  <br /></td></tr>
+<tr class="memdesc:a953574337d84ecc63082904b806f0149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of available days in the given month and year, for the given web server.  <br /></td></tr>
 <tr class="separator:a953574337d84ecc63082904b806f0149"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7729561544e1a3d5e46748220843b678" id="r_a7729561544e1a3d5e46748220843b678"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7729561544e1a3d5e46748220843b678">getHours</a> () const noexcept</td></tr>
 <tr class="memdesc:a7729561544e1a3d5e46748220843b678"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the hours of the day.  <br /></td></tr>
@@ -133,21 +133,51 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 <tr class="memitem:a6138f094550da7542d144b10f77de54f" id="r_a6138f094550da7542d144b10f77de54f"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6138f094550da7542d144b10f77de54f">getSpeedHeaderColumns</a> () const noexcept</td></tr>
 <tr class="memdesc:a6138f094550da7542d144b10f77de54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of the translated columns.  <br /></td></tr>
 <tr class="separator:a6138f094550da7542d144b10f77de54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95e62ac6c42d1c84f51f8a3d333e0bae" id="r_a95e62ac6c42d1c84f51f8a3d333e0bae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95e62ac6c42d1c84f51f8a3d333e0bae">setSpeedTimeInterval</a> (const qint64 interval) noexcept</td></tr>
+<tr class="memdesc:a95e62ac6c42d1c84f51f8a3d333e0bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the time interval for the Speed stats.  <br /></td></tr>
+<tr class="separator:a95e62ac6c42d1c84f51f8a3d333e0bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a90bf0349962850743e5e28b51aecd8" id="r_a6a90bf0349962850743e5e28b51aecd8"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a90bf0349962850743e5e28b51aecd8">getSpeedTimeInterval</a> () const noexcept</td></tr>
+<tr class="memdesc:a6a90bf0349962850743e5e28b51aecd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current time interval for the Speed stats.  <br /></td></tr>
+<tr class="separator:a6a90bf0349962850743e5e28b51aecd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a6630310746bb19f02995a64305ff24" id="r_a8a6630310746bb19f02995a64305ff24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a6630310746bb19f02995a64305ff24">setSpeedTimeFormat</a> (const QString &amp;format) noexcept</td></tr>
+<tr class="memdesc:a8a6630310746bb19f02995a64305ff24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the time format for the Speed labels on the X-axis.  <br /></td></tr>
+<tr class="separator:a8a6630310746bb19f02995a64305ff24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a3f39bc538ec2da67dc7e86ab035aae" id="r_a4a3f39bc538ec2da67dc7e86ab035aae"><td class="memItemLeft" align="right" valign="top">const QString &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a3f39bc538ec2da67dc7e86ab035aae">getSpeedTimeFormat</a> () const noexcept</td></tr>
+<tr class="memdesc:a4a3f39bc538ec2da67dc7e86ab035aae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current time format for the Speed labels on the X-axis.  <br /></td></tr>
+<tr class="separator:a4a3f39bc538ec2da67dc7e86ab035aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a398a17248c2407fbd26d4ec6160f3b5f" id="r_a398a17248c2407fbd26d4ec6160f3b5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a398a17248c2407fbd26d4ec6160f3b5f">setCountPieSize</a> (const qreal size) noexcept</td></tr>
+<tr class="memdesc:a398a17248c2407fbd26d4ec6160f3b5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the size of the pie chart for the Count stats.  <br /></td></tr>
+<tr class="separator:a398a17248c2407fbd26d4ec6160f3b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f9365445f0e014ecdb13f1d36d875fe" id="r_a8f9365445f0e014ecdb13f1d36d875fe"><td class="memItemLeft" align="right" valign="top">qreal&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f9365445f0e014ecdb13f1d36d875fe">getCountPieSize</a> () const noexcept</td></tr>
+<tr class="memdesc:a8f9365445f0e014ecdb13f1d36d875fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current size of the pie chart for the Count stats.  <br /></td></tr>
+<tr class="separator:a8f9365445f0e014ecdb13f1d36d875fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b0c351706eb258c839ba22c2a2b640c" id="r_a9b0c351706eb258c839ba22c2a2b640c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b0c351706eb258c839ba22c2a2b640c">setCountMaxSlices</a> (const int value) noexcept</td></tr>
+<tr class="memdesc:a9b0c351706eb258c839ba22c2a2b640c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the maximum number of slices of pie chart for the Count stats.  <br /></td></tr>
+<tr class="separator:a9b0c351706eb258c839ba22c2a2b640c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea40f9e230c9dd749a17d1d8a8712152" id="r_aea40f9e230c9dd749a17d1d8a8712152"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea40f9e230c9dd749a17d1d8a8712152">getCountMaxSlices</a> () const noexcept</td></tr>
+<tr class="memdesc:aea40f9e230c9dd749a17d1d8a8712152"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current maximum number of slices of pie chart for the Count stats.  <br /></td></tr>
+<tr class="separator:aea40f9e230c9dd749a17d1d8a8712152"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe00dacc7ba6fac3b8d005c31b4ee53b" id="r_abe00dacc7ba6fac3b8d005c31b4ee53b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe00dacc7ba6fac3b8d005c31b4ee53b">setRelatTimeFormat</a> (const QString &amp;format) noexcept</td></tr>
+<tr class="memdesc:abe00dacc7ba6fac3b8d005c31b4ee53b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the time format for the Relational labels on the X-axis.  <br /></td></tr>
+<tr class="separator:abe00dacc7ba6fac3b8d005c31b4ee53b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab06703bbf0935a69083552e2ae9a7b9f" id="r_ab06703bbf0935a69083552e2ae9a7b9f"><td class="memItemLeft" align="right" valign="top">const QString &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab06703bbf0935a69083552e2ae9a7b9f">getRelatTimeFormat</a> () const noexcept</td></tr>
+<tr class="memdesc:ab06703bbf0935a69083552e2ae9a7b9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current time format for the Relational labels on the X-axis.  <br /></td></tr>
+<tr class="separator:ab06703bbf0935a69083552e2ae9a7b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ebee61566b688550e2e8074842fec7d" id="r_a6ebee61566b688550e2e8074842fec7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ebee61566b688550e2e8074842fec7d">drawWarn</a> (QTableWidget *table, QChartView *chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString year, const QString month, const QString day, const QString hour, const <a class="el" href="structWarnlist.html">Warnlist</a> &amp;warnlist) const</td></tr>
 <tr class="memdesc:a6ebee61566b688550e2e8074842fec7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Warnings stats.  <br /></td></tr>
 <tr class="separator:a6ebee61566b688550e2e8074842fec7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab569e9b9ab0f70a7620b5b78504175f5" id="r_ab569e9b9ab0f70a7620b5b78504175f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab569e9b9ab0f70a7620b5b78504175f5">drawSpeed</a> (QTableWidget *table, QChartView *chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString year, const QString month, const QString day, const QString protocol, const QString method, const QString uri, const QString query, const QString response) const</td></tr>
-<tr class="memdesc:ab569e9b9ab0f70a7620b5b78504175f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Speed stats.  <br /></td></tr>
-<tr class="separator:ab569e9b9ab0f70a7620b5b78504175f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada344c04960f7b8dfa54d04bc7a59c8e" id="r_ada344c04960f7b8dfa54d04bc7a59c8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada344c04960f7b8dfa54d04bc7a59c8e">drawCount</a> (QTableWidget *table, QChartView *chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString year, const QString month, const QString day, const QString field) const</td></tr>
-<tr class="memdesc:ada344c04960f7b8dfa54d04bc7a59c8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Counts stats.  <br /></td></tr>
-<tr class="separator:ada344c04960f7b8dfa54d04bc7a59c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab468e4008724571d44d6244d918640d" id="r_aab468e4008724571d44d6244d918640d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab468e4008724571d44d6244d918640d">drawDay</a> (QChartView *chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_str, const LogField field, const QString filter) const</td></tr>
-<tr class="memdesc:aab468e4008724571d44d6244d918640d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Daytime stats.  <br /></td></tr>
-<tr class="separator:aab468e4008724571d44d6244d918640d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e89a9a590435df939bc5edfac7dbb56" id="r_a4e89a9a590435df939bc5edfac7dbb56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e89a9a590435df939bc5edfac7dbb56">drawRelat</a> (QChartView *chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_1_str, const LogField field_1, const QString filter_1, const QString field_2_str, const LogField field_2, const QString filter_2) const</td></tr>
-<tr class="memdesc:a4e89a9a590435df939bc5edfac7dbb56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Relational stats.  <br /></td></tr>
-<tr class="separator:a4e89a9a590435df939bc5edfac7dbb56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeb26c6c1a18e420ef27ceddeceaf15a" id="r_abeb26c6c1a18e420ef27ceddeceaf15a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abeb26c6c1a18e420ef27ceddeceaf15a">drawSpeed</a> (QTableWidget *const table, QChartView *const chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString year, const QString month, const QString day, const QString protocol, const QString method, const QString uri, const QString query, const QString response) const</td></tr>
+<tr class="memdesc:abeb26c6c1a18e420ef27ceddeceaf15a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Speed stats.  <br /></td></tr>
+<tr class="separator:abeb26c6c1a18e420ef27ceddeceaf15a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a404e131706a0ec08b4c444b2f893a742" id="r_a404e131706a0ec08b4c444b2f893a742"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a404e131706a0ec08b4c444b2f893a742">drawCount</a> (QTableWidget *const table, QChartView *const chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString year, const QString month, const QString day, const QString field) const</td></tr>
+<tr class="memdesc:a404e131706a0ec08b4c444b2f893a742"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart and fills the table for the Counts stats.  <br /></td></tr>
+<tr class="separator:a404e131706a0ec08b4c444b2f893a742"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9180d8cc35dc36a7dc34a4e57c88284" id="r_af9180d8cc35dc36a7dc34a4e57c88284"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9180d8cc35dc36a7dc34a4e57c88284">drawDay</a> (QChartView *const chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_str, const LogField field, const QString filter) const</td></tr>
+<tr class="memdesc:af9180d8cc35dc36a7dc34a4e57c88284"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Daytime stats.  <br /></td></tr>
+<tr class="separator:af9180d8cc35dc36a7dc34a4e57c88284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27e83955162457bcc5b7ffc07b45a5d5" id="r_a27e83955162457bcc5b7ffc07b45a5d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27e83955162457bcc5b7ffc07b45a5d5">drawRelat</a> (QChartView *const chart, const QChart::ChartTheme &amp;theme, const QString web_server, const QString from_year, const QString from_month, const QString from_day, const QString to_year, const QString to_month, const QString to_day, const QString field_1_str, const LogField field_1, const QString filter_1, const QString field_2_str, const LogField field_2, const QString filter_2) const</td></tr>
+<tr class="memdesc:a27e83955162457bcc5b7ffc07b45a5d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the chart for the Relational stats.  <br /></td></tr>
+<tr class="separator:a27e83955162457bcc5b7ffc07b45a5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a350742e9b0ec2c5480fad7598fe73f58" id="r_a350742e9b0ec2c5480fad7598fe73f58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a350742e9b0ec2c5480fad7598fe73f58">calcGlobals</a> (std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;recur_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;traffic_list, std::vector&lt; std::tuple&lt; QString, QString &gt; &gt; &amp;perf_list, std::vector&lt; QString &gt; &amp;work_list, const QString web_server) const</td></tr>
 <tr class="memdesc:a350742e9b0ec2c5480fad7598fe73f58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the data to fill the Globals stats.  <br /></td></tr>
 <tr class="separator:a350742e9b0ec2c5480fad7598fe73f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,8 +235,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 
 </div>
 </div>
-<a id="ada344c04960f7b8dfa54d04bc7a59c8e" name="ada344c04960f7b8dfa54d04bc7a59c8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada344c04960f7b8dfa54d04bc7a59c8e">&#9670;&#160;</a></span>drawCount()</h2>
+<a id="a404e131706a0ec08b4c444b2f893a742" name="a404e131706a0ec08b4c444b2f893a742"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a404e131706a0ec08b4c444b2f893a742">&#9670;&#160;</a></span>drawCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -214,12 +244,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
         <tr>
           <td class="memname">void Crapview::drawCount </td>
           <td>(</td>
-          <td class="paramtype">QTableWidget *</td>          <td class="paramname"><span class="paramname"><em>table</em>, </span></td>
+          <td class="paramtype">QTableWidget *const</td>          <td class="paramname"><span class="paramname"><em>table</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">QChartView *</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
+          <td class="paramtype">QChartView *const</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -271,8 +301,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 
 </div>
 </div>
-<a id="aab468e4008724571d44d6244d918640d" name="aab468e4008724571d44d6244d918640d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab468e4008724571d44d6244d918640d">&#9670;&#160;</a></span>drawDay()</h2>
+<a id="af9180d8cc35dc36a7dc34a4e57c88284" name="af9180d8cc35dc36a7dc34a4e57c88284"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9180d8cc35dc36a7dc34a4e57c88284">&#9670;&#160;</a></span>drawDay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -280,7 +310,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
         <tr>
           <td class="memname">void Crapview::drawDay </td>
           <td>(</td>
-          <td class="paramtype">QChartView *</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
+          <td class="paramtype">QChartView *const</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -360,8 +390,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 
 </div>
 </div>
-<a id="a4e89a9a590435df939bc5edfac7dbb56" name="a4e89a9a590435df939bc5edfac7dbb56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e89a9a590435df939bc5edfac7dbb56">&#9670;&#160;</a></span>drawRelat()</h2>
+<a id="a27e83955162457bcc5b7ffc07b45a5d5" name="a27e83955162457bcc5b7ffc07b45a5d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27e83955162457bcc5b7ffc07b45a5d5">&#9670;&#160;</a></span>drawRelat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -369,7 +399,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
         <tr>
           <td class="memname">void Crapview::drawRelat </td>
           <td>(</td>
-          <td class="paramtype">QChartView *</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
+          <td class="paramtype">QChartView *const</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -466,8 +496,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 
 </div>
 </div>
-<a id="ab569e9b9ab0f70a7620b5b78504175f5" name="ab569e9b9ab0f70a7620b5b78504175f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab569e9b9ab0f70a7620b5b78504175f5">&#9670;&#160;</a></span>drawSpeed()</h2>
+<a id="abeb26c6c1a18e420ef27ceddeceaf15a" name="abeb26c6c1a18e420ef27ceddeceaf15a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeb26c6c1a18e420ef27ceddeceaf15a">&#9670;&#160;</a></span>drawSpeed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -475,12 +505,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
         <tr>
           <td class="memname">void Crapview::drawSpeed </td>
           <td>(</td>
-          <td class="paramtype">QTableWidget *</td>          <td class="paramname"><span class="paramname"><em>table</em>, </span></td>
+          <td class="paramtype">QTableWidget *const</td>          <td class="paramname"><span class="paramname"><em>table</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">QChartView *</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
+          <td class="paramtype">QChartView *const</td>          <td class="paramname"><span class="paramname"><em>chart</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -628,6 +658,62 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 
 </div>
 </div>
+<a id="aea40f9e230c9dd749a17d1d8a8712152" name="aea40f9e230c9dd749a17d1d8a8712152"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea40f9e230c9dd749a17d1d8a8712152">&#9670;&#160;</a></span>getCountMaxSlices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Crapview::getCountMaxSlices </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current maximum number of slices of pie chart for the Count stats. </p>
+<dl class="section return"><dt>Returns</dt><dd>The maximum number of slices in use </dd></dl>
+
+</div>
+</div>
+<a id="a8f9365445f0e014ecdb13f1d36d875fe" name="a8f9365445f0e014ecdb13f1d36d875fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f9365445f0e014ecdb13f1d36d875fe">&#9670;&#160;</a></span>getCountPieSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">qreal Crapview::getCountPieSize </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current size of the pie chart for the Count stats. </p>
+<dl class="section return"><dt>Returns</dt><dd>The size in use </dd></dl>
+
+</div>
+</div>
 <a id="a953574337d84ecc63082904b806f0149" name="a953574337d84ecc63082904b806f0149"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a953574337d84ecc63082904b806f0149">&#9670;&#160;</a></span>getDays()</h2>
 
@@ -660,7 +746,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 </table>
 </div><div class="memdoc">
 
-<p>Returns le list of available days in the given month and year, for the given web server. </p>
+<p>Returns the list of available days in the given month and year, for the given web server. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
@@ -762,7 +848,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 </table>
 </div><div class="memdoc">
 
-<p>Returns le list of available months in the given year, for the given web server. </p>
+<p>Returns the list of available months in the given year, for the given web server. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
@@ -771,6 +857,34 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The list of printable month names which are avaliable </dd></dl>
+
+</div>
+</div>
+<a id="ab06703bbf0935a69083552e2ae9a7b9f" name="ab06703bbf0935a69083552e2ae9a7b9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab06703bbf0935a69083552e2ae9a7b9f">&#9670;&#160;</a></span>getRelatTimeFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const QString &amp; Crapview::getRelatTimeFormat </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current time format for the Relational labels on the X-axis. </p>
+<dl class="section return"><dt>Returns</dt><dd>The time format in use </dd></dl>
 
 </div>
 </div>
@@ -799,6 +913,62 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 
 <p>Returns a list of the translated columns. </p>
 <p>To be inserted in a header </p><dl class="section return"><dt>Returns</dt><dd>The list of fields </dd></dl>
+
+</div>
+</div>
+<a id="a4a3f39bc538ec2da67dc7e86ab035aae" name="a4a3f39bc538ec2da67dc7e86ab035aae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a3f39bc538ec2da67dc7e86ab035aae">&#9670;&#160;</a></span>getSpeedTimeFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const QString &amp; Crapview::getSpeedTimeFormat </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current time format for the Speed labels on the X-axis. </p>
+<dl class="section return"><dt>Returns</dt><dd>The time format in use </dd></dl>
+
+</div>
+</div>
+<a id="a6a90bf0349962850743e5e28b51aecd8" name="a6a90bf0349962850743e5e28b51aecd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a90bf0349962850743e5e28b51aecd8">&#9670;&#160;</a></span>getSpeedTimeInterval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">qint64 Crapview::getSpeedTimeInterval </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current time interval for the Speed stats. </p>
+<dl class="section return"><dt>Returns</dt><dd>The time interval in use </dd></dl>
 
 </div>
 </div>
@@ -853,7 +1023,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 </table>
 </div><div class="memdoc">
 
-<p>Returns le list of available years, for the given web server. </p>
+<p>Returns the list of available years, for the given web server. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">web_server</td><td>The printable Web Server name </td></tr>
@@ -861,6 +1031,72 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The list of yearss which are avaliable </dd></dl>
+
+</div>
+</div>
+<a id="a9b0c351706eb258c839ba22c2a2b640c" name="a9b0c351706eb258c839ba22c2a2b640c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b0c351706eb258c839ba22c2a2b640c">&#9670;&#160;</a></span>setCountMaxSlices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Crapview::setCountMaxSlices </td>
+          <td>(</td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the maximum number of slices of pie chart for the Count stats. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The maximum number of slices </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a398a17248c2407fbd26d4ec6160f3b5f" name="a398a17248c2407fbd26d4ec6160f3b5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a398a17248c2407fbd26d4ec6160f3b5f">&#9670;&#160;</a></span>setCountPieSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Crapview::setCountPieSize </td>
+          <td>(</td>
+          <td class="paramtype">const qreal</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the size of the pie chart for the Count stats. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>The new size </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -888,7 +1124,106 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDates</b> () noe
 </div><div class="memdoc">
 
 <p>Sets the new path for the logs Collection database. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classDbQuery.html#a6924de3d7b44efca2d5e6d4304f908c2" title="Sets the path for the logs Collection database.">DbQuery::setDbPath()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFetcher.html#a06992707a1733f01ef73e5f19464e2e4" title="Sets the path for the logs Collection database.">Fetcher::setDbPath()</a> </dd></dl>
+
+</div>
+</div>
+<a id="abe00dacc7ba6fac3b8d005c31b4ee53b" name="abe00dacc7ba6fac3b8d005c31b4ee53b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe00dacc7ba6fac3b8d005c31b4ee53b">&#9670;&#160;</a></span>setRelatTimeFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Crapview::setRelatTimeFormat </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>format</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the time format for the Relational labels on the X-axis. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">format</td><td>The format to use </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8a6630310746bb19f02995a64305ff24" name="a8a6630310746bb19f02995a64305ff24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a6630310746bb19f02995a64305ff24">&#9670;&#160;</a></span>setSpeedTimeFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Crapview::setSpeedTimeFormat </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>format</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the time format for the Speed labels on the X-axis. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">format</td><td>The format to use </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a95e62ac6c42d1c84f51f8a3d333e0bae" name="a95e62ac6c42d1c84f51f8a3d333e0bae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95e62ac6c42d1c84f51f8a3d333e0bae">&#9670;&#160;</a></span>setSpeedTimeInterval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Crapview::setSpeedTimeInterval </td>
+          <td>(</td>
+          <td class="paramtype">const qint64</td>          <td class="paramname"><span class="paramname"><em>interval</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the time interval for the Speed stats. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interval</td><td>The time interval to use </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

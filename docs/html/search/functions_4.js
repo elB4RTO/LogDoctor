@@ -4,7 +4,7 @@ var searchData=
   ['endswith_1',['endsWith',['../namespaceStringOps.html#a56c64ca6806bc01d6592dcf252ae1aa1',1,'StringOps::endsWith(std::string_view str, const char flag) noexcept'],['../namespaceStringOps.html#a89aa4526794ce074d8a8ec199e817354',1,'StringOps::endsWith(std::string_view str, std::string_view flag) noexcept']]],
   ['endturn_2',['endTurn',['../classCrissCross.html#a3d3d3eeb2b7666c4411c89cf153048e0',1,'CrissCross']]],
   ['enrichlogs_3',['enrichLogs',['../classRichText.html#a4b7aa4cd838e9ea6780740047cdfa474',1,'RichText']]],
-  ['enumerate_4',['enumerate',['../namespaceArrayOps.html#aec332afe52ccb712ba86f0a126702f49',1,'ArrayOps']]],
+  ['enumerate_4',['enumerate',['../namespaceArrayOps.html#aa841b6c561df9eda0b2abc5df8e027c8',1,'ArrayOps']]],
   ['errconfdirnotwritable_5',['errConfDirNotWritable',['../classDialogSec.html#a2cfc4ee49a455ec10253c133308e5235',1,'DialogSec']]],
   ['errconffailedwriting_6',['errConfFailedWriting',['../classDialogSec.html#a2dcb66d839d8a10574414d45011e1764',1,'DialogSec']]],
   ['errconffilenotreadable_7',['errConfFileNotReadable',['../classDialogSec.html#ae2a40f972582a40f5c4533cc7e2b425b',1,'DialogSec']]],

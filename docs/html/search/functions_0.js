@@ -8,5 +8,6 @@ var searchData=
   ['ai_5fplayturn_5',['AI_playTurn',['../classCrissCross.html#a9546863583b69a7246a216794b88d062',1,'CrissCross']]],
   ['ai_5fupdateweights_6',['AI_updateWeights',['../classCrissCross.html#a2fc7d3a6f907718ea430e138681ba328',1,'CrissCross']]],
   ['applycharttheme_7',['applyChartTheme',['../namespaceColorSec.html#af2d0f21c73979f6b9363e1a47718628d',1,'ColorSec']]],
-  ['availablememory_8',['availableMemory',['../namespaceMemOps.html#ae86bbf78d7743f9b6b98da053bfcbd08',1,'MemOps']]]
+  ['assertvalid_8',['assertValid',['../classFetcherPrivate_1_1TimeManager.html#a8d29e3d1f1966ad8ec18a022884e84d7',1,'FetcherPrivate::TimeManager::assertValid()'],['../classFetcherPrivate_1_1DateManager.html#a83f6feb1ffba8931e2760d7588e10b1c',1,'FetcherPrivate::DateManager::assertValid()']]],
+  ['availablememory_9',['availableMemory',['../namespaceMemOps.html#ae86bbf78d7743f9b6b98da053bfcbd08',1,'MemOps']]]
 ];
