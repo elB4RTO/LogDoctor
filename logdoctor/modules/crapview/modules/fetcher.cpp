@@ -7,9 +7,10 @@
 
 #include "modules/crapview/datatypes/fwd.h"
 
-#include "utilities/arrays.h"
 #include "utilities/printables.h"
 #include "utilities/strings.h"
+
+#include "workarounds/ranges_zip.h"
 
 #include <map>
 #include <vector>
@@ -547,7 +548,7 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
     // process the day of the week
     /*std::ranges::for_each( std::views::zip( data.traf.day, week_days_count ),
         [](auto tc){ if (auto& [t,c]{tc}; c>0.0){ t/=c; } });*/
-    for ( auto [total,count] : ArrayOps::zip( data.traf.day, week_days_count ) ) {
+    for ( auto [total,count] : Workarounds::zip( data.traf.day, week_days_count ) ) {
         if ( count > 0.0 ) {
             total /= count;
         }

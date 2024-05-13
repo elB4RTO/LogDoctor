@@ -1,6 +1,5 @@
 
 target_sources(LogDoctor PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/arrays.h
     ${CMAKE_CURRENT_SOURCE_DIR}/bwlists.h
     ${CMAKE_CURRENT_SOURCE_DIR}/bwutils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/chars.h

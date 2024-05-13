@@ -4,7 +4,7 @@
 
 #include "modules/crapview/datatypes/global_stats.h"
 
-#include "utilities/arrays.h"
+#include "workarounds/ranges_enumerate.h"
 
 #include <QString>
 
@@ -44,7 +44,7 @@ inline auto getMaxIndexCount( const auto& traf )
     /*std::ranges::for_each( std::views::enumerate(traf),
         [&max_c,&max_i](const auto ic)
         { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });*/
-    for( const auto [index,count] : ArrayOps::enumerate(traf) ) {
+    for( const auto [index,count] : Workarounds::enumerate(traf) ) {
         if ( count > max_c ) {
             max_c = count;
             max_i = index;
