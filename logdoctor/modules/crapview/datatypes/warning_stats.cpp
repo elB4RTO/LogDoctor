@@ -11,10 +11,14 @@
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
 
+#if defined( Q_OS_MACOS )
+    #include "workarounds/ranges_join.h"
+#else
+    #include <ranges>
+#endif
+
 #include <QBarSet>
 #include <QTableWidget>
-
-#include <ranges>
 
 
 using namespace FetcherPrivate;
@@ -288,8 +292,15 @@ int WarningData::insertForHour( std::vector<std::vector<QBarSet*>>& bars ) const
 
 void WarningData::insertInTable( QTableWidget*const table, const QColor& warning_color ) const
 {
-    const auto flattened_data{ std::views::join( std::views::join(data) ) };
-    for ( const WarningDatum& datum : flattened_data ) {
-        datum.insertInTable( table, warning_color );
-    }
+    #if defined( Q_OS_MACOS )
+        const auto flattened_data{ Workarounds::join( Workarounds::join(data) ) };
+        for ( const WarningDatum* datum : flattened_data ) {
+            datum->insertInTable( table, warning_color );
+        }
+    #else
+        const auto flattened_data{ std::views::join( std::views::join(data) ) };
+        for ( const WarningDatum& datum : flattened_data ) {
+            datum.insertInTable( table, warning_color );
+        }
+    #endif
 }

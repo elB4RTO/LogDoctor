@@ -15,6 +15,7 @@ function(logdoc_add_target_sources)
     add_subdirectory(modules)
     add_subdirectory(tools)
     add_subdirectory(utilities)
+    add_subdirectory(workarounds)
 
     add_subdirectory(resources)
 
