@@ -13,6 +13,8 @@ int main()
 
     passed &= Testing::testUtilities();
 
+    passed &= Testing::testWorkarounds();
+
     passed &= Testing::testCraplogModules();
 
     passed &= Testing::testCrapviewModules();

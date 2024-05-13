@@ -5,7 +5,10 @@
 
 #include "main_lib.h"
 
-#include "utilities/arrays.h"
+#include "workarounds/ranges_enumerate.h"
+#include "workarounds/ranges_join.h"
+#include "workarounds/ranges_zip.h"
+
 #include "utilities/io.h"
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
@@ -445,8 +448,15 @@ bool testUtilities()
     T_ASSERT_NOT( VecOps::contains<std::string>({"catch","the","flag"}, "flac") );
     T_TEST_RESULT()
 
+    T_FIN()
+}
 
-    //// ARRAYS ////
+
+bool testWorkarounds()
+{
+    T_INIT("workarounds")
+
+    //// CONCEPTS ////
 
     T_TEST_START("IsStdArray")
     {
@@ -458,7 +468,57 @@ bool testUtilities()
     }
     T_TEST_RESULT()
 
-    T_TEST_START("ArrayOps::zip")
+    //// RANGES ////
+
+    T_TEST_START("Workarounds::enumerate")
+    {
+    const auto equality{ [](EnumeratedArray<std::array<int,3>>& enumerated, const std::array<std::tuple<int,int>,3>& fake_enumerated) -> bool {
+        size_t i{ 0ul };
+        for (const auto& tpl : enumerated) {
+            if ( tpl != fake_enumerated.at(i) ) return false;
+            ++i;
+        }
+        return true;
+    }};
+    std::array<int,3> a{ 10,20,30 };
+    const std::array<std::tuple<int,int>,3> t{ std::make_tuple(0,10),std::make_tuple(1,20),std::make_tuple(2,30) };
+    EnumeratedArray v{ Workarounds::enumerate( a ) };
+    T_ASSERT( equality( v, t ) );
+    }
+    T_TEST_RESULT()
+
+    T_TEST_START("Workarounds::join")
+    {
+    const auto equality{ [](const auto& flattened, const auto& fake_flattened) -> bool {
+        if ( flattened.size() != fake_flattened.size() ) {
+            return false;
+        }
+        const size_t max{ flattened.size() };
+        for ( size_t i{0ul}; i<max; ++i ) {
+            if ( *flattened.at(i) != fake_flattened.at(i) ) {
+                return false;
+            }
+        }
+        return true;
+    }};
+    {
+    std::vector<std::vector<int>> nv{ {0}, {1,2,3}, {4,5}, {6,7,8}, {9} };
+    const std::vector<int> e{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    const std::vector<const int*> v{ Workarounds::join( nv ) };
+    T_ASSERT( equality( v, e ) );
+    }{
+    std::vector<std::vector<std::vector<int>>> mnv{ { {0,1}, {2,3} }, { {4,5} }, { {6}, {7}, {8}, {9} } };
+    const std::vector<std::vector<int>> ne{ {0,1}, {2,3}, {4,5}, {6}, {7}, {8}, {9} };
+    const std::vector<const std::vector<int>*> nv{ Workarounds::join( mnv ) };
+    T_ASSERT( equality( nv, ne ) );
+    const std::vector<int> e{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    const std::vector<const int*> v{ Workarounds::join( nv ) };
+    T_ASSERT( equality( v, e ) );
+    }
+    }
+    T_TEST_RESULT()
+
+    T_TEST_START("Workarounds::zip")
     {
     const auto equality{ [](ZippedArrays<std::array<int,3>>& zipped, std::array<std::tuple<int,int>,3>& fake_zipped) -> bool {
         size_t i{ 0ul };
@@ -471,25 +531,8 @@ bool testUtilities()
     std::array<int,3> a1{ 1,2,3 };
     std::array<int,3> a2{ 10,20,30 };
     std::array<std::tuple<int,int>,3> t{ std::make_tuple(1,10),std::make_tuple(2,20),std::make_tuple(3,30) };
-    ZippedArrays v{ ArrayOps::zip( a1, a2 ) };
-    T_ASSERT( equality( v, t) );
-    }
-    T_TEST_RESULT()
-
-    T_TEST_START("ArrayOps::enumerate")
-    {
-    const auto equality{ [](EnumeratedArray<std::array<int,3>>& enumerated, std::array<std::tuple<int,int>,3>& fake_enumerated) -> bool {
-        size_t i{ 0ul };
-        for (const auto& tpl : enumerated) {
-            if ( tpl != fake_enumerated.at(i) ) return false;
-            ++i;
-        }
-        return true;
-    }};
-    std::array<int,3> a{ 10,20,30 };
-    std::array<std::tuple<int,int>,3> t{ std::make_tuple(0,10),std::make_tuple(1,20),std::make_tuple(2,30) };
-    EnumeratedArray v{ ArrayOps::enumerate( a ) };
-    T_ASSERT( equality( v, t) );
+    ZippedArrays v{ Workarounds::zip( a1, a2 ) };
+    T_ASSERT( equality( v, t ) );
     }
     T_TEST_RESULT()
 

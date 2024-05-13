@@ -15,6 +15,9 @@ bool testOperators();
 //! A Test suit for the utilities
 bool testUtilities();
 
+//! A Test suit for the workarounds
+bool testWorkarounds();
+
 //! A Test suit for craplog's modules
 bool testCraplogModules();
 

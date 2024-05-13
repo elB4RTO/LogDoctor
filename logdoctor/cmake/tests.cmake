@@ -36,6 +36,11 @@ macro(logdoc_add_tests)
         utilities/strings.h
         utilities/strings.cpp
         utilities/vectors.h
+
+        workarounds/lib.h
+        workarounds/ranges_enumerate.h
+        workarounds/ranges_join.h
+        workarounds/ranges_zip.h
     )
 
     if(WIN32)
