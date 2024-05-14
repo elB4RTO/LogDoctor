@@ -3,12 +3,16 @@ name: CMake Build
 on:
   pull_request:
     branches: [ "main" ]
-#  push:
-#    branches: [ "main" ]
+#  release:
+#    types: [published]
 
 env:
   QT_VERSION: '6.6.*'
-  BUILD_TYPE: 'MinSizeRel'
+  BUILD_TYPE: 'Release'
+  SRC_DIR: "${{github.workspace}}/logdoctor"
+  BUILD_DIR: "${{github.workspace}}/build"
+  RELEASE_DIR: "${{github.workspace}}/release"
+#  TAG: ${{ github.event.release.tag_name }}
 
 jobs:
   build:
@@ -18,13 +22,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest,  arch: gcc_64            }
-          - { os: windows-latest, arch: win64_msvc2019_64 }
-          - { os: macos-latest,   arch: clang_64          }
+          - { os: ubuntu-latest,  arch: gcc_64,            exec: LogDoctor     }
+          - { os: windows-latest, arch: win64_msvc2019_64, exec: LogDoctor.exe }
+          - { os: macos-latest,   arch: clang_64,          exec: LogDoctor.app }
 
     steps:
     - name: Get LogDoctor
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     
     - name: Install Qt6
@@ -37,12 +41,11 @@ jobs:
         archives: 'icu qtbase qttools qttranslations'
         tools: 'tools_ifw tools_cmake tools_qtcreator,qt.tools.qtcreator'
         install-deps: 'true'
-        setup-python: 'false'
     
     
     - name: Get MSVC (WIN)
       if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1.12.1
+      uses: ilammy/msvc-dev-cmd@v1.13.0
     
     
     - name: Append PATHs (WIN)
@@ -55,17 +58,33 @@ jobs:
 
     - name: Configure CMake (NIX)
       if: runner.os != 'Windows'
-      run: cmake -S ${{github.workspace}}/logdoctor -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -S ${{env.SRC_DIR}} -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Configure CMake (WIN)
       if: runner.os == 'Windows'
-      run: cmake -S ${{github.workspace}}\logdoctor -B ${{github.workspace}}\build "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=cl.exe"
+      run: cmake -S ${{env.SRC_DIR}} -B ${{env.BUILD_DIR}} "-DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}}" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER=cl.exe"
 
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --target all
+      run: cmake --build ${{env.BUILD_DIR}} --target all -j16
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{env.BUILD_DIR}}
       run: ctest
+
+    - name: Prepare deployment
+      run: |
+        mkdir "${{env.RELEASE_DIR}}"
+        mv "${{env.BUILD_DIR}}/${{matrix.config.exec}}" "${{env.RELEASE_DIR}}/"
+#        echo "RELEASE_NAME=LogDoctor-${TAG:1}-amd64_${{matrix.config.osname}}" >> $GITHUB_ENV
+      
+    - name: Deploy
+      uses: actions/upload-artifact@v4
+      with:
+#        name: ${{env.RELEASE_NAME}}
+        name: 'LogDoctor_${{matrix.config.os}}'
+        path: ${{env.RELEASE_DIR}}
+        if-no-files-found: error
+        compression-level: 9
+        retention-days: 7
 

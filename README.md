@@ -2,7 +2,7 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-4.00-fff"/>
+  <img src="https://img.shields.io/badge/version-4.01-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-20-blue"/>
   <img src="https://img.shields.io/badge/Qt-6-blue"/>
   <br/>
@@ -120,7 +120,6 @@ See [HOW_TO_COMPILE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_CO
 
 ### Version check
 
-A version check utility is available while running LogDoctor to check the availability of a new version.<br/>
 To check for updates, open the menu `Utilities`→`Version check`.<br/><br/>
 
 ### How to update
@@ -131,8 +130,8 @@ See [HOW_TO_UPDATE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_UPD
 
 ## Before to start
 
-When you run LogDoctor for the first time, please take a minute to set-up the things it needs.<br/>
-Head to the **configurations** section and give a look at least at the [logs format](#logs-format) settings. You have to tell the doctor what he'll be dealing with!
+When you run LogDoctor for the first time, you will most likely see an empty list of log files.<br/>
+Head to the **configurations** section and give a look at least at the [logs format](#logs-format) settings. Only files containings logs that match the given format will be shown in the list.
 
 <br/><br/>
 
@@ -174,8 +173,7 @@ When you parse a file, it will be hashed using the **SHA256** algorithm and the 
 
 ##### Note
 
-If you don't know, *SHA256* produces an irreversible hash, which means that no information about the file can be retrieved from the hash.<br/>
-You have full control on the hashes database (same as for the logs-data database): you can move, delete, view or edit it the way you want (but you must keep the original file-name).<br/>
+The *SHA256* algorithm produces an irreversible hash, which means that no information about the file can be retrieved from the hash.<br/>
 LogDoctor will **never** grab and/or use any information about you or the usage you make of it.
 
 <br/>
@@ -189,8 +187,8 @@ It can be the default system folder or any folder you decide to use, just set it
 
 #### Logs format
 
-Before to start parsing logs, you must set-up the *log format* that LogDoctor will have to use.<br/>
-Head to the **configurations** section, tap `Logs`, select the **Web Server** you want to configure and tap `Format`.<br/>
+Before to start parsing logs, you must set-up the *loga format*.<br/>
+Head to the **configurations** section, under `Logs` select the **Web Server** you want to configure and tap `Format`.<br/>
 Once inside the **Format** section, you can insert the *log format string* you're using. Don't forget to use the `Generete preview` button to generate a *log line sample* and **check the correctness** of the format!<br/>
 
 For reliability reasons, LogDoctor **does not** support the usage of the **Carriage Return** inside the log format string.
@@ -384,7 +382,7 @@ A new backup is made every time you quit LogDoctor after doing a job which affec
 #### Note
 
 Only the *logs-data database* will be backed-up, the *hashes database* **won't**.<br/>
-This is because it is unlikely (supposedly impossible) that a hash equals another, therefore they're supposed to be useful for a short period of time (that is, since you or your web server delete the original log files).
+This is because it is unlikely (supposedly impossible) that a hash equals another, therefore they're supposed to be useful for a short period of time (that is, until you or your web server delete the original log files).
 
 <br/>
 
@@ -392,7 +390,7 @@ This is because it is unlikely (supposedly impossible) that a hash equals anothe
 
 10~200 MB/s
 
-May be higher or lower depending on the complexity of the logs, the complexity of the blacklist, the build type, your hardware and the workload of your system during the execution.
+Take this estimation with a grain of salt, it may be even higher or lower depending on a variety of factors, like: the build type, your hardware, the complexity of the logs, the complexity of the blacklist, the workload of your system during the execution...
 
 <br/><br/>
 
