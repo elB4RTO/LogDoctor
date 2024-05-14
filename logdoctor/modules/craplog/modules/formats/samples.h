@@ -2,7 +2,7 @@
 #define LOGDOCTOR__CRAPLOG__MODULES__FORMATS__SAMPLES_H
 
 
-class LogsFormat;
+struct LogsFormat;
 
 class QString;
 
@@ -34,7 +34,7 @@ QString getNginxLogSample( const LogsFormat& logs_format );
 */
 QString getIisLogSample( const LogsFormat& logs_format );
 
-} // namespace FormatOps
+} // namespace FormatOps::Private
 
 
 #endif // LOGDOCTOR__CRAPLOG__MODULES__FORMATS__SAMPLES_H
