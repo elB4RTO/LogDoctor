@@ -2,7 +2,7 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-4.00-fff"/>
+  <img src="https://img.shields.io/badge/version-4.01-fff"/>
   <img src="https://img.shields.io/badge/C%2B%2B-20-blue"/>
   <img src="https://img.shields.io/badge/Qt-6-blue"/>
   <br/>
@@ -120,7 +120,6 @@ See [HOW_TO_COMPILE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_CO
 
 ### Version check
 
-A version check utility is available while running LogDoctor to check the availability of a new version.<br/>
 To check for updates, open the menu `Utilities`→`Version check`.<br/><br/>
 
 ### How to update
@@ -131,8 +130,8 @@ See [HOW_TO_UPDATE.md](https://github.com/elB4RTO/LogDoctor/blob/main/HOW_TO_UPD
 
 ## Before to start
 
-When you run LogDoctor for the first time, please take a minute to set-up the things it needs.<br/>
-Head to the **configurations** section and give a look at least at the [logs format](#logs-format) settings. You have to tell the doctor what he'll be dealing with!
+When you run LogDoctor for the first time, you will most likely see an empty list of log files.<br/>
+Head to the **configurations** section and give a look at least at the [logs format](#logs-format) settings. Only files containings logs that match the given format will be shown in the list.
 
 <br/><br/>
 
@@ -188,7 +187,7 @@ It can be the default system folder or any folder you decide to use, just set it
 
 #### Logs format
 
-Before to start parsing logs, you must set-up the *log format* that LogDoctor will have to use.<br/>
+Before to start parsing logs, you must set-up the *loga format*.<br/>
 Head to the **configurations** section, under `Logs` select the **Web Server** you want to configure and tap `Format`.<br/>
 Once inside the **Format** section, you can insert the *log format string* you're using. Don't forget to use the `Generete preview` button to generate a *log line sample* and **check the correctness** of the format!<br/>
 
