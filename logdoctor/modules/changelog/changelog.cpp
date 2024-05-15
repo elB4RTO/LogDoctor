@@ -240,6 +240,27 @@ void Changelog::on_tree_Versions_itemClicked(QTreeWidgetItem* item, int index)
             content.append( R"(</li></ul>)" );
         content.append( R"(</li><p></p>)" ); // leave the p tag
 
+    } else if ( version == "v4.01" ) {
+
+        content.append( R"(<li class="elem">)" );
+        content.append( tr("Tweakable parameters for some of the charts:") );
+            content.append( R"(<ul><li>)" );
+            content.append( tr("Speed") );
+            content.append( R"(</li><li>)" );
+            content.append( tr("Counts") );
+            content.append( R"(</li><li>)" );
+            content.append( tr("Relational") );
+            content.append( R"(</li></ul>)" );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Improved project structure") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Modernized Cmake usage") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Code improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Tests improvements") );
+        content.append( R"(</li><p></p>)" ); // leave the p tag
+
     } else {
         throw DoNotCatchException( "Unexpected changelog version", version.toStdString() );
     }

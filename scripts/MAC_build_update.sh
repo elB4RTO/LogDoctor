@@ -43,7 +43,7 @@ fi
 mkdir build && cd build
 
 # Prepare the cmake files
-cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel
+cmake ../logdoctor -DCMAKE_BUILD_TYPE=Release
 if [[ "$?" != "0" ]]
 then
 	# an error occured during preparation
@@ -52,7 +52,7 @@ then
 fi
 
 # Build the project
-cmake --build ./ --target all -j$(sysctl -n hw.ncpu)
+cmake --build ./ --target LogDoctor -j$(sysctl -n hw.ncpu)
 if [[ "$?" == "0" ]]
 then
 	# compiled succesfully

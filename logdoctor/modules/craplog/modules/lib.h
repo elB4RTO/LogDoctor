@@ -13,12 +13,7 @@
     File types used to decide whether a file should be considered valid or not
     \see LogOps::defineFileType()
 */
-enum class LogType
-#ifdef _MSC_VER
-    : __int8
-#else
-    : __INT8_TYPE__
-#endif
+enum class LogType : int8_t
 {
     Failed    = -1, //!< Failed to determine the type
     Discarded =  0, //!< Not a valid file, will be discarded

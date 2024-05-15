@@ -7,6 +7,7 @@ var searchData=
   ['blacklists_4',['Blacklists',['../structBlacklists.html',1,'']]],
   ['bodypart_5',['BodyPart',['../structBodyPart.html',1,'']]],
   ['breakdownseries_6',['breakdownSeries',['../classMainSlice.html#af44c7a7a24e34fcd30da0ed8c3412e0d',1,'MainSlice']]],
-  ['bwlistexception_7',['BWlistException',['../classBWlistException.html',1,'']]],
-  ['bwutils_8',['BWutils',['../namespaceBWutils.html',1,'']]]
+  ['buildfromquery_7',['buildFromQuery',['../classWarningData.html#afa43ce1c82d29d54c13dc6ecac822de9',1,'WarningData']]],
+  ['bwlistexception_8',['BWlistException',['../classBWlistException.html',1,'']]],
+  ['bwutils_9',['BWutils',['../namespaceBWutils.html',1,'']]]
 ];

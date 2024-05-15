@@ -2727,7 +2727,7 @@ Use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                  <widget class="QWidget" name="scrollAreaContent_StatsCount">
                   <property name="geometry">
                    <rect>
-                    <x>0</x>
+                    <x>14</x>
                     <y>0</y>
                     <width>263</width>
                     <height>402</height>
@@ -6008,6 +6008,26 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
              <property name="text">
               <string>Charts</string>
              </property>
+             <item>
+              <property name="text">
+               <string>Appearance</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Speed</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Count</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Relational</string>
+              </property>
+             </item>
             </item>
             <item>
              <property name="text">
@@ -6826,7 +6846,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="page_Conf_General_Charts">
+           <widget class="QWidget" name="page_Conf_General_Charts_Theme">
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <item>
               <widget class="QFrame" name="frame_ConfCharts_Theme">
@@ -6947,7 +6967,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
               </widget>
              </item>
              <item>
-              <widget class="QFrame" name="frame_ConfCharts_Preview">
+              <widget class="QFrame" name="frame_ConfCharts_Theme_Preview">
                <layout class="QGridLayout" name="gridLayout_83">
                 <item row="0" column="0">
                  <widget class="QLabel" name="label_ConfCharts_Preview">
@@ -6981,10 +7001,604 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                     <height>256</height>
                    </size>
                   </property>
+                  <property name="acceptDrops">
+                   <bool>false</bool>
+                  </property>
                  </widget>
                 </item>
                </layout>
               </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_Conf_General_Charts_Speed">
+            <layout class="QVBoxLayout" name="verticalLayout_31">
+             <item>
+              <widget class="QFrame" name="frame_ConfCharts_Speed_TimeInterval">
+               <layout class="QGridLayout" name="gridLayout_89">
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfCharts_Speed_1">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfCharts_Speed_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfCharts_Speed_TimeInterval">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</string>
+                  </property>
+                  <property name="text">
+                   <string>Time interval</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="box_ConfCharts_Speed_TimeInterval">
+                  <property name="minimumSize">
+                   <size>
+                    <width>72</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>1</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>2</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>3</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>4</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>5</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>15</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>20</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>30</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>60</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>120</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>180</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>240</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>300</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>600</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>900</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>1200</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>1800</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>3600</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame_ConfCharts_Speed_TimeFormat">
+               <layout class="QGridLayout" name="gridLayout_90">
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfCharts_Speed_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfCharts_Speed_TimeFormat">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>The format to use for the labels of the time axis.</string>
+                  </property>
+                  <property name="text">
+                   <string>Time format</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfCharts_Speed_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="box_ConfCharts_Speed_TimeFormat">
+                  <property name="minimumSize">
+                   <size>
+                    <width>96</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>hh:mm</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>hh</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_ConfCharts_Speed">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>608</width>
+                 <height>333</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_Conf_General_Charts_Count">
+            <layout class="QVBoxLayout" name="verticalLayout_30">
+             <item>
+              <widget class="QFrame" name="frame_ConfCharts_Count_PieSize">
+               <layout class="QGridLayout" name="gridLayout_86">
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfCharts_Count_1">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfCharts_Count_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfCharts_Count_PieSize">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>The size of the pie</string>
+                  </property>
+                  <property name="text">
+                   <string>Pie size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_ConfCharts_Count_PieSize">
+                  <property name="minimumSize">
+                   <size>
+                    <width>64</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::PlusMinus</enum>
+                  </property>
+                  <property name="correctionMode">
+                   <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                  </property>
+                  <property name="minimum">
+                   <double>0.400000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>0.800000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.010000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.600000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame_ConfCharts_Count_MaxSlices">
+               <layout class="QGridLayout" name="gridLayout_87">
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfCharts_Count_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfCharts_Count_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfCharts_Count_MaxSlices">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</string>
+                  </property>
+                  <property name="text">
+                   <string>Maximum slices</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="spinBox_ConfCharts_Count_MaxSlices">
+                  <property name="minimumSize">
+                   <size>
+                    <width>56</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::PlusMinus</enum>
+                  </property>
+                  <property name="correctionMode">
+                   <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>31</number>
+                  </property>
+                  <property name="value">
+                   <number>15</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_ConfCharts_Count">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_Conf_General_Charts_Relat">
+            <layout class="QVBoxLayout" name="verticalLayout_32">
+             <item>
+              <widget class="QFrame" name="frame_ConfCharts_Relat_TimeFormat">
+               <layout class="QGridLayout" name="gridLayout_91">
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfCharts_Relat_1">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfCharts_Relat_TimeFormat">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>The format to use for the labels of the time axis.</string>
+                  </property>
+                  <property name="text">
+                   <string>Time format</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="box_ConfCharts_Relat_TimeFormat">
+                  <property name="minimumSize">
+                   <size>
+                    <width>96</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>hh:mm</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>hh</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfCharts_Relat_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_ConfCharts_Relat">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>608</width>
+                 <height>427</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
@@ -8582,7 +9196,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -9456,7 +10070,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>
@@ -10654,7 +11268,7 @@ Any field not considered by LogDoctor will appear as 'DISCARDED'</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>62</width>
                      <height>54</height>
                     </rect>
                    </property>

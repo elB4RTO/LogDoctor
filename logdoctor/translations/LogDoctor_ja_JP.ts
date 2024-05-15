@@ -251,6 +251,38 @@
         <source>Redesigned configs section</source>
         <translation type="unfinished">再設計された構成セクション</translation>
     </message>
+    <message>
+        <source>Version 4</source>
+        <translation type="unfinished">バージョン4</translation>
+    </message>
+    <message>
+        <source>Stability improvements</source>
+        <translation type="unfinished">安定性の向上</translation>
+    </message>
+    <message>
+        <source>Generating warnings dinamically</source>
+        <translation type="unfinished">警告の動的な生成</translation>
+    </message>
+    <message>
+        <source>New tool:</source>
+        <translation type="unfinished">新しいツール:</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">変更履歴</translation>
+    </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation type="unfinished">プロジェクト構造の改善</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation type="unfinished">最新の Cmake の使用</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation type="unfinished">一部のチャートの調整可能なパラメーター:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1004,6 +1036,28 @@ Continue?</source>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation type="unfinished">現在設定されているパラメータと一致するデータが見つかりませんでした</translation>
     </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation type="unfinished">ログ形式にフィールドがありません</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation type="unfinished">提供された形式に重要なフィールドがありません:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation type="unfinished">統計の品質が著しく損なわれる可能性があります</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation type="unfinished">ログ形式で「Carriage Return」</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation type="unfinished">提供された形式には「Carriage Return」が含まれています。
+注意して使用しないと、データの損失やクラッシュが発生する可能性があります</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1738,6 +1792,138 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
         <source>Show the changelog</source>
         <translation type="unfinished">変更ログを表示する</translation>
     </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished">スピード</translation>
+    </message>
+    <message>
+        <source>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</source>
+        <translation type="unfinished">時間軸のステップを秒単位で表します。
+ 同じ間隔内にあるすべての値が結合され、平均値が使用されます。</translation>
+    </message>
+    <message>
+        <source>Time interval</source>
+        <translation type="unfinished">時間間隔</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished">1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished">2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation type="unfinished">3</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished">4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished">5</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation type="unfinished">10</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation type="unfinished">15</translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation type="unfinished">20</translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation type="unfinished">30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation type="unfinished">60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation type="unfinished">120</translation>
+    </message>
+    <message>
+        <source>180</source>
+        <translation type="unfinished">180</translation>
+    </message>
+    <message>
+        <source>240</source>
+        <translation type="unfinished">240</translation>
+    </message>
+    <message>
+        <source>300</source>
+        <translation type="unfinished">300</translation>
+    </message>
+    <message>
+        <source>600</source>
+        <translation type="unfinished">600</translation>
+    </message>
+    <message>
+        <source>900</source>
+        <translation type="unfinished">900</translation>
+    </message>
+    <message>
+        <source>1200</source>
+        <translation type="unfinished">1200</translation>
+    </message>
+    <message>
+        <source>1800</source>
+        <translation type="unfinished">1800</translation>
+    </message>
+    <message>
+        <source>3600</source>
+        <translation type="unfinished">3600</translation>
+    </message>
+    <message>
+        <source>The format to use for the labels of the time axis.</source>
+        <translation type="unfinished">時間軸のラベルに使用する形式。</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation type="unfinished">時刻形式</translation>
+    </message>
+    <message>
+        <source>hh:mm</source>
+        <translation type="unfinished">hh:mm</translation>
+    </message>
+    <message>
+        <source>hh</source>
+        <translation type="unfinished">hh</translation>
+    </message>
+    <message>
+        <source>The size of the pie</source>
+        <translation type="unfinished">パイの大きさ</translation>
+    </message>
+    <message>
+        <source>Pie size</source>
+        <translation type="unfinished">パイのサイズ</translation>
+    </message>
+    <message>
+        <source>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</source>
+        <translation type="unfinished">円を構成するスライスの最大数。
+ 超過したスライスは 1 つの包括的なスライスにグループ化されます。</translation>
+    </message>
+    <message>
+        <source>Maximum slices</source>
+        <translation type="unfinished">最大スライス数</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation type="unfinished">関連した</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation type="unfinished">外観</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1870,38 +2056,6 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     <message>
         <source>Unexpected WebServer</source>
         <translation type="unfinished">予期しない Web サーバー</translation>
-    </message>
-    <message>
-        <source>An error occured while processing</source>
-        <translation type="unfinished">処理中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation type="unfinished">日付の処理中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation type="unfinished">データベースから %1 を解析中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation type="unfinished">年</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation type="unfinished">月</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation type="unfinished">日々</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation type="unfinished">エラーの原因となる値</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation type="unfinished">データベース テーブル名</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2038,6 +2192,34 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
     <message>
         <source>Saturday</source>
         <translation type="unfinished">土曜日</translation>
+    </message>
+    <message>
+        <source>Relational Count</source>
+        <translation type="unfinished">リレーショナルカウント</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished">年</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation type="unfinished">月</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation type="unfinished">日</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation type="unfinished">時間</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation type="unfinished">分</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation type="unfinished">秒</translation>
     </message>
 </context>
 </TS>

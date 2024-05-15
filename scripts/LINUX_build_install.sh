@@ -44,7 +44,7 @@ fi
 cd build
 
 # Prepare the cmake files
-cmake ../logdoctor -DCMAKE_BUILD_TYPE=MinSizeRel
+cmake ../logdoctor -DCMAKE_BUILD_TYPE=Release
 if [[ "$?" != "0" ]]
 then
 	# an error occured during preparation
@@ -53,7 +53,7 @@ then
 fi
 
 # Build the project
-cmake --build ./ --target all -j$(nproc)
+cmake --build ./ --target LogDoctor -j$(nproc)
 if [[ "$?" == "0" ]]
 then
 	# compiled succesfully

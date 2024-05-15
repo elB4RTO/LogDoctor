@@ -24,7 +24,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="dox_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogDoctor<span id="projectnumber">&#160;4.00</span>
+   <div id="projectname">LogDoctor<span id="projectnumber">&#160;4.01</span>
    </div>
    <div id="projectbrief">Parse Apache2/Nginx/IIS logs and view dinamically generated statistics</div>
   </td>
@@ -264,7 +264,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>errInvalidLogF
 <tr class="separator:a3cc898412f2debd5eff058aa8cd88c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9f19176ce2981bd3397b9d033490cb8" id="r_af9f19176ce2981bd3397b9d033490cb8"><td class="memItemLeft" align="right" valign="top"><a id="af9f19176ce2981bd3397b9d033490cb8" name="af9f19176ce2981bd3397b9d033490cb8"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLogFormatNotSet</b> (QWidget *parent=nullptr)</td></tr>
-<tr class="memdesc:af9f19176ce2981bd3397b9d033490cb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The logs format has not been set for the web server in use. <br /></td></tr>
+<tr class="memdesc:af9f19176ce2981bd3397b9d033490cb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The log format has not been set for the web server in use. <br /></td></tr>
 <tr class="separator:af9f19176ce2981bd3397b9d033490cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48efa757e87889491d2d723749647c00" id="r_a48efa757e87889491d2d723749647c00"><td class="memItemLeft" align="right" valign="top"><a id="a48efa757e87889491d2d723749647c00" name="a48efa757e87889491d2d723749647c00"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLogFormatNoFields</b> (QWidget *parent=nullptr)</td></tr>
@@ -274,6 +274,14 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLogFormatNo
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errLogFormatNoSeparators</b> (QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a5cc9c61fd5d5dea50b248366a6bd6e54"><td class="mdescLeft">&#160;</td><td class="mdescRight">The log format in use has no log separators. <br /></td></tr>
 <tr class="separator:a5cc9c61fd5d5dea50b248366a6bd6e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75fe926c1dd860fccb59c39cfbafe641" id="r_a75fe926c1dd860fccb59c39cfbafe641"><td class="memItemLeft" align="right" valign="top"><a id="a75fe926c1dd860fccb59c39cfbafe641" name="a75fe926c1dd860fccb59c39cfbafe641"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>choiceLogFormatMissingField</b> (const QString &amp;field, QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a75fe926c1dd860fccb59c39cfbafe641"><td class="mdescLeft">&#160;</td><td class="mdescRight">The provided log format is missing an important field. <br /></td></tr>
+<tr class="separator:a75fe926c1dd860fccb59c39cfbafe641"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99f36a702917a2b1d80a31e4be8f89bc" id="r_a99f36a702917a2b1d80a31e4be8f89bc"><td class="memItemLeft" align="right" valign="top"><a id="a99f36a702917a2b1d80a31e4be8f89bc" name="a99f36a702917a2b1d80a31e4be8f89bc"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>choiceLogFormatWithCarriageReturn</b> (QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a99f36a702917a2b1d80a31e4be8f89bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The provided log format contains the CR control character. <br /></td></tr>
+<tr class="separator:a99f36a702917a2b1d80a31e4be8f89bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bdf9d669f24bffd5d996ec18020194b" id="r_a8bdf9d669f24bffd5d996ec18020194b"><td class="memItemLeft" align="right" valign="top"><a id="a8bdf9d669f24bffd5d996ec18020194b" name="a8bdf9d669f24bffd5d996ec18020194b"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>errFailedParsingLogs</b> (const QString &amp;message, QWidget *parent=nullptr)</td></tr>
 <tr class="memdesc:a8bdf9d669f24bffd5d996ec18020194b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An error occured while parsing logs. <br /></td></tr>

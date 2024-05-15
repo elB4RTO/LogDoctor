@@ -2,7 +2,7 @@ var searchData=
 [
   ['list_0',['Todo List',['../todo.html',1,'']]],
   ['list2string_1',['list2string',['../classMainWindow.html#a827a4bc119f8008df7605feaaefaecc8',1,'MainWindow']]],
-  ['loadusedhasheslists_2',['loadUsedHashesLists',['../classHashOps.html#ad0b62ddfa2ed968c27e7fbeb58c21571',1,'HashOps']]],
+  ['loadusedhasheslists_2',['loadUsedHashesLists',['../classHasher.html#adc44cf9dc663a59725746a9d4c9337c3',1,'Hasher']]],
   ['logdoctorexception_3',['LogDoctorException',['../classLogDoctorException.html',1,'']]],
   ['logfieldslistmodel_4',['LogFieldsListModel',['../classLogFieldsListModel.html',1,'']]],
   ['logfile_5',['LogFile',['../structLogFile.html',1,'']]],

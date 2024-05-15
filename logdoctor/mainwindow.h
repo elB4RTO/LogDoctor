@@ -35,6 +35,8 @@ class QTreeWidgetItem;
 enum class LogField;
 enum class ColorsScheme : unsigned char;
 
+enum ConfigsPage : unsigned char;
+
 
 namespace Ui {
     class MainWindow;
@@ -48,6 +50,9 @@ namespace Ui {
 class MainWindow final : public QMainWindow
 {
     Q_OBJECT
+
+    // current version of LogDoctor
+    const float version{ 4.01f };
 
 public:
 
@@ -65,6 +70,7 @@ private slots:
 
     ///////////////////
     //// OVERRIDES ////
+
     void closeEvent( QCloseEvent* event ) override;
 
 
@@ -274,8 +280,8 @@ private slots:
     void on_button_StatsGlob_Iis_clicked();
 
 
-    /////////////////
-    //// CRAPSET ////
+    //////////////////
+    //// CRAPCONF ////
 
     void on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int column);
 
@@ -308,6 +314,16 @@ private slots:
     //// CHARTS ////
 
     void on_box_ConfCharts_Theme_currentIndexChanged(int index);
+
+    void on_box_ConfCharts_Speed_TimeInterval_currentTextChanged(const QString& arg1);
+
+    void on_box_ConfCharts_Speed_TimeFormat_currentTextChanged(const QString& arg1);
+
+    void on_doubleSpinBox_ConfCharts_Count_PieSize_valueChanged(double arg1);
+
+    void on_spinBox_ConfCharts_Count_MaxSlices_valueChanged(int arg1);
+
+    void on_box_ConfCharts_Relat_TimeFormat_currentTextChanged(const QString& arg1);
 
     //// DATABASES ////
 
@@ -560,9 +576,6 @@ private slots:
 
 private:
     QSharedPointer<Ui::MainWindow> ui;
-
-    // current version of LogDoctor
-    const float version{ 4.00f };
 
     QString wsFromIndex( const int index ) const;
     WebServer wsEnumFromIndex( const int index ) const;
@@ -896,9 +909,11 @@ private:
     void resetStatsGlob();
 
 
-    /////////////////
-    //// CRAPSET ////
-    /////////////////
+    //////////////////
+    //// CRAPCONF ////
+    //////////////////
+
+    void setConfigsPage( const ConfigsPage page );
 
     void refreshTextBrowserPreview();
 

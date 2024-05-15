@@ -251,6 +251,38 @@
         <source>Redesigned configs section</source>
         <translation>Ridisegnata la sezione delle configurazioni</translation>
     </message>
+    <message>
+        <source>Version 4</source>
+        <translation>Versione 4</translation>
+    </message>
+    <message>
+        <source>Stability improvements</source>
+        <translation>Miglioramenti alla stabilità</translation>
+    </message>
+    <message>
+        <source>Generating warnings dinamically</source>
+        <translation>Generazione dinamica degli avvertimenti</translation>
+    </message>
+    <message>
+        <source>New tool:</source>
+        <translation>Nuovo attrezzo:</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation>Cambiamenti</translation>
+    </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation>Miglirata la struttura del progetto</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation>Modernizzato l&apos;uso di CMake</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation>Tweakable parameters for some of the charts:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -1004,6 +1036,28 @@ Continuare?</translation>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation>Nessun dato trovato che corrisponda ai parametri attualmente in uso</translation>
     </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation>Campo mancante nel formato dei log</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation>Manca un campo importante nel formato fornito:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation>La qualità delle statistiche potrebbe venire seriamente compromessa</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation>&apos;Carriage Return&apos; nel formato dei log</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation>Il formato fornito contiene il &apos;Carriage Return&apos;.
+Ciò potrebbe comportare perdite di dati o crash se non usato con cautela</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1739,6 +1793,138 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
         <source>Show the changelog</source>
         <translation>Mostra i cambiamenti</translation>
     </message>
+    <message>
+        <source>Speed</source>
+        <translation>Velocità</translation>
+    </message>
+    <message>
+        <source>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</source>
+        <translation>Rappresenta l&apos;intervallo nell&apos;asse del tempo, in secondi.
+Tutti i valori appartenenti allo stesso intervallo verranno accumulati e sarà usato il valore medio.</translation>
+    </message>
+    <message>
+        <source>Time interval</source>
+        <translation>Intervallo di tempo</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation>3</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation>5</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation>10</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation>15</translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation>20</translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation>30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation>60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation>120</translation>
+    </message>
+    <message>
+        <source>180</source>
+        <translation>180</translation>
+    </message>
+    <message>
+        <source>240</source>
+        <translation>240</translation>
+    </message>
+    <message>
+        <source>300</source>
+        <translation>300</translation>
+    </message>
+    <message>
+        <source>600</source>
+        <translation>600</translation>
+    </message>
+    <message>
+        <source>900</source>
+        <translation>900</translation>
+    </message>
+    <message>
+        <source>1200</source>
+        <translation>1200</translation>
+    </message>
+    <message>
+        <source>1800</source>
+        <translation>1800</translation>
+    </message>
+    <message>
+        <source>3600</source>
+        <translation>3600</translation>
+    </message>
+    <message>
+        <source>The format to use for the labels of the time axis.</source>
+        <translation>Il formato da usare per le etichette dell&apos;asse del tempo.</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation>Formato dell&apos;orario</translation>
+    </message>
+    <message>
+        <source>hh:mm</source>
+        <translation>hh:mm</translation>
+    </message>
+    <message>
+        <source>hh</source>
+        <translation>hh</translation>
+    </message>
+    <message>
+        <source>The size of the pie</source>
+        <translation>La dimensione del grafico a torta</translation>
+    </message>
+    <message>
+        <source>Pie size</source>
+        <translation>Dimensione del grafico</translation>
+    </message>
+    <message>
+        <source>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</source>
+        <translation>Il numero massimo di fette in cui verrà diviso il grafico a torta.
+Le porzioni in eccesso verratto raggruppate in una singola fetta.</translation>
+    </message>
+    <message>
+        <source>Maximum slices</source>
+        <translation>Massimo numero di fette</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation>Relazionale</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>Aspetto</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1871,38 +2057,6 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
     <message>
         <source>Unexpected WebServer</source>
         <translation>WebServer inaspettato</translation>
-    </message>
-    <message>
-        <source>An error occured while processing</source>
-        <translation>È avvenuto un errore nel processare</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation>È avvenuto un errore nel processare le date</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation>È avvenuto un errore nel processare &apos;%1&apos; dal database</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Anni</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation>Mesi</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation>Giorni</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation>Valore responsabile per l&apos;errore</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation>Nome della tabella del database</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2039,6 +2193,34 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
     <message>
         <source>Saturday</source>
         <translation>Sabato</translation>
+    </message>
+    <message>
+        <source>Relational Count</source>
+        <translation>Conteggio relazionale</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Anno</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mese</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Giorno</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation>Ora</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation>Minuto</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation>Secondo</translation>
     </message>
 </context>
 </TS>

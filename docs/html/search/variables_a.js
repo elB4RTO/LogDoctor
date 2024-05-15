@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['separators_0',['separators',['../structLogsFormat.html#aab4ae0212440e906f09c0b91c699aaf9',1,'LogsFormat']]],
-  ['snake_1',['snake',['../classSnakeGame.html#a7448c2b54b8bc6e7b3d1d4aee12fbad7',1,'SnakeGame']]],
-  ['starts_2',['starts',['../structCraplog_1_1LogName.html#a6c853d2801446e1a6975e81a7c1bbace',1,'Craplog::LogName']]],
-  ['string_3',['string',['../structLogsFormat.html#a504de7eb43b1992c22c2a46627992a75',1,'LogsFormat']]]
+  ['x_0',['x',['../classFood.html#af35fa376e635e2de2eaf8861654215fe',1,'Food::x'],['../structBodyPart.html#a51183c659a9618d7a4a497c118f0df6c',1,'BodyPart::x']]]
 ];

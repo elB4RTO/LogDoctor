@@ -420,7 +420,7 @@ IF ERRORLEVEL 1 (
 cd build
 
 :: Prepare build files
-"%cmake_path%" "%logdocdir%/logdoctor" "-DCMAKE_BUILD_TYPE:STRING=MinSizeRel" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=%cxx_compiler%" "-DCMAKE_PREFIX_PATH:PATH=%prefix_path%" "-DQT_DIR:PATH=%qt_dir%"
+"%cmake_path%" "%logdocdir%/logdoctor" "-DCMAKE_BUILD_TYPE:STRING=Release" "-DCMAKE_GENERATOR:STRING=NMake Makefiles JOM" "-DCMAKE_MAKE_PROGRAM:STRING=jom" "-DCMAKE_CXX_COMPILER:FILEPATH=%cxx_compiler%" "-DCMAKE_PREFIX_PATH:PATH=%prefix_path%" "-DQT_DIR:PATH=%qt_dir%"
 IF ERRORLEVEL 1 (
 	ECHO:
 	ECHO Error: failed to prepare cmake files
@@ -430,7 +430,7 @@ IF ERRORLEVEL 1 (
 )
 
 :: Build the project
-"%cmake_path%" --build ./ --target all -j%NUMBER_OF_PROCESSORS%
+"%cmake_path%" --build ./ --target LogDoctor -j%NUMBER_OF_PROCESSORS%
 IF ERRORLEVEL 1 (
 	ECHO:
 	ECHO Error: failed to compile

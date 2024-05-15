@@ -81,6 +81,11 @@
          </property>
          <item>
           <property name="text">
+           <string notr="true">v4.01</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string notr="true">v4.00</string>
           </property>
          </item>

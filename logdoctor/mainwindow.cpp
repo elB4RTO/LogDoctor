@@ -31,7 +31,9 @@
 #include "modules/craplog/lib.h"
 
 #include "modules/crapview/lib.h"
-#include "modules/crapview/modules/filters.h"
+#include "modules/crapview/utilities/filters.h"
+
+#include "modules/crapconf/lib.h"
 
 #include "tools/crappath/crappath.h"
 #include "tools/crapnote/crapnote.h"
@@ -221,6 +223,11 @@ MainWindow::MainWindow(QWidget *parent)
     // charts
     this->ui->box_ConfCharts_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::charts_theme) );
     this->refreshChartsPreview();
+    this->ui->box_ConfCharts_Speed_TimeInterval->setCurrentText( QString::number(this->crapview.getSpeedTimeInterval()) );
+    this->ui->box_ConfCharts_Speed_TimeFormat->setCurrentText( this->crapview.getSpeedTimeFormat() );
+    this->ui->doubleSpinBox_ConfCharts_Count_PieSize->setValue( this->crapview.getCountPieSize() );
+    this->ui->spinBox_ConfCharts_Count_MaxSlices->setValue( this->crapview.getCountMaxSlices() );
+    this->ui->box_ConfCharts_Relat_TimeFormat->setCurrentText( this->crapview.getRelatTimeFormat() );
     // databases
     this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
@@ -847,6 +854,56 @@ void MainWindow::readConfigs()
                         invalid_lines.append( QString::fromStdString( line ) );
                     }
 
+                } else if ( var == "CrapviewSpeedTimeInterval" ) {
+                    try {
+                        const qint64 value{ std::stoll( val ) };
+                        if ( const int index{this->ui->box_ConfCharts_Speed_TimeInterval->findText( QString::fromStdString( val ) )}; index >= 0 ) {
+                            this->crapview.setSpeedTimeInterval( value );
+                        } else {
+                            invalid_lines.append( QString::fromStdString( line ) );
+                        }
+                    } catch ( ... ) { // std::exception
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewSpeedTimeFormat" ) {
+                    if ( val == "hh:mm" || val == "hh" ) {
+                        this->crapview.setSpeedTimeFormat( QString::fromStdString( val ) );
+                    } else {
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewCountPieSize" ) {
+                    try {
+                        const qreal value{ std::stod( val ) };
+                        if ( value >= 0.6 && value <= 0.8 ) {
+                            this->crapview.setCountPieSize( value );
+                        } else {
+                            invalid_lines.append( QString::fromStdString( line ) );
+                        }
+                    } catch ( ... ) { // std::exception
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewCountMaxSlices" ) {
+                    try {
+                        const int value{ std::stoi( val ) };
+                        if ( value >= 1 && value <= 31 ) {
+                            this->crapview.setCountMaxSlices( value );
+                        } else {
+                            invalid_lines.append( QString::fromStdString( line ) );
+                        }
+                    } catch ( ... ) { // std::exception
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
+                } else if ( var == "CrapviewRelationalTimeFormat" ) {
+                    if ( val == "hh:mm" || val == "hh" ) {
+                        this->crapview.setRelatTimeFormat( QString::fromStdString( val ) );
+                    } else {
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+
                 }/* else {
                     // not valid
                 }*/
@@ -1063,6 +1120,11 @@ void MainWindow::writeConfigs()
         //// CRAPVIEW ////
         configs += "\n\n[Crapview]";
         configs += "\nCrapviewDialogsLevel=" + toString( this->crapview.getDialogsLevel() );
+        configs += "\nCrapviewSpeedTimeInterval=" + std::to_string( this->crapview.getSpeedTimeInterval() );
+        configs += "\nCrapviewSpeedTimeFormat=" + this->crapview.getSpeedTimeFormat().toStdString();
+        configs += "\nCrapviewCountPieSize=" + std::to_string( this->crapview.getCountPieSize() );
+        configs += "\nCrapviewCountMaxSlices=" + std::to_string( this->crapview.getCountMaxSlices() );
+        configs += "\nCrapviewRelationalTimeFormat=" + this->crapview.getRelatTimeFormat().toStdString();
 
         // write on file
         try {
@@ -1439,6 +1501,14 @@ void MainWindow::updateUiIcons()
                 icon_name += "conf_dialogs";
             } else if ( text == tr("Charts") ) {
                 icon_name += "conf_charts";
+            } else if ( text == tr("Appearance") ) {
+                icon_name += "conf_charts_style";
+            } else if ( text == tr("Speed") ) {
+                icon_name += "conf_speed";
+            } else if ( text == tr("Count") ) {
+                icon_name += "conf_count";
+            } else if ( text == tr("Relational") ) {
+                icon_name += "conf_relational";
             } else if ( text == tr("TextBrowser") ) {
                 icon_name += "conf_textbrowser";
             } else if ( text == tr("Databases") ) {
@@ -1559,9 +1629,10 @@ void MainWindow::updateUiFonts()
     const QFont& small_font{ this->fonts.at( "main_small" ) };
     const QFont& font{ this->fonts.at( "main" ) };
     const QFont& big_font{ this->fonts.at( "main_big" ) };
-    QFont menu_font{ this->fonts.at( "main_small" ) };
+    const QFont& tb_font{ this->TB.getFont() };
+    QFont menu_font{ small_font };
     menu_font.setPointSizeF( this->font_size_small+1.5 );
-    QFont header_font{ this->fonts.at( "main_small" ) };
+    QFont header_font{ small_font };
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
     this->ui->menuLanguage->setFont( menu_font );
@@ -1588,7 +1659,7 @@ void MainWindow::updateUiFonts()
     this->ui->listLogFiles->setFont( font );
     this->ui->listLogFiles->headerItem()->setFont( 0, header_font );
     this->ui->listLogFiles->headerItem()->setFont( 1, header_font );
-    this->ui->textLogFiles->setFont( this->TB.getFont() );
+    this->ui->textLogFiles->setFont( tb_font );
     // log files parse
     this->ui->label_MakeStats_Size->setFont( font );
     this->ui->label_MakeStats_Lines->setFont( font );
@@ -1750,11 +1821,21 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfTextBrowser_ColorScheme->setFont( big_font );
     this->ui->box_ConfTextBrowser_ColorScheme->setFont( font );
     this->ui->label_ConfTextBrowser_Preview->setFont( big_font );
-    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( this->TB.getFont() );
+    this->ui->textBrowser_ConfTextBrowser_Preview->setFont( tb_font );
     // conf charts
     this->ui->label_ConfCharts_Theme->setFont( big_font );
     this->ui->box_ConfCharts_Theme->setFont( font );
     this->ui->label_ConfCharts_Preview->setFont( big_font );
+    this->ui->label_ConfCharts_Speed_TimeInterval->setFont( big_font );
+    this->ui->box_ConfCharts_Speed_TimeInterval->setFont( font );
+    this->ui->label_ConfCharts_Speed_TimeFormat->setFont( big_font );
+    this->ui->box_ConfCharts_Speed_TimeFormat->setFont( font );
+    this->ui->label_ConfCharts_Count_PieSize->setFont( big_font );
+    this->ui->doubleSpinBox_ConfCharts_Count_PieSize->setFont( font );
+    this->ui->label_ConfCharts_Count_MaxSlices->setFont( big_font );
+    this->ui->spinBox_ConfCharts_Count_MaxSlices->setFont( font );
+    this->ui->label_ConfCharts_Relat_TimeFormat->setFont( big_font );
+    this->ui->box_ConfCharts_Relat_TimeFormat->setFont( font );
     // conf databases
     this->ui->label_ConfDatabases_Paths->setFont( big_font );
     this->ui->label_ConfDatabases_Data->setFont( font );
@@ -1781,7 +1862,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfApache_Format_String->setFont( font );
     this->ui->inLine_ConfApache_Format_String->setFont( font );
     this->ui->button_ConfApache_Format_Sample->setFont( font );
-    this->ui->preview_ConfApache_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfApache_Format_Sample->setFont( tb_font );
     this->ui->box_ConfApache_Warnlist_Field->setFont( font );
     this->ui->checkBox_ConfApache_Warnlist_Used->setFont( font );
     this->ui->inLine_ConfApache_Warnlist_String->setFont( font );
@@ -1796,7 +1877,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfNginx_Format_String->setFont( font );
     this->ui->inLine_ConfNginx_Format_String->setFont( font );
     this->ui->button_ConfNginx_Format_Sample->setFont( font );
-    this->ui->preview_ConfNginx_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfNginx_Format_Sample->setFont( tb_font );
     this->ui->box_ConfNginx_Warnlist_Field->setFont( font );
     this->ui->checkBox_ConfNginx_Warnlist_Used->setFont( font );
     this->ui->inLine_ConfNginx_Warnlist_String->setFont( font );
@@ -1811,7 +1892,7 @@ void MainWindow::updateUiFonts()
     this->ui->label_ConfIis_Format_String->setFont( font );
     this->ui->inLine_ConfIis_Format_String->setFont( font );
     this->ui->button_ConfIis_Format_Sample->setFont( font );
-    this->ui->preview_ConfIis_Format_Sample->setFont( this->TB.getFont() );
+    this->ui->preview_ConfIis_Format_Sample->setFont( tb_font );
     this->ui->box_ConfIis_Warnlist_Field->setFont( font );
     this->ui->checkBox_ConfIis_Warnlist_Used->setFont( font );
     this->ui->inLine_ConfIis_Warnlist_String->setFont( font );
@@ -2024,7 +2105,7 @@ void MainWindow::makeInitialChecks()
                 ok &= false;
             } else {
                 this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                this->craplog.hashOps.loadUsedHashesLists( this->db_hashes_path + "/" + DatabasesNames::hashes );
+                this->craplog.hasher.loadUsedHashesLists( this->db_hashes_path + "/" + DatabasesNames::hashes );
             }
         }
     }
@@ -2788,10 +2869,10 @@ void MainWindow::refreshFinished()
     // refresh finished, back to normal state
     if ( this->craplog.getLogsListSize() > 0ul ) {
         this->ui->checkBox_LogFiles_CheckAll->setEnabled( true );
+        this->ui->button_LogFiles_RefreshList->setEnabled( true );
+        this->ui->button_LogFiles_ViewFile->setEnabled( true );
         this->ui->listLogFiles->setEnabled( true );
     }
-    this->ui->button_LogFiles_RefreshList->setEnabled( true );
-    this->ui->button_LogFiles_ViewFile->setEnabled( true );
     this->ui->button_LogFiles_Apache->setEnabled( true );
     this->ui->button_LogFiles_Nginx->setEnabled( true );
     this->ui->button_LogFiles_Iis->setEnabled( true );
@@ -3241,7 +3322,8 @@ void MainWindow::drawStatsWarn()
 {
     const int wsIndex{ this->ui->box_StatsWarn_WebServer->currentIndex() };
     this->ui->table_StatsWarn->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
-    this->ui->table_StatsWarn->setRowCount(0);
+    this->ui->table_StatsWarn->setRowCount( 0 );
+    this->ui->chart_StatsWarn->setChart( new QChart() );
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -3425,7 +3507,8 @@ void MainWindow::on_button_StatsSpeed_Draw_clicked()
 void MainWindow::drawStatsSpeed()
 {
     this->ui->table_StatsSpeed->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
-    this->ui->table_StatsSpeed->setRowCount(0);
+    this->ui->table_StatsSpeed->setRowCount( 0 );
+    this->ui->chart_StatsSpeed->setChart( new QChart() );
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_StatsSpeed,
@@ -3669,7 +3752,8 @@ void MainWindow::on_button_StatsCount_Client_clicked()
 void MainWindow::drawStatsCount()
 {
     this->ui->table_StatsCount->horizontalHeader()->setSortIndicator( -1, Qt::SortOrder::AscendingOrder );
-    this->ui->table_StatsCount->setRowCount(0);
+    this->ui->table_StatsCount->setRowCount( 0 );
+    this->ui->chart_StatsCount->setChart( new QChart() );
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -3955,6 +4039,7 @@ void MainWindow::on_button_StatsDay_Draw_clicked()
 void MainWindow::drawStatsDay()
 {
     const bool period{ this->ui->checkBox_StatsDay_Period->isChecked() };
+    this->ui->chart_StatsDay->setChart( new QChart() );
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -4248,6 +4333,7 @@ void MainWindow::on_button_StatsRelat_Draw_clicked()
 }
 void MainWindow::drawStatsRelat()
 {
+    this->ui->chart_StatsRelat->setChart( new QChart() );
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
         this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
@@ -4429,58 +4515,66 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
     if ( section == tr("General") ) {
         return;
     } else if ( section == tr("Window") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(0);
+        this->setConfigsPage( General_Window );
     } else if ( section == tr("Dialogs") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(1);
+        this->setConfigsPage( General_Dialogs );
     } else if ( section == tr("Charts") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(2);
+        return;
+    } else if ( section == tr("Appearance") ) {
+        this->setConfigsPage( General_Charts_Appearance );
+    } else if ( section == tr("Speed") ) {
+        this->setConfigsPage( General_Charts_Speed );
+    } else if ( section == tr("Count") ) {
+        this->setConfigsPage( General_Charts_Count );
+    } else if ( section == tr("Relational") ) {
+        this->setConfigsPage( General_Charts_Relational );
     } else if ( section == tr("TextBrowser") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(3);
+        this->setConfigsPage( General_TextBrowser );
     } else if ( section == tr("Databases") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(4);
+        this->setConfigsPage( General_Databases );
     } else if ( section == tr("Logs") ) {
         return;
     } else if ( section == tr("Defaults") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(5);
+        this->setConfigsPage( Logs_Defaults );
     } else if ( section == tr("Control") ) {
-        this->ui->stackedPages_Conf->setCurrentIndex(6);
+        this->setConfigsPage( Logs_Control );
     } else if ( section == tr("Apache2") || section == tr("Nginx") || section == tr("IIS") ) {
         return;
     } else if ( section == tr("Path") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(7);
+            this->setConfigsPage( Logs_Apache2_Path );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(11);
+            this->setConfigsPage( Logs_Nginx_Path );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(15);
+            this->setConfigsPage( Logs_IIS_Path );
         }
     } else if ( section == tr("Format") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(8);
+            this->setConfigsPage( Logs_Apache2_Format );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(12);
+            this->setConfigsPage( Logs_Nginx_Format );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(16);
+            this->setConfigsPage( Logs_IIS_Format );
         }
     } else if ( section == tr("Warnlists") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(9);
+            this->setConfigsPage( Logs_Apache2_Warnlists );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(13);
+            this->setConfigsPage( Logs_Nginx_Warnlists );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(17);
+            this->setConfigsPage( Logs_IIS_Warnlists );
         }
     } else if ( section == tr("Blacklists") ) {
         const QString parent{ item->parent()->text(0) };
         if ( parent == tr("Apache2") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(10);
+            this->setConfigsPage( Logs_Apache2_Blacklists );
         } else if ( parent == tr("Nginx") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(14);
+            this->setConfigsPage( Logs_Nginx_Blacklists );
         } else if ( parent == tr("IIS") ) {
-            this->ui->stackedPages_Conf->setCurrentIndex(18);
+            this->setConfigsPage( Logs_IIS_Blacklists );
         }
     } else {
         throw("Unexpected Conf section: "+section.toStdString());
@@ -4490,6 +4584,11 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
 void MainWindow::on_tree_ConfSections_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     this->on_tree_ConfSections_itemClicked( item, column );
+}
+
+void MainWindow::setConfigsPage( const ConfigsPage page )
+{
+    this->ui->stackedPages_Conf->setCurrentIndex( page );
 }
 
 /////////////////
@@ -4709,6 +4808,31 @@ void MainWindow::refreshChartsPreview()
     ColorSec::applyChartTheme(
         this->fonts,
         this->ui->chart_ConfCharts_Preview );
+}
+
+void MainWindow::on_box_ConfCharts_Speed_TimeInterval_currentTextChanged(const QString& arg1)
+{
+    this->crapview.setSpeedTimeInterval( arg1.toLong() );
+}
+
+void MainWindow::on_box_ConfCharts_Speed_TimeFormat_currentTextChanged(const QString& arg1)
+{
+    this->crapview.setSpeedTimeFormat( arg1 );
+}
+
+void MainWindow::on_doubleSpinBox_ConfCharts_Count_PieSize_valueChanged(double arg1)
+{
+    this->crapview.setCountPieSize( arg1 );
+}
+
+void MainWindow::on_spinBox_ConfCharts_Count_MaxSlices_valueChanged(int arg1)
+{
+    this->crapview.setCountMaxSlices( arg1 );
+}
+
+void MainWindow::on_box_ConfCharts_Relat_TimeFormat_currentTextChanged(const QString& arg1)
+{
+    this->crapview.setRelatTimeFormat( arg1 );
 }
 
 

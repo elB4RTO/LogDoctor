@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['fields_0',['fields',['../structLogsFormat.html#af59e2f67fcf791a98e4003e894f694f9',1,'LogsFormat']]],
-  ['final_1',['final',['../structLogsFormat.html#ac3e0736a6c3544a39c3c85f719eb1553',1,'LogsFormat']]],
-  ['food_2',['food',['../classSnakeGame.html#a24bb09f513593f8c816b41134f8684c3',1,'SnakeGame']]]
+  ['image_0',['image',['../structBodyPart.html#a1196ac7004a9559d2f2ef380885f2867',1,'BodyPart']]],
+  ['img_5frat_1',['img_rat',['../classFood.html#ad7ca002e1067c45e362f2193f679ac77',1,'Food']]],
+  ['initial_2',['initial',['../structLogsFormat.html#a160b9942307a37c343d28a26336ee5de',1,'LogsFormat']]]
 ];

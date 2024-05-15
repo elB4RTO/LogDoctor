@@ -19,9 +19,10 @@
 
 #include "modules/craplog/modules/lib.h"
 #include "modules/craplog/modules/donuts.h"
-#include "modules/craplog/modules/logs.h"
-#include "modules/craplog/modules/workers/lister.h"
-#include "modules/craplog/modules/workers/parser.h"
+#include "modules/craplog/modules/formats.h"
+#include "modules/craplog/workers/lister.h"
+#include "modules/craplog/workers/parser.h"
+#include "modules/craplog/utilities/logs.h"
 
 #include <QPainter>
 #include <QWaitCondition>
@@ -87,7 +88,7 @@ DialogsLevel Craplog::getDialogsLevel() const noexcept
 void Craplog::setDialogsLevel( const DialogsLevel new_level ) noexcept
 {
     this->dialogs_level = new_level;
-    this->hashOps.setDialogLevel( new_level );
+    this->hasher.setDialogLevel( new_level );
 }
 
 const std::string& Craplog::getStatsDatabasePath() const noexcept
@@ -138,7 +139,7 @@ bool Craplog::setApacheLogFormat( const std::string& format_string ) noexcept
 {
     try {
         this->logs_formats.at( WS_APACHE ) =
-            this->formatOps.processApacheFormatString( format_string );
+            FormatOps::processApacheFormatString( format_string );
         this->logs_format_strings.at( WS_APACHE ) = format_string;
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -153,7 +154,7 @@ bool Craplog::setNginxLogFormat( const std::string& format_string ) noexcept
 {
     try {
         this->logs_formats.at( WS_NGINX ) =
-            this->formatOps.processNginxFormatString( format_string );
+            FormatOps::processNginxFormatString( format_string );
         this->logs_format_strings.at( WS_NGINX ) = format_string;
     } catch ( LogFormatException& e ) {
         DialogSec::errInvalidLogFormatString( e.what() );
@@ -168,7 +169,7 @@ bool Craplog::setIisLogFormat( const std::string& format_string, const IISLogsMo
 {
     try {
         this->logs_formats.at( WS_IIS ) =
-            this->formatOps.processIisFormatString( format_string, log_module );
+            FormatOps::processIisFormatString( format_string, log_module );
         this->logs_format_strings.at( WS_IIS ) = format_string;
         this->changeIisLogsBaseNames( log_module );
     } catch ( LogFormatException& e ) {
@@ -183,32 +184,24 @@ bool Craplog::setIisLogFormat( const std::string& format_string, const IISLogsMo
 
 QString Craplog::getLogsFormatSample( const WebServer& web_server ) const
 {
-    switch ( web_server ) {
-        case WS_APACHE:
-            return this->formatOps.getApacheLogSample( this->logs_formats.at( web_server ) );
-        case WS_NGINX:
-            return this->formatOps.getNginxLogSample( this->logs_formats.at( web_server ) );
-        case WS_IIS:
-            return this->formatOps.getIisLogSample( this->logs_formats.at( web_server ) );
-        default:
-            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(web_server)) );
-    }
+    return FormatOps::getLogLineSample(
+        web_server, this->logs_formats.at( web_server ) );
 }
 
 bool Craplog::checkCurrentLogsFormat() const noexcept
 {
     if ( this->current_log_format.string.empty() ) {
-            // format string not set
-            DialogSec::errLogFormatNotSet( nullptr );
-            return false;
+        // format string not set
+        DialogSec::errLogFormatNotSet( nullptr );
+        return false;
     } else if ( this->current_log_format.fields.empty() ) {
-            // no field, useless to parse
-            DialogSec::errLogFormatNoFields( nullptr );
-            return false;
+        // no field, useless to parse
+        DialogSec::errLogFormatNoFields( nullptr );
+        return false;
     } else if ( this->current_log_format.separators.size() < this->current_log_format.fields.size()-1 ) {
-            // at least one separator is missing between two (or more) fields
-            DialogSec::errLogFormatNoSeparators( nullptr );
-            return false;
+        // at least one separator is missing between two (or more) fields
+        DialogSec::errLogFormatNoSeparators( nullptr );
+        return false;
     }
     return true;
 }
@@ -270,7 +263,7 @@ const std::vector<LogFile>& Craplog::getLogsList() const noexcept
 const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 {
     const auto item{ std::find_if( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& file){ return file.name()==file_name; } ) };
+        [&file_name](const LogFile& file){ return file.name()==file_name; } ) };
     if ( item != this->logs_list.end() ) return *item;
     // should be unreachable
     throw GenericException("File item not found");
@@ -281,7 +274,7 @@ const LogFile& Craplog::getLogFileItem( const QString& file_name ) const
 bool Craplog::setLogFileSelected( const QString& file_name ) noexcept
 {
     const auto item{ std::find_if( this->logs_list.begin(), this->logs_list.end(),
-          [&file_name](const LogFile& file){ return file.name() == file_name; } ) };
+        [&file_name](const LogFile& file){ return file.name() == file_name; } ) };
     if ( item != this->logs_list.end() ) {
         item->setSelected();
         return true;
@@ -293,8 +286,7 @@ void Craplog::clearLogFilesSelection() noexcept
 {
     std::ignore = std::for_each(
         this->logs_list.begin(), this->logs_list.end(),
-        []( LogFile& it )
-          { if (it.isSelected()) it.setUnselected(); } );
+        [](LogFile& it){ if (it.isSelected()) it.setUnselected(); } );
 }
 
 
@@ -308,8 +300,8 @@ void Craplog::scanLogsDir()
         this->dialogs_level,
         this->logs_paths.at( this->current_web_server ),
         this->logs_formats.at( this->current_web_server ),
-        this->hashOps,
-        [this]( const std::string& file_name)
+        this->hasher,
+        [this]( const std::string& file_name )
               { return this->isFileNameValid( file_name ); }
     ) };
     QThread* worker_thread{ new QThread() };
@@ -507,7 +499,7 @@ bool Craplog::checkStuff()
                 // appears twice in the list
                 QString msg{ file.name() };
                 if ( this->dialogs_level == DL_EXPLANATORY ) {
-                        msg += "\n" + QString::fromStdString( file.hash() );
+                    msg += "\n" + QString::fromStdString( file.hash() );
                 }
                 const int choice = DialogSec::choiceDuplicateFile( msg );
                 if ( choice == 0 ) {
@@ -720,9 +712,6 @@ void Craplog::hireWorker( const Blacklists& blacklists ) const
 void Craplog::stopWorking( const bool successful )
 {
     this->db_edited = successful;
-    if ( successful ) {
-        // insert the hashes of the used files
-    }
     emit this->finishedWorking();
 }
 
@@ -793,7 +782,7 @@ void Craplog::updateChartData( const size_t total_size, const size_t total_lines
 void Craplog::storeFilesHashes( QWaitCondition* wc, bool* successful) noexcept
 {
     try {
-        this->hashOps.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
+        this->hasher.insertUsedHashes( this->db_hashes_path, this->used_files_hashes, this->current_web_server );
         *successful |= true;
     } catch (...) {
         DialogSec::errFailedInsertUsedHashes();

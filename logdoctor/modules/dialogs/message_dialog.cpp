@@ -13,6 +13,9 @@
 #include <unordered_map> // leave this here for clang
 
 
+namespace /*private*/
+{
+
 enum StyleId : uint32_t {
     TEXT,
     WINDOW,
@@ -137,6 +140,8 @@ QString getStylesheet()
         "   background-color: "+style.at(SCROLLBAR_CONTROLS)+";"
         "}";
 }
+
+} //namespace (private)
 
 
 DialogMsg::DialogMsg(const QString& title, const QString& text, const QString& additional, const MsgType type, QWidget* parent )

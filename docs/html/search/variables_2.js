@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['direction_0',['direction',['../structBodyPart.html#ad732b10425a86790821523da2388910b',1,'BodyPart']]]
+  ['ends_0',['ends',['../structCraplog_1_1LogName.html#a84d26cb4dc6f8efd87b26ad77d048e15',1,'Craplog::LogName']]]
 ];

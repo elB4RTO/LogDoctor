@@ -251,6 +251,38 @@
         <source>Redesigned configs section</source>
         <translation type="unfinished">Section de configuration repensée</translation>
     </message>
+    <message>
+        <source>Version 4</source>
+        <translation type="unfinished">Version 4</translation>
+    </message>
+    <message>
+        <source>Stability improvements</source>
+        <translation type="unfinished">Améliorations de la stabilité</translation>
+    </message>
+    <message>
+        <source>Generating warnings dinamically</source>
+        <translation type="unfinished">Génération dynamique des alertes</translation>
+    </message>
+    <message>
+        <source>New tool:</source>
+        <translation type="unfinished">Nouvel outil:</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">Journal des modifications</translation>
+    </message>
+    <message>
+        <source>Improved project structure</source>
+        <translation type="unfinished">Structure de projet améliorée</translation>
+    </message>
+    <message>
+        <source>Modernized Cmake usage</source>
+        <translation type="unfinished">Utilisation modernisée de Cmake</translation>
+    </message>
+    <message>
+        <source>Tweakable parameters for some of the charts:</source>
+        <translation type="unfinished">Paramètres modifiables pour certains graphiques:</translation>
+    </message>
 </context>
 <context>
     <name>Crapinfo</name>
@@ -447,7 +479,7 @@ marqueur pas trouvé</translation>
     <name>DialogMsg</name>
     <message>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation type="unfinished">Ok</translation>
     </message>
 </context>
 <context>
@@ -1003,6 +1035,28 @@ Continuer?</translation>
     <message>
         <source>No data has been found that matches with the currently set parameters</source>
         <translation type="unfinished">Aucune donnée correspondant aux paramètres actuellement définis n&apos;a été trouvée</translation>
+    </message>
+    <message>
+        <source>Missing field in log format</source>
+        <translation type="unfinished">Champ manquant au format journal</translation>
+    </message>
+    <message>
+        <source>An important field is missing from the provided format:</source>
+        <translation type="unfinished">Un champ important manque dans le format fourni:</translation>
+    </message>
+    <message>
+        <source>The quality of the statistics may be seriously compromized</source>
+        <translation type="unfinished">La qualité des statistiques peut être sérieusement compromise</translation>
+    </message>
+    <message>
+        <source>&apos;Carriage Return&apos; in log format</source>
+        <translation type="unfinished">&apos;Carriage Return&apos; au format journal</translation>
+    </message>
+    <message>
+        <source>The provided format contains the &apos;Carriage Return&apos;.
+This may lead to data losses or crashes if not used with caution</source>
+        <translation type="unfinished">Le format fourni contient le &apos;Carriage Return&apos;.
+Cela peut entraîner des pertes de données ou des plantages s&apos;il n&apos;est pas utilisé avec prudence</translation>
     </message>
 </context>
 <context>
@@ -1738,6 +1792,138 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <source>Show the changelog</source>
         <translation type="unfinished">Afficher le journal des modifications</translation>
     </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished">Vitesse</translation>
+    </message>
+    <message>
+        <source>Represents a step in the time axis, in seconds.
+All the values falling inside the same interval will be merged and the mean value will be used.</source>
+        <translation type="unfinished">Représente une étape sur l&apos;axe du temps, en secondes.
+Toutes les valeurs comprises dans le même intervalle seront fusionnées et la valeur moyenne sera utilisée.</translation>
+    </message>
+    <message>
+        <source>Time interval</source>
+        <translation type="unfinished">Intervalle de temps</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation>3</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation>5</translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation>10</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation>15</translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation>20</translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation>30</translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation>60</translation>
+    </message>
+    <message>
+        <source>120</source>
+        <translation>120</translation>
+    </message>
+    <message>
+        <source>180</source>
+        <translation>180</translation>
+    </message>
+    <message>
+        <source>240</source>
+        <translation>240</translation>
+    </message>
+    <message>
+        <source>300</source>
+        <translation>300</translation>
+    </message>
+    <message>
+        <source>600</source>
+        <translation>600</translation>
+    </message>
+    <message>
+        <source>900</source>
+        <translation>900</translation>
+    </message>
+    <message>
+        <source>1200</source>
+        <translation>1200</translation>
+    </message>
+    <message>
+        <source>1800</source>
+        <translation>1800</translation>
+    </message>
+    <message>
+        <source>3600</source>
+        <translation>3600</translation>
+    </message>
+    <message>
+        <source>The format to use for the labels of the time axis.</source>
+        <translation type="unfinished">Le format à utiliser pour les étiquettes de l&apos;axe du temps.</translation>
+    </message>
+    <message>
+        <source>Time format</source>
+        <translation type="unfinished">Format de l&apos;heure</translation>
+    </message>
+    <message>
+        <source>hh:mm</source>
+        <translation type="unfinished">hh:mm</translation>
+    </message>
+    <message>
+        <source>hh</source>
+        <translation type="unfinished">hh</translation>
+    </message>
+    <message>
+        <source>The size of the pie</source>
+        <translation type="unfinished">La taille du diagramme circulaire</translation>
+    </message>
+    <message>
+        <source>Pie size</source>
+        <translation type="unfinished">Taille de la tarte</translation>
+    </message>
+    <message>
+        <source>The maximum number of slices that the pie will be composed of.
+Exceeding slices will be grouped into one comprehensive slice.</source>
+        <translation type="unfinished">Le nombre maximum de tranches dont la tarte sera composée.
+Les tranches excédentaires seront regroupées en une seule tranche compréhensif.</translation>
+    </message>
+    <message>
+        <source>Maximum slices</source>
+        <translation type="unfinished">Tranches maximales</translation>
+    </message>
+    <message>
+        <source>Relational</source>
+        <translation type="unfinished">Relationnelle</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation type="unfinished">Apparence</translation>
+    </message>
 </context>
 <context>
     <name>RichText</name>
@@ -1870,38 +2056,6 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
     <message>
         <source>Unexpected WebServer</source>
         <translation type="unfinished">WebServer inattendu</translation>
-    </message>
-    <message>
-        <source>An error occured while processing</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors du traitement</translation>
-    </message>
-    <message>
-        <source>An error occured while processing dates</source>
-        <translation type="unfinished">Une erreur s&apos;est produite lors du traitement des dates</translation>
-    </message>
-    <message>
-        <source>An error occured while parsing %1 from the database</source>
-        <translation type="unfinished">Erreur lors du traitement de &apos;%1&apos; dans la database</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Ans</translation>
-    </message>
-    <message>
-        <source>Months</source>
-        <translation>Mois</translation>
-    </message>
-    <message>
-        <source>Days</source>
-        <translation>Journées</translation>
-    </message>
-    <message>
-        <source>Value responsible for the error</source>
-        <translation type="unfinished">Valeur responsable de l&apos;erreur</translation>
-    </message>
-    <message>
-        <source>Database table name</source>
-        <translation type="unfinished">Nom de la table de la base de données</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2038,6 +2192,34 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
     <message>
         <source>Saturday</source>
         <translation type="unfinished">Samedi</translation>
+    </message>
+    <message>
+        <source>Relational Count</source>
+        <translation type="unfinished">Nombre relationnel</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished">An</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation type="unfinished">Mois</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation type="unfinished">Jour</translation>
+    </message>
+    <message>
+        <source>Hour</source>
+        <translation type="unfinished">Heure</translation>
+    </message>
+    <message>
+        <source>Minute</source>
+        <translation type="unfinished">Minute</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation type="unfinished">Seconde</translation>
     </message>
 </context>
 </TS>

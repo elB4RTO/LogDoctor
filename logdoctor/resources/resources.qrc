@@ -23,7 +23,9 @@
         <file>icons/dark/combobox_arrow.png</file>
         <file>icons/dark/conf_blacklists.png</file>
         <file>icons/dark/conf_charts.png</file>
+        <file>icons/dark/conf_charts_style.png</file>
         <file>icons/dark/conf_control.png</file>
+        <file>icons/dark/conf_count.png</file>
         <file>icons/dark/conf_databases.png</file>
         <file>icons/dark/conf_defaults.png</file>
         <file>icons/dark/conf_dialogs.png</file>
@@ -33,6 +35,8 @@
         <file>icons/dark/conf_off.png</file>
         <file>icons/dark/conf_on.png</file>
         <file>icons/dark/conf_path.png</file>
+        <file>icons/dark/conf_relational.png</file>
+        <file>icons/dark/conf_speed.png</file>
         <file>icons/dark/conf_textbrowser.png</file>
         <file>icons/dark/conf_warnlists.png</file>
         <file>icons/dark/conf_webservers.png</file>
@@ -75,7 +79,9 @@
         <file>icons/dark_native/checking.png</file>
         <file>icons/dark_native/conf_blacklists.png</file>
         <file>icons/dark_native/conf_charts.png</file>
+        <file>icons/dark_native/conf_charts_style.png</file>
         <file>icons/dark_native/conf_control.png</file>
+        <file>icons/dark_native/conf_count.png</file>
         <file>icons/dark_native/conf_databases.png</file>
         <file>icons/dark_native/conf_defaults.png</file>
         <file>icons/dark_native/conf_dialogs.png</file>
@@ -85,6 +91,8 @@
         <file>icons/dark_native/conf_off.png</file>
         <file>icons/dark_native/conf_on.png</file>
         <file>icons/dark_native/conf_path.png</file>
+        <file>icons/dark_native/conf_relational.png</file>
+        <file>icons/dark_native/conf_speed.png</file>
         <file>icons/dark_native/conf_textbrowser.png</file>
         <file>icons/dark_native/conf_warnlists.png</file>
         <file>icons/dark_native/conf_webservers.png</file>
@@ -132,7 +140,9 @@
         <file>icons/light/combobox_arrow.png</file>
         <file>icons/light/conf_blacklists.png</file>
         <file>icons/light/conf_charts.png</file>
+        <file>icons/light/conf_charts_style.png</file>
         <file>icons/light/conf_control.png</file>
+        <file>icons/light/conf_count.png</file>
         <file>icons/light/conf_databases.png</file>
         <file>icons/light/conf_defaults.png</file>
         <file>icons/light/conf_dialogs.png</file>
@@ -142,6 +152,8 @@
         <file>icons/light/conf_off.png</file>
         <file>icons/light/conf_on.png</file>
         <file>icons/light/conf_path.png</file>
+        <file>icons/light/conf_relational.png</file>
+        <file>icons/light/conf_speed.png</file>
         <file>icons/light/conf_textbrowser.png</file>
         <file>icons/light/conf_warnlists.png</file>
         <file>icons/light/conf_webservers.png</file>
@@ -184,7 +196,9 @@
         <file>icons/light_native/checking.png</file>
         <file>icons/light_native/conf_blacklists.png</file>
         <file>icons/light_native/conf_charts.png</file>
+        <file>icons/light_native/conf_charts_style.png</file>
         <file>icons/light_native/conf_control.png</file>
+        <file>icons/light_native/conf_count.png</file>
         <file>icons/light_native/conf_databases.png</file>
         <file>icons/light_native/conf_defaults.png</file>
         <file>icons/light_native/conf_dialogs.png</file>
@@ -194,6 +208,8 @@
         <file>icons/light_native/conf_off.png</file>
         <file>icons/light_native/conf_on.png</file>
         <file>icons/light_native/conf_path.png</file>
+        <file>icons/light_native/conf_relational.png</file>
+        <file>icons/light_native/conf_speed.png</file>
         <file>icons/light_native/conf_textbrowser.png</file>
         <file>icons/light_native/conf_warnlists.png</file>
         <file>icons/light_native/conf_webservers.png</file>

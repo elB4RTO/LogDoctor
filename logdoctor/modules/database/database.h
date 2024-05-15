@@ -116,6 +116,10 @@ public:
     inline void operator <<( const QString& text ) noexcept
     { stmt.append(text); }
 
+    //! Appends the given text to the internal statement
+    inline void operator <<( const QStringView text ) noexcept
+    { stmt.append(text); }
+
     //! Executes the query using the internal statement
     /*!
         Throws in case of failure
