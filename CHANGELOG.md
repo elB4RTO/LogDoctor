@@ -1,3 +1,16 @@
+# v4.01
+
+- Tweakable parameters for some of the charts:
+  - Speed
+  - Counts
+  - Relational
+- Improved project structure
+- Modernized Cmake usage
+- Code improvements
+- Tests improvements
+
+<br/><br/>
+
 # v4.00
 
 - Fixes
