@@ -7,6 +7,7 @@
 #include "utilities/strings.h"
 
 #include <vector>
+#include <unordered_map>
 
 
 using simple_fields_umap_t = std::unordered_map<std::string, LogsFormatField>;
