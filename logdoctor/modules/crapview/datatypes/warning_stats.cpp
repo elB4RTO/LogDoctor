@@ -11,7 +11,7 @@
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
 
-#if defined( Q_OS_MACOS )
+#if defined( Q_OS_MACOS ) || defined( Q_OS_BSD4 )
     #include "workarounds/ranges_join.h"
 #else
     #include <ranges>
@@ -292,7 +292,7 @@ int WarningData::insertForHour( std::vector<std::vector<QBarSet*>>& bars ) const
 
 void WarningData::insertInTable( QTableWidget*const table, const QColor& warning_color ) const
 {
-    #if defined( Q_OS_MACOS )
+    #if defined( Q_OS_MACOS ) || defined( Q_OS_BSD4 )
         const auto flattened_data{ Workarounds::join( Workarounds::join(data) ) };
         for ( const WarningDatum* datum : flattened_data ) {
             datum->insertInTable( table, warning_color );
