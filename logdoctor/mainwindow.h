@@ -8,6 +8,8 @@
 
 #include "modules/tb.h"
 
+#include "modules/security/path.h"
+
 #include "modules/database/database.h"
 
 #include "modules/blacklists/blacklists.h"
@@ -347,6 +349,10 @@ private slots:
 
     void on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1);
 
+    //// SECURITY ////
+
+    void on_checkBox_ConfSecurity_Paths_Symlinks_toggled(bool checked);
+
     //// LOGS DEFAULTS ////
 
     void on_radio_ConfDefaults_Apache_toggled(bool checked);
@@ -588,14 +594,14 @@ private:
 
     // 1: linux/bsd, 2:windows, 3:mac
     #if defined( Q_OS_MACOS )
-        const std::string configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
-        const std::string logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
+        const PathHandler configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
+        const PathHandler logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
     #elif defined( Q_OS_WINDOWS )
-        const std::string configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
-        const std::string logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
+        const PathHandler configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
+        const PathHandler logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
     #elif defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
-        const std::string configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
-        const std::string logdoc_path  { "/usr/share/LogDoctor" };
+        const PathHandler configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
+        const PathHandler logdoc_path  { std::string("/usr/share/LogDoctor") };
     #else
         #error "System not supported"
     #endif
@@ -752,13 +758,6 @@ private:
     /*std::chrono::system_clock::duration   waiter_timer_elapsed;*/
 
 
-    //! Resolves the given path and returns the canonical path
-    std::string resolvePath( const std::string& path ) const noexcept;
-
-    //! Returns the parent folder of the given path
-    std::string parentPath( const std::string& path ) const;
-
-
     ////////////////
     //// CHECKS ////
     ////////////////
@@ -787,8 +786,8 @@ private:
     //! Backs-up the logs data collection database
     void backupDatabase() const;
 
-    std::string db_data_path;
-    std::string db_hashes_path;
+    PathHandler db_data_path;
+    PathHandler db_hashes_path;
 
     // true when a process is working on a db
     bool db_working{ false };
