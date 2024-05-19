@@ -14,6 +14,7 @@
 #include "modules/exceptions.h"
 
 #include "modules/database/database.h"
+#include "modules/security/path.h"
 
 #include <ios>
 
@@ -27,8 +28,14 @@ void Hasher::setDialogLevel( const DialogsLevel new_level ) noexcept
 
 
 // reads the database holding the already used hashes
-bool Hasher::loadUsedHashesLists( const std::string& db_path ) noexcept
+bool Hasher::loadUsedHashesLists( const PathHandler& db_path ) noexcept
 {
+    const auto path_exp{ db_path.getPath() };
+    if ( ! path_exp.has_value() ) {
+        path_exp.error().showDialogMessage();
+        return false;
+    }
+
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
 
     db.open( db_path, this->dialogs_level==DL_EXPLANATORY );
@@ -56,13 +63,20 @@ bool Hasher::loadUsedHashesLists( const std::string& db_path ) noexcept
 
 
 // returns the hash
-void Hasher::digestFile( const std::string& file_path, std::string& hash )
+void Hasher::digestFile( const PathHandler& file_path, std::string& hash )
 {
     std::string content;
     try {
+        const auto path_exp{ file_path.getPath() };
+        if ( ! path_exp.has_value() ) {
+            path_exp.error().showDialogMessage();
+            throw "";
+        }
+        const path_t& path{ path_exp.value() };
+
         try {
             // try reading as gzip compressed file
-            GZutils::readFile( file_path, content );
+            GZutils::readFile( path, content );
 
         } catch ( const GenericException& ) {
             // failed closing file pointer
@@ -73,7 +87,7 @@ void Hasher::digestFile( const std::string& file_path, std::string& hash )
             if ( ! content.empty() ) {
                 content.clear();
             }
-            IOutils::readFile( file_path, content );
+            IOutils::readFile( path, content );
         }
 
     // re-catched in craplog
@@ -81,21 +95,21 @@ void Hasher::digestFile( const std::string& file_path, std::string& hash )
         // failed closing gzip file pointer
         throw GenericException( QStringLiteral("%1:\n%2").arg(
             DialogSec::tr("An error occured while reading the gzipped file"),
-            QString::fromStdString( file_path )
+            QString::fromStdString( file_path.toString() )
             ).toStdString() );
 
     } catch ( const std::ios_base::failure& ) {
         // failed reading as text
         throw GenericException( QStringLiteral("%1:\n%2").arg(
             DialogSec::tr("An error occured while reading the file"),
-            QString::fromStdString( file_path )
+            QString::fromStdString( file_path.toString() )
             ).toStdString() );
 
     } catch (...) {
         // failed somehow
         throw GenericException( QStringLiteral("%1:\n%2").arg(
             DialogSec::tr("Something failed while handling the file"),
-            QString::fromStdString( file_path )
+            QString::fromStdString( file_path.toString() )
             ).toStdString() );
     }
 
@@ -119,10 +133,16 @@ bool Hasher::hasBeenUsed( const std::string &file_hash, const WebServer& web_ser
 }
 
 
-void Hasher::insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
+void Hasher::insertUsedHashes( const PathHandler& db_path, const std::vector<std::string>& hashes, const WebServer& web_server )
 {
     const bool explain_msg{ this->dialogs_level >  DL_ESSENTIAL   };
     const bool explain_err{ this->dialogs_level == DL_EXPLANATORY };
+
+    const auto path_exp{ db_path.getPath() };
+    if ( ! path_exp.has_value() ) {
+        path_exp.error().showDialogMessage();
+        throw VoidException();
+    }
 
     DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
 

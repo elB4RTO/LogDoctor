@@ -12,6 +12,7 @@
 
 enum class WebServer;
 
+class PathHandler;
 class QSqlQuery;
 
 
@@ -32,7 +33,7 @@ public:
         \return Whether the operation has been successful or not
         \throw VoidException
     */
-    bool loadUsedHashesLists( const std::string& db_path ) noexcept;
+    bool loadUsedHashesLists( const PathHandler& db_path ) noexcept;
 
     //! Returns the hash resulting from the content of the given file
     /*!
@@ -41,7 +42,7 @@ public:
         \throw GenericException
         \see SHA256
     */
-    static void digestFile( const std::string& file_path, std::string& hash );
+    static void digestFile( const PathHandler& file_path, std::string& hash );
 
     //! Checks if the given hash equals one which is already in the list
     /*!
@@ -58,7 +59,7 @@ public:
         \param web_server_id The ID of the Web Server which generated the file
         \throw VoidException
     */
-    void insertUsedHashes( const std::string& db_path, const std::vector<std::string>& hashes, const WebServer& web_server );
+    void insertUsedHashes( const PathHandler& db_path, const std::vector<std::string>& hashes, const WebServer& web_server );
 
 private:
 

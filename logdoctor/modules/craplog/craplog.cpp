@@ -27,7 +27,6 @@
 #include <QPainter>
 #include <QWaitCondition>
 
-#include <filesystem>
 #include <thread>
 #include <exception>
 #include <ctime>
@@ -58,11 +57,11 @@ Craplog::Craplog()
     this->current_log_format = this->logs_formats.at( WS_APACHE );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( WS_APACHE, std::string{} );
+    this->logs_paths.emplace( WS_APACHE, PathHandler() );
     // nginx access/error logs location
-    this->logs_paths.emplace( WS_NGINX, std::string{} );
+    this->logs_paths.emplace( WS_NGINX, PathHandler() );
     // iis access/error logs location
-    this->logs_paths.emplace( WS_IIS, std::string{} );
+    this->logs_paths.emplace( WS_IIS, PathHandler() );
 
     // apache2 access/error log files' names
     this->logs_base_names.emplace( WS_APACHE, LogName{ .starts   = "access.log.",
@@ -91,22 +90,22 @@ void Craplog::setDialogsLevel( const DialogsLevel new_level ) noexcept
     this->hasher.setDialogLevel( new_level );
 }
 
-const std::string& Craplog::getStatsDatabasePath() const noexcept
+const PathHandler& Craplog::getStatsDatabasePath() const noexcept
 {
     return this->db_stats_path;
 }
-const std::string& Craplog::getHashesDatabasePath() const noexcept
+const PathHandler& Craplog::getHashesDatabasePath() const noexcept
 {
     return this->db_hashes_path;
 }
 
-void Craplog::setStatsDatabasePath( const std::string& path ) noexcept
+void Craplog::setStatsDatabasePath( const PathHandler& path ) noexcept
 {
-    this->db_stats_path = path + "/" + DatabasesNames::data;
+    this->db_stats_path = path / DatabasesNames::data;
 }
-void Craplog::setHashesDatabasePath( const std::string& path ) noexcept
+void Craplog::setHashesDatabasePath( const PathHandler& path ) noexcept
 {
-    this->db_hashes_path = path + "/" + DatabasesNames::hashes;
+    this->db_hashes_path = path / DatabasesNames::hashes;
 }
 
 size_t Craplog::getWarningSize() const noexcept
@@ -234,11 +233,11 @@ const LogsFormat& Craplog::getCurrentLogFormat() const noexcept
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const WebServer& web_server ) const noexcept
+const PathHandler& Craplog::getLogsPath( const WebServer& web_server ) const noexcept
 {
     return this->logs_paths.at( web_server );
 }
-void Craplog::setLogsPath( const WebServer& web_server, const std::string& new_path ) noexcept
+void Craplog::setLogsPath( const WebServer& web_server, const PathHandler& new_path ) noexcept
 {
     this->logs_paths.at( web_server ) = new_path;
 }
@@ -610,6 +609,9 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
         case WorkerDialog::errDirNotExists:
             DialogSec::errDirNotExists( args.at(0) );
             break;
+        case WorkerDialog::errPathHasSymlink:
+            DialogSec::errPathHasSymlink( args.at(0), args.at(1) );
+            break;
         case WorkerDialog::errFailedDefiningLogType:
             DialogSec::errFailedDefiningLogType( args.at(0) );
             break;
@@ -657,7 +659,7 @@ void Craplog::startWorking( const Blacklists& blacklists )
 }
 void Craplog::hireWorker( const Blacklists& blacklists ) const
 {
-    std::vector<std::string> files;
+    std::vector<PathHandler> files;
     files.reserve( this->log_files_to_use.size() );
     std::transform(
         this->log_files_to_use.cbegin(), this->log_files_to_use.cend(), std::back_inserter(files),

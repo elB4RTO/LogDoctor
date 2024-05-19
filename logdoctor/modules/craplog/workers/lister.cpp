@@ -13,7 +13,7 @@
 #include "modules/craplog/workers/lib.h"
 
 
-CraplogLister::CraplogLister( const WebServer web_server, const DialogsLevel dialogs_level, const std::string& logs_path, const LogsFormat& logs_format, const Hasher& hasher, const std::function<bool(const std::string&)> check_filename, QObject* parent )
+CraplogLister::CraplogLister( const WebServer web_server, const DialogsLevel dialogs_level, const PathHandler& logs_path, const LogsFormat& logs_format, const Hasher& hasher, const std::function<bool(const std::string&)> check_filename, QObject* parent )
     : QObject        { parent         }
     , web_server     { web_server     }
     , dialogs_level  { dialogs_level  }
@@ -22,7 +22,6 @@ CraplogLister::CraplogLister( const WebServer web_server, const DialogsLevel dia
     , hasher         { hasher         }
     , check_filename { check_filename }
 {
-
 }
 
 
@@ -34,13 +33,23 @@ void CraplogLister::quit()
 
 void CraplogLister::work()
 {
-    const std::string& logs_path{ this->logs_path };
-    if ( ! IOutils::isDir( logs_path ) ) {
-        // this directory doesn't exists
-        if ( ! logs_path.empty() ) {
+    const auto path_exp{ this->logs_path.getPath() };
+    if ( ! path_exp.has_value() ) {
+        if ( path_exp.error().isReasonSymlink() ) {
+            emit this->showDialog( WorkerDialog::errPathHasSymlink,
+                                  {QString( path_exp.error().invalid_component.c_str() ),
+                                   QString( path_exp.error().full_path.c_str() )} );
+            this->quit();
+            return;
+        } else {
             emit this->showDialog( WorkerDialog::errDirNotExists,
-                                   {QString::fromStdString( logs_path )} );
+                                  {QString::fromStdString( this->logs_path.toString() )} );
+            this->quit();
+            return;
         }
+    } else if ( ! IOutils::isDir( path_exp.value() ) ) {
+        emit this->showDialog( WorkerDialog::errDirNotExists,
+                               {QString::fromStdString( this->logs_path.toString() )} );
         this->quit();
         return;
     }
@@ -48,7 +57,7 @@ void CraplogLister::work()
     QString name;
     std::string path;
     // iterate over entries in the logs folder
-    for ( const auto& dir_entry : std::filesystem::directory_iterator{logs_path}) {
+    for ( const auto& dir_entry : std::filesystem::directory_iterator{path_exp.value()}) {
         // get the attributes
         path = dir_entry.path().string();
         name = QString::fromStdString( dir_entry.path().filename().string() );

@@ -6,6 +6,7 @@
 
 #include <QObject>
 
+class PathHandler;
 struct LogsFormat;
 struct LogFile;
 class Hasher;
@@ -22,7 +23,7 @@ public:
     explicit CraplogLister(
         const WebServer web_server,
         const DialogsLevel dialogs_level,
-        const std::string& logs_path,
+        const PathHandler& logs_path,
         const LogsFormat& logs_format,
         const Hasher& hasher,
         const std::function<bool(const std::string&)> check_filename,
@@ -51,7 +52,7 @@ private:
 
     const DialogsLevel dialogs_level;
 
-    const std::string& logs_path;
+    const PathHandler& logs_path;
 
     const LogsFormat& logs_format;
 

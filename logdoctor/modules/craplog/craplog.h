@@ -45,22 +45,22 @@ public:
     //// DATABASES ////
 
     //! Returns the path of the logs Collection database
-    const std::string& getStatsDatabasePath() const noexcept;
+    const PathHandler& getStatsDatabasePath() const noexcept;
 
     //! Returns the path of the log files' Hashes database
-    const std::string& getHashesDatabasePath() const noexcept;
+    const PathHandler& getHashesDatabasePath() const noexcept;
 
     //! Sets the new path for the logs Collection database
     /*!
         \param The new path of the database file
     */
-    void setStatsDatabasePath( const std::string& path ) noexcept;
+    void setStatsDatabasePath( const PathHandler& path ) noexcept;
 
     //! Sets the new path for the log files' Hashes database
     /*!
         \param The new path of the database file
     */
-    void setHashesDatabasePath( const std::string& path ) noexcept;
+    void setHashesDatabasePath( const PathHandler& path ) noexcept;
 
 
     ////////////////////////
@@ -100,14 +100,14 @@ public:
         \param web_server The Web Server
         \return The path of the logs' folder
     */
-    const std::string& getLogsPath( const WebServer& web_server ) const noexcept;
+    const PathHandler& getLogsPath( const WebServer& web_server ) const noexcept;
 
     //! Sets a new path for the given Web Server to search the logs in
     /*!
         \param web_server The Web Server
         \param new_path The new path
     */
-    void setLogsPath( const WebServer& web_server, const std::string& new_path ) noexcept;
+    void setLogsPath( const WebServer& web_server, const PathHandler& new_path ) noexcept;
 
 
     ///////////////////
@@ -335,8 +335,8 @@ private:
     ///////////////////
     //// DATABASES ////
 
-    std::string db_stats_path;
-    std::string db_hashes_path;
+    PathHandler db_stats_path;
+    PathHandler db_hashes_path;
 
 
     //////////////
@@ -368,7 +368,7 @@ private:
     //// LOGS ITEMS ////
 
     // the selected log files to be parsed during the process
-    std::vector<std::tuple<std::string,std::string>> log_files_to_use;
+    std::vector<std::tuple<PathHandler,std::string>> log_files_to_use;
 
     // used files hashes
     std::vector<std::string> used_files_hashes;
@@ -387,7 +387,7 @@ private:
     // currently used web server
     WebServer current_web_server{ WS_APACHE };
 
-    std::unordered_map<WebServer, std::string> logs_paths;
+    std::unordered_map<WebServer, PathHandler> logs_paths;
 
     //! Web Server specific file names criterions
     /*!

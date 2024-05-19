@@ -2,6 +2,8 @@
 #define LOGDOCTOR__CRAPLOG__MODULES__LIB_H
 
 
+#include "modules/security/path.h"
+
 #include <QString>
 #include <QMetaType>
 
@@ -25,7 +27,7 @@ enum class LogType : int8_t
 struct LogFile final
 {
     explicit LogFile() noexcept = default;
-    explicit LogFile(const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt) noexcept
+    explicit LogFile(const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const PathHandler& pt) noexcept
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
     LogFile(LogFile&& other) noexcept = default;
     LogFile& operator=(LogFile&& other) noexcept = default;
@@ -54,7 +56,7 @@ struct LogFile final
     inline const std::string& hash() const noexcept
     { return this->hash_; }
     //! Returns the path of the file, including the file name
-    inline const std::string& path() const noexcept
+    inline const PathHandler& path() const noexcept
     { return this->path_; }
 private:
     bool selected;
@@ -62,7 +64,7 @@ private:
     size_t size_;
     QString name_;
     std::string hash_;
-    std::string path_;
+    PathHandler path_;
 };
 Q_DECLARE_METATYPE( LogFile )
 
