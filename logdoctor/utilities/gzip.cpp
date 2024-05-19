@@ -83,7 +83,7 @@ public:
 namespace GZutils
 {
 
-void readFile( const std::string& path, std::string& content )
+void readFile( const std::filesystem::path& path, std::string& content )
 {
     bool successful{ true };
 

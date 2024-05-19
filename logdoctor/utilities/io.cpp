@@ -20,7 +20,7 @@ class FileHandler final
     Stream file;
 
 public:
-    explicit FileHandler( const std::string& path )
+    explicit FileHandler( const std::filesystem::path& path )
     : file{ path }
     {
         if ( ! this->file.is_open() ) {
@@ -58,7 +58,7 @@ public:
 namespace IOutils
 {
 
-bool checkFile( std::string_view path, const bool readable, const bool writable ) noexcept
+bool checkFile( const std::filesystem::path& path, const bool readable, const bool writable ) noexcept
 {
     if ( isFile( path ) ) {
         // check the needed permissions
@@ -79,7 +79,7 @@ bool checkFile( std::string_view path, const bool readable, const bool writable 
 }
 
 
-bool checkDir( std::string_view path, const bool readable, const bool writable ) noexcept
+bool checkDir( const std::filesystem::path& path, const bool readable, const bool writable ) noexcept
 {
     if ( isDir( path ) ) {
         // check the needed permissions
@@ -100,7 +100,7 @@ bool checkDir( std::string_view path, const bool readable, const bool writable )
 }
 
 
-bool makeDir( std::string_view path, std::error_code& err ) noexcept
+bool makeDir( const std::filesystem::path& path, std::error_code& err ) noexcept
 {
     try {
         const bool failed{ !std::filesystem::create_directories( path, err ) };
@@ -115,14 +115,14 @@ bool makeDir( std::string_view path, std::error_code& err ) noexcept
 
 
 // rename an entry with a trailing '.copy'
-bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept
+bool renameAsCopy( const std::filesystem::path& path, std::error_code& err ) noexcept
 {
     try {
-        std::string new_path{ path };
+        std::filesystem::path new_path{ path };
         // loop until a valid name is found
         while (true) {
-            new_path += ".copy";
-            if ( ! exists( new_path ) ) {
+            new_path.concat(".copy");
+            if ( ! IOutils::exists( new_path ) ) {
                 // available name found
                 break;
             }
@@ -138,7 +138,7 @@ bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept
 }
 
 
-void readFile( const std::string& path, std::string& content )
+void readFile( const std::filesystem::path& path, std::string& content )
 {
     // read the whole file
     try {
@@ -160,7 +160,7 @@ void readFile( const std::string& path, std::string& content )
 }
 
 
-void randomLines( const std::string& path, std::vector<std::string>& lines, const size_t n_lines, const bool strip_lines )
+void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const size_t n_lines, const bool strip_lines )
 {
     // read rhe first N lines only
     try {
@@ -244,7 +244,7 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
 }
 
 
-void writeOnFile( const std::string& path, std::string_view content )
+void writeOnFile( const std::filesystem::path& path, std::string_view content )
 {
     try {
         FileHandler<std::ofstream> file{ path }; // throws std::ios_base::failure on failure

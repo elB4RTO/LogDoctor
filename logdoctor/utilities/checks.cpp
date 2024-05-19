@@ -6,6 +6,7 @@
 #include "modules/dialogs.h"
 
 #include "modules/database/database.h"
+#include "modules/security/path.h"
 
 #include "utilities/io.h"
 
@@ -85,11 +86,11 @@ bool checkDatabaseTablesNames( QueryWrapper query )
     \return The result of the operation
     \see checkCollectionDatabase(), checkHashesDatabase()
 */
-bool newCollectionDatabase( DatabaseWrapper db, const std::string& db_path, const std::vector<QString>& ws_names ) noexcept
+bool newCollectionDatabase( DatabaseWrapper db, const PathHandler& db_path, const std::vector<QString>& ws_names ) noexcept
 {
     try {
 
-        db.openNew( db_path );
+        db.openNew( db_path.toString() );
 
         // succesfully creted database file, now create the tables
         const QString stmt{ QStringLiteral(R"(
@@ -146,11 +147,11 @@ bool newCollectionDatabase( DatabaseWrapper db, const std::string& db_path, cons
     \return The result of the operation
     \see checkCollectionDatabase(), checkHashesDatabase()
 */
-bool newHashesDatabase( DatabaseWrapper db, const std::string& db_path, const std::vector<QString>& ws_names ) noexcept
+bool newHashesDatabase( DatabaseWrapper db, const PathHandler& db_path, const std::vector<QString>& ws_names ) noexcept
 {
     try {
 
-        db.openNew( db_path );
+        db.openNew( db_path.toString() );
 
         // succesfully creted database file, now create the tables
         const QString stmt{ QStringLiteral(R"(
@@ -185,7 +186,7 @@ bool newHashesDatabase( DatabaseWrapper db, const std::string& db_path, const st
 } // namespace (private)
 
 
-bool checkCollectionDatabase( const std::string& db_path ) noexcept
+bool checkCollectionDatabase( const PathHandler& db_path ) noexcept
 {
     const std::vector<QString> ws_names{ "apache", "nginx", "iis" };
 
@@ -193,15 +194,19 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
 
         DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Data ) };
 
-        if ( ! IOutils::exists( db_path ) ) {
-            // ask to create a new one
-            if ( DialogSec::choiceDatabaseNotFound( db.name() ) ) {
-                // choosed to create it
-                throw MakeNewDatabase{};
+        const auto path_exp{ db_path.getPath() };
+        if ( ! path_exp.has_value() ) {
+            if ( path_exp.error().isReasonSymlink() ) {
+                const auto& invalid{ path_exp.error() };
+                DialogSec::errDatabasePathHasSymlink(
+                    QString(invalid.invalid_component.c_str()),
+                    QString(invalid.full_path.c_str()) );
             } else {
-                // refused to create it, abort
-                return false;
+                if ( DialogSec::choiceDatabaseNotFound( db.name() ) ) {
+                    throw MakeNewDatabase{};
+                }
             }
+            return false;
         }
 
         // check file type and permissions
@@ -210,7 +215,7 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
         }
 
         // file seems ok, try to open
-        db.open( db_path, true );
+        db.open( db_path.toString(), true );
 
         // check the tables
         if ( ! checkDatabaseTablesNames( db.getQuery() ) ) {
@@ -308,16 +313,17 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
 
     } catch (const MakeNewDatabase&) {
 
-        if ( IOutils::exists( db_path ) ) {
+        const auto path{ db_path.getPathUnchecked() };
+        if ( IOutils::exists( path ) ) {
             // a database already exists, try rename it
             std::error_code err;
-            if ( ! IOutils::renameAsCopy( db_path, err ) ) {
+            if ( ! IOutils::renameAsCopy( path, err ) ) {
                 // failed to rename
                 QString err_msg;
                 if ( err ) {
                     err_msg = QString::fromStdString( err.message() );
                 }
-                DialogSec::errRenaming( QString::fromStdString(db_path), err_msg );
+                DialogSec::errRenaming( QString(path.c_str()), err_msg );
                 return false;
             }
         }
@@ -331,7 +337,7 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept
 }
 
 
-bool checkHashesDatabase( const std::string& db_path ) noexcept
+bool checkHashesDatabase( const PathHandler& db_path ) noexcept
 {
     const std::vector<QString> ws_names { "apache", "nginx", "iis" };
 
@@ -339,15 +345,19 @@ bool checkHashesDatabase( const std::string& db_path ) noexcept
 
         DatabaseWrapper db{ DatabaseHandler::get( DatabaseType::Hashes ) };
 
-        if ( ! IOutils::exists( db_path ) ) {
-            // database does not exist, yet, ask to create a new one
-            if ( DialogSec::choiceDatabaseNotFound( db.name() ) ) {
-                // choosed to create it
-                throw MakeNewDatabase{};
+        const auto path_exp{ db_path.getPath() };
+        if ( ! path_exp.has_value() ) {
+            if ( path_exp.error().isReasonSymlink() ) {
+                const auto& invalid{ path_exp.error() };
+                DialogSec::errDatabasePathHasSymlink(
+                    QString(invalid.invalid_component.c_str()),
+                    QString(invalid.full_path.c_str()) );
             } else {
-                // refused to create it, abort
-                return false;
+                if ( DialogSec::choiceDatabaseNotFound( db.name() ) ) {
+                    throw MakeNewDatabase{};
+                }
             }
+            return false;
         }
 
         // check file type and permissions
@@ -356,7 +366,7 @@ bool checkHashesDatabase( const std::string& db_path ) noexcept
         }
 
         // file seems ok, try to open
-        db.open( db_path, true );
+        db.open( db_path.toString(), true );
 
         // check the tables
         if ( ! checkDatabaseTablesNames( db.getQuery() ) ) {
@@ -401,16 +411,17 @@ bool checkHashesDatabase( const std::string& db_path ) noexcept
 
     } catch (const MakeNewDatabase&) {
 
-        if ( IOutils::exists( db_path ) ) {
+        const auto path{ db_path.getPathUnchecked() };
+        if ( IOutils::exists( path ) ) {
             // a database already exists, try rename it
             std::error_code err;
-            if ( ! IOutils::renameAsCopy( db_path, err ) ) {
+            if ( ! IOutils::renameAsCopy( path, err ) ) {
                 // failed to rename
                 QString err_msg;
                 if ( err ) {
                     err_msg = QString::fromStdString( err.message() );
                 }
-                DialogSec::errRenaming( QString::fromStdString(db_path), err_msg );
+                DialogSec::errRenaming( QString(path.c_str()), err_msg );
                 return false;
             }
         }
@@ -424,21 +435,30 @@ bool checkHashesDatabase( const std::string& db_path ) noexcept
 }
 
 
-bool checkDatabaseFile( const std::string& db_path, const QString& db_name ) noexcept
+bool checkDatabaseFile( const PathHandler& db_path, const QString& db_name ) noexcept
 {
-    if ( ! IOutils::exists( db_path ) ) {
+    const auto path_exp{ db_path.getPath() };
+    if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        const auto& invalid{ path_exp.error() };
+        DialogSec::errDatabasePathHasSymlink(
+            QString(invalid.invalid_component.c_str()),
+            QString(invalid.full_path.c_str()) );
+        return false;
+    }
+    const path_t& path{ path_exp.value() };
+    if ( ! IOutils::exists( path ) ) {
         // path doesn't exists
         DialogSec::errDatabaseNotFound( db_name );
         return false;
-    } else if ( ! IOutils::isFile( db_path ) ) {
+    } else if ( ! IOutils::isFile( path ) ) {
         // path doesn't point to a file
         DialogSec::errDatabaseNotFile( db_name );
         return false;
-    } else if ( ! IOutils::checkFile( db_path, true ) ) {
+    } else if ( ! IOutils::checkFile( path, true ) ) {
         // database not readable, abort
         DialogSec::errDatabaseNotReadable( db_name );
         return false;
-    } else if ( ! IOutils::checkFile( db_path, false, true ) ) {
+    } else if ( ! IOutils::checkFile( path, false, true ) ) {
         // database not writable, abort
         DialogSec::errDatabaseNotWritable( db_name );
         return false;
