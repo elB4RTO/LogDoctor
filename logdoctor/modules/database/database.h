@@ -9,6 +9,7 @@
 #include <QVariant>
 
 
+class PathHandler;
 class QueryWrapper;
 
 
@@ -52,7 +53,7 @@ public:
         Throws if the file cannot be opened or if opening fails
         \throw VoidException
     */
-    void open( const std::string& path, const bool explain_err );
+    void open( const PathHandler& path, const bool explain_err );
 
     //! Opens the database file at the given path
     /*!

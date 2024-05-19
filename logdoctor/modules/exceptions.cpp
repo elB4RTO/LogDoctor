@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include <QString>
-
 
 DoNotCatchException::DoNotCatchException( const char* header, const std::string& body )
 {
@@ -17,7 +15,6 @@ DoNotCatchException::DoNotCatchException( const char* header, const std::string&
 GenericException::GenericException( const std::string& msg )
     : msg{ QString::fromStdString( msg ) }
 {
-
 }
 const QString& GenericException::what()
 {
@@ -74,9 +71,20 @@ BWlistException::BWlistException( const std::string& msg )
 DatabaseException::DatabaseException( QString&& msg )
     : msg{ std::move(msg) }
 {
-
 }
 const QString& DatabaseException::what() const noexcept
+{
+    return msg;
+}
+
+
+///////////////
+//// PATHS ////
+InvalidPathException::InvalidPathException( QStringList&& msg )
+    : msg{ std::move(msg) }
+{
+}
+const QStringList& InvalidPathException::what() const noexcept
 {
     return msg;
 }

@@ -2,7 +2,7 @@
 #define LOGDOCTOR__EXCEPTIONS_H
 
 
-#include <QString>
+#include <QStringList>
 
 
 //! VoidException
@@ -105,6 +105,20 @@ public:
 
 private:
     QString msg;
+};
+
+
+//! InvalidPathException
+/*!
+    Exception related to a path
+*/
+class InvalidPathException final : public LogDoctorException {
+public:
+    explicit InvalidPathException( QStringList&& msg );
+    const QStringList& what() const noexcept;
+
+private:
+    QStringList msg;
 };
 
 

@@ -13,7 +13,7 @@ void DialogSec::errLangLocaleInvalid( const QString& locale, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Invalid locale"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("Unexpected locale format"),
             locale,
             DialogSec::tr("If you haven't manually edited the configuration file,\nplease report this issue") ),
@@ -24,7 +24,7 @@ void DialogSec::errLangNotAccepted( const QString& locale, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Invalid locale"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The given locale is not an accepted language"),
             locale,
             DialogSec::tr("If you'd like to have this locale in LogDoctor,\nplease follow the instruction on the repository page") ),
@@ -41,60 +41,74 @@ void DialogSec::warnConfFileNotFound( const QString& file, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Configuration file not found"),
-        QStringLiteral("%1%2\n\n%3").arg(
+        QLatin1String("%1%2\n\n%3").arg(
             DialogSec::tr("Unable to retrieve the configuration file"),
-            (file.isEmpty()) ? file : ":\n"+file,
+            file.isEmpty() ? file : QLatin1String(":\n%1").arg(file),
             DialogSec::tr("Skipping") ),
         QString(), MsgType::Warning, parent };
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errConfFailedWriting( const QString& msg, const QString& err, QWidget* parent )
+void DialogSec::errHandlingConfFile( const QString& title, const QString& message, const QString& additional, const MsgType type, QWidget* parent )
 {
     DialogMsg dialog{
-        DialogSec::tr("Failed to write the configuration file"),
-        QStringLiteral("%1%2\n\n%3").arg(
+        title,
+        QLatin1String("%1%2").arg(
             DialogSec::tr("An error occured while handling the configuration file"),
-            (msg.isEmpty()) ? msg : ":\n"+msg,
-            DialogSec::tr("Current configuration not saved") ),
-        err, MsgType::Warning, parent };
+            message ),
+        additional, type, parent };
     std::ignore = dialog.exec();
+}
+
+void DialogSec::errConfFailedWriting( const QString& msg, const QString& err, QWidget* parent )
+{
+    errHandlingConfFile(
+        DialogSec::tr("Failed to write the configuration file"),
+        QLatin1String("%1\n\n%2").arg(
+            msg.isEmpty() ? msg : QLatin1String(":\n%1").arg(msg),
+            DialogSec::tr("Current configuration not saved") ),
+        err, MsgType::Warning, parent );
 }
 
 void DialogSec::errConfFileNotReadable( const QString& file, const QString& err, QWidget* parent )
 {
-    DialogMsg dialog{
+    errHandlingConfFile(
         DialogSec::tr("File not readable"),
-        QStringLiteral("%1\n\n%2%3").arg(
-            DialogSec::tr("An error occured while handling the configuration file"),
+        QLatin1String("\n\n%1%2").arg(
             DialogSec::tr("The file is not readable"),
-            (file.isEmpty()) ? file : ":\n"+file ),
-        err, MsgType::Error, parent };
-    std::ignore = dialog.exec();
+            file.isEmpty() ? file : QLatin1String(":\n%1").arg(file) ),
+        err, MsgType::Error, parent );
 }
 void DialogSec::errConfFileNotWritable( const QString& file, const QString& err, QWidget* parent )
 {
-    DialogMsg dialog{
+    errHandlingConfFile(
         DialogSec::tr("File not writable"),
-        QStringLiteral("%1\n\n%2%3").arg(
-            DialogSec::tr("An error occured while handling the configuration file"),
+        QLatin1String("\n\n%1%2").arg(
             DialogSec::tr("The file is not writable"),
-            (file.isEmpty()) ? file : ":\n"+file ),
-        err, MsgType::Error, parent };
-    std::ignore = dialog.exec();
+            file.isEmpty() ? file : QLatin1String(":\n%1").arg(file) ),
+        err, MsgType::Error, parent );
 }
 
 
 void DialogSec::errConfDirNotWritable( const QString& dir, const QString& err, QWidget* parent )
 {
-    DialogMsg dialog{
+    errHandlingConfFile(
         DialogSec::tr("Directory not writable"),
-        QStringLiteral("%1\n\n%2%3").arg(
-            DialogSec::tr("An error occured while handling the configuration file"),
+        QLatin1String("\n\n%1%2").arg(
             DialogSec::tr("The directory is not writable"),
-            (dir.isEmpty()) ? dir : ":\n"+dir ),
-        err, MsgType::Error, parent };
-    std::ignore = dialog.exec();
+            dir.isEmpty() ? dir : QLatin1String(":\n%1").arg(dir) ),
+        err, MsgType::Error, parent );
+}
+
+
+void DialogSec::errConfPathHasSymlink( const QString& full_path, const QString& symlink, QWidget* parent )
+{
+    errHandlingConfFile(
+        DialogSec::tr("Invalid path"),
+        QLatin1String("\n\n%1%2").arg(
+            DialogSec::tr("The path contains a symlink"),
+            full_path.isEmpty() ? full_path : QLatin1String(":\n%1").arg(full_path) ),
+        symlink, MsgType::Error, parent );
 }
 
 
@@ -102,8 +116,8 @@ void DialogSec::errFailedApplyingConfigsItem( const QString& msg, QWidget* paren
 {
     DialogMsg dialog{
         DialogSec::tr("Failed applying configuration"),
-        QStringLiteral("%1\n%2").arg(
-            (msg.isEmpty()) ? msg : QString(msg).append(QLatin1Char('\n')),
+        QLatin1String("%1\n%2").arg(
+            msg.isEmpty() ? msg : QLatin1String("%1\n").arg(msg),
             DialogSec::tr("Skipping") ),
         QString(), MsgType::Error, parent };
     std::ignore = dialog.exec();
@@ -114,7 +128,7 @@ void DialogSec::warnInvalidConfigsList( const QStringList& list, QWidget* parent
 {
     DialogMsg dialog{
         DialogSec::tr("Invalid configuration lines"),
-        QStringLiteral("%1\n%2").arg(
+        QLatin1String("%1\n%2").arg(
             DialogSec::tr("Has not been possible to apply some of the configurations"),
             DialogSec::tr("If you haven't manually edited the configuration file,\nplease report this issue") ),
         list.join('\n'),
@@ -127,7 +141,7 @@ bool DialogSec::choiceFailedApplyingConfigs( const QString& msg, QWidget* parent
 {
     DialogBool dialog{
         DialogSec::tr("Failed applying configuration"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             msg,
             DialogSec::tr("If you choose to proceed, all of the unapplied configurations will be lost\nContinue?") ),
         parent };
@@ -143,11 +157,11 @@ void DialogSec::errHelpFailed( const QString& link, const QString& msg, QWidget*
 {
     DialogMsg dialog{
         DialogSec::tr("Failed to retrieve the help file"),
-        QStringLiteral("%1%2\n\n%3%4").arg(
+        QLatin1String("%1%2\n\n%3%4").arg(
             DialogSec::tr("An error occured while getting the help file"),
-            (msg.isEmpty()) ? msg : ":\n"+msg,
+            msg.isEmpty() ? msg : QLatin1String(":\n%1").arg(msg),
             DialogSec::tr("Additional resources can be downloaded from the git repo"),
-            (link.isEmpty()) ? link : ":\n"+link ),
+            link.isEmpty() ? link : QLatin1String(":\n%1").arg(link) ),
         QString(), MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -191,7 +205,7 @@ void DialogSec::errSqlDriverNotFound( const QString& driver, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("QSql driver not found"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("Failed to retrieve the driver needed to handle the database"),
             driver,
             DialogSec::tr("Aborting") ),
@@ -203,7 +217,7 @@ bool DialogSec::choiceDatabaseNotFound( const QString& db_name, QWidget* parent 
 {
     DialogBool dialog{
         DialogSec::tr("File not found"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("Failed to retrieve the database file"),
             db_name,
             DialogSec::tr("Create a new database?") ),
@@ -265,7 +279,7 @@ bool DialogSec::choiceDatabaseRenew( const QString& title, const QString& msg, Q
 {
     DialogBool dialog{
         title,
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             msg,
             DialogSec::tr("This database will be renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
         parent };
@@ -275,7 +289,7 @@ void DialogSec::msgDatabaseCreated( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Database created"),
-        QStringLiteral("%1:\n%2").arg(
+        QLatin1String("%1:\n%2").arg(
             DialogSec::tr("Successfully created a new database"),
             db_name ),
         QString(), MsgType::Info, parent };
@@ -286,7 +300,7 @@ void DialogSec::errDatabaseNotFound( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("File not found"),
-        QStringLiteral("%1:\n%2").arg(
+        QLatin1String("%1:\n%2").arg(
             DialogSec::tr("Failed to retrieve the database file"),
             db_name ),
         QString(), MsgType::Error, parent };
@@ -297,7 +311,7 @@ void DialogSec::errDatabaseNotFile( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Not a file"),
-        QStringLiteral("%1\n\n%2:\n%3\n\n%4").arg(
+        QLatin1String("%1\n\n%2:\n%3\n\n%4").arg(
             DialogSec::tr("Failed to retrieve the database file"),
             DialogSec::tr("The path was supposed to point to a file, but it doesn't"),
             db_name,
@@ -310,7 +324,7 @@ void DialogSec::errDatabaseNotReadable( const QString& db_name, QWidget* parent 
 {
     DialogMsg dialog{
         DialogSec::tr("File not readable"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The database file is not readable"),
             db_name,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
@@ -322,7 +336,7 @@ void DialogSec::errDatabaseNotWritable( const QString& db_name, QWidget* parent 
 {
     DialogMsg dialog{
         DialogSec::tr("File not writable"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The database file is not writable"),
             db_name,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
@@ -330,11 +344,23 @@ void DialogSec::errDatabaseNotWritable( const QString& db_name, QWidget* parent 
     std::ignore = dialog.exec();
 }
 
+void DialogSec::errDatabasePathHasSymlink( const QString& full_path, const QString& symlink, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("Invalid database path"),
+        QLatin1String("%1:\n%2\n\n%3").arg(
+            DialogSec::tr("The path contains a symlink"),
+            full_path,
+            DialogSec::tr("Aborting") ),
+        symlink, MsgType::Error, parent };
+    std::ignore = dialog.exec();
+}
+
 void DialogSec::errDatabaseFailedCreating( const QString& db_name, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Failed creating database"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("An error occured while creating the database"),
             db_name,
             DialogSec::tr("Aborting") ),
@@ -346,7 +372,7 @@ void DialogSec::errDatabaseFailedOpening( const QString& db_name, const QString&
 {
     DialogMsg dialog{
         DialogSec::tr("Failed opening database"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("An error occured while opening the database"),
             db_name,
             DialogSec::tr("Aborting") ),
@@ -358,22 +384,22 @@ void DialogSec::errDatabaseFailedExecuting( const QString& db_name, const QStrin
 {
     DialogMsg dialog{
         DialogSec::tr("Failed executing on database"),
-        QStringLiteral("%1:\n%2%3\n\n%4").arg(
+        QLatin1String("%1:\n%2%3\n\n%4").arg(
             DialogSec::tr("An error occured while executing a statement on the database"),
             db_name,
-            !statement.isEmpty() ? "\n"+statement : QString(),
+            !statement.isEmpty() ? QLatin1String(":\n%1").arg(statement) : QString(),
             DialogSec::tr("Aborting") ),
         err, MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
 
-void DialogSec::errDatabaseFailedBackup( const QString& msg, const QString& err, QWidget* parent )
+void DialogSec::errDatabaseFailedBackup( const QString& msg, const QString& err, const bool report, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Failed to backup database"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1%2").arg(
             msg,
-            DialogSec::tr("Please report this issue") ),
+            report ? QLatin1String("\n\n%1").arg(DialogSec::tr("Please report this issue") ) : QString() ),
         err, MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -405,7 +431,7 @@ void DialogSec::errLogFormatNoFields( QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Misconfigured log format"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("No log field has been set in the current logs format,\nmaking it useless to parse logs"),
             DialogSec::tr("Please set up a format which contains at least one field") ),
         QString(), MsgType::Error, parent };
@@ -416,7 +442,7 @@ void DialogSec::errLogFormatNoSeparators( QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Misconfigured log format"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("A separator is missing between one or more fields,\nmaking it hard to establish net bounds,\nand possibly leading to store incorrect data"),
             DialogSec::tr("Please set up a format which contains separators between fields") ),
         QString(), MsgType::Error, parent };
@@ -427,7 +453,7 @@ bool DialogSec::choiceLogFormatMissingField( const QString& field, QWidget* pare
 {
     DialogBool dialog{
         DialogSec::tr("Missing field in log format"),
-        QStringLiteral("%1:\n%2\n\n%3\n%4").arg(
+        QLatin1String("%1:\n%2\n\n%3\n%4").arg(
             DialogSec::tr("An important field is missing from the provided format:"),
             field,
             DialogSec::tr("The quality of the statistics may be seriously compromized"),
@@ -440,7 +466,7 @@ bool DialogSec::choiceLogFormatWithCarriageReturn( QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("'Carriage Return' in log format"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("The provided format contains the 'Carriage Return'.\nThis may lead to data losses or crashes if not used with caution"),
             DialogSec::tr("Proceed anyway?") ),
         parent };
@@ -465,7 +491,7 @@ void DialogSec::errFailedDefiningLogType( const QString& file, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Failed defining type"),
-        QStringLiteral("%1:\n%2").arg(
+        QLatin1String("%1:\n%2").arg(
             DialogSec::tr("Failed to determine the log type"),
             file ),
         QString(), MsgType::Error, parent };
@@ -477,7 +503,7 @@ int DialogSec::choiceFileAlreadyUsed( const QString& msg, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("File already used"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file has probably been used already"),
             msg,
             DialogSec::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?") ),
@@ -490,7 +516,7 @@ int DialogSec::choiceDuplicateFile( const QString& msg, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("Duplicate file"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file appears twice in the list of selections"),
             msg,
             DialogSec::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?") ),
@@ -502,7 +528,7 @@ void DialogSec::errFailedInsertUsedHashes( QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Failed updating hashes"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("An error occured while inserting the parsed files hashes into the database"),
             DialogSec::tr("Aborting") ),
         QString(), MsgType::Error, parent };
@@ -514,7 +540,7 @@ int DialogSec::choiceFileSizeWarning( const QString& msg, QWidget* parent )
 {
     DialogIda dialog{
         DialogSec::tr("File exceeds warning size"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file's size exceeds the warning size"),
             msg,
             DialogSec::tr("Ignore the warning and use it anyway, Discard it and continue, or Abort the entire process?") ),
@@ -525,7 +551,7 @@ bool DialogSec::choiceFileSizeWarning2( const QString& msg, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("File exceeds warning size"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file's size exceeds the warning size"),
             msg,
             DialogSec::tr("Proceed anyway?") ),
@@ -537,7 +563,7 @@ void DialogSec::msgNotEnoughMemory( const QString& msg, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Not enough memory"),
-        QStringLiteral("%1%2\n\n%3").arg(
+        QLatin1String("%1%2\n\n%3").arg(
             DialogSec::tr("The total size of the selected files exceeds the available memory"),
             msg,
             DialogSec::tr("Please free some resources, parse the files in different steps or split them into smaller units") ),
@@ -550,7 +576,7 @@ void DialogSec::errFailedReadFile( const QString& file , const bool skipping, QW
 {
     DialogMsg dialog{
         DialogSec::tr("Failed reading"),
-        QStringLiteral("%1:\n%2%3").arg(
+        QLatin1String("%1:\n%2%3").arg(
             DialogSec::tr("An error occured while reading the file"),
             file,
             skipping ? DialogSec::tr("Skipping").prepend("\n\n") : QString() ),
@@ -562,10 +588,10 @@ void DialogSec::errFailedReadFile( const QString& file , const bool skipping, QW
 {
     DialogMsg dialog{
         DialogSec::tr("Failed writing"),
-        QStringLiteral("%1:\n%2%3").arg(
+        QLatin1String("%1:\n%2%3").arg(
             DialogSec::tr("An error occured while writing the file"),
             file,
-            (skipping) ? QStringLiteral("\n\n%1").arg(DialogSec::tr("Skipping")) : QString() ),
+            (skipping) ? QLatin1String("\n\n%1").arg(DialogSec::tr("Skipping")) : QString() ),
         QString(), MsgType::Error, parent };
     std::ignore = dialog.exec();
 }*/
@@ -575,7 +601,7 @@ void DialogSec::warnEmptyFile( const QString& file, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("File is empty"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file is blank"),
             file,
             DialogSec::tr("Skipping") ),
@@ -587,7 +613,7 @@ void DialogSec::errFileNotFound( const QString& file , const bool report, QWidge
 {
     DialogMsg dialog{
         DialogSec::tr("File not found"),
-        QStringLiteral("%1:\n%2%3").arg(
+        QLatin1String("%1:\n%2%3").arg(
             DialogSec::tr("Unable to retrieve the file"),
             file,
             report ? DialogSec::tr("Please report this issue").prepend("\n\n") : QString() ),
@@ -599,7 +625,7 @@ void DialogSec::warnFileNotReadable( const QString& file, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("File not readable"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The file is not readable"),
             file,
             DialogSec::tr("Skipping") ),
@@ -613,7 +639,7 @@ int DialogSec::choiceSelectedFileNotFound( const QString& file, QWidget* parent 
 {
     DialogIda dialog{
         DialogSec::tr("File not found"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("Failed to retrieve the selected file"),
             file,
             DialogSec::tr("Discard it and continue, or Abort all and exit?") ),
@@ -625,7 +651,7 @@ void DialogSec::msgNoFileToParse( QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("No file to parse"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("The list of files to parse is empty"),
             DialogSec::tr("Aborting") ),
         QString(), MsgType::Error, parent };
@@ -641,7 +667,7 @@ void DialogSec::errDirNotExists( const QString& dir, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Directory not found"),
-        QStringLiteral("%1:\n%2").arg(
+        QLatin1String("%1:\n%2").arg(
             DialogSec::tr("The directory does not exists"),
             dir ),
         QString(), MsgType::Error, parent };
@@ -652,7 +678,7 @@ void DialogSec::errDirNotExists( const QString& dir, QWidget* parent )
 {
     DialogDia dialog{
         DialogSec::tr("Directory not found"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The directory does not exists"),
             dir,
             DialogSec::tr("Discard it and continue, or Abort all and exit?") ),
@@ -665,7 +691,7 @@ void DialogSec::errDirNotReadable( const QString& dir, const QString& err, QWidg
 {
     DialogMsg dialog{
         DialogSec::tr("Directory not readable"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The directory is not readable"),
             dir,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
@@ -676,7 +702,7 @@ void DialogSec::warnDirNotReadable( QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Directory not readable"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("The directory is not readable"),
             DialogSec::tr("Please set the proper permissions before to start") ),
         QString(), MsgType::Warning, parent };
@@ -687,7 +713,7 @@ void DialogSec::errDirNotWritable( const QString& dir, const QString& err, QWidg
 {
     DialogMsg dialog{
         DialogSec::tr("Directory not writable"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The directory is not writable"),
             dir,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
@@ -698,7 +724,7 @@ void DialogSec::warnDirNotWritable( QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("Directory not writable"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             DialogSec::tr("The directory is not writable"),
             DialogSec::tr("Please set the proper permissions before to start") ),
         QString(), MsgType::Warning, parent };
@@ -709,10 +735,36 @@ void DialogSec::errFailedMakeDir( const QString& msg, const QString& err, QWidge
 {
     DialogMsg dialog{
         DialogSec::tr("Failed creating directory"),
-        QStringLiteral("%1\n\n%2").arg(
+        QLatin1String("%1\n\n%2").arg(
             msg,
             DialogSec::tr("Please set the proper permissions and retry\nIf this error persists, please report this issue") ),
         err, MsgType::Error, parent };
+    std::ignore = dialog.exec();
+}
+
+
+///////////////
+//// PATHS ////
+///////////////
+void DialogSec::errPathNotExists( const QString& component, const QString& path, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("Invalid path"),
+        QLatin1String("%1:\n%2").arg(
+            DialogSec::tr("The path does not exists"),
+            component ),
+        path, MsgType::Error, parent };
+    std::ignore = dialog.exec();
+}
+
+void DialogSec::errPathHasSymlink( const QString& component, const QString& path, QWidget* parent )
+{
+    DialogMsg dialog{
+        DialogSec::tr("Invalid path"),
+        QLatin1String("%1:\n%2").arg(
+            DialogSec::tr("The path contains a symlink"),
+            component ),
+        path, MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
 
@@ -724,7 +776,7 @@ void DialogSec::errConvertingData( const QString& fromType, const QString& intoT
 {
     DialogMsg dialog{
         DialogSec::tr("Data conversion failed"),
-        QStringLiteral("%1:\n%2").arg(
+        QLatin1String("%1:\n%2").arg(
             DialogSec::tr("Failed to convert from '%1' to '%2'").arg(
                 fromType, intoType ),
             value ),
@@ -762,7 +814,7 @@ bool DialogSec::choiceDirNotDir( const QString& path, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("Not a folder"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The path was supposed to point to a folder, but it doesn't"),
             path,
             DialogSec::tr("The entry will be renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
@@ -773,7 +825,7 @@ bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
 {
     DialogBool dialog{
         DialogSec::tr("Not a file"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1:\n%2\n\n%3").arg(
             DialogSec::tr("The path was supposed to point to a file, but it doesn't"),
             path,
             DialogSec::tr("The entry will be renamed with a trailing '.copy' and a new one will be created.\nContinue?") ),
@@ -787,11 +839,11 @@ bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
 {
     QString footer;
     if ( report_msg ) {
-        footer += "\n\n" + DialogSec::tr("Please report this issue");
+        footer = QLatin1String("\n\n%1").arg( DialogSec::tr("Please report this issue") );
     }
     DialogMsg dialog{
         DialogSec::tr("An error occured"),
-        QStringLiteral("%1%2").arg(
+        QLatin1String("%1%2").arg(
             msg, footer ),
         QString(), MsgType::Warning, parent };
     std::ignore = dialog.exec();
@@ -799,13 +851,13 @@ bool DialogSec::choiceFileNotFile( const QString& path, QWidget* parent )
 
 
 
-void DialogSec::errGeneric( const QString& msg, const bool report_msg, QWidget* parent )
+void DialogSec::errGeneric( const QString& msg, const bool report, QWidget* parent )
 {
     DialogMsg dialog{
         DialogSec::tr("An error occured"),
-        QStringLiteral("%1%2").arg(
+        QLatin1String("%1%2").arg(
             msg,
-            report_msg ? DialogSec::tr("Please report this issue").prepend("\n\n") : QString() ),
+            report ? DialogSec::tr("Please report this issue").prepend("\n\n") : QString() ),
         QString(), MsgType::Error, parent };
     std::ignore = dialog.exec();
 }
@@ -816,9 +868,9 @@ void DialogSec::errRenaming( const QString& path, const QString& err, QWidget* p
 {
     DialogMsg dialog{
         DialogSec::tr("Failed renaming"),
-        QStringLiteral("%1:\n%2\n\n%3").arg(
+        QLatin1String("%1%2\n\n%3").arg(
             DialogSec::tr("An error occured while renaming"),
-            path,
+            path.isEmpty() ? path : QLatin1String(":\n%1").arg(path),
             DialogSec::tr("Aborting") ),
         err, MsgType::Error, parent };
     std::ignore = dialog.exec();

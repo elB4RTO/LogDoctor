@@ -4,6 +4,7 @@
 #include "globals/db_names.h"
 
 #include "modules/dialogs.h"
+#include "modules/security/path.h"
 
 #include "utilities/checks.h"
 
@@ -39,14 +40,16 @@ DatabaseWrapper::~DatabaseWrapper()
     }
 }
 
-void DatabaseWrapper::open( const std::string& path, const bool explain_err )
+void DatabaseWrapper::open( const PathHandler& path, const bool explain_err )
 {
-    this->db.setDatabaseName( QString::fromStdString( path ));
     if ( ! CheckSec::checkDatabaseFile( path, this->db_name ) ) {
         throw VoidException();
-    } else if ( ! this->db.open() ) {
-        DialogSec::errDatabaseFailedOpening( this->db_name, explain_err ? this->db.lastError().text() : QString{} );
-        throw VoidException();
+    } else {
+        this->db.setDatabaseName( QString::fromStdString( path.toString() ));
+        if ( ! this->db.open() ) {
+            DialogSec::errDatabaseFailedOpening( this->db_name, explain_err ? this->db.lastError().text() : QString{} );
+            throw VoidException();
+        }
     }
 }
 
