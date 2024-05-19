@@ -236,6 +236,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
     this->ui->spinBox_ConfDatabases_NumBackups->setValue( this->db_backups_number );
     this->ui->checkBox_ConfDatabases_DoBackup->setChecked( this->db_do_backup );
+    // security
+    this->ui->checkBox_ConfSecurity_Paths_Symlinks->setChecked( GlobalConfigs::Security::follow_symlinks );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
     this->ui->spinBox_ConfControl_Size->setValue( static_cast<int>(this->craplog.getWarningSize() / 1'048'576ul) );
@@ -518,6 +520,13 @@ void MainWindow::readConfigs()
             } else if ( var == "DatabaseBackupsNumber" ) {
                 try {
                     this->db_backups_number = std::stoi( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "FollowSymlinks" ) {
+                try {
+                    GlobalConfigs::Security::follow_symlinks = this->s2b.at( val );
                 } catch ( const std::exception& ) {
                     invalid_lines.append( QString::fromStdString( line ) );
                 }
@@ -1031,7 +1040,7 @@ void MainWindow::writeConfigs()
 
     //// USER INTERFACE ////
     std::string configs;
-    configs += "\n\n[UI]";
+    configs += "\n[UI]";
     configs += "\nLanguage=" + this->language;
     configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
     configs += "\nGeometry=" + this->geometryToString();
@@ -1044,6 +1053,9 @@ void MainWindow::writeConfigs()
     configs += "\nDatabaseHashesPath=" + this->db_hashes_path.toString();
     configs += "\nDatabaseDoBackup=" + this->b2s.at( this->db_do_backup );
     configs += "\nDatabaseBackupsNumber=" + std::to_string( this->db_backups_number );
+    //// SECURITY ////
+    configs += "\n\n[Security]";
+    configs += "\nFollowSymlinks=" + this->b2s.at(GlobalConfigs::Security::follow_symlinks);
     //// TEXT BROWSER ////
     configs += "\n\n[TextBrowser]";
     configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
