@@ -4,4 +4,6 @@ target_sources(LogDoctor PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/db_names.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/global_configs.h
     ${CMAKE_CURRENT_SOURCE_DIR}/global_configs.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/security.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/security.cpp
 )
