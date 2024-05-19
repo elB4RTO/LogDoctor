@@ -13,6 +13,7 @@
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
+#include "modules/security/path.h"
 
 #include "modules/warnlists/modules/warnlist.h"
 
@@ -30,9 +31,9 @@ void Crapview::setDialogsLevel( const DialogsLevel new_level ) noexcept
 }
 
 
-void Crapview::setDbPath( const std::string& path ) noexcept
+void Crapview::setDbPath( const PathHandler& path ) noexcept
 {
-    this->fetcher.setDbPath( path + "/" + DatabasesNames::data );
+    this->fetcher.setDbPath( path / DatabasesNames::data );
 }
 
 
