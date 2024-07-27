@@ -327,17 +327,17 @@ void MainWindow::closeEvent( QCloseEvent *event )
 // os definition
 void MainWindow::defineOSspec()
 {
-    #if defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
-        this->db_data_path   = PathHandler( this->home_path + "/.local/share/LogDoctor" );
-        this->db_hashes_path = PathHandler( this->home_path + "/.local/share/LogDoctor" );
+    #if defined( Q_OS_MACOS )
+        this->db_data_path   = PathHandler( this->logdoc_path );
+        this->db_hashes_path = PathHandler( this->logdoc_path );
 
     #elif defined( Q_OS_WINDOWS )
         this->db_data_path   = PathHandler( this->logdoc_path );
         this->db_hashes_path = PathHandler( this->logdoc_path );
 
-    #elif defined( Q_OS_MACOS )
-        this->db_data_path   = PathHandler( this->logdoc_path );
-        this->db_hashes_path = PathHandler( this->logdoc_path );
+    #elif defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
+        this->db_data_path   = PathHandler( this->home_path + "/.local/share/LogDoctor" );
+        this->db_hashes_path = PathHandler( this->home_path + "/.local/share/LogDoctor" );
 
     #else
         // shouldn't be here
@@ -362,37 +362,36 @@ void MainWindow::readConfigs()
         proceed &= false;
     } else {
         const path_t& conf_file{ this->configs_path.getPathUnchecked() };
-        if ( IOutils::exists( conf_file ) ) {
-            if ( IOutils::checkFile( conf_file ) ) {
-                if ( ! IOutils::checkFile( conf_file, true ) ) {
-                    // file not readable
-                    QString file;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        file = QString( conf_file.c_str() );
-                    }
-                    DialogSec::errConfFileNotReadable( file, err_msg );
-                    proceed &= false;
-                }
-            } else {
-                // the given path doesn't point to a file
-                const QString path_msg{ conf_file.c_str() };
-                if ( DialogSec::choiceFileNotFile( path_msg ) ) {
-                    if ( ! IOutils::renameAsCopy( conf_file, err ) ) {
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            err_msg = QString::fromStdString( err.message() );
-                        }
-                        DialogSec::errRenaming( path_msg, err_msg );
-                    }
-                }
-                proceed &= false;
-            }
-        } else {
+        if ( ! IOutils::exists( conf_file ) ) {
             // configuration file not found
             QString file;
             if ( this->dialogs_level == DL_EXPLANATORY ) {
                 file = QString( conf_file.c_str() );
             }
             DialogSec::warnConfFileNotFound( file );
+            proceed &= false;
+
+        } else if ( ! IOutils::checkFile( conf_file ) ) {
+            // the given path doesn't point to a file
+            const QString path_msg{ conf_file.c_str() };
+            if ( DialogSec::choiceFileNotFile( path_msg ) ) {
+                if ( IOutils::renameAsCopy( conf_file, err ) ) {
+                    return;
+                }
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    err_msg = QString::fromStdString( err.message() );
+                }
+                DialogSec::errRenaming( path_msg, err_msg );
+            }
+            proceed &= false;
+
+        } else if ( ! IOutils::checkFile( conf_file, true ) ) {
+            // file not readable
+            QString file;
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                file = QString( conf_file.c_str() );
+            }
+            DialogSec::errConfFileNotReadable( file, err_msg );
             proceed &= false;
         }
     }
@@ -946,81 +945,10 @@ void MainWindow::writeConfigs()
         proceed &= false;
     } else {
         const path_t& conf_file{ this->configs_path.getPathUnchecked() };
-        if ( IOutils::exists( conf_file ) ) {
-            if ( IOutils::checkFile( conf_file ) ) {
-                if ( ! IOutils::checkFile( conf_file, false, true ) ) {
-                    // file not writable
-                    QString file;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        file = QString( conf_file.c_str() );
-                    }
-                    DialogSec::errConfFileNotWritable( file, err_msg );
-                    return;
-                }
-            } else {
-                // the given path doesn't point to a file
-                const QString path_msg{ conf_file.c_str() };
-                if ( DialogSec::choiceFileNotFile( path_msg ) ) {
-                    if ( ! IOutils::renameAsCopy( conf_file, err ) ) {
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            err_msg = QString::fromStdString( err.message() );
-                        }
-                        DialogSec::errRenaming( path_msg, err_msg );
-                        return;
-                    }
-                } else {
-                    // choosed not to rename the entry as '.copy'
-                    msg = DialogSec::tr("Failed to create the configuration file");
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        msg += QLatin1String(":\n%1").arg( path_msg );
-                    }
-                    proceed &= false;
-                }
-            }
-        } else {
+        if ( ! IOutils::exists( conf_file ) ) {
             // file does not exists, check if at least the folder exists
             const auto base_path{ this->configs_path.getParentUnchecked() };
-            if ( IOutils::exists( base_path ) ) {
-                if ( IOutils::isDir( base_path ) ) {
-                    if ( ! IOutils::checkDir( base_path, false, true ) ) {
-                        QString file;
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            file = QString( base_path.c_str() );
-                        }
-                        DialogSec::errConfDirNotWritable( file, err_msg );
-                        proceed &= false;
-                    }
-                } else {
-                    // not a directory
-                    const QString path_msg{ base_path.c_str() };
-                    if ( DialogSec::choiceDirNotDir( path_msg ) ) {
-                        if ( ! IOutils::renameAsCopy( base_path, err ) ) {
-                            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                err_msg = QString::fromStdString( err.message() );
-                            }
-                            DialogSec::errRenaming( path_msg, err_msg );
-                            proceed &= false;
-                        } else {
-                            // make the new folder
-                            if ( ! IOutils::makeDir( base_path, err ) ) {
-                                msg = DialogSec::tr("Failed to create the configuration file's directory");
-                                if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                    msg += QLatin1String(":\n%1").arg( path_msg );
-                                    err_msg = QString::fromStdString( err.message() );
-                                }
-                                proceed &= false;
-                            }
-                        }
-                    } else {
-                        // choosed not to rename the entry as '.copy'
-                        msg = DialogSec::tr("Failed to create the configuration file");
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            msg += QLatin1String(":\n%1").arg( path_msg );
-                        }
-                        proceed &= false;
-                    }
-                }
-            } else {
+            if ( ! IOutils::exists( base_path ) ) {
                 // the configs folder does not exist too
                 if ( ! IOutils::makeDir( base_path, err ) ) {
                     msg = DialogSec::tr("Failed to create the configuration file's directory");
@@ -1030,7 +958,74 @@ void MainWindow::writeConfigs()
                     }
                     proceed &= false;
                 }
+
+            } else if ( ! IOutils::isDir( base_path ) ) {
+                // not a directory
+                const QString path_msg{ base_path.c_str() };
+                if ( DialogSec::choiceDirNotDir( path_msg ) ) {
+                    if ( ! IOutils::renameAsCopy( base_path, err ) ) {
+                        if ( this->dialogs_level > DL_ESSENTIAL ) {
+                            err_msg = QString::fromStdString( err.message() );
+                        }
+                        DialogSec::errRenaming( path_msg, err_msg );
+                        proceed &= false;
+                    } else {
+                        // make the new folder
+                        if ( ! IOutils::makeDir( base_path, err ) ) {
+                            msg = DialogSec::tr("Failed to create the configuration file's directory");
+                            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                                msg += QLatin1String(":\n%1").arg( path_msg );
+                                err_msg = QString::fromStdString( err.message() );
+                            }
+                            proceed &= false;
+                        }
+                    }
+                } else {
+                    // choosed not to rename the entry as '.copy'
+                    msg = DialogSec::tr("Failed to create the configuration file");
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
+                        msg += QLatin1String(":\n%1").arg( path_msg );
+                    }
+                    proceed &= false;
+                }
+
+            } else if ( ! IOutils::checkDir( base_path, false, true ) ) {
+                QString file;
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    file = QString( base_path.c_str() );
+                }
+                DialogSec::errConfDirNotWritable( file, err_msg );
+                proceed &= false;
             }
+
+        } else if ( ! IOutils::checkFile( conf_file ) ) {
+            // the given path doesn't point to a file
+            const QString path_msg{ conf_file.c_str() };
+            if ( DialogSec::choiceFileNotFile( path_msg ) ) {
+                if ( ! IOutils::renameAsCopy( conf_file, err ) ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                    DialogSec::errRenaming( path_msg, err_msg );
+                    return;
+                }
+            } else {
+                // choosed not to rename the entry as '.copy'
+                msg = DialogSec::tr("Failed to create the configuration file");
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    msg += QLatin1String(":\n%1").arg( path_msg );
+                }
+                proceed &= false;
+            }
+
+        } else if ( ! IOutils::checkFile( conf_file, false, true ) ) {
+            // file not writable
+            QString file;
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                file = QString( conf_file.c_str() );
+            }
+            DialogSec::errConfFileNotWritable( file, err_msg );
+            return;
         }
     }
     if ( !proceed ) {
@@ -1147,7 +1142,8 @@ void MainWindow::backupDatabase() const
     const PathHandler db_path{ this->db_data_path / std::string(DatabasesNames::data) };
     const auto path_exp{ db_path.getPath() };
     if ( ! path_exp.has_value() ) {
-        if ( const auto invalid{ path_exp.error() }; invalid.isReasonSymlink() ) {
+        const auto invalid{ path_exp.error() };
+        if ( invalid.isReasonSymlink() ) {
             QString invalid_component;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
                 invalid_component = QString( invalid.full_path.c_str() );
@@ -1155,78 +1151,74 @@ void MainWindow::backupDatabase() const
             DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), invalid_component, false );
             return;
         }
-    } else {
-        const path_t& db_file{ path_exp.value() };
-        if ( IOutils::checkFile( db_file ) ) {
-            const path_t& backups_dir{ this->db_data_path.getPathUnchecked() / "backups" };
-            if ( std::filesystem::is_symlink( backups_dir ) ) {
-                DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), QString( backups_dir.c_str() ), false );
+    }
+    const path_t& db_file{ path_exp.value() };
+    if ( ! IOutils::checkFile( db_file ) ) {
+        // database file does not exists or is not a file
+        QString file;
+        if ( this->dialogs_level > DL_ESSENTIAL ) {
+            file = QString( db_file.c_str() );
+        }
+        DialogSec::errDatabaseFailedBackup( DialogSec::tr("The file does not exist"), file, false );
+        return;
+    }
+    const path_t backups_dir{ this->db_data_path.getPathUnchecked() / "backups" };
+    if ( IOutils::isSymlink( backups_dir ) ) {
+        DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), QString( backups_dir.c_str() ), false );
+        return;
+    } else if ( ! IOutils::exists( backups_dir ) ) {
+        // backups directory doesn't exists, make it
+        if ( ! IOutils::makeDir( backups_dir, err ) ) {
+            QString msg = DialogSec::tr("Failed to create the database backups' directory");
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                msg += QLatin1String(":\n%1").arg( backups_dir.c_str() );
+                if ( err.value() ) {
+                    err_msg = QString::fromStdString( err.message() );
+                }
+            }
+            DialogSec::errFailedMakeDir( msg, err_msg );
+            DialogSec::errDatabaseFailedBackup( QString(), QString() );
+            return;
+        }
+    } else if ( ! IOutils::isDir( backups_dir ) ) {
+        // exists but it's not a directory, rename as copy and make a new one
+        if ( DialogSec::choiceDirNotDir( QString( backups_dir.c_str() ) ) ) {
+            if ( ! IOutils::renameAsCopy( backups_dir, err ) ) {
+                QString path_msg;
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    path_msg = QString( backups_dir.c_str() );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                }
+                DialogSec::errRenaming( path_msg, err_msg );
+                DialogSec::errDatabaseFailedBackup( QString(), QString() );
                 return;
-            } else if ( std::filesystem::exists( backups_dir ) ) {
-                if ( !std::filesystem::is_directory( backups_dir, err ) ) {
-                    // exists but it's not a directory, rename as copy and make a new one
-                    if ( DialogSec::choiceDirNotDir( QString( backups_dir.c_str() ) ) ) {
-                        if ( ! IOutils::renameAsCopy( backups_dir, err ) ) {
-                            QString path_msg;
-                            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                path_msg = QString( backups_dir.c_str() );
-                                if ( err.value() ) {
-                                    err_msg = QString::fromStdString( err.message() );
-                                }
-                            }
-                            DialogSec::errRenaming( path_msg, err_msg );
-                            DialogSec::errDatabaseFailedBackup( QString(), QString() );
-                            return;
-                        } else {
-                            // sucesfully renamed, make the new one
-                            if ( ! IOutils::makeDir( backups_dir, err ) ) {
-                                QString msg = DialogSec::tr("Failed to create the database backups' directory");
-                                if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                    msg += QLatin1String(":\n%1").arg( backups_dir.c_str() );
-                                    if ( err.value() ) {
-                                        err_msg = QString::fromStdString( err.message() );
-                                    }
-                                }
-                                DialogSec::errFailedMakeDir( msg, err_msg );
-                                DialogSec::errDatabaseFailedBackup( QString(), QString() );
-                                return;
-                            }
-                        }
-                    } else {
-                        // choosed not to rename the entry as '.copy'
-                        DialogSec::errDatabaseFailedBackup( QString(), QString() );
-                        return;
+            }
+            // sucesfully renamed, make the new one
+            if ( ! IOutils::makeDir( backups_dir, err ) ) {
+                QString msg = DialogSec::tr("Failed to create the database backups' directory");
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    msg += QLatin1String(":\n%1").arg( backups_dir.c_str() );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
                     }
                 }
-            } else {
-                // backups directory doesn't exists, make it
-                if ( ! IOutils::makeDir( backups_dir, err ) ) {
-                    QString msg = DialogSec::tr("Failed to create the database backups' directory");
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        msg += QLatin1String(":\n%1").arg( backups_dir.c_str() );
-                        if ( err.value() ) {
-                            err_msg = QString::fromStdString( err.message() );
-                        }
-                    }
-                    DialogSec::errFailedMakeDir( msg, err_msg );
-                    DialogSec::errDatabaseFailedBackup( QString(), QString() );
-                    return;
-                }
+                DialogSec::errFailedMakeDir( msg, err_msg );
+                DialogSec::errDatabaseFailedBackup( QString(), QString() );
+                return;
             }
         } else {
-            // database file does not exists or is not a file
-            QString file;
-            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                file = QString( db_file.c_str() );
-            }
-            DialogSec::errDatabaseFailedBackup( DialogSec::tr("The file does not exist"), file, false );
+            // choosed not to rename the entry as '.copy'
+            DialogSec::errDatabaseFailedBackup( QString(), QString() );
             return;
         }
     }
 
+    const path_t base_file{(backups_dir / DatabasesNames::data).concat(".0") };
     bool proceed = std::filesystem::copy_file(
-        this->db_data_path.getPathUnchecked() / DatabasesNames::data,
-        (this->db_data_path.getPathUnchecked() / "backups" / DatabasesNames::data).concat(".0"),
+        db_file,
+        base_file,
         std::filesystem::copy_options::update_existing,
         err );
     if ( ! proceed ) {
@@ -1235,39 +1227,39 @@ void MainWindow::backupDatabase() const
             err_msg = QString::fromStdString( err.message() );
         }
         DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ), err_msg );
-    } else {
-        // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
-        const path_t base_file{ this->db_data_path.getPathUnchecked() / "backups" / DatabasesNames::data };
-        const path_t backup_file{ path_t(base_file).replace_extension(std::to_string(this->db_backups_number)) };
-        if ( std::filesystem::exists( backup_file ) ) {
-            std::ignore = std::filesystem::remove_all( backup_file, err );
+        return;
+    }
+
+    // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
+    const path_t backup_file{ path_t(base_file).replace_extension(std::to_string(this->db_backups_number)) };
+    if ( std::filesystem::exists( backup_file ) ) {
+        std::ignore = std::filesystem::remove_all( backup_file, err );
+        if ( err.value() ) {
+            err_msg = QString::fromStdString( err.message() );
+            proceed &= false;
+        } else {
+            proceed = ! std::filesystem::exists( backup_file );
+        }
+        if ( ! proceed ) {
+            DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
+            return;
+        }
+    }
+    // cascade rename
+    for ( int n=this->db_backups_number-1; n>=0; --n ) {
+        const path_t path{ path_t(base_file).replace_extension(std::to_string(n)) };
+        if ( std::filesystem::exists( path ) ) {
+            const path_t new_path{ path_t(base_file).replace_extension(std::to_string(n+1)) };
+            std::filesystem::rename( path, new_path, err );
             if ( err.value() ) {
                 err_msg = QString::fromStdString( err.message() );
                 proceed &= false;
             } else {
-                proceed = ! std::filesystem::exists( backup_file );
+                proceed = ! std::filesystem::exists( path );
             }
             if ( ! proceed ) {
                 DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
                 return;
-            }
-        }
-        // cascade rename
-        for ( int n=this->db_backups_number-1; n>=0; --n ) {
-            const path_t path{ path_t(base_file).replace_extension(std::to_string(n)) };
-            if ( std::filesystem::exists( path ) ) {
-                const path_t new_path{ path_t(base_file).replace_extension(std::to_string(n+1)) };
-                std::filesystem::rename( path, new_path, err );
-                if ( err.value() ) {
-                    err_msg = QString::fromStdString( err.message() );
-                    proceed &= false;
-                } else {
-                    proceed = ! std::filesystem::exists( path );
-                }
-                if ( ! proceed ) {
-                    DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
-                    return;
-                }
             }
         }
     }
@@ -1276,7 +1268,7 @@ void MainWindow::backupDatabase() const
 
 std::string MainWindow::geometryToString() const
 {
-    QRect geometry{ this->geometry() };
+    const QRect& geometry{ this->geometry() };
     std::string string;
     string += std::to_string( geometry.x() );
     string += ",";
@@ -2024,9 +2016,9 @@ void MainWindow::makeInitialChecks()
 {
     std::error_code err;
     QString err_msg;
+
     // check that the sqlite plugin is available
     if ( ! this->dbHandler.checkDriver() ) {
-        // checks failed, abort
         DialogSec::errSqlDriverNotFound( "QSQLITE" );
         std::exit( 1 );
     }
@@ -2039,51 +2031,13 @@ void MainWindow::makeInitialChecks()
         this->db_hashes_path
     };
     for ( const auto& path_handler : paths ) {
-        if ( const auto path_exp{ path_handler.getPath() };
-             !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        const auto path_exp{ path_handler.getPath() };
+        if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
             path_exp.error().showDialogMessage();
             std::exit( 1 );
-        } else if ( const auto&path{path_exp.value()}; IOutils::exists( path ) ) {
-            if ( IOutils::isDir( path ) ) {
-                if ( ! IOutils::checkDir( path, true ) ) {
-                    DialogSec::errDirNotReadable( QString( path.c_str() ), err_msg );
-                    std::exit( 1 );
-                } else if ( ! IOutils::checkDir( path, false, true ) ) {
-                    DialogSec::errDirNotWritable( QString( path.c_str() ), err_msg );
-                    std::exit( 1 );
-                }
-
-            } else {
-                // not a directory, rename as copy a make a new one
-                if ( DialogSec::choiceDirNotDir( QString( path.c_str() ) ) ) {
-                    if ( ! IOutils::renameAsCopy( path, err ) ) {
-                        QString p;
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            p = QString( path.c_str() );
-                            if ( err.value() ) {
-                                err_msg = QString::fromStdString( err.message() );
-                            }
-                        }
-                        DialogSec::errRenaming( p, err_msg );
-                        std::exit( 1 );
-                    } else if ( ! IOutils::makeDir( path, err ) ) {
-                        QString msg{ DialogSec::tr("Failed to create the directory") };
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            msg += QLatin1String(":\n%1").arg( path.c_str() );
-                            if ( err.value() ) {
-                                err_msg = QString::fromStdString( err.message() );
-                            }
-                        }
-                        DialogSec::errFailedMakeDir( msg, err_msg );
-                        std::exit( 1 );
-                    }
-                } else {
-                    // choosed not to rename the entry as '.copy'
-                    std::exit( 1 );
-                }
-            }
-
-        } else {
+        }
+        const auto& path{ path_exp.value() };
+        if ( ! IOutils::exists( path ) ) {
             if ( ! IOutils::makeDir( path, err ) ) {
                 QString msg{ DialogSec::tr("Failed to create the directory") };
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
@@ -2095,6 +2049,41 @@ void MainWindow::makeInitialChecks()
                 DialogSec::errFailedMakeDir( msg, err_msg );
                 std::exit( 1 );
             }
+
+        } else if ( ! IOutils::isDir( path ) ) {
+            // not a directory, rename as copy a make a new one
+            if ( ! DialogSec::choiceDirNotDir( QString( path.c_str() ) ) ) {
+                // choosed not to rename the entry as '.copy'
+                std::exit( 1 );
+            } else if ( ! IOutils::renameAsCopy( path, err ) ) {
+                QString p;
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    p = QString( path.c_str() );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                }
+                DialogSec::errRenaming( p, err_msg );
+                std::exit( 1 );
+            } else if ( ! IOutils::makeDir( path, err ) ) {
+                QString msg{ DialogSec::tr("Failed to create the directory") };
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    msg += QLatin1String(":\n%1").arg( path.c_str() );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                }
+                DialogSec::errFailedMakeDir( msg, err_msg );
+                std::exit( 1 );
+            }
+
+        } else if ( ! IOutils::checkDir( path, true ) ) {
+            DialogSec::errDirNotReadable( QString( path.c_str() ), err_msg );
+            std::exit( 1 );
+
+        } else if ( ! IOutils::checkDir( path, false, true ) ) {
+            DialogSec::errDirNotWritable( QString( path.c_str() ), err_msg );
+            std::exit( 1 );
         }
     }
 
@@ -2229,34 +2218,28 @@ void MainWindow::showHelp( const std::string& file_name )
         fallback |= true;
     } else {
         const path_t& file_path{ path_exp.value() };
-        if ( IOutils::exists( file_path ) ) {
-            if ( IOutils::isFile( file_path ) ) {
-                if ( IOutils::checkFile( file_path, true ) ) {
-                    // everything ok, open a new window
-                    this->craphelp.reset( new Craphelp() );
-                    this->craphelp->helpLogsFormat(
-                        file_path,
-                        this->TB.getFont(),
-                        this->TB.getColorSchemeID() );
-                    if ( this->isMaximized() ) {
-                        this->craphelp->showMaximized();
-                    } else {
-                        this->craphelp->show();
-                    }
-                } else {
-                    // resource not readable
-                    DialogSec::errHelpNotReadable( link );
-                    fallback |= true;
-                }
-            } else {
-                // resource is not a file
-                DialogSec::errHelpFailed( link, DialogSec::tr("Unrecognized entry") );
-                fallback |= true;
-            }
-        } else {
-            // resource not found
+        if ( ! IOutils::exists( file_path ) ) {
             DialogSec::errHelpNotFound( link );
             fallback |= true;
+        } else if ( ! IOutils::isFile( file_path ) ) {
+            DialogSec::errHelpFailed( link, DialogSec::tr("Unrecognized entry") );
+            fallback |= true;
+        } else if ( ! IOutils::checkFile( file_path, true ) ) {
+            DialogSec::errHelpNotReadable( link );
+            fallback |= true;
+        } else {
+            // everything ok, open a new window
+            this->craphelp.reset( new Craphelp() );
+            this->craphelp->helpLogsFormat(
+                file_path,
+                this->TB.getFont(),
+                this->TB.getColorSchemeID() );
+            if ( this->isMaximized() ) {
+                this->craphelp->showMaximized();
+            } else {
+                this->craphelp->show();
+            }
+            return;
         }
     }
     if ( fallback ) {
@@ -2298,78 +2281,63 @@ WarnlistField MainWindow::warnlistFieldFromString( const QString& str )
 
 
 
-/***************************************************************
- * MainWindow'S OPERATIONS START FROM HERE
- ***************************************************************/
+/****************************************************************
+ ************** UI HANDLING LOGIC START FROM HERE ***************
+ ****************************************************************/
 
 
 //////////////
 //// MENU ////
-/// //////////
+//////////////
 // switch language
-void MainWindow::menu_actionEnglishGb_triggered()
+void MainWindow::uncheckAllLanguageMenuEntries()
 {
-    this->ui->actionEnglishGb->setChecked(    true );
+    this->ui->actionEnglishGb->setChecked(   false );
     this->ui->actionEspanolEs->setChecked(   false );
     this->ui->actionFrancaisFr->setChecked(  false );
     this->ui->actionItalianoIt->setChecked(  false );
     this->ui->actionJapaneseJp->setChecked(  false );
     this->ui->actionPortuguesBr->setChecked( false );
+}
+void MainWindow::menu_actionEnglishGb_triggered()
+{
+    this->uncheckAllLanguageMenuEntries();
+    this->ui->actionEnglishGb->setChecked( true );
     this->language = "en_GB";
     this->updateUiLanguage();
 }
 void MainWindow::menu_actionEspanolEs_triggered()
 {
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(    true );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
+    this->uncheckAllLanguageMenuEntries();
+    this->ui->actionEspanolEs->setChecked( true );
     this->language = "es_ES";
     this->updateUiLanguage();
 }
 void MainWindow::menu_actionFrancaisFr_triggered()
 {
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(   true );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
+    this->uncheckAllLanguageMenuEntries();
+    this->ui->actionFrancaisFr->setChecked( true );
     this->language = "fr_FR";
     this->updateUiLanguage();
 }
 void MainWindow::menu_actionItalianoIt_triggered()
 {
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(   true );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
+    this->uncheckAllLanguageMenuEntries();
+    this->ui->actionItalianoIt->setChecked( true );
     this->language = "it_IT";
     this->updateUiLanguage();
 }
 void MainWindow::menu_actionJapaneseJp_triggered()
 {
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(   true );
-    this->ui->actionPortuguesBr->setChecked( false );
+    this->uncheckAllLanguageMenuEntries();
+    this->ui->actionJapaneseJp->setChecked( true );
     this->language = "ja_JP";
     this->updateUiLanguage();
 }
 void MainWindow::menu_actionPortuguesBr_triggered()
 {
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked(  true );
+    this->uncheckAllLanguageMenuEntries();
+    this->ui->actionPortuguesBr->setChecked( true );
     this->language = "pt_BR";
     this->updateUiLanguage();
 }
@@ -2682,15 +2650,16 @@ void MainWindow::setDbWorkingState( const bool working )
 
 bool MainWindow::dbUsable()
 {
-    if ( ! this->db_working ) {
-        if ( this->db_ok ) {
-            const auto path_exp{ (this->db_data_path / DatabasesNames::data).getPath() };
-            if ( path_exp.has_value() ) {
-                return IOutils::checkFile( path_exp.value(), true );
-            }
-        } else {
-            return this->checkDataDB(); // db is invalid, attempt to renew
-        }
+    if ( this->db_working ) {
+        return false;
+    } else if ( ! this->db_ok ) {
+        // db is invalid, attempt to renew
+        return this->checkDataDB();
+    }
+
+    const auto path_exp{ (this->db_data_path / DatabasesNames::data).getPath() };
+    if ( path_exp.has_value() ) {
+        return IOutils::checkFile( path_exp.value(), true );
     }
     return false;
 }
@@ -2717,7 +2686,6 @@ void MainWindow::checkMakeStats_Makable()
 {
     bool state{ false };
     if ( this->dbUsable() ) {
-        // db is not busy
         if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
             // all checked
             state |= true;
@@ -3101,24 +3069,20 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 
 void MainWindow::resetPerfsLabels()
 {
-    // reset to default
     this->ui->label_MakeStats_Size->setText( "0 B" );
     this->ui->label_MakeStats_Lines->setText( "0" );
-    // time and speed
     this->ui->label_MakeStats_Time->setText( "00:00" );
     this->ui->label_MakeStats_Speed->setText( "0 B/s" );
 }
 
 void MainWindow::updatePerfsLabels()
 {
-    // update values
     if ( this->craplog.isParsing() || this->force_updating_labels ) {
         const size_t size{ this->craplog.getParsedSize() };
         this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
         this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
         this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
     }
-    // time and speed
     std::chrono::duration<float, std::milli> timer_elapsed =
         std::chrono::system_clock::now() - this->waiter_timer_start;
     this->ui->label_MakeStats_Time->setText(
@@ -3128,11 +3092,8 @@ void MainWindow::updatePerfsLabels()
 
 void MainWindow::craplogStarted()
 {
-    // reset perfs
     this->resetPerfsLabels();
-    // disable the LogFiles section
     this->ui->stackedPages_Logs->setEnabled( false );
-    // disable things which needs database access
     this->setDbWorkingState( true );
 }
 
@@ -3166,14 +3127,10 @@ void MainWindow::craplogFinished()
 
 void MainWindow::afterCraplogFinished()
 {
-    // enable the LogFiles section
     this->ui->stackedPages_Logs->setEnabled( true );
-    // enable back
     this->setDbWorkingState( false );
     if ( this->craplog.editedDatabase() ) {
-        // refresh the logs list
         this->on_button_LogFiles_RefreshList_clicked();
-        // get a fresh collection of available stats dates
         this->refreshStatsDates();
     }
 }
@@ -3199,20 +3156,12 @@ void MainWindow::refreshStatsDates()
 //// WARN ////
 void MainWindow::checkStatsWarnDrawable()
 {
-    if ( this->dbUsable() ) {
-        if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
-          && this->ui->box_StatsWarn_Month->currentIndex() >= 0
-          && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
-            // enable the draw button
-            this->ui->button_StatsWarn_Draw->setEnabled( true );
-        } else {
-            // disable the draw button
-            this->ui->button_StatsWarn_Draw->setEnabled( false );
-        }
-    } else {
-        // db busy
-        this->ui->button_StatsWarn_Draw->setEnabled( false );
-    }
+    this->ui->button_StatsWarn_Draw->setEnabled(
+        this->dbUsable()
+        && this->ui->box_StatsWarn_Year->currentIndex() >= 0
+        && this->ui->box_StatsWarn_Month->currentIndex() >= 0
+        && this->ui->box_StatsWarn_Day->currentIndex() >= 0
+    );
 }
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
@@ -3351,25 +3300,17 @@ void MainWindow::drawStatsWarn()
 //// SPEED ////
 void MainWindow::checkStatsSpeedDrawable()
 {
-    if ( this->dbUsable() ) {
-        if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
-          && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
-          && this->ui->box_StatsSpeed_Day->currentIndex() >= 0
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ).has_value()
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ).has_value()
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ).has_value()
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).has_value()
-          && FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).has_value() ) {
-            // enable the draw button
-            this->ui->button_StatsSpeed_Draw->setEnabled( true );
-        } else {
-            // disable the draw button
-            this->ui->button_StatsSpeed_Draw->setEnabled( false );
-        }
-    } else {
-        // db busy
-        this->ui->button_StatsSpeed_Draw->setEnabled( false );
-    }
+    this->ui->button_StatsSpeed_Draw->setEnabled(
+        this->dbUsable()
+        && this->ui->box_StatsSpeed_Year->currentIndex() >= 0
+        && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
+        && this->ui->box_StatsSpeed_Day->currentIndex() >= 0
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ).has_value()
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ).has_value()
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ).has_value()
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).has_value()
+        && FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).has_value()
+    );
 }
 
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
@@ -3540,20 +3481,12 @@ void MainWindow::drawStatsSpeed()
 //// COUNT ////
 void MainWindow::checkStatsCountDrawable()
 {
-    if ( this->dbUsable() ) {
-        if ( this->ui->box_StatsCount_Year->currentIndex() >= 0
-          && this->ui->box_StatsCount_Month->currentIndex() >= 0
-          && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
-            // enable the draw button
-            this->ui->scrollArea_StatsCount->setEnabled( true );
-        } else {
-            // disable the draw button
-            this->ui->scrollArea_StatsCount->setEnabled( false );
-        }
-    } else {
-        // db busy
-        this->ui->scrollArea_StatsCount->setEnabled( false );
-    }
+    this->ui->scrollArea_StatsCount->setEnabled(
+        this->dbUsable()
+        && this->ui->box_StatsCount_Year->currentIndex() >= 0
+        && this->ui->box_StatsCount_Month->currentIndex() >= 0
+        && this->ui->box_StatsCount_Day->currentIndex() >= 0
+    );
 }
 
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
@@ -3782,57 +3715,56 @@ void MainWindow::drawStatsCount()
 //// DAY ////
 void MainWindow::checkStatsDayDrawable()
 {
-    if ( this->dbUsable() ) {
-        bool aux{ true };
-        // secondary date (period)
-        if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
-            if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
-              && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
-              && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
+    if ( ! this->dbUsable() ) {
+        this->ui->button_StatsDay_Draw->setEnabled( false );
+        return;
+    }
+
+    bool aux{ true };
+    // primary date
+    if ( this->ui->box_StatsDay_FromYear->currentIndex() < 0
+      || this->ui->box_StatsDay_FromMonth->currentIndex() < 0
+      || this->ui->box_StatsDay_FromDay->currentIndex() < 0 ) {
+        aux &= false;
+    }
+    // secondary date (period)
+    if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
+        if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
+          || this->ui->box_StatsDay_ToMonth->currentIndex() < 0
+          || this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
+            aux &= false;
+        } else {
+            int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
+            int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
+            if ( a < b ) {
+                // year 'to' is less than 'from'
                 aux &= false;
-            } else {
-                int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
-                int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
+            } else if ( a == b ) {
+                a = this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() );
+                b = this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() );
                 if ( a < b ) {
-                    // year 'to' is less than 'from'
+                    // month 'to' is less than 'from'
                     aux &= false;
                 } else if ( a == b ) {
-                    a = this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() );
-                    b = this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() );
+                    a = this->ui->box_StatsDay_ToDay->currentText().toInt();
+                    b = this->ui->box_StatsDay_FromDay->currentText().toInt();
                     if ( a < b ) {
-                        // month 'to' is less than 'from'
+                        // day 'to' is less than 'from'
                         aux &= false;
-                    } else if ( a == b ) {
-                        a = this->ui->box_StatsDay_ToDay->currentText().toInt();
-                        b = this->ui->box_StatsDay_FromDay->currentText().toInt();
-                        if ( a < b ) {
-                            // day 'to' is less than 'from'
-                            aux &= false;
-                        }
                     }
                 }
             }
         }
-        // primary date
-        if ( this->ui->box_StatsDay_FromYear->currentIndex() < 0
-          && this->ui->box_StatsDay_FromMonth->currentIndex() < 0
-          && this->ui->box_StatsDay_FromDay->currentIndex() < 0 ) {
-            aux &= false;
-        }
-        // check log field validity
-        if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
-            aux &= false;
-        }
-        // check filter string validity
-        if ( ! this->getStatsDayParsedFilter().has_value() ) {
-            aux &= false;
-        }
-        this->ui->button_StatsDay_Draw->setEnabled( aux );
-
-    } else {
-        // db busy
-        this->ui->button_StatsDay_Draw->setEnabled( false );
     }
+    // check log field validity
+    if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
+        aux &= false;
+    }
+    // check filter string validity
+    if ( ! this->getStatsDayParsedFilter().has_value() ) {
+        aux &= false;
+    }
+    this->ui->button_StatsDay_Draw->setEnabled( aux );
 }
 
 LogField MainWindow::getStatsDayLogField() const
@@ -4072,55 +4004,53 @@ void MainWindow::drawStatsDay()
 //// RELATIONAL ////
 void MainWindow::checkStatsRelatDrawable()
 {
-    if ( this->dbUsable() ) {
-        bool aux{ true };
-        if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
-          && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
-          && this->ui->box_StatsRelat_FromDay->currentIndex() >= 0
-          && this->ui->box_StatsRelat_ToYear->currentIndex() >= 0
-          && this->ui->box_StatsRelat_ToMonth->currentIndex() >= 0
-          && this->ui->box_StatsRelat_ToDay->currentIndex() >= 0 ) {
-            // check period validity
-            int a{ this->ui->box_StatsRelat_ToYear->currentText().toInt() };
-            int b{ this->ui->box_StatsRelat_FromYear->currentText().toInt() };
+    if ( ! this->dbUsable() ) {
+        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        return;
+    }
+
+    bool aux{ true };
+    if ( this->ui->box_StatsRelat_FromYear->currentIndex() < 0
+      || this->ui->box_StatsRelat_FromMonth->currentIndex() < 0
+      || this->ui->box_StatsRelat_FromDay->currentIndex() < 0
+      || this->ui->box_StatsRelat_ToYear->currentIndex() < 0
+      || this->ui->box_StatsRelat_ToMonth->currentIndex() < 0
+      || this->ui->box_StatsRelat_ToDay->currentIndex() < 0 ) {
+        aux &= false;
+    } else {
+        // check period validity
+        int a{ this->ui->box_StatsRelat_ToYear->currentText().toInt() };
+        int b{ this->ui->box_StatsRelat_FromYear->currentText().toInt() };
+        if ( a < b ) {
+            // year 'to' is less than 'from'
+            aux &= false;
+        } else if ( a == b ) {
+            a = this->crapview.getMonthNumber( this->ui->box_StatsRelat_ToMonth->currentText() );
+            b = this->crapview.getMonthNumber( this->ui->box_StatsRelat_FromMonth->currentText() );
             if ( a < b ) {
-                // year 'to' is less than 'from'
+                // month 'to' is less than 'from'
                 aux &= false;
             } else if ( a == b ) {
-                a = this->crapview.getMonthNumber( this->ui->box_StatsRelat_ToMonth->currentText() );
-                b = this->crapview.getMonthNumber( this->ui->box_StatsRelat_FromMonth->currentText() );
+                a = this->ui->box_StatsRelat_ToDay->currentText().toInt();
+                b = this->ui->box_StatsRelat_FromDay->currentText().toInt();
                 if ( a < b ) {
-                    // month 'to' is less than 'from'
+                    // day 'to' is less than 'from'
                     aux &= false;
-                } else if ( a == b ) {
-                    a = this->ui->box_StatsRelat_ToDay->currentText().toInt();
-                    b = this->ui->box_StatsRelat_FromDay->currentText().toInt();
-                    if ( a < b ) {
-                        // day 'to' is less than 'from'
-                        aux &= false;
-                    }
                 }
             }
-        } else {
-            // disable the draw button
-            aux &= false;
         }
-        // check log field validity
-        if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() < 0
-          || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
-            aux &= false;
-        }
-        // check filter string validity
-        if ( !this->getStatsRelatParsedFilter( 1 ).has_value()
-          || !this->getStatsRelatParsedFilter( 2 ).has_value() ) {
-            aux &= false;
-        }
-        this->ui->button_StatsRelat_Draw->setEnabled( aux );
-
-    } else {
-        // db busy
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
     }
+    // check log field validity
+    if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() < 0
+      || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
+        aux &= false;
+    }
+    // check filter string validity
+    if ( !this->getStatsRelatParsedFilter( 1 ).has_value()
+      || !this->getStatsRelatParsedFilter( 2 ).has_value() ) {
+        aux &= false;
+    }
+    this->ui->button_StatsRelat_Draw->setEnabled( aux );
 }
 
 
@@ -4367,7 +4297,6 @@ void MainWindow::drawStatsRelat()
 
 ////////////////
 //// GLOBAL ////
-
 void MainWindow::drawStatsGlobals()
 {
     std::vector<std::tuple<QString,QString>> recur_list;
@@ -4379,7 +4308,9 @@ void MainWindow::drawStatsGlobals()
         recur_list, traffic_list, perf_list, work_list,
         this->glob_ws ) };
 
-    if ( result ) {
+    if ( ! result ) {
+        this->resetStatsGlob();
+    } else {
         this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
         this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
         this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
@@ -4429,11 +4360,7 @@ void MainWindow::drawStatsGlobals()
                 this->ui->button_StatsGlob_Nginx->setFlat( true );
             }
         }
-
-    } else {
-        this->resetStatsGlob();
     }
-    // restore db state
     this->setDbWorkingState( false );
 }
 
@@ -4471,8 +4398,6 @@ void MainWindow::resetStatsGlob()
     this->ui->button_StatsGlob_Iis->setFlat( true );
 }
 
-
-
 void MainWindow::makeStatsGlob()
 {
     this->setDbWorkingState( true );
@@ -4491,7 +4416,6 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
     }
 }
 
-
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
     if ( this->dbUsable() && this->checkDataDB() ) {
@@ -4499,7 +4423,6 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
         this->makeStatsGlob();
     }
 }
-
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
