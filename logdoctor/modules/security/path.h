@@ -38,12 +38,11 @@ public:
     //! Convenience function that returns the path as string, without checks
     std::string toString() const;
 
-    //! Returns the path if it is valid, throws otherwise
+    //! Returns the path if it is valid
     /*!
         Checks every component of the path to determine whether it is valid.
         For a path to be valid, all of its components must exist on the filesystem
         and they must follow the security configuration about the symlinks.
-        \throw VoidException
     */
     std::expected<path_t, InvalidPath> getPath() const;
 

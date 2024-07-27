@@ -592,7 +592,6 @@ private:
 
     const std::string home_path{ StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), '/' ) };
 
-    // 1: linux/bsd, 2:windows, 3:mac
     #if defined( Q_OS_MACOS )
         const PathHandler configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
         const PathHandler logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
@@ -654,6 +653,9 @@ private:
     //! Translates the UI to the selected language
     void updateUiLanguage();
 
+    //! Unchecks all the languages in the menu
+    void uncheckAllLanguageMenuEntries();
+
 
     /////////////////////////
     //// WINDOW GEOMETRY ////
@@ -666,6 +668,7 @@ private:
 
     //! Retrieves the window geometry from the given string
     /*!
+        \throw std::exception
         \see readConfigs()
     */
     void setGeometryFromString( const std::string& geometry );
@@ -679,11 +682,15 @@ private:
 
     //! Retrieves the dialogs level from the given string
     /*!
+        \throw std::exception
         \see readConfigs()
     */
     void setDialogsLevelFromString( const std::string& dialogs_level );
 
     //! Returns the dialogs level corresponding to the given number
+    /*!
+        \throw DoNotCatchException
+    */
     DialogsLevel dialogsLevelFromInt( const int dialogs_level );
 
 
@@ -695,6 +702,7 @@ private:
 
     //! Retrieves the Web Server from the given string
     /*!
+        \throw DoNotCatchException
         \see readConfigs()
     */
     void setWebServerFromString( const std::string& web_server );
@@ -708,15 +716,27 @@ private:
     bool remember_window{ true };
 
     //! Auto-detects the icon-set to use depending on the current window theme
+    /*!
+        \throw DoNotCatchException
+    */
     void detectIconsTheme();
 
     //! Updates the icons on the window
+    /*!
+        \throw DoNotCatchException
+    */
     void updateUiIcons();
 
     //! Updates the window theme
+    /*!
+        \throw DoNotCatchException
+    */
     void updateUiTheme();
 
     //! Updates the fonts on the window
+    /*!
+        \throw std::exception
+    */
     void updateUiFonts();
 
     const std::vector<QChart::ChartTheme> CHARTS_THEMES{
