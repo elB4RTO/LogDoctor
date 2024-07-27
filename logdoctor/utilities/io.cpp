@@ -51,7 +51,7 @@ public:
     }
 };
 
-} //namespace (private)
+} // namespace (private)
 
 
 

@@ -49,6 +49,18 @@ inline bool isDir( const std::filesystem::path& path ) noexcept
          : false;
 }
 
+//! Checks if a path exists and is a symlink
+/*!
+    \param path The path of the entry
+    \return The result of the checks
+*/
+inline bool isSymlink( const std::filesystem::path& path ) noexcept
+{
+    return IOutils::exists( path )
+         ? std::filesystem::is_symlink( path )
+         : false;
+}
+
 //! Checks if a path exists, if it points to a file and if the user has read and/or write permissions on it
 /*!
     \param path The path of the entry
