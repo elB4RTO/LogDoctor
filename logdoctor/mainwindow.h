@@ -54,7 +54,7 @@ class MainWindow final : public QMainWindow
     Q_OBJECT
 
     // current version of LogDoctor
-    const float version{ 4.01f };
+    const float version{ 4.02f };
 
 public:
 

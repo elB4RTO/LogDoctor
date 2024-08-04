@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LogDoctor VERSION 4.01 LANGUAGES CXX)
+project(LogDoctor VERSION 4.02 LANGUAGES CXX)
 
 include(cmake/project.cmake)
 logdoc_set_cmake_options()
