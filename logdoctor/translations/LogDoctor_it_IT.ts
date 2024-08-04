@@ -1058,6 +1058,30 @@ This may lead to data losses or crashes if not used with caution</source>
         <translation>Il formato fornito contiene il &apos;Carriage Return&apos;.
 Ciò potrebbe comportare perdite di dati o crash se non usato con cautela</translation>
     </message>
+    <message>
+        <source>Failed to create the configuration file</source>
+        <translation>Creazione del file di configurazione non riuscita</translation>
+    </message>
+    <message>
+        <source>The path contains a symlink</source>
+        <translation>Il percorso contiene un link simbolico</translation>
+    </message>
+    <message>
+        <source>The file does not exist</source>
+        <translation>Il file non esiste</translation>
+    </message>
+    <message>
+        <source>Invalid path</source>
+        <translation>Percorso non valido</translation>
+    </message>
+    <message>
+        <source>Invalid database path</source>
+        <translation>Percorso del database non valido</translation>
+    </message>
+    <message>
+        <source>The path does not exists</source>
+        <translation>Il percorso non esiste</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1390,8 +1414,7 @@ Ciò potrebbe comportare perdite di dati o crash se non usato con cautela</trans
     </message>
     <message>
         <source>TextBrowser</source>
-        <translatorcomment>TextBrowser</translatorcomment>
-        <translation></translation>
+        <translation>TextBrowser</translation>
     </message>
     <message>
         <source>Font to use for the Text Browser</source>
@@ -1636,20 +1659,8 @@ I campi marcati come &apos;DISCARDED&apos; sono stati applicati correttamente, m
         <translation>Attrezzi</translation>
     </message>
     <message>
-        <source>Check updates</source>
-        <translation>Controlla aggiornamenti</translation>
-    </message>
-    <message>
         <source>Perform a version-check</source>
         <translation>Effettua un controllo della versione</translation>
-    </message>
-    <message>
-        <source>Infos</source>
-        <translation>Informazioni</translation>
-    </message>
-    <message>
-        <source>BlockNote</source>
-        <translation>BloccoNote</translation>
     </message>
     <message>
         <source>Open a block-note like window to write temporary text</source>
@@ -1736,16 +1747,8 @@ Per i numeri, usa &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation>Giochi</translation>
     </message>
     <message>
-        <source>CrissCross</source>
-        <translation>Tris</translation>
-    </message>
-    <message>
         <source>Play CrissCross</source>
         <translation>Gioca a Tris</translation>
-    </message>
-    <message>
-        <source>Snake</source>
-        <translation>Snake</translation>
     </message>
     <message>
         <source>Play Snake</source>
@@ -1786,10 +1789,6 @@ I campi non considerati da LogDocrot appariranno come &apos;DISCARDED&apos;</tra
         <translation>Mostra alcune informazioni riguardo LogDoctor</translation>
     </message>
     <message>
-        <source>Changelog</source>
-        <translation>Cambiamenti</translation>
-    </message>
-    <message>
         <source>Show the changelog</source>
         <translation>Mostra i cambiamenti</translation>
     </message>
@@ -1808,96 +1807,12 @@ Tutti i valori appartenenti allo stesso intervallo verranno accumulati e sarà u
         <translation>Intervallo di tempo</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation>2</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation>3</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation>4</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation>5</translation>
-    </message>
-    <message>
-        <source>10</source>
-        <translation>10</translation>
-    </message>
-    <message>
-        <source>15</source>
-        <translation>15</translation>
-    </message>
-    <message>
-        <source>20</source>
-        <translation>20</translation>
-    </message>
-    <message>
-        <source>30</source>
-        <translation>30</translation>
-    </message>
-    <message>
-        <source>60</source>
-        <translation>60</translation>
-    </message>
-    <message>
-        <source>120</source>
-        <translation>120</translation>
-    </message>
-    <message>
-        <source>180</source>
-        <translation>180</translation>
-    </message>
-    <message>
-        <source>240</source>
-        <translation>240</translation>
-    </message>
-    <message>
-        <source>300</source>
-        <translation>300</translation>
-    </message>
-    <message>
-        <source>600</source>
-        <translation>600</translation>
-    </message>
-    <message>
-        <source>900</source>
-        <translation>900</translation>
-    </message>
-    <message>
-        <source>1200</source>
-        <translation>1200</translation>
-    </message>
-    <message>
-        <source>1800</source>
-        <translation>1800</translation>
-    </message>
-    <message>
-        <source>3600</source>
-        <translation>3600</translation>
-    </message>
-    <message>
         <source>The format to use for the labels of the time axis.</source>
         <translation>Il formato da usare per le etichette dell&apos;asse del tempo.</translation>
     </message>
     <message>
         <source>Time format</source>
         <translation>Formato dell&apos;orario</translation>
-    </message>
-    <message>
-        <source>hh:mm</source>
-        <translation>hh:mm</translation>
-    </message>
-    <message>
-        <source>hh</source>
-        <translation>hh</translation>
     </message>
     <message>
         <source>The size of the pie</source>
@@ -1924,6 +1839,42 @@ Le porzioni in eccesso verratto raggruppate in una singola fetta.</translation>
     <message>
         <source>Appearance</source>
         <translation>Aspetto</translation>
+    </message>
+    <message>
+        <source>Security</source>
+        <translation>Sicurezza</translation>
+    </message>
+    <message>
+        <source>Whether it is allowed or denied to follow symlinks occuring in a path</source>
+        <translation>Se è permesso o negato di seguire i collegamenti simbolici all&apos;interno di un percorso</translation>
+    </message>
+    <message>
+        <source>Follow symlinks</source>
+        <translation>Segui i link simbolici</translation>
+    </message>
+    <message>
+        <source>Check updates</source>
+        <translation>Controllo aggiornamenti</translation>
+    </message>
+    <message>
+        <source>Infos</source>
+        <translation>Informazioni</translation>
+    </message>
+    <message>
+        <source>BlockNote</source>
+        <translation>Blocco note</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation>Tris</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation>Snake</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation>Cambiamenti</translation>
     </message>
 </context>
 <context>

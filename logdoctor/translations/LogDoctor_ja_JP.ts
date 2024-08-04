@@ -1058,6 +1058,30 @@ This may lead to data losses or crashes if not used with caution</source>
         <translation type="unfinished">提供された形式には「Carriage Return」が含まれています。
 注意して使用しないと、データの損失やクラッシュが発生する可能性があります</translation>
     </message>
+    <message>
+        <source>Failed to create the configuration file</source>
+        <translation type="unfinished">設定ファイルを作成する失敗</translation>
+    </message>
+    <message>
+        <source>The path contains a symlink</source>
+        <translation type="unfinished">パスには、symlink が含まれています</translation>
+    </message>
+    <message>
+        <source>The file does not exist</source>
+        <translation type="unfinished">ファイルが存在しない</translation>
+    </message>
+    <message>
+        <source>Invalid path</source>
+        <translation type="unfinished">無効なパス</translation>
+    </message>
+    <message>
+        <source>Invalid database path</source>
+        <translation type="unfinished">無効なデータベースパス</translation>
+    </message>
+    <message>
+        <source>The path does not exists</source>
+        <translation type="unfinished">パスが存在しません</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1635,20 +1659,8 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation type="unfinished">ツール</translation>
     </message>
     <message>
-        <source>Check updates</source>
-        <translation type="unfinished">更新を確認する</translation>
-    </message>
-    <message>
         <source>Perform a version-check</source>
         <translation type="unfinished">バージョンチェックを実行する</translation>
-    </message>
-    <message>
-        <source>Infos</source>
-        <translation type="unfinished">情報</translation>
-    </message>
-    <message>
-        <source>BlockNote</source>
-        <translation type="unfinished">ブロックノート</translation>
     </message>
     <message>
         <source>Open a block-note like window to write temporary text</source>
@@ -1735,16 +1747,8 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation type="unfinished">ゲーム</translation>
     </message>
     <message>
-        <source>CrissCross</source>
-        <translation type="unfinished">クリスクロス</translation>
-    </message>
-    <message>
         <source>Play CrissCross</source>
         <translation type="unfinished">クリスクロスをプレイ</translation>
-    </message>
-    <message>
-        <source>Snake</source>
-        <translation type="unfinished">蛇</translation>
     </message>
     <message>
         <source>Play Snake</source>
@@ -1785,10 +1789,6 @@ LogDoctor によって考慮されないフィールドは、「DISCARDED」と�
         <translation type="unfinished">LogDoctor に関する情報を表示します</translation>
     </message>
     <message>
-        <source>Changelog</source>
-        <translation type="unfinished">変更履歴</translation>
-    </message>
-    <message>
         <source>Show the changelog</source>
         <translation type="unfinished">変更ログを表示する</translation>
     </message>
@@ -1807,96 +1807,12 @@ All the values falling inside the same interval will be merged and the mean valu
         <translation type="unfinished">時間間隔</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation type="unfinished">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="unfinished">2</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation type="unfinished">3</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation type="unfinished">4</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation type="unfinished">5</translation>
-    </message>
-    <message>
-        <source>10</source>
-        <translation type="unfinished">10</translation>
-    </message>
-    <message>
-        <source>15</source>
-        <translation type="unfinished">15</translation>
-    </message>
-    <message>
-        <source>20</source>
-        <translation type="unfinished">20</translation>
-    </message>
-    <message>
-        <source>30</source>
-        <translation type="unfinished">30</translation>
-    </message>
-    <message>
-        <source>60</source>
-        <translation type="unfinished">60</translation>
-    </message>
-    <message>
-        <source>120</source>
-        <translation type="unfinished">120</translation>
-    </message>
-    <message>
-        <source>180</source>
-        <translation type="unfinished">180</translation>
-    </message>
-    <message>
-        <source>240</source>
-        <translation type="unfinished">240</translation>
-    </message>
-    <message>
-        <source>300</source>
-        <translation type="unfinished">300</translation>
-    </message>
-    <message>
-        <source>600</source>
-        <translation type="unfinished">600</translation>
-    </message>
-    <message>
-        <source>900</source>
-        <translation type="unfinished">900</translation>
-    </message>
-    <message>
-        <source>1200</source>
-        <translation type="unfinished">1200</translation>
-    </message>
-    <message>
-        <source>1800</source>
-        <translation type="unfinished">1800</translation>
-    </message>
-    <message>
-        <source>3600</source>
-        <translation type="unfinished">3600</translation>
-    </message>
-    <message>
         <source>The format to use for the labels of the time axis.</source>
         <translation type="unfinished">時間軸のラベルに使用する形式。</translation>
     </message>
     <message>
         <source>Time format</source>
         <translation type="unfinished">時刻形式</translation>
-    </message>
-    <message>
-        <source>hh:mm</source>
-        <translation type="unfinished">hh:mm</translation>
-    </message>
-    <message>
-        <source>hh</source>
-        <translation type="unfinished">hh</translation>
     </message>
     <message>
         <source>The size of the pie</source>
@@ -1923,6 +1839,42 @@ Exceeding slices will be grouped into one comprehensive slice.</source>
     <message>
         <source>Appearance</source>
         <translation type="unfinished">外観</translation>
+    </message>
+    <message>
+        <source>Security</source>
+        <translation type="unfinished">セキュリティ</translation>
+    </message>
+    <message>
+        <source>Whether it is allowed or denied to follow symlinks occuring in a path</source>
+        <translation type="unfinished">パスで発生したシンリンクに従うことを許可または拒否するかどうか</translation>
+    </message>
+    <message>
+        <source>Follow symlinks</source>
+        <translation type="unfinished">シンポジウムのフォロー</translation>
+    </message>
+    <message>
+        <source>Check updates</source>
+        <translation type="unfinished">更新情報</translation>
+    </message>
+    <message>
+        <source>Infos</source>
+        <translation type="unfinished">インフォメーション</translation>
+    </message>
+    <message>
+        <source>BlockNote</source>
+        <translation type="unfinished">ブロックノート</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation type="unfinished">クリスクロス</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation type="unfinished">蛇</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">変更履歴</translation>
     </message>
 </context>
 <context>
