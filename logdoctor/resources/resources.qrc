@@ -3,12 +3,51 @@
         <file>logo/logdoctor.svg</file>
     </qresource>
     <qresource prefix="/translations">
+        <file alias="ar_AR">translations/LogDoctor_ar_AR.qm</file>
+        <file alias="az_AZ">translations/LogDoctor_az_AZ.qm</file>
+        <file alias="bg_BG">translations/LogDoctor_bg_BG.qm</file>
+        <file alias="bn_BN">translations/LogDoctor_bn_BN.qm</file>
+        <file alias="ca_SP">translations/LogDoctor_ca_SP.qm</file>
+        <file alias="cs_CZ">translations/LogDoctor_cs_CZ.qm</file>
+        <file alias="da_DA">translations/LogDoctor_da_DA.qm</file>
+        <file alias="de_GE">translations/LogDoctor_de_GE.qm</file>
+        <file alias="el_GR">translations/LogDoctor_el_GR.qm</file>
         <file alias="en_GB">translations/LogDoctor_en_GB.qm</file>
-        <file alias="es_ES">translations/LogDoctor_es_ES.qm</file>
+        <file alias="eo_EO">translations/LogDoctor_eo_EO.qm</file>
+        <file alias="es_SP">translations/LogDoctor_es_SP.qm</file>
+        <file alias="et_ES">translations/LogDoctor_et_ES.qm</file>
+        <file alias="fa_PE">translations/LogDoctor_fa_PE.qm</file>
+        <file alias="fi_FI">translations/LogDoctor_fi_FI.qm</file>
         <file alias="fr_FR">translations/LogDoctor_fr_FR.qm</file>
+        <file alias="ga_IR">translations/LogDoctor_ga_IR.qm</file>
+        <file alias="he_HE">translations/LogDoctor_he_HE.qm</file>
+        <file alias="hi_IN">translations/LogDoctor_hi_IN.qm</file>
+        <file alias="hu_HU">translations/LogDoctor_hu_HU.qm</file>
+        <file alias="id_ID">translations/LogDoctor_id_ID.qm</file>
         <file alias="it_IT">translations/LogDoctor_it_IT.qm</file>
         <file alias="ja_JP">translations/LogDoctor_ja_JP.qm</file>
+        <file alias="ko_KO">translations/LogDoctor_ko_KO.qm</file>
+        <file alias="lt_LI">translations/LogDoctor_lt_LI.qm</file>
+        <file alias="lv_LA">translations/LogDoctor_lv_LA.qm</file>
+        <file alias="ms_MA">translations/LogDoctor_ms_MA.qm</file>
+        <file alias="nb_NB">translations/LogDoctor_nb_NB.qm</file>
+        <file alias="nl_NL">translations/LogDoctor_nl_NL.qm</file>
+        <file alias="pl_PL">translations/LogDoctor_pl_PL.qm</file>
         <file alias="pt_BR">translations/LogDoctor_pt_BR.qm</file>
+        <file alias="pt_PT">translations/LogDoctor_pt_PT.qm</file>
+        <file alias="ro_RO">translations/LogDoctor_ro_RO.qm</file>
+        <file alias="ru_RU">translations/LogDoctor_ru_RU.qm</file>
+        <file alias="sk_SK">translations/LogDoctor_sk_SK.qm</file>
+        <file alias="sl_SL">translations/LogDoctor_sl_SL.qm</file>
+        <file alias="sq_AL">translations/LogDoctor_sq_AL.qm</file>
+        <file alias="sv_SV">translations/LogDoctor_sv_SV.qm</file>
+        <file alias="th_TH">translations/LogDoctor_th_TH.qm</file>
+        <file alias="tl_PH">translations/LogDoctor_tl_PH.qm</file>
+        <file alias="tr_TR">translations/LogDoctor_tr_TR.qm</file>
+        <file alias="uk_UK">translations/LogDoctor_uk_UK.qm</file>
+        <file alias="ur_PA">translations/LogDoctor_ur_PA.qm</file>
+        <file alias="zh_CN">translations/LogDoctor_zh_CN.qm</file>
+        <file alias="zt_CN">translations/LogDoctor_zt_CN.qm</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="3270">fonts/3270.ttf</file>
@@ -254,14 +293,6 @@
         <file>icons/midtone/spinbox_add.png</file>
         <file>icons/midtone/spinbox_sub.png</file>
         <file>icons/midtone/up.png</file>
-    </qresource>
-    <qresource prefix="/flags">
-        <file>flags/br.png</file>
-        <file>flags/es.png</file>
-        <file>flags/fr.png</file>
-        <file>flags/gb.png</file>
-        <file>flags/it.png</file>
-        <file>flags/jp.png</file>
     </qresource>
     <qresource prefix="/games">
         <file>games/crisscross/o.png</file>
