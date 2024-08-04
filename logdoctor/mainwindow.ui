@@ -6143,8 +6143,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
             </font>
            </property>
            <widget class="QWidget" name="page_Conf_General_Window">
-            <layout class="QVBoxLayout" name="verticalLayout_12">
-             <item>
+            <layout class="QGridLayout" name="gridLayout_37">
+             <item row="0" column="0">
               <widget class="QFrame" name="frame_ConfWindow_Geometry">
                <layout class="QGridLayout" name="gridLayout_51">
                 <item row="1" column="0">
@@ -6226,7 +6226,7 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                </layout>
               </widget>
              </item>
-             <item>
+             <item row="1" column="0" colspan="2">
               <widget class="QFrame" name="frame_ConfWindow_Theme">
                <layout class="QGridLayout" name="gridLayout_50">
                 <item row="0" column="0" colspan="3">
@@ -6333,8 +6333,8 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                </layout>
               </widget>
              </item>
-             <item>
-              <widget class="QFrame" name="frame_ConfWindow_Theme_2">
+             <item row="2" column="0" colspan="2">
+              <widget class="QFrame" name="frame_ConfWindow_Icons">
                <layout class="QGridLayout" name="gridLayout_67">
                 <item row="1" column="0">
                  <spacer name="spacer_ConfWindow_Icons_1">
@@ -6440,7 +6440,102 @@ With numbers, use '!', '=','&lt;' or '&gt;' to declare what to use</string>
                </layout>
               </widget>
              </item>
-             <item>
+             <item row="3" column="0" colspan="2">
+              <widget class="QFrame" name="frame_ConfWindow_Language">
+               <layout class="QGridLayout" name="gridLayout_68">
+                <item row="1" column="0">
+                 <spacer name="spacer_ConfWindow_Language_1">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Policy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>16</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="2">
+                 <spacer name="spacer_ConfWindow_Language_2">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>569</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="box_ConfWindow_Language">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>260</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>260</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>13</pointsize>
+                   </font>
+                  </property>
+                  <property name="currentText">
+                   <string notr="true"/>
+                  </property>
+                  <property name="placeholderText">
+                   <string notr="true"/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLabel" name="label_ConfWindow_Language">
+                  <property name="minimumSize">
+                   <size>
+                    <width>128</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Theme to use for the window</string>
+                  </property>
+                  <property name="text">
+                   <string>Language</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="2">
               <spacer name="spacer_ConfWindow_1">
                <property name="orientation">
                 <enum>Qt::Orientation::Vertical</enum>
@@ -7094,97 +7189,97 @@ All the values falling inside the same interval will be merged and the mean valu
                   </property>
                   <item>
                    <property name="text">
-                    <string>1</string>
+                    <string notr="true">1</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>2</string>
+                    <string notr="true">2</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>3</string>
+                    <string notr="true">3</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>4</string>
+                    <string notr="true">4</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>5</string>
+                    <string notr="true">5</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>10</string>
+                    <string notr="true">10</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>15</string>
+                    <string notr="true">15</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>20</string>
+                    <string notr="true">20</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>30</string>
+                    <string notr="true">30</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>60</string>
+                    <string notr="true">60</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>120</string>
+                    <string notr="true">120</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>180</string>
+                    <string notr="true">180</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>240</string>
+                    <string notr="true">240</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>300</string>
+                    <string notr="true">300</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>600</string>
+                    <string notr="true">600</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>900</string>
+                    <string notr="true">900</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>1200</string>
+                    <string notr="true">1200</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>1800</string>
+                    <string notr="true">1800</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>3600</string>
+                    <string notr="true">3600</string>
                    </property>
                   </item>
                  </widget>
@@ -7267,12 +7362,12 @@ All the values falling inside the same interval will be merged and the mean valu
                   </property>
                   <item>
                    <property name="text">
-                    <string>hh:mm</string>
+                    <string notr="true">hh:mm</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>hh</string>
+                    <string notr="true">hh</string>
                    </property>
                   </item>
                  </widget>
@@ -7563,12 +7658,12 @@ Exceeding slices will be grouped into one comprehensive slice.</string>
                   </property>
                   <item>
                    <property name="text">
-                    <string>hh:mm</string>
+                    <string notr="true">hh:mm</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>hh</string>
+                    <string notr="true">hh</string>
                    </property>
                   </item>
                  </widget>
@@ -12103,17 +12198,6 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
      <pointsize>11</pointsize>
     </font>
    </property>
-   <widget class="QMenu" name="menuLanguage">
-    <property name="title">
-     <string>Language</string>
-    </property>
-    <addaction name="actionEnglishGb"/>
-    <addaction name="actionEspanolEs"/>
-    <addaction name="actionFrancaisFr"/>
-    <addaction name="actionItalianoIt"/>
-    <addaction name="actionPortuguesBr"/>
-    <addaction name="actionJapaneseJp"/>
-   </widget>
    <widget class="QMenu" name="menuUtilities">
     <property name="font">
      <font>
@@ -12150,77 +12234,13 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
     <addaction name="actionCrissCross"/>
     <addaction name="actionSnake"/>
    </widget>
-   <addaction name="menuLanguage"/>
    <addaction name="menuTools"/>
    <addaction name="menuUtilities"/>
    <addaction name="menuGames"/>
   </widget>
-  <action name="actionEnglishGb">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/gb.png</normaloff>:/flags/flags/gb.png</iconset>
-   </property>
-   <property name="text">
-    <string notr="true">&amp;English</string>
-   </property>
-   <property name="toolTip">
-    <string notr="true">English</string>
-   </property>
-  </action>
-  <action name="actionEspanolEs">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/es.png</normaloff>:/flags/flags/es.png</iconset>
-   </property>
-   <property name="text">
-    <string notr="true">E&amp;spañol</string>
-   </property>
-   <property name="toolTip">
-    <string notr="true">Español</string>
-   </property>
-  </action>
-  <action name="actionFrancaisFr">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/fr.png</normaloff>:/flags/flags/fr.png</iconset>
-   </property>
-   <property name="text">
-    <string notr="true">&amp;Francais</string>
-   </property>
-   <property name="toolTip">
-    <string notr="true">Francais</string>
-   </property>
-  </action>
-  <action name="actionItalianoIt">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/it.png</normaloff>:/flags/flags/it.png</iconset>
-   </property>
-   <property name="text">
-    <string notr="true">&amp;Italiano</string>
-   </property>
-   <property name="toolTip">
-    <string notr="true">Italiano</string>
-   </property>
-  </action>
   <action name="actionCheckUpdates">
    <property name="text">
-    <string>Check &amp;updates</string>
+    <string>Check updates</string>
    </property>
    <property name="toolTip">
     <string>Perform a version-check</string>
@@ -12228,7 +12248,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
   </action>
   <action name="actionInfos">
    <property name="text">
-    <string>&amp;Infos</string>
+    <string>Infos</string>
    </property>
    <property name="toolTip">
     <string>Show some info about LogDoctor</string>
@@ -12236,7 +12256,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
   </action>
   <action name="actionBlockNote">
    <property name="text">
-    <string>&amp;BlockNote</string>
+    <string>BlockNote</string>
    </property>
    <property name="toolTip">
     <string>Open a block-note like window to write temporary text</string>
@@ -12244,7 +12264,7 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
   </action>
   <action name="actionCrissCross">
    <property name="text">
-    <string>&amp;CrissCross</string>
+    <string>CrissCross</string>
    </property>
    <property name="toolTip">
     <string>Play CrissCross</string>
@@ -12252,39 +12272,15 @@ Fields marked as 'DISCARDED' got parsed correctly, but are not considered by Log
   </action>
   <action name="actionSnake">
    <property name="text">
-    <string>&amp;Snake</string>
+    <string>Snake</string>
    </property>
    <property name="toolTip">
     <string>Play Snake</string>
    </property>
   </action>
-  <action name="actionJapaneseJp">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/jp.png</normaloff>:/flags/flags/jp.png</iconset>
-   </property>
-   <property name="text">
-    <string notr="true">日本語</string>
-   </property>
-  </action>
-  <action name="actionPortuguesBr">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources/resources.qrc">
-     <normaloff>:/flags/flags/br.png</normaloff>:/flags/flags/br.png</iconset>
-   </property>
-   <property name="text">
-    <string notr="true">&amp;Português</string>
-   </property>
-  </action>
   <action name="actionChangelog">
    <property name="text">
-    <string>&amp;Changelog</string>
+    <string>Changelog</string>
    </property>
    <property name="toolTip">
     <string>Show the changelog</string>
