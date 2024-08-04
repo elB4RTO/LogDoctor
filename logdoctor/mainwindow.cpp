@@ -10,6 +10,7 @@
 
 #include "customs/logfile_treewidgetitem.h"
 #include "customs/models/logfields_listmodel.h"
+#include "customs/models/languages_listmodel.h"
 
 #include "utilities/checks.h"
 #include "utilities/colors.h"
@@ -18,6 +19,7 @@
 #include "utilities/printables.h"
 #include "utilities/rtf.h"
 #include "utilities/stylesheets.h"
+#include "utilities/vectors.h"
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
@@ -121,13 +123,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //////////////
     //// MENU ////
-    // languages
-    connect( this->ui->actionEnglishGb,   &QAction::triggered, this, &MainWindow::menu_actionEnglishGb_triggered   );
-    connect( this->ui->actionEspanolEs,   &QAction::triggered, this, &MainWindow::menu_actionEspanolEs_triggered   );
-    connect( this->ui->actionFrancaisFr,  &QAction::triggered, this, &MainWindow::menu_actionFrancaisFr_triggered  );
-    connect( this->ui->actionItalianoIt,  &QAction::triggered, this, &MainWindow::menu_actionItalianoIt_triggered  );
-    connect( this->ui->actionJapaneseJp,  &QAction::triggered, this, &MainWindow::menu_actionJapaneseJp_triggered  );
-    connect( this->ui->actionPortuguesBr, &QAction::triggered, this, &MainWindow::menu_actionPortuguesBr_triggered );
     // tools
     connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
     // utilities
@@ -161,27 +156,19 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_StatsRelat_LogsField_2->setModel( new RelationslLogFieldsListModel() );
 
 
+    //////////////////
+    //// CRAPCONF ////
+    {
+        QSignalBlocker blocker( this->ui->box_ConfWindow_Language );
+        this->ui->box_ConfWindow_Language->setModel( new LanguagesListModel() );
+    }
+
+
     ///////////////////
     //// POLISHING ////
     // default tabs
     this->switchMainTab( 0 );
     this->switchStatsTab( 0 );
-
-    // language menu
-    if ( this->language != "en_GB" ) {
-        this->ui->actionEnglishGb->setChecked( false );
-        if ( language == "es_ES" ) {
-            this->ui->actionEspanolEs->setChecked( true );
-        } else if ( language == "fr_FR" ) {
-            this->ui->actionFrancaisFr->setChecked( true );
-        } else if ( language == "it_IT" ) {
-            this->ui->actionItalianoIt->setChecked( true );
-        } else if ( language == "ja_JP" ) {
-            this->ui->actionJapaneseJp->setChecked( true );
-        } else if ( language == "pt_BR" ) {
-            this->ui->actionPortuguesBr->setChecked( true );
-        }
-    }
 
     // set the default WS as the current one
     switch ( this->default_web_server ) {
@@ -212,6 +199,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
     this->ui->box_ConfWindow_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::window_theme) );
     this->ui->box_ConfWindow_Icons->setCurrentIndex( static_cast<int>(GlobalConfigs::icons_theme) );
+    this->ui->box_ConfWindow_Language->setCurrentIndex(
+        dynamic_cast<LanguagesListModel*>( this->ui->box_ConfWindow_Language->model() )->indexOfLanguage( this->language )
+    );
     // dialogs
     this->ui->slider_ConfDialogs_General->setValue( static_cast<int>(this->dialogs_level) );
     this->ui->slider_ConfDialogs_Logs->setValue( static_cast<int>(this->craplog.getDialogsLevel()) );
@@ -447,7 +437,7 @@ void MainWindow::readConfigs()
                     invalid_lines.append( QString::fromStdString( line ) );
                     DialogSec::errLangLocaleInvalid( QString::fromStdString( val ) );
                 } else {
-                    if ( val == "en_GB" || val == "es_ES" || val == "fr_FR" || val == "it_IT" || val == "ja_JP" || val == "pt_BR" ) {
+                    if ( VecOps::contains( this->available_languages, val ) ) {
                         this->language = val;
                     } else {
                         invalid_lines.append( QString::fromStdString( line ) );
@@ -1649,13 +1639,6 @@ void MainWindow::updateUiFonts()
     QFont header_font{ small_font };
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
-    this->ui->menuLanguage->setFont( menu_font );
-    this->ui->actionEnglishGb->setFont( menu_font );
-    this->ui->actionEspanolEs->setFont( menu_font );
-    this->ui->actionFrancaisFr->setFont( menu_font );
-    this->ui->actionItalianoIt->setFont( menu_font );
-    this->ui->actionJapaneseJp->setFont( menu_font );
-    this->ui->actionPortuguesBr->setFont( menu_font );
     this->ui->menuTools->setFont( menu_font );
     this->ui->actionBlockNote->setFont( menu_font );
     this->ui->menuUtilities->setFont( menu_font );
@@ -1819,6 +1802,8 @@ void MainWindow::updateUiFonts()
     this->ui->box_ConfWindow_Theme->setFont( font );
     this->ui->label_ConfWindow_Icons->setFont( big_font );
     this->ui->box_ConfWindow_Icons->setFont( font );
+    this->ui->label_ConfWindow_Language->setFont( big_font );
+    this->ui->box_ConfWindow_Language->setFont( font );
     // conf dialogs
     this->ui->label_ConfDialogs_Level->setFont( big_font );
     this->ui->label_ConfDialogs_General->setFont( font );
@@ -2289,59 +2274,6 @@ WarnlistField MainWindow::warnlistFieldFromString( const QString& str )
 //////////////
 //// MENU ////
 //////////////
-// switch language
-void MainWindow::uncheckAllLanguageMenuEntries()
-{
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
-}
-void MainWindow::menu_actionEnglishGb_triggered()
-{
-    this->uncheckAllLanguageMenuEntries();
-    this->ui->actionEnglishGb->setChecked( true );
-    this->language = "en_GB";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionEspanolEs_triggered()
-{
-    this->uncheckAllLanguageMenuEntries();
-    this->ui->actionEspanolEs->setChecked( true );
-    this->language = "es_ES";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionFrancaisFr_triggered()
-{
-    this->uncheckAllLanguageMenuEntries();
-    this->ui->actionFrancaisFr->setChecked( true );
-    this->language = "fr_FR";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionItalianoIt_triggered()
-{
-    this->uncheckAllLanguageMenuEntries();
-    this->ui->actionItalianoIt->setChecked( true );
-    this->language = "it_IT";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionJapaneseJp_triggered()
-{
-    this->uncheckAllLanguageMenuEntries();
-    this->ui->actionJapaneseJp->setChecked( true );
-    this->language = "ja_JP";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionPortuguesBr_triggered()
-{
-    this->uncheckAllLanguageMenuEntries();
-    this->ui->actionPortuguesBr->setChecked( true );
-    this->language = "pt_BR";
-    this->updateUiLanguage();
-}
-
 // use a tool
 void MainWindow::menu_actionBlockNote_triggered()
 {
@@ -4544,6 +4476,15 @@ void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
 {
     GlobalConfigs::icons_theme = static_cast<IconsTheme>(index);
     this->updateUiIcons();
+}
+
+void MainWindow::on_box_ConfWindow_Language_currentIndexChanged(int index)
+{
+    const QModelIndex idx{ this->ui->box_ConfWindow_Language->model()->index(
+        index, 0 ) };
+    this->language = this->ui->box_ConfWindow_Language->model()->data(
+        idx, Qt::UserRole).value<std::string>();
+    this->updateUiLanguage();
 }
 
 

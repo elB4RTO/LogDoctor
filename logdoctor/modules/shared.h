@@ -20,28 +20,28 @@ public:
 const std::string BOOLS__FALSE { TR::tr("FALSE").toStdString() };
 const std::string BOOLS__TRUE  { TR::tr("TRUE").toStdString()  };
 
-const std::string WORDS__DATE   { TR::tr("Date").toStdString() };
-const std::string WORDS__YEAR   { TR::tr("Year").toStdString() };
-const std::string WORDS__MONTH  { TR::tr("Month").toStdString() };
-const std::string WORDS__DAY    { TR::tr("Day").toStdString() };
-const std::string WORDS__TIME   { TR::tr("Time").toStdString() };
-const std::string WORDS__HOUR   { TR::tr("Hour").toStdString() };
+const std::string WORDS__DATE   { TR::tr("Date").toStdString()   };
+const std::string WORDS__YEAR   { TR::tr("Year").toStdString()   };
+const std::string WORDS__MONTH  { TR::tr("Month").toStdString()  };
+const std::string WORDS__DAY    { TR::tr("Day").toStdString()    };
+const std::string WORDS__TIME   { TR::tr("Time").toStdString()   };
+const std::string WORDS__HOUR   { TR::tr("Hour").toStdString()   };
 const std::string WORDS__MINUTE { TR::tr("Minute").toStdString() };
 const std::string WORDS__SECOND { TR::tr("Second").toStdString() };
 
-const std::string FIELDS__WARNING        { TR::tr("Warning").toStdString()  };
-const std::string FIELDS__PROTOCOL       { TR::tr("Protocol").toStdString() };
-const std::string FIELDS__METHOD         { TR::tr("Method").toStdString()   };
-const std::string FIELDS__URI            { TR::tr("URI").toStdString()      };
-const std::string FIELDS__QUERY          { TR::tr("Query").toStdString()    };
+const std::string FIELDS__WARNING        { TR::tr("Warning").toStdString()        };
+const std::string FIELDS__PROTOCOL       { TR::tr("Protocol").toStdString()       };
+const std::string FIELDS__METHOD         { TR::tr("Method").toStdString()         };
+const std::string FIELDS__URI            { TR::tr("URI").toStdString()            };
+const std::string FIELDS__QUERY          { TR::tr("Query").toStdString()          };
 const std::string FIELDS__RESPONSE_CODE  { TR::tr("Response code").toStdString()  };
 const std::string FIELDS__TIME_TAKEN     { TR::tr("Time taken").toStdString()     };
 const std::string FIELDS__BYTES_SENT     { TR::tr("Bytes sent").toStdString()     };
 const std::string FIELDS__BYTES_RECEIVED { TR::tr("Bytes received").toStdString() };
-const std::string FIELDS__REFERRER       { TR::tr("Referrer").toStdString()   };
-const std::string FIELDS__COOKIE         { TR::tr("Cookie").toStdString()     };
-const std::string FIELDS__CLIENT         { TR::tr("Client").toStdString()     };
-const std::string FIELDS__USER_AGENT     { TR::tr("User-agent").toStdString() };
+const std::string FIELDS__REFERRER       { TR::tr("Referrer").toStdString()       };
+const std::string FIELDS__COOKIE         { TR::tr("Cookie").toStdString()         };
+const std::string FIELDS__CLIENT         { TR::tr("Client").toStdString()         };
+const std::string FIELDS__USER_AGENT     { TR::tr("User-agent").toStdString()     };
 
 const std::string MONTHS__JANUARY   { TR::tr("January").toStdString()   };
 const std::string MONTHS__FEBRUARY  { TR::tr("February").toStdString()  };

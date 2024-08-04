@@ -297,6 +297,8 @@ private slots:
 
     void on_box_ConfWindow_Icons_currentIndexChanged(int index);
 
+    void on_box_ConfWindow_Language_currentIndexChanged(int index);
+
     //// DIALOGS ////
 
     void on_slider_ConfDialogs_General_sliderReleased();
@@ -544,22 +546,8 @@ private slots:
     void on_button_ConfIis_Blacklist_Down_clicked();
 
 
-    ///////////////
+    //////////////
     //// MENU ////
-
-    //// LANGUAGE ////
-
-    void menu_actionEnglishGb_triggered();
-
-    void menu_actionEspanolEs_triggered();
-
-    void menu_actionFrancaisFr_triggered();
-
-    void menu_actionItalianoIt_triggered();
-
-    void menu_actionJapaneseJp_triggered();
-
-    void menu_actionPortuguesBr_triggered();
 
     //// TOOLS ////
 
@@ -649,6 +637,14 @@ private:
     QTranslator translator;
 
     std::string language{ "en_GB" };
+
+    const std::vector<std::string> available_languages{
+        "ar_AR", "az_AZ", "bg_BG", "bn_BN", "ca_SP", "cs_CZ", "da_DA", "de_GE", "el_GR",
+        "en_GB", "eo_EO", "es_SP", "et_ES", "fa_PE", "fi_FI", "fr_FR", "ga_IR", "he_HE",
+        "hi_IN", "hu_HU", "id_ID", "it_IT", "ja_JP", "ko_KO", "lt_LI", "lv_LA", "ms_MA",
+        "nb_NB", "nl_NL", "pl_PL", "pt_BR", "pt_PT", "ro_RO", "ru_RU", "sk_SK", "sl_SL",
+        "sq_AL", "sv_SV", "th_TH", "tl_PH", "tr_TR", "uk_UK", "ur_PA", "zh_CN", "zt_CN"
+    };
 
     //! Translates the UI to the selected language
     void updateUiLanguage();
