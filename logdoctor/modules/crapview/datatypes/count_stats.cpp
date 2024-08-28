@@ -17,7 +17,7 @@ bool CountData::buildFromQuery( QueryWrapper& query )
 {
     QHash<QString, unsigned> aux_data;
 
-    if ( const size_t size{ query.size() }; size > 0ul ) {
+    if ( const std::size_t size{ query.size() }; size > 0ul ) {
         aux_data.reserve( size * 3 );
     } else {
         return false;

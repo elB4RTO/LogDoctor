@@ -53,7 +53,7 @@ void CraplogLister::work()
         this->quit();
         return;
     }
-    size_t size;
+    std::size_t size;
     QString name;
     std::string path;
     // iterate over entries in the logs folder

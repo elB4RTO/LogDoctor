@@ -9,7 +9,7 @@
 namespace PrintSec
 {
 
-QString printableSize( const size_t bytes ) noexcept
+QString printableSize( const std::size_t bytes ) noexcept
 {
     std::string size_sfx{" B"};
     double size{ static_cast<double>(bytes) };
@@ -23,11 +23,11 @@ QString printableSize( const size_t bytes ) noexcept
     }
     // cut decimals depending on how big the floor is
     std::string size_str{ std::to_string( size ) };
-    size_t cut_index{ size_str.find('.')+1 };
+    std::size_t cut_index{ size_str.find('.')+1 };
     if ( cut_index == 0ul ) { // catches the overflow of +1 of the above
         cut_index = size_str.find(',')+1;
     }
-    size_t n_decimals{ 3ul };
+    std::size_t n_decimals{ 3ul };
     if ( size >= 100.0 ) {
         -- n_decimals;
         if ( size >= 1000.0 ) {
@@ -63,11 +63,11 @@ QString printableSpeed( const double bytes, const double secs_ ) noexcept
     }
     // cut decimals depending on how big the floor is
     std::string speed_str{ std::to_string( speed ) };
-    size_t cut_index{ speed_str.find('.')+1ul };
+    std::size_t cut_index{ speed_str.find('.')+1ul };
     if ( cut_index == 0ul ) { // catches the overflow of +1 of the above
         cut_index = speed_str.find(',')+1ul;
     }
-    size_t n_decimals{ 3ul };
+    std::size_t n_decimals{ 3ul };
     if ( speed >= 100.0 ) {
         -- n_decimals;
         if ( speed >= 1000.0 ) {

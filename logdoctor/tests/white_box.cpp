@@ -473,7 +473,7 @@ bool testWorkarounds()
     T_TEST_START("Workarounds::enumerate")
     {
     const auto equality{ [](EnumeratedArray<std::array<int,3>>& enumerated, const std::array<std::tuple<int,int>,3>& fake_enumerated) -> bool {
-        size_t i{ 0ul };
+        std::size_t i{ 0ul };
         for (const auto& tpl : enumerated) {
             if ( tpl != fake_enumerated.at(i) ) return false;
             ++i;
@@ -493,8 +493,8 @@ bool testWorkarounds()
         if ( flattened.size() != fake_flattened.size() ) {
             return false;
         }
-        const size_t max{ flattened.size() };
-        for ( size_t i{0ul}; i<max; ++i ) {
+        const std::size_t max{ flattened.size() };
+        for ( std::size_t i{0ul}; i<max; ++i ) {
             if ( *flattened.at(i) != fake_flattened.at(i) ) {
                 return false;
             }
@@ -521,7 +521,7 @@ bool testWorkarounds()
     T_TEST_START("Workarounds::zip")
     {
     const auto equality{ [](ZippedArrays<std::array<int,3>>& zipped, std::array<std::tuple<int,int>,3>& fake_zipped) -> bool {
-        size_t i{ 0ul };
+        std::size_t i{ 0ul };
         for (const auto& tpl : zipped) {
             if ( tpl != fake_zipped.at(i) ) return false;
             ++i;

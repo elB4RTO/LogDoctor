@@ -2815,7 +2815,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
 
         // check the size
         if ( proceed ) {
-            const size_t warn_size{ this->craplog.getWarningSize() };
+            const std::size_t warn_size{ this->craplog.getWarningSize() };
             if ( warn_size > 0ul ) {
                 if ( item.size() > warn_size ) {
                     // exceeds the warning size
@@ -2927,7 +2927,7 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
     Q_UNUSED(item)
     Q_UNUSED(column)
     // control checked
-    size_t n_checked{ 0ul };
+    std::size_t n_checked{ 0ul };
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
     while ( *i ) {
         if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
@@ -3010,7 +3010,7 @@ void MainWindow::resetPerfsLabels()
 void MainWindow::updatePerfsLabels()
 {
     if ( this->craplog.isParsing() || this->force_updating_labels ) {
-        const size_t size{ this->craplog.getParsedSize() };
+        const std::size_t size{ this->craplog.getParsedSize() };
         this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
         this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
         this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
@@ -3038,7 +3038,7 @@ void MainWindow::craplogFinished()
         this->force_updating_labels &= false;
         // draw the chart
         this->craplog.makeChart(
-            this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+            this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
             this->fonts,
             this->ui->chart_MakeStats_Size );
         ColorSec::applyChartTheme(
@@ -3214,7 +3214,7 @@ void MainWindow::drawStatsWarn()
     this->ui->chart_StatsWarn->setChart( new QChart() );
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( wsIndex ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
@@ -3392,7 +3392,7 @@ void MainWindow::drawStatsSpeed()
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_StatsSpeed,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
@@ -3628,7 +3628,7 @@ void MainWindow::drawStatsCount()
     this->ui->chart_StatsCount->setChart( new QChart() );
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(),
         this->ui->box_StatsCount_Month->currentText(),
@@ -3913,7 +3913,7 @@ void MainWindow::drawStatsDay()
     this->ui->chart_StatsDay->setChart( new QChart() );
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
@@ -4205,7 +4205,7 @@ void MainWindow::drawStatsRelat()
     this->ui->chart_StatsRelat->setChart( new QChart() );
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
         this->ui->box_StatsRelat_FromYear->currentText(),
         this->ui->box_StatsRelat_FromMonth->currentText(),
@@ -4645,7 +4645,7 @@ void MainWindow::refreshChartsPreview()
 
     QChart* t_chart{ new QChart() };
     // apply the theme
-    t_chart->setTheme( this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ) );
+    t_chart->setTheme( this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ) );
     // add the bars
     t_chart->addSeries( bars );
     t_chart->setTitle( "Sample preview" );
@@ -4916,13 +4916,13 @@ void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
         // enable warning
         this->ui->spinBox_ConfControl_Size->setEnabled( true );
         this->craplog.setWarningSize(
-            (static_cast<size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
+            (static_cast<std::size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
     }
 }
 void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 {
     this->craplog.setWarningSize(
-        (static_cast<size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
+        (static_cast<std::size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
 }
 
 

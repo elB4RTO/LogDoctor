@@ -288,12 +288,12 @@ void CrissCross::AI_playTurn() noexcept
 void CrissCross::AI_updateWeights() noexcept
 {
     // reset the weights
-    for ( size_t i{0ul}; i<9ul; ++i ) {
+    for ( std::size_t i{0ul}; i<9ul; ++i ) {
         this->board_weights[ i ] = 0;
     }
     // calculate the new weights
     unsigned win_streak, lose_streak;
-    std::vector<size_t> empty_tiles (3);
+    std::vector<std::size_t> empty_tiles (3);
     for ( const auto& sequence : this->sequences ) {
         // reset data
         win_streak = lose_streak = 0;

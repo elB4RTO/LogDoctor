@@ -116,12 +116,12 @@ void QueryWrapper::operator()( const QString& text )
     }
 }
 
-size_t QueryWrapper::size()
+std::size_t QueryWrapper::size()
 {
     if ( !query.last() ) {
         return 0ul;
     }
-    const auto sz{ static_cast<size_t>( query.at()+1 ) };
+    const auto sz{ static_cast<std::size_t>( query.at()+1 ) };
     if ( !query.first() ) {
         throw DatabaseException( QStringLiteral("Failed to move back to first record") );
     }

@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    qRegisterMetaType<size_t>();
+    qRegisterMetaType<std::size_t>();
     qRegisterMetaType<LogFile>();
     qRegisterMetaType<LogField>();
     qRegisterMetaType<WorkerDialog>();

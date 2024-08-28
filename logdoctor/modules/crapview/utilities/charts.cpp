@@ -26,11 +26,11 @@ void appendToSeries( std::vector<QStackedBarSeries*>& b_series, std::vector<std:
 {
     b_series.reserve( sets.size() );
     const QColor cols[]{ QColor(127,127,127), QColor(237,80,61) };
-    const size_t max{ sets.size() };
-    for ( size_t i{0}; i<max; ++i ) {
+    const std::size_t max{ sets.size() };
+    for ( std::size_t i{0ul}; i<max; ++i ) {
         const auto& set{ sets.at( i ) };
         auto* series{ new QStackedBarSeries() };
-        for ( size_t w{0}; w<2ul; ++w ) {
+        for ( std::size_t w{0ul}; w<2ul; ++w ) {
             QBarSet* b{ set.at( w ) };
             b->setColor( cols[ w ] );
             series->append( b );

@@ -353,21 +353,21 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
     bool no_data{ true };
     int max_date_year{0}, max_date_month{0}, max_date_day{0};
     double n_days{0.0};
-    size_t max_date_count{0};
-    std::array<double, 7> week_days_count{ 0, 0, 0, 0, 0, 0, 0 };
+    std::size_t max_date_count{0ul};
+    std::array<double, 7> week_days_count{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
     GlobalsData data;
 
     const auto week_day_from{
-        [](const int y, const int m, const int d)->size_t
-        { return static_cast<size_t>( QDate(y,m,d).dayOfWeek()-1 ); }
+        [](const int y, const int m, const int d)->std::size_t
+        { return static_cast<std::size_t>( QDate(y,m,d).dayOfWeek()-1 ); }
     };
 
     const auto update_perf{
         [](Perfs& perf, const int val)
         {
             if ( val >= 0 ) {
-                if ( const size_t v{static_cast<size_t>(val)}; v > 0ul) [[likely]] {
+                if ( const std::size_t v{static_cast<std::size_t>(val)}; v > 0ul) [[likely]] {
                     if ( v > perf.max ) {
                         perf.max = v;
                     }
@@ -383,8 +383,8 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
 
             int d{-1}, h{-1}, tt{-1}, bs{-1}, br{-1},
                 day{-1}, hour{-1};
-            double hour_count{0};
-            size_t day_count{0};
+            double hour_count{0.0};
+            std::size_t day_count{0ul};
             QString protocol, method, uri, user_agent;
 
             QueryWrapper query{ db.getQuery() };
@@ -450,7 +450,7 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
                         // sum the day count to the total count
                         data.req_count += day_count;
                         // sum the day count to the relative day of the week count
-                        const size_t week_day{ week_day_from(year,month,day) };
+                        const std::size_t week_day{ week_day_from(year,month,day) };
                         data.traf.day[ week_day ] += static_cast<double>(day_count);
                         ++ week_days_count[ week_day ];
                         // check the max date count
@@ -520,7 +520,7 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
             data.req_count += day_count;
 
             // sum the day count to the relative day of the week count
-            const size_t week_day{ week_day_from(year,month,day) };
+            const std::size_t week_day{ week_day_from(year,month,day) };
             data.traf.day[ week_day ] += static_cast<double>(day_count);
             ++ week_days_count[ week_day ];
 

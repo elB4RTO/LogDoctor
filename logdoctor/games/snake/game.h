@@ -100,7 +100,7 @@ private:
     //// SNAKE ////
 
     //! The maximum length of the snake
-    const size_t MAX_SNAKE_LENGTH{ 64 };
+    const std::size_t MAX_SNAKE_LENGTH{ 64 };
 
     //! The snake
     Snake snake;

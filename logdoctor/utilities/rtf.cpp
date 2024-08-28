@@ -32,12 +32,12 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
     QString rich_line{}, class_name{};
     std::string sep, fld, fld_str, aux_sep2;
     bool missing{ false };
-    size_t i, start, stop, aux_start, aux_stop,
-           line_size, sep_size;
-    const size_t n_sep{ logs_format.separators.size()-1 };
+    std::size_t i, start, stop, aux_start, aux_stop,
+                line_size, sep_size;
+    const std::size_t n_sep{ logs_format.separators.size()-1 };
     std::vector<std::string> lines;
     StringOps::splitrip( lines, content );
-    size_t lines_left{ lines.size() };
+    std::size_t lines_left{ lines.size() };
     for ( const std::string& line : lines ) {
         -- lines_left;
         // check if the line is commented, usually from IIS logs
@@ -94,8 +94,8 @@ void RichText::enrichLogs( QString& rich_content, const std::string& content, co
 
                 if ( sep == " " ) {
                     // whitespace-separated-values fields
-                    size_t c{ StringOps::count( fld_str, ' ' ) },
-                           n{ 0 };
+                    std::size_t c{ StringOps::count( fld_str, ' ' ) },
+                                n{ 0 };
                     if ( fld == "request_full" ) {
                         n = 2;
                     } else if ( fld == "date_time_mcs" ) {

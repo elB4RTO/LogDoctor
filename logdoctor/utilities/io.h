@@ -101,7 +101,7 @@ bool renameAsCopy( const std::filesystem::path& path, std::error_code& err ) noe
     \param n_lines The number of lines to pick
     \param strip_lines Whether to strip control-characters away from the lines
 */
-void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const size_t n_lines=16ul, const bool strip_lines=true );
+void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const std::size_t n_lines=16ul, const bool strip_lines=true );
 
 //! Reads the content of a file
 /*!

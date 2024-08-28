@@ -145,7 +145,7 @@ public:
         Throws if the query cannot be restored at the initial position
         \throw DatabaseException
     */
-    size_t size();
+    std::size_t size();
 
     //! Returns the name of the associated database
     const QString& dbName() const noexcept

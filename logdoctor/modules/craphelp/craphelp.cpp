@@ -74,19 +74,19 @@ void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const
     if ( colors_scheme_id == ColorsScheme::None ) {
         // remove the style for the colors
         while (true) {
-            const size_t start{ aux.find( "background-color:" ) };
+            const std::size_t start{ aux.find( "background-color:" ) };
             if ( start == std::string::npos ) {
                 break;
             }
-            const size_t stop{ aux.find( ";\n", start ) + 2ul };
+            const std::size_t stop{ aux.find( ";\n", start ) + 2ul };
             aux.erase( start, stop-start );
         }
         while (true) {
-            const size_t start{ aux.find( "color:" ) };
+            const std::size_t start{ aux.find( "color:" ) };
             if ( start == std::string::npos ) {
                 break;
             }
-            const size_t stop{ aux.find( ";\n", start ) + 2ul };
+            const std::size_t stop{ aux.find( ";\n", start ) + 2ul };
             aux.erase( start, stop-start );
         }
         content = QString::fromStdString( aux );
@@ -124,19 +124,19 @@ void Craphelp::helpLogsFormatDefault( std::string_view file_name, const QFont& f
     if ( colors_scheme_id == ColorsScheme::None ) {
         // remove the style for the colors
         while (true) {
-            const size_t start{ aux.find( "background-color:" ) };
+            const std::size_t start{ aux.find( "background-color:" ) };
             if ( start == std::string::npos ) {
                 break;
             }
-            const size_t stop{ aux.find( ";", start ) + 1ul };
+            const std::size_t stop{ aux.find( ";", start ) + 1ul };
             aux.erase( start, stop-start );
         }
         while (true) {
-            const size_t start{ aux.find( "color:" ) };
+            const std::size_t start{ aux.find( "color:" ) };
             if ( start == std::string::npos ) {
                 break;
             }
-            const size_t stop{ aux.find( ";", start ) + 1ul };
+            const std::size_t stop{ aux.find( ";", start ) + 1ul };
             aux.erase( start, stop-start );
         }
         content = QString::fromStdString( aux );

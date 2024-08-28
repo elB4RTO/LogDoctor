@@ -2,7 +2,7 @@
 #define LOGDOCTOR__UTILITIES__PRINTABLES_H
 
 
-#include <stddef.h>
+#include <cstddef>
 
 class QString;
 
@@ -20,7 +20,7 @@ namespace PrintSec
     \return The string to be displayed
 */
 QString printableSize(
-    const size_t bytes
+    const std::size_t bytes
 ) noexcept;
 
 

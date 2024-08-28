@@ -229,7 +229,7 @@ void CraplogParser::parseLogLines()
         ++ this->parsed_lines;
     }};
 
-    const auto signal_emission_gap{ [](const size_t n_lines)->size_t{
+    const auto signal_emission_gap{ [](const std::size_t n_lines)->std::size_t{
         return n_lines>10000ul ? n_lines/1000ul
                                : n_lines>1000ul ? n_lines/100ul
                                                 : n_lines>100ul ? n_lines/10ul
@@ -239,11 +239,11 @@ void CraplogParser::parseLogLines()
 
     // parse all the lines
     if ( this->proceed ) {
-        const size_t n_lines{ this->logs_lines.size() };
-        const size_t nl{ this->logs_format.new_lines };
-        size_t send{ 0ul };
+        const std::size_t n_lines{ this->logs_lines.size() };
+        const std::size_t nl{ this->logs_format.new_lines };
+        std::size_t send{ 0ul };
         if ( nl == 0ul ) {
-            const size_t send_gap{ signal_emission_gap(n_lines) };
+            const std::size_t send_gap{ signal_emission_gap(n_lines) };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( n_lines );
             for ( const std::string& line : this->logs_lines ) {
@@ -254,13 +254,13 @@ void CraplogParser::parseLogLines()
                 }
             }
         } else {
-            const size_t real_lines{ n_lines / (nl+1ul) };
-            const size_t send_gap{ signal_emission_gap(real_lines) };
+            const std::size_t real_lines{ n_lines / (nl+1ul) };
+            const std::size_t send_gap{ signal_emission_gap(real_lines) };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( real_lines );
-            for ( size_t i{0ul}; i<n_lines; ++i ) {
+            for ( std::size_t i{0ul}; i<n_lines; ++i ) {
                 std::string line = this->logs_lines.at( i );
-                for ( size_t n{0ul}; n<nl; ++n ) {
+                for ( std::size_t n{0ul}; n<nl; ++n ) {
                     ++i;
                     line += "\n" + this->logs_lines.at( i );
                 }

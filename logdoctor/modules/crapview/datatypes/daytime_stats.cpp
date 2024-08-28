@@ -77,7 +77,7 @@ qreal DaytimeData::insertInChart( QList<QBarSet*>& sets ) const
     const auto check_max_count{ [&count,&max_count](){
         if ( count > max_count ) max_count = count;
     }};
-    for ( size_t h{0ul}; h<24ul; ++h ) {
+    for ( std::size_t h{0ul}; h<24ul; ++h ) {
         const auto& data_{ data.at( h ) };
         count = data_.at( 0ul );
         *sets.at( 0ul ) << count;

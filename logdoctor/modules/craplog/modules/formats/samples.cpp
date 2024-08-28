@@ -77,7 +77,7 @@ QString makeSample( const samples_umap_t& map, const LogsFormat& logs_format )
     QString sample;
     // append the initial characters
     sample += QString::fromStdString( logs_format.initial );
-    for ( size_t i{0ul}; i<logs_format.separators.size(); ++i ) {
+    for ( std::size_t i{0ul}; i<logs_format.separators.size(); ++i ) {
         // append fields and separators
         sample += map.at( logs_format.fields.at( i ) );
         sample += QString::fromStdString( logs_format.separators.at( i ) );

@@ -138,7 +138,7 @@ public:
         \return The number of files actually in the list
         \see logs_list
     */
-    size_t getLogsListSize() const noexcept;
+    std::size_t getLogsListSize() const noexcept;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -230,10 +230,10 @@ public:
     //// WARNING SIZE ////
 
     //! Returns the currently set warning size for the log files
-    size_t getWarningSize() const noexcept;
+    std::size_t getWarningSize() const noexcept;
 
     //! Sets the new warning size for the log files
-    void setWarningSize( const size_t new_size ) noexcept;
+    void setWarningSize( const std::size_t new_size ) noexcept;
 
 
     ////////////////////
@@ -265,10 +265,10 @@ public:
     //// PERFORMANCES ////
 
     //! Returns the total logs size
-    size_t getParsedSize() noexcept;
+    std::size_t getParsedSize() noexcept;
 
     //! Returns the parsed logs lines
-    size_t getParsedLines() noexcept;
+    std::size_t getParsedLines() noexcept;
 
     //! Returns the speed on parsing logs
     QString getParsingSpeed() noexcept;
@@ -310,12 +310,12 @@ public slots:
 
     void stopWorking( const bool successful );
 
-    void updatePerfData( const size_t parsed_size,
-                         const size_t parsed_lines ) noexcept;
+    void updatePerfData( const std::size_t parsed_size,
+                         const std::size_t parsed_lines ) noexcept;
 
-    void updateChartData( const size_t total_size,
-                          const size_t total_lines,
-                          const size_t blacklisted_size ) noexcept;
+    void updateChartData( const std::size_t total_size,
+                          const std::size_t total_lines,
+                          const std::size_t blacklisted_size ) noexcept;
 
     void showWorkerDialog( const WorkerDialog dialog_type,
                            const QStringList args ) const noexcept;
@@ -355,11 +355,11 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    size_t total_lines      { 0ul }; // total number of logs lines
-    size_t parsed_lines     { 0ul }; // number of parsed logs lines
-    size_t total_size       { 0ul }; // total size of the logs
-    size_t parsed_size      { 0ul }; // size of the logs which have been used
-    size_t blacklisted_size { 0ul }; // size of the logs which has been blacklisted
+    std::size_t total_lines      { 0ul }; // total number of logs lines
+    std::size_t parsed_lines     { 0ul }; // number of parsed logs lines
+    std::size_t total_size       { 0ul }; // total size of the logs
+    std::size_t parsed_size      { 0ul }; // size of the logs which have been used
+    std::size_t blacklisted_size { 0ul }; // size of the logs which has been blacklisted
 
     std::chrono::system_clock::time_point parsing_time_start,
                                           parsing_time_stop;
@@ -378,7 +378,7 @@ private:
     //// LOGS CONTROL ////
 
     // warning size, in Bytes
-    size_t warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
+    std::size_t warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
 
 
     ////////////////////

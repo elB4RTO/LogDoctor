@@ -21,9 +21,9 @@ namespace /*private*/
 */
 bool deepTypeCheck( const std::string& line, const LogsFormat& format ) noexcept
 {
-    size_t n_sep{ format.separators.size() },
-           n_sep_found{0}, n_blank_sep{0},
-           found_at, aux_found_at1{0}, aux_found_at2;
+    std::size_t n_sep{ format.separators.size() },
+                n_sep_found{0}, n_blank_sep{0},
+                found_at, aux_found_at1{0}, aux_found_at2;
     std::string sep, aux_sep1, aux_sep2;
     // check the initial part
     if ( ! format.initial.empty() ) {
@@ -35,7 +35,7 @@ bool deepTypeCheck( const std::string& line, const LogsFormat& format ) noexcept
         ++ n_blank_sep;
     }
     // check the middle part
-    for ( size_t i{0}; i<n_sep; ++i ) {
+    for ( std::size_t i{0ul}; i<n_sep; ++i ) {
         sep = format.separators.at( i );
         if ( sep.empty() ) {
             ++ n_sep_found;
@@ -57,7 +57,7 @@ bool deepTypeCheck( const std::string& line, const LogsFormat& format ) noexcept
                 aux_sep1 = StringOps::lstripUntil( aux_sep1, ' ' );
             }
             // iterate over following separators
-            for ( size_t j{i+1ul}; j<n_sep; ++j ) {
+            for ( std::size_t j{i+1ul}; j<n_sep; ++j ) {
                 aux_sep2 = format.separators.at( j );
                 aux_found_at2 = aux_sep2.find(' ');
                 if ( aux_found_at2 == std::string::npos ) {

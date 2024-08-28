@@ -160,7 +160,7 @@ void readFile( const std::filesystem::path& path, std::string& content )
 }
 
 
-void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const size_t n_lines, const bool strip_lines )
+void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const std::size_t n_lines, const bool strip_lines )
 {
     // read rhe first N lines only
     try {
@@ -189,19 +189,19 @@ void randomLines( const std::filesystem::path& path, std::vector<std::string>& l
             StringOps::split( aux_lines, aux );
         }
         aux.clear();
-        const size_t max{ aux_lines.size() };
+        const std::size_t max{ aux_lines.size() };
         if ( max > 0ul ) {
             if ( max <= n_lines ) {
                 lines = aux_lines;
             } else {
                 time_t nTime;
                 srand( (unsigned)time(&nTime) );
-                size_t index;
-                std::vector<size_t> picked_indexes;
-                for( size_t i=0ul; i<n_lines ; ++i ) {
+                std::size_t index;
+                std::vector<std::size_t> picked_indexes;
+                for( std::size_t i{0ul}; i<n_lines ; ++i ) {
                     while (true) {
-                        index = static_cast<size_t>(rand()) % max;
-                        if ( VecOps::contains<size_t>( picked_indexes, index ) ) {
+                        index = static_cast<std::size_t>(rand()) % max;
+                        if ( VecOps::contains<std::size_t>( picked_indexes, index ) ) {
                             continue;
                         }
                         break;
@@ -214,8 +214,8 @@ void randomLines( const std::filesystem::path& path, std::vector<std::string>& l
                     lines.push_back( line );
                 }
                 // add the first and last lines, to double check for file integrity
-                for ( const size_t& index : std::vector<size_t>{0ul,max-1ul} ) {
-                    if ( ! VecOps::contains<size_t>( picked_indexes, index ) ) {
+                for ( const auto index : std::vector<std::size_t>{0ul,max-1ul} ) {
+                    if ( ! VecOps::contains<std::size_t>( picked_indexes, index ) ) {
                         const std::string& line{ aux_lines.at( index ) };
                         if ( StringOps::startsWith( line, '#' ) ) {
                             continue;

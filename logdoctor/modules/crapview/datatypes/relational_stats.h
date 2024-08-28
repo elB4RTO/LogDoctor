@@ -40,7 +40,7 @@ public:
 
     bool buildFromQuery( QueryWrapper& query, DateManager&& date, const QDate last_date );
     bool appendFromQuery( QueryWrapper& query, DateManager& date, const QDate initial_date, const QDate final_date, const int last_day );
-    void reserveSpace( const size_t size );
+    void reserveSpace( const std::size_t size );
     void appendFirstEmpty( DateManager& date );
     void appendLastEmpty( DateManager& date, const QDate&& last_date );
 

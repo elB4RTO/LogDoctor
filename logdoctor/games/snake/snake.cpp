@@ -64,20 +64,13 @@ const QPixmap& Snake::getHeadImage() const noexcept
 
 bool Snake::inTile( const unsigned x, const unsigned y, const bool avoid_tail ) const noexcept
 {
-    if ( this->size() > 0 ) {
-        size_t i{ 0 };
-        size_t max{ this->size()-1ul };
-        if ( !avoid_tail ) {
-            ++ max;
-        }
-        for ( auto bp{ this->cbegin() }; bp != this->cend(); ++bp ) {
-            if ( bp->x == x && bp->y == y ) {
-                return true;
-            }
-            ++i;
-            if ( i >= max ) {
-                break;
-            }
+    if ( this->empty() ) {
+        return false;
+    }
+    const auto max{ avoid_tail ? std::prev(this->cend()) : this->cend()};
+    for ( auto bp{ this->cbegin() }; bp != max; ++bp ) {
+        if ( bp->x == x && bp->y == y ) {
+            return true;
         }
     }
     return false;
@@ -143,9 +136,9 @@ void Snake::update( QGraphicsScene* field_scene, const bool dry , const bool is_
         this->grow( is_borning );
         field_scene->addItem( this->back().image );
     }
-    // anyway, update the whole body
-    size_t i{ 0 };
-    const size_t max_i{ this->size()-1ul };
+    // update the whole body
+    std::size_t i{ 0 };
+    const std::size_t max_i{ this->size()-1ul };
     unsigned new_x, prev_x, new_y, prev_y;
     Direction new_direction, prev_direction, prev_body_d;
     const QPixmap& head_img{  (this->adversary) ? this->img_snakeHead_  : this->img_snakeHead  };
@@ -427,7 +420,7 @@ void Snake::move( const Snake& adv_snake, const unsigned food_x, const unsigned 
 
     this->updateFieldMap( adv_snake, food_x, food_y );
 
-    for ( size_t i{0}; i<4ul; ++i ) {
+    for ( std::size_t i{0ul}; i<4ul; ++i ) {
         this->collectData( dataset.at(i), classes.at(i), adv_snake, food_x, food_y );
     }
 
@@ -443,10 +436,10 @@ Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data
     Direction class_label{ this->head_direction };
 
     // process data
-    for ( size_t i{0}; i<4ul; ++i ) {
+    for ( std::size_t i{0ul}; i<4ul; ++i ) {
         const std::array<float, 7>& d = data.at(i);
         float& r = results[i];
-        for ( size_t j{0}; j<7ul; ++j ) {
+        for ( std::size_t j{0ul}; j<7ul; ++j ) {
             r += d.at(j) * weights.at(j);
         }
     }
@@ -462,12 +455,12 @@ Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data
         }
     }
     if ( max != min ) {
-        for ( size_t i{0}; i<4ul; ++i ) {
+        for ( std::size_t i{0ul}; i<4ul; ++i ) {
             results[i] = (results[i]-min) / (max-min);
         }
     } else {
         keep_current |= true;
-        for ( size_t i{0}; i<4ul; ++i ) {
+        for ( std::size_t i{0ul}; i<4ul; ++i ) {
             results[i] = 0.f;
         }
     }
@@ -475,7 +468,7 @@ Direction Snake::predictDirection( const std::array<std::array<float,7>,4>& data
     // choose the best result
     if ( ! keep_current ) {
         max = 0.f;
-        for ( size_t i{0}; i<4ul; ++i ) {
+        for ( std::size_t i{0ul}; i<4ul; ++i ) {
             if ( results[i] > max ) {
                 class_label = classes.at(i);
                 max = results[i];
@@ -757,8 +750,8 @@ void Snake::collectData( std::array<float,7>& data, const Direction& direction, 
 void Snake::updateFieldMap( const Snake& adv_snake, const unsigned& food_x, const unsigned& food_y ) noexcept
 {
     // reset to default state
-    for ( size_t x{0}; x<16ul; ++x ) {
-        for ( size_t y{0}; y<16ul; ++y ) {
+    for ( std::size_t x{0ul}; x<16ul; ++x ) {
+        for ( std::size_t y{0ul}; y<16ul; ++y ) {
             Tile& t = this->field_map.at(x).at(y);
             t.entity = Entity::N;
             t.s_index = 0u;
@@ -862,7 +855,7 @@ std::array<unsigned,8> Snake::checkAround( const Direction& direction, const uns
     }
 
     unsigned x_, y_;
-    for ( size_t i{0}; i<8ul; ++i ) {
+    for ( std::size_t i{0ul}; i<8ul; ++i ) {
         x_  = x;
         x_ += x_pattern.at(i);
         y_  = y;

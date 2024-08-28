@@ -108,12 +108,12 @@ void Craplog::setHashesDatabasePath( const PathHandler& path ) noexcept
     this->db_hashes_path = path / DatabasesNames::hashes;
 }
 
-size_t Craplog::getWarningSize() const noexcept
+std::size_t Craplog::getWarningSize() const noexcept
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const size_t new_size ) noexcept
+void Craplog::setWarningSize(const std::size_t new_size ) noexcept
 {
     this->warning_size = new_size;
 }
@@ -246,7 +246,7 @@ void Craplog::setLogsPath( const WebServer& web_server, const PathHandler& new_p
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-size_t Craplog::getLogsListSize() const noexcept
+std::size_t Craplog::getLogsListSize() const noexcept
 {
     return this->logs_list.size();
 }
@@ -383,7 +383,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
         case WS_NGINX:
         {
             // further checks for apache / nginx
-            size_t start, stop;
+            std::size_t start, stop;
             start = name.rfind(".log." );
             if ( start == std::string::npos ) {
                 return false;
@@ -394,7 +394,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
                 stop -= 3ul;
             }
             // serach for incremental numbers
-            for ( size_t i{start}; i<=stop; ++i ) {
+            for ( std::size_t i{start}; i<=stop; ++i ) {
                 if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     return false;
                 }
@@ -404,7 +404,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
         case WS_IIS:
         {
             // further checks for iis
-            size_t start, stop;
+            std::size_t start, stop;
             start = name.find( this->logs_base_names.at( WS_IIS ).contains ) + 3ul;
             if ( start == std::string::npos ) {
                 return false;
@@ -415,7 +415,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             }
             // search for date
             std::string date;
-            for ( size_t i{start}; i<=stop; ++i ) {
+            for ( std::size_t i{start}; i<=stop; ++i ) {
                 if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     return false;
                 }
@@ -428,7 +428,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             char aux_date[7];
             // using strftime to display time
             strftime( aux_date, 7, "%y%m%d", tmp );
-            for ( size_t i{0}; i<6ul; ++i ) {
+            for ( std::size_t i{0ul}; i<6ul; ++i ) {
                 if ( date.at(i) != aux_date[i] ) {
                     // different date, valid
                     return true;
@@ -451,7 +451,7 @@ bool Craplog::checkStuff()
 {
     this->proceed |= true;
     {
-        const size_t l_size{ this->logs_list.size() };
+        const std::size_t l_size{ this->logs_list.size() };
         this->log_files_to_use.clear();
         if ( this->log_files_to_use.capacity() < l_size ) {
             this->log_files_to_use.reserve( l_size );
@@ -462,7 +462,7 @@ bool Craplog::checkStuff()
         }
     }
 
-    size_t logs_size{ 0ul };
+    std::size_t logs_size{ 0ul };
     for ( const LogFile& file : this->logs_list ) {
 
         if ( ! file.isSelected() ) {
@@ -723,12 +723,12 @@ bool Craplog::editedDatabase() const noexcept
 }
 
 
-size_t Craplog::getParsedSize() noexcept
+std::size_t Craplog::getParsedSize() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-size_t Craplog::getParsedLines() noexcept
+std::size_t Craplog::getParsedLines() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
@@ -767,13 +767,13 @@ bool Craplog::isParsing() const noexcept
     return this->is_parsing;
 }
 
-void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines ) noexcept
+void Craplog::updatePerfData( const std::size_t parsed_size, const std::size_t parsed_lines ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t blacklisted_size ) noexcept
+void Craplog::updateChartData( const std::size_t total_size, const std::size_t total_lines, const std::size_t blacklisted_size ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;
@@ -805,7 +805,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
     parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size ) );
-    const size_t parsed_size{ this->parsed_size - this->blacklisted_size };
+    const std::size_t parsed_size{ this->parsed_size - this->blacklisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         static_cast<qreal>( parsed_size ) );
@@ -815,7 +815,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* ignoredSize_donut{ new QPieSeries() };
-    const size_t ignored_size{ this->total_size - this->parsed_size };
+    const std::size_t ignored_size{ this->total_size - this->parsed_size };
     QString printable_ignored_size{ PrintSec::printableSize( ignored_size ) };
     ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(
