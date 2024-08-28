@@ -38,19 +38,25 @@ inline void appendMostTrafficked( auto& traffic_list, const auto& traf, const st
         traffic_list.emplace_back( value, count );
     }
 }
+
 inline auto getMaxIndexCount( const auto& traf )
 {
     double max_c{ 0.0 };
     std::size_t max_i{ traf.size() };
-    /*std::ranges::for_each( std::views::enumerate(traf),
-        [&max_c,&max_i](const auto ic)
-        { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });*/
-    for( const auto [index,count] : Workarounds::enumerate(traf) ) {
-        if ( count > max_c ) {
-            max_c = count;
-            max_i = index;
+
+    if constexpr ( HasRangesEnumerate<decltype(traf)> ) {
+        std::ranges::for_each( std::views::enumerate(traf),
+            [&max_c,&max_i](const auto ic)
+            { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });
+    } else {
+        for( const auto [index,count] : Workarounds::enumerate(traf) ) {
+            if ( count > max_c ) {
+                max_c = count;
+                max_i = index;
+            }
         }
-    };
+    }
+
     return std::make_tuple( max_i, max_c );
 }
 

@@ -546,11 +546,14 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
     }
 
     // process the day of the week
-    /*std::ranges::for_each( std::views::zip( data.traf.day, week_days_count ),
-        [](auto tc){ if (auto& [t,c]{tc}; c>0.0){ t/=c; } });*/
-    for ( auto [total,count] : Workarounds::zip( data.traf.day, week_days_count ) ) {
-        if ( count > 0.0 ) {
-            total /= count;
+    if constexpr ( HasRangesZip<decltype(data.traf.day), decltype(week_days_count)> ) {
+        std::ranges::for_each( std::views::zip( data.traf.day, week_days_count ),
+            [](auto tc){ if (auto& [t,c]{tc}; c>0.0){ t/=c; } });
+    } else {
+        for ( auto [total,count] : Workarounds::zip( data.traf.day, week_days_count ) ) {
+            if ( count > 0.0 ) {
+                total /= count;
+            }
         }
     }
 
