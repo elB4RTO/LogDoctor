@@ -2,8 +2,8 @@
   <h1>LogDoctor</h1>
   <p>Parse Apache2 / Nginx / IIS logs and view dynamically generated statistics</p>
   <br/>
-  <img src="https://img.shields.io/badge/version-4.01-fff"/>
-  <img src="https://img.shields.io/badge/C%2B%2B-20-blue"/>
+  <img src="https://img.shields.io/badge/version-4.02-fff"/>
+  <img src="https://img.shields.io/badge/C%2B%2B-23-blue"/>
   <img src="https://img.shields.io/badge/Qt-6-blue"/>
   <br/>
   <img src="https://img.shields.io/badge/Linux-supported-31c653"/>
@@ -12,8 +12,6 @@
   <img src="https://img.shields.io/badge/Mac%20OS%20X-supported-31c653"/>
   <br/>
   <img src="https://github.com/elB4RTO/LogDoctor/actions/workflows/cmake.yml/badge.svg"/>
- 
-  <h2>🇬🇧 🇪🇸 🇫🇷 🇮🇹 🇯🇵 🇧🇷</h2>
 </div>
 
 <br/><br/>
@@ -396,25 +394,13 @@ Take this estimation with a grain of salt, it may be even higher or lower depend
 
 ## Languages
 
-LogDoctor is available in:
-
-- 🇬🇧 **English** (100%)
-
-- 🇮🇹 **Italian** (100%)
-
-- 🇪🇸 **Spanish** (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
-
-- 🇫🇷 **French** (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
-
-- 🇧🇷 **Portuguese** [**Brazil**] (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
-
-- 🇯🇵 **Japanese** (90%, *wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md)?*)
+LogDoctor is available in multiple languages, most of which are automatically translated. *Wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md) to improve them?*)
 
 <br/><br/>
 
 ## Contributions
 
-LogDoctor is under development.
+LogDoctor is under constant development.
 
 If you have suggestions about how to improve it, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
 
