@@ -1,3 +1,13 @@
+# v4.02
+
+- Upgrade to C++23
+- Automatized translations
+- Security improvements
+- Tests improvements
+- Fixes
+
+<br/><br/>
+
 # v4.01
 
 - Tweakable parameters for some of the charts:
