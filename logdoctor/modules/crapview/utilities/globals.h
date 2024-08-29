@@ -8,6 +8,8 @@
 
 #include <QString>
 
+#include <ranges>
+
 
 namespace GlobalsOps
 {
@@ -44,17 +46,18 @@ inline auto getMaxIndexCount( const auto& traf )
     double max_c{ 0.0 };
     std::size_t max_i{ traf.size() };
 
-    if constexpr ( HasRangesEnumerate<decltype(traf)> ) {
-        std::ranges::for_each( std::views::enumerate(traf),
-            [&max_c,&max_i](const auto ic)
-            { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });
-    } else {
-        for( const auto [index,count] : Workarounds::enumerate(traf) ) {
-            if ( count > max_c ) {
-                max_c = count;
-                max_i = index;
-            }
+    const auto update{ [&max_c,&max_i](const auto& tpl){
+        if (const auto& [index,count]{tpl}; count > max_c) {
+            max_c = count;
+            max_i = index;
         }
+    }};
+
+    if constexpr ( isRangesEnumerateAvailable() ) {
+        std::ranges::for_each( std::ranges::views::enumerate(traf), update);
+    } else {
+        const auto enarr{ Workarounds::enumerate(traf) };
+        std::for_each( enarr.cbegin(), enarr.cend(), update );
     }
 
     return std::make_tuple( max_i, max_c );

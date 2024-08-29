@@ -14,6 +14,7 @@
 
 #include <map>
 #include <vector>
+#include <ranges>
 
 
 using namespace FetcherPrivate;
@@ -546,15 +547,17 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
     }
 
     // process the day of the week
-    if constexpr ( HasRangesZip<decltype(data.traf.day), decltype(week_days_count)> ) {
-        std::ranges::for_each( std::views::zip( data.traf.day, week_days_count ),
-            [](auto tc){ if (auto& [t,c]{tc}; c>0.0){ t/=c; } });
-    } else {
-        for ( auto [total,count] : Workarounds::zip( data.traf.day, week_days_count ) ) {
-            if ( count > 0.0 ) {
-                total /= count;
-            }
+    const auto mean_day_count{ [](auto tpl){
+        if (auto& [total,count]{tpl}; count > 0.0) {
+            total /= count;
         }
+    }};
+
+    if constexpr ( isRangesZipAvailable() ) {
+        std::ranges::for_each( std::ranges::views::zip( data.traf.day, week_days_count ), mean_day_count );
+    } else {
+        auto ziparr{ Workarounds::zip( data.traf.day, week_days_count ) };
+        std::for_each( ziparr.begin(), ziparr.end(), mean_day_count );
     }
 
     // make the max-date tuple

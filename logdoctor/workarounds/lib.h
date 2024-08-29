@@ -3,7 +3,6 @@
 
 
 #include <array>
-#include <ranges>
 
 
 template <typename T>
@@ -19,16 +18,24 @@ template <typename A>
 concept IsStdArray = is_std_array<A>::value;
 
 
-template <typename Cont>
-concept HasRangesEnumerate = requires(Cont c) {
-    std::views::enumerate(c);
-};
+consteval bool isRangesEnumerateAvailable()
+{
+    #ifdef __cpp_lib_ranges_enumerate
+        return true;
+    #else
+        return false;
+    #endif
+}
 
 
-template <typename Cont1, typename Cont2>
-concept HasRangesZip = requires(Cont1 c1, Cont2 c2) {
-    std::views::zip(c1, c2);
-};
+consteval bool isRangesZipAvailable()
+{
+    #ifdef __cpp_lib_ranges_zip
+        return true;
+    #else
+        return false;
+    #endif
+}
 
 
 #endif // LOGDOCTOR__WORKAROUNDS__LIB_H
