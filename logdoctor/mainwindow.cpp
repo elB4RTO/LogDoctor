@@ -346,9 +346,9 @@ void MainWindow::readConfigs()
         const auto& invalid{ path_exp.error() };
         QString invalid_component;
         if ( this->dialogs_level > DL_ESSENTIAL ) {
-            invalid_component = QString( invalid.full_path.c_str() );
+            invalid_component = toQString( invalid.invalid_component );
         }
-        DialogSec::errConfPathHasSymlink( QString( invalid.full_path.c_str() ), invalid_component );
+        DialogSec::errConfPathHasSymlink( toQString( invalid.full_path ), invalid_component );
         proceed &= false;
     } else {
         const path_t& conf_file{ this->configs_path.getPathUnchecked() };
@@ -356,14 +356,14 @@ void MainWindow::readConfigs()
             // configuration file not found
             QString file;
             if ( this->dialogs_level == DL_EXPLANATORY ) {
-                file = QString( conf_file.c_str() );
+                file = toQString( conf_file );
             }
             DialogSec::warnConfFileNotFound( file );
             proceed &= false;
 
         } else if ( ! IOutils::checkFile( conf_file ) ) {
             // the given path doesn't point to a file
-            const QString path_msg{ conf_file.c_str() };
+            const QString path_msg{ toQString( conf_file ) };
             if ( DialogSec::choiceFileNotFile( path_msg ) ) {
                 if ( IOutils::renameAsCopy( conf_file, err ) ) {
                     return;
@@ -379,7 +379,7 @@ void MainWindow::readConfigs()
             // file not readable
             QString file;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
-                file = QString( conf_file.c_str() );
+                file = toQString( conf_file );
             }
             DialogSec::errConfFileNotReadable( file, err_msg );
             proceed &= false;
@@ -929,9 +929,9 @@ void MainWindow::writeConfigs()
         const auto& invalid{ path_exp.error() };
         QString invalid_component;
         if ( this->dialogs_level > DL_ESSENTIAL ) {
-            invalid_component = QString( invalid.full_path.c_str() );
+            invalid_component = toQString( invalid.invalid_component );
         }
-        DialogSec::errConfPathHasSymlink( QString( invalid.full_path.c_str() ), invalid_component );
+        DialogSec::errConfPathHasSymlink( toQString( invalid.full_path ), invalid_component );
         proceed &= false;
     } else {
         const path_t& conf_file{ this->configs_path.getPathUnchecked() };
@@ -951,7 +951,7 @@ void MainWindow::writeConfigs()
 
             } else if ( ! IOutils::isDir( base_path ) ) {
                 // not a directory
-                const QString path_msg{ base_path.c_str() };
+                const QString path_msg{ toQString( base_path ) };
                 if ( DialogSec::choiceDirNotDir( path_msg ) ) {
                     if ( ! IOutils::renameAsCopy( base_path, err ) ) {
                         if ( this->dialogs_level > DL_ESSENTIAL ) {
@@ -982,7 +982,7 @@ void MainWindow::writeConfigs()
             } else if ( ! IOutils::checkDir( base_path, false, true ) ) {
                 QString file;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    file = QString( base_path.c_str() );
+                    file = toQString( base_path );
                 }
                 DialogSec::errConfDirNotWritable( file, err_msg );
                 proceed &= false;
@@ -990,7 +990,7 @@ void MainWindow::writeConfigs()
 
         } else if ( ! IOutils::checkFile( conf_file ) ) {
             // the given path doesn't point to a file
-            const QString path_msg{ conf_file.c_str() };
+            const QString path_msg{ toQString( conf_file ) };
             if ( DialogSec::choiceFileNotFile( path_msg ) ) {
                 if ( ! IOutils::renameAsCopy( conf_file, err ) ) {
                     if ( this->dialogs_level > DL_ESSENTIAL ) {
@@ -1012,7 +1012,7 @@ void MainWindow::writeConfigs()
             // file not writable
             QString file;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
-                file = QString( conf_file.c_str() );
+                file = toQString( conf_file );
             }
             DialogSec::errConfFileNotWritable( file, err_msg );
             return;
@@ -1136,7 +1136,7 @@ void MainWindow::backupDatabase() const
         if ( invalid.isReasonSymlink() ) {
             QString invalid_component;
             if ( this->dialogs_level > DL_ESSENTIAL ) {
-                invalid_component = QString( invalid.full_path.c_str() );
+                invalid_component = toQString( invalid.invalid_component );
             }
             DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), invalid_component, false );
             return;
@@ -1147,14 +1147,14 @@ void MainWindow::backupDatabase() const
         // database file does not exists or is not a file
         QString file;
         if ( this->dialogs_level > DL_ESSENTIAL ) {
-            file = QString( db_file.c_str() );
+            file = toQString( db_file );
         }
         DialogSec::errDatabaseFailedBackup( DialogSec::tr("The file does not exist"), file, false );
         return;
     }
     const path_t backups_dir{ this->db_data_path.getPathUnchecked() / "backups" };
     if ( IOutils::isSymlink( backups_dir ) ) {
-        DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), QString( backups_dir.c_str() ), false );
+        DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), toQString( backups_dir ), false );
         return;
     } else if ( ! IOutils::exists( backups_dir ) ) {
         // backups directory doesn't exists, make it
@@ -1172,11 +1172,11 @@ void MainWindow::backupDatabase() const
         }
     } else if ( ! IOutils::isDir( backups_dir ) ) {
         // exists but it's not a directory, rename as copy and make a new one
-        if ( DialogSec::choiceDirNotDir( QString( backups_dir.c_str() ) ) ) {
+        if ( DialogSec::choiceDirNotDir( toQString( backups_dir ) ) ) {
             if ( ! IOutils::renameAsCopy( backups_dir, err ) ) {
                 QString path_msg;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    path_msg = QString( backups_dir.c_str() );
+                    path_msg = toQString( backups_dir );
                     if ( err.value() ) {
                         err_msg = QString::fromStdString( err.message() );
                     }
@@ -2037,13 +2037,13 @@ void MainWindow::makeInitialChecks()
 
         } else if ( ! IOutils::isDir( path ) ) {
             // not a directory, rename as copy a make a new one
-            if ( ! DialogSec::choiceDirNotDir( QString( path.c_str() ) ) ) {
+            if ( ! DialogSec::choiceDirNotDir( toQString( path ) ) ) {
                 // choosed not to rename the entry as '.copy'
                 std::exit( 1 );
             } else if ( ! IOutils::renameAsCopy( path, err ) ) {
                 QString p;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    p = QString( path.c_str() );
+                    p = toQString( path );
                     if ( err.value() ) {
                         err_msg = QString::fromStdString( err.message() );
                     }
@@ -2063,11 +2063,11 @@ void MainWindow::makeInitialChecks()
             }
 
         } else if ( ! IOutils::checkDir( path, true ) ) {
-            DialogSec::errDirNotReadable( QString( path.c_str() ), err_msg );
+            DialogSec::errDirNotReadable( toQString( path ), err_msg );
             std::exit( 1 );
 
         } else if ( ! IOutils::checkDir( path, false, true ) ) {
-            DialogSec::errDirNotWritable( QString( path.c_str() ), err_msg );
+            DialogSec::errDirNotWritable( toQString( path ), err_msg );
             std::exit( 1 );
         }
     }
@@ -4722,7 +4722,7 @@ void MainWindow::on_tool_ConfDatabases_Data_Dialog_clicked()
     } else if ( ! this->db_data_path.getPathUnchecked().empty() ) {
         crappath->setDirectory( QString::fromStdString( this->db_data_path.toString() ) );
     } else {
-        crappath->setDirectory( QString( this->home_path.c_str() ) );
+        crappath->setDirectory( toQString( this->home_path ) );
     }
 
     if ( crappath->exec() ) {
@@ -4773,7 +4773,7 @@ void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
         this->db_data_path = path_handler;
         this->craplog.setStatsDatabasePath( path_handler );
         this->crapview.setDbPath( path_handler );
-        this->ui->inLine_ConfDatabases_Data_Path->setText( QString( path.c_str() ) );
+        this->ui->inLine_ConfDatabases_Data_Path->setText( toQString( path ) );
     }
     this->ui->inLine_ConfDatabases_Data_Path->setFocus();
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
@@ -4790,7 +4790,7 @@ void MainWindow::on_tool_ConfDatabases_Hashes_Dialog_clicked()
     } else if ( ! this->db_hashes_path.getPathUnchecked().empty() ) {
         crappath->setDirectory( QString::fromStdString( this->db_hashes_path.toString() ) );
     } else {
-        crappath->setDirectory( QString( this->home_path.c_str() ) );
+        crappath->setDirectory( toQString( this->home_path ) );
     }
 
     if ( crappath->exec() ) {
@@ -4840,7 +4840,7 @@ void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
         }
         this->db_hashes_path = path_handler;
         this->craplog.setHashesDatabasePath( path_handler );
-        this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString( path.c_str() ) );
+        this->ui->inLine_ConfDatabases_Hashes_Path->setText( toQString( path ) );
     }
     this->ui->inLine_ConfDatabases_Hashes_Path->setFocus();
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
@@ -4986,7 +4986,7 @@ void MainWindow::on_button_ConfApache_Path_Save_clicked()
             DialogSec::warnDirNotReadable( nullptr );
         }
         this->craplog.setLogsPath( WS_APACHE, path_handler );
-        this->ui->inLine_ConfApache_Path_String->setText( QString( path.c_str() ) );
+        this->ui->inLine_ConfApache_Path_String->setText( toQString( path ) );
     }
     this->ui->button_ConfApache_Path_Save->setEnabled( false );
 }
@@ -5382,7 +5382,7 @@ void MainWindow::on_button_ConfNginx_Path_Save_clicked()
             DialogSec::warnDirNotReadable( nullptr );
         }
         this->craplog.setLogsPath( WS_NGINX, path_handler );
-        this->ui->inLine_ConfNginx_Path_String->setText( QString( path.c_str() ) );
+        this->ui->inLine_ConfNginx_Path_String->setText( toQString( path ) );
     }
     this->ui->button_ConfNginx_Path_Save->setEnabled( false );
 }
@@ -5778,7 +5778,7 @@ void MainWindow::on_button_ConfIis_Path_Save_clicked()
             DialogSec::warnDirNotReadable( nullptr );
         }
         this->craplog.setLogsPath( WS_IIS, path_handler );
-        this->ui->inLine_ConfIis_Path_String->setText( QString( path.c_str() ) );
+        this->ui->inLine_ConfIis_Path_String->setText( toQString( path ) );
     }
     this->ui->button_ConfIis_Path_Save->setEnabled( false );
 }

@@ -76,7 +76,7 @@ public:
     }
 };
 
-} //namespace (private)
+} // namespace (private)
 
 
 
@@ -105,7 +105,7 @@ void readFile( const std::filesystem::path& path, std::string& content )
     }
 
     if ( successful ) {
-        FileHandler file{ path.c_str(), "rb" };
+        FileHandler file{ path.native().c_str(), "rb" };
         if ( ! file.valid() ) {
             // unable to open the file
             return;

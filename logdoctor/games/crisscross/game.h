@@ -56,7 +56,7 @@ private:
     const bool p2_human{ !p1_human };
 
     // victory related
-    std::vector<unsigned> victory_sequence;
+    std::vector<std::size_t> victory_sequence;
 
     // game data
     unsigned board[9]{

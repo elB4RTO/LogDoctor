@@ -88,7 +88,7 @@ const path_t& PathHandler::getPathUnchecked() const
     return this->path;
 }
 
-const path_t PathHandler::getParentUnchecked() const
+path_t PathHandler::getParentUnchecked() const
 {
     return this->path.parent_path();
 }

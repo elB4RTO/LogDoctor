@@ -208,7 +208,7 @@ void CrissCross::victory() noexcept
 {
     // disable all buttons except the victory sequence ones
     bool disable{ true };
-    for ( unsigned i=0; i<9; ++i ) {
+    for ( std::size_t i{0ul}; i<9ul; ++i ) {
         disable |= true;
         for ( const auto& j : this->victory_sequence ) {
             if ( i == j ) {

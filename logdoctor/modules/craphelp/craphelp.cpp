@@ -65,7 +65,7 @@ std::unordered_map<std::string, QString> Craphelp::getColorScheme( const ColorsS
 }
 
 
-void Craphelp::helpLogsFormat( const std::string& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept
+void Craphelp::helpLogsFormat( const std::filesystem::path& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept
 {
     std::unordered_map<std::string, QString> colors_scheme{ this->getColorScheme( colors_scheme_id ) };
     std::string aux;

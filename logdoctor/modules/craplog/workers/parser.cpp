@@ -160,8 +160,8 @@ void CraplogParser::joinLogLines()
             const auto path_exp{ file_path.getPath() };
             if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
                 const auto& invalid{ path_exp.error() };
-                throw InvalidPathException( {QString(invalid.invalid_component.c_str()),
-                                             QString(invalid.full_path.c_str())} );
+                throw InvalidPathException( {toQString(invalid.invalid_component),
+                                             toQString(invalid.full_path)} );
             }
             const path_t& path{ path_exp.value() };
 
@@ -485,8 +485,8 @@ bool CraplogParser::checkDatabaseFile() noexcept
     if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
         const auto& invalid{ path_exp.error() };
         emit this->showDialog( WorkerDialog::errPathHasSymlink,
-                               {QString(invalid.invalid_component.c_str()),
-                                QString(invalid.full_path.c_str())} );
+                               {toQString(invalid.invalid_component),
+                                toQString(invalid.full_path)} );
         return false;
     }
     const path_t& path{ path_exp.value() };

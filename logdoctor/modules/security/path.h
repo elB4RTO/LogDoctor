@@ -2,6 +2,8 @@
 #define LOGDOCTOR__MODULES__SECURITY__PATH_H
 
 
+#include <QString>
+
 #include <expected>
 #include <filesystem>
 #include <vector>
@@ -10,7 +12,17 @@
 using path_t = std::filesystem::path;
 
 
-class InvalidPath;
+struct InvalidPath;
+
+
+inline QString toQString(const path_t& path)
+{
+    #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
+        return QString( path.native().c_str() );
+    #else
+        return QString( path.c_str() );
+    #endif
+}
 
 
 //! PathHandler
@@ -50,7 +62,7 @@ public:
     const path_t& getPathUnchecked() const;
 
     //! Convenience function that just returns the parent path, skipping all the checks
-    const path_t getParentUnchecked() const;
+    path_t getParentUnchecked() const;
 };
 
 

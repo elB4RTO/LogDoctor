@@ -28,7 +28,7 @@ void Fetcher::setDialogLevel( const DialogsLevel new_level ) noexcept
 void Fetcher::setDbPath( PathHandler&& path ) noexcept
 {
     this->db_path = std::move(path);
-    this->db_name = QString( this->db_path.getPathUnchecked().filename().c_str() );
+    this->db_name = toQString( this->db_path.getPathUnchecked().filename() );
 }
 
 

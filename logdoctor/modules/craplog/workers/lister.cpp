@@ -37,19 +37,19 @@ void CraplogLister::work()
     if ( ! path_exp.has_value() ) {
         if ( path_exp.error().isReasonSymlink() ) {
             emit this->showDialog( WorkerDialog::errPathHasSymlink,
-                                  {QString( path_exp.error().invalid_component.c_str() ),
-                                   QString( path_exp.error().full_path.c_str() )} );
+                                  {toQString( path_exp.error().invalid_component ),
+                                   toQString( path_exp.error().full_path )} );
             this->quit();
             return;
         } else {
             emit this->showDialog( WorkerDialog::errDirNotExists,
-                                  {QString::fromStdString( this->logs_path.toString() )} );
+                                  {toQString( this->logs_path.getPathUnchecked() )} );
             this->quit();
             return;
         }
     } else if ( ! IOutils::isDir( path_exp.value() ) ) {
         emit this->showDialog( WorkerDialog::errDirNotExists,
-                               {QString::fromStdString( this->logs_path.toString() )} );
+                               {toQString( this->logs_path.getPathUnchecked() )} );
         this->quit();
         return;
     }
