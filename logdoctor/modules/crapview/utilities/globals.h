@@ -53,12 +53,12 @@ inline auto getMaxIndexCount( const auto& traf )
         }
     }};
 
-    if constexpr ( isRangesEnumerateAvailable() ) {
+    #ifdef __cpp_lib_ranges_enumerate
         std::ranges::for_each( std::ranges::views::enumerate(traf), update);
-    } else {
+    #else
         const auto enarr{ Workarounds::enumerate(traf) };
         std::for_each( enarr.cbegin(), enarr.cend(), update );
-    }
+    #endif
 
     return std::make_tuple( max_i, max_c );
 }

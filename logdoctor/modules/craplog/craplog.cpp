@@ -424,16 +424,17 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             // check if the file has today's date
             time_t t;
             time( &t );
-            struct tm* tmp = localtime( &t );
+            struct tm tmp;
+            #ifdef Q_OS_WINDOWS
+                localtime_s( &tmp, &t );
+            #else
+                localtime_r( &t, &tmp );
+            #endif
             char aux_date[7];
-            // using strftime to display time
-            strftime( aux_date, 7, "%y%m%d", tmp );
-            for ( std::size_t i{0ul}; i<6ul; ++i ) {
-                if ( date.at(i) != aux_date[i] ) {
-                    // different date, valid
-                    return true;
-                    break;
-                }
+            strftime( aux_date, 7, "%y%m%d", &tmp );
+            if ( strcmp( date.data(), aux_date ) != 0 ) {
+                // different date, valid
+                return true;
             }
         }break;
 

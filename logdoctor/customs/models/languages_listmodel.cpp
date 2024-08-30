@@ -24,7 +24,7 @@ int LanguagesListModel::indexOfLanguage( const std::string& lang ) const
 int LanguagesListModel::rowCount( const QModelIndex& parent ) const
 {
     Q_UNUSED(parent)
-    return this->model_data.size();
+    return static_cast<int>( this->model_data.size() );
 }
 
 QVariant LanguagesListModel::data( const QModelIndex& index, int role ) const

@@ -96,8 +96,8 @@ path_t PathHandler::getParentUnchecked() const
 
 void InvalidPath::showDialogMessage() const
 {
-    const QString fp( this->full_path.c_str() );
-    const QString ic( this->invalid_component.c_str() );
+    const QString fp( toQString( this->full_path ) );
+    const QString ic( toQString( this->invalid_component ) );
     switch ( this->reason ) {
         case Reason::NotExists:
             DialogSec::errPathNotExists( fp, ic );

@@ -18,7 +18,7 @@ struct InvalidPath;
 inline QString toQString(const path_t& path)
 {
     #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
-        return QString( path.native().c_str() );
+        return QString::fromWCharArray( path.c_str() );
     #else
         return QString( path.c_str() );
     #endif

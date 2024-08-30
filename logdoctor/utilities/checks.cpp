@@ -199,8 +199,8 @@ bool checkCollectionDatabase( const PathHandler& db_path ) noexcept
             if ( path_exp.error().isReasonSymlink() ) {
                 const auto& invalid{ path_exp.error() };
                 DialogSec::errDatabasePathHasSymlink(
-                    QString(invalid.invalid_component.c_str()),
-                    QString(invalid.full_path.c_str()) );
+                    toQString(invalid.invalid_component),
+                    toQString(invalid.full_path) );
             } else {
                 if ( DialogSec::choiceDatabaseNotFound( db.name() ) ) {
                     throw MakeNewDatabase{};
@@ -323,7 +323,7 @@ bool checkCollectionDatabase( const PathHandler& db_path ) noexcept
                 if ( err ) {
                     err_msg = QString::fromStdString( err.message() );
                 }
-                DialogSec::errRenaming( QString(path.c_str()), err_msg );
+                DialogSec::errRenaming( toQString(path), err_msg );
                 return false;
             }
         }
@@ -350,8 +350,8 @@ bool checkHashesDatabase( const PathHandler& db_path ) noexcept
             if ( path_exp.error().isReasonSymlink() ) {
                 const auto& invalid{ path_exp.error() };
                 DialogSec::errDatabasePathHasSymlink(
-                    QString(invalid.invalid_component.c_str()),
-                    QString(invalid.full_path.c_str()) );
+                    toQString(invalid.invalid_component),
+                    toQString(invalid.full_path) );
             } else {
                 if ( DialogSec::choiceDatabaseNotFound( db.name() ) ) {
                     throw MakeNewDatabase{};
@@ -421,7 +421,7 @@ bool checkHashesDatabase( const PathHandler& db_path ) noexcept
                 if ( err ) {
                     err_msg = QString::fromStdString( err.message() );
                 }
-                DialogSec::errRenaming( QString(path.c_str()), err_msg );
+                DialogSec::errRenaming( toQString(path), err_msg );
                 return false;
             }
         }
@@ -441,8 +441,8 @@ bool checkDatabaseFile( const PathHandler& db_path, const QString& db_name ) noe
     if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
         const auto& invalid{ path_exp.error() };
         DialogSec::errDatabasePathHasSymlink(
-            QString(invalid.invalid_component.c_str()),
-            QString(invalid.full_path.c_str()) );
+            toQString(invalid.invalid_component),
+            toQString(invalid.full_path) );
         return false;
     }
     const path_t& path{ path_exp.value() };

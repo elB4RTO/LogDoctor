@@ -553,12 +553,12 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
         }
     }};
 
-    if constexpr ( isRangesZipAvailable() ) {
+    #ifdef __cpp_lib_ranges_zip
         std::ranges::for_each( std::ranges::views::zip( data.traf.day, week_days_count ), mean_day_count );
-    } else {
+    #else
         auto ziparr{ Workarounds::zip( data.traf.day, week_days_count ) };
         std::for_each( ziparr.begin(), ziparr.end(), mean_day_count );
-    }
+    #endif
 
     // make the max-date tuple
     data.traf.date = std::make_tuple(
