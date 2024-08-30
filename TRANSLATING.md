@@ -4,17 +4,9 @@
 
 ## Translations
 
-Current translations under developement:
+Most of the available translations are automatically generated through a script and are hence imprecise.
 
-- `es_ES` : **90%** *(auditor needed)*
-
-- `fr_FR` : **90%** *(auditor needed)*
-
-- `pt_BR` : **90%** *(auditor needed)*
-
-- `ja_JP` : **90%** *(auditor needed)*
-
-If you have a request for a missing language or you're willing to contribute, please refer to [this issue](https://github.com/elB4RTO/LogDoctor/issues/10).
+If you have a request for a missing language or you're willing to contribute in improving existing translations, please refer to [this issue](https://github.com/elB4RTO/LogDoctor/issues/10).
 
 <br/><br/>
 
