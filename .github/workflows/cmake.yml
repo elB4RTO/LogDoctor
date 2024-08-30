@@ -44,7 +44,7 @@ jobs:
 
   
     - name: Update GCC (NIX)
-      if: runner.os == 'Ubuntu'
+      if: runner.os == 'Linux'
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y 
         sudo apt-get update
