@@ -56,7 +56,7 @@ private:
     const bool p2_human{ !p1_human };
 
     // victory related
-    std::vector<unsigned> victory_sequence;
+    std::vector<std::size_t> victory_sequence;
 
     // game data
     unsigned board[9]{
@@ -72,7 +72,7 @@ private:
         QIcon(":/games/games/crisscross/x.png")
     };
 
-    const size_t sequences[8][3]{
+    const std::size_t sequences[8][3]{
         {0,1,2},{3,4,5},{6,7,8}, // horizontal
         {0,3,6},{1,4,7},{2,5,8}, // vertical
         {0,4,8},{2,4,6}          // diagonal

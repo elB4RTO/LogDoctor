@@ -6,9 +6,11 @@
 
 #include "globals/db_names.h"
 #include "globals/global_configs.h"
+#include "globals/security.h"
 
 #include "customs/logfile_treewidgetitem.h"
 #include "customs/models/logfields_listmodel.h"
+#include "customs/models/languages_listmodel.h"
 
 #include "utilities/checks.h"
 #include "utilities/colors.h"
@@ -17,6 +19,7 @@
 #include "utilities/printables.h"
 #include "utilities/rtf.h"
 #include "utilities/stylesheets.h"
+#include "utilities/vectors.h"
 
 #include "modules/dialogs.h"
 #include "modules/exceptions.h"
@@ -120,13 +123,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //////////////
     //// MENU ////
-    // languages
-    connect( this->ui->actionEnglishGb,   &QAction::triggered, this, &MainWindow::menu_actionEnglishGb_triggered   );
-    connect( this->ui->actionEspanolEs,   &QAction::triggered, this, &MainWindow::menu_actionEspanolEs_triggered   );
-    connect( this->ui->actionFrancaisFr,  &QAction::triggered, this, &MainWindow::menu_actionFrancaisFr_triggered  );
-    connect( this->ui->actionItalianoIt,  &QAction::triggered, this, &MainWindow::menu_actionItalianoIt_triggered  );
-    connect( this->ui->actionJapaneseJp,  &QAction::triggered, this, &MainWindow::menu_actionJapaneseJp_triggered  );
-    connect( this->ui->actionPortuguesBr, &QAction::triggered, this, &MainWindow::menu_actionPortuguesBr_triggered );
     // tools
     connect( this->ui->actionBlockNote, &QAction::triggered, this, &MainWindow::menu_actionBlockNote_triggered );
     // utilities
@@ -160,27 +156,19 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->box_StatsRelat_LogsField_2->setModel( new RelationslLogFieldsListModel() );
 
 
+    //////////////////
+    //// CRAPCONF ////
+    {
+        QSignalBlocker blocker( this->ui->box_ConfWindow_Language );
+        this->ui->box_ConfWindow_Language->setModel( new LanguagesListModel() );
+    }
+
+
     ///////////////////
     //// POLISHING ////
     // default tabs
     this->switchMainTab( 0 );
     this->switchStatsTab( 0 );
-
-    // language menu
-    if ( this->language != "en_GB" ) {
-        this->ui->actionEnglishGb->setChecked( false );
-        if ( language == "es_ES" ) {
-            this->ui->actionEspanolEs->setChecked( true );
-        } else if ( language == "fr_FR" ) {
-            this->ui->actionFrancaisFr->setChecked( true );
-        } else if ( language == "it_IT" ) {
-            this->ui->actionItalianoIt->setChecked( true );
-        } else if ( language == "ja_JP" ) {
-            this->ui->actionJapaneseJp->setChecked( true );
-        } else if ( language == "pt_BR" ) {
-            this->ui->actionPortuguesBr->setChecked( true );
-        }
-    }
 
     // set the default WS as the current one
     switch ( this->default_web_server ) {
@@ -211,6 +199,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->checkBox_ConfWindow_Geometry->setChecked( this->remember_window );
     this->ui->box_ConfWindow_Theme->setCurrentIndex( static_cast<int>(GlobalConfigs::window_theme) );
     this->ui->box_ConfWindow_Icons->setCurrentIndex( static_cast<int>(GlobalConfigs::icons_theme) );
+    this->ui->box_ConfWindow_Language->setCurrentIndex(
+        dynamic_cast<LanguagesListModel*>( this->ui->box_ConfWindow_Language->model() )->indexOfLanguage( this->language )
+    );
     // dialogs
     this->ui->slider_ConfDialogs_General->setValue( static_cast<int>(this->dialogs_level) );
     this->ui->slider_ConfDialogs_Logs->setValue( static_cast<int>(this->craplog.getDialogsLevel()) );
@@ -229,12 +220,14 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->spinBox_ConfCharts_Count_MaxSlices->setValue( this->crapview.getCountMaxSlices() );
     this->ui->box_ConfCharts_Relat_TimeFormat->setCurrentText( this->crapview.getRelatTimeFormat() );
     // databases
-    this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path ) );
+    this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( this->db_data_path.toString() ) );
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
-    this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( this->db_hashes_path ) );
+    this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( this->db_hashes_path.toString() ) );
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
     this->ui->spinBox_ConfDatabases_NumBackups->setValue( this->db_backups_number );
     this->ui->checkBox_ConfDatabases_DoBackup->setChecked( this->db_do_backup );
+    // security
+    this->ui->checkBox_ConfSecurity_Paths_Symlinks->setChecked( GlobalConfigs::Security::follow_symlinks );
     // logs control
     this->ui->checkBox_ConfControl_Usage->setChecked( this->hide_used_files );
     this->ui->spinBox_ConfControl_Size->setValue( static_cast<int>(this->craplog.getWarningSize() / 1'048'576ul) );
@@ -244,7 +237,7 @@ MainWindow::MainWindow(QWidget *parent)
         this->ui->checkBox_ConfControl_Size->setChecked( false );
     }
     // apache paths
-    this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_APACHE )) );
+    this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_APACHE ).toString()) );
     this->ui->button_ConfApache_Path_Save->setEnabled( false );
     // apache formats
     this->ui->inLine_ConfApache_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_APACHE ) ) );
@@ -254,7 +247,7 @@ MainWindow::MainWindow(QWidget *parent)
     // apache blacklists
     this->on_box_ConfApache_Blacklist_Field_currentTextChanged( this->ui->box_ConfApache_Blacklist_Field->currentText() );
     // nginx paths
-    this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_NGINX )) );
+    this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_NGINX ).toString()) );
     this->ui->button_ConfNginx_Path_Save->setEnabled( false );
     // nginx formats
     this->ui->inLine_ConfNginx_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_NGINX ) ) );
@@ -264,7 +257,7 @@ MainWindow::MainWindow(QWidget *parent)
     // nginx blacklists
     this->on_box_ConfNginx_Blacklist_Field_currentTextChanged( this->ui->box_ConfNginx_Blacklist_Field->currentText() );
     // iis paths
-    this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_IIS )) );
+    this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString(this->craplog.getLogsPath( WS_IIS ).toString()) );
     this->ui->button_ConfIis_Path_Save->setEnabled( false );
     // iis formats
     this->ui->inLine_ConfIis_Format_String->setText( QString::fromStdString( this->craplog.getLogsFormatString( WS_IIS ) ) );
@@ -324,23 +317,17 @@ void MainWindow::closeEvent( QCloseEvent *event )
 // os definition
 void MainWindow::defineOSspec()
 {
-    #if defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
-        /*this->configs_path   = home_path + "/.config/LogDoctor/logdoctor.conf";
-        this->logdoc_path    = home_path + "/.local/share/LogDoctor";*/
-        this->db_data_path   = this->home_path + "/.local/share/LogDoctor";
-        this->db_hashes_path = this->home_path + "/.local/share/LogDoctor";
+    #if defined( Q_OS_MACOS )
+        this->db_data_path   = PathHandler( this->logdoc_path );
+        this->db_hashes_path = PathHandler( this->logdoc_path );
 
     #elif defined( Q_OS_WINDOWS )
-        /*this->configs_path   = home_path + "/AppData/Local/LogDoctor/logdoctor.conf";
-        this->logdoc_path    = home_path + "/AppData/Local/LogDoctor";*/
-        this->db_data_path   = this->logdoc_path;
-        this->db_hashes_path = this->logdoc_path;
+        this->db_data_path   = PathHandler( this->logdoc_path );
+        this->db_hashes_path = PathHandler( this->logdoc_path );
 
-    #elif defined( Q_OS_MACOS )
-        /*this->configs_path   = home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf";
-        this->logdoc_path    = home_path + "/Lybrary/Application Support/LogDoctor";*/
-        this->db_data_path   = this->logdoc_path;
-        this->db_hashes_path = this->logdoc_path;
+    #elif defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
+        this->db_data_path   = PathHandler( this->home_path + "/.local/share/LogDoctor" );
+        this->db_hashes_path = PathHandler( this->home_path + "/.local/share/LogDoctor" );
 
     #else
         // shouldn't be here
@@ -350,587 +337,583 @@ void MainWindow::defineOSspec()
 
 void MainWindow::readConfigs()
 {
-    bool proceed{ true };
     std::error_code err;
+    bool proceed{true};
     QString err_msg;
-    // check the file
-    if ( IOutils::exists( this->configs_path ) ) {
-        if ( IOutils::checkFile( this->configs_path ) ) {
-            if ( ! IOutils::checkFile( this->configs_path, true ) ) {
-                // file not readable, try to assign permissions
-                std::filesystem::permissions( this->configs_path,
-                                              std::filesystem::perms::owner_read,
-                                              std::filesystem::perm_options::add,
-                                              err );
-                if ( err.value() ) {
-                    proceed &= false;
-                    QString file;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        file = QString::fromStdString( this->configs_path );
-                        err_msg = QString::fromStdString( err.message() );
-                    }
-                    DialogSec::errConfFileNotReadable( file, err_msg );
-                }
-            }
-        } else {
-            // the given path doesn't point to a file
-            proceed = DialogSec::choiceFileNotFile( QString::fromStdString( this->configs_path ) );
-            if ( proceed ) {
-                proceed = IOutils::renameAsCopy( this->configs_path, err );
-                if ( ! proceed ) {
-                    QString path;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        path = QString::fromStdString( this->configs_path );
-                        if ( err.value() ) {
-                            err_msg = QString::fromStdString( err.message() );
-                        }
-                    }
-                    DialogSec::errRenaming( QString::fromStdString( this->configs_path ), err_msg );
-                }
-            }
+
+    if ( const auto path_exp{ this->configs_path.getPath() };
+         !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        const auto& invalid{ path_exp.error() };
+        QString invalid_component;
+        if ( this->dialogs_level > DL_ESSENTIAL ) {
+            invalid_component = toQString( invalid.invalid_component );
         }
-    } else {
-        // configuration file not found
+        DialogSec::errConfPathHasSymlink( toQString( invalid.full_path ), invalid_component );
         proceed &= false;
-        QString file;
-        if ( this->dialogs_level == DL_EXPLANATORY ) {
-            file = QString::fromStdString( this->configs_path );
+    } else {
+        const path_t& conf_file{ this->configs_path.getPathUnchecked() };
+        if ( ! IOutils::exists( conf_file ) ) {
+            // configuration file not found
+            QString file;
+            if ( this->dialogs_level == DL_EXPLANATORY ) {
+                file = toQString( conf_file );
+            }
+            DialogSec::warnConfFileNotFound( file );
+            proceed &= false;
+
+        } else if ( ! IOutils::checkFile( conf_file ) ) {
+            // the given path doesn't point to a file
+            const QString path_msg{ toQString( conf_file ) };
+            if ( DialogSec::choiceFileNotFile( path_msg ) ) {
+                if ( IOutils::renameAsCopy( conf_file, err ) ) {
+                    return;
+                }
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    err_msg = QString::fromStdString( err.message() );
+                }
+                DialogSec::errRenaming( path_msg, err_msg );
+            }
+            proceed &= false;
+
+        } else if ( ! IOutils::checkFile( conf_file, true ) ) {
+            // file not readable
+            QString file;
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                file = toQString( conf_file );
+            }
+            DialogSec::errConfFileNotReadable( file, err_msg );
+            proceed &= false;
         }
-        DialogSec::warnConfFileNotFound( file );
+    }
+    if ( ! proceed ) {
+        if ( ! DialogSec::choiceFailedApplyingConfigs( err_msg ) ) {
+            // choosed to abort
+            std::exit( 1 );
+        }
+        return;
     }
 
-    if ( proceed ) {
-        err_msg.clear();
-        QStringList invalid_lines;
-        std::vector<std::string> aux, configs;
-        try {
-            bool iis_module_set{ false };
-            std::string iis_format_w3c;
-            const std::string iis_format_ncsa{ "c-ip s-sitename s-computername [date:time] sc-status sc-bytes" };
-            const std::string iis_format_iis{  "c-ip, cs-username, date, time, s-sitename, s-computername, s-ip, time-taken, cs-bytes, sc-bytes, sc-status, sc-win32-status, cs-method, cs-uri-stem, cs-uri-query," };
-            const auto apply_iis_format{ [this,&invalid_lines](const std::string& line, const std::string& format, const IISLogsModule module)
-                {
-                    if ( ! this->craplog.setIisLogFormat( format, module ) ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
+    QStringList invalid_lines;
+    try {
+        bool iis_module_set{ false };
+        std::string iis_format_w3c;
+        const std::string iis_format_ncsa{ "c-ip s-sitename s-computername [date:time] sc-status sc-bytes" };
+        const std::string iis_format_iis{  "c-ip, cs-username, date, time, s-sitename, s-computername, s-ip, time-taken, cs-bytes, sc-bytes, sc-status, sc-win32-status, cs-method, cs-uri-stem, cs-uri-query," };
+        const auto apply_iis_format{ [this,&invalid_lines](const std::string& line, const std::string& format, const IISLogsModule module)
+            {
+                if ( ! this->craplog.setIisLogFormat( format, module ) ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
                 }
-            };
+            }
+        };
 
-            std::string content;
-            IOutils::readFile( this->configs_path, content );
-            StringOps::splitrip( configs, content );
-            for ( const std::string& line : configs ) {
-                if ( StringOps::startsWith( line, '[') ) {
-                    // section descriptor
-                    continue;
-                }
-                aux.clear();
-                StringOps::splitrip( aux, line, '=' );
-                if ( aux.size() < 2 ) {
-                    // nothing to do
-                    continue;
-                }
-                // if here, a value is present
-                const std::string& var{ aux.at( 0 ) };
-                const std::string& val{ aux.at( 1 ) };
+        std::string content;
+        IOutils::readFile( this->configs_path.getPathUnchecked(), content );
+        std::vector<std::string> configs;
+        StringOps::splitrip( configs, content );
+        for ( const std::string& line : configs ) {
+            if ( StringOps::startsWith( line, '[') ) {
+                // section descriptor
+                continue;
+            }
+            std::vector<std::string> aux;
+            StringOps::splitrip( aux, line, '=' );
+            if ( aux.size() < 2 ) {
+                // nothing to do
+                continue;
+            }
+            // if here, a value is present
+            const std::string& var{ aux.at( 0 ) };
+            const std::string& val{ aux.at( 1 ) };
 
-                if ( val.empty() ) {
-                    // nothing to do, no value stored
-                    continue;
-                }
+            if ( val.empty() ) {
+                // nothing to do, no value stored
+                continue;
+            }
 
-                if ( var == "Language" ) {
-                    if ( val.size() != 5 ) {
-                        // not a valid locale, keep the default
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errLangLocaleInvalid( QString::fromStdString( val ) );
+            if ( var == "Language" ) {
+                if ( val.size() != 5 ) {
+                    // not a valid locale, keep the default
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errLangLocaleInvalid( QString::fromStdString( val ) );
+                } else {
+                    if ( VecOps::contains( this->available_languages, val ) ) {
+                        this->language = val;
                     } else {
-                        if ( val == "en_GB" || val == "es_ES" || val == "fr_FR" || val == "it_IT" || val == "ja_JP" || val == "pt_BR" ) {
-                            this->language = val;
-                        } else {
-                            invalid_lines.append( QString::fromStdString( line ) );
-                            DialogSec::errLangNotAccepted( QString::fromStdString( val ) );
-                        }
-                    }
-
-                } else if ( var == "RememberGeometry" ) {
-                    try {
-                        this->remember_window = this->s2b.at( val );
-                    } catch ( const std::exception& ) {
                         invalid_lines.append( QString::fromStdString( line ) );
+                        DialogSec::errLangNotAccepted( QString::fromStdString( val ) );
                     }
+                }
 
-                } else if ( var == "Geometry" ) {
-                    this->setGeometryFromString( val );
+            } else if ( var == "RememberGeometry" ) {
+                try {
+                    this->remember_window = this->s2b.at( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
 
-                } else if ( var == "WindowTheme" ) {
-                    try {
-                        GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
+            } else if ( var == "Geometry" ) {
+                this->setGeometryFromString( val );
+
+            } else if ( var == "WindowTheme" ) {
+                try {
+                    GlobalConfigs::window_theme = static_cast<WindowTheme>( std::stoi( val ) );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "IconsTheme" ) {
+                try {
+                    GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "ChartsTheme" ) {
+                try {
+                    GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "MainDialogsLevel" ) {
+                try {
+                    this->setDialogsLevelFromString( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "DefaultWebServer" ) {
+                try {
+                    this->setWebServerFromString( val );
+                } catch ( const GenericException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        TR::tr("Unexpected WebServer"),
+                        QString::fromStdString( val ) ) );
+                }
+
+            } else if ( var == "DatabaseDataPath" ) {
+                this->db_data_path = PathHandler( val );
+
+            } else if ( var == "DatabaseHashesPath" ) {
+                this->db_hashes_path = PathHandler( val );
+
+            } else if ( var == "DatabaseDoBackup" ) {
+                try {
+                    this->db_do_backup = this->s2b.at( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "DatabaseBackupsNumber" ) {
+                try {
+                    this->db_backups_number = std::stoi( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "FollowSymlinks" ) {
+                try {
+                    GlobalConfigs::Security::follow_symlinks = this->s2b.at( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "Font" ) {
+                try {
+                    this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "WideLines" ) {
+                try {
+                    this->TB.setWideLinesUsage( this->s2b.at( val ) );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "ColorScheme" ) {
+                try {
+                    const int v{ std::stoi( val ) };
+                    GlobalConfigs::colors_scheme = static_cast<ColorsScheme>( v );
+                    this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( v );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "CraplogDialogsLevel" ) {
+                try {
+                    this->craplog.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
+                } catch ( ... ) { // std::exception / GenericException
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "HideUsedFiles" ) {
+                try {
+                    hide_used_files = this->s2b.at( val );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "WarningSize" ) {
+                try {
+                    this->craplog.setWarningSize( std::stoul( val ) );
+                } catch ( const std::exception& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "ApacheLogsPath" ) {
+                this->craplog.setLogsPath( WS_APACHE, PathHandler( val ) );
+
+            } else if ( var == "ApacheLogsFormat" ) {
+                if ( ! this->craplog.setApacheLogFormat( val ) ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "ApacheWarnlistMethod" ) {
+                try {
+                    this->warnlists.setList( WS_APACHE, WarnlistField::Method, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Apache -> %1 (%2)").arg(
+                            TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "ApacheWarnlistMethodUsed" ) {
+                this->warnlists.setUsed( WS_APACHE, WarnlistField::Method, this->s2b.at( val ) );
+
+            } else if ( var == "ApacheWarnlistURI" ) {
+                try {
+                    this->warnlists.setList( WS_APACHE, WarnlistField::Uri, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Apache -> %1 (%2)").arg(
+                            TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "ApacheWarnlistURIUsed" ) {
+                this->warnlists.setUsed( WS_APACHE, WarnlistField::Uri, this->s2b.at( val ) );
+
+            } else if ( var == "ApacheWarnlistClient" ) {
+                try {
+                    this->warnlists.setList( WS_APACHE, WarnlistField::Client, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Apache -> %1 (%2)").arg(
+                            TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "ApacheWarnlistClientUsed" ) {
+                this->warnlists.setUsed( WS_APACHE, WarnlistField::Client, this->s2b.at( val ) );
+
+            } else if ( var == "ApacheWarnlistUserAgent" ) {
+                try {
+                    this->warnlists.setList( WS_APACHE, WarnlistField::UserAgent, this->string2list( val, true ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Apache -> %1 (%2)").arg(
+                            TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "ApacheWarnlistUserAgentUsed" ) {
+                this->warnlists.setUsed( WS_APACHE, WarnlistField::UserAgent, this->s2b.at( val ) );
+
+            } else if ( var == "ApacheBlacklistClient" ) {
+                try {
+                    this->blacklists.setList( WS_APACHE, BlacklistField::Client, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Apache -> %1 (%2)").arg(
+                            TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
+                }
+
+            } else if ( var == "ApacheBlacklistClientUsed" ) {
+                this->blacklists.setUsed( WS_APACHE, BlacklistField::Client, this->s2b.at( val ) );
+
+            } else if ( var == "NginxLogsPath" ) {
+                this->craplog.setLogsPath( WS_NGINX, PathHandler( val ) );
+
+            } else if ( var == "NginxLogsFormat" ) {
+                if ( ! this->craplog.setNginxLogFormat( val ) ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            } else if ( var == "NginxWarnlistMethod" ) {
+                try {
+                    this->warnlists.setList( WS_NGINX, WarnlistField::Method, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Nginx -> %1 (%2)").arg(
+                            TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "NginxWarnlistMethodUsed" ) {
+                this->warnlists.setUsed( WS_NGINX, WarnlistField::Method, this->s2b.at( val ) );
+
+            } else if ( var == "NginxWarnlistURI" ) {
+                try {
+                    this->warnlists.setList( WS_NGINX, WarnlistField::Uri, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Nginx -> %1 (%2)").arg(
+                            TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "NginxWarnlistURIUsed" ) {
+                this->warnlists.setUsed( WS_NGINX, WarnlistField::Uri, this->s2b.at( val ) );
+
+            } else if ( var == "NginxWarnlistClient" ) {
+                try {
+                    this->warnlists.setList( WS_NGINX, WarnlistField::Client, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Nginx -> %1 (%2)").arg(
+                            TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "NginxWarnlistClientUsed" ) {
+                this->warnlists.setUsed( WS_NGINX, WarnlistField::Client, this->s2b.at( val ) );
+
+            } else if ( var == "NginxWarnlistUserAgent" ) {
+                try {
+                    this->warnlists.setList( WS_NGINX, WarnlistField::UserAgent, this->string2list( val, true ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Nginx -> %1 (%2)").arg(
+                            TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
+
+            } else if ( var == "NginxWarnlistUserAgentUsed" ) {
+                this->warnlists.setUsed( WS_NGINX, WarnlistField::UserAgent, this->s2b.at( val ) );
+
+            } else if ( var == "NginxBlacklistClient" ) {
+                try {
+                    this->blacklists.setList( WS_NGINX, BlacklistField::Client, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("Nginx -> %1 (%2)").arg(
+                            TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
+                }
+
+            } else if ( var == "NginxBlacklistClientUsed" ) {
+                this->blacklists.setUsed( WS_NGINX, BlacklistField::Client, this->s2b.at( val ) );
+
+            } else if ( var == "IisLogsPath" ) {
+                this->craplog.setLogsPath( WS_IIS, PathHandler( val ) );
+
+            } else if ( var == "IisLogsModule" ) {
+                if ( val == "0" ) {
+                    this->ui->radio_ConfIis_Format_W3C->setChecked( true );
+                    if ( ! iis_format_w3c.empty() ) {
+                        apply_iis_format( line, iis_format_w3c, IISLogsModule::W3C );
                     }
+                } else if ( val == "1" ) {
+                    iis_format_w3c.clear();
+                    this->ui->radio_ConfIis_Format_NCSA->setChecked( true );
+                    apply_iis_format( line, iis_format_ncsa, IISLogsModule::NCSA );
+                } else if ( val == "2" ) {
+                    iis_format_w3c.clear();
+                    this->ui->radio_ConfIis_Format_IIS->setChecked( true );
+                    apply_iis_format( line, iis_format_iis, IISLogsModule::IIS );
+                } else {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    iis_module_set &= false;
+                    continue;
+                }
+                iis_module_set |= true;
 
-                } else if ( var == "IconsTheme" ) {
-                    try {
-                        GlobalConfigs::icons_theme = static_cast<IconsTheme>( std::stoi( val ) );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "ChartsTheme" ) {
-                    try {
-                        GlobalConfigs::charts_theme = static_cast<ChartsTheme>( std::stoi( val ) );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "MainDialogsLevel" ) {
-                    try {
-                        this->setDialogsLevelFromString( val );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "DefaultWebServer" ) {
-                    try {
-                        this->setWebServerFromString( val );
-                    } catch ( const GenericException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            TR::tr("Unexpected WebServer"),
-                            QString::fromStdString( val ) ) );
-                    }
-
-                } else if ( var == "DatabaseDataPath" ) {
-                    this->db_data_path = this->resolvePath( val );
-                    if ( this->db_data_path.empty() ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "DatabaseHashesPath" ) {
-                    this->db_hashes_path = this->resolvePath( val );
-                    if ( this->db_hashes_path.empty() ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "DatabaseDoBackup" ) {
-                    try {
-                        this->db_do_backup = this->s2b.at( val );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "DatabaseBackupsNumber" ) {
-                    try {
-                        this->db_backups_number = std::stoi( val );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "Font" ) {
-                    try {
-                        this->on_box_ConfTextBrowser_Font_currentIndexChanged( std::stoi( val ) );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "WideLines" ) {
-                    try {
-                        this->TB.setWideLinesUsage( this->s2b.at( val ) );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "ColorScheme" ) {
-                    try {
-                        const int v{ std::stoi( val ) };
-                        GlobalConfigs::colors_scheme = static_cast<ColorsScheme>( v );
-                        this->on_box_ConfTextBrowser_ColorScheme_currentIndexChanged( v );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "CraplogDialogsLevel" ) {
-                    try {
-                        this->craplog.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
-                    } catch ( ... ) { // std::exception / GenericException
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "HideUsedFiles" ) {
-                    try {
-                        hide_used_files = this->s2b.at( val );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "WarningSize" ) {
-                    try {
-                        this->craplog.setWarningSize( std::stoul( val ) );
-                    } catch ( const std::exception& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "ApacheLogsPath" ) {
-                    this->craplog.setLogsPath( WS_APACHE, this->resolvePath( val ) );
-                    if ( this->craplog.getLogsPath( WS_APACHE ).empty() ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "ApacheLogsFormat" ) {
-                    if ( ! this->craplog.setApacheLogFormat( val ) ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "ApacheWarnlistMethod" ) {
-                    try {
-                        this->warnlists.setList( WS_APACHE, WarnlistField::Method, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Apache -> %1 (%2)").arg(
-                                TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "ApacheWarnlistMethodUsed" ) {
-                    this->warnlists.setUsed( WS_APACHE, WarnlistField::Method, this->s2b.at( val ) );
-
-                } else if ( var == "ApacheWarnlistURI" ) {
-                    try {
-                        this->warnlists.setList( WS_APACHE, WarnlistField::Uri, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Apache -> %1 (%2)").arg(
-                                TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "ApacheWarnlistURIUsed" ) {
-                    this->warnlists.setUsed( WS_APACHE, WarnlistField::Uri, this->s2b.at( val ) );
-
-                } else if ( var == "ApacheWarnlistClient" ) {
-                    try {
-                        this->warnlists.setList( WS_APACHE, WarnlistField::Client, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Apache -> %1 (%2)").arg(
-                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "ApacheWarnlistClientUsed" ) {
-                    this->warnlists.setUsed( WS_APACHE, WarnlistField::Client, this->s2b.at( val ) );
-
-                } else if ( var == "ApacheWarnlistUserAgent" ) {
-                    try {
-                        this->warnlists.setList( WS_APACHE, WarnlistField::UserAgent, this->string2list( val, true ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Apache -> %1 (%2)").arg(
-                                TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "ApacheWarnlistUserAgentUsed" ) {
-                    this->warnlists.setUsed( WS_APACHE, WarnlistField::UserAgent, this->s2b.at( val ) );
-
-                } else if ( var == "ApacheBlacklistClient" ) {
-                    try {
-                        this->blacklists.setList( WS_APACHE, BlacklistField::Client, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Apache -> %1 (%2)").arg(
-                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
-                    }
-
-                } else if ( var == "ApacheBlacklistClientUsed" ) {
-                    this->blacklists.setUsed( WS_APACHE, BlacklistField::Client, this->s2b.at( val ) );
-
-                } else if ( var == "NginxLogsPath" ) {
-                    this->craplog.setLogsPath( WS_NGINX, this->resolvePath( val ) );
-                    if ( this->craplog.getLogsPath( WS_NGINX ).empty() ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "NginxLogsFormat" ) {
-                    if ( ! this->craplog.setNginxLogFormat( val ) ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "NginxWarnlistMethod" ) {
-                    try {
-                        this->warnlists.setList( WS_NGINX, WarnlistField::Method, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Nginx -> %1 (%2)").arg(
-                                TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "NginxWarnlistMethodUsed" ) {
-                    this->warnlists.setUsed( WS_NGINX, WarnlistField::Method, this->s2b.at( val ) );
-
-                } else if ( var == "NginxWarnlistURI" ) {
-                    try {
-                        this->warnlists.setList( WS_NGINX, WarnlistField::Uri, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Nginx -> %1 (%2)").arg(
-                                TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "NginxWarnlistURIUsed" ) {
-                    this->warnlists.setUsed( WS_NGINX, WarnlistField::Uri, this->s2b.at( val ) );
-
-                } else if ( var == "NginxWarnlistClient" ) {
-                    try {
-                        this->warnlists.setList( WS_NGINX, WarnlistField::Client, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Nginx -> %1 (%2)").arg(
-                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "NginxWarnlistClientUsed" ) {
-                    this->warnlists.setUsed( WS_NGINX, WarnlistField::Client, this->s2b.at( val ) );
-
-                } else if ( var == "NginxWarnlistUserAgent" ) {
-                    try {
-                        this->warnlists.setList( WS_NGINX, WarnlistField::UserAgent, this->string2list( val, true ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Nginx -> %1 (%2)").arg(
-                                TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
-
-                } else if ( var == "NginxWarnlistUserAgentUsed" ) {
-                    this->warnlists.setUsed( WS_NGINX, WarnlistField::UserAgent, this->s2b.at( val ) );
-
-                } else if ( var == "NginxBlacklistClient" ) {
-                    try {
-                        this->blacklists.setList( WS_NGINX, BlacklistField::Client, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("Nginx -> %1 (%2)").arg(
-                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
-                    }
-
-                } else if ( var == "NginxBlacklistClientUsed" ) {
-                    this->blacklists.setUsed( WS_NGINX, BlacklistField::Client, this->s2b.at( val ) );
-
-                } else if ( var == "IisLogsPath" ) {
-                    this->craplog.setLogsPath( WS_IIS, this->resolvePath( val ) );
-                    if ( this->craplog.getLogsPath( WS_IIS ).empty() ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "IisLogsModule" ) {
-                    if ( val == "0" ) {
-                        this->ui->radio_ConfIis_Format_W3C->setChecked( true );
-                        if ( ! iis_format_w3c.empty() ) {
-                            apply_iis_format( line, iis_format_w3c, IISLogsModule::W3C );
-                        }
-                    } else if ( val == "1" ) {
+            } else if ( var == "IisLogsFormat" ) {
+                iis_format_w3c = val;
+                if ( iis_module_set ) {
+                    if ( this->ui->radio_ConfIis_Format_W3C->isChecked() ) {
+                        apply_iis_format( line, iis_format_w3c, IISLogsModule::W3C );
+                    } else if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
                         iis_format_w3c.clear();
-                        this->ui->radio_ConfIis_Format_NCSA->setChecked( true );
                         apply_iis_format( line, iis_format_ncsa, IISLogsModule::NCSA );
-                    } else if ( val == "2" ) {
+                    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
                         iis_format_w3c.clear();
-                        this->ui->radio_ConfIis_Format_IIS->setChecked( true );
                         apply_iis_format( line, iis_format_iis, IISLogsModule::IIS );
                     } else {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        iis_module_set &= false;
-                        continue;
+                        // ... wtf?
+                        throw("No radio button checked for the IIS logs module");
                     }
-                    iis_module_set |= true;
+                }
 
-                } else if ( var == "IisLogsFormat" ) {
-                    iis_format_w3c = val;
-                    if ( iis_module_set ) {
-                        if ( this->ui->radio_ConfIis_Format_W3C->isChecked() ) {
-                            apply_iis_format( line, iis_format_w3c, IISLogsModule::W3C );
-                        } else if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
-                            iis_format_w3c.clear();
-                            apply_iis_format( line, iis_format_ncsa, IISLogsModule::NCSA );
-                        } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
-                            iis_format_w3c.clear();
-                            apply_iis_format( line, iis_format_iis, IISLogsModule::IIS );
-                        } else {
-                            // ... wtf?
-                            throw("No radio button checked for the IIS logs module");
-                        }
-                    }
+            } else if ( var == "IisWarnlistMethod" ) {
+                try {
+                    this->warnlists.setList( WS_IIS, WarnlistField::Method, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("IIS -> %1 (%2)").arg(
+                            TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
 
-                } else if ( var == "IisWarnlistMethod" ) {
-                    try {
-                        this->warnlists.setList( WS_IIS, WarnlistField::Method, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("IIS -> %1 (%2)").arg(
-                                TR::tr(FIELDS__METHOD.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
+            } else if ( var == "IisWarnlistMethodUsed" ) {
+                this->warnlists.setUsed( WS_IIS, WarnlistField::Method, this->s2b.at( val ) );
 
-                } else if ( var == "IisWarnlistMethodUsed" ) {
-                    this->warnlists.setUsed( WS_IIS, WarnlistField::Method, this->s2b.at( val ) );
+            } else if ( var == "IisWarnlistURI" ) {
+                try {
+                    this->warnlists.setList( WS_IIS, WarnlistField::Uri, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("IIS -> %1 (%2)").arg(
+                            TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
 
-                } else if ( var == "IisWarnlistURI" ) {
-                    try {
-                        this->warnlists.setList( WS_IIS, WarnlistField::Uri, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("IIS -> %1 (%2)").arg(
-                                TR::tr(FIELDS__URI.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
+            } else if ( var == "IisWarnlistURIUsed" ) {
+                this->warnlists.setUsed( WS_IIS, WarnlistField::Uri, this->s2b.at( val ) );
 
-                } else if ( var == "IisWarnlistURIUsed" ) {
-                    this->warnlists.setUsed( WS_IIS, WarnlistField::Uri, this->s2b.at( val ) );
+            } else if ( var == "IisWarnlistClient" ) {
+                try {
+                    this->warnlists.setList( WS_IIS, WarnlistField::Client, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("IIS -> %1 (%2)").arg(
+                            TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
 
-                } else if ( var == "IisWarnlistClient" ) {
-                    try {
-                        this->warnlists.setList( WS_IIS, WarnlistField::Client, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("IIS -> %1 (%2)").arg(
-                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
+            } else if ( var == "IisWarnlistClientUsed" ) {
+                this->warnlists.setUsed( WS_IIS, WarnlistField::Client, this->s2b.at( val ) );
 
-                } else if ( var == "IisWarnlistClientUsed" ) {
-                    this->warnlists.setUsed( WS_IIS, WarnlistField::Client, this->s2b.at( val ) );
+            } else if ( var == "IisWarnlistUserAgent" ) {
+                try {
+                    this->warnlists.setList( WS_IIS, WarnlistField::UserAgent, this->string2list( val, true ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("IIS -> %1 (%2)").arg(
+                            TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
+                }
 
-                } else if ( var == "IisWarnlistUserAgent" ) {
-                    try {
-                        this->warnlists.setList( WS_IIS, WarnlistField::UserAgent, this->string2list( val, true ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("IIS -> %1 (%2)").arg(
-                                TR::tr(FIELDS__USER_AGENT.c_str()), MainWindow::tr("warnlist") ) ) );
-                    }
+            } else if ( var == "IisWarnlistUserAgentUsed" ) {
+                this->warnlists.setUsed( WS_IIS, WarnlistField::UserAgent, this->s2b.at( val ) );
 
-                } else if ( var == "IisWarnlistUserAgentUsed" ) {
-                    this->warnlists.setUsed( WS_IIS, WarnlistField::UserAgent, this->s2b.at( val ) );
+            } else if ( var == "IisBlacklistClient" ) {
+                try {
+                    this->blacklists.setList( WS_IIS, BlacklistField::Client, this->string2list( val ) );
+                } catch ( const BWlistException& ) {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                    DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
+                        DialogSec::tr("One of the lists has an invalid item"),
+                        QStringLiteral("IIS -> %1 (%2)").arg(
+                            TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
+                }
 
-                } else if ( var == "IisBlacklistClient" ) {
-                    try {
-                        this->blacklists.setList( WS_IIS, BlacklistField::Client, this->string2list( val ) );
-                    } catch ( const BWlistException& ) {
-                        invalid_lines.append( QString::fromStdString( line ) );
-                        DialogSec::errFailedApplyingConfigsItem( QStringLiteral("%1:\n%2").arg(
-                            DialogSec::tr("One of the lists has an invalid item"),
-                            QStringLiteral("IIS -> %1 (%2)").arg(
-                                TR::tr(FIELDS__CLIENT.c_str()), MainWindow::tr("blacklist") ) ) );
-                    }
+            } else if ( var == "IisBlacklistClientUsed" ) {
+                this->blacklists.setUsed( WS_IIS, BlacklistField::Client, this->s2b.at( val ) );
 
-                } else if ( var == "IisBlacklistClientUsed" ) {
-                    this->blacklists.setUsed( WS_IIS, BlacklistField::Client, this->s2b.at( val ) );
+            } else if ( var == "CrapviewDialogsLevel" ) {
+                try {
+                    this->crapview.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
+                } catch ( ... ) { // std::exception / GenericException
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
 
-                } else if ( var == "CrapviewDialogsLevel" ) {
-                    try {
-                        this->crapview.setDialogsLevel( this->dialogsLevelFromInt( std::stoi( val ) ) );
-                    } catch ( ... ) { // std::exception / GenericException
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "CrapviewSpeedTimeInterval" ) {
-                    try {
-                        const qint64 value{ std::stoll( val ) };
-                        if ( const int index{this->ui->box_ConfCharts_Speed_TimeInterval->findText( QString::fromStdString( val ) )}; index >= 0 ) {
-                            this->crapview.setSpeedTimeInterval( value );
-                        } else {
-                            invalid_lines.append( QString::fromStdString( line ) );
-                        }
-                    } catch ( ... ) { // std::exception
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "CrapviewSpeedTimeFormat" ) {
-                    if ( val == "hh:mm" || val == "hh" ) {
-                        this->crapview.setSpeedTimeFormat( QString::fromStdString( val ) );
+            } else if ( var == "CrapviewSpeedTimeInterval" ) {
+                try {
+                    const qint64 value{ std::stoll( val ) };
+                    if ( const int index{this->ui->box_ConfCharts_Speed_TimeInterval->findText( QString::fromStdString( val ) )}; index >= 0 ) {
+                        this->crapview.setSpeedTimeInterval( value );
                     } else {
                         invalid_lines.append( QString::fromStdString( line ) );
                     }
+                } catch ( ... ) { // std::exception
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
 
-                } else if ( var == "CrapviewCountPieSize" ) {
-                    try {
-                        const qreal value{ std::stod( val ) };
-                        if ( value >= 0.6 && value <= 0.8 ) {
-                            this->crapview.setCountPieSize( value );
-                        } else {
-                            invalid_lines.append( QString::fromStdString( line ) );
-                        }
-                    } catch ( ... ) { // std::exception
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
+            } else if ( var == "CrapviewSpeedTimeFormat" ) {
+                if ( val == "hh:mm" || val == "hh" ) {
+                    this->crapview.setSpeedTimeFormat( QString::fromStdString( val ) );
+                } else {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
 
-                } else if ( var == "CrapviewCountMaxSlices" ) {
-                    try {
-                        const int value{ std::stoi( val ) };
-                        if ( value >= 1 && value <= 31 ) {
-                            this->crapview.setCountMaxSlices( value );
-                        } else {
-                            invalid_lines.append( QString::fromStdString( line ) );
-                        }
-                    } catch ( ... ) { // std::exception
-                        invalid_lines.append( QString::fromStdString( line ) );
-                    }
-
-                } else if ( var == "CrapviewRelationalTimeFormat" ) {
-                    if ( val == "hh:mm" || val == "hh" ) {
-                        this->crapview.setRelatTimeFormat( QString::fromStdString( val ) );
+            } else if ( var == "CrapviewCountPieSize" ) {
+                try {
+                    const qreal value{ std::stod( val ) };
+                    if ( value >= 0.6 && value <= 0.8 ) {
+                        this->crapview.setCountPieSize( value );
                     } else {
                         invalid_lines.append( QString::fromStdString( line ) );
                     }
+                } catch ( ... ) { // std::exception
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
 
-                }/* else {
-                    // not valid
-                }*/
-            }
+            } else if ( var == "CrapviewCountMaxSlices" ) {
+                try {
+                    const int value{ std::stoi( val ) };
+                    if ( value >= 1 && value <= 31 ) {
+                        this->crapview.setCountMaxSlices( value );
+                    } else {
+                        invalid_lines.append( QString::fromStdString( line ) );
+                    }
+                } catch ( ... ) { // std::exception
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
 
-        } catch ( const std::ios_base::failure& ) {
-            // failed reading
-            proceed &= false;
-            invalid_lines.clear();
-            err_msg = DialogSec::tr("An error occured while reading the configuration file");
-        } catch ( const LogDoctorException& ) {
-            // something failed
-            proceed &= false;
-            invalid_lines.clear();
-            err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
+            } else if ( var == "CrapviewRelationalTimeFormat" ) {
+                if ( val == "hh:mm" || val == "hh" ) {
+                    this->crapview.setRelatTimeFormat( QString::fromStdString( val ) );
+                } else {
+                    invalid_lines.append( QString::fromStdString( line ) );
+                }
+
+            }/* else {
+                // not valid
+            }*/
         }
 
-        if ( ! invalid_lines.isEmpty() ) {
-            proceed &= false;
-            DialogSec::warnInvalidConfigsList( invalid_lines );
-            err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
-        }
-        if ( ! proceed ) {
-            if ( ! DialogSec::choiceFailedApplyingConfigs( err_msg ) ) {
-                // choosed to abort
-                std::exit( 1 );
-            }
+    } catch ( const std::ios_base::failure& ) {
+        // failed reading
+        proceed &= false;
+        invalid_lines.clear();
+        err_msg = DialogSec::tr("An error occured while reading the configuration file");
+    } catch ( const LogDoctorException& ) {
+        // something failed
+        proceed &= false;
+        invalid_lines.clear();
+        err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
+    }
+
+    if ( ! invalid_lines.isEmpty() ) {
+        proceed &= false;
+        DialogSec::warnInvalidConfigsList( invalid_lines );
+        err_msg = DialogSec::tr("An error occured while parsing configuration file's data");
+    }
+    if ( ! proceed ) {
+        if ( ! DialogSec::choiceFailedApplyingConfigs( err_msg ) ) {
+            // choosed to abort
+            std::exit( 1 );
         }
     }
 }
@@ -938,316 +921,335 @@ void MainWindow::readConfigs()
 void MainWindow::writeConfigs()
 {
     std::error_code err;
-    bool proceed{true}, msg_shown{false};
+    bool proceed{true};
     QString msg, err_msg;
-    // check the file first
-    if ( IOutils::exists( this->configs_path ) ) {
-        if ( IOutils::checkFile( this->configs_path ) ) {
-            if ( ! IOutils::checkFile( this->configs_path, false, true ) ) {
-                // file not writable, try to assign permissions
-                std::filesystem::permissions( this->configs_path,
-                                              std::filesystem::perms::owner_write,
-                                              std::filesystem::perm_options::add,
-                                              err );
-                if ( err.value() ) {
-                    proceed &= false;
-                    QString file;
+
+    if ( const auto path_exp{ this->configs_path.getPath() };
+         !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        const auto& invalid{ path_exp.error() };
+        QString invalid_component;
+        if ( this->dialogs_level > DL_ESSENTIAL ) {
+            invalid_component = toQString( invalid.invalid_component );
+        }
+        DialogSec::errConfPathHasSymlink( toQString( invalid.full_path ), invalid_component );
+        proceed &= false;
+    } else {
+        const path_t& conf_file{ this->configs_path.getPathUnchecked() };
+        if ( ! IOutils::exists( conf_file ) ) {
+            // file does not exists, check if at least the folder exists
+            const auto base_path{ this->configs_path.getParentUnchecked() };
+            if ( ! IOutils::exists( base_path ) ) {
+                // the configs folder does not exist too
+                if ( ! IOutils::makeDir( base_path, err ) ) {
+                    msg = DialogSec::tr("Failed to create the configuration file's directory");
                     if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        file = QString::fromStdString( this->configs_path );
+                        msg += QLatin1String(":\n%1").arg( base_path.c_str() );
                         err_msg = QString::fromStdString( err.message() );
                     }
-                    DialogSec::errConfFileNotWritable( file, err_msg );
-                    msg_shown |= true;
+                    proceed &= false;
                 }
-            }
-        } else {
-            // the given path doesn't point to a file
-            proceed = DialogSec::choiceFileNotFile( QString::fromStdString( this->configs_path ) );
-            if ( proceed ) {
-                proceed = IOutils::renameAsCopy( this->configs_path, err );
-                if ( ! proceed ) {
-                    QString path;
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        path = QString::fromStdString( this->configs_path );
-                        if ( err.value() ) {
-                            err_msg = QString::fromStdString( err.message() );
-                        }
-                    }
-                    DialogSec::errRenaming( path, err_msg );
-                    msg_shown |= true;
-                }
-            }
-        }
-    } else {
-        // file does not exists, check if at least the folder exists
-        const std::string base_path{ this->parentPath( this->configs_path ) };
-        if ( IOutils::exists( base_path ) ) {
-            if ( IOutils::isDir( base_path ) ) {
-                if ( ! IOutils::checkDir( base_path, false, true ) ) {
-                    // directory not writable, try to assign permissions
-                    std::filesystem::permissions( base_path,
-                                                  std::filesystem::perms::owner_write,
-                                                  std::filesystem::perm_options::add,
-                                                  err );
-                    if ( err.value() ) {
-                        proceed &= false;
-                        QString file;
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            file = QString::fromStdString( base_path );
-                            err_msg = QString::fromStdString( err.message() );
-                        }
-                        DialogSec::errConfDirNotWritable( file, err_msg );
-                        msg_shown |= true;
-                    }
-                }
-            } else {
+
+            } else if ( ! IOutils::isDir( base_path ) ) {
                 // not a directory
-                proceed = DialogSec::choiceDirNotDir( QString::fromStdString( base_path ) );
-                if ( proceed ) {
-                    proceed = IOutils::renameAsCopy( base_path, err );
-                    if ( ! proceed ) {
-                        QString path;
+                const QString path_msg{ toQString( base_path ) };
+                if ( DialogSec::choiceDirNotDir( path_msg ) ) {
+                    if ( ! IOutils::renameAsCopy( base_path, err ) ) {
                         if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            path = QString::fromStdString( base_path );
                             err_msg = QString::fromStdString( err.message() );
                         }
-                        DialogSec::errRenaming( path, err_msg );
-                        msg_shown |= true;
+                        DialogSec::errRenaming( path_msg, err_msg );
+                        proceed &= false;
                     } else {
                         // make the new folder
-                        proceed = IOutils::makeDir( base_path, err );
-                        if ( ! proceed ) {
+                        if ( ! IOutils::makeDir( base_path, err ) ) {
                             msg = DialogSec::tr("Failed to create the configuration file's directory");
                             if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                msg += ":\n"+QString::fromStdString( base_path );
+                                msg += QLatin1String(":\n%1").arg( path_msg );
                                 err_msg = QString::fromStdString( err.message() );
                             }
+                            proceed &= false;
                         }
                     }
+                } else {
+                    // choosed not to rename the entry as '.copy'
+                    msg = DialogSec::tr("Failed to create the configuration file");
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
+                        msg += QLatin1String(":\n%1").arg( path_msg );
+                    }
+                    proceed &= false;
                 }
-            }
-        } else {
-            // the folder does not exist too
-            proceed = IOutils::makeDir( base_path, err );
-            if ( ! proceed ) {
-                msg = DialogSec::tr("Failed to create the configuration file's directory");
+
+            } else if ( ! IOutils::checkDir( base_path, false, true ) ) {
+                QString file;
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    msg += ":\n"+QString::fromStdString( base_path );
-                    err_msg = QString::fromStdString( err.message() );
+                    file = toQString( base_path );
                 }
+                DialogSec::errConfDirNotWritable( file, err_msg );
+                proceed &= false;
             }
+
+        } else if ( ! IOutils::checkFile( conf_file ) ) {
+            // the given path doesn't point to a file
+            const QString path_msg{ toQString( conf_file ) };
+            if ( DialogSec::choiceFileNotFile( path_msg ) ) {
+                if ( ! IOutils::renameAsCopy( conf_file, err ) ) {
+                    if ( this->dialogs_level > DL_ESSENTIAL ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                    DialogSec::errRenaming( path_msg, err_msg );
+                    return;
+                }
+            } else {
+                // choosed not to rename the entry as '.copy'
+                msg = DialogSec::tr("Failed to create the configuration file");
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    msg += QLatin1String(":\n%1").arg( path_msg );
+                }
+                proceed &= false;
+            }
+
+        } else if ( ! IOutils::checkFile( conf_file, false, true ) ) {
+            // file not writable
+            QString file;
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                file = toQString( conf_file );
+            }
+            DialogSec::errConfFileNotWritable( file, err_msg );
+            return;
         }
     }
-    if ( !proceed && !msg_shown ) {
+    if ( !proceed ) {
         DialogSec::errConfFailedWriting( msg, err_msg );
+        return;
     }
 
-    if ( proceed ) {
-        //// USER INTERFACE ////
-        std::string configs;
-        configs += "\n\n[UI]";
-        configs += "\nLanguage=" + this->language;
-        configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
-        configs += "\nGeometry=" + this->geometryToString();
-        configs += "\nWindowTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::window_theme) );
-        configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
-        configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
-        configs += "\nMainDialogsLevel=" + toString( this->dialogs_level );
-        configs += "\nDefaultWebServer=" + toString( this->default_web_server );
-        configs += "\nDatabaseDataPath=" + this->db_data_path;
-        configs += "\nDatabaseHashesPath=" + this->db_hashes_path;
-        configs += "\nDatabaseDoBackup=" + this->b2s.at( this->db_do_backup );
-        configs += "\nDatabaseBackupsNumber=" + std::to_string( this->db_backups_number );
-        //// TEXT BROWSER ////
-        configs += "\n\n[TextBrowser]";
-        configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
-        configs += "\nWideLines=" + this->b2s.at( this->TB.getWideLinesUsage() );
-        configs += "\nColorScheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::colors_scheme) );
-        //// CRAPLOG ////
-        configs += "\n\n[Craplog]";
-        configs += "\nCraplogDialogsLevel=" + toString( this->craplog.getDialogsLevel() );
-        configs += "\nHideUsedFiles=" + this->b2s.at( this->hide_used_files );
-        configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
-        //// APACHE2 ////
-        configs += "\n\n[Apache2]";
-        configs += "\nApacheLogsPath=" + this->craplog.getLogsPath( WS_APACHE );
-        configs += "\nApacheLogsFormat=" + this->craplog.getLogsFormatString( WS_APACHE );
-        configs += "\nApacheWarnlistMethod=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::Method ) );
-        configs += "\nApacheWarnlistMethodUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::Method ) );
-        configs += "\nApacheWarnlistURI=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::Uri ) );
-        configs += "\nApacheWarnlistURIUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::Uri ) );
-        configs += "\nApacheWarnlistClient=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::Client ) );
-        configs += "\nApacheWarnlistClientUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::Client ) );
-        configs += "\nApacheWarnlistUserAgent=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::UserAgent ), true );
-        configs += "\nApacheWarnlistUserAgentUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::UserAgent ) );
-        configs += "\nApacheBlacklistClient=" + this->list2string( this->blacklists.getListConst( WS_APACHE, BlacklistField::Client ) );
-        configs += "\nApacheBlacklistClientUsed=" + this->b2s.at( this->blacklists.isUsed( WS_APACHE, BlacklistField::Client ) );
-        //// NGINX ////
-        configs += "\n\n[Nginx]";
-        configs += "\nNginxLogsPath=" + this->craplog.getLogsPath( WS_NGINX );
-        configs += "\nNginxLogsFormat=" + this->craplog.getLogsFormatString( WS_NGINX );
-        configs += "\nNginxWarnlistMethod=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::Method ) );
-        configs += "\nNginxWarnlistMethodUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::Method ) );
-        configs += "\nNginxWarnlistURI=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::Uri ) );
-        configs += "\nNginxWarnlistURIUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::Uri ) );
-        configs += "\nNginxWarnlistClient=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::Client ) );
-        configs += "\nNginxWarnlistClientUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::Client ) );
-        configs += "\nNginxWarnlistUserAgent=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::UserAgent ), true );
-        configs += "\nNginxWarnlistUserAgentUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::UserAgent ) );
-        configs += "\nNginxBlacklistClient=" + this->list2string( this->blacklists.getListConst( WS_NGINX, BlacklistField::Client ) );
-        configs += "\nNginxBlacklistClientUsed=" + this->b2s.at( this->blacklists.isUsed( WS_NGINX, BlacklistField::Client ) );
-        //// IIS ////
-        configs += "\n\n[IIS]";
-        configs += "\nIisLogsPath=" + this->craplog.getLogsPath( WS_IIS );
-        std::string module{ "0" };
-        if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
-            module = "1";
-        } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
-            module = "2";
-        }
-        configs += "\nIisLogsModule=" + module;
-        configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( WS_IIS );
-        configs += "\nIisWarnlistMethod=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::Method ) );
-        configs += "\nIisWarnlistMethodUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::Method ) );
-        configs += "\nIisWarnlistURI=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::Uri ) );
-        configs += "\nIisWarnlistURIUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::Uri ) );
-        configs += "\nIisWarnlistClient=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::Client ) );
-        configs += "\nIisWarnlistClientUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::Client ) );
-        configs += "\nIisWarnlistUserAgent=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::UserAgent ), true );
-        configs += "\nIisWarnlistUserAgentUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::UserAgent ) );
-        configs += "\nIisBlacklistClient=" + this->list2string( this->blacklists.getListConst( WS_IIS, BlacklistField::Client ) );
-        configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->blacklists.isUsed( WS_IIS, BlacklistField::Client ) );
-        //// CRAPVIEW ////
-        configs += "\n\n[Crapview]";
-        configs += "\nCrapviewDialogsLevel=" + toString( this->crapview.getDialogsLevel() );
-        configs += "\nCrapviewSpeedTimeInterval=" + std::to_string( this->crapview.getSpeedTimeInterval() );
-        configs += "\nCrapviewSpeedTimeFormat=" + this->crapview.getSpeedTimeFormat().toStdString();
-        configs += "\nCrapviewCountPieSize=" + std::to_string( this->crapview.getCountPieSize() );
-        configs += "\nCrapviewCountMaxSlices=" + std::to_string( this->crapview.getCountMaxSlices() );
-        configs += "\nCrapviewRelationalTimeFormat=" + this->crapview.getRelatTimeFormat().toStdString();
+    //// USER INTERFACE ////
+    std::string configs;
+    configs += "\n[UI]";
+    configs += "\nLanguage=" + this->language;
+    configs += "\nRememberGeometry=" + this->b2s.at( this->remember_window );
+    configs += "\nGeometry=" + this->geometryToString();
+    configs += "\nWindowTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::window_theme) );
+    configs += "\nIconsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::icons_theme) );
+    configs += "\nChartsTheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::charts_theme) );
+    configs += "\nMainDialogsLevel=" + toString( this->dialogs_level );
+    configs += "\nDefaultWebServer=" + toString( this->default_web_server );
+    configs += "\nDatabaseDataPath=" + this->db_data_path.toString();
+    configs += "\nDatabaseHashesPath=" + this->db_hashes_path.toString();
+    configs += "\nDatabaseDoBackup=" + this->b2s.at( this->db_do_backup );
+    configs += "\nDatabaseBackupsNumber=" + std::to_string( this->db_backups_number );
+    //// SECURITY ////
+    configs += "\n\n[Security]";
+    configs += "\nFollowSymlinks=" + this->b2s.at(GlobalConfigs::Security::follow_symlinks);
+    //// TEXT BROWSER ////
+    configs += "\n\n[TextBrowser]";
+    configs += "\nFont=" + std::to_string( this->ui->box_ConfTextBrowser_Font->currentIndex() );
+    configs += "\nWideLines=" + this->b2s.at( this->TB.getWideLinesUsage() );
+    configs += "\nColorScheme=" + std::to_string( static_cast<themes_t>(GlobalConfigs::colors_scheme) );
+    //// CRAPLOG ////
+    configs += "\n\n[Craplog]";
+    configs += "\nCraplogDialogsLevel=" + toString( this->craplog.getDialogsLevel() );
+    configs += "\nHideUsedFiles=" + this->b2s.at( this->hide_used_files );
+    configs += "\nWarningSize=" + std::to_string( this->craplog.getWarningSize() );
+    //// APACHE2 ////
+    configs += "\n\n[Apache2]";
+    configs += "\nApacheLogsPath=" + this->craplog.getLogsPath( WS_APACHE ).getPathUnchecked().string();
+    configs += "\nApacheLogsFormat=" + this->craplog.getLogsFormatString( WS_APACHE );
+    configs += "\nApacheWarnlistMethod=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::Method ) );
+    configs += "\nApacheWarnlistMethodUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::Method ) );
+    configs += "\nApacheWarnlistURI=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::Uri ) );
+    configs += "\nApacheWarnlistURIUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::Uri ) );
+    configs += "\nApacheWarnlistClient=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::Client ) );
+    configs += "\nApacheWarnlistClientUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::Client ) );
+    configs += "\nApacheWarnlistUserAgent=" + this->list2string( this->warnlists.getListConst( WS_APACHE, WarnlistField::UserAgent ), true );
+    configs += "\nApacheWarnlistUserAgentUsed=" + this->b2s.at( this->warnlists.isUsed( WS_APACHE, WarnlistField::UserAgent ) );
+    configs += "\nApacheBlacklistClient=" + this->list2string( this->blacklists.getListConst( WS_APACHE, BlacklistField::Client ) );
+    configs += "\nApacheBlacklistClientUsed=" + this->b2s.at( this->blacklists.isUsed( WS_APACHE, BlacklistField::Client ) );
+    //// NGINX ////
+    configs += "\n\n[Nginx]";
+    configs += "\nNginxLogsPath=" + this->craplog.getLogsPath( WS_NGINX ).getPathUnchecked().string();
+    configs += "\nNginxLogsFormat=" + this->craplog.getLogsFormatString( WS_NGINX );
+    configs += "\nNginxWarnlistMethod=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::Method ) );
+    configs += "\nNginxWarnlistMethodUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::Method ) );
+    configs += "\nNginxWarnlistURI=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::Uri ) );
+    configs += "\nNginxWarnlistURIUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::Uri ) );
+    configs += "\nNginxWarnlistClient=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::Client ) );
+    configs += "\nNginxWarnlistClientUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::Client ) );
+    configs += "\nNginxWarnlistUserAgent=" + this->list2string( this->warnlists.getListConst( WS_NGINX, WarnlistField::UserAgent ), true );
+    configs += "\nNginxWarnlistUserAgentUsed=" + this->b2s.at( this->warnlists.isUsed( WS_NGINX, WarnlistField::UserAgent ) );
+    configs += "\nNginxBlacklistClient=" + this->list2string( this->blacklists.getListConst( WS_NGINX, BlacklistField::Client ) );
+    configs += "\nNginxBlacklistClientUsed=" + this->b2s.at( this->blacklists.isUsed( WS_NGINX, BlacklistField::Client ) );
+    //// IIS ////
+    configs += "\n\n[IIS]";
+    configs += "\nIisLogsPath=" + this->craplog.getLogsPath( WS_IIS ).getPathUnchecked().string();
+    std::string module{ "0" };
+    if ( this->ui->radio_ConfIis_Format_NCSA->isChecked() ) {
+        module = "1";
+    } else if ( this->ui->radio_ConfIis_Format_IIS->isChecked() ) {
+        module = "2";
+    }
+    configs += "\nIisLogsModule=" + module;
+    configs += "\nIisLogsFormat=" + this->craplog.getLogsFormatString( WS_IIS );
+    configs += "\nIisWarnlistMethod=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::Method ) );
+    configs += "\nIisWarnlistMethodUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::Method ) );
+    configs += "\nIisWarnlistURI=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::Uri ) );
+    configs += "\nIisWarnlistURIUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::Uri ) );
+    configs += "\nIisWarnlistClient=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::Client ) );
+    configs += "\nIisWarnlistClientUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::Client ) );
+    configs += "\nIisWarnlistUserAgent=" + this->list2string( this->warnlists.getListConst( WS_IIS, WarnlistField::UserAgent ), true );
+    configs += "\nIisWarnlistUserAgentUsed=" + this->b2s.at( this->warnlists.isUsed( WS_IIS, WarnlistField::UserAgent ) );
+    configs += "\nIisBlacklistClient=" + this->list2string( this->blacklists.getListConst( WS_IIS, BlacklistField::Client ) );
+    configs += "\nIisBlacklistClientUsed=" + this->b2s.at( this->blacklists.isUsed( WS_IIS, BlacklistField::Client ) );
+    //// CRAPVIEW ////
+    configs += "\n\n[Crapview]";
+    configs += "\nCrapviewDialogsLevel=" + toString( this->crapview.getDialogsLevel() );
+    configs += "\nCrapviewSpeedTimeInterval=" + std::to_string( this->crapview.getSpeedTimeInterval() );
+    configs += "\nCrapviewSpeedTimeFormat=" + this->crapview.getSpeedTimeFormat().toStdString();
+    configs += "\nCrapviewCountPieSize=" + std::to_string( this->crapview.getCountPieSize() );
+    configs += "\nCrapviewCountMaxSlices=" + std::to_string( this->crapview.getCountMaxSlices() );
+    configs += "\nCrapviewRelationalTimeFormat=" + this->crapview.getRelatTimeFormat().toStdString();
 
-        // write on file
-        try {
-            IOutils::writeOnFile( this->configs_path, configs );
+    try {
+        IOutils::writeOnFile( this->configs_path.getPath().value(), configs );
 
-        } catch ( const std::ios_base::failure&/* err*/ ) {
-            // failed writing
-            DialogSec::errGeneric( DialogSec::tr("An error occured while writing the configuration file") );
-        } catch (...) {
-            // something failed
-            DialogSec::errGeneric( DialogSec::tr("An error occured while preparing the configuration file's data") );
-        }
+    } catch ( const std::bad_expected_access<InvalidPath>& /*err*/ ) {
+        // invalid path
+        DialogSec::errGeneric( DialogSec::tr("An error occured while writing the configuration file") );
+    } catch ( const std::ios_base::failure& /*err*/ ) {
+        // failed writing
+        DialogSec::errGeneric( DialogSec::tr("An error occured while writing the configuration file") );
+    } catch (...) {
+        // something failed
+        DialogSec::errGeneric( DialogSec::tr("An error occured while preparing the configuration file's data") );
     }
 }
 
 
 void MainWindow::backupDatabase() const
 {
-    bool proceed{ true };
     std::error_code err;
     QString err_msg;
-    if ( IOutils::checkFile( this->db_data_path+"/"+DatabasesNames::data ) ) {
-        // db exists and is a file
-        const std::string path{ this->db_data_path+"/backups" };
-        if ( std::filesystem::exists( path ) ) {
-            if ( !std::filesystem::is_directory( path, err ) ) {
-                // exists but it's not a directory, rename as copy and make a new one
-                proceed = DialogSec::choiceDirNotDir( QString::fromStdString( path ) );
-                if ( proceed ) {
-                    proceed = IOutils::renameAsCopy( path, err );
-                    if ( ! proceed ) {
-                        QString p;
-                        if ( this->dialogs_level > DL_ESSENTIAL ) {
-                            p = QString::fromStdString( path );
-                            if ( err.value() ) {
-                                err_msg = QString::fromStdString( err.message() );
-                            }
-                        }
-                        DialogSec::errRenaming( p, err_msg );
-                    } else {
-                        // sucesfully renamed, make the new one
-                        proceed = IOutils::makeDir( path, err );
-                        if ( ! proceed ) {
-                            QString msg = DialogSec::tr("Failed to create the database backups' directory");
-                            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                msg += ":\n"+QString::fromStdString( path );
-                                if ( err.value() ) {
-                                    err_msg = QString::fromStdString( err.message() );
-                                }
-                            }
-                            DialogSec::errFailedMakeDir( msg, err_msg );
-                        }
-                    }
+    const PathHandler db_path{ this->db_data_path / std::string(DatabasesNames::data) };
+    const auto path_exp{ db_path.getPath() };
+    if ( ! path_exp.has_value() ) {
+        const auto invalid{ path_exp.error() };
+        if ( invalid.isReasonSymlink() ) {
+            QString invalid_component;
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                invalid_component = toQString( invalid.invalid_component );
+            }
+            DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), invalid_component, false );
+            return;
+        }
+    }
+    const path_t& db_file{ path_exp.value() };
+    if ( ! IOutils::checkFile( db_file ) ) {
+        // database file does not exists or is not a file
+        QString file;
+        if ( this->dialogs_level > DL_ESSENTIAL ) {
+            file = toQString( db_file );
+        }
+        DialogSec::errDatabaseFailedBackup( DialogSec::tr("The file does not exist"), file, false );
+        return;
+    }
+    const path_t backups_dir{ this->db_data_path.getPathUnchecked() / "backups" };
+    if ( IOutils::isSymlink( backups_dir ) ) {
+        DialogSec::errDatabaseFailedBackup( DialogSec::tr("The path contains a symlink"), toQString( backups_dir ), false );
+        return;
+    } else if ( ! IOutils::exists( backups_dir ) ) {
+        // backups directory doesn't exists, make it
+        if ( ! IOutils::makeDir( backups_dir, err ) ) {
+            QString msg = DialogSec::tr("Failed to create the database backups' directory");
+            if ( this->dialogs_level > DL_ESSENTIAL ) {
+                msg += QLatin1String(":\n%1").arg( backups_dir.c_str() );
+                if ( err.value() ) {
+                    err_msg = QString::fromStdString( err.message() );
                 }
             }
-        } else {
-            // backups directory doesn't exists, make it
-            proceed = IOutils::makeDir( path, err );
-            if ( ! proceed ) {
+            DialogSec::errFailedMakeDir( msg, err_msg );
+            DialogSec::errDatabaseFailedBackup( QString(), QString() );
+            return;
+        }
+    } else if ( ! IOutils::isDir( backups_dir ) ) {
+        // exists but it's not a directory, rename as copy and make a new one
+        if ( DialogSec::choiceDirNotDir( toQString( backups_dir ) ) ) {
+            if ( ! IOutils::renameAsCopy( backups_dir, err ) ) {
+                QString path_msg;
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    path_msg = toQString( backups_dir );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                }
+                DialogSec::errRenaming( path_msg, err_msg );
+                DialogSec::errDatabaseFailedBackup( QString(), QString() );
+                return;
+            }
+            // sucesfully renamed, make the new one
+            if ( ! IOutils::makeDir( backups_dir, err ) ) {
                 QString msg = DialogSec::tr("Failed to create the database backups' directory");
                 if ( this->dialogs_level > DL_ESSENTIAL ) {
-                    msg += ":\n"+QString::fromStdString( path );
+                    msg += QLatin1String(":\n%1").arg( backups_dir.c_str() );
                     if ( err.value() ) {
                         err_msg = QString::fromStdString( err.message() );
                     }
                 }
                 DialogSec::errFailedMakeDir( msg, err_msg );
+                DialogSec::errDatabaseFailedBackup( QString(), QString() );
+                return;
             }
+        } else {
+            // choosed not to rename the entry as '.copy'
+            DialogSec::errDatabaseFailedBackup( QString(), QString() );
+            return;
         }
+    }
 
-    }/* else {
-        // db doesn't exists or is not a file
-    }*/
+    const path_t base_file{(backups_dir / DatabasesNames::data).concat(".0") };
+    bool proceed = std::filesystem::copy_file(
+        db_file,
+        base_file,
+        std::filesystem::copy_options::update_existing,
+        err );
+    if ( ! proceed ) {
+        // failed to copy
+        if ( this->dialogs_level > DL_ESSENTIAL && err.value() ) {
+            err_msg = QString::fromStdString( err.message() );
+        }
+        DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ), err_msg );
+        return;
+    }
 
-    if ( proceed ) {
-        // copy the database to a new file
-        proceed = std::filesystem::copy_file(
-            this->db_data_path+"/"+DatabasesNames::data,
-            this->db_data_path+"/backups/"+DatabasesNames::data+".0",
-            std::filesystem::copy_options::update_existing,
-            err );
+    // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
+    const path_t backup_file{ path_t(base_file).replace_extension(std::to_string(this->db_backups_number)) };
+    if ( std::filesystem::exists( backup_file ) ) {
+        std::ignore = std::filesystem::remove_all( backup_file, err );
+        if ( err.value() ) {
+            err_msg = QString::fromStdString( err.message() );
+            proceed &= false;
+        } else {
+            proceed = ! std::filesystem::exists( backup_file );
+        }
         if ( ! proceed ) {
-            // failed to copy
+            DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
+            return;
+        }
+    }
+    // cascade rename
+    for ( int n=this->db_backups_number-1; n>=0; --n ) {
+        const path_t path{ path_t(base_file).replace_extension(std::to_string(n)) };
+        if ( std::filesystem::exists( path ) ) {
+            const path_t new_path{ path_t(base_file).replace_extension(std::to_string(n+1)) };
+            std::filesystem::rename( path, new_path, err );
             if ( err.value() ) {
                 err_msg = QString::fromStdString( err.message() );
+                proceed &= false;
+            } else {
+                proceed = ! std::filesystem::exists( path );
             }
-            DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to copy the database file" ), err_msg );
-        } else {
-            // succesfully copied, now rename the already existing copies (up to the choosen number of copies)
-            std::string path{ this->db_data_path+"/backups/"+DatabasesNames::data+"."+std::to_string(this->db_backups_number) };
-            std::string new_path;
-            if ( std::filesystem::exists( path ) ) {
-                std::ignore = std::filesystem::remove_all( path, err );
-                if ( err.value() ) {
-                    err_msg = QString::fromStdString( err.message() );
-                    proceed &= false;
-                } else {
-                    proceed = ! std::filesystem::exists( path );
-                }
-                if ( ! proceed ) {
-                    DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
-                }
-            }
-            if ( proceed ) {
-                // cascade rename
-                for ( int n=this->db_backups_number-1; n>=0; --n ) {
-                    path = this->db_data_path+"/backups/"+DatabasesNames::data+"."+std::to_string( n );
-                    if ( std::filesystem::exists( path ) ) {
-                        new_path = this->db_data_path+"/backups/"+DatabasesNames::data+"."+std::to_string( n+1 );
-                        std::filesystem::rename( path, new_path, err );
-                        if ( err.value() ) {
-                            err_msg = QString::fromStdString( err.message() );
-                            proceed &= false;
-                        } else {
-                            proceed = ! std::filesystem::exists( path );
-                        }
-                    }
-                    if ( ! proceed ) {
-                        // seems it failed to rename
-                        DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
-                        break;
-                    }
-                }
+            if ( ! proceed ) {
+                DialogSec::errDatabaseFailedBackup( DialogSec::tr( "Failed to update the backups" ), err_msg );
+                return;
             }
         }
     }
@@ -1256,7 +1258,7 @@ void MainWindow::backupDatabase() const
 
 std::string MainWindow::geometryToString() const
 {
-    QRect geometry{ this->geometry() };
+    const QRect& geometry{ this->geometry() };
     std::string string;
     string += std::to_string( geometry.x() );
     string += ",";
@@ -1513,6 +1515,8 @@ void MainWindow::updateUiIcons()
                 icon_name += "conf_textbrowser";
             } else if ( text == tr("Databases") ) {
                 icon_name += "conf_databases";
+            } else if ( text == tr("Security") ) {
+                icon_name += "conf_security";
             } else if ( text == tr("Logs") ) {
                 icon_name += "conf_logs";
             } else if ( text == tr("Defaults") ) {
@@ -1635,13 +1639,6 @@ void MainWindow::updateUiFonts()
     QFont header_font{ small_font };
     header_font.setPointSizeF( this->font_size_small+2 );
     // menu
-    this->ui->menuLanguage->setFont( menu_font );
-    this->ui->actionEnglishGb->setFont( menu_font );
-    this->ui->actionEspanolEs->setFont( menu_font );
-    this->ui->actionFrancaisFr->setFont( menu_font );
-    this->ui->actionItalianoIt->setFont( menu_font );
-    this->ui->actionJapaneseJp->setFont( menu_font );
-    this->ui->actionPortuguesBr->setFont( menu_font );
     this->ui->menuTools->setFont( menu_font );
     this->ui->actionBlockNote->setFont( menu_font );
     this->ui->menuUtilities->setFont( menu_font );
@@ -1805,6 +1802,8 @@ void MainWindow::updateUiFonts()
     this->ui->box_ConfWindow_Theme->setFont( font );
     this->ui->label_ConfWindow_Icons->setFont( big_font );
     this->ui->box_ConfWindow_Icons->setFont( font );
+    this->ui->label_ConfWindow_Language->setFont( big_font );
+    this->ui->box_ConfWindow_Language->setFont( font );
     // conf dialogs
     this->ui->label_ConfDialogs_Level->setFont( big_font );
     this->ui->label_ConfDialogs_General->setFont( font );
@@ -2000,159 +1999,129 @@ void MainWindow::waitActiveWindow()
 }
 void MainWindow::makeInitialChecks()
 {
-    bool ok{ true };
     std::error_code err;
     QString err_msg;
+
     // check that the sqlite plugin is available
     if ( ! this->dbHandler.checkDriver() ) {
-        // checks failed, abort
         DialogSec::errSqlDriverNotFound( "QSQLITE" );
-        ok &= false;
+        std::exit( 1 );
     }
 
-    if ( ok ) {
-        // check LogDoctor's folders paths
-        for ( const std::string& path : {this->parentPath(this->configs_path), this->logdoc_path, this->db_data_path, this->db_hashes_path} ) {
-            if ( IOutils::exists( path ) ) {
-                if ( IOutils::isDir( path ) ) {
-                    if ( ! IOutils::checkDir( path, true ) ) {
-                        // directory not readable, try to assign permissions
-                        std::filesystem::permissions( path,
-                                                      std::filesystem::perms::owner_read,
-                                                      std::filesystem::perm_options::add,
-                                                      err );
-                        if ( err.value() ) {
-                            ok &= false;
-                            err_msg = QString::fromStdString( err.message() );
-                            DialogSec::errDirNotReadable( QString::fromStdString( path ), err_msg );
-                        }
-                    }
-                    if ( ok ) {
-                        if ( ! IOutils::checkDir( path, false, true ) ) {
-                            // directory not writable, try to assign permissions
-                            std::filesystem::permissions( path,
-                                                          std::filesystem::perms::owner_write,
-                                                          std::filesystem::perm_options::add,
-                                                          err );
-                            if ( err.value() ) {
-                                ok &= false;
-                                err_msg = QString::fromStdString( err.message() );
-                                DialogSec::errDirNotWritable( QString::fromStdString( path ), err_msg );
-                            }
-                        }
-                    }
-
-                } else {
-                    // not a directory, rename as copy a make a new one
-                    ok = DialogSec::choiceDirNotDir( QString::fromStdString( path ) );
-                    if ( ok ) {
-                        ok = IOutils::renameAsCopy( path, err );
-                        if ( ! ok ) {
-                            QString p;
-                            if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                p = QString::fromStdString( path );
-                                if ( err.value() ) {
-                                    err_msg = QString::fromStdString( err.message() );
-                                }
-                            }
-                            DialogSec::errRenaming( p, err_msg );
-                        } else {
-                            ok = IOutils::makeDir( path, err );
-                            if ( ! ok ) {
-                                QString msg = DialogSec::tr("Failed to create the directory");
-                                if ( this->dialogs_level > DL_ESSENTIAL ) {
-                                    msg += ":\n"+QString::fromStdString( path );
-                                    if ( err.value() ) {
-                                        err_msg = QString::fromStdString( err.message() );
-                                    }
-                                }
-                                DialogSec::errFailedMakeDir( msg, err_msg );
-                            }
-                        }
+    // check LogDoctor's folders paths
+    const std::vector<PathHandler> paths{
+        PathHandler(this->configs_path.getParentUnchecked()),
+        this->logdoc_path,
+        this->db_data_path,
+        this->db_hashes_path
+    };
+    for ( const auto& path_handler : paths ) {
+        const auto path_exp{ path_handler.getPath() };
+        if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+            path_exp.error().showDialogMessage();
+            std::exit( 1 );
+        }
+        const auto& path{ path_exp.value() };
+        if ( ! IOutils::exists( path ) ) {
+            if ( ! IOutils::makeDir( path, err ) ) {
+                QString msg{ DialogSec::tr("Failed to create the directory") };
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    msg += QLatin1String(":\n%1").arg( path.c_str() );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
                     }
                 }
+                DialogSec::errFailedMakeDir( msg, err_msg );
+                std::exit( 1 );
+            }
 
-            } else {
-                ok = IOutils::makeDir( path, err );
-                if ( ! ok ) {
-                    QString msg = DialogSec::tr("Failed to create the directory");
-                    if ( this->dialogs_level > DL_ESSENTIAL ) {
-                        msg += ":\n"+QString::fromStdString( path );
-                        if ( err.value() ) {
-                            err_msg = QString::fromStdString( err.message() );
-                        }
+        } else if ( ! IOutils::isDir( path ) ) {
+            // not a directory, rename as copy a make a new one
+            if ( ! DialogSec::choiceDirNotDir( toQString( path ) ) ) {
+                // choosed not to rename the entry as '.copy'
+                std::exit( 1 );
+            } else if ( ! IOutils::renameAsCopy( path, err ) ) {
+                QString p;
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    p = toQString( path );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
                     }
-                    DialogSec::errFailedMakeDir( msg, err_msg );
                 }
+                DialogSec::errRenaming( p, err_msg );
+                std::exit( 1 );
+            } else if ( ! IOutils::makeDir( path, err ) ) {
+                QString msg{ DialogSec::tr("Failed to create the directory") };
+                if ( this->dialogs_level > DL_ESSENTIAL ) {
+                    msg += QLatin1String(":\n%1").arg( path.c_str() );
+                    if ( err.value() ) {
+                        err_msg = QString::fromStdString( err.message() );
+                    }
+                }
+                DialogSec::errFailedMakeDir( msg, err_msg );
+                std::exit( 1 );
             }
-            if ( ! ok ) {
-                break;
-            }
+
+        } else if ( ! IOutils::checkDir( path, true ) ) {
+            DialogSec::errDirNotReadable( toQString( path ), err_msg );
+            std::exit( 1 );
+
+        } else if ( ! IOutils::checkDir( path, false, true ) ) {
+            DialogSec::errDirNotWritable( toQString( path ), err_msg );
+            std::exit( 1 );
         }
     }
 
-    if ( ok ) {
-        // statistics' database
-        if ( ! CheckSec::checkCollectionDatabase( this->db_data_path + "/" + DatabasesNames::data ) ) {
-            // checks failed, abort
-            ok &= false;
-        } else {
-            this->crapview.setDbPath( this->db_data_path );
-            this->craplog.setStatsDatabasePath( this->db_data_path );
-            // used-files' hashes' database
-            if ( ! CheckSec::checkHashesDatabase( this->db_hashes_path + "/" + DatabasesNames::hashes ) ) {
-                // checks failed, abort
-                ok &= false;
-            } else {
-                this->craplog.setHashesDatabasePath( this->db_hashes_path );
-                this->craplog.hasher.loadUsedHashesLists( this->db_hashes_path + "/" + DatabasesNames::hashes );
-            }
-        }
+    // statistics' database
+    if ( ! CheckSec::checkCollectionDatabase( this->db_data_path.getPathUnchecked() / DatabasesNames::data )
+      || ! CheckSec::checkHashesDatabase( this->db_hashes_path.getPathUnchecked() / DatabasesNames::hashes ) ) {
+        std::exit( 1 );
     }
-    if ( ! ok ) {
-        this->close();
-        //QCoreApplication::exit(0);
-        //this->destroy();
-    } else {
-        // get available stats dates
-        this->refreshStatsDates();
-        // get a fresh list of log files
-        this->on_button_LogFiles_RefreshList_clicked();
-        // set the default WS as the current one
-        switch ( this->craplog.getCurrentWebServer() ) {
-            case WS_APACHE:
-                this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
-                this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
-                this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
-                this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
-                this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
-                break;
-            case WS_NGINX:
-                this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
-                this->ui->box_StatsCount_WebServer->setCurrentIndex( 1 );
-                this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 1 );
-                this->ui->box_StatsDay_WebServer->setCurrentIndex(   1 );
-                this->ui->box_StatsRelat_WebServer->setCurrentIndex( 1 );
-                break;
-            case WS_IIS:
-                this->ui->box_StatsWarn_WebServer->setCurrentIndex(  2 );
-                this->ui->box_StatsCount_WebServer->setCurrentIndex( 2 );
-                this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 2 );
-                this->ui->box_StatsDay_WebServer->setCurrentIndex(   2 );
-                this->ui->box_StatsRelat_WebServer->setCurrentIndex( 2 );
-                break;
-            default:
-                // shouldn't be here
-                throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(this->default_web_server)) );
-        }
-        this->initiating &= false;
-        // effectively check if draw buttons can be enabled
-        this->checkStatsWarnDrawable();
-        this->checkStatsSpeedDrawable();
-        this->checkStatsCountDrawable();
-        this->checkStatsDayDrawable();
-        this->checkStatsRelatDrawable();
+    this->crapview.setDbPath( this->db_data_path );
+    this->craplog.setStatsDatabasePath( this->db_data_path );
+    this->craplog.setHashesDatabasePath( this->db_hashes_path );
+    if ( ! this->craplog.hasher.loadUsedHashesLists( this->db_hashes_path.getPathUnchecked() / DatabasesNames::hashes ) ) {
+        std::exit( 1 );
     }
+
+    // get available stats dates
+    this->refreshStatsDates();
+    // get a fresh list of log files
+    this->on_button_LogFiles_RefreshList_clicked();
+    // set the default WS as the current one
+    switch ( this->craplog.getCurrentWebServer() ) {
+        case WS_APACHE:
+            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  0 );
+            this->ui->box_StatsCount_WebServer->setCurrentIndex( 0 );
+            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 0 );
+            this->ui->box_StatsDay_WebServer->setCurrentIndex(   0 );
+            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 0 );
+            break;
+        case WS_NGINX:
+            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  1 );
+            this->ui->box_StatsCount_WebServer->setCurrentIndex( 1 );
+            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 1 );
+            this->ui->box_StatsDay_WebServer->setCurrentIndex(   1 );
+            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 1 );
+            break;
+        case WS_IIS:
+            this->ui->box_StatsWarn_WebServer->setCurrentIndex(  2 );
+            this->ui->box_StatsCount_WebServer->setCurrentIndex( 2 );
+            this->ui->box_StatsSpeed_WebServer->setCurrentIndex( 2 );
+            this->ui->box_StatsDay_WebServer->setCurrentIndex(   2 );
+            this->ui->box_StatsRelat_WebServer->setCurrentIndex( 2 );
+            break;
+        default:
+            // shouldn't be here
+            throw DoNotCatchException( "Unexpected WebServer", std::to_string(static_cast<int>(this->default_web_server)) );
+    }
+    this->initiating &= false;
+    // effectively check if draw buttons can be enabled
+    this->checkStatsWarnDrawable();
+    this->checkStatsSpeedDrawable();
+    this->checkStatsCountDrawable();
+    this->checkStatsDayDrawable();
+    this->checkStatsRelatDrawable();
 }
 
 
@@ -2162,8 +2131,12 @@ bool MainWindow::checkDataDB()
         return false;
     }
 
-    const std::string path{ this->db_data_path + "/" + DatabasesNames::data };
-    if ( ! CheckSec::checkCollectionDatabase( path ) ) {
+    const auto path{ this->db_data_path / DatabasesNames::data };
+    const auto path_exp{ path.getPath() };
+    if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        path_exp.error().showDialogMessage();
+        return false;
+    } else if ( ! CheckSec::checkCollectionDatabase( path ) ) {
         // db invalid and failed to create a new one or user refused to do so
         this->crapview.clearDates();
         this->ui->box_StatsWarn_Year->clear();
@@ -2216,19 +2189,6 @@ WebServer MainWindow::wsEnumFromIndex( const int index ) const
     }
 }
 
-std::string MainWindow::resolvePath( const std::string& path ) const noexcept
-{
-    try {
-        return std::filesystem::canonical( StringOps::strip( path ) ).string();
-    } catch (...) {
-        return std::string();
-    }
-}
-std::string MainWindow::parentPath( const std::string& path ) const
-{
-    return path.substr( 0, path.rfind( '/' ) );
-}
-
 
 //////////////
 //// HELP ////
@@ -2237,35 +2197,35 @@ void MainWindow::showHelp( const std::string& file_name )
 {
     bool fallback{ false };
     const QString link{ "https://github.com/elB4RTO/LogDoctor/tree/main/installation_stuff/logdocdata/help/" };
-    const std::string path{ this->logdoc_path+"/help/"+this->language+"/"+file_name+".html" };
-    if ( IOutils::exists( path ) ) {
-        if ( IOutils::isFile( path ) ) {
-            if ( IOutils::checkFile( path, true ) ) {
-                // everything ok, open a new window
-                this->craphelp.reset( new Craphelp() );
-                this->craphelp->helpLogsFormat(
-                    path,
-                    this->TB.getFont(),
-                    this->TB.getColorSchemeID() );
-                if ( this->isMaximized() ) {
-                    this->craphelp->showMaximized();
-                } else {
-                    this->craphelp->show();
-                }
-            } else {
-                // resource not readable
-                DialogSec::errHelpNotReadable( link );
-                fallback |= true;
-            }
-        } else {
-            // resource is not a file
+    const auto path_exp{ (this->logdoc_path / "help" / this->language/ (file_name+".html")).getPath() };
+    if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        path_exp.error().showDialogMessage();
+        fallback |= true;
+    } else {
+        const path_t& file_path{ path_exp.value() };
+        if ( ! IOutils::exists( file_path ) ) {
+            DialogSec::errHelpNotFound( link );
+            fallback |= true;
+        } else if ( ! IOutils::isFile( file_path ) ) {
             DialogSec::errHelpFailed( link, DialogSec::tr("Unrecognized entry") );
             fallback |= true;
+        } else if ( ! IOutils::checkFile( file_path, true ) ) {
+            DialogSec::errHelpNotReadable( link );
+            fallback |= true;
+        } else {
+            // everything ok, open a new window
+            this->craphelp.reset( new Craphelp() );
+            this->craphelp->helpLogsFormat(
+                file_path,
+                this->TB.getFont(),
+                this->TB.getColorSchemeID() );
+            if ( this->isMaximized() ) {
+                this->craphelp->showMaximized();
+            } else {
+                this->craphelp->show();
+            }
+            return;
         }
-    } else {
-        // resource not found
-        DialogSec::errHelpNotFound( link );
-        fallback |= true;
     }
     if ( fallback ) {
         // help file not found for the current locale, fallback to the default version
@@ -2306,82 +2266,14 @@ WarnlistField MainWindow::warnlistFieldFromString( const QString& str )
 
 
 
-/***************************************************************
- * MainWindow'S OPERATIONS START FROM HERE
- ***************************************************************/
+/****************************************************************
+ ************** UI HANDLING LOGIC START FROM HERE ***************
+ ****************************************************************/
 
 
 //////////////
 //// MENU ////
-/// //////////
-// switch language
-void MainWindow::menu_actionEnglishGb_triggered()
-{
-    this->ui->actionEnglishGb->setChecked(    true );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
-    this->language = "en_GB";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionEspanolEs_triggered()
-{
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(    true );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
-    this->language = "es_ES";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionFrancaisFr_triggered()
-{
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(   true );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
-    this->language = "fr_FR";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionItalianoIt_triggered()
-{
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(   true );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked( false );
-    this->language = "it_IT";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionJapaneseJp_triggered()
-{
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(   true );
-    this->ui->actionPortuguesBr->setChecked( false );
-    this->language = "ja_JP";
-    this->updateUiLanguage();
-}
-void MainWindow::menu_actionPortuguesBr_triggered()
-{
-    this->ui->actionEnglishGb->setChecked(   false );
-    this->ui->actionEspanolEs->setChecked(   false );
-    this->ui->actionFrancaisFr->setChecked(  false );
-    this->ui->actionItalianoIt->setChecked(  false );
-    this->ui->actionJapaneseJp->setChecked(  false );
-    this->ui->actionPortuguesBr->setChecked(  true );
-    this->language = "pt_BR";
-    this->updateUiLanguage();
-}
-
+//////////////
 // use a tool
 void MainWindow::menu_actionBlockNote_triggered()
 {
@@ -2402,9 +2294,9 @@ void MainWindow::menu_actionInfos_triggered()
     } else {
         this->crapinfo.reset( new Crapinfo(
             QString::number( this->version ),
-            QString::fromStdString( this->resolvePath( "./" ) ),
-            QString::fromStdString( this->configs_path ),
-            QString::fromStdString( this->logdoc_path ) ) );
+            QString::fromStdString( PathHandler(std::string("./")).toString() ),
+            QString::fromStdString( this->configs_path.toString() ),
+            QString::fromStdString( this->logdoc_path.toString() ) ) );
         this->crapinfo->show();
     }
 }
@@ -2690,13 +2582,16 @@ void MainWindow::setDbWorkingState( const bool working )
 
 bool MainWindow::dbUsable()
 {
-    if ( ! this->db_working ) {
-        if ( this->db_ok ) {
-            const std::string path{ this->db_data_path + "/" + DatabasesNames::data };
-            return IOutils::checkFile( path, true );
-        } else {
-            return this->checkDataDB(); // db is invalid, attempt to renew
-        }
+    if ( this->db_working ) {
+        return false;
+    } else if ( ! this->db_ok ) {
+        // db is invalid, attempt to renew
+        return this->checkDataDB();
+    }
+
+    const auto path_exp{ (this->db_data_path / DatabasesNames::data).getPath() };
+    if ( path_exp.has_value() ) {
+        return IOutils::checkFile( path_exp.value(), true );
     }
     return false;
 }
@@ -2723,7 +2618,6 @@ void MainWindow::checkMakeStats_Makable()
 {
     bool state{ false };
     if ( this->dbUsable() ) {
-        // db is not busy
         if ( this->ui->checkBox_LogFiles_CheckAll->checkState() == Qt::CheckState::Checked ) {
             // all checked
             state |= true;
@@ -2907,21 +2801,21 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
     // display the selected item
     if ( ! this->ui->listLogFiles->selectedItems().isEmpty() ) {
         bool proceed{ true };
+        const QString item_name{ this->ui->listLogFiles->selectedItems().takeFirst()->text(0) };
         LogFile item;
         // retrieve the file item
         try {
-            item = this->craplog.getLogFileItem(
-                this->ui->listLogFiles->selectedItems().takeFirst()->text(0) );
+            item = this->craplog.getLogFileItem( item_name );
 
         } catch ( const GenericException& ) {
             // failed to find file
             proceed &= false;
-            DialogSec::errFileNotFound( QString::fromStdString( item.path() ), true );
+            DialogSec::errFileNotFound( item_name, true );
         }
 
         // check the size
         if ( proceed ) {
-            const size_t warn_size{ this->craplog.getWarningSize() };
+            const std::size_t warn_size{ this->craplog.getWarningSize() };
             if ( warn_size > 0ul ) {
                 if ( item.size() > warn_size ) {
                     // exceeds the warning size
@@ -2937,11 +2831,23 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                         }
                     }
                     // ask the user what to do
-                    proceed = DialogSec::choiceFileSizeWarning2( msg );
-                    if ( ! proceed ) {
+                    if ( ! DialogSec::choiceFileSizeWarning2( msg ) ) {
+                        QString rich_text;
+                        RichText::richLogsDefault( rich_text );
+                        this->ui->textLogFiles->setText( rich_text );
+                        this->ui->textLogFiles->setAlignment( Qt::AlignHCenter );
                         return;
                     }
                 }
+            }
+        }
+
+        // check the path
+        if ( proceed ) {
+            const auto path_exp{ item.path().getPath() };
+            if ( ! path_exp.has_value() ) {
+                path_exp.error().showDialogMessage();
+                proceed &= false;
             }
         }
 
@@ -2950,10 +2856,11 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
             const LogsFormat& format{ this->craplog.getCurrentLogFormat() };
             // read the content
             std::string content;
+            const path_t path{ item.path().getPathUnchecked() };
             try {
                 try {
                     // try reading as gzip compressed file
-                    GZutils::readFile( item.path(), content );
+                    GZutils::readFile( path, content );
 
                 } catch ( const GenericException& ) {
                     // failed closing file pointer
@@ -2964,7 +2871,7 @@ void MainWindow::on_button_LogFiles_ViewFile_clicked()
                     if ( content.size() > 0 ) {
                         content.clear();
                     }
-                    IOutils::readFile( item.path(), content );
+                    IOutils::readFile( path, content );
                 }
 
             } catch ( const GenericException& ) {
@@ -3020,7 +2927,7 @@ void MainWindow::on_listLogFiles_itemChanged(QTreeWidgetItem *item, int column)
     Q_UNUSED(item)
     Q_UNUSED(column)
     // control checked
-    size_t n_checked{ 0ul };
+    std::size_t n_checked{ 0ul };
     QTreeWidgetItemIterator i(this->ui->listLogFiles);
     while ( *i ) {
         if ( (*i)->checkState(0) == Qt::CheckState::Checked ) {
@@ -3094,24 +3001,20 @@ void MainWindow::on_button_MakeStats_Start_clicked()
 
 void MainWindow::resetPerfsLabels()
 {
-    // reset to default
     this->ui->label_MakeStats_Size->setText( "0 B" );
     this->ui->label_MakeStats_Lines->setText( "0" );
-    // time and speed
     this->ui->label_MakeStats_Time->setText( "00:00" );
     this->ui->label_MakeStats_Speed->setText( "0 B/s" );
 }
 
 void MainWindow::updatePerfsLabels()
 {
-    // update values
     if ( this->craplog.isParsing() || this->force_updating_labels ) {
-        const size_t size{ this->craplog.getParsedSize() };
+        const std::size_t size{ this->craplog.getParsedSize() };
         this->ui->label_MakeStats_Size->setText( PrintSec::printableSize( size ) );
         this->ui->label_MakeStats_Lines->setText( QString::number( this->craplog.getParsedLines() ) );
         this->ui->label_MakeStats_Speed->setText( this->craplog.getParsingSpeed() );
     }
-    // time and speed
     std::chrono::duration<float, std::milli> timer_elapsed =
         std::chrono::system_clock::now() - this->waiter_timer_start;
     this->ui->label_MakeStats_Time->setText(
@@ -3121,11 +3024,8 @@ void MainWindow::updatePerfsLabels()
 
 void MainWindow::craplogStarted()
 {
-    // reset perfs
     this->resetPerfsLabels();
-    // disable the LogFiles section
     this->ui->stackedPages_Logs->setEnabled( false );
-    // disable things which needs database access
     this->setDbWorkingState( true );
 }
 
@@ -3138,7 +3038,7 @@ void MainWindow::craplogFinished()
         this->force_updating_labels &= false;
         // draw the chart
         this->craplog.makeChart(
-            this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+            this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
             this->fonts,
             this->ui->chart_MakeStats_Size );
         ColorSec::applyChartTheme(
@@ -3159,14 +3059,10 @@ void MainWindow::craplogFinished()
 
 void MainWindow::afterCraplogFinished()
 {
-    // enable the LogFiles section
     this->ui->stackedPages_Logs->setEnabled( true );
-    // enable back
     this->setDbWorkingState( false );
     if ( this->craplog.editedDatabase() ) {
-        // refresh the logs list
         this->on_button_LogFiles_RefreshList_clicked();
-        // get a fresh collection of available stats dates
         this->refreshStatsDates();
     }
 }
@@ -3192,20 +3088,12 @@ void MainWindow::refreshStatsDates()
 //// WARN ////
 void MainWindow::checkStatsWarnDrawable()
 {
-    if ( this->dbUsable() ) {
-        if ( this->ui->box_StatsWarn_Year->currentIndex() >= 0
-          && this->ui->box_StatsWarn_Month->currentIndex() >= 0
-          && this->ui->box_StatsWarn_Day->currentIndex() >= 0 ) {
-            // enable the draw button
-            this->ui->button_StatsWarn_Draw->setEnabled( true );
-        } else {
-            // disable the draw button
-            this->ui->button_StatsWarn_Draw->setEnabled( false );
-        }
-    } else {
-        // db busy
-        this->ui->button_StatsWarn_Draw->setEnabled( false );
-    }
+    this->ui->button_StatsWarn_Draw->setEnabled(
+        this->dbUsable()
+        && this->ui->box_StatsWarn_Year->currentIndex() >= 0
+        && this->ui->box_StatsWarn_Month->currentIndex() >= 0
+        && this->ui->box_StatsWarn_Day->currentIndex() >= 0
+    );
 }
 
 void MainWindow::on_box_StatsWarn_WebServer_currentIndexChanged(int index)
@@ -3326,7 +3214,7 @@ void MainWindow::drawStatsWarn()
     this->ui->chart_StatsWarn->setChart( new QChart() );
     this->crapview.drawWarn(
         this->ui->table_StatsWarn, this->ui->chart_StatsWarn,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( wsIndex ),
         this->ui->box_StatsWarn_Year->currentText(),
         this->ui->box_StatsWarn_Month->currentText(),
@@ -3344,25 +3232,17 @@ void MainWindow::drawStatsWarn()
 //// SPEED ////
 void MainWindow::checkStatsSpeedDrawable()
 {
-    if ( this->dbUsable() ) {
-        if ( this->ui->box_StatsSpeed_Year->currentIndex() >= 0
-          && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
-          && this->ui->box_StatsSpeed_Day->currentIndex() >= 0
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ).has_value()
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ).has_value()
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ).has_value()
-          && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).has_value()
-          && FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).has_value() ) {
-            // enable the draw button
-            this->ui->button_StatsSpeed_Draw->setEnabled( true );
-        } else {
-            // disable the draw button
-            this->ui->button_StatsSpeed_Draw->setEnabled( false );
-        }
-    } else {
-        // db busy
-        this->ui->button_StatsSpeed_Draw->setEnabled( false );
-    }
+    this->ui->button_StatsSpeed_Draw->setEnabled(
+        this->dbUsable()
+        && this->ui->box_StatsSpeed_Year->currentIndex() >= 0
+        && this->ui->box_StatsSpeed_Month->currentIndex() >= 0
+        && this->ui->box_StatsSpeed_Day->currentIndex() >= 0
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Protocol->text() ).has_value()
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Method->text() ).has_value()
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Uri->text() ).has_value()
+        && FilterOps::parseTextualFilter( this->ui->inLine_StatsSpeed_Query->text() ).has_value()
+        && FilterOps::parseNumericFilter( this->ui->inLine_StatsSpeed_Response->text() ).has_value()
+    );
 }
 
 void MainWindow::on_box_StatsSpeed_WebServer_currentIndexChanged(int index)
@@ -3512,7 +3392,7 @@ void MainWindow::drawStatsSpeed()
     this->crapview.drawSpeed(
         this->ui->table_StatsSpeed,
         this->ui->chart_StatsSpeed,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsSpeed_WebServer->currentIndex() ),
         this->ui->box_StatsSpeed_Year->currentText(),
         this->ui->box_StatsSpeed_Month->currentText(),
@@ -3533,20 +3413,12 @@ void MainWindow::drawStatsSpeed()
 //// COUNT ////
 void MainWindow::checkStatsCountDrawable()
 {
-    if ( this->dbUsable() ) {
-        if ( this->ui->box_StatsCount_Year->currentIndex() >= 0
-          && this->ui->box_StatsCount_Month->currentIndex() >= 0
-          && this->ui->box_StatsCount_Day->currentIndex() >= 0 ) {
-            // enable the draw button
-            this->ui->scrollArea_StatsCount->setEnabled( true );
-        } else {
-            // disable the draw button
-            this->ui->scrollArea_StatsCount->setEnabled( false );
-        }
-    } else {
-        // db busy
-        this->ui->scrollArea_StatsCount->setEnabled( false );
-    }
+    this->ui->scrollArea_StatsCount->setEnabled(
+        this->dbUsable()
+        && this->ui->box_StatsCount_Year->currentIndex() >= 0
+        && this->ui->box_StatsCount_Month->currentIndex() >= 0
+        && this->ui->box_StatsCount_Day->currentIndex() >= 0
+    );
 }
 
 void MainWindow::on_box_StatsCount_WebServer_currentIndexChanged(int index)
@@ -3756,7 +3628,7 @@ void MainWindow::drawStatsCount()
     this->ui->chart_StatsCount->setChart( new QChart() );
     this->crapview.drawCount(
         this->ui->table_StatsCount, this->ui->chart_StatsCount,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsCount_WebServer->currentIndex() ),
         this->ui->box_StatsCount_Year->currentText(),
         this->ui->box_StatsCount_Month->currentText(),
@@ -3775,57 +3647,56 @@ void MainWindow::drawStatsCount()
 //// DAY ////
 void MainWindow::checkStatsDayDrawable()
 {
-    if ( this->dbUsable() ) {
-        bool aux{ true };
-        // secondary date (period)
-        if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
-            if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
-              && this->ui->box_StatsDay_ToMonth->currentIndex() < 0
-              && this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
+    if ( ! this->dbUsable() ) {
+        this->ui->button_StatsDay_Draw->setEnabled( false );
+        return;
+    }
+
+    bool aux{ true };
+    // primary date
+    if ( this->ui->box_StatsDay_FromYear->currentIndex() < 0
+      || this->ui->box_StatsDay_FromMonth->currentIndex() < 0
+      || this->ui->box_StatsDay_FromDay->currentIndex() < 0 ) {
+        aux &= false;
+    }
+    // secondary date (period)
+    if ( this->ui->checkBox_StatsDay_Period->isChecked() ) {
+        if ( this->ui->box_StatsDay_ToYear->currentIndex() < 0
+          || this->ui->box_StatsDay_ToMonth->currentIndex() < 0
+          || this->ui->box_StatsDay_ToDay->currentIndex() < 0 ) {
+            aux &= false;
+        } else {
+            int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
+            int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
+            if ( a < b ) {
+                // year 'to' is less than 'from'
                 aux &= false;
-            } else {
-                int a{ this->ui->box_StatsDay_ToYear->currentText().toInt() };
-                int b{ this->ui->box_StatsDay_FromYear->currentText().toInt() };
+            } else if ( a == b ) {
+                a = this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() );
+                b = this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() );
                 if ( a < b ) {
-                    // year 'to' is less than 'from'
+                    // month 'to' is less than 'from'
                     aux &= false;
                 } else if ( a == b ) {
-                    a = this->crapview.getMonthNumber( this->ui->box_StatsDay_ToMonth->currentText() );
-                    b = this->crapview.getMonthNumber( this->ui->box_StatsDay_FromMonth->currentText() );
+                    a = this->ui->box_StatsDay_ToDay->currentText().toInt();
+                    b = this->ui->box_StatsDay_FromDay->currentText().toInt();
                     if ( a < b ) {
-                        // month 'to' is less than 'from'
+                        // day 'to' is less than 'from'
                         aux &= false;
-                    } else if ( a == b ) {
-                        a = this->ui->box_StatsDay_ToDay->currentText().toInt();
-                        b = this->ui->box_StatsDay_FromDay->currentText().toInt();
-                        if ( a < b ) {
-                            // day 'to' is less than 'from'
-                            aux &= false;
-                        }
                     }
                 }
             }
         }
-        // primary date
-        if ( this->ui->box_StatsDay_FromYear->currentIndex() < 0
-          && this->ui->box_StatsDay_FromMonth->currentIndex() < 0
-          && this->ui->box_StatsDay_FromDay->currentIndex() < 0 ) {
-            aux &= false;
-        }
-        // check log field validity
-        if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
-            aux &= false;
-        }
-        // check filter string validity
-        if ( ! this->getStatsDayParsedFilter().has_value() ) {
-            aux &= false;
-        }
-        this->ui->button_StatsDay_Draw->setEnabled( aux );
-
-    } else {
-        // db busy
-        this->ui->button_StatsDay_Draw->setEnabled( false );
     }
+    // check log field validity
+    if ( this->ui->box_StatsDay_LogsField->currentIndex() < 0 ) {
+        aux &= false;
+    }
+    // check filter string validity
+    if ( ! this->getStatsDayParsedFilter().has_value() ) {
+        aux &= false;
+    }
+    this->ui->button_StatsDay_Draw->setEnabled( aux );
 }
 
 LogField MainWindow::getStatsDayLogField() const
@@ -4042,7 +3913,7 @@ void MainWindow::drawStatsDay()
     this->ui->chart_StatsDay->setChart( new QChart() );
     this->crapview.drawDay(
         this->ui->chart_StatsDay,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsDay_WebServer->currentIndex() ),
         this->ui->box_StatsDay_FromYear->currentText(),
         this->ui->box_StatsDay_FromMonth->currentText(),
@@ -4065,55 +3936,53 @@ void MainWindow::drawStatsDay()
 //// RELATIONAL ////
 void MainWindow::checkStatsRelatDrawable()
 {
-    if ( this->dbUsable() ) {
-        bool aux{ true };
-        if ( this->ui->box_StatsRelat_FromYear->currentIndex() >= 0
-          && this->ui->box_StatsRelat_FromMonth->currentIndex() >= 0
-          && this->ui->box_StatsRelat_FromDay->currentIndex() >= 0
-          && this->ui->box_StatsRelat_ToYear->currentIndex() >= 0
-          && this->ui->box_StatsRelat_ToMonth->currentIndex() >= 0
-          && this->ui->box_StatsRelat_ToDay->currentIndex() >= 0 ) {
-            // check period validity
-            int a{ this->ui->box_StatsRelat_ToYear->currentText().toInt() };
-            int b{ this->ui->box_StatsRelat_FromYear->currentText().toInt() };
+    if ( ! this->dbUsable() ) {
+        this->ui->button_StatsRelat_Draw->setEnabled( false );
+        return;
+    }
+
+    bool aux{ true };
+    if ( this->ui->box_StatsRelat_FromYear->currentIndex() < 0
+      || this->ui->box_StatsRelat_FromMonth->currentIndex() < 0
+      || this->ui->box_StatsRelat_FromDay->currentIndex() < 0
+      || this->ui->box_StatsRelat_ToYear->currentIndex() < 0
+      || this->ui->box_StatsRelat_ToMonth->currentIndex() < 0
+      || this->ui->box_StatsRelat_ToDay->currentIndex() < 0 ) {
+        aux &= false;
+    } else {
+        // check period validity
+        int a{ this->ui->box_StatsRelat_ToYear->currentText().toInt() };
+        int b{ this->ui->box_StatsRelat_FromYear->currentText().toInt() };
+        if ( a < b ) {
+            // year 'to' is less than 'from'
+            aux &= false;
+        } else if ( a == b ) {
+            a = this->crapview.getMonthNumber( this->ui->box_StatsRelat_ToMonth->currentText() );
+            b = this->crapview.getMonthNumber( this->ui->box_StatsRelat_FromMonth->currentText() );
             if ( a < b ) {
-                // year 'to' is less than 'from'
+                // month 'to' is less than 'from'
                 aux &= false;
             } else if ( a == b ) {
-                a = this->crapview.getMonthNumber( this->ui->box_StatsRelat_ToMonth->currentText() );
-                b = this->crapview.getMonthNumber( this->ui->box_StatsRelat_FromMonth->currentText() );
+                a = this->ui->box_StatsRelat_ToDay->currentText().toInt();
+                b = this->ui->box_StatsRelat_FromDay->currentText().toInt();
                 if ( a < b ) {
-                    // month 'to' is less than 'from'
+                    // day 'to' is less than 'from'
                     aux &= false;
-                } else if ( a == b ) {
-                    a = this->ui->box_StatsRelat_ToDay->currentText().toInt();
-                    b = this->ui->box_StatsRelat_FromDay->currentText().toInt();
-                    if ( a < b ) {
-                        // day 'to' is less than 'from'
-                        aux &= false;
-                    }
                 }
             }
-        } else {
-            // disable the draw button
-            aux &= false;
         }
-        // check log field validity
-        if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() < 0
-          || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
-            aux &= false;
-        }
-        // check filter string validity
-        if ( !this->getStatsRelatParsedFilter( 1 ).has_value()
-          || !this->getStatsRelatParsedFilter( 2 ).has_value() ) {
-            aux &= false;
-        }
-        this->ui->button_StatsRelat_Draw->setEnabled( aux );
-
-    } else {
-        // db busy
-        this->ui->button_StatsRelat_Draw->setEnabled( false );
     }
+    // check log field validity
+    if ( this->ui->box_StatsRelat_LogsField_1->currentIndex() < 0
+      || this->ui->box_StatsRelat_LogsField_2->currentIndex() < 0 ) {
+        aux &= false;
+    }
+    // check filter string validity
+    if ( !this->getStatsRelatParsedFilter( 1 ).has_value()
+      || !this->getStatsRelatParsedFilter( 2 ).has_value() ) {
+        aux &= false;
+    }
+    this->ui->button_StatsRelat_Draw->setEnabled( aux );
 }
 
 
@@ -4336,7 +4205,7 @@ void MainWindow::drawStatsRelat()
     this->ui->chart_StatsRelat->setChart( new QChart() );
     this->crapview.drawRelat(
         this->ui->chart_StatsRelat,
-        this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ),
+        this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ),
         this->wsFromIndex( this->ui->box_StatsRelat_WebServer->currentIndex() ),
         this->ui->box_StatsRelat_FromYear->currentText(),
         this->ui->box_StatsRelat_FromMonth->currentText(),
@@ -4360,7 +4229,6 @@ void MainWindow::drawStatsRelat()
 
 ////////////////
 //// GLOBAL ////
-
 void MainWindow::drawStatsGlobals()
 {
     std::vector<std::tuple<QString,QString>> recur_list;
@@ -4372,7 +4240,9 @@ void MainWindow::drawStatsGlobals()
         recur_list, traffic_list, perf_list, work_list,
         this->glob_ws ) };
 
-    if ( result ) {
+    if ( ! result ) {
+        this->resetStatsGlob();
+    } else {
         this->ui->label_StatsGlob_Recur_Protocol_String->setText( std::get<0>( recur_list.at(0) ) );
         this->ui->label_StatsGlob_Recur_Protocol_Count->setText( std::get<1>( recur_list.at(0) ) );
         this->ui->label_StatsGlob_Recur_Method_String->setText( std::get<0>( recur_list.at(1) ) );
@@ -4422,11 +4292,7 @@ void MainWindow::drawStatsGlobals()
                 this->ui->button_StatsGlob_Nginx->setFlat( true );
             }
         }
-
-    } else {
-        this->resetStatsGlob();
     }
-    // restore db state
     this->setDbWorkingState( false );
 }
 
@@ -4464,8 +4330,6 @@ void MainWindow::resetStatsGlob()
     this->ui->button_StatsGlob_Iis->setFlat( true );
 }
 
-
-
 void MainWindow::makeStatsGlob()
 {
     this->setDbWorkingState( true );
@@ -4484,7 +4348,6 @@ void MainWindow::on_button_StatsGlob_Apache_clicked()
     }
 }
 
-
 void MainWindow::on_button_StatsGlob_Nginx_clicked()
 {
     if ( this->dbUsable() && this->checkDataDB() ) {
@@ -4492,7 +4355,6 @@ void MainWindow::on_button_StatsGlob_Nginx_clicked()
         this->makeStatsGlob();
     }
 }
-
 
 void MainWindow::on_button_StatsGlob_Iis_clicked()
 {
@@ -4532,6 +4394,8 @@ void MainWindow::on_tree_ConfSections_itemClicked(QTreeWidgetItem *item, int col
         this->setConfigsPage( General_TextBrowser );
     } else if ( section == tr("Databases") ) {
         this->setConfigsPage( General_Databases );
+    } else if ( section == tr("Security") ) {
+        this->setConfigsPage( General_Security );
     } else if ( section == tr("Logs") ) {
         return;
     } else if ( section == tr("Defaults") ) {
@@ -4612,6 +4476,15 @@ void MainWindow::on_box_ConfWindow_Icons_currentIndexChanged(int index)
 {
     GlobalConfigs::icons_theme = static_cast<IconsTheme>(index);
     this->updateUiIcons();
+}
+
+void MainWindow::on_box_ConfWindow_Language_currentIndexChanged(int index)
+{
+    const QModelIndex idx{ this->ui->box_ConfWindow_Language->model()->index(
+        index, 0 ) };
+    this->language = this->ui->box_ConfWindow_Language->model()->data(
+        idx, Qt::UserRole).value<std::string>();
+    this->updateUiLanguage();
 }
 
 
@@ -4772,7 +4645,7 @@ void MainWindow::refreshChartsPreview()
 
     QChart* t_chart{ new QChart() };
     // apply the theme
-    t_chart->setTheme( this->CHARTS_THEMES.at( static_cast<size_t>(GlobalConfigs::charts_theme) ) );
+    t_chart->setTheme( this->CHARTS_THEMES.at( static_cast<std::size_t>(GlobalConfigs::charts_theme) ) );
     // add the bars
     t_chart->addSeries( bars );
     t_chart->setTitle( "Sample preview" );
@@ -4846,10 +4719,10 @@ void MainWindow::on_tool_ConfDatabases_Data_Dialog_clicked()
     const QString current_path{ this->ui->inLine_ConfDatabases_Data_Path->text() };
     if ( ! current_path.isEmpty() ) {
         crappath->setDirectory( current_path );
-    } else if ( ! this->db_data_path.empty() ) {
-        crappath->setDirectory( QString::fromStdString( this->db_data_path ) );
+    } else if ( ! this->db_data_path.getPathUnchecked().empty() ) {
+        crappath->setDirectory( QString::fromStdString( this->db_data_path.toString() ) );
     } else {
-        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+        crappath->setDirectory( toQString( this->home_path ) );
     }
 
     if ( crappath->exec() ) {
@@ -4862,13 +4735,13 @@ void MainWindow::on_tool_ConfDatabases_Data_Dialog_clicked()
 void MainWindow::on_inLine_ConfDatabases_Data_Path_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
-        std::string path{ this->resolvePath( arg1.toStdString() ) };
-        if ( IOutils::checkDir( path ) ) {
-            this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
-            this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
-        } else {
+        const auto path{ PathHandler( arg1.toStdString() ).getPath() };
+        if ( !( path.has_value() && IOutils::checkDir( path.value() ) ) ) {
             this->ui->icon_ConfDatabases_Data_Wrong->setVisible( true );
             this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
+        } else {
+            this->ui->icon_ConfDatabases_Data_Wrong->setVisible( false );
+            this->ui->button_ConfDatabases_Data_Save->setEnabled( true );
         }
     } else {
         this->ui->icon_ConfDatabases_Data_Wrong->setVisible( true );
@@ -4882,27 +4755,31 @@ void MainWindow::on_inLine_ConfDatabases_Data_Path_returnPressed()
 void MainWindow::on_button_ConfDatabases_Data_Save_clicked()
 {
     if ( ! this->ui->icon_ConfDatabases_Data_Wrong->isVisible() ) {
-        // set the paths
-        std::string path{ this->resolvePath( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() ) };
-        if ( StringOps::endsWith( path, '/' ) ) {
-            path = StringOps::rstrip( path, '/' );
+        const auto path_handler{ PathHandler( this->ui->inLine_ConfDatabases_Data_Path->text().toStdString() ) };
+        const auto path_exp{ path_handler.getPath() };
+        if ( ! path_exp.has_value() ) {
+            path_exp.error().showDialogMessage();
+            this->ui->icon_ConfDatabases_Data_Wrong->setVisible( true );
+            this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
+            return;
         }
+        const path_t& path{ path_exp.value() };
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
         if ( ! IOutils::checkDir( path, false, true ) ) {
             DialogSec::warnDirNotWritable( nullptr );
         }
-        this->db_data_path = path;
-        this->craplog.setStatsDatabasePath( path );
-        this->crapview.setDbPath( path );
-        this->ui->inLine_ConfDatabases_Data_Path->setText( QString::fromStdString( path ) );
+        this->db_data_path = path_handler;
+        this->craplog.setStatsDatabasePath( path_handler );
+        this->crapview.setDbPath( path_handler );
+        this->ui->inLine_ConfDatabases_Data_Path->setText( toQString( path ) );
     }
     this->ui->inLine_ConfDatabases_Data_Path->setFocus();
     this->ui->button_ConfDatabases_Data_Save->setEnabled( false );
 }
 
-// usef files hashes
+// used files hashes
 void MainWindow::on_tool_ConfDatabases_Hashes_Dialog_clicked()
 {
     this->crappath.reset( new Crappath( this ) );
@@ -4910,10 +4787,10 @@ void MainWindow::on_tool_ConfDatabases_Hashes_Dialog_clicked()
     const QString current_path{ this->ui->inLine_ConfDatabases_Hashes_Path->text() };
     if ( ! current_path.isEmpty() ) {
         crappath->setDirectory( current_path );
-    } else if ( ! this->db_hashes_path.empty() ) {
-        crappath->setDirectory( QString::fromStdString( this->db_hashes_path ) );
+    } else if ( ! this->db_hashes_path.getPathUnchecked().empty() ) {
+        crappath->setDirectory( QString::fromStdString( this->db_hashes_path.toString() ) );
     } else {
-        crappath->setDirectory( QString::fromStdString( this->home_path ) );
+        crappath->setDirectory( toQString( this->home_path ) );
     }
 
     if ( crappath->exec() ) {
@@ -4926,13 +4803,13 @@ void MainWindow::on_tool_ConfDatabases_Hashes_Dialog_clicked()
 void MainWindow::on_inLine_ConfDatabases_Hashes_Path_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
-        std::string path{ this->resolvePath( arg1.toStdString() ) };
-        if ( IOutils::checkDir( path ) ) {
-            this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
-            this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
-        } else {
+        const auto path{ PathHandler( arg1.toStdString() ).getPath() };
+        if ( !( path.has_value() && IOutils::checkDir( path.value() ) ) ) {
             this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( true );
             this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
+        } else {
+            this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( false );
+            this->ui->button_ConfDatabases_Hashes_Save->setEnabled( true );
         }
     } else {
         this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( true );
@@ -4946,20 +4823,24 @@ void MainWindow::on_inLine_ConfDatabases_Hashes_Path_returnPressed()
 void MainWindow::on_button_ConfDatabases_Hashes_Save_clicked()
 {
     if ( ! this->ui->icon_ConfDatabases_Hashes_Wrong->isVisible() ) {
-        // set the paths
-        std::string path{ this->resolvePath( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() ) };
-        if ( StringOps::endsWith( path, '/' ) ) {
-            path = StringOps::rstrip( path, '/' );
+        const auto path_handler{ PathHandler( this->ui->inLine_ConfDatabases_Hashes_Path->text().toStdString() ) };
+        const auto path_exp{ path_handler.getPath() };
+        if ( ! path_exp.has_value() ) {
+            path_exp.error().showDialogMessage();
+            this->ui->icon_ConfDatabases_Hashes_Wrong->setVisible( true );
+            this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
+            return;
         }
+        const path_t& path{ path_exp.value() };
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
         if ( ! IOutils::checkDir( path, false, true ) ) {
             DialogSec::warnDirNotWritable( nullptr );
         }
-        this->db_hashes_path = path;
-        this->craplog.setHashesDatabasePath( path );
-        this->ui->inLine_ConfDatabases_Hashes_Path->setText( QString::fromStdString( path ) );
+        this->db_hashes_path = path_handler;
+        this->craplog.setHashesDatabasePath( path_handler );
+        this->ui->inLine_ConfDatabases_Hashes_Path->setText( toQString( path ) );
     }
     this->ui->inLine_ConfDatabases_Hashes_Path->setFocus();
     this->ui->button_ConfDatabases_Hashes_Save->setEnabled( false );
@@ -4986,6 +4867,14 @@ void MainWindow::on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1)
             this->on_checkBox_ConfDatabases_DoBackup_clicked( false );
         }
     }
+}
+
+
+//////////////////
+//// SECURITY ////
+void MainWindow::on_checkBox_ConfSecurity_Paths_Symlinks_toggled(bool checked)
+{
+    GlobalConfigs::Security::follow_symlinks = checked;
 }
 
 
@@ -5027,13 +4916,13 @@ void MainWindow::on_checkBox_ConfControl_Size_clicked(bool checked)
         // enable warning
         this->ui->spinBox_ConfControl_Size->setEnabled( true );
         this->craplog.setWarningSize(
-            (static_cast<size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
+            (static_cast<std::size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
     }
 }
 void MainWindow::on_spinBox_ConfControl_Size_editingFinished()
 {
     this->craplog.setWarningSize(
-        (static_cast<size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
+        (static_cast<std::size_t>(this->ui->spinBox_ConfControl_Size->value()) * 1'048'576ul) +1ul );
 }
 
 
@@ -5045,11 +4934,11 @@ void MainWindow::on_tool_ConfApache_Path_Dialog_clicked()
     this->crappath.reset( new Crappath( this ) );
 
     const QString current_path{ this->ui->inLine_ConfApache_Path_String->text() };
-    const std::string& logs_path{ this->craplog.getLogsPath( WS_APACHE ) };
+    const PathHandler& logs_path{ this->craplog.getLogsPath( WS_APACHE ) };
     if ( ! current_path.isEmpty() ) {
         crappath->setDirectory( current_path );
-    } else if ( ! logs_path.empty() ) {
-        crappath->setDirectory( QString::fromStdString( logs_path ) );
+    } else if ( logs_path.getPath().has_value() ) {
+        crappath->setDirectory( QString::fromStdString( logs_path.toString() ) );
     } else {
         crappath->setDirectory( QString::fromStdString( this->home_path ) );
     }
@@ -5064,13 +4953,13 @@ void MainWindow::on_tool_ConfApache_Path_Dialog_clicked()
 void MainWindow::on_inLine_ConfApache_Path_String_textChanged(const QString& arg1)
 {
     if ( arg1.size() > 0 ) {
-        std::string path{ this->resolvePath( arg1.toStdString() ) };
-        if ( IOutils::checkDir( path ) ) {
-            this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
-            this->ui->button_ConfApache_Path_Save->setEnabled( true );
-        } else {
+        const auto path{ PathHandler( arg1.toStdString() ).getPath() };
+        if ( !( path.has_value() && IOutils::checkDir( path.value() ) ) ) {
             this->ui->icon_ConfApache_Path_Wrong->setVisible( true );
             this->ui->button_ConfApache_Path_Save->setEnabled( false );
+        } else {
+            this->ui->icon_ConfApache_Path_Wrong->setVisible( false );
+            this->ui->button_ConfApache_Path_Save->setEnabled( true );
         }
     } else {
         this->ui->icon_ConfApache_Path_Wrong->setVisible( true );
@@ -5084,16 +4973,20 @@ void MainWindow::on_inLine_ConfApache_Path_String_returnPressed()
 void MainWindow::on_button_ConfApache_Path_Save_clicked()
 {
     if ( ! this->ui->icon_ConfApache_Path_Wrong->isVisible() ) {
-        // set the paths
-        std::string path{ this->resolvePath( this->ui->inLine_ConfApache_Path_String->text().toStdString() ) };
-        if ( StringOps::endsWith( path, '/' ) ) {
-            path = StringOps::rstrip( path, '/' );
+        const auto path_handler{ PathHandler( this->ui->inLine_ConfApache_Path_String->text().toStdString() ) };
+        const auto path_exp{ path_handler.getPath() };
+        if ( ! path_exp.has_value() ) {
+            path_exp.error().showDialogMessage();
+            this->ui->icon_ConfApache_Path_Wrong->setVisible( true );
+            this->ui->button_ConfApache_Path_Save->setEnabled( false );
+            return;
         }
+        const path_t& path{ path_exp.value() };
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        this->craplog.setLogsPath( WS_APACHE, path );
-        this->ui->inLine_ConfApache_Path_String->setText( QString::fromStdString( path ) );
+        this->craplog.setLogsPath( WS_APACHE, path_handler );
+        this->ui->inLine_ConfApache_Path_String->setText( toQString( path ) );
     }
     this->ui->button_ConfApache_Path_Save->setEnabled( false );
 }
@@ -5437,11 +5330,11 @@ void MainWindow::on_tool_ConfNginx_Path_Dialog_clicked()
     this->crappath.reset( new Crappath( this ) );
 
     const QString current_path{ this->ui->inLine_ConfNginx_Path_String->text() };
-    const std::string& logs_path{ this->craplog.getLogsPath( WS_NGINX ) };
+    const PathHandler& logs_path{ this->craplog.getLogsPath( WS_NGINX ) };
     if ( ! current_path.isEmpty() ) {
         crappath->setDirectory( current_path );
-    } else if ( ! logs_path.empty() ) {
-        crappath->setDirectory( QString::fromStdString( logs_path ) );
+    } else if ( logs_path.getPath().has_value() ) {
+        crappath->setDirectory( QString::fromStdString( logs_path.toString() ) );
     } else {
         crappath->setDirectory( QString::fromStdString( this->home_path ) );
     }
@@ -5456,13 +5349,13 @@ void MainWindow::on_tool_ConfNginx_Path_Dialog_clicked()
 void MainWindow::on_inLine_ConfNginx_Path_String_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
-        std::string path{ this->resolvePath( arg1.toStdString() ) };
-        if ( IOutils::checkDir( path ) ) {
-            this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
-            this->ui->button_ConfNginx_Path_Save->setEnabled( true );
-        } else {
+        const auto path{ PathHandler( arg1.toStdString() ).getPath() };
+        if ( !( path.has_value() && IOutils::checkDir( path.value() ) ) ) {
             this->ui->icon_ConfNginx_Path_Wrong->setVisible( true );
             this->ui->button_ConfNginx_Path_Save->setEnabled( false );
+        } else {
+            this->ui->icon_ConfNginx_Path_Wrong->setVisible( false );
+            this->ui->button_ConfNginx_Path_Save->setEnabled( true );
         }
     } else {
         this->ui->icon_ConfNginx_Path_Wrong->setVisible( true );
@@ -5476,16 +5369,20 @@ void MainWindow::on_inLine_ConfNginx_Path_String_returnPressed()
 void MainWindow::on_button_ConfNginx_Path_Save_clicked()
 {
     if ( ! this->ui->icon_ConfNginx_Path_Wrong->isVisible() ) {
-        // set the paths
-        std::string path{ this->resolvePath( this->ui->inLine_ConfNginx_Path_String->text().toStdString() ) };
-        if ( StringOps::endsWith( path, '/' ) ) {
-            path = StringOps::rstrip( path, '/' );
+        const auto path_handler{ PathHandler( this->ui->inLine_ConfNginx_Path_String->text().toStdString() ) };
+        const auto path_exp{ path_handler.getPath() };
+        if ( ! path_exp.has_value() ) {
+            path_exp.error().showDialogMessage();
+            this->ui->icon_ConfNginx_Path_Wrong->setVisible( true );
+            this->ui->button_ConfNginx_Path_Save->setEnabled( false );
+            return;
         }
+        const path_t& path{ path_exp.value() };
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        this->craplog.setLogsPath( WS_NGINX, path );
-        this->ui->inLine_ConfNginx_Path_String->setText( QString::fromStdString( path ) );
+        this->craplog.setLogsPath( WS_NGINX, path_handler );
+        this->ui->inLine_ConfNginx_Path_String->setText( toQString( path ) );
     }
     this->ui->button_ConfNginx_Path_Save->setEnabled( false );
 }
@@ -5829,11 +5726,11 @@ void MainWindow::on_tool_ConfIis_Path_Dialog_clicked()
     this->crappath.reset( new Crappath( this ) );
 
     const QString current_path{ this->ui->inLine_ConfIis_Path_String->text() };
-    const std::string& logs_path{ this->craplog.getLogsPath( WS_IIS ) };
+    const PathHandler& logs_path{ this->craplog.getLogsPath( WS_IIS ) };
     if ( ! current_path.isEmpty() ) {
         crappath->setDirectory( current_path );
-    } else if ( ! logs_path.empty() ) {
-        crappath->setDirectory( QString::fromStdString( logs_path ) );
+    } else if ( logs_path.getPath().has_value() ) {
+        crappath->setDirectory( QString::fromStdString( logs_path.toString() ) );
     } else {
         crappath->setDirectory( QString::fromStdString( this->home_path ) );
     }
@@ -5848,13 +5745,13 @@ void MainWindow::on_tool_ConfIis_Path_Dialog_clicked()
 void MainWindow::on_inLine_ConfIis_Path_String_textChanged(const QString& arg1)
 {
     if ( ! arg1.isEmpty() ) {
-        std::string path{ this->resolvePath( arg1.toStdString() ) };
-        if ( IOutils::checkDir( path ) ) {
-            this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
-            this->ui->button_ConfIis_Path_Save->setEnabled( true );
-        } else {
+        const auto path{ PathHandler( arg1.toStdString() ).getPath() };
+        if ( !( path.has_value() && IOutils::checkDir( path.value() ) ) ) {
             this->ui->icon_ConfIis_Path_Wrong->setVisible( true );
             this->ui->button_ConfIis_Path_Save->setEnabled( false );
+        } else {
+            this->ui->icon_ConfIis_Path_Wrong->setVisible( false );
+            this->ui->button_ConfIis_Path_Save->setEnabled( true );
         }
     } else {
         this->ui->icon_ConfIis_Path_Wrong->setVisible( true );
@@ -5868,16 +5765,20 @@ void MainWindow::on_inLine_ConfIis_Path_String_returnPressed()
 void MainWindow::on_button_ConfIis_Path_Save_clicked()
 {
     if ( ! this->ui->icon_ConfIis_Path_Wrong->isVisible() ) {
-        // set the paths
-        std::string path{ this->resolvePath( this->ui->inLine_ConfIis_Path_String->text().toStdString() ) };
-        if ( StringOps::endsWith( path, '/' ) ) {
-            path = StringOps::rstrip( path, '/' );
+        const auto path_handler{ PathHandler( this->ui->inLine_ConfIis_Path_String->text().toStdString() ) };
+        const auto path_exp{ path_handler.getPath() };
+        if ( ! path_exp.has_value() ) {
+            path_exp.error().showDialogMessage();
+            this->ui->icon_ConfIis_Path_Wrong->setVisible( true );
+            this->ui->button_ConfIis_Path_Save->setEnabled( false );
+            return;
         }
+        const path_t& path{ path_exp.value() };
         if ( ! IOutils::checkDir( path, true ) ) {
             DialogSec::warnDirNotReadable( nullptr );
         }
-        this->craplog.setLogsPath( WS_IIS, path );
-        this->ui->inLine_ConfIis_Path_String->setText( QString::fromStdString( path ) );
+        this->craplog.setLogsPath( WS_IIS, path_handler );
+        this->ui->inLine_ConfIis_Path_String->setText( toQString( path ) );
     }
     this->ui->button_ConfIis_Path_Save->setEnabled( false );
 }

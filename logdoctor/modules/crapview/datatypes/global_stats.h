@@ -10,10 +10,10 @@
 
 struct RecurrenceData final
 {
-    QHash<QString, size_t> protocol;
-    QHash<QString, size_t> method;
-    QHash<QString, size_t> uri;
-    QHash<QString, size_t> user_agent;
+    QHash<QString, std::size_t> protocol;
+    QHash<QString, std::size_t> method;
+    QHash<QString, std::size_t> uri;
+    QHash<QString, std::size_t> user_agent;
 };
 
 struct TrafficData final
@@ -28,9 +28,9 @@ struct TrafficData final
 
 struct Perfs final
 {
-    size_t max{   0ul };
-    size_t total{ 0ul };
-    size_t count{ 0ul };
+    std::size_t max{   0ul };
+    std::size_t total{ 0ul };
+    std::size_t count{ 0ul };
 };
 struct PerformanceData final
 {
@@ -47,7 +47,7 @@ struct GlobalsData final
     RecurrenceData recurs;
     TrafficData traf;
     PerformanceData perf;
-    size_t req_count{ 0 }; // total number of requests
+    std::size_t req_count{ 0 }; // total number of requests
 
     GlobalsData() noexcept = default;
     GlobalsData(GlobalsData&&) noexcept = default;

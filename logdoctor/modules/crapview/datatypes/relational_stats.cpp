@@ -41,7 +41,7 @@ bool RelationalData::buildFromQuery( QueryWrapper& query, TimeManager&& time )
         return false;
     }
 
-    data.reserve( static_cast<size_t>( 24*(60/(time.intervalStep()/60)) ) );
+    data.reserve( static_cast<std::size_t>( 24*(60/(time.intervalStep()/60)) ) );
 
     int count{ 0 };
 
@@ -84,7 +84,7 @@ bool RelationalData::buildFromQuery( QueryWrapper& query, TimeManager&& time )
 
 bool RelationalData::buildFromQuery( QueryWrapper& query, DateManager&& date, const QDate last_date )
 {
-    if ( const size_t size{query.size()}; size == 0ul ) {
+    if ( const std::size_t size{query.size()}; size == 0ul ) {
         return false;
     } else {
         data.reserve( size * 2 );
@@ -153,7 +153,7 @@ void RelationalData::process( QueryWrapper& query, DateManager& date, const int 
     }
 }
 
-void RelationalData::reserveSpace( const size_t size )
+void RelationalData::reserveSpace( const std::size_t size )
 {
     data.reserve( size );
 }

@@ -21,12 +21,12 @@
 
 namespace MemOps {
 
-size_t availableMemory() {
+std::size_t availableMemory() {
 #if defined( Q_OS_WIN )
     MEMORYSTATUSEX mem_statexs;
     mem_statexs.dwLength = sizeof( mem_statexs );
     GlobalMemoryStatusEx( &mem_statexs );
-    return static_cast<size_t>( mem_statexs.ullAvailPhys );
+    return static_cast<std::size_t>( mem_statexs.ullAvailPhys );
 #elif defined( Q_OS_DARWIN )
     mach_msg_type_number_t count{ HOST_VM_INFO_COUNT };
     vm_statistics_data_t vmstat;
@@ -38,26 +38,26 @@ size_t availableMemory() {
     if ( n_pages < 0u || page_size < 0l ) {
         return 0ul;
     }
-    return static_cast<size_t>( n_pages ) * static_cast<size_t>( page_size );
+    return static_cast<std::size_t>( n_pages ) * static_cast<std::size_t>( page_size );
 #elif defined( Q_OS_BSD4 )
     vmtotal vmt;
     u_int page_size;
-    size_t vmt_size{ sizeof(vmt) };
-    size_t uint_size{ sizeof(page_size) };
+    std::size_t vmt_size{ sizeof(vmt) };
+    std::size_t uint_size{ sizeof(page_size) };
     if ( sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) < 0 ) {
         throw DoNotCatchException("Failed to get vmtotal", "failed");
     }
     if ( sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) < 0 ) {
         throw DoNotCatchException("Failed to get v_page_size", "failed");
     }
-    return vmt.t_free * static_cast<size_t>( page_size );
+    return vmt.t_free * static_cast<std::size_t>( page_size );
 #elif defined( Q_OS_UNIX )
     const long n_pages{ sysconf( _SC_AVPHYS_PAGES ) };
     const long page_size{ sysconf( _SC_PAGE_SIZE ) };
     if ( n_pages < 0l || page_size < 0l ) {
         return 0ul;
     }
-    return static_cast<size_t>( n_pages * page_size );
+    return static_cast<std::size_t>( n_pages * page_size );
 #else
 #   error "System not supported"
 #endif

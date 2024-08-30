@@ -13,9 +13,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.logdoctor.LogDoctor</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.01</string>
+	<string>4.02</string>
 	<key>CFBundleVersion</key>
-	<string>4.01</string>
+	<string>4.02</string>
 	<key>CFBundleExecutable</key>
 	<string>LogDoctor</string>
 	<key>CFBundleIconFile</key>

@@ -5,6 +5,9 @@
 #include <QWidget>
 
 
+enum class MsgType;
+
+
 //! DialogSec
 /*!
     Implements various dialog models
@@ -20,10 +23,10 @@ public:
     /////////////////
     //// GENERIC ////
 
-    /*static void warnGeneric( const QString& message, const bool report_msg=false, QWidget* parent=nullptr );*/
+    /*static void warnGeneric( const QString& message, const bool report=false, QWidget* parent=nullptr );*/
 
     //! Generic error message
-    static void errGeneric( const QString& message, const bool report_msg=false, QWidget* parent=nullptr );
+    static void errGeneric( const QString& message, const bool report=false, QWidget* parent=nullptr );
 
     //! Error while renaming
     static void errRenaming( const QString& path, const QString& err, QWidget* parent=nullptr );
@@ -56,6 +59,9 @@ public:
 
     //! Missing read permission for the configuration file's directory
     static void errConfDirNotWritable( const QString& dir, const QString& err, QWidget* parent=nullptr );
+
+    //! The path of the configuration file contains a symlink
+    static void errConfPathHasSymlink( const QString& full_path, const QString& symlink, QWidget* parent=nullptr );
 
     //! An error occured while applying the value retrieved from the conf file
     static void errFailedApplyingConfigsItem( const QString& msg, QWidget* parent=nullptr );
@@ -116,6 +122,9 @@ public:
     //! Missing write permission for a database
     static void errDatabaseNotWritable( const QString& db_name, QWidget* parent=nullptr );
 
+    //! The path of a database file contains a symlink
+    static void errDatabasePathHasSymlink( const QString& full_path, const QString& symlink, QWidget* parent=nullptr );
+
     //! Successfully created a new database
     static void msgDatabaseCreated( const QString& db_name, QWidget* parent=nullptr );
 
@@ -129,7 +138,7 @@ public:
     static void errDatabaseFailedExecuting( const QString& db_name, const QString& statement, const QString& err, QWidget* parent=nullptr );
 
     //! Failed to backup a database
-    static void errDatabaseFailedBackup( const QString& msg, const QString& err, QWidget* parent=nullptr );
+    static void errDatabaseFailedBackup( const QString& msg, const QString& err, const bool report=true, QWidget* parent=nullptr );
 
 
     ///////////////////
@@ -261,11 +270,22 @@ public:
     static void errFailedMakeDir( const QString& msg, const QString& err, QWidget* parent=nullptr );
 
 
+    ///////////////
+    //// PATHS ////
+
+    //! A component of the path does not extst
+    static void errPathNotExists( const QString& component, const QString& path, QWidget* parent=nullptr );
+
+    //! A component of the path is a symlink
+    static void errPathHasSymlink( const QString& component, const QString& path, QWidget* parent=nullptr );
+
+
     //////////////
     //// DATA ////
 
     //! Failed to convert some data from one type into another
     static void errConvertingData( const QString& fromType, const QString& intoType, const QString& value, QWidget* parent=nullptr );
+
 
     /////////////////
     //// CHOICES ////
@@ -282,6 +302,9 @@ private:
 
     //! Asks to renew a database
     static bool choiceDatabaseRenew( const QString& title, const QString& msg, QWidget* parent=nullptr );
+
+    //! Display an error message about the configuration file/folder/path
+    static void errHandlingConfFile( const QString& title, const QString& message, const QString& additional, const MsgType type, QWidget* parent=nullptr );
 
 };
 

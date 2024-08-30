@@ -76,14 +76,14 @@ public:
     }
 };
 
-} //namespace (private)
+} // namespace (private)
 
 
 
 namespace GZutils
 {
 
-void readFile( const std::string& path, std::string& content )
+void readFile( const std::filesystem::path& path, std::string& content )
 {
     bool successful{ true };
 
@@ -105,7 +105,7 @@ void readFile( const std::string& path, std::string& content )
     }
 
     if ( successful ) {
-        FileHandler file{ path.c_str(), "rb" };
+        FileHandler file{ path.string().c_str(), "rb" };
         if ( ! file.valid() ) {
             // unable to open the file
             return;

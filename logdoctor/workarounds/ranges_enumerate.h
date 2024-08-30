@@ -47,11 +47,17 @@ public:
     explicit EnumeratedArray( const Array& a )
     : arr{a} {}
 
-    inline auto begin() noexcept
+    inline auto cbegin() const noexcept
     { return Enumerator<Array>(arr.cbegin()); }
 
-    inline auto end() noexcept
+    inline auto begin() noexcept
+    { return cbegin(); }
+
+    inline auto cend() const noexcept
     { return Enumerator<Array>(arr.cend()); }
+
+    inline auto end() noexcept
+    { return cend(); }
 };
 
 

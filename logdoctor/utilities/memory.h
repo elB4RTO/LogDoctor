@@ -2,6 +2,9 @@
 #define LOGDOCTOR__UTILITIES__MEMORY_H
 
 
+#include <cstddef>
+
+
 //! MemOps
 /*!
     Utilities for system's memory infos
@@ -9,14 +12,12 @@
 namespace MemOps
 {
 
-namespace{ using size_t = unsigned long; }
-
 //! Returns the available (free) memory in the system
 /*!
     \return The amount of memory in Bytes
     \throw DoNotCatchException
 */
-size_t availableMemory();
+std::size_t availableMemory();
 
 } // namespace MemOps
 

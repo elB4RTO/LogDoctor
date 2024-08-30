@@ -1058,6 +1058,30 @@ This may lead to data losses or crashes if not used with caution</source>
         <translation type="unfinished">Le format fourni contient le &apos;Carriage Return&apos;.
 Cela peut entraîner des pertes de données ou des plantages s&apos;il n&apos;est pas utilisé avec prudence</translation>
     </message>
+    <message>
+        <source>Failed to create the configuration file</source>
+        <translation type="unfinished">Impossible de créer le fichier de configuration</translation>
+    </message>
+    <message>
+        <source>The path contains a symlink</source>
+        <translation type="unfinished">Le chemin contient un lien symbolique</translation>
+    </message>
+    <message>
+        <source>The file does not exist</source>
+        <translation type="unfinished">Le fichier n&amp;apos;existe pas</translation>
+    </message>
+    <message>
+        <source>Invalid path</source>
+        <translation type="unfinished">Voie non valide</translation>
+    </message>
+    <message>
+        <source>Invalid database path</source>
+        <translation type="unfinished">Chemin de base de données non valide</translation>
+    </message>
+    <message>
+        <source>The path does not exists</source>
+        <translation type="unfinished">Le chemin n&amp;apos;existe pas</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1551,16 +1575,8 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</sour
 Tout champ non pris en compte par LogDoctor apparaîtra comme &apos;DISCARDED&apos;</translation>
     </message>
     <message>
-        <source>CrissCross</source>
-        <translation type="unfinished">CrissCross</translation>
-    </message>
-    <message>
         <source>Play CrissCross</source>
         <translation type="unfinished">Jouer au CrissCross</translation>
-    </message>
-    <message>
-        <source>Snake</source>
-        <translation type="unfinished">Snake</translation>
     </message>
     <message>
         <source>Play Snake</source>
@@ -1729,20 +1745,8 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <translation type="unfinished">Jeux</translation>
     </message>
     <message>
-        <source>Check updates</source>
-        <translation type="unfinished">Vérifier les mises à jour</translation>
-    </message>
-    <message>
         <source>Perform a version-check</source>
         <translation type="unfinished">Effectuer une vérification de version</translation>
-    </message>
-    <message>
-        <source>Infos</source>
-        <translation type="unfinished">Infos</translation>
-    </message>
-    <message>
-        <source>BlockNote</source>
-        <translation type="unfinished">Bloc Notes</translation>
     </message>
     <message>
         <source>Open a block-note like window to write temporary text</source>
@@ -1785,10 +1789,6 @@ Les champs marqués comme &apos;DISCARDED&apos; ont été analysés correctement
         <translation type="unfinished">Afficher quelques informations sur LogDoctor</translation>
     </message>
     <message>
-        <source>Changelog</source>
-        <translation type="unfinished">Journal des modifications</translation>
-    </message>
-    <message>
         <source>Show the changelog</source>
         <translation type="unfinished">Afficher le journal des modifications</translation>
     </message>
@@ -1807,96 +1807,12 @@ Toutes les valeurs comprises dans le même intervalle seront fusionnées et la v
         <translation type="unfinished">Intervalle de temps</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation>2</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation>3</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation>4</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation>5</translation>
-    </message>
-    <message>
-        <source>10</source>
-        <translation>10</translation>
-    </message>
-    <message>
-        <source>15</source>
-        <translation>15</translation>
-    </message>
-    <message>
-        <source>20</source>
-        <translation>20</translation>
-    </message>
-    <message>
-        <source>30</source>
-        <translation>30</translation>
-    </message>
-    <message>
-        <source>60</source>
-        <translation>60</translation>
-    </message>
-    <message>
-        <source>120</source>
-        <translation>120</translation>
-    </message>
-    <message>
-        <source>180</source>
-        <translation>180</translation>
-    </message>
-    <message>
-        <source>240</source>
-        <translation>240</translation>
-    </message>
-    <message>
-        <source>300</source>
-        <translation>300</translation>
-    </message>
-    <message>
-        <source>600</source>
-        <translation>600</translation>
-    </message>
-    <message>
-        <source>900</source>
-        <translation>900</translation>
-    </message>
-    <message>
-        <source>1200</source>
-        <translation>1200</translation>
-    </message>
-    <message>
-        <source>1800</source>
-        <translation>1800</translation>
-    </message>
-    <message>
-        <source>3600</source>
-        <translation>3600</translation>
-    </message>
-    <message>
         <source>The format to use for the labels of the time axis.</source>
         <translation type="unfinished">Le format à utiliser pour les étiquettes de l&apos;axe du temps.</translation>
     </message>
     <message>
         <source>Time format</source>
         <translation type="unfinished">Format de l&apos;heure</translation>
-    </message>
-    <message>
-        <source>hh:mm</source>
-        <translation type="unfinished">hh:mm</translation>
-    </message>
-    <message>
-        <source>hh</source>
-        <translation type="unfinished">hh</translation>
     </message>
     <message>
         <source>The size of the pie</source>
@@ -1923,6 +1839,42 @@ Les tranches excédentaires seront regroupées en une seule tranche compréhensi
     <message>
         <source>Appearance</source>
         <translation type="unfinished">Apparence</translation>
+    </message>
+    <message>
+        <source>Security</source>
+        <translation type="unfinished">Sécurité</translation>
+    </message>
+    <message>
+        <source>Whether it is allowed or denied to follow symlinks occuring in a path</source>
+        <translation type="unfinished">Qu&amp;apos;il soit permis ou refusé de suivre des liens symboliques se produisant dans un chemin</translation>
+    </message>
+    <message>
+        <source>Follow symlinks</source>
+        <translation type="unfinished">Suivez les liens symboliques</translation>
+    </message>
+    <message>
+        <source>Check updates</source>
+        <translation type="unfinished">Vérifier les mises à jour</translation>
+    </message>
+    <message>
+        <source>Infos</source>
+        <translation type="unfinished">Infos</translation>
+    </message>
+    <message>
+        <source>BlockNote</source>
+        <translation type="unfinished">BlockNote</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation type="unfinished">CrissCross</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation type="unfinished">Snake</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">Journal des modifications</translation>
     </message>
 </context>
 <context>

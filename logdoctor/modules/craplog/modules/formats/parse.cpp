@@ -7,6 +7,7 @@
 #include "utilities/strings.h"
 
 #include <vector>
+#include <unordered_map>
 
 
 using simple_fields_umap_t = std::unordered_map<std::string, LogsFormatField>;
@@ -25,7 +26,7 @@ namespace /*private*/
     \return The number of new lines in a single log line
     \see LogsFormat, processApacheFormatString(), processNginxFormatString()
 */
-size_t countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators );
+std::size_t countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators );
 
 
 //! Parses the escapes (backslashes) and returns the resulting string
@@ -65,7 +66,7 @@ bool checkNginxFieldChar( const char& chr );
     \return The ending poin of the field in the string
     \see processNginxFormatString()
 */
-size_t findNginxFieldEnd( const std::string& string, const size_t start );
+std::size_t findNginxFieldEnd( const std::string& string, const std::size_t start );
 
 
 //! Checks whether the given character is valid or not
@@ -133,8 +134,8 @@ LogsFormat parseApacheFormatString( const std::string& f_str )
     // parse the string to convert keyargs in craplog's fields format
     bool is_strftime_sep{ false };
     int n_fld{ 0 };
-    size_t start, stop{0ul}, aux, aux_start, aux_stop;
-    const size_t max{ f_str.size()-1ul };
+    std::size_t start, stop{0ul}, aux, aux_start, aux_stop;
+    const std::size_t max{ f_str.size()-1ul };
     std::string aux_fld, aux_fld_v, cur_sep;
     LogsFormatField cur_fld{ _INVALID };
     // find and convert any field
@@ -193,7 +194,7 @@ LogsFormat parseApacheFormatString( const std::string& f_str )
             // remove the per-status directives (if any)
             if ( CharOps::isNumeric( c ) || c == '!' || c == ',' ) {
                 // per-status, not important for LogDoctor
-                size_t aux_aux{ aux+1ul };
+                std::size_t aux_aux{ aux+1ul };
                 while (true) {
                     if ( aux_aux > max ) {
                         break;
@@ -277,7 +278,7 @@ LogsFormat parseApacheFormatString( const std::string& f_str )
 
                     } else /*if ( aux_fld_v == "t" )*/ {
                         // only 't' remaining
-                        size_t aux_aux{ aux_fld.find( '%' ) };
+                        std::size_t aux_aux{ aux_fld.find( '%' ) };
                         if ( aux_aux == std::string::npos ) {
                             // no concatenation, only valid fields used, anything else used as text
                             // whole content used as varname
@@ -295,7 +296,7 @@ LogsFormat parseApacheFormatString( const std::string& f_str )
 
                         } else {
                             // concatenation allowed, only strftime() value used as fields, everything else treated as text
-                            size_t aux_aux_start,
+                            std::size_t aux_aux_start,
                                    aux_aux_stop{0};
                             std::string aux_aux_fld;
                             while (true) {
@@ -306,7 +307,7 @@ LogsFormat parseApacheFormatString( const std::string& f_str )
                                     aux_aux = aux_fld.find( '%', aux_aux_stop );
                                     // check if false positive
                                     if ( aux_aux != std::string::npos ) {
-                                        const size_t aux_aux_{ aux_aux+1ul };
+                                        const std::size_t aux_aux_{ aux_aux+1ul };
                                         if ( aux_aux_ >= aux_fld.size() ) {
                                             aux_aux = std::string::npos;
                                             break;
@@ -450,8 +451,8 @@ LogsFormat parseNginxFormatString( const std::string& f_str )
     std::vector<LogsFormatField> fields;
     // parse the string to convert keyargs in craplog's fields format
     bool finished{ false };
-    size_t start, aux, stop{0ul};
-    const size_t max{ f_str.size()-1ul };
+    std::size_t start, aux, stop{0ul};
+    const std::size_t max{ f_str.size()-1ul };
     std::string cur_fld, cur_sep;
     // find and convert any field
     while (true) {
@@ -541,8 +542,8 @@ LogsFormat parseIisFormatString( const std::string& f_str, const IISLogsModule l
             // W3C logging module
             if ( f_str.size() > 0ul ) {
                 bool finished{ false };
-                size_t start, stop{0ul};
-                const size_t max{ f_str.size()-1ul };
+                std::size_t start, stop{0ul};
+                const std::size_t max{ f_str.size()-1ul };
                 std::string cur_fld;
                 const std::string cur_sep{ " " };
                 const auto& f_map{ getIisFields() };
@@ -599,9 +600,9 @@ LogsFormat parseIisFormatString( const std::string& f_str, const IISLogsModule l
 namespace /*private*/
 {
 
-size_t countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators )
+std::size_t countNewLines( std::string_view initial, std::string_view final, const std::vector<std::string>& separators )
 {
-    size_t nl{ 0ul };
+    std::size_t nl{ 0ul };
     nl += StringOps::count( initial, '\n' );
     nl += StringOps::count( final, '\n' );
     for ( const std::string& sep : separators ) {
@@ -616,7 +617,7 @@ std::string parseApacheEscapes( std::string_view string , const bool strftime )
     if ( string.empty() ) {
             return std::string{string};
     }
-    size_t i{ 0ul },
+    std::size_t i{ 0ul },
         max{ string.size()-1ul };
     std::string str1;
     str1.reserve( string.size() );
@@ -719,8 +720,8 @@ std::string parseNginxEscapes( std::string_view string )
     if ( string.empty() ) {
             return std::string{string};
     }
-    size_t i{ 0ul };
-    const size_t max{ string.size()-1ul };
+    std::size_t i{ 0ul };
+    const std::size_t max{ string.size()-1ul };
     char c, cc;
     std::string str;
     str.reserve( string.size() );
@@ -770,7 +771,7 @@ bool checkNginxFieldChar( const char& chr )
     return CharOps::isAlnum( chr ) || chr == '_';
 }
 
-size_t findNginxFieldEnd( const std::string& string, const size_t start )
+std::size_t findNginxFieldEnd( const std::string& string, const std::size_t start )
 {
     if ( string.empty() || start >= string.size()-1ul ) {
             return start;

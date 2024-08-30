@@ -1055,6 +1055,30 @@ This may lead to data losses or crashes if not used with caution</source>
         <translation>The provided format contains the &apos;Carriage Return&apos;.
 This may lead to data losses or crashes if not used with caution</translation>
     </message>
+    <message>
+        <source>Failed to create the configuration file</source>
+        <translation>Failed to create the configuration file</translation>
+    </message>
+    <message>
+        <source>The path contains a symlink</source>
+        <translation>The path contains a symlink</translation>
+    </message>
+    <message>
+        <source>The file does not exist</source>
+        <translation>The file does not exist</translation>
+    </message>
+    <message>
+        <source>Invalid path</source>
+        <translation>Invalid path</translation>
+    </message>
+    <message>
+        <source>Invalid database path</source>
+        <translation>Invalid database path</translation>
+    </message>
+    <message>
+        <source>The path does not exists</source>
+        <translation>The path does not exists</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1632,20 +1656,8 @@ Fields marked as &apos;DISCARDED&apos; got parsed correctly, but are not conside
         <translation>Tools</translation>
     </message>
     <message>
-        <source>Check updates</source>
-        <translation>Check updates</translation>
-    </message>
-    <message>
         <source>Perform a version-check</source>
         <translation>Perform a version-check</translation>
-    </message>
-    <message>
-        <source>Infos</source>
-        <translation>Infos</translation>
-    </message>
-    <message>
-        <source>BlockNote</source>
-        <translation>BlockNote</translation>
     </message>
     <message>
         <source>Open a block-note like window to write temporary text</source>
@@ -1732,16 +1744,8 @@ With numbers, use &apos;!&apos;, &apos;=&apos;,&apos;&lt;&apos; or &apos;&gt;&ap
         <translation>Games</translation>
     </message>
     <message>
-        <source>CrissCross</source>
-        <translation>CrissCross</translation>
-    </message>
-    <message>
         <source>Play CrissCross</source>
         <translation>Play CrissCross</translation>
-    </message>
-    <message>
-        <source>Snake</source>
-        <translation>Snake</translation>
     </message>
     <message>
         <source>Play Snake</source>
@@ -1782,10 +1786,6 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</tran
         <translation>Show some info about LogDoctor</translation>
     </message>
     <message>
-        <source>Changelog</source>
-        <translation>Changelog</translation>
-    </message>
-    <message>
         <source>Show the changelog</source>
         <translation>Show the changelog</translation>
     </message>
@@ -1803,96 +1803,12 @@ All the values falling inside the same interval will be merged and the mean valu
         <translation>Time interval</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation>2</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation>3</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation>4</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation>5</translation>
-    </message>
-    <message>
-        <source>10</source>
-        <translation>10</translation>
-    </message>
-    <message>
-        <source>15</source>
-        <translation>15</translation>
-    </message>
-    <message>
-        <source>20</source>
-        <translation>20</translation>
-    </message>
-    <message>
-        <source>30</source>
-        <translation>30</translation>
-    </message>
-    <message>
-        <source>60</source>
-        <translation>60</translation>
-    </message>
-    <message>
-        <source>120</source>
-        <translation>120</translation>
-    </message>
-    <message>
-        <source>180</source>
-        <translation>180</translation>
-    </message>
-    <message>
-        <source>240</source>
-        <translation>240</translation>
-    </message>
-    <message>
-        <source>300</source>
-        <translation>300</translation>
-    </message>
-    <message>
-        <source>600</source>
-        <translation>600</translation>
-    </message>
-    <message>
-        <source>900</source>
-        <translation>900</translation>
-    </message>
-    <message>
-        <source>1200</source>
-        <translation>1200</translation>
-    </message>
-    <message>
-        <source>1800</source>
-        <translation>1800</translation>
-    </message>
-    <message>
-        <source>3600</source>
-        <translation>3600</translation>
-    </message>
-    <message>
         <source>The format to use for the labels of the time axis.</source>
         <translation>The format to use for the labels of the time axis.</translation>
     </message>
     <message>
         <source>Time format</source>
         <translation>Time format</translation>
-    </message>
-    <message>
-        <source>hh:mm</source>
-        <translation>hh:mm</translation>
-    </message>
-    <message>
-        <source>hh</source>
-        <translation>hh</translation>
     </message>
     <message>
         <source>The size of the pie</source>
@@ -1918,6 +1834,42 @@ Exceeding slices will be grouped into one comprehensive slice.</source>
     <message>
         <source>Appearance</source>
         <translation>Appearance</translation>
+    </message>
+    <message>
+        <source>Security</source>
+        <translation>Security</translation>
+    </message>
+    <message>
+        <source>Whether it is allowed or denied to follow symlinks occuring in a path</source>
+        <translation>Whether it is allowed or denied to follow symlinks occuring in a path</translation>
+    </message>
+    <message>
+        <source>Follow symlinks</source>
+        <translation>Follow symlinks</translation>
+    </message>
+    <message>
+        <source>Check updates</source>
+        <translation>Check updates</translation>
+    </message>
+    <message>
+        <source>Infos</source>
+        <translation>Infos</translation>
+    </message>
+    <message>
+        <source>BlockNote</source>
+        <translation>BlockNote</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation>CrissCross</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation>Snake</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation>Changelog</translation>
     </message>
 </context>
 <context>

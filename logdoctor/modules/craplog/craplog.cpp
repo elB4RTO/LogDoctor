@@ -27,7 +27,6 @@
 #include <QPainter>
 #include <QWaitCondition>
 
-#include <filesystem>
 #include <thread>
 #include <exception>
 #include <ctime>
@@ -58,11 +57,11 @@ Craplog::Craplog()
     this->current_log_format = this->logs_formats.at( WS_APACHE );
 
     // apache2 access/error logs location
-    this->logs_paths.emplace( WS_APACHE, std::string{} );
+    this->logs_paths.emplace( WS_APACHE, PathHandler() );
     // nginx access/error logs location
-    this->logs_paths.emplace( WS_NGINX, std::string{} );
+    this->logs_paths.emplace( WS_NGINX, PathHandler() );
     // iis access/error logs location
-    this->logs_paths.emplace( WS_IIS, std::string{} );
+    this->logs_paths.emplace( WS_IIS, PathHandler() );
 
     // apache2 access/error log files' names
     this->logs_base_names.emplace( WS_APACHE, LogName{ .starts   = "access.log.",
@@ -91,30 +90,30 @@ void Craplog::setDialogsLevel( const DialogsLevel new_level ) noexcept
     this->hasher.setDialogLevel( new_level );
 }
 
-const std::string& Craplog::getStatsDatabasePath() const noexcept
+const PathHandler& Craplog::getStatsDatabasePath() const noexcept
 {
     return this->db_stats_path;
 }
-const std::string& Craplog::getHashesDatabasePath() const noexcept
+const PathHandler& Craplog::getHashesDatabasePath() const noexcept
 {
     return this->db_hashes_path;
 }
 
-void Craplog::setStatsDatabasePath( const std::string& path ) noexcept
+void Craplog::setStatsDatabasePath( const PathHandler& path ) noexcept
 {
-    this->db_stats_path = path + "/" + DatabasesNames::data;
+    this->db_stats_path = path / DatabasesNames::data;
 }
-void Craplog::setHashesDatabasePath( const std::string& path ) noexcept
+void Craplog::setHashesDatabasePath( const PathHandler& path ) noexcept
 {
-    this->db_hashes_path = path + "/" + DatabasesNames::hashes;
+    this->db_hashes_path = path / DatabasesNames::hashes;
 }
 
-size_t Craplog::getWarningSize() const noexcept
+std::size_t Craplog::getWarningSize() const noexcept
 {
     return this->warning_size;
 }
 
-void Craplog::setWarningSize(const size_t new_size ) noexcept
+void Craplog::setWarningSize(const std::size_t new_size ) noexcept
 {
     this->warning_size = new_size;
 }
@@ -234,11 +233,11 @@ const LogsFormat& Craplog::getCurrentLogFormat() const noexcept
 
 ///////////////////
 //// LOGS PATH ////
-const std::string& Craplog::getLogsPath( const WebServer& web_server ) const noexcept
+const PathHandler& Craplog::getLogsPath( const WebServer& web_server ) const noexcept
 {
     return this->logs_paths.at( web_server );
 }
-void Craplog::setLogsPath( const WebServer& web_server, const std::string& new_path ) noexcept
+void Craplog::setLogsPath( const WebServer& web_server, const PathHandler& new_path ) noexcept
 {
     this->logs_paths.at( web_server ) = new_path;
 }
@@ -247,7 +246,7 @@ void Craplog::setLogsPath( const WebServer& web_server, const std::string& new_p
 ///////////////////
 //// LOGS LIST ////
 // return the size of the list
-size_t Craplog::getLogsListSize() const noexcept
+std::size_t Craplog::getLogsListSize() const noexcept
 {
     return this->logs_list.size();
 }
@@ -384,7 +383,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
         case WS_NGINX:
         {
             // further checks for apache / nginx
-            size_t start, stop;
+            std::size_t start, stop;
             start = name.rfind(".log." );
             if ( start == std::string::npos ) {
                 return false;
@@ -395,7 +394,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
                 stop -= 3ul;
             }
             // serach for incremental numbers
-            for ( size_t i{start}; i<=stop; ++i ) {
+            for ( std::size_t i{start}; i<=stop; ++i ) {
                 if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     return false;
                 }
@@ -405,7 +404,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
         case WS_IIS:
         {
             // further checks for iis
-            size_t start, stop;
+            std::size_t start, stop;
             start = name.find( this->logs_base_names.at( WS_IIS ).contains ) + 3ul;
             if ( start == std::string::npos ) {
                 return false;
@@ -416,7 +415,7 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             }
             // search for date
             std::string date;
-            for ( size_t i{start}; i<=stop; ++i ) {
+            for ( std::size_t i{start}; i<=stop; ++i ) {
                 if ( ! CharOps::isNumeric( name.at( i ) ) ) {
                     return false;
                 }
@@ -425,16 +424,17 @@ bool Craplog::isFileNameValid( const std::string& name ) const
             // check if the file has today's date
             time_t t;
             time( &t );
-            struct tm* tmp = localtime( &t );
+            struct tm tmp;
+            #ifdef Q_OS_WINDOWS
+                localtime_s( &tmp, &t );
+            #else
+                localtime_r( &t, &tmp );
+            #endif
             char aux_date[7];
-            // using strftime to display time
-            strftime( aux_date, 7, "%y%m%d", tmp );
-            for ( size_t i{0}; i<6ul; ++i ) {
-                if ( date.at(i) != aux_date[i] ) {
-                    // different date, valid
-                    return true;
-                    break;
-                }
+            strftime( aux_date, 7, "%y%m%d", &tmp );
+            if ( strcmp( date.data(), aux_date ) != 0 ) {
+                // different date, valid
+                return true;
             }
         }break;
 
@@ -452,7 +452,7 @@ bool Craplog::checkStuff()
 {
     this->proceed |= true;
     {
-        const size_t l_size{ this->logs_list.size() };
+        const std::size_t l_size{ this->logs_list.size() };
         this->log_files_to_use.clear();
         if ( this->log_files_to_use.capacity() < l_size ) {
             this->log_files_to_use.reserve( l_size );
@@ -463,7 +463,7 @@ bool Craplog::checkStuff()
         }
     }
 
-    size_t logs_size{ 0ul };
+    std::size_t logs_size{ 0ul };
     for ( const LogFile& file : this->logs_list ) {
 
         if ( ! file.isSelected() ) {
@@ -610,6 +610,9 @@ void Craplog::showWorkerDialog( const WorkerDialog dialog_type, const QStringLis
         case WorkerDialog::errDirNotExists:
             DialogSec::errDirNotExists( args.at(0) );
             break;
+        case WorkerDialog::errPathHasSymlink:
+            DialogSec::errPathHasSymlink( args.at(0), args.at(1) );
+            break;
         case WorkerDialog::errFailedDefiningLogType:
             DialogSec::errFailedDefiningLogType( args.at(0) );
             break;
@@ -657,7 +660,7 @@ void Craplog::startWorking( const Blacklists& blacklists )
 }
 void Craplog::hireWorker( const Blacklists& blacklists ) const
 {
-    std::vector<std::string> files;
+    std::vector<PathHandler> files;
     files.reserve( this->log_files_to_use.size() );
     std::transform(
         this->log_files_to_use.cbegin(), this->log_files_to_use.cend(), std::back_inserter(files),
@@ -721,12 +724,12 @@ bool Craplog::editedDatabase() const noexcept
 }
 
 
-size_t Craplog::getParsedSize() noexcept
+std::size_t Craplog::getParsedSize() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_size;
 }
-size_t Craplog::getParsedLines() noexcept
+std::size_t Craplog::getParsedLines() noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     return this->parsed_lines;
@@ -765,13 +768,13 @@ bool Craplog::isParsing() const noexcept
     return this->is_parsing;
 }
 
-void Craplog::updatePerfData( const size_t parsed_size, const size_t parsed_lines ) noexcept
+void Craplog::updatePerfData( const std::size_t parsed_size, const std::size_t parsed_lines ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->parsed_size  = parsed_size;
     this->parsed_lines = parsed_lines;
 }
-void Craplog::updateChartData( const size_t total_size, const size_t total_lines, const size_t blacklisted_size ) noexcept
+void Craplog::updateChartData( const std::size_t total_size, const std::size_t total_lines, const std::size_t blacklisted_size ) noexcept
 {
     std::unique_lock<std::mutex> lock( this->mutex );
     this->total_size  = total_size;
@@ -803,7 +806,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
     // logs size donut chart
     QPieSeries* parsedSize_donut{ new QPieSeries() };
     parsedSize_donut->setName( PrintSec::printableSize( this->parsed_size ) );
-    const size_t parsed_size{ this->parsed_size - this->blacklisted_size };
+    const std::size_t parsed_size{ this->parsed_size - this->blacklisted_size };
     parsedSize_donut->append(
         "P@" + parsed_slice_name + "@" + PrintSec::printableSize( parsed_size ),
         static_cast<qreal>( parsed_size ) );
@@ -813,7 +816,7 @@ void Craplog::makeChart( const QChart::ChartTheme& theme, const std::unordered_m
 
     // logs size donut chart
     QPieSeries* ignoredSize_donut{ new QPieSeries() };
-    const size_t ignored_size{ this->total_size - this->parsed_size };
+    const std::size_t ignored_size{ this->total_size - this->parsed_size };
     QString printable_ignored_size{ PrintSec::printableSize( ignored_size ) };
     ignoredSize_donut->setName( printable_ignored_size );
     ignoredSize_donut->append(

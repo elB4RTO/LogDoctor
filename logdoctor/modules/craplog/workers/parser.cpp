@@ -23,7 +23,7 @@
 #include <QMutex>
 
 
-CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const LogsFormat& logs_format, const Blacklist& blacklist, worker_files_t&& log_files, const std::string& data_db_path, QObject* parent )
+CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dialogs_level, const LogsFormat& logs_format, const Blacklist& blacklist, worker_files_t&& log_files, const PathHandler& data_db_path, QObject* parent )
     : QObject        { parent                     }
     , web_server     { web_server                 }
     , dialogs_level  { dialogs_level              }
@@ -33,7 +33,6 @@ CraplogParser::CraplogParser( const WebServer web_server, const DialogsLevel dia
     , logs_format    { logs_format                }
     , files_to_use   { std::move( log_files )     }
 {
-
 }
 
 CraplogParser::~CraplogParser()
@@ -109,6 +108,11 @@ void CraplogParser::work()
                                {e.what()} );
         this->proceed &= false;
 
+    } catch ( InvalidPathException& e ) {
+        emit this->showDialog( WorkerDialog::errPathHasSymlink,
+                               e.what() );
+        this->proceed &= false;
+
     }
     // send the final data
     if ( ! this->proceed ) {
@@ -152,9 +156,18 @@ void CraplogParser::joinLogLines()
             // try reading
             content.clear();
             aux.clear();
+
+            const auto path_exp{ file_path.getPath() };
+            if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+                const auto& invalid{ path_exp.error() };
+                throw InvalidPathException( {toQString(invalid.invalid_component),
+                                             toQString(invalid.full_path)} );
+            }
+            const path_t& path{ path_exp.value() };
+
             try {
                 // try as gzip compressed archive first
-                GZutils::readFile( file_path, aux );
+                GZutils::readFile( path, aux );
 
             } catch ( const GenericException& ) {
                 // failed closing file pointer
@@ -165,7 +178,7 @@ void CraplogParser::joinLogLines()
                 if ( ! aux.empty() ) {
                     aux.clear();
                 }
-                IOutils::readFile( file_path, aux );
+                IOutils::readFile( path, aux );
             }
             StringOps::splitrip( content, aux );
 
@@ -181,21 +194,21 @@ void CraplogParser::joinLogLines()
             // failed closing gzip file pointer
             throw GenericException( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("An error occured while reading the gzipped file"),
-                    QString::fromStdString( file_path )
+                    QString::fromStdString( file_path.toString() )
                 ).toStdString() );
 
         } catch ( const std::ios_base::failure& ) {
             // failed reading as text
             throw GenericException( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("An error occured while reading the file"),
-                    QString::fromStdString( file_path )
+                    QString::fromStdString( file_path.toString() )
                 ).toStdString() );
 
         } catch (...) {
             // failed somehow
             throw GenericException( QStringLiteral("%1:\n%2").arg(
                     DialogSec::tr("Something failed while handling the file"),
-                    QString::fromStdString( file_path )
+                    QString::fromStdString( file_path.toString() )
                 ).toStdString() );
         }
 
@@ -216,7 +229,7 @@ void CraplogParser::parseLogLines()
         ++ this->parsed_lines;
     }};
 
-    const auto signal_emission_gap{ [](const size_t n_lines)->size_t{
+    const auto signal_emission_gap{ [](const std::size_t n_lines)->std::size_t{
         return n_lines>10000ul ? n_lines/1000ul
                                : n_lines>1000ul ? n_lines/100ul
                                                 : n_lines>100ul ? n_lines/10ul
@@ -226,11 +239,11 @@ void CraplogParser::parseLogLines()
 
     // parse all the lines
     if ( this->proceed ) {
-        const size_t n_lines{ this->logs_lines.size() };
-        const size_t nl{ this->logs_format.new_lines };
-        size_t send{ 0ul };
+        const std::size_t n_lines{ this->logs_lines.size() };
+        const std::size_t nl{ this->logs_format.new_lines };
+        std::size_t send{ 0ul };
         if ( nl == 0ul ) {
-            const size_t send_gap{ signal_emission_gap(n_lines) };
+            const std::size_t send_gap{ signal_emission_gap(n_lines) };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( n_lines );
             for ( const std::string& line : this->logs_lines ) {
@@ -241,13 +254,13 @@ void CraplogParser::parseLogLines()
                 }
             }
         } else {
-            const size_t real_lines{ n_lines / (nl+1ul) };
-            const size_t send_gap{ signal_emission_gap(real_lines) };
+            const std::size_t real_lines{ n_lines / (nl+1ul) };
+            const std::size_t send_gap{ signal_emission_gap(real_lines) };
             const LogsFormat& lf {this->logs_format};
             this->data_collection.reserve( real_lines );
-            for ( size_t i{0ul}; i<n_lines; ++i ) {
+            for ( std::size_t i{0ul}; i<n_lines; ++i ) {
                 std::string line = this->logs_lines.at( i );
-                for ( size_t n{0ul}; n<nl; ++n ) {
+                for ( std::size_t n{0ul}; n<nl; ++n ) {
                     ++i;
                     line += "\n" + this->logs_lines.at( i );
                 }
@@ -266,7 +279,7 @@ void CraplogParser::parseLogLines()
 
 void CraplogParser::storeLogLines( QSqlDatabase& db )
 {
-    db.setDatabaseName( QString::fromStdString( this->db_path ) );
+    db.setDatabaseName( QString::fromStdString( this->db_path.toString() ) );
 
     if ( ! this->checkDatabaseFile() ) [[unlikely]] {
         this->proceed &= false;
@@ -468,16 +481,25 @@ bool CraplogParser::storeData( QSqlDatabase& db )
 
 bool CraplogParser::checkDatabaseFile() noexcept
 {
-    if ( ! IOutils::exists( this->db_path ) ) {
+    const auto path_exp{ this->db_path.getPath() };
+    if ( !path_exp.has_value() && path_exp.error().isReasonSymlink() ) {
+        const auto& invalid{ path_exp.error() };
+        emit this->showDialog( WorkerDialog::errPathHasSymlink,
+                               {toQString(invalid.invalid_component),
+                                toQString(invalid.full_path)} );
+        return false;
+    }
+    const path_t& path{ path_exp.value() };
+    if ( ! IOutils::exists( path ) ) {
         emit this->showDialog( WorkerDialog::errDatabaseFileNotFound, {this->db_name} );
         return false;
-    } else if ( ! IOutils::isFile( this->db_path ) ) {
+    } else if ( ! IOutils::isFile( path ) ) {
         emit this->showDialog( WorkerDialog::errDatabaseFileNotFile, {this->db_name} );
         return false;
-    } else if ( ! IOutils::checkFile( this->db_path, true ) ) {
+    } else if ( ! IOutils::checkFile( path, true ) ) {
         emit this->showDialog( WorkerDialog::errDatabaseFileNotReadable, {this->db_name} );
         return false;
-    } else if ( ! IOutils::checkFile( this->db_path, false, true ) ) {
+    } else if ( ! IOutils::checkFile( path, false, true ) ) {
         emit this->showDialog( WorkerDialog::errDatabaseFileNotWritable, {this->db_name} );
         return false;
     }

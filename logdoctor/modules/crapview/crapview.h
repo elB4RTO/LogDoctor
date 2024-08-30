@@ -43,7 +43,7 @@ public:
     /*!
         \see Fetcher::setDbPath()
     */
-    void setDbPath( const std::string& path ) noexcept;
+    void setDbPath( const PathHandler& path ) noexcept;
 
 
     //! Returns the month number corresponding to the given printable month

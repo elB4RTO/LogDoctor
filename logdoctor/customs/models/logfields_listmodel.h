@@ -25,7 +25,7 @@ public:
     QVariant data( const QModelIndex& index, int role ) const override;
 
 private:
-    real_data_t  real_data;
+    real_data_t real_data;
     QVector<QString> view_data;
 
 };

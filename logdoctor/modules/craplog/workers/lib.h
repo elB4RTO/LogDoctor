@@ -9,6 +9,7 @@
 enum class WorkerDialog {
     errGeneric,                 // 1 arg
     errDirNotExists,            // 1 arg
+    errPathHasSymlink,          // 1 arg
     errFailedDefiningLogType,   // 1 arg
     errFailedParsingLogs,       // 1 arg
     errDatabaseFileNotFound,    // 1 arg

@@ -4,6 +4,7 @@
 
 #include <QWidget>
 
+#include <filesystem>
 #include <unordered_map>
 
 
@@ -34,7 +35,7 @@ public:
         \param colors_scheme_id The ID of the color-scheme to be used
         \throw DoNotCatchException
     */
-    void helpLogsFormat( const std::string& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept;
+    void helpLogsFormat( const std::filesystem::path& path, const QFont& font, const ColorsScheme colors_scheme_id ) const noexcept;
 
     //! Provides help about log formats
     /*!

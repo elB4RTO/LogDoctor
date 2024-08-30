@@ -4,6 +4,8 @@
 
 #include "main_lib.h"
 
+#include "modules/security/path.h"
+
 #include "modules/craplog/modules/lib.h"
 
 #include "modules/blacklists/modules/blacklist.h"
@@ -28,7 +30,7 @@ class CraplogParser final : public QObject
 {
     Q_OBJECT
 
-    using worker_files_t  = std::vector<std::string>;
+    using worker_files_t  = std::vector<PathHandler>;
 
 public:
 
@@ -38,7 +40,7 @@ public:
         const LogsFormat& logs_format,
         const Blacklist& blacklist,
         worker_files_t&& log_files,
-        const std::string& data_db_path,
+        const PathHandler& data_db_path,
         QObject* parent=nullptr
     );
 
@@ -47,13 +49,13 @@ public:
 signals:
 
     void perfData(
-        const size_t parsed_size,
-        const size_t parsed_lines );
+        const std::size_t parsed_size,
+        const std::size_t parsed_lines );
 
     void chartData(
-        const size_t total_size,
-        const size_t total_lines,
-        const size_t blacklisted_size );
+        const std::size_t total_size,
+        const std::size_t total_lines,
+        const std::size_t blacklisted_size );
 
     void showDialog(
         const WorkerDialog dialog_type,
@@ -90,7 +92,7 @@ private:
 
     bool db_edited{ false };
 
-    std::string db_path;
+    PathHandler db_path;
 
     const QString db_name;
     const QString db_conn_name{ QStringLiteral("Parser_LogsData") };
@@ -100,11 +102,11 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    size_t total_lines      { 0ul };
-    size_t parsed_lines     { 0ul };
-    size_t total_size       { 0ul };
-    size_t parsed_size      { 0ul };
-    size_t blacklisted_size { 0ul };
+    std::size_t total_lines      { 0ul };
+    std::size_t parsed_lines     { 0ul };
+    std::size_t total_size       { 0ul };
+    std::size_t parsed_size      { 0ul };
+    std::size_t blacklisted_size { 0ul };
 
     ///////////////////
     //// BLACKLIST ////

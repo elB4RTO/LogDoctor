@@ -1058,6 +1058,30 @@ This may lead to data losses or crashes if not used with caution</source>
         <translation type="unfinished">O formato fornecido contém o &apos;Carriage Return&apos;.
 Isso pode levar a perdas de dados ou travamentos se não for usado com cautela</translation>
     </message>
+    <message>
+        <source>Failed to create the configuration file</source>
+        <translation type="unfinished">Falhado para criar o arquivo de configuração</translation>
+    </message>
+    <message>
+        <source>The path contains a symlink</source>
+        <translation type="unfinished">O caminho contém um symlink</translation>
+    </message>
+    <message>
+        <source>The file does not exist</source>
+        <translation type="unfinished">O arquivo não existe</translation>
+    </message>
+    <message>
+        <source>Invalid path</source>
+        <translation type="unfinished">Caminho inválido</translation>
+    </message>
+    <message>
+        <source>Invalid database path</source>
+        <translation type="unfinished">Caminho de banco de dados inválido</translation>
+    </message>
+    <message>
+        <source>The path does not exists</source>
+        <translation type="unfinished">O caminho não existe</translation>
+    </message>
 </context>
 <context>
     <name>GameDialog</name>
@@ -1557,16 +1581,8 @@ Any field not considered by LogDoctor will appear as &apos;DISCARDED&apos;</sour
 Qualquer campo não considerado pelo LogDoctor aparecerá como &apos;DISCARDED&apos;</translation>
     </message>
     <message>
-        <source>CrissCross</source>
-        <translation type="unfinished">Cruzado</translation>
-    </message>
-    <message>
         <source>Play CrissCross</source>
         <translation type="unfinished">Jogar a Cruzada</translation>
-    </message>
-    <message>
-        <source>Snake</source>
-        <translation type="unfinished">Cobra</translation>
     </message>
     <message>
         <source>Play Snake</source>
@@ -1729,20 +1745,8 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <translation type="unfinished">Jogos</translation>
     </message>
     <message>
-        <source>Check updates</source>
-        <translation type="unfinished">Verificar atualizações</translation>
-    </message>
-    <message>
         <source>Perform a version-check</source>
         <translation type="unfinished">Execute uma verificação de versão</translation>
-    </message>
-    <message>
-        <source>Infos</source>
-        <translation type="unfinished">Informação</translation>
-    </message>
-    <message>
-        <source>BlockNote</source>
-        <translation type="unfinished">Bloco de Notas</translation>
     </message>
     <message>
         <source>Open a block-note like window to write temporary text</source>
@@ -1785,10 +1789,6 @@ Campos marcados como &apos;DISCARDED&apos; analisados ​​corretamente, mas o 
         <translation type="unfinished">Mostrar algumas informações sobre o LogDoctor</translation>
     </message>
     <message>
-        <source>Changelog</source>
-        <translation type="unfinished">Registro de alterações</translation>
-    </message>
-    <message>
         <source>Show the changelog</source>
         <translation type="unfinished">Mostrar o registro de alterações</translation>
     </message>
@@ -1807,96 +1807,12 @@ Todos os valores dentro do mesmo intervalo serão mesclados e o valor médio ser
         <translation type="unfinished">Intervalo de tempo</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation>2</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation>3</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation>4</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation>5</translation>
-    </message>
-    <message>
-        <source>10</source>
-        <translation>10</translation>
-    </message>
-    <message>
-        <source>15</source>
-        <translation>15</translation>
-    </message>
-    <message>
-        <source>20</source>
-        <translation>20</translation>
-    </message>
-    <message>
-        <source>30</source>
-        <translation>30</translation>
-    </message>
-    <message>
-        <source>60</source>
-        <translation>60</translation>
-    </message>
-    <message>
-        <source>120</source>
-        <translation>120</translation>
-    </message>
-    <message>
-        <source>180</source>
-        <translation>180</translation>
-    </message>
-    <message>
-        <source>240</source>
-        <translation>240</translation>
-    </message>
-    <message>
-        <source>300</source>
-        <translation>300</translation>
-    </message>
-    <message>
-        <source>600</source>
-        <translation>600</translation>
-    </message>
-    <message>
-        <source>900</source>
-        <translation>900</translation>
-    </message>
-    <message>
-        <source>1200</source>
-        <translation>1200</translation>
-    </message>
-    <message>
-        <source>1800</source>
-        <translation>1800</translation>
-    </message>
-    <message>
-        <source>3600</source>
-        <translation>3600</translation>
-    </message>
-    <message>
         <source>The format to use for the labels of the time axis.</source>
         <translation type="unfinished">O formato a ser usado para os rótulos do eixo do tempo.</translation>
     </message>
     <message>
         <source>Time format</source>
         <translation type="unfinished">Formato de hora</translation>
-    </message>
-    <message>
-        <source>hh:mm</source>
-        <translation type="unfinished">hh:mm</translation>
-    </message>
-    <message>
-        <source>hh</source>
-        <translation type="unfinished">hh</translation>
     </message>
     <message>
         <source>The size of the pie</source>
@@ -1923,6 +1839,42 @@ As fatias excedentes serão agrupadas em uma fatia abrangente.</translation>
     <message>
         <source>Appearance</source>
         <translation type="unfinished">Aparência</translation>
+    </message>
+    <message>
+        <source>Security</source>
+        <translation type="unfinished">Segurança</translation>
+    </message>
+    <message>
+        <source>Whether it is allowed or denied to follow symlinks occuring in a path</source>
+        <translation type="unfinished">Se é permitido ou negado a seguir links que ocorrem em um caminho</translation>
+    </message>
+    <message>
+        <source>Follow symlinks</source>
+        <translation type="unfinished">Seguir symlinks</translation>
+    </message>
+    <message>
+        <source>Check updates</source>
+        <translation type="unfinished">Verificar atualizações</translation>
+    </message>
+    <message>
+        <source>Infos</source>
+        <translation type="unfinished">Info</translation>
+    </message>
+    <message>
+        <source>BlockNote</source>
+        <translation type="unfinished">Nota do bloco</translation>
+    </message>
+    <message>
+        <source>CrissCross</source>
+        <translation type="unfinished">Críticas</translation>
+    </message>
+    <message>
+        <source>Snake</source>
+        <translation type="unfinished">Snake</translation>
+    </message>
+    <message>
+        <source>Changelog</source>
+        <translation type="unfinished">Registro de alterações</translation>
     </message>
 </context>
 <context>

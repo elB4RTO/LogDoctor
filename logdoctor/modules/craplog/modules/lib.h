@@ -2,6 +2,8 @@
 #define LOGDOCTOR__CRAPLOG__MODULES__LIB_H
 
 
+#include "modules/security/path.h"
+
 #include <QString>
 #include <QMetaType>
 
@@ -25,7 +27,7 @@ enum class LogType : int8_t
 struct LogFile final
 {
     explicit LogFile() noexcept = default;
-    explicit LogFile(const bool sel,const bool used,const size_t sz,const QString& nm,const std::string& hs,const std::string& pt) noexcept
+    explicit LogFile(const bool sel,const bool used,const std::size_t sz,const QString& nm,const std::string& hs,const PathHandler& pt) noexcept
         :selected{sel},used_already{used},size_{sz},name_{nm},hash_{hs},path_{pt}{}
     LogFile(LogFile&& other) noexcept = default;
     LogFile& operator=(LogFile&& other) noexcept = default;
@@ -45,7 +47,7 @@ struct LogFile final
     inline bool hasBeenUsed() const noexcept
     { return this->used_already; }
     //! Returns the size of the file
-    inline size_t size() const noexcept
+    inline std::size_t size() const noexcept
     { return this->size_; }
     //! Returns the name of the file, to be displayed in the list
     inline const QString& name() const noexcept
@@ -54,15 +56,15 @@ struct LogFile final
     inline const std::string& hash() const noexcept
     { return this->hash_; }
     //! Returns the path of the file, including the file name
-    inline const std::string& path() const noexcept
+    inline const PathHandler& path() const noexcept
     { return this->path_; }
 private:
     bool selected;
     bool used_already;
-    size_t size_;
+    std::size_t size_;
     QString name_;
     std::string hash_;
-    std::string path_;
+    PathHandler path_;
 };
 Q_DECLARE_METATYPE( LogFile )
 
@@ -150,10 +152,10 @@ struct LogsFormat final
     std::string final;                   //!< The final separator
     std::vector<std::string> separators; //!< The separators in the middle
     std::vector<LogsFormatField> fields; //!< The logged fields
-    size_t new_lines;                    //!< The number of new lines within the string
+    std::size_t new_lines;                    //!< The number of new lines within the string
 
     explicit LogsFormat() noexcept = default;
-    explicit LogsFormat(const std::string& str,std::string&& itl,std::string&& fnl,std::vector<std::string>&& seps,std::vector<LogsFormatField>&& flds,const size_t nl) noexcept
+    explicit LogsFormat(const std::string& str,std::string&& itl,std::string&& fnl,std::vector<std::string>&& seps,std::vector<LogsFormatField>&& flds,const std::size_t nl) noexcept
         :string{str},initial{std::move(itl)},final{std::move(fnl)},separators{std::move(seps)},fields{std::move(flds)},new_lines{nl}{}
 };
 

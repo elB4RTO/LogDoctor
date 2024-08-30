@@ -4,6 +4,8 @@
 
 #include <string>
 
+class PathHandler;
+
 class QString;
 
 
@@ -21,7 +23,7 @@ namespace CheckSec
   \return The result of the check
   \see IOutils::exists(), IOutils::isFile(), IOutils::checkFile()
 */
-bool checkDatabaseFile( const std::string& db_path, const QString& db_name ) noexcept;
+bool checkDatabaseFile( const PathHandler& db_path, const QString& db_name ) noexcept;
 
 //! Checks the structure's integrity of the Collection database
 /*!
@@ -29,7 +31,7 @@ bool checkDatabaseFile( const std::string& db_path, const QString& db_name ) noe
   \return The result of the check
   \see checkDatabaseTablesNames(), newCollectionDatabase(), newHashesDatabase()
 */
-bool checkCollectionDatabase( const std::string& db_path ) noexcept;
+bool checkCollectionDatabase( const PathHandler& db_path ) noexcept;
 
 //! Checks the structure's integrity of the Hashes database
 /*!
@@ -37,7 +39,7 @@ bool checkCollectionDatabase( const std::string& db_path ) noexcept;
   \return The result of the check
   \see checkDatabaseTablesNames(), newCollectionDatabase(), newHashesDatabase()
 */
-bool checkHashesDatabase( const std::string& db_path ) noexcept;
+bool checkHashesDatabase( const PathHandler& db_path ) noexcept;
 
 } // namespace CheckSec
 

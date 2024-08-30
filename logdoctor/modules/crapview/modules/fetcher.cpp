@@ -14,6 +14,7 @@
 
 #include <map>
 #include <vector>
+#include <ranges>
 
 
 using namespace FetcherPrivate;
@@ -24,10 +25,10 @@ void Fetcher::setDialogLevel( const DialogsLevel new_level ) noexcept
     this->dialog_level = new_level;
 }
 
-void Fetcher::setDbPath( std::string&& path ) noexcept
+void Fetcher::setDbPath( PathHandler&& path ) noexcept
 {
     this->db_path = std::move(path);
-    this->db_name = QString::fromStdString( this->db_path.substr( this->db_path.find_last_of( '/' ) + 1ul ) );
+    this->db_name = toQString( this->db_path.getPathUnchecked().filename() );
 }
 
 
@@ -353,21 +354,21 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
     bool no_data{ true };
     int max_date_year{0}, max_date_month{0}, max_date_day{0};
     double n_days{0.0};
-    size_t max_date_count{0};
-    std::array<double, 7> week_days_count{ 0, 0, 0, 0, 0, 0, 0 };
+    std::size_t max_date_count{0ul};
+    std::array<double, 7> week_days_count{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
     GlobalsData data;
 
     const auto week_day_from{
-        [](const int y, const int m, const int d)->size_t
-        { return static_cast<size_t>( QDate(y,m,d).dayOfWeek()-1 ); }
+        [](const int y, const int m, const int d)->std::size_t
+        { return static_cast<std::size_t>( QDate(y,m,d).dayOfWeek()-1 ); }
     };
 
     const auto update_perf{
         [](Perfs& perf, const int val)
         {
             if ( val >= 0 ) {
-                if ( const size_t v{static_cast<size_t>(val)}; v > 0ul) [[likely]] {
+                if ( const std::size_t v{static_cast<std::size_t>(val)}; v > 0ul) [[likely]] {
                     if ( v > perf.max ) {
                         perf.max = v;
                     }
@@ -383,8 +384,8 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
 
             int d{-1}, h{-1}, tt{-1}, bs{-1}, br{-1},
                 day{-1}, hour{-1};
-            double hour_count{0};
-            size_t day_count{0};
+            double hour_count{0.0};
+            std::size_t day_count{0ul};
             QString protocol, method, uri, user_agent;
 
             QueryWrapper query{ db.getQuery() };
@@ -450,7 +451,7 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
                         // sum the day count to the total count
                         data.req_count += day_count;
                         // sum the day count to the relative day of the week count
-                        const size_t week_day{ week_day_from(year,month,day) };
+                        const std::size_t week_day{ week_day_from(year,month,day) };
                         data.traf.day[ week_day ] += static_cast<double>(day_count);
                         ++ week_days_count[ week_day ];
                         // check the max date count
@@ -520,7 +521,7 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
             data.req_count += day_count;
 
             // sum the day count to the relative day of the week count
-            const size_t week_day{ week_day_from(year,month,day) };
+            const std::size_t week_day{ week_day_from(year,month,day) };
             data.traf.day[ week_day ] += static_cast<double>(day_count);
             ++ week_days_count[ week_day ];
 
@@ -546,13 +547,18 @@ void Fetcher::fetchGlobalsData( std::optional<GlobalsData>& result, QStringView 
     }
 
     // process the day of the week
-    /*std::ranges::for_each( std::views::zip( data.traf.day, week_days_count ),
-        [](auto tc){ if (auto& [t,c]{tc}; c>0.0){ t/=c; } });*/
-    for ( auto [total,count] : Workarounds::zip( data.traf.day, week_days_count ) ) {
-        if ( count > 0.0 ) {
+    const auto mean_day_count{ [](auto tpl){
+        if (auto& [total,count]{tpl}; count > 0.0) {
             total /= count;
         }
-    }
+    }};
+
+    #ifdef __cpp_lib_ranges_zip
+        std::ranges::for_each( std::ranges::views::zip( data.traf.day, week_days_count ), mean_day_count );
+    #else
+        auto ziparr{ Workarounds::zip( data.traf.day, week_days_count ) };
+        std::for_each( ziparr.begin(), ziparr.end(), mean_day_count );
+    #endif
 
     // make the max-date tuple
     data.traf.date = std::make_tuple(

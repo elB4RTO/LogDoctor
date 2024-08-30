@@ -44,7 +44,7 @@ void SpeedData::pushDatum( const SpeedDatum datum )
 
 bool SpeedData::buildFromQuery( QueryWrapper& query, TimeManager&& time )
 {
-    if ( const size_t size{ query.size() }; size > 0ul ) {
+    if ( const std::size_t size{ query.size() }; size > 0ul ) {
         data.reserve( size * 3 );
     } else {
         return false;
@@ -88,8 +88,8 @@ bool SpeedData::buildFromQuery( QueryWrapper& query, TimeManager&& time )
 
 int SpeedData::insertInChart( QLineSeries*const line ) const
 {
-    size_t i{ 0 };
-    const size_t max_i{ data.size() };
+    std::size_t i{ 0 };
+    const std::size_t max_i{ data.size() };
     int value{0}, count{0}, aux_value, max_value{0};
     qint64 time{ -1 };
 

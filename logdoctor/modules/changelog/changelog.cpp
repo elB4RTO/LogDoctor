@@ -261,6 +261,20 @@ void Changelog::on_tree_Versions_itemClicked(QTreeWidgetItem* item, int index)
         content.append( tr("Tests improvements") );
         content.append( R"(</li><p></p>)" ); // leave the p tag
 
+    } else if ( version == "v4.02" ) {
+
+        content.append( R"(<li class="elem">)" );
+        content.append( tr("Upgrade to C++23") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Automatized translations") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Security improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Tests improvements") );
+        content.append( R"(</li><li class="elem">)" );
+        content.append( tr("Fixes") );
+        content.append( R"(</li><p></p>)" ); // leave the p tag
+
     } else {
         throw DoNotCatchException( "Unexpected changelog version", version.toStdString() );
     }

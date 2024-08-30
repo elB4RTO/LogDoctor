@@ -82,7 +82,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
         year   = datetime.substr( datetime.size()-4 );
 
     } else if ( format == date_time_gmt ) {
-        size_t start{ datetime.find( ", " ) + 2ul };
+        std::size_t start{ datetime.find( ", " ) + 2ul };
         day    = datetime.substr( start, 2ul );
         start += 3ul;
         month  = convertMonth( datetime.substr( start, 3ul ) );
@@ -160,7 +160,7 @@ std::vector<std::string> processDateTime( std::string_view datetime_, const Logs
             year  += (y<10) ? "0"+std::to_string( y ) : std::to_string( y );
 
         } else if ( format == date_time_mdyyyy ) {
-            size_t aux_;
+            std::size_t aux_;
             if ( datetime.at(2) == '/' ) {
                 month = datetime.substr( 0ul, 2ul );
                 aux_ = 3ul;

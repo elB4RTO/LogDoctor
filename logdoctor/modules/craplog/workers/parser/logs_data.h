@@ -39,10 +39,10 @@ struct FieldData final
     inline const std::string& operator *() const noexcept
     { return this->data; }
     //! Returns the sum of the field's data size with another field's data size
-    inline size_t operator +(const FieldData& rhs) const noexcept
+    inline std::size_t operator +(const FieldData& rhs) const noexcept
     { return this->data.size() + rhs.data.size(); }
     //! Returns the sum of the field's data size with the given size
-    friend inline size_t operator +(const size_t lhs, const FieldData& rhs) noexcept;
+    friend inline std::size_t operator +(const std::size_t lhs, const FieldData& rhs) noexcept;
 
 private:
     bool is_set;
@@ -50,7 +50,7 @@ private:
 };
 
 
-inline size_t operator +(const size_t lhs, const FieldData& rhs) noexcept
+inline std::size_t operator +(const std::size_t lhs, const FieldData& rhs) noexcept
 {
     return lhs + rhs.data.size();
 }
@@ -72,7 +72,7 @@ struct LogLineData final
     LogLineData &operator=(const LogLineData &) = delete;
 
     //! Returns the total size of all the fields' data
-    size_t size() const noexcept;
+    std::size_t size() const noexcept;
 
     // date and time
     FieldData year;

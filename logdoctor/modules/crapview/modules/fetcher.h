@@ -4,6 +4,7 @@
 #include "main_lib.h"
 
 #include "modules/shared.h"
+#include "modules/security/path.h"
 
 #include "modules/crapview/lib.h"
 #include "modules/crapview/datatypes/fwd.h"
@@ -66,9 +67,7 @@ public:
     /*!
         \see Crapview::setDbPath()
     */
-    void setDbPath( std::string&& path ) noexcept;
-
-    /*const std::string getDbPath( const int web_server );*/
+    void setDbPath( PathHandler&& path ) noexcept;
 
 
     //! Refreshes the dates which are available in the database
@@ -237,7 +236,7 @@ private:
     // quantity of information to display throught dialogs
     DialogsLevel dialog_level{ DL_NORMAL };
 
-    std::string db_path;
+    PathHandler db_path;
     QString db_name;
 
     // convert log fields to database fields

@@ -24,9 +24,9 @@ namespace StringOps
     \param flag The character to find
     \return The number of occurrences
 */
-inline size_t count( std::string_view str, const char flag ) noexcept
+inline std::size_t count( std::string_view str, const char flag ) noexcept
 {
-    return static_cast<size_t>( std::count( str.cbegin(), str.cend(), flag ) );
+    return static_cast<std::size_t>( std::count( str.cbegin(), str.cend(), flag ) );
 }
 
 //! Counts the occurrences of the given sequence in the given string
@@ -35,7 +35,7 @@ inline size_t count( std::string_view str, const char flag ) noexcept
     \param flag The string to find
     \return The number of occurrences
 */
-size_t count( std::string_view str, std::string_view flag ) noexcept;
+std::size_t count( std::string_view str, std::string_view flag ) noexcept;
 
 //! Checks whether a string only contains numeric characters
 /*!

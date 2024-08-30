@@ -8,6 +8,8 @@
 
 #include "modules/tb.h"
 
+#include "modules/security/path.h"
+
 #include "modules/database/database.h"
 
 #include "modules/blacklists/blacklists.h"
@@ -52,7 +54,7 @@ class MainWindow final : public QMainWindow
     Q_OBJECT
 
     // current version of LogDoctor
-    const float version{ 4.01f };
+    const float version{ 4.02f };
 
 public:
 
@@ -295,6 +297,8 @@ private slots:
 
     void on_box_ConfWindow_Icons_currentIndexChanged(int index);
 
+    void on_box_ConfWindow_Language_currentIndexChanged(int index);
+
     //// DIALOGS ////
 
     void on_slider_ConfDialogs_General_sliderReleased();
@@ -346,6 +350,10 @@ private slots:
     void on_checkBox_ConfDatabases_DoBackup_clicked(bool checked);
 
     void on_spinBox_ConfDatabases_NumBackups_valueChanged(int arg1);
+
+    //// SECURITY ////
+
+    void on_checkBox_ConfSecurity_Paths_Symlinks_toggled(bool checked);
 
     //// LOGS DEFAULTS ////
 
@@ -538,22 +546,8 @@ private slots:
     void on_button_ConfIis_Blacklist_Down_clicked();
 
 
-    ///////////////
+    //////////////
     //// MENU ////
-
-    //// LANGUAGE ////
-
-    void menu_actionEnglishGb_triggered();
-
-    void menu_actionEspanolEs_triggered();
-
-    void menu_actionFrancaisFr_triggered();
-
-    void menu_actionItalianoIt_triggered();
-
-    void menu_actionJapaneseJp_triggered();
-
-    void menu_actionPortuguesBr_triggered();
 
     //// TOOLS ////
 
@@ -586,16 +580,15 @@ private:
 
     const std::string home_path{ StringOps::rstrip( QStandardPaths::locate( QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory ).toStdString(), '/' ) };
 
-    // 1: linux/bsd, 2:windows, 3:mac
     #if defined( Q_OS_MACOS )
-        const std::string configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
-        const std::string logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
+        const PathHandler configs_path { this->home_path + "/Lybrary/Preferences/LogDoctor/logdoctor.conf" };
+        const PathHandler logdoc_path  { this->home_path + "/Lybrary/Application Support/LogDoctor" };
     #elif defined( Q_OS_WINDOWS )
-        const std::string configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
-        const std::string logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
+        const PathHandler configs_path { this->home_path + "/AppData/Local/LogDoctor/logdoctor.conf" };
+        const PathHandler logdoc_path  { this->home_path + "/AppData/Local/LogDoctor" };
     #elif defined( Q_OS_LINUX ) || defined( Q_OS_BSD4 )
-        const std::string configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
-        const std::string logdoc_path  { "/usr/share/LogDoctor" };
+        const PathHandler configs_path { this->home_path + "/.config/LogDoctor/logdoctor.conf" };
+        const PathHandler logdoc_path  { std::string("/usr/share/LogDoctor") };
     #else
         #error "System not supported"
     #endif
@@ -645,8 +638,19 @@ private:
 
     std::string language{ "en_GB" };
 
+    const std::vector<std::string> available_languages{
+        "ar_AR", "az_AZ", "bg_BG", "bn_BN", "ca_SP", "cs_CZ", "da_DA", "de_GE", "el_GR",
+        "en_GB", "eo_EO", "es_SP", "et_ES", "fa_PE", "fi_FI", "fr_FR", "ga_IR", "he_HE",
+        "hi_IN", "hu_HU", "id_ID", "it_IT", "ja_JP", "ko_KO", "lt_LI", "lv_LA", "ms_MA",
+        "nb_NB", "nl_NL", "pl_PL", "pt_BR", "pt_PT", "ro_RO", "ru_RU", "sk_SK", "sl_SL",
+        "sq_AL", "sv_SV", "th_TH", "tl_PH", "tr_TR", "uk_UK", "ur_PA", "zh_CN", "zt_CN"
+    };
+
     //! Translates the UI to the selected language
     void updateUiLanguage();
+
+    //! Unchecks all the languages in the menu
+    void uncheckAllLanguageMenuEntries();
 
 
     /////////////////////////
@@ -660,6 +664,7 @@ private:
 
     //! Retrieves the window geometry from the given string
     /*!
+        \throw std::exception
         \see readConfigs()
     */
     void setGeometryFromString( const std::string& geometry );
@@ -673,11 +678,15 @@ private:
 
     //! Retrieves the dialogs level from the given string
     /*!
+        \throw std::exception
         \see readConfigs()
     */
     void setDialogsLevelFromString( const std::string& dialogs_level );
 
     //! Returns the dialogs level corresponding to the given number
+    /*!
+        \throw DoNotCatchException
+    */
     DialogsLevel dialogsLevelFromInt( const int dialogs_level );
 
 
@@ -689,6 +698,7 @@ private:
 
     //! Retrieves the Web Server from the given string
     /*!
+        \throw DoNotCatchException
         \see readConfigs()
     */
     void setWebServerFromString( const std::string& web_server );
@@ -702,15 +712,27 @@ private:
     bool remember_window{ true };
 
     //! Auto-detects the icon-set to use depending on the current window theme
+    /*!
+        \throw DoNotCatchException
+    */
     void detectIconsTheme();
 
     //! Updates the icons on the window
+    /*!
+        \throw DoNotCatchException
+    */
     void updateUiIcons();
 
     //! Updates the window theme
+    /*!
+        \throw DoNotCatchException
+    */
     void updateUiTheme();
 
     //! Updates the fonts on the window
+    /*!
+        \throw std::exception
+    */
     void updateUiFonts();
 
     const std::vector<QChart::ChartTheme> CHARTS_THEMES{
@@ -752,13 +774,6 @@ private:
     /*std::chrono::system_clock::duration   waiter_timer_elapsed;*/
 
 
-    //! Resolves the given path and returns the canonical path
-    std::string resolvePath( const std::string& path ) const noexcept;
-
-    //! Returns the parent folder of the given path
-    std::string parentPath( const std::string& path ) const;
-
-
     ////////////////
     //// CHECKS ////
     ////////////////
@@ -787,8 +802,8 @@ private:
     //! Backs-up the logs data collection database
     void backupDatabase() const;
 
-    std::string db_data_path;
-    std::string db_hashes_path;
+    PathHandler db_data_path;
+    PathHandler db_hashes_path;
 
     // true when a process is working on a db
     bool db_working{ false };

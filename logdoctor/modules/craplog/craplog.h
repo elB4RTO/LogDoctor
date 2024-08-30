@@ -45,22 +45,22 @@ public:
     //// DATABASES ////
 
     //! Returns the path of the logs Collection database
-    const std::string& getStatsDatabasePath() const noexcept;
+    const PathHandler& getStatsDatabasePath() const noexcept;
 
     //! Returns the path of the log files' Hashes database
-    const std::string& getHashesDatabasePath() const noexcept;
+    const PathHandler& getHashesDatabasePath() const noexcept;
 
     //! Sets the new path for the logs Collection database
     /*!
         \param The new path of the database file
     */
-    void setStatsDatabasePath( const std::string& path ) noexcept;
+    void setStatsDatabasePath( const PathHandler& path ) noexcept;
 
     //! Sets the new path for the log files' Hashes database
     /*!
         \param The new path of the database file
     */
-    void setHashesDatabasePath( const std::string& path ) noexcept;
+    void setHashesDatabasePath( const PathHandler& path ) noexcept;
 
 
     ////////////////////////
@@ -100,14 +100,14 @@ public:
         \param web_server The Web Server
         \return The path of the logs' folder
     */
-    const std::string& getLogsPath( const WebServer& web_server ) const noexcept;
+    const PathHandler& getLogsPath( const WebServer& web_server ) const noexcept;
 
     //! Sets a new path for the given Web Server to search the logs in
     /*!
         \param web_server The Web Server
         \param new_path The new path
     */
-    void setLogsPath( const WebServer& web_server, const std::string& new_path ) noexcept;
+    void setLogsPath( const WebServer& web_server, const PathHandler& new_path ) noexcept;
 
 
     ///////////////////
@@ -138,7 +138,7 @@ public:
         \return The number of files actually in the list
         \see logs_list
     */
-    size_t getLogsListSize() const noexcept;
+    std::size_t getLogsListSize() const noexcept;
 
     //! Returns the LogFile instance of the given file
     /*!
@@ -230,10 +230,10 @@ public:
     //// WARNING SIZE ////
 
     //! Returns the currently set warning size for the log files
-    size_t getWarningSize() const noexcept;
+    std::size_t getWarningSize() const noexcept;
 
     //! Sets the new warning size for the log files
-    void setWarningSize( const size_t new_size ) noexcept;
+    void setWarningSize( const std::size_t new_size ) noexcept;
 
 
     ////////////////////
@@ -265,10 +265,10 @@ public:
     //// PERFORMANCES ////
 
     //! Returns the total logs size
-    size_t getParsedSize() noexcept;
+    std::size_t getParsedSize() noexcept;
 
     //! Returns the parsed logs lines
-    size_t getParsedLines() noexcept;
+    std::size_t getParsedLines() noexcept;
 
     //! Returns the speed on parsing logs
     QString getParsingSpeed() noexcept;
@@ -310,12 +310,12 @@ public slots:
 
     void stopWorking( const bool successful );
 
-    void updatePerfData( const size_t parsed_size,
-                         const size_t parsed_lines ) noexcept;
+    void updatePerfData( const std::size_t parsed_size,
+                         const std::size_t parsed_lines ) noexcept;
 
-    void updateChartData( const size_t total_size,
-                          const size_t total_lines,
-                          const size_t blacklisted_size ) noexcept;
+    void updateChartData( const std::size_t total_size,
+                          const std::size_t total_lines,
+                          const std::size_t blacklisted_size ) noexcept;
 
     void showWorkerDialog( const WorkerDialog dialog_type,
                            const QStringList args ) const noexcept;
@@ -335,8 +335,8 @@ private:
     ///////////////////
     //// DATABASES ////
 
-    std::string db_stats_path;
-    std::string db_hashes_path;
+    PathHandler db_stats_path;
+    PathHandler db_hashes_path;
 
 
     //////////////
@@ -355,11 +355,11 @@ private:
     //////////////////////
     //// PERFORMANCES ////
 
-    size_t total_lines      { 0ul }; // total number of logs lines
-    size_t parsed_lines     { 0ul }; // number of parsed logs lines
-    size_t total_size       { 0ul }; // total size of the logs
-    size_t parsed_size      { 0ul }; // size of the logs which have been used
-    size_t blacklisted_size { 0ul }; // size of the logs which has been blacklisted
+    std::size_t total_lines      { 0ul }; // total number of logs lines
+    std::size_t parsed_lines     { 0ul }; // number of parsed logs lines
+    std::size_t total_size       { 0ul }; // total size of the logs
+    std::size_t parsed_size      { 0ul }; // size of the logs which have been used
+    std::size_t blacklisted_size { 0ul }; // size of the logs which has been blacklisted
 
     std::chrono::system_clock::time_point parsing_time_start,
                                           parsing_time_stop;
@@ -368,7 +368,7 @@ private:
     //// LOGS ITEMS ////
 
     // the selected log files to be parsed during the process
-    std::vector<std::tuple<std::string,std::string>> log_files_to_use;
+    std::vector<std::tuple<PathHandler,std::string>> log_files_to_use;
 
     // used files hashes
     std::vector<std::string> used_files_hashes;
@@ -378,7 +378,7 @@ private:
     //// LOGS CONTROL ////
 
     // warning size, in Bytes
-    size_t warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
+    std::size_t warning_size{ (1'048'576u * 50u) +1u }; // => 1 MiB * x
 
 
     ////////////////////
@@ -387,7 +387,7 @@ private:
     // currently used web server
     WebServer current_web_server{ WS_APACHE };
 
-    std::unordered_map<WebServer, std::string> logs_paths;
+    std::unordered_map<WebServer, PathHandler> logs_paths;
 
     //! Web Server specific file names criterions
     /*!

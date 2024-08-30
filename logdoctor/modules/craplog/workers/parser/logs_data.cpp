@@ -15,11 +15,11 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 {
     using F = LogsFormatField;
 
-    size_t start, stop{logs_format.initial.size()},
+    std::size_t start, stop{logs_format.initial.size()},
            sep_i{0};
-    const size_t line_size{ line.size()-1ul },
-                 max_seps{ logs_format.separators.size() },
-                 n_seps{ max_seps-1ul };
+    const std::size_t line_size{ line.size()-1ul },
+                      max_seps{ logs_format.separators.size() },
+                      n_seps{ max_seps-1ul };
 
     while ( sep_i <= max_seps ) {
         // split fields
@@ -47,7 +47,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
             // should be unreachable
             throw ("Unexpected section reached");
         }
-        const size_t sep_size{ sep.size() };
+        const std::size_t sep_size{ sep.size() };
 
         // get the field
         const F fld{ logs_format.fields.at( sep_i ) };
@@ -58,17 +58,17 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 
             if ( sep_i < n_seps ) {
                 // not the last separator, check for mistakes
-                size_t aux_stop = stop;
+                std::size_t aux_stop = stop;
 
                 if ( (_MAY_HAVE_SPACES & fld) && sep == " " ) {
                     // check the fields with whitespace-separated values
-                    const size_t n{ fld == request_full ? 2ul
-                                  : fld & _COUNT_SPACES };
+                    const std::size_t n{ fld == request_full ? 2ul
+                                       : fld & _COUNT_SPACES };
 
-                    size_t c{ StringOps::count( fld_str, ' ' ) };
+                    std::size_t c{ StringOps::count( fld_str, ' ' ) };
                     if ( c < n ) {
                         // loop until the correct number of whitespaces is reached
-                        size_t aux_start = line[stop+1ul] == ' ' ? stop : stop+1ul;
+                        std::size_t aux_start = line[stop+1ul] == ' ' ? stop : stop+1ul;
                         while ( c < n ) {
                             aux_stop = line.find( sep, aux_start );
                             if ( aux_stop == std::string::npos ) {
@@ -88,7 +88,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                     if ( fld_str.back() == '\\' ) {
                         // the found separator is not actually the separator but is part of the user-agent string
                         // keep searching until the real separator is found
-                        size_t aux_start = stop + sep_size;
+                        std::size_t aux_start = stop + sep_size;
                         while (true) {
                             aux_stop = line.find( sep, aux_start );
                             if ( aux_stop == std::string::npos ) {
@@ -167,7 +167,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                     // process the request to get the protocol, method, resource and query
                     } else if ( fld == request_full ) {
                         // check whether the request string has the proper number of spaces
-                        const size_t n_spaces{ StringOps::count( fld_str, ' ' ) };
+                        const std::size_t n_spaces{ StringOps::count( fld_str, ' ' ) };
 
                         if ( n_spaces == 0ul ) [[unlikely]] {
                             // no spaces
@@ -193,9 +193,9 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
 
                         } else [[likely]] {
                             // correct amount of spaces
-                            const size_t aux_stop1{ fld_str.find( ' ' ) },
-                                         aux_start{ aux_stop1+1ul },
-                                         aux_stop2{ fld_str.find( ' ', aux_start ) };
+                            const std::size_t aux_stop1{ fld_str.find( ' ' ) },
+                                              aux_start{ aux_stop1+1ul },
+                                              aux_stop2{ fld_str.find( ' ', aux_start ) };
 
                             if ( aux_stop1 > 0ul && aux_stop2 > aux_start ) [[likely]] {
                                 std::string method{ fld_str.substr( 0ul, aux_stop1 ) };
@@ -220,7 +220,7 @@ LogLineData::LogLineData(const std::string& line, const LogsFormat& logs_format)
                     } else if ( fld == request_uri_query ) {
                         // search for the query
                         std::string uri, query;
-                        const size_t aux_{ fld_str.find( '?' ) };
+                        const std::size_t aux_{ fld_str.find( '?' ) };
                         if ( aux_ != std::string::npos ) {
                             uri   = fld_str.substr( 0ul, aux_ );
                             query = fld_str.substr( aux_+1ul  );
@@ -270,7 +270,7 @@ void LogLineData::storeUriQuery(std::string&& str) noexcept
 
 void LogLineData::storeMalformedRequestOneSpace(std::string&& str) noexcept
 {
-    const size_t pos{ str.find( ' ' ) };
+    const std::size_t pos{ str.find( ' ' ) };
     std::string field1{ str.substr( 0ul, pos ) },
                 field2{ str.substr( pos+1 ) };
     const bool is_method1{ VecOps::contains( this->valid_methods, field1 ) },
@@ -335,8 +335,8 @@ void LogLineData::storeMalformedRequestOneSpace(std::string&& str) noexcept
 
 void LogLineData::storeMalformedRequestMultiSpace(std::string&& str) noexcept
 {
-    const size_t pos1{ str.find( ' ' ) },
-                 pos2{ str.rfind( ' ' ) };
+    const std::size_t pos1{ str.find( ' ' ) },
+                      pos2{ str.rfind( ' ' ) };
     std::string field1{ str.substr( 0ul, pos1 ) };
     std::string field2{ StringOps::strip( str.substr( pos1+1ul, pos2-pos1-1ul ) ) };
     std::string field3{ str.substr( pos2+1ul ) };
@@ -492,7 +492,7 @@ void LogLineData::storeMalformedRequestMultiSpace(std::string&& str) noexcept
     }
 }
 
-size_t LogLineData::size() const noexcept
+std::size_t LogLineData::size() const noexcept
 {
     return this->year
          + this->month

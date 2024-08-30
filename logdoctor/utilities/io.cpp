@@ -20,7 +20,7 @@ class FileHandler final
     Stream file;
 
 public:
-    explicit FileHandler( const std::string& path )
+    explicit FileHandler( const std::filesystem::path& path )
     : file{ path }
     {
         if ( ! this->file.is_open() ) {
@@ -51,14 +51,14 @@ public:
     }
 };
 
-} //namespace (private)
+} // namespace (private)
 
 
 
 namespace IOutils
 {
 
-bool checkFile( std::string_view path, const bool readable, const bool writable ) noexcept
+bool checkFile( const std::filesystem::path& path, const bool readable, const bool writable ) noexcept
 {
     if ( isFile( path ) ) {
         // check the needed permissions
@@ -79,7 +79,7 @@ bool checkFile( std::string_view path, const bool readable, const bool writable 
 }
 
 
-bool checkDir( std::string_view path, const bool readable, const bool writable ) noexcept
+bool checkDir( const std::filesystem::path& path, const bool readable, const bool writable ) noexcept
 {
     if ( isDir( path ) ) {
         // check the needed permissions
@@ -100,7 +100,7 @@ bool checkDir( std::string_view path, const bool readable, const bool writable )
 }
 
 
-bool makeDir( std::string_view path, std::error_code& err ) noexcept
+bool makeDir( const std::filesystem::path& path, std::error_code& err ) noexcept
 {
     try {
         const bool failed{ !std::filesystem::create_directories( path, err ) };
@@ -115,14 +115,14 @@ bool makeDir( std::string_view path, std::error_code& err ) noexcept
 
 
 // rename an entry with a trailing '.copy'
-bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept
+bool renameAsCopy( const std::filesystem::path& path, std::error_code& err ) noexcept
 {
     try {
-        std::string new_path{ path };
+        std::filesystem::path new_path{ path };
         // loop until a valid name is found
         while (true) {
-            new_path += ".copy";
-            if ( ! exists( new_path ) ) {
+            new_path.concat(".copy");
+            if ( ! IOutils::exists( new_path ) ) {
                 // available name found
                 break;
             }
@@ -138,7 +138,7 @@ bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept
 }
 
 
-void readFile( const std::string& path, std::string& content )
+void readFile( const std::filesystem::path& path, std::string& content )
 {
     // read the whole file
     try {
@@ -160,7 +160,7 @@ void readFile( const std::string& path, std::string& content )
 }
 
 
-void randomLines( const std::string& path, std::vector<std::string>& lines, const size_t n_lines, const bool strip_lines )
+void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const std::size_t n_lines, const bool strip_lines )
 {
     // read rhe first N lines only
     try {
@@ -189,19 +189,19 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
             StringOps::split( aux_lines, aux );
         }
         aux.clear();
-        const size_t max{ aux_lines.size() };
+        const std::size_t max{ aux_lines.size() };
         if ( max > 0ul ) {
             if ( max <= n_lines ) {
                 lines = aux_lines;
             } else {
                 time_t nTime;
                 srand( (unsigned)time(&nTime) );
-                size_t index;
-                std::vector<size_t> picked_indexes;
-                for( size_t i=0ul; i<n_lines ; ++i ) {
+                std::size_t index;
+                std::vector<std::size_t> picked_indexes;
+                for( std::size_t i{0ul}; i<n_lines ; ++i ) {
                     while (true) {
-                        index = static_cast<size_t>(rand()) % max;
-                        if ( VecOps::contains<size_t>( picked_indexes, index ) ) {
+                        index = static_cast<std::size_t>(rand()) % max;
+                        if ( VecOps::contains<std::size_t>( picked_indexes, index ) ) {
                             continue;
                         }
                         break;
@@ -214,8 +214,8 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
                     lines.push_back( line );
                 }
                 // add the first and last lines, to double check for file integrity
-                for ( const size_t& index : std::vector<size_t>{0ul,max-1ul} ) {
-                    if ( ! VecOps::contains<size_t>( picked_indexes, index ) ) {
+                for ( const auto index : std::vector<std::size_t>{0ul,max-1ul} ) {
+                    if ( ! VecOps::contains<std::size_t>( picked_indexes, index ) ) {
                         const std::string& line{ aux_lines.at( index ) };
                         if ( StringOps::startsWith( line, '#' ) ) {
                             continue;
@@ -244,7 +244,7 @@ void randomLines( const std::string& path, std::vector<std::string>& lines, cons
 }
 
 
-void writeOnFile( const std::string& path, std::string_view content )
+void writeOnFile( const std::filesystem::path& path, std::string_view content )
 {
     try {
         FileHandler<std::ofstream> file{ path }; // throws std::ios_base::failure on failure

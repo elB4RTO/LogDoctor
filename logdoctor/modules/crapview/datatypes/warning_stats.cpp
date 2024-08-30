@@ -11,7 +11,7 @@
 #include "utilities/strings.h"
 #include "utilities/vectors.h"
 
-#if defined( Q_OS_MACOS )
+#if defined( Q_OS_MACOS ) || defined( Q_OS_BSD4 )
     #include "workarounds/ranges_join.h"
 #else
     #include <ranges>
@@ -149,7 +149,7 @@ void WarningData::setTimelineAsDay()
     timeline = TimelineType::Day;
 
     data.reserve( 24ul );
-    for ( size_t h{0ul}; h<24ul; ++h ) {
+    for ( std::size_t h{0ul}; h<24ul; ++h ) {
         data.push_back( std::vector<std::vector<WarningDatum>>{} );
         auto& aux{ data.back() };
         aux.reserve( 6ul );
@@ -163,7 +163,7 @@ void WarningData::setTimelineAsHour()
     timeline = TimelineType::Hour;
 
     data.reserve( 6ul );
-    for ( size_t g{0ul}; g<6ul; ++g ) {
+    for ( std::size_t g{0ul}; g<6ul; ++g ) {
         data.push_back( std::vector<std::vector<WarningDatum>>{} );
         auto& aux{ data.back() };
         aux.reserve( 10ul );
@@ -191,8 +191,8 @@ bool WarningData::buildForDay( QueryWrapper& query )
     }
 
     while ( query->next() ) {
-        data.at( static_cast<size_t>( toInt( query[3] ) ) )
-            .at( static_cast<size_t>( getMinuteGap( toInt( query[4] ) )/10 ) )
+        data.at( static_cast<std::size_t>( toInt( query[3] ) ) )
+            .at( static_cast<std::size_t>( getMinuteGap( toInt( query[4] ) )/10 ) )
             .emplace_back( query );
     }
 
@@ -206,8 +206,8 @@ bool WarningData::buildForHour( QueryWrapper& query )
 
     while ( query->next() ) {
         const int min{ toInt( query[4] ) };
-        data.at( static_cast<size_t>( getMinuteGap( min )/10 ) )
-            .at( static_cast<size_t>( min % 10 ) )
+        data.at( static_cast<std::size_t>( getMinuteGap( min )/10 ) )
+            .at( static_cast<std::size_t>( min % 10 ) )
             .emplace_back( query );
     }
 
@@ -245,8 +245,8 @@ int WarningData::insertForDay( std::vector<std::vector<QBarSet*>>& bars ) const
         bars.back().push_back( new QBarSet("") );
     }
 
-    for ( size_t h{0}; h<24ul; ++h ) {
-        for ( size_t m{0}; m<6ul; ++m ) {
+    for ( std::size_t h{0ul}; h<24ul; ++h ) {
+        for ( std::size_t m{0ul}; m<6ul; ++m ) {
             int norm_count{0}, warn_count{0};
             for ( const WarningDatum& datum : data.at( h ).at( m ) ) {
                 datum.hasWarnings() ? ++warn_count : ++norm_count;
@@ -272,8 +272,8 @@ int WarningData::insertForHour( std::vector<std::vector<QBarSet*>>& bars ) const
         bars.back().push_back( new QBarSet("") );
     }
 
-    for ( size_t g{0ul}; g<6ul; ++g ) {
-        for ( size_t m{0ul}; m<10ul; ++m ) {
+    for ( std::size_t g{0ul}; g<6ul; ++g ) {
+        for ( std::size_t m{0ul}; m<10ul; ++m ) {
             int norm_count{0}, warn_count{0};
             for ( const WarningDatum& datum : data.at( g ).at( m ) ) {
                 datum.hasWarnings() ? ++warn_count : ++norm_count;
@@ -292,7 +292,7 @@ int WarningData::insertForHour( std::vector<std::vector<QBarSet*>>& bars ) const
 
 void WarningData::insertInTable( QTableWidget*const table, const QColor& warning_color ) const
 {
-    #if defined( Q_OS_MACOS )
+    #if defined( Q_OS_MACOS ) || defined( Q_OS_BSD4 )
         const auto flattened_data{ Workarounds::join( Workarounds::join(data) ) };
         for ( const WarningDatum* datum : flattened_data ) {
             datum->insertInTable( table, warning_color );

@@ -8,13 +8,15 @@
 
 #include <QString>
 
+#include <ranges>
+
 
 namespace GlobalsOps
 {
 
 inline void appendMostRecurrent( auto& recur_list, const auto& kvr, const QString& __dash )
 {
-    size_t max{ 0 };
+    std::size_t max{ 0ul };
     QStringView max_str{ __dash };
     std::for_each( kvr.begin(), kvr.end(),
         [&max,&max_str](const auto sc)
@@ -23,13 +25,14 @@ inline void appendMostRecurrent( auto& recur_list, const auto& kvr, const QStrin
         std::make_tuple( max_str.toString(), QString::number(max) ) );
 }
 
-inline void appendMostTrafficked( auto& traffic_list, const auto& traf, const size_t max_i, const double max_c, const QString&& value, const QString& __dash, const QString& __zero )
+inline void appendMostTrafficked( auto& traffic_list, const auto& traf, const std::size_t max_i, const double max_c, const QString&& value, const QString& __dash, const QString& __zero )
 {
     if ( max_i == traf.size() ) {
         traffic_list.emplace_back( __dash, __zero );
     } else {
-        const size_t f{ static_cast<size_t>(max_c) };
-        const size_t d{ max_c<10.0 ? static_cast<size_t>(max_c*100.0)%100ul : static_cast<size_t>(max_c*10.0)%10ul };
+        const auto f{ static_cast<std::size_t>(max_c) };
+        const auto d{ max_c<10.0 ? static_cast<std::size_t>(max_c*100.0)%100ul
+                                 : static_cast<std::size_t>(max_c*10.0)%10ul };
         QString count{ QString::number( f ) };
         if ( d > 0 ) {
             count += QString::number( d ).prepend(QLatin1Char('.'));
@@ -37,19 +40,26 @@ inline void appendMostTrafficked( auto& traffic_list, const auto& traf, const si
         traffic_list.emplace_back( value, count );
     }
 }
+
 inline auto getMaxIndexCount( const auto& traf )
 {
     double max_c{ 0.0 };
-    size_t max_i{ traf.size() };
-    /*std::ranges::for_each( std::views::enumerate(traf),
-        [&max_c,&max_i](const auto ic)
-        { if (auto& [i,c]{ic}; c>max_c){ max_c=c; max_i=i; } });*/
-    for( const auto [index,count] : Workarounds::enumerate(traf) ) {
-        if ( count > max_c ) {
+    std::size_t max_i{ traf.size() };
+
+    const auto update{ [&max_c,&max_i](const auto& tpl){
+        if (const auto& [index,count]{tpl}; count > max_c) {
             max_c = count;
             max_i = index;
         }
-    };
+    }};
+
+    #ifdef __cpp_lib_ranges_enumerate
+        std::ranges::for_each( std::ranges::views::enumerate(traf), update);
+    #else
+        const auto enarr{ Workarounds::enumerate(traf) };
+        std::for_each( enarr.cbegin(), enarr.cend(), update );
+    #endif
+
     return std::make_tuple( max_i, max_c );
 }
 

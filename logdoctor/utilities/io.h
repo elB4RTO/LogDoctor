@@ -2,7 +2,6 @@
 #define LOGDOCTOR__UTILITIES__IO_H
 
 
-#include <string>
 #include <vector>
 #include <filesystem>
 
@@ -19,7 +18,7 @@ namespace IOutils
     \param path The path of the entry
     \return The result of the check
 */
-inline bool exists( std::string_view path ) noexcept
+inline bool exists( const std::filesystem::path& path ) noexcept
 {
     return path.empty()
          ? false
@@ -31,9 +30,9 @@ inline bool exists( std::string_view path ) noexcept
     \param path The path of the entry
     \return The result of the check
 */
-inline bool isFile( std::string_view path ) noexcept
+inline bool isFile( const std::filesystem::path& path ) noexcept
 {
-    return exists( path )
+    return IOutils::exists( path )
          ? std::filesystem::is_regular_file( path )
          : false;
 }
@@ -43,10 +42,22 @@ inline bool isFile( std::string_view path ) noexcept
     \param path The path of the entry
     \return The result of the checks
 */
-inline bool isDir( std::string_view path ) noexcept
+inline bool isDir( const std::filesystem::path& path ) noexcept
 {
-    return exists( path )
+    return IOutils::exists( path )
          ? std::filesystem::is_directory( path )
+         : false;
+}
+
+//! Checks if a path exists and is a symlink
+/*!
+    \param path The path of the entry
+    \return The result of the checks
+*/
+inline bool isSymlink( const std::filesystem::path& path ) noexcept
+{
+    return IOutils::exists( path )
+         ? std::filesystem::is_symlink( path )
          : false;
 }
 
@@ -57,7 +68,7 @@ inline bool isDir( std::string_view path ) noexcept
     \param writable Set to true to check for writability
     \return The result of the checks
 */
-bool checkFile( std::string_view path, const bool readable=false, const bool writable=false ) noexcept;
+bool checkFile( const std::filesystem::path& path, const bool readable=false, const bool writable=false ) noexcept;
 
 //! Checks if a path exists, if it points to a folder and if the user has read and/or write permissions on it
 /*!
@@ -66,14 +77,14 @@ bool checkFile( std::string_view path, const bool readable=false, const bool wri
     \param writable Set to true to check for writability
     \return The result of the checks
 */
-bool checkDir( std::string_view path, const bool readable=false, const bool writable=false ) noexcept;
+bool checkDir( const std::filesystem::path& path, const bool readable=false, const bool writable=false ) noexcept;
 
 //! Creates a directory
 /*!
     \param path The path of the new entry
     \return Wheter the operation was successful or not
 */
-bool makeDir( std::string_view path, std::error_code& err ) noexcept;
+bool makeDir( const std::filesystem::path& path, std::error_code& err ) noexcept;
 
 //! Renames an entry with a trailing '.copy'
 /*!
@@ -81,7 +92,7 @@ bool makeDir( std::string_view path, std::error_code& err ) noexcept;
     \param err Will hold the error, if any
     \return Wheter the operation was successful or not
 */
-bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept;
+bool renameAsCopy( const std::filesystem::path& path, std::error_code& err ) noexcept;
 
 //! Randomly pick lines from a file
 /*!
@@ -90,21 +101,21 @@ bool renameAsCopy( std::string_view path, std::error_code& err ) noexcept;
     \param n_lines The number of lines to pick
     \param strip_lines Whether to strip control-characters away from the lines
 */
-void randomLines( const std::string& path, std::vector<std::string>& lines, const size_t n_lines=16ul, const bool strip_lines=true );
+void randomLines( const std::filesystem::path& path, std::vector<std::string>& lines, const std::size_t n_lines=16ul, const bool strip_lines=true );
 
 //! Reads the content of a file
 /*!
     \param path The path of the file to read from
     \param content Will hold the content of the file
 */
-void readFile( const std::string& path, std::string& content );
+void readFile( const std::filesystem::path& path, std::string& content );
 
 //! Writes a string on file
 /*!
     \param path The path of the file to write on
     \param content The string to write
 */
-void writeOnFile( const std::string& path, std::string_view content );
+void writeOnFile( const std::filesystem::path& path, std::string_view content );
 
 } // namespace IOutils
 
