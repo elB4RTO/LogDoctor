@@ -81,7 +81,7 @@ LogDoctor is a hard fork of [Craplog](https://github.com/elB4RTO/CRAPLOG).
 ### Requirements / Dependencies
 
 - **From binary**:
-  - C++ 20
+  - C++ 23
   - Qt6 *(Framework 6.6+, Linguist, Widgets, Charts, Sql, Network)*<br/><br/>
 - **From source**:
   - *all the above*
@@ -185,7 +185,7 @@ It can be the default system folder or any folder you decide to use, just set it
 
 #### Logs format
 
-Before to start parsing logs, you must set-up the *loga format*.<br/>
+Before to start parsing logs, you must set-up the *logs format*.<br/>
 Head to the **configurations** section, under `Logs` select the **Web Server** you want to configure and tap `Format`.<br/>
 Once inside the **Format** section, you can insert the *log format string* you're using. Don't forget to use the `Generete preview` button to generate a *log line sample* and **check the correctness** of the format!<br/>
 
@@ -348,7 +348,7 @@ Color schemes will be applied using the currently set log format.
 
 ### Block-note
 
-A block-note utility is available at `Tools`→`BlockNote` which can be used to temporary write text, notes, etc.
+A block-note utility is available at `Tools`→`BlockNote` which can be used to temporarily write text, notes, etc.
 
 <br/>
 
@@ -394,7 +394,7 @@ Take this estimation with a grain of salt, it may be even higher or lower depend
 
 ## Languages
 
-LogDoctor is available in multiple languages, most of which are automatically translated. *Wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md) to improve them?*)
+LogDoctor is available in multiple languages, most of which are automatically translated. *Wanna [contribute](https://github.com/elB4RTO/LogDoctor/blob/main/TRANSLATING.md) to improve them?*
 
 <br/><br/>
 
@@ -402,7 +402,7 @@ LogDoctor is available in multiple languages, most of which are automatically tr
 
 LogDoctor is under constant development.
 
-If you have suggestions about how to improve it, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
+If you have suggestions about how to improve it or you spot a bug, please open an [issue](https://github.com/elB4RTO/LogDoctor/issues).
 
 If you want to contribute to the code, please read the [Contribution Guidelines](https://github.com/elB4RTO/LogDoctor/blob/main/CONTRIBUTING.md).
 
